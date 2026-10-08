@@ -14,6 +14,15 @@ const requiredColors = [
     'primary', 'onPrimary', 'accent', 'border', 'success', 'danger', 'logoMain', 'logoAccent',
     'colDown', 'colUp', 'colMiddle', 'colManual', 'colAnnounce', 'colFree'
 ];
+const cardSurfaceCss = fs.readFileSync(path.join(root, 'www/theme-card-surfaces.css'), 'utf8');
+const indexHtml = fs.readFileSync(path.join(root, 'www/index.html'), 'utf8');
+assert(indexHtml.includes('theme-card-surfaces.css?v='), 'The shared card surface stylesheet is not loaded.');
+assert(spec.crossThemeRoomContract.cardSurfaces?.includes('www/theme-card-surfaces.css'), 'Shared card surface contract is missing.');
+const clayCardGroup = cardSurfaceCss.match(/\/\* Clay keeps[^]*?\*\/\s*body:is\(([^)]+)\)/);
+assert(clayCardGroup, 'Clay card material rule is missing.');
+const clayCardIds = [...clayCardGroup[1].matchAll(/\.([a-z]+)-theme/g)].map(match => match[1]).sort();
+const definedClayIds = spec.themes.filter(theme => theme.id !== 'dark' && theme.direction === 'clay').map(theme => theme.id).sort();
+assert(JSON.stringify(clayCardIds) === JSON.stringify(definedClayIds), 'Card material directions differ from theme definitions.');
 
 function assert(condition, message) {
     if (!condition) throw new Error(message);
@@ -193,6 +202,15 @@ for (const theme of spec.themes) {
     assert(theme.designScope === 'target-for-implementation', `${theme.id}: design scope mismatch.`);
     const palette = theme.paletteHex;
     assert(palette && requiredColors.every(token => /^#[0-9A-F]{6}$/.test(palette[token] || '')), `${theme.id}: incomplete HEX palette.`);
+    const cardBlock = cardSurfaceCss.match(new RegExp(`body\\.${theme.id}-theme\\s*\\{([^}]+)\\}`));
+    assert(cardBlock, `${theme.id}: card surface palette is missing.`);
+    for (const [cssToken, paletteToken] of [
+        ['surface', 'surface'], ['raised', 'raised'], ['inset', 'inset'],
+        ['border', 'border'], ['ink', 'text'], ['muted', 'textMuted'], ['primary', 'primary']
+    ]) {
+        const match = cardBlock[1].match(new RegExp(`--theme-card-${cssToken}:\\s*(#[0-9A-F]{6})\\s*;`));
+        assert(match && match[1] === palette[paletteToken], `${theme.id}: card ${cssToken} differs from the theme palette.`);
+    }
     const dna = theme.iconDna;
     const iconColors = dna?.colorsHex;
     assert(dna && dna.silhouette.length > 70 && dna.coinFace.length > 70, `${theme.id}: icon shape or ducat design is missing.`);

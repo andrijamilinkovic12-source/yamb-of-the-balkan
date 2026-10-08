@@ -3690,7 +3690,15 @@ class ShopManager {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const source = activeTheme === 'dark'
             ? item?.greenIcon
-            : (activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon);
+            : (activeTheme === 'light'
+                ? item?.lightIcon
+                : (activeTheme === 'medium'
+                    ? item?.mediumIcon
+                    : (activeTheme === 'winter'
+                        ? item?.winterIcon
+                        : (activeTheme === 'neon'
+                            ? item?.neonIcon
+                            : (activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon)))));
         const safeSource = String(source || item?.easterIcon || '');
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }

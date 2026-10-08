@@ -36,6 +36,7 @@ body.light-theme {
     --board-announce: rgba(225,205,143,.94);
     --board-announce-ink: #392817;
     --board-die: linear-gradient(145deg, #fff4dd, #e7c99d);
+    --board-control-menu: linear-gradient(145deg, rgba(255,241,215,.96), rgba(225,188,137,.97));
 }
 
 body.medium-theme {
@@ -55,6 +56,7 @@ body.medium-theme {
     --board-announce: rgba(241,195,178,.92);
     --board-announce-ink: #431720;
     --board-die: linear-gradient(145deg, #87495a, #602e40);
+    --board-control-menu: linear-gradient(145deg, rgba(103,47,59,.96), rgba(55,19,31,.97));
 }
 
 body.winter-theme {
@@ -74,6 +76,7 @@ body.winter-theme {
     --board-announce: rgba(167,218,215,.93);
     --board-announce-ink: #18384B;
     --board-die: linear-gradient(145deg, #f7f9eb, #b9dce1);
+    --board-control-menu: linear-gradient(145deg, rgba(233,246,246,.96), rgba(172,211,219,.97));
 }
 
 body.neon-theme {
@@ -93,6 +96,7 @@ body.neon-theme {
     --board-announce: rgba(86,229,210,.89);
     --board-announce-ink: #102330;
     --board-die: linear-gradient(145deg, #34536c, #1d3348);
+    --board-control-menu: linear-gradient(145deg, rgba(28,47,68,.96), rgba(11,22,36,.97));
 }
 
 body.amethyst-theme {
@@ -112,6 +116,7 @@ body.amethyst-theme {
     --board-announce: rgba(229,196,110,.91);
     --board-announce-ink: #2D1D3C;
     --board-die: linear-gradient(145deg, #865b91, #563865);
+    --board-control-menu: linear-gradient(145deg, rgba(96,64,111,.96), rgba(48,31,63,.97));
 }
 
 body.easter-theme {
@@ -131,6 +136,7 @@ body.easter-theme {
     --board-announce: rgba(191,219,176,.93);
     --board-announce-ink: #30432D;
     --board-die: linear-gradient(145deg, #f4f8e5, #d3e5c5);
+    --board-control-menu: linear-gradient(145deg, rgba(255,248,234,.96), rgba(222,227,201,.97));
 }
 
 body.desert-theme {
@@ -150,6 +156,7 @@ body.desert-theme {
     --board-announce: rgba(193,218,186,.94);
     --board-announce-ink: #334437;
     --board-die: linear-gradient(145deg, #f9dfbc, #dda97e);
+    --board-control-menu: linear-gradient(145deg, rgba(249,225,191,.96), rgba(215,164,127,.97));
 }
 
 body.moon-theme {
@@ -169,6 +176,7 @@ body.moon-theme {
     --board-announce: rgba(202,217,213,.90);
     --board-announce-ink: #20252B;
     --board-die: linear-gradient(145deg, #646872, #3a3d49);
+    --board-control-menu: linear-gradient(145deg, rgba(65,69,79,.96), rgba(25,28,36,.97));
 }
 
 body.severna-theme {
@@ -188,6 +196,55 @@ body.severna-theme {
     --board-announce: rgba(138,227,228,.90);
     --board-announce-ink: #102A39;
     --board-die: linear-gradient(145deg, #477185, #274b64);
+    --board-control-menu: linear-gradient(145deg, rgba(39,67,89,.96), rgba(15,34,56,.97));
+}
+
+/* The header, dice dock and quick-settings panel continue the board material.
+   Green already has its established Clay treatment in teme.css. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #game-scene :is(.game-header,.controls-area) {
+    color: var(--board-ink) !important;
+    background: var(--board-header) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 6px 16px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
+    #game-scene :is(.game-header,.controls-area) {
+    box-shadow: 0 8px 18px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #game-scene .dice-container {
+    background: var(--board-cell) !important;
+    box-shadow: inset 2px 2px 5px var(--board-recess), inset -2px -2px 3px var(--board-light) !important;
+}
+
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
+    #game-scene .dice-container {
+    box-shadow: inset 4px 4px 8px var(--board-recess), inset -3px -3px 5px var(--board-light) !important;
+}
+
+body.easter-theme #game-scene .dice-container::before {
+    content: none !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #game-scene #game-dropdown-menu {
+    color: var(--board-ink) !important;
+    background: var(--board-control-menu) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 10px 23px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #game-scene #game-dropdown-menu > div:last-child {
+    background: var(--board-cell) !important;
+    border-color: var(--board-cell-edge) !important;
 }
 
 #game-scene .player-table {

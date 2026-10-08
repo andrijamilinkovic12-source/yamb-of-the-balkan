@@ -19,6 +19,10 @@ Oklop table u devet novih tema koristi alfa vrednosti 0,72–0,74, a polja 0,60�
 
 Dugmad za upis u tabeli, „Bacaj“ i „Najava“ koriste boje, materijal i dubinu aktivne teme. Dugmad za bacanje imaju diskretna normalna, aktivna i onemogućena stanja, bez ukrasnog svetlucanja. Podrazumevane kockice koriste paletu teme; kupljeni ili ručno izabrani skinovi kockica zadržavaju sopstveni izgled. Nijedno od ovih pravila ne menja širinu, visinu, razmake, font, veličinu tačkica, zonu dodira ili broj kockica.
 
+Gornja traka sa kontrolama, donja pozadina oko kockica i dugmadi, ležište kockica i otvoreni meni za brza podešavanja nastavljaju paletu i materijal iste table. Devet novih tema koristi odgovarajuće boje zaglavlja i polja table; otvoreni meni je nešto puniji radi čitljivosti. Clay teme imaju mekšu udubljenu/izdignutu dubinu, a mat plastika ravnomerniju površinu. Zelena zadržava postojeću referentnu obradu tih zona. Promena je samo vizuelna: dimenzije, položaji, kontrole i skrol ostaju isti.
+
 Neon Cyber ima jedan uzak tirkizni svetlosni trag koji polako obilazi samo spoljašnju ivicu table i potom se gasi. Pun ciklus traje 22 sekunde; nema treperenja, dodatnih tragova u ćelijama ni sloja preko teksta. Pri podešavanju `prefers-reduced-motion: reduce` animacija je isključena.
 
 Automatska provera u `scripts/check-theme-game-board.js` proverava deset paleta, ciljnu providnost kroz dva sloja, kontrast osnovnog teksta i Najave na tipičnoj boji pozadine i odsustvo geometrijskih deklaracija u novom CSS-u. Vizuelna provera na uređaju ostaje deo završne kontrole.
+
+Provera u lokalnom Android QA emulatoru 2026-10-08 (`scripts/qa-theme-game-surfaces-emulator.js`) potvrdila je da svih deset tema zaista primenjuje različite izračunate pozadine na gornju traku, donju zonu, ležište kockica i otvoreni meni podešavanja. Ovo proverava materijal u WebView-u, ali ne zamenjuje završni pregled tokom cele partije na fizičkom uređaju.

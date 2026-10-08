@@ -53,6 +53,14 @@ let lowestContrast = Infinity;
 for (const id of themeIds) {
     const tokens = blocks.get(id);
     required.forEach(token => assert(tokens[token], `${id}: missing ${token}`));
+    if (id !== 'dark') {
+        assert(tokens['board-control-menu'], `${id}: missing quick-settings surface`);
+        for (const stop of gradientStops(tokens['board-control-menu'])) {
+            assert(stop[3] >= 0.95, `${id}: quick-settings surface must remain legible`);
+            const ratio = contrast(color(tokens['board-ink']), over(stop, color('#78858A')));
+            assert(ratio >= 4.5, `${id}: quick-settings text contrast ${ratio.toFixed(2)} < 4.5`);
+        }
+    }
     const shell = gradientStops(tokens['board-shell']);
     const cells = gradientStops(tokens['board-cell']);
     const shellRange = id === 'dark' ? [0.68, 0.70] : [0.72, 0.74];
@@ -110,12 +118,16 @@ assert.equal(geometryDeclarations.length, 0, 'Board skin must not change geometr
 for (const selector of ['#game-scene #btn-bacaj', '#game-scene #btn-najava', '.dice.skin-default']) {
     assert(css.includes(selector), `Missing board control: ${selector}`);
 }
+for (const selector of ['#game-scene :is(.game-header,.controls-area)', '#game-scene .dice-container',
+    '#game-scene #game-dropdown-menu']) {
+    assert(css.includes(selector), `Missing themed game surface: ${selector}`);
+}
 assert(css.includes('body.neon-theme #game-scene .player-table::after'), 'Neon rim must be scoped to the Neon board');
 assert(css.includes('animation: neon-board-trace 22s linear infinite'), 'Neon rim must move slowly');
 assert(css.includes('mask-composite: exclude'), 'Neon trace must stay on the rim');
 assert(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?neon-theme #game-scene \.player-table::after[\s\S]*?animation: none !important/.test(css),
     'Neon rim must stop for reduced motion');
-assert(fs.readFileSync(path.join(root, 'www/index.html'), 'utf8').includes('theme-game-board.css?v=4'),
+assert(fs.readFileSync(path.join(root, 'www/index.html'), 'utf8').includes('theme-game-board.css?v=5'),
     'Board skin must be loaded by the game');
 
 console.log(`PASS: 10 translucent board palettes, minimum modeled text contrast ${lowestContrast.toFixed(2)}:1, geometry untouched.`);

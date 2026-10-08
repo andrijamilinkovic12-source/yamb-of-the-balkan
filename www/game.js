@@ -2176,7 +2176,7 @@ class YambApp {
             dailyChallenge: 'daily' }[roomId] || roomId;
         const roles = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily', 'global-chat',
             'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings', 'statistics'];
-        if (role === 'treasury') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png`;
+        if (role === 'treasury') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=2`;
         if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v3.png`;
         if (role === 'tournament') return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`;
         if (!roles.includes(role)) return '';
@@ -8864,6 +8864,14 @@ class YambApp {
                 || activeTheme === 'easter';
             const isDesertTheme = document.body.classList.contains('desert-theme')
                 || activeTheme === 'desert';
+            const isLightTheme = document.body.classList.contains('light-theme')
+                || activeTheme === 'light';
+            const isMediumTheme = document.body.classList.contains('medium-theme')
+                || activeTheme === 'medium';
+            const isWinterTheme = document.body.classList.contains('winter-theme')
+                || activeTheme === 'winter';
+            const isNeonTheme = document.body.classList.contains('neon-theme')
+                || activeTheme === 'neon';
             const isGreenTheme = activeTheme === 'dark'
                 && !document.body.classList.contains('easter-theme')
                 && !document.body.classList.contains('desert-theme')
@@ -8887,7 +8895,15 @@ class YambApp {
             const cardsHtml = earnedTrophies.map((trophy, index) => {
                 const trophyTitle = this.escapeHtml(textFor(trophy.title) || trophy.id);
                 const reward = Math.max(0, Number(trophy.reward) || 0);
-                const icon = isEasterTheme
+                const icon = isLightTheme && trophy.lightIcon
+                    ? `<img class="light-trophy-showcase-icon" src="${trophy.lightIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : isMediumTheme && trophy.mediumIcon
+                    ? `<img class="medium-trophy-showcase-icon" src="${trophy.mediumIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : isWinterTheme && trophy.winterIcon
+                    ? `<img class="winter-trophy-showcase-icon" src="${trophy.winterIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : isNeonTheme && trophy.neonIcon
+                    ? `<img class="neon-trophy-showcase-icon" src="${trophy.neonIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : isEasterTheme
                     ? '<img class="easter-trophy-showcase-icon" data-theme-src="assets/easter-soft-clay/statistics/trophies-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">'
                     : (isDesertTheme && trophy.desertIcon
                         ? `<img class="desert-trophy-showcase-icon" src="${trophy.desertIcon}" alt="" aria-hidden="true" decoding="async">`

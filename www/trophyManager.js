@@ -485,11 +485,27 @@ class TrophyManager {
             || activeTheme === 'easter';
         const isDesertTheme = document.body.classList.contains('desert-theme')
             || activeTheme === 'desert';
+        const isLightTheme = document.body.classList.contains('light-theme')
+            || activeTheme === 'light';
+        const isMediumTheme = document.body.classList.contains('medium-theme')
+            || activeTheme === 'medium';
+        const isWinterTheme = document.body.classList.contains('winter-theme')
+            || activeTheme === 'winter';
+        const isNeonTheme = document.body.classList.contains('neon-theme')
+            || activeTheme === 'neon';
         const isGreenTheme = activeTheme === 'dark'
             && !document.body.classList.contains('easter-theme')
             && !document.body.classList.contains('desert-theme')
             && !document.body.classList.contains('severna-theme');
-        const iconHtml = isEasterTheme
+        const iconHtml = isLightTheme && trophy.lightIcon
+            ? `<img class="light-trophy-popup-icon" src="${trophy.lightIcon}" alt="" aria-hidden="true" decoding="async">`
+            : isMediumTheme && trophy.mediumIcon
+            ? `<img class="medium-trophy-popup-icon" src="${trophy.mediumIcon}" alt="" aria-hidden="true" decoding="async">`
+            : isWinterTheme && trophy.winterIcon
+            ? `<img class="winter-trophy-popup-icon" src="${trophy.winterIcon}" alt="" aria-hidden="true" decoding="async">`
+            : isNeonTheme && trophy.neonIcon
+            ? `<img class="neon-trophy-popup-icon" src="${trophy.neonIcon}" alt="" aria-hidden="true" decoding="async">`
+            : isEasterTheme
             ? '<img class="easter-trophy-popup-icon" data-theme-src="assets/easter-soft-clay/statistics/trophies-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">'
             : (isDesertTheme && trophy.desertIcon
                 ? `<img class="desert-trophy-popup-icon" src="${trophy.desertIcon}" alt="" aria-hidden="true" decoding="async">`

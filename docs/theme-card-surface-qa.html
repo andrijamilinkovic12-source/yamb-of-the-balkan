@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="sr">
+<meta charset="utf-8">
+<link rel="stylesheet" href="../www/style.css">
+<link rel="stylesheet" href="../www/teme.css">
+<link rel="stylesheet" href="../www/theme-card-surfaces.css">
+<style>*,*::before,*::after{transition:none!important;animation:none!important}</style>
+<div class="card" id="qa-card">Kartica</div>
+<div class="modal-box" id="qa-modal">Okvir</div>
+<div class="stat-item" id="qa-subcard">Podkartica</div>
+<div class="settings-account-card" id="qa-settings-row">Podešavanje</div>
+<div class="friend-card" id="qa-friend">Prijatelj</div>
+<div class="friend-card add-new" id="qa-add-friend">Dodaj prijatelja</div>
+<div class="match-card" id="qa-match">Meč</div>
+<div class="ws-glass-card" id="qa-waiting">Igrač</div>
+<div class="waiting-header" id="qa-waiting-header">Čekanje</div>
+<div class="ws-player-card my-card" id="qa-player">Moj profil</div>
+<div class="tourney-stats-box" id="qa-tournament-stats">Turnir</div>
+<div class="daily-challenge-card" id="qa-daily">Izazov</div>
+<div class="reward-card" id="qa-reward">Nagrada</div>
+<div class="league-summary-card" id="qa-league">Liga</div>
+<div class="trophy-showcase-card" id="qa-trophy">Trofej</div>
+<div id="highscores-screen"><div class="hs-card modal-box" id="qa-shell">Soba</div></div>
+<pre id="qa-result"></pre>
+<script>
+const ids = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const selectors = ['qa-card', 'qa-modal', 'qa-subcard', 'qa-settings-row', 'qa-friend', 'qa-add-friend', 'qa-match', 'qa-waiting', 'qa-waiting-header', 'qa-player', 'qa-tournament-stats', 'qa-daily', 'qa-reward', 'qa-league', 'qa-trophy', 'qa-shell'];
+const output = {};
+for (const id of ids) {
+  document.body.className = id === 'dark' ? '' : `${id}-theme`;
+  output[id] = {};
+  for (const name of selectors) {
+    const element = document.getElementById(name);
+    const style = getComputedStyle(element);
+    output[id][name] = {
+      radius: style.borderRadius,
+      padding: style.padding,
+      minHeight: style.minHeight,
+      borderWidth: style.borderWidth,
+      width: style.width,
+      height: style.height,
+      color: style.color,
+      background: style.backgroundImage === 'none' ? style.backgroundColor : style.backgroundImage,
+      shadow: style.boxShadow,
+      blur: style.backdropFilter,
+    };
+  }
+}
+document.getElementById('qa-result').textContent = JSON.stringify(output);
+</script>
+</html>

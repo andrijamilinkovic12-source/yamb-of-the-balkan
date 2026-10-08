@@ -57,7 +57,7 @@ function expectedPath(theme, anchor) {
   const room = !anchor.inMenu;
   const canonical = green.match(/canonical\/([a-z-]+)-room-identity\//);
   if (canonical) return `assets/theme-packs/${theme}/canonical/${canonical[1]}-room-identity/${canonical[1]}-room${room ? '' : '-menu'}-v1.png`;
-  if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png`;
+  if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png?v=2`;
   if (green.includes('ducats-undo-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}ducats-undo-free-v3.png`;
   if (green.includes('champion-trophy-v1')) return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${room ? '-room' : ''}-v1.png`;
   throw new Error(`Unexpected anchor ${green}`);
@@ -114,7 +114,7 @@ for (const theme of themes) {
     assert.equal(image.style.getPropertyValue('visibility'), '', `${theme}: loaded icon did not become visible`);
     assert(image.classList.contains('theme-main-room-icon'), `${theme}: missing icon class for ${actual}`);
     assert(image.parentElement.classList.contains('theme-main-room-icon-host'), `${theme}: missing host class for ${actual}`);
-    const file = path.join(repo, 'www', actual);
+    const file = path.join(repo, 'www', actual.split('?')[0]);
     assert(fs.existsSync(file), `${theme}: missing runtime file ${actual}`);
     const required = image.anchor.inMenu ? 384 : 512;
     assert.deepEqual(pngSize(file), [required, required], `${theme}: wrong size for ${actual}`);

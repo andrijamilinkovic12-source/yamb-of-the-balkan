@@ -1,0 +1,265 @@
+/* Shared card geometry follows Green. Only the material and palette change by theme.
+   The four transparent mode cards and the game board have their own contracts. */
+body.light-theme {
+    --theme-card-surface: #FFF1D7; --theme-card-raised: #F3D6A8;
+    --theme-card-inset: #DBB47B; --theme-card-border: #9B754F;
+    --theme-card-ink: #392817; --theme-card-muted: #705237;
+    --theme-card-primary: #875024;
+}
+body.medium-theme {
+    --theme-card-surface: #431720; --theme-card-raised: #60252E;
+    --theme-card-inset: #301019; --theme-card-border: #AF7777;
+    --theme-card-ink: #FFF6F2; --theme-card-muted: #E6C9C4;
+    --theme-card-primary: #F1C3B2;
+}
+body.winter-theme {
+    --theme-card-surface: #FFF4E5; --theme-card-raised: #DEECEB;
+    --theme-card-inset: #BBD8DE; --theme-card-border: #6D9BA8;
+    --theme-card-ink: #18384B; --theme-card-muted: #476874;
+    --theme-card-primary: #0B5C8C;
+}
+body.neon-theme {
+    --theme-card-surface: #121B2B; --theme-card-raised: #1A2B40;
+    --theme-card-inset: #0C1625; --theme-card-border: #3A8A94;
+    --theme-card-ink: #F4FAFF; --theme-card-muted: #B5C7D6;
+    --theme-card-primary: #56E5D2;
+}
+body.amethyst-theme {
+    --theme-card-surface: #3C284B; --theme-card-raised: #563660;
+    --theme-card-inset: #2D1D3C; --theme-card-border: #A37EAE;
+    --theme-card-ink: #FBF6FF; --theme-card-muted: #E0CDE5;
+    --theme-card-primary: #F2C879;
+}
+body.easter-theme {
+    --theme-card-surface: #FFF8EA; --theme-card-raised: #EEE5D3;
+    --theme-card-inset: #D3D5B7; --theme-card-border: #879373;
+    --theme-card-ink: #3D4434; --theme-card-muted: #5F654F;
+    --theme-card-primary: #4D6B45;
+}
+body.desert-theme {
+    --theme-card-surface: #FFF0DA; --theme-card-raised: #F0D0AB;
+    --theme-card-inset: #D5B29B; --theme-card-border: #A87759;
+    --theme-card-ink: #443027; --theme-card-muted: #70513D;
+    --theme-card-primary: #87523C;
+}
+body.moon-theme {
+    --theme-card-surface: #252934; --theme-card-raised: #3B3F4B;
+    --theme-card-inset: #181B24; --theme-card-border: #858895;
+    --theme-card-ink: #F5F5F7; --theme-card-muted: #C9CAD2;
+    --theme-card-primary: #E1E2E7;
+}
+body.severna-theme {
+    --theme-card-surface: #182C44; --theme-card-raised: #24445B;
+    --theme-card-inset: #0F2137; --theme-card-border: #759DA9;
+    --theme-card-ink: #F5FBFF; --theme-card-muted: #C3D8E0;
+    --theme-card-primary: #8AE3E4;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) {
+    --theme-card-fill: linear-gradient(145deg,
+        color-mix(in srgb, var(--theme-card-surface) 94%, transparent),
+        color-mix(in srgb, var(--theme-card-raised) 90%, transparent));
+    --theme-subcard-fill: linear-gradient(145deg,
+        color-mix(in srgb, var(--theme-card-raised) 83%, transparent),
+        color-mix(in srgb, var(--theme-card-surface) 85%, transparent));
+    --theme-card-line: color-mix(in srgb, var(--theme-card-border) 62%, transparent);
+    --theme-card-shadow: 0 10px 24px color-mix(in srgb, var(--theme-card-inset) 38%, transparent),
+        inset 0 1px 0 color-mix(in srgb, var(--theme-card-surface) 58%, transparent);
+    --theme-subcard-shadow: 0 4px 10px color-mix(in srgb, var(--theme-card-inset) 25%, transparent),
+        inset 0 1px 0 color-mix(in srgb, var(--theme-card-surface) 46%, transparent);
+}
+
+/* Clay keeps a slightly fuller, uneven volume; smooth plastic has a cleaner edge. */
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme) {
+    --theme-card-shadow: 0 5px 0 color-mix(in srgb, var(--theme-card-inset) 72%, transparent),
+        0 13px 24px color-mix(in srgb, var(--theme-card-inset) 43%, transparent),
+        inset 2px 2px 2px color-mix(in srgb, var(--theme-card-surface) 44%, transparent);
+    --theme-subcard-shadow: 0 3px 0 color-mix(in srgb, var(--theme-card-inset) 55%, transparent),
+        0 6px 12px color-mix(in srgb, var(--theme-card-inset) 27%, transparent);
+}
+
+/* Green's 20px / 12px / 180px content card geometry is shared by all nine packs. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .card {
+    box-sizing: border-box;
+    min-height: 180px !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
+    border: 1px solid var(--theme-card-line) !important;
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #riznica-screen#riznica-screen .card {
+    border: 1px solid var(--theme-card-line) !important;
+    background: var(--theme-card-fill) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .card:is(.unlocked,.active-skin,.active-effect) {
+    border-color: var(--theme-card-primary) !important;
+}
+
+/* Room frames retain the same width, padding, clipping and scrolling rules as Green. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.modal-box,.modal-card,.custom-modal,.global-chat-shell,.online-players-shell,.tourney-shell,.settings-shell,.rules-card,.daily-challenge-card,.daily-glass-card,.reward-card,.trophy-showcase-panel,.waiting-screen-shell,.economy-card-header,.h2h-detail-card) {
+    box-sizing: border-box;
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Small cards and inset rows use the same Green layout and the theme's softer surface. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.stat-item,.settings-account-card,.settings-row,.online-player-card,.ws-glass-card,.friend-card:not(.add-new),.match-card,.game-over-score-card,.league-summary-card,.tourney-registration-panel,.trophy-showcase-card,.daily-score-box) {
+    box-sizing: border-box;
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-subcard-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.hs-card-header,.hs-card-toolbar,.settings-card-header,.tourney-card-header,.stats-card-header,.economy-card-header) {
+    background: color-mix(in srgb, var(--theme-card-raised) 72%, transparent) !important;
+    border-color: var(--theme-card-line) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.settings-section,.hs-card-toolbar,.hs-card-header,.stats-card-header,.tourney-card-header) {
+    border-color: var(--theme-card-line) !important;
+}
+
+/* Green room geometry at the same viewport, language and state. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) {
+    --theme-room-top: max(10px, var(--safe-top));
+    --theme-room-bottom: max(16px, calc(var(--safe-bottom) + 8px));
+    --theme-room-side: max(10px, env(safe-area-inset-left), env(safe-area-inset-right));
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(#highscores-screen,#stats-screen,#settings-screen,#tournament-screen) {
+    padding-top: var(--theme-room-top) !important;
+    padding-bottom: var(--theme-room-bottom) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(#highscores-screen .hs-card.modal-box,#stats-screen .stats-shell,#settings-screen .settings-shell,#tournament-screen .tourney-shell) {
+    box-sizing: border-box;
+    width: calc(100vw - var(--theme-room-side) - var(--theme-room-side)) !important;
+    max-width: 100% !important;
+    border-radius: 20px !important;
+    border: 1px solid var(--theme-card-line) !important;
+    background: var(--theme-card-fill) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(#rules-overlay-ui .rules-card,#league-modal-overlay > .modal-box,#global-chat-overlay .global-chat-shell,#online-players-overlay .online-players-shell,#pi-modal-overlay .pi-modal-shell,#streak-overlay .streak-modal-shell,#undo-menu-overlay .economy-shell) {
+    box-sizing: border-box;
+    top: var(--theme-room-top) !important;
+    left: var(--theme-room-side) !important;
+    width: calc(100vw - var(--theme-room-side) - var(--theme-room-side)) !important;
+    max-width: 100% !important;
+    height: calc(var(--global-chat-height, 100dvh) - var(--theme-room-top) - var(--theme-room-bottom)) !important;
+    max-height: calc(var(--global-chat-height, 100dvh) - var(--theme-room-top) - var(--theme-room-bottom)) !important;
+    padding: 0 !important;
+    border: 1px solid var(--theme-card-line) !important;
+    border-radius: 20px !important;
+    background: var(--theme-card-fill) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-shell {
+    height: calc(var(--global-chat-height, 100dvh) - var(--economy-native-banner-space, 0px) - var(--theme-room-top) - var(--theme-room-bottom)) !important;
+    max-height: calc(var(--global-chat-height, 100dvh) - var(--economy-native-banner-space, 0px) - var(--theme-room-top) - var(--theme-room-bottom)) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-card-header {
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: 58px !important;
+    margin: 0 !important;
+    padding: 11px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--theme-card-line) !important;
+    border-radius: 20px 20px 0 0 !important;
+    box-shadow: none !important;
+}
+
+/* Specific radii and border widths inherited from Green, without resizing content. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .modal-box:not(.hs-card):not(.rules-card) { border-radius: 24px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .reward-card { border-width: 2px !important; border-radius: 20px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.stat-item,.match-card,.trophy-showcase-card) { border-radius: 8px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.settings-account-card,.settings-row,.friend-card) { border-radius: 12px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .friend-card.add-new {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-subcard-fill) !important;
+    border-color: var(--theme-card-primary) !important;
+    border-width: 2px !important;
+    border-style: dashed !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Online waiting and tournament interiors keep their Green dimensions and state borders. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.waiting-header,.ws-player-card,.waiting-hof,.tourney-stats-box,.ws-stats) {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-subcard-fill) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .ws-player-card.my-card { border-color: var(--theme-card-primary) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tourney-stats-box { border-radius: 12px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(.economy-reward-card,.economy-token-box) {
+    border-color: var(--theme-card-line) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #winner-modal-overlay {
+    box-sizing: border-box;
+    padding: var(--safe-top) max(12px, env(safe-area-inset-left), env(safe-area-inset-right)) calc(var(--safe-bottom) + 8px) !important;
+    align-items: center;
+    justify-content: center;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #winner-modal-overlay > .quarter-winner-card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(3px, .8vh, 8px);
+    width: min(400px, 100%) !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: clamp(14px, 2vh, 22px) clamp(15px, 4vw, 22px) !important;
+    border-radius: 20px !important;
+    border: 1px solid var(--theme-card-line) !important;
+    background: var(--theme-card-fill) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    color: var(--theme-card-ink) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-align: center;
+}

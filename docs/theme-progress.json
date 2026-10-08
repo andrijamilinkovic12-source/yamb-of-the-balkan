@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-07",
-  "activeThemeId": null,
-  "workState": "nine-rewarded-video-packs-linked-pending-runtime-visual-qa",
-  "activeWorkPackage": "Svih devet nezelenih tema ima 15 povezanih ikona glavnih soba, kanonske dukate, Undo token i sedam povezanih PNG uloga za nagradni video po temi (63 fajla). Nagradni video ima aktivno i nedostupno stanje u dve veličine, jednu nagradu za Dnevni izazov i Riznicu i dva dukata za Solo; svaki dukat ima pet tačaka. Pet ikona donjeg reda glavnog menija po temi prikazuje se bez kvadratnih podloga, uz sekvencijalni talas samo na ikonama. Nove ikone Riznice i Turnira u meniju su bez podloga i starih SVG duplikata, sa pokretom prema Zelenoj temi. Četiri centralna moda koriste nove tematske PNG-ove u svih devet tema, istu geometriju i pokret kao Zelena, providne kartice bez blura i tekst bez emoji duplikata. Providnost je izričito primenjena i na Zelenu. Pri promeni teme pozadina i 15 vidljivih PNG elemenata novog menija pripremaju se pre vizuelnog prebacivanja, a stari PNG se sakriva dok novi nije učitan. Plavi okean nema stare SVG ikone glavnog menija ni stare nacrtane simbole; novi PNG-ovi stoje na Green pozicijama. Watermark Kvartalne lige je vraćen u svih deset tema kao tematski kanonski PNG; watermark Indeksa moći ostaje uklonjen. Gornje tri kartice imaju Green geometriju i raspored teksta, a ikone Online igrača i Dukata imaju Vaskršnji blagi motion i u Zelenoj. Putanje, dimenzije, RGBA i automatsko mapiranje prolaze; vizuelna provera u stvarnoj aplikaciji i na telefonu, te ostale porodice kataloga, predstoje. Svih deset tema ima originalni PNG logo igre 1672×941 na splash i login ekranu, bez starih tekstualnih logotipa; Green v2 je samostalni Clay natpis bez oblacica.",
+  "updatedOn": "2026-10-08",
+  "activeThemeId": "neon",
+  "workState": "neon-achievement-trophies-linked-android-three-surfaces-checked",
+  "activeWorkPackage": "Svih devet nezelenih tema ima povezane glavne ikone soba, kanonske dukate, Undo token i po sedam PNG uloga za nagradni video. Svetlo Zlato, Trula Visnja, Plavi Okean i Neon Cyber imaju po 26 originalnih trofeja dostignuca. Android qaLocal WebView je za sva cetiri seta potvrdio 26/26 ucitanih PNG-ova u Riznici i nove ikone u zavrsnom prikazu i obavestenju. Dokazi su pojedinacni QA zapisi i snimci. Trofeji preostalih pet tema i ostale porodice kataloga predstoje; korisnicko odobrenje kompleta nije zabelezeno.",
   "requiredSurfaceIds": [
     "splash-login",
     "main-menu",
@@ -244,9 +244,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 26
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Prvih 26 originalnih trofeja dostignuca za Svetlo Zlato imaju mastere, standardne PNG-ove i povezana tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-light-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "medium",
@@ -347,9 +347,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 26
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih Trula Visnja trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-medium-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "winter",
@@ -450,9 +450,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 26
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih Plavi Okean trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-winter-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "neon",
@@ -553,9 +553,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 26
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih Neon Cyber trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u vidljivom obavestenju. Dokaz: docs/qa-neon-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "amethyst",

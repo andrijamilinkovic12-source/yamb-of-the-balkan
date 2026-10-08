@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "themeId": "medium",
+  "slots": {
+    "achilles": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/achilles-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/achilles-v1.png",
+      "sizeBytes": 42311,
+      "opticalBoundsPx": [
+        27,
+        22,
+        228,
+        234
+      ]
+    },
+    "apprentice": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/apprentice-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/apprentice-v1.png",
+      "sizeBytes": 46550,
+      "opticalBoundsPx": [
+        22,
+        24,
+        234,
+        232
+      ]
+    },
+    "close_call": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/close_call-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/close_call-v1.png",
+      "sizeBytes": 38660,
+      "opticalBoundsPx": [
+        22,
+        60,
+        234,
+        196
+      ]
+    },
+    "concrete": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/concrete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/concrete-v1.png",
+      "sizeBytes": 40931,
+      "opticalBoundsPx": [
+        22,
+        42,
+        234,
+        214
+      ]
+    },
+    "firecracker": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/firecracker-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/firecracker-v1.png",
+      "sizeBytes": 31572,
+      "opticalBoundsPx": [
+        27,
+        22,
+        229,
+        234
+      ]
+    },
+    "first_play": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/first_play-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/first_play-v1.png",
+      "sizeBytes": 56426,
+      "opticalBoundsPx": [
+        22,
+        22,
+        233,
+        234
+      ]
+    },
+    "godlike": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/godlike-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/godlike-v1.png",
+      "sizeBytes": 55893,
+      "opticalBoundsPx": [
+        22,
+        22,
+        233,
+        234
+      ]
+    },
+    "grandmaster": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/grandmaster-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/grandmaster-v1.png",
+      "sizeBytes": 38205,
+      "opticalBoundsPx": [
+        57,
+        22,
+        199,
+        234
+      ]
+    },
+    "hazard": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/hazard-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/hazard-v1.png",
+      "sizeBytes": 47107,
+      "opticalBoundsPx": [
+        32,
+        22,
+        224,
+        234
+      ]
+    },
+    "immortal": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/immortal-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/immortal-v1.png",
+      "sizeBytes": 68422,
+      "opticalBoundsPx": [
+        22,
+        26,
+        234,
+        230
+      ]
+    },
+    "kafana": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/kafana-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/kafana-v1.png",
+      "sizeBytes": 51538,
+      "opticalBoundsPx": [
+        22,
+        39,
+        234,
+        216
+      ]
+    },
+    "legend": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/legend-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/legend-v1.png",
+      "sizeBytes": 33137,
+      "opticalBoundsPx": [
+        60,
+        22,
+        195,
+        234
+      ]
+    },
+    "math": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/math-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/math-v1.png",
+      "sizeBytes": 62226,
+      "opticalBoundsPx": [
+        22,
+        30,
+        234,
+        226
+      ]
+    },
+    "miner": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/miner-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/miner-v1.png",
+      "sizeBytes": 60540,
+      "opticalBoundsPx": [
+        22,
+        28,
+        234,
+        228
+      ]
+    },
+    "minimal": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/minimal-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/minimal-v1.png",
+      "sizeBytes": 44193,
+      "opticalBoundsPx": [
+        22,
+        37,
+        234,
+        218
+      ]
+    },
+    "mythic": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/mythic-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/mythic-v1.png",
+      "sizeBytes": 56672,
+      "opticalBoundsPx": [
+        22,
+        23,
+        234,
+        233
+      ]
+    },
+    "night_owl": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/night_owl-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/night_owl-v1.png",
+      "sizeBytes": 49344,
+      "opticalBoundsPx": [
+        35,
+        22,
+        221,
+        234
+      ]
+    },
+    "perfectionist": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/perfectionist-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/perfectionist-v1.png",
+      "sizeBytes": 54465,
+      "opticalBoundsPx": [
+        22,
+        40,
+        234,
+        216
+      ]
+    },
+    "potato": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/potato-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/potato-v1.png",
+      "sizeBytes": 60878,
+      "opticalBoundsPx": [
+        22,
+        24,
+        234,
+        231
+      ]
+    },
+    "prophet": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/prophet-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/prophet-v1.png",
+      "sizeBytes": 44255,
+      "opticalBoundsPx": [
+        22,
+        48,
+        234,
+        207
+      ]
+    },
+    "score_1000": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/score_1000-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/score_1000-v1.png",
+      "sizeBytes": 38424,
+      "opticalBoundsPx": [
+        22,
+        46,
+        234,
+        209
+      ]
+    },
+    "sniper": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/sniper-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/sniper-v1.png",
+      "sizeBytes": 59237,
+      "opticalBoundsPx": [
+        22,
+        25,
+        234,
+        231
+      ]
+    },
+    "spite": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/spite-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/spite-v1.png",
+      "sizeBytes": 45928,
+      "opticalBoundsPx": [
+        41,
+        22,
+        215,
+        234
+      ]
+    },
+    "surgeon": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/surgeon-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/surgeon-v1.png",
+      "sizeBytes": 61273,
+      "opticalBoundsPx": [
+        23,
+        22,
+        233,
+        234
+      ]
+    },
+    "sveti_ilija": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/sveti_ilija-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/sveti_ilija-v1.png",
+      "sizeBytes": 55307,
+      "opticalBoundsPx": [
+        22,
+        26,
+        234,
+        230
+      ]
+    },
+    "veteran": {
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/veteran-master-v1.png",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/veteran-v1.png",
+      "sizeBytes": 74877,
+      "opticalBoundsPx": [
+        22,
+        27,
+        234,
+        228
+      ]
+    }
+  }
+}

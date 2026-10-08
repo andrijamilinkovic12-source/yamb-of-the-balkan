@@ -1,0 +1,451 @@
+/* Light Gold achievement trophies: same geometry as Green, own matte icon material. */
+body.light-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.light-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.light-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(57, 40, 23, .22));
+}
+
+body.light-theme .light-trophy-popup-icon,
+body.light-theme .light-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.light-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(57, 40, 23, .22));
+}
+
+body.light-theme .trophy-showcase-icon {
+    background: rgba(255, 241, 215, .76);
+    border: 1px solid rgba(135, 80, 36, .26);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .36);
+}
+
+body.light-theme .trophy-showcase {
+    background: rgba(57, 40, 23, .48);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.light-theme .trophy-showcase-panel {
+    background: linear-gradient(150deg, rgba(255, 241, 215, .98), rgba(243, 214, 168, .97));
+    border: 1px solid rgba(135, 80, 36, .38);
+    box-shadow: 0 15px 28px rgba(57, 40, 23, .25), inset 0 1px 0 rgba(255, 255, 255, .55);
+    color: #392817;
+}
+
+body.light-theme .trophy-showcase-panel::before {
+    content: none;
+}
+
+body.light-theme .trophy-showcase-kicker {
+    color: #4A311B;
+    text-shadow: none;
+}
+
+body.light-theme .trophy-showcase-subtitle,
+body.light-theme .trophy-showcase-total {
+    color: #705237;
+}
+
+body.light-theme .trophy-showcase-card {
+    background: rgba(255, 255, 255, .42);
+    border-color: rgba(135, 80, 36, .24);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .50), 0 5px 12px rgba(87, 52, 28, .10);
+}
+
+body.light-theme .trophy-showcase-name {
+    color: #392817;
+}
+
+body.light-theme .trophy-showcase-reward {
+    color: #35613D;
+    background: rgba(53, 97, 61, .10);
+    border-color: rgba(53, 97, 61, .28);
+}
+
+body.light-theme .trophy-showcase-total {
+    background: rgba(219, 180, 123, .27);
+    border-color: rgba(135, 80, 36, .24);
+}
+
+body.light-theme .trophy-showcase-total strong {
+    color: #875024;
+}
+
+body.light-theme .trophy-popup {
+    background: rgba(255, 241, 215, .98);
+    border: 1px solid rgba(135, 80, 36, .35);
+    box-shadow: 0 10px 24px rgba(57, 40, 23, .22), inset 0 1px 0 rgba(255, 255, 255, .52);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.light-theme .trophy-popup .tp-title {
+    color: #875024;
+    text-shadow: none;
+}
+
+body.light-theme .trophy-popup .tp-desc {
+    color: #392817;
+}
+
+body.light-theme .trophy-popup .tp-reward {
+    color: #35613D;
+    background: rgba(53, 97, 61, .10);
+    border-color: rgba(53, 97, 61, .28);
+}
+
+/* Trula Višnja: broad matte clay forms against a deep cherry surface. */
+body.medium-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.medium-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.medium-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(48, 16, 25, .32));
+}
+
+body.medium-theme .medium-trophy-popup-icon,
+body.medium-theme .medium-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.medium-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(48, 16, 25, .32));
+}
+
+body.medium-theme .trophy-showcase-icon {
+    background: rgba(139, 48, 56, .34);
+    border: 1px solid rgba(241, 195, 178, .25);
+    box-shadow: inset 0 1px 0 rgba(255, 237, 230, .10);
+}
+
+body.medium-theme .trophy-showcase {
+    background: rgba(48, 16, 25, .57);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.medium-theme .trophy-showcase-panel {
+    background: linear-gradient(150deg, rgba(96, 37, 46, .98), rgba(67, 23, 32, .98));
+    border: 1px solid rgba(241, 195, 178, .28);
+    box-shadow: 0 15px 28px rgba(48, 16, 25, .35), inset 0 1px 0 rgba(255, 237, 230, .12);
+    color: #FFF6F2;
+}
+
+body.medium-theme .trophy-showcase-panel::before {
+    content: none;
+}
+
+body.medium-theme .trophy-showcase-kicker,
+body.medium-theme .trophy-showcase-name {
+    color: #FFF6F2;
+    text-shadow: none;
+}
+
+body.medium-theme .trophy-showcase-subtitle,
+body.medium-theme .trophy-showcase-total {
+    color: #E6C9C4;
+}
+
+body.medium-theme .trophy-showcase-card {
+    background: rgba(255, 246, 242, .075);
+    border-color: rgba(241, 195, 178, .18);
+    box-shadow: inset 0 1px 0 rgba(255, 237, 230, .09), 0 5px 12px rgba(48, 16, 25, .18);
+}
+
+body.medium-theme .trophy-showcase-reward,
+body.medium-theme .trophy-popup .tp-reward {
+    color: #F1C3B2;
+    background: rgba(241, 195, 178, .10);
+    border-color: rgba(241, 195, 178, .28);
+}
+
+body.medium-theme .trophy-showcase-total {
+    background: rgba(241, 195, 178, .08);
+    border-color: rgba(241, 195, 178, .22);
+}
+
+body.medium-theme .trophy-showcase-total strong {
+    color: #FFEDE6;
+}
+
+body.medium-theme .trophy-popup {
+    background: rgba(67, 23, 32, .98);
+    border: 1px solid rgba(241, 195, 178, .28);
+    box-shadow: 0 10px 24px rgba(48, 16, 25, .34), inset 0 1px 0 rgba(255, 237, 230, .10);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.medium-theme .trophy-popup .tp-title {
+    color: #FFEDE6;
+    text-shadow: none;
+}
+
+body.medium-theme .trophy-popup .tp-desc {
+    color: #E6C9C4;
+}
+
+/* Plavi Okean: clean blue matte rubber on a calm warm-cream surface. */
+body.winter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.winter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.winter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(23, 61, 91, .22));
+}
+
+body.winter-theme .winter-trophy-popup-icon,
+body.winter-theme .winter-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.winter-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(23, 61, 91, .22));
+}
+
+body.winter-theme .trophy-showcase-icon {
+    background: rgba(222, 236, 235, .76);
+    border: 1px solid rgba(29, 102, 139, .22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .50);
+}
+
+body.winter-theme .trophy-showcase {
+    background: rgba(23, 61, 91, .50);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.winter-theme .trophy-showcase-panel {
+    background: linear-gradient(150deg, rgba(255, 244, 229, .99), rgba(222, 236, 235, .98));
+    border: 1px solid rgba(29, 102, 139, .28);
+    box-shadow: 0 15px 28px rgba(23, 61, 91, .24), inset 0 1px 0 rgba(255, 255, 255, .52);
+    color: #18384B;
+}
+
+body.winter-theme .trophy-showcase-panel::before {
+    content: none;
+}
+
+body.winter-theme .trophy-showcase-kicker,
+body.winter-theme .trophy-showcase-name {
+    color: #173D5B;
+    text-shadow: none;
+}
+
+body.winter-theme .trophy-showcase-subtitle,
+body.winter-theme .trophy-showcase-total {
+    color: #476874;
+}
+
+body.winter-theme .trophy-showcase-card {
+    background: rgba(255, 255, 255, .55);
+    border-color: rgba(29, 102, 139, .20);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 5px 12px rgba(23, 61, 91, .10);
+}
+
+body.winter-theme .trophy-showcase-reward,
+body.winter-theme .trophy-popup .tp-reward {
+    color: #0B5C8C;
+    background: rgba(11, 92, 140, .10);
+    border-color: rgba(11, 92, 140, .23);
+}
+
+body.winter-theme .trophy-showcase-total {
+    background: rgba(11, 92, 140, .07);
+    border-color: rgba(11, 92, 140, .19);
+}
+
+body.winter-theme .trophy-showcase-total strong {
+    color: #0B5C8C;
+}
+
+body.winter-theme .trophy-popup {
+    background: rgba(255, 244, 229, .99);
+    border: 1px solid rgba(29, 102, 139, .28);
+    box-shadow: 0 10px 24px rgba(23, 61, 91, .22), inset 0 1px 0 rgba(255, 255, 255, .50);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.winter-theme .trophy-popup .tp-title {
+    color: #173D5B;
+    text-shadow: none;
+}
+
+body.winter-theme .trophy-popup .tp-desc {
+    color: #476874;
+}
+
+/* Neon Cyber: matte navy plastic with one restrained cyan edge. */
+body.neon-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.neon-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.neon-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(8, 13, 24, .42));
+}
+
+body.neon-theme .neon-trophy-popup-icon,
+body.neon-theme .neon-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.neon-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(8, 13, 24, .42));
+}
+
+body.neon-theme .trophy-showcase-icon {
+    background: rgba(25, 52, 85, .58);
+    border: 1px solid rgba(86, 229, 210, .27);
+    box-shadow: inset 0 1px 0 rgba(233, 255, 255, .10);
+}
+
+body.neon-theme .trophy-showcase {
+    background: rgba(8, 13, 24, .66);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.neon-theme .trophy-showcase-panel {
+    background: linear-gradient(150deg, rgba(26, 43, 64, .99), rgba(18, 27, 43, .99));
+    border: 1px solid rgba(86, 229, 210, .28);
+    box-shadow: 0 15px 28px rgba(8, 13, 24, .46), inset 0 1px 0 rgba(233, 255, 255, .09);
+    color: #F4FAFF;
+}
+
+body.neon-theme .trophy-showcase-panel::before {
+    content: none;
+}
+
+body.neon-theme .trophy-showcase-kicker,
+body.neon-theme .trophy-showcase-name {
+    color: #E9FFFF;
+    text-shadow: none;
+}
+
+body.neon-theme .trophy-showcase-subtitle,
+body.neon-theme .trophy-showcase-total {
+    color: #B5C7D6;
+}
+
+body.neon-theme .trophy-showcase-card {
+    background: rgba(25, 52, 85, .42);
+    border-color: rgba(86, 229, 210, .18);
+    box-shadow: inset 0 1px 0 rgba(233, 255, 255, .08), 0 5px 12px rgba(8, 13, 24, .20);
+}
+
+body.neon-theme .trophy-showcase-reward,
+body.neon-theme .trophy-popup .tp-reward {
+    color: #56E5D2;
+    background: rgba(86, 229, 210, .10);
+    border-color: rgba(86, 229, 210, .27);
+}
+
+body.neon-theme .trophy-showcase-total {
+    background: rgba(86, 229, 210, .07);
+    border-color: rgba(86, 229, 210, .18);
+}
+
+body.neon-theme .trophy-showcase-total strong {
+    color: #E9FFFF;
+}
+
+body.neon-theme .trophy-popup {
+    background: rgba(18, 27, 43, .99);
+    border: 1px solid rgba(86, 229, 210, .28);
+    box-shadow: 0 10px 24px rgba(8, 13, 24, .42), inset 0 1px 0 rgba(233, 255, 255, .09);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.neon-theme .trophy-popup .tp-title {
+    color: #E9FFFF;
+    text-shadow: none;
+}
+
+body.neon-theme .trophy-popup .tp-desc {
+    color: #B5C7D6;
+}

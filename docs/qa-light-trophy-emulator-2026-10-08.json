@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-08",
+  "device": "Easter_QA_10GB Android emulator",
+  "build": "qaLocal 12.2 (versionCode 112)",
+  "viewportCssPx": [
+    412,
+    892
+  ],
+  "devicePixelRatio": 3.5,
+  "language": "en",
+  "theme": "light",
+  "trophyCount": 26,
+  "loadedPngCount": 26,
+  "firstCardSource": "assets/theme-packs/light/canonical/achievement-trophies/first_play-v1.png?v=1&card=384-v1",
+  "imageDisplay": "block",
+  "fallbackDisplay": "none",
+  "screenshots": [
+    "docs/qa-light-trophy-emulator.png",
+    "docs/qa-light-trophy-showcase-emulator.png",
+    "docs/qa-light-trophy-popup-emulator.png"
+  ],
+  "showcaseIconsLoaded": 2,
+  "popupIconLoaded": true
+}

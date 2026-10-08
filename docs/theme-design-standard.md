@@ -90,17 +90,23 @@ Svaka tema ima 21 precizan HEX token u registru: pozadina, površina, izdignuta 
 
 | Tema | Pravac | Pozadina | Površina | Primarna akcija | Akcenat | Tekst |
 |---|---|---|---|---|---|---|
-| Svetlo Zlato | Mat silikon / Meka plastika | `#D8B466` | `#FFF4D6` | `#885309` | `#B05E28` | `#35240A` |
-| Trula Višnja | Clay | `#210A14` | `#391523` | `#F1C3B2` | `#E6AA66` | `#FFF6F2` |
-| Plavi Okean | Mat silikon / Meka plastika | `#D8EDF1` | `#F6FCFB` | `#126478` | `#A85646` | `#123B4A` |
+| Svetlo Zlato | Mat silikon / Meka plastika | `#E6BE83` | `#FFF1D7` | `#875024` | `#76612B` | `#392817` |
+| Trula Višnja | Clay | `#681D25` | `#431720` | `#F1C3B2` | `#E39A70` | `#FFF6F2` |
+| Plavi Okean | Mat silikon / Meka plastika | `#0E5A9B` | `#FFF4E5` | `#0B5C8C` | `#BD684A` | `#18384B` |
 | Neon Cyber | Mat silikon / Meka plastika | `#080D18` | `#121B2B` | `#56E5D2` | `#F08CE3` | `#F4FAFF` |
-| Kraljevski Ametist | Clay | `#1C102D` | `#332044` | `#E5C46E` | `#C3A3EF` | `#FBF6FF` |
-| Vaskršnja | Mat silikon / Meka plastika | `#F1E4E2` | `#FFF9F4` | `#745298` | `#3F705A` | `#3F2C48` |
-| Pustinjsko Staklo | Clay | `#D9B98C` | `#F9EEDB` | `#92503B` | `#2D6B6F` | `#3D2A1C` |
-| Mesečev Sjaj | Clay | `#070C17` | `#172132` | `#D4E1F4` | `#88B8EC` | `#F6F9FD` |
+| Kraljevski Ametist | Clay | `#5A386A` | `#3C284B` | `#F2C879` | `#D691B5` | `#FBF6FF` |
+| Vaskršnja | Mat silikon / Meka plastika | `#E5D4B9` | `#FFF8EA` | `#4D6B45` | `#A66443` | `#3D4434` |
+| Pustinjsko Staklo | Clay | `#D79269` | `#FFF0DA` | `#87523C` | `#396B72` | `#443027` |
+| Mesečev Sjaj | Clay | `#08090C` | `#252934` | `#E1E2E7` | `#A7A9B8` | `#F5F5F7` |
 | Severna Maglina | Mat silikon / Meka plastika | `#0B1830` | `#182C44` | `#8AE3E4` | `#C3ACEA` | `#F5FBFF` |
 
 Ovi HEX tokeni ostaju trenutne ciljne palete; promena pravca sama po sebi nije razlog da se bez provere menjaju boje. Clay koristi blagu ručno vajanu mekoću bez fotorealistične teksture. Mat silikon / Meka plastika koristi čiste, napumpane oblike bez otiska gline, staklene providnosti ili metalnog sjaja. Nazivi poput „Pustinjsko Staklo“ označavaju temu i paletu, ne dodatni materijalni pravac.
+
+### Kartice, podkartice i okviri soba
+
+Devet nezelenih tema sada koristi zajedničku geometriju Zelene i sopstvene `surface`, `raised`, `inset`, `border`, `text` i `primary` boje iz `theme-definitions.json`. Kartica sadržaja ima radius **20 px**, padding **12 px** i minimalnu visinu **180 px**. Odgovarajuće podkartice i puni okviri soba imaju isti radius, padding, širinu i granice kao Zelena pri istom viewportu i stanju. Clay teme imaju puniju meku dubinu; mat silikon i meka plastika čistiju mat ivicu. Jedan obris i kontrolisana senka čuvaju izgled bez kiča. Produkcioni sloj je `www/theme-card-surfaces.css`.
+
+Četiri centralne kartice glavnog menija zadržavaju svoj posebno dogovoreni providni staklasti sloj, a tabla za igranje zasebnu paletu i providnost. Provera izračunatog CSS-a u pregledaču potvrdila je geometriju 13 reprezentativnih tipova kartica, podkartica i okvira za svih deset tema na prikazima 320 × 568, 360 × 780, 412 × 915 i 768 × 1024 CSS px, bez odstupanja u proveravanim dimenzijama. U ponovljenoj proveri ispravljene su širina isprekidane ivice kartice za dodavanje prijatelja i radius statistike turnira u Vaskršnjoj temi. Android prikaz još nije potvrđen za ovaj sloj.
 
 UI tipografija je zajednička radi istog prelamanja i veličine kartica: **Montserrat**, težine 400/600/700/800; rezervni font Arial. Citat koristi Georgia italic. Skala za nove komponente: 12 px natpis, 14 px pomoćni tekst, 16 px osnovni tekst, 18 px naslov kartice, 22 px naslov odeljka, 28 px naslov sobe; line-height 1,45 za tekst i 1,2 za naslove. Postojeće Green komponente zadržavaju svoje aktivne metrike i služe kao referenca za odgovarajuće komponente drugih tema. Tematske boje teksta su u HEX tokenima, a posebna tipografija glavnog logotipa nalazi se unutar njegovog PNG-a.
 

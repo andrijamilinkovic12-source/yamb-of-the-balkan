@@ -1,0 +1,855 @@
+{
+  "date": "2026-10-08",
+  "device": "Easter_QA_10GB Android emulator",
+  "build": "qaLocal 12.2 (versionCode 112)",
+  "apkModifiedAt": "2026-10-08T19:38:14.377Z",
+  "result": "runtime asset routing and decoding passed; real rewarded-ad transaction and room-level visual QA remain separate",
+  "themes": [
+    {
+      "theme": "light",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/light/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/light/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "medium",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/medium/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/medium/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "winter",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/winter/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/winter/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "neon",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/neon/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/neon/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/amethyst/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/amethyst/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "easter",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/easter/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/easter/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "desert",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/desert/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/desert/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "moon",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/moon/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/moon/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    },
+    {
+      "theme": "severna",
+      "viewport": [
+        412,
+        892,
+        3.5
+      ],
+      "language": "en",
+      "mapped": [
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/treasury/reward-video-v3.png",
+          "source": "assets/theme-packs/severna/treasury/reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+          "source": "assets/theme-packs/severna/solo/finish-reward-video-v3.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        },
+        {
+          "original": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "source": "assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v1.png"
+        }
+      ],
+      "legacyCount": 31,
+      "visibleLegacyCount": 0,
+      "decoded": [
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "role": "daily/reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        },
+        {
+          "role": "treasury/reward-video-v3.png",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "role": "solo/finish-reward-video-v3.png",
+          "width": 384,
+          "height": 384
+        }
+      ]
+    }
+  ]
+}

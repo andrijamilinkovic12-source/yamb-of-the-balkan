@@ -214,6 +214,10 @@ const SHOP_DATA = {
 SHOP_DATA.TROPHIES.forEach(item => {
     item.desertIcon = `assets/desert-soft-clay/treasury/trophies/${item.id}-v1.png?v=1`;
     item.greenIcon = `assets/green-soft-clay/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.lightIcon = `assets/theme-packs/light/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.mediumIcon = `assets/theme-packs/medium/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.winterIcon = `assets/theme-packs/winter/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.neonIcon = `assets/theme-packs/neon/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
 });
 
 // Export (ako je potrebno za module, mada u browseru radi globalno)

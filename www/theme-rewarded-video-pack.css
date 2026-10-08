@@ -7,6 +7,10 @@ body.theme-rewarded-video-pack-active .riznica-ad-fallback,
 body.theme-rewarded-video-pack-active .riznica-item-reward-video-fallback {
     display: none !important;
 }
+/* The disabled Desert card has a stronger legacy selector in teme.css. */
+body.theme-rewarded-video-pack-active #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled .theme-rewarded-video-legacy {
+    display: none !important;
+}
 body.theme-rewarded-video-pack-active .theme-rewarded-video-icon {
     display: inline-block !important;
     width: 28px;
