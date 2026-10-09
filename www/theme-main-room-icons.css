@@ -445,8 +445,12 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     flex-basis: 100% !important;
 }
 
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #easter-room-intro:is(.theme-light,.theme-medium,.theme-winter,.theme-neon,.theme-amethyst,.theme-moon) {
-    background: linear-gradient(180deg, rgba(15,18,30,.08), rgba(15,18,30,.22)), var(--approved-theme-bg-image) center / cover no-repeat !important;
+/* All nine room packs enter over their approved background, including special rooms. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    :is(#easter-room-intro,#riznica-intro,#daily-intro,#league-intro,#tournament-intro) {
+    background: var(--approved-theme-bg-image) center / cover no-repeat !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 /* The three summary cards keep their own theme surfaces and Green's shared geometry. */

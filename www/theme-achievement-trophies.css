@@ -449,3 +449,221 @@ body.neon-theme .trophy-popup .tp-title {
 body.neon-theme .trophy-popup .tp-desc {
     color: #B5C7D6;
 }
+
+/* Kraljevski Ametist: broad lilac clay forms on a quiet violet surface. */
+body.amethyst-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.amethyst-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.amethyst-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(45, 29, 60, .36));
+}
+
+body.amethyst-theme .amethyst-trophy-popup-icon,
+body.amethyst-theme .amethyst-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.amethyst-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(45, 29, 60, .36));
+}
+
+body.amethyst-theme .trophy-showcase-icon {
+    background: rgba(86, 54, 96, .62);
+    border: 1px solid rgba(224, 205, 229, .25);
+    box-shadow: inset 0 1px 0 rgba(251, 246, 255, .11);
+}
+
+body.amethyst-theme .trophy-showcase {
+    background: rgba(45, 29, 60, .62);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.amethyst-theme .trophy-showcase-panel {
+    background: linear-gradient(150deg, rgba(86, 54, 96, .99), rgba(60, 40, 75, .99));
+    border: 1px solid rgba(224, 205, 229, .28);
+    box-shadow: 0 15px 28px rgba(45, 29, 60, .42), inset 0 1px 0 rgba(251, 246, 255, .11);
+    color: #FBF6FF;
+}
+
+body.amethyst-theme .trophy-showcase-panel::before {
+    content: none;
+}
+
+body.amethyst-theme .trophy-showcase-kicker,
+body.amethyst-theme .trophy-showcase-name {
+    color: #FFF2E3;
+    text-shadow: none;
+}
+
+body.amethyst-theme .trophy-showcase-subtitle,
+body.amethyst-theme .trophy-showcase-total {
+    color: #E0CDE5;
+}
+
+body.amethyst-theme .trophy-showcase-card {
+    background: rgba(224, 205, 229, .08);
+    border-color: rgba(224, 205, 229, .20);
+    box-shadow: inset 0 1px 0 rgba(251, 246, 255, .09), 0 5px 12px rgba(45, 29, 60, .18);
+}
+
+body.amethyst-theme .trophy-showcase-reward,
+body.amethyst-theme .trophy-popup .tp-reward {
+    color: #F2C879;
+    background: rgba(242, 200, 121, .10);
+    border-color: rgba(242, 200, 121, .27);
+}
+
+body.amethyst-theme .trophy-showcase-total {
+    background: rgba(242, 200, 121, .07);
+    border-color: rgba(242, 200, 121, .20);
+}
+
+body.amethyst-theme .trophy-showcase-total strong {
+    color: #FFF2E3;
+}
+
+body.amethyst-theme .trophy-popup {
+    background: rgba(60, 40, 75, .99);
+    border: 1px solid rgba(224, 205, 229, .27);
+    box-shadow: 0 10px 24px rgba(45, 29, 60, .40), inset 0 1px 0 rgba(251, 246, 255, .10);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+body.amethyst-theme .trophy-popup .tp-title {
+    color: #FFF2E3;
+    text-shadow: none;
+}
+
+body.amethyst-theme .trophy-popup .tp-desc {
+    color: #E0CDE5;
+}
+
+/* Vaskrsnja: smooth matte rubber, warm ivory and sage, without ornament. */
+body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(61, 68, 52, .22));
+}
+
+body.easter-theme .easter-trophy-popup-icon,
+body.easter-theme .easter-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.easter-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(61, 68, 52, .22));
+}
+
+body.easter-theme .trophy-showcase {
+    background: rgba(45, 59, 42, .48) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme .trophy-showcase-panel,
+body.easter-theme .trophy-popup {
+    background: linear-gradient(150deg, #FFF8EA, #EEE5D3) !important;
+    border: 1px solid rgba(77, 107, 69, .36) !important;
+    box-shadow: 0 14px 26px rgba(61, 68, 52, .22), inset 0 1px 0 rgba(255, 255, 255, .60) !important;
+    color: #3D4434 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme .trophy-showcase-panel::before {
+    content: none !important;
+}
+
+body.easter-theme .trophy-showcase-icon {
+    background: rgba(211, 213, 183, .34) !important;
+    border: 1px solid rgba(77, 107, 69, .22) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .44) !important;
+}
+
+body.easter-theme .trophy-showcase-kicker,
+body.easter-theme .trophy-showcase-name,
+body.easter-theme .trophy-popup .tp-title {
+    color: #3F4A35 !important;
+    text-shadow: none !important;
+}
+
+body.easter-theme .trophy-showcase-subtitle,
+body.easter-theme .trophy-showcase-total,
+body.easter-theme .trophy-popup .tp-desc {
+    color: #5F654F !important;
+}
+
+body.easter-theme .trophy-showcase-card {
+    background: rgba(255, 255, 255, .42) !important;
+    border-color: rgba(77, 107, 69, .22) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 5px 12px rgba(61, 68, 52, .10) !important;
+}
+
+body.easter-theme .trophy-showcase-reward,
+body.easter-theme .trophy-popup .tp-reward {
+    color: #4D6B45 !important;
+    background: rgba(77, 107, 69, .10) !important;
+    border-color: rgba(77, 107, 69, .25) !important;
+}
+
+body.easter-theme .trophy-showcase-total {
+    background: rgba(211, 213, 183, .28) !important;
+    border-color: rgba(77, 107, 69, .22) !important;
+}
+
+body.easter-theme .trophy-showcase-total strong {
+    color: #3F4A35 !important;
+}
+
+@media (max-width: 480px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme) #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual,
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme) #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+        width: 72px;
+        height: 72px;
+    }
+}

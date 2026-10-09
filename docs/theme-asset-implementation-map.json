@@ -7236,212 +7236,472 @@
           "sizeBytes": null
         },
         "canonical/achievement-trophies/achilles-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/achilles-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/achilles-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            42,
+            234,
+            214
+          ],
+          "sizeBytes": 42351
         },
         "canonical/achievement-trophies/apprentice-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/apprentice-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/apprentice-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            29,
+            22,
+            226,
+            234
+          ],
+          "sizeBytes": 44794
         },
         "canonical/achievement-trophies/close_call-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/close_call-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/close_call-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            41,
+            22,
+            214,
+            234
+          ],
+          "sizeBytes": 54169
         },
         "canonical/achievement-trophies/concrete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/concrete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/concrete-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            79,
+            234,
+            177
+          ],
+          "sizeBytes": 36266
         },
         "canonical/achievement-trophies/firecracker-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/firecracker-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/firecracker-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            43,
+            22,
+            212,
+            234
+          ],
+          "sizeBytes": 37476
         },
         "canonical/achievement-trophies/first_play-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/first_play-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/first_play-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            23,
+            22,
+            233,
+            234
+          ],
+          "sizeBytes": 57439
         },
         "canonical/achievement-trophies/godlike-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/godlike-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/godlike-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            39,
+            234,
+            217
+          ],
+          "sizeBytes": 64946
         },
         "canonical/achievement-trophies/grandmaster-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/grandmaster-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/grandmaster-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            49,
+            22,
+            207,
+            234
+          ],
+          "sizeBytes": 54293
         },
         "canonical/achievement-trophies/hazard-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/hazard-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/hazard-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            29,
+            234,
+            226
+          ],
+          "sizeBytes": 46591
         },
         "canonical/achievement-trophies/immortal-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/immortal-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/immortal-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            77,
+            234,
+            178
+          ],
+          "sizeBytes": 37091
         },
         "canonical/achievement-trophies/kafana-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/kafana-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/kafana-master-v2.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            76,
+            234,
+            179
+          ],
+          "sizeBytes": 34870
         },
         "canonical/achievement-trophies/legend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/legend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/legend-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            34,
+            234,
+            222
+          ],
+          "sizeBytes": 53576
         },
         "canonical/achievement-trophies/math-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/math-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/math-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            28,
+            234,
+            227
+          ],
+          "sizeBytes": 54597
         },
         "canonical/achievement-trophies/miner-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/miner-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/miner-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            31,
+            22,
+            225,
+            234
+          ],
+          "sizeBytes": 59632
         },
         "canonical/achievement-trophies/minimal-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/minimal-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/minimal-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            41,
+            22,
+            215,
+            234
+          ],
+          "sizeBytes": 37019
         },
         "canonical/achievement-trophies/mythic-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/mythic-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/mythic-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            29,
+            22,
+            227,
+            234
+          ],
+          "sizeBytes": 57265
         },
         "canonical/achievement-trophies/night_owl-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/night_owl-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/night_owl-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            65,
+            234,
+            191
+          ],
+          "sizeBytes": 46684
         },
         "canonical/achievement-trophies/perfectionist-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/perfectionist-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/perfectionist-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            70,
+            234,
+            185
+          ],
+          "sizeBytes": 39897
         },
         "canonical/achievement-trophies/potato-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/potato-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/potato-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            27,
+            234,
+            229
+          ],
+          "sizeBytes": 60609
         },
         "canonical/achievement-trophies/prophet-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/prophet-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/prophet-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            63,
+            234,
+            192
+          ],
+          "sizeBytes": 43629
         },
         "canonical/achievement-trophies/score_1000-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/score_1000-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/score_1000-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            22,
+            234,
+            234
+          ],
+          "sizeBytes": 48821
         },
         "canonical/achievement-trophies/sniper-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/sniper-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/sniper-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            22,
+            233,
+            234
+          ],
+          "sizeBytes": 63359
         },
         "canonical/achievement-trophies/spite-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/spite-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/spite-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            29,
+            234,
+            227
+          ],
+          "sizeBytes": 44668
         },
         "canonical/achievement-trophies/surgeon-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/surgeon-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/surgeon-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            29,
+            234,
+            226
+          ],
+          "sizeBytes": 46917
         },
         "canonical/achievement-trophies/sveti_ilija-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/sveti_ilija-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/sveti_ilija-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            53,
+            234,
+            202
+          ],
+          "sizeBytes": 39442
         },
         "canonical/achievement-trophies/veteran-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/veteran-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/veteran-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES amethystIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            88,
+            234,
+            168
+          ],
+          "sizeBytes": 25925
         },
         "canonical/collection-medals/collection-bronze-v1": {
           "stage": "defined",
@@ -8779,212 +9039,472 @@
           "sizeBytes": null
         },
         "canonical/achievement-trophies/achilles-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/achilles-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/achilles-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            23,
+            234,
+            232
+          ],
+          "sizeBytes": 34219
         },
         "canonical/achievement-trophies/apprentice-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/apprentice-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/apprentice-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            37,
+            234,
+            219
+          ],
+          "sizeBytes": 39716
         },
         "canonical/achievement-trophies/close_call-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/close_call-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/close_call-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            33,
+            22,
+            222,
+            234
+          ],
+          "sizeBytes": 42229
         },
         "canonical/achievement-trophies/concrete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/concrete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/concrete-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            84,
+            234,
+            171
+          ],
+          "sizeBytes": 29320
         },
         "canonical/achievement-trophies/firecracker-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/firecracker-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/firecracker-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            48,
+            22,
+            208,
+            234
+          ],
+          "sizeBytes": 28860
         },
         "canonical/achievement-trophies/first_play-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/first_play-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/first_play-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            22,
+            234,
+            233
+          ],
+          "sizeBytes": 55181
         },
         "canonical/achievement-trophies/godlike-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/godlike-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/godlike-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            47,
+            234,
+            209
+          ],
+          "sizeBytes": 45530
         },
         "canonical/achievement-trophies/grandmaster-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/grandmaster-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/grandmaster-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            55,
+            22,
+            201,
+            234
+          ],
+          "sizeBytes": 44157
         },
         "canonical/achievement-trophies/hazard-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/hazard-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/hazard-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            35,
+            234,
+            221
+          ],
+          "sizeBytes": 42295
         },
         "canonical/achievement-trophies/immortal-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/immortal-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/immortal-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            75,
+            234,
+            180
+          ],
+          "sizeBytes": 32724
         },
         "canonical/achievement-trophies/kafana-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/kafana-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/kafana-master-v3.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            64,
+            234,
+            191
+          ],
+          "sizeBytes": 28255
         },
         "canonical/achievement-trophies/legend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/legend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/legend-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            23,
+            22,
+            233,
+            234
+          ],
+          "sizeBytes": 45536
         },
         "canonical/achievement-trophies/math-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/math-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/math-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            91,
+            234,
+            164
+          ],
+          "sizeBytes": 22920
         },
         "canonical/achievement-trophies/miner-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/miner-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/miner-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            33,
+            22,
+            222,
+            234
+          ],
+          "sizeBytes": 48952
         },
         "canonical/achievement-trophies/minimal-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/minimal-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/minimal-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            23,
+            234,
+            233
+          ],
+          "sizeBytes": 41604
         },
         "canonical/achievement-trophies/mythic-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/mythic-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/mythic-master-v2.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            31,
+            22,
+            224,
+            234
+          ],
+          "sizeBytes": 37959
         },
         "canonical/achievement-trophies/night_owl-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/night_owl-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/night_owl-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            46,
+            234,
+            209
+          ],
+          "sizeBytes": 49803
         },
         "canonical/achievement-trophies/perfectionist-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/perfectionist-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/perfectionist-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            73,
+            234,
+            182
+          ],
+          "sizeBytes": 22137
         },
         "canonical/achievement-trophies/potato-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/potato-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/potato-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            29,
+            234,
+            226
+          ],
+          "sizeBytes": 59939
         },
         "canonical/achievement-trophies/prophet-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/prophet-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/prophet-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            22,
+            233,
+            234
+          ],
+          "sizeBytes": 61475
         },
         "canonical/achievement-trophies/score_1000-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/score_1000-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/score_1000-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            24,
+            234,
+            232
+          ],
+          "sizeBytes": 38081
         },
         "canonical/achievement-trophies/sniper-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/sniper-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/sniper-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            24,
+            22,
+            232,
+            234
+          ],
+          "sizeBytes": 49305
         },
         "canonical/achievement-trophies/spite-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/spite-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/spite-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            28,
+            22,
+            228,
+            234
+          ],
+          "sizeBytes": 38635
         },
         "canonical/achievement-trophies/surgeon-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/surgeon-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/surgeon-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            37,
+            234,
+            218
+          ],
+          "sizeBytes": 31353
         },
         "canonical/achievement-trophies/sveti_ilija-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/sveti_ilija-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/sveti_ilija-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            29,
+            234,
+            226
+          ],
+          "sizeBytes": 50553
         },
         "canonical/achievement-trophies/veteran-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/veteran-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/achievement-trophies-v1/veteran-master-v1.png",
+          "consumerRefs": [
+            "www/config.js:TROPHIES easterIcon",
+            "www/managers.js:Riznica trophy card",
+            "www/trophyManager.js:trophy notification",
+            "www/game.js:trophy showcase"
+          ],
+          "opticalBoundsPx": [
+            22,
+            106,
+            234,
+            149
+          ],
+          "sizeBytes": 13039
         },
         "canonical/collection-medals/collection-bronze-v1": {
           "stage": "defined",

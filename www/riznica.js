@@ -51,6 +51,8 @@ class RiznicaManager {
             this.warmTrophyAssets('winter');
         } else if (overlay.classList.contains('theme-neon')) {
             this.warmTrophyAssets('neon');
+        } else if (overlay.classList.contains('theme-amethyst')) {
+            this.warmTrophyAssets('amethyst');
         } else if (overlay.classList.contains('theme-dark')) {
             this.warmTrophyAssets('green');
         }
@@ -103,7 +105,7 @@ class RiznicaManager {
     }
 
     warmTrophyAssets(themeName) {
-        const theme = ['desert', 'green', 'light', 'medium', 'winter', 'neon'].includes(themeName) ? themeName : 'easter';
+        const theme = ['desert', 'green', 'light', 'medium', 'winter', 'neon', 'amethyst'].includes(themeName) ? themeName : 'easter';
         if (this.trophyWarmupPromises.has(theme) || typeof SHOP_DATA === 'undefined') {
             return this.trophyWarmupPromises.get(theme) || null;
         }
@@ -114,7 +116,8 @@ class RiznicaManager {
                     : (theme === 'medium' ? item?.mediumIcon
                         : (theme === 'winter' ? item?.winterIcon
                             : (theme === 'neon' ? item?.neonIcon
-                                : (theme === 'desert' ? item?.desertIcon : item?.easterIcon))))))
+                                : (theme === 'amethyst' ? item?.amethystIcon
+                                    : (theme === 'desert' ? item?.desertIcon : item?.easterIcon)))))))
             .filter(Boolean)
             .map(source => `${source}${source.includes('?') ? '&' : '?'}card=384-v1`);
         let nextSource = 0;

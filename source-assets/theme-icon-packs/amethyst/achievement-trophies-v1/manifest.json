@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "themeId": "amethyst",
+  "slots": {
+    "achilles": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/achilles-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/achilles-v1.png",
+      "sizeBytes": 42351,
+      "opticalBoundsPx": [
+        22,
+        42,
+        234,
+        214
+      ]
+    },
+    "apprentice": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/apprentice-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/apprentice-v1.png",
+      "sizeBytes": 44794,
+      "opticalBoundsPx": [
+        29,
+        22,
+        226,
+        234
+      ]
+    },
+    "close_call": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/close_call-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/close_call-v1.png",
+      "sizeBytes": 54169,
+      "opticalBoundsPx": [
+        41,
+        22,
+        214,
+        234
+      ]
+    },
+    "concrete": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/concrete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/concrete-v1.png",
+      "sizeBytes": 36266,
+      "opticalBoundsPx": [
+        22,
+        79,
+        234,
+        177
+      ]
+    },
+    "firecracker": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/firecracker-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/firecracker-v1.png",
+      "sizeBytes": 37476,
+      "opticalBoundsPx": [
+        43,
+        22,
+        212,
+        234
+      ]
+    },
+    "first_play": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/first_play-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/first_play-v1.png",
+      "sizeBytes": 57439,
+      "opticalBoundsPx": [
+        23,
+        22,
+        233,
+        234
+      ]
+    },
+    "godlike": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/godlike-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/godlike-v1.png",
+      "sizeBytes": 64946,
+      "opticalBoundsPx": [
+        22,
+        39,
+        234,
+        217
+      ]
+    },
+    "grandmaster": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/grandmaster-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/grandmaster-v1.png",
+      "sizeBytes": 54293,
+      "opticalBoundsPx": [
+        49,
+        22,
+        207,
+        234
+      ]
+    },
+    "hazard": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/hazard-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/hazard-v1.png",
+      "sizeBytes": 46591,
+      "opticalBoundsPx": [
+        22,
+        29,
+        234,
+        226
+      ]
+    },
+    "immortal": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/immortal-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/immortal-v1.png",
+      "sizeBytes": 37091,
+      "opticalBoundsPx": [
+        22,
+        77,
+        234,
+        178
+      ]
+    },
+    "kafana": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/kafana-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/kafana-v1.png",
+      "sizeBytes": 34870,
+      "opticalBoundsPx": [
+        22,
+        76,
+        234,
+        179
+      ]
+    },
+    "legend": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/legend-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/legend-v1.png",
+      "sizeBytes": 53576,
+      "opticalBoundsPx": [
+        22,
+        34,
+        234,
+        222
+      ]
+    },
+    "math": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/math-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/math-v1.png",
+      "sizeBytes": 54597,
+      "opticalBoundsPx": [
+        22,
+        28,
+        234,
+        227
+      ]
+    },
+    "miner": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/miner-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/miner-v1.png",
+      "sizeBytes": 59632,
+      "opticalBoundsPx": [
+        31,
+        22,
+        225,
+        234
+      ]
+    },
+    "minimal": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/minimal-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/minimal-v1.png",
+      "sizeBytes": 37019,
+      "opticalBoundsPx": [
+        41,
+        22,
+        215,
+        234
+      ]
+    },
+    "mythic": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/mythic-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/mythic-v1.png",
+      "sizeBytes": 57265,
+      "opticalBoundsPx": [
+        29,
+        22,
+        227,
+        234
+      ]
+    },
+    "night_owl": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/night_owl-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/night_owl-v1.png",
+      "sizeBytes": 46684,
+      "opticalBoundsPx": [
+        22,
+        65,
+        234,
+        191
+      ]
+    },
+    "perfectionist": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/perfectionist-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/perfectionist-v1.png",
+      "sizeBytes": 39897,
+      "opticalBoundsPx": [
+        22,
+        70,
+        234,
+        185
+      ]
+    },
+    "potato": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/potato-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/potato-v1.png",
+      "sizeBytes": 60609,
+      "opticalBoundsPx": [
+        22,
+        27,
+        234,
+        229
+      ]
+    },
+    "prophet": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/prophet-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/prophet-v1.png",
+      "sizeBytes": 43629,
+      "opticalBoundsPx": [
+        22,
+        63,
+        234,
+        192
+      ]
+    },
+    "score_1000": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/score_1000-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/score_1000-v1.png",
+      "sizeBytes": 48821,
+      "opticalBoundsPx": [
+        22,
+        22,
+        234,
+        234
+      ]
+    },
+    "sniper": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/sniper-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/sniper-v1.png",
+      "sizeBytes": 63359,
+      "opticalBoundsPx": [
+        22,
+        22,
+        233,
+        234
+      ]
+    },
+    "spite": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/spite-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/spite-v1.png",
+      "sizeBytes": 44668,
+      "opticalBoundsPx": [
+        22,
+        29,
+        234,
+        227
+      ]
+    },
+    "surgeon": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/surgeon-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/surgeon-v1.png",
+      "sizeBytes": 46917,
+      "opticalBoundsPx": [
+        22,
+        29,
+        234,
+        226
+      ]
+    },
+    "sveti_ilija": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/sveti_ilija-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/sveti_ilija-v1.png",
+      "sizeBytes": 39442,
+      "opticalBoundsPx": [
+        22,
+        53,
+        234,
+        202
+      ]
+    },
+    "veteran": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/achievement-trophies-v1/veteran-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/veteran-v1.png",
+      "sizeBytes": 25925,
+      "opticalBoundsPx": [
+        22,
+        88,
+        234,
+        168
+      ]
+    }
+  }
+}

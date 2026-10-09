@@ -3698,7 +3698,9 @@ class ShopManager {
                         ? item?.winterIcon
                         : (activeTheme === 'neon'
                             ? item?.neonIcon
-                            : (activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon)))));
+                            : (activeTheme === 'amethyst'
+                                ? item?.amethystIcon
+                                : (activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon))))));
         const safeSource = String(source || item?.easterIcon || '');
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }

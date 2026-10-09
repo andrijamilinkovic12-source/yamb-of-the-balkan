@@ -84,6 +84,8 @@ Vrednosti ispod potiču iz aktivnog Green rasporeda. Za komponente koje nisu poj
 
 Svi odgovarajući introi imaju isti početak, redosled faza, mesto prekida i završetak. Redovna i reduced-motion varijanta zadržavaju isti sadržaj i trajanje prelaza; u reduced-motion varijanti nema ukrasnog kretanja. Funkcionalne vrednosti igre dolaze iz zajedničke logike.
 
+U devet nezelenih tema intro svake glavne sobe prikazuje odobrenu pozadinu aktivne teme preko celog ekrana. Ovo važi i za Riznicu, Dnevni izazov, Kvartalnu ligu i Turnir. Preko prizora nema zasebne tamne podloge, gradijenta ni zamućenja. Zelena zadržava svoju referentnu obradu.
+
 ## 3. Boje i tipografija
 
 Svaka tema ima 21 precizan HEX token u registru: pozadina, površina, izdignuta i udubljena površina, glavni i sekundarni tekst, naslov, primarna akcija i tekst na njoj, akcenat, ivica, uspeh, greška, dve boje logotipa i šest boja Yamb kolona. Ovo su **ciljne boje za devet tema**. Kod Zelene ostaju važeći njen postojeći manifest i CSS.

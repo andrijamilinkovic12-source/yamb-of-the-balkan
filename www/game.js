@@ -8872,6 +8872,8 @@ class YambApp {
                 || activeTheme === 'winter';
             const isNeonTheme = document.body.classList.contains('neon-theme')
                 || activeTheme === 'neon';
+            const isAmethystTheme = document.body.classList.contains('amethyst-theme')
+                || activeTheme === 'amethyst';
             const isGreenTheme = activeTheme === 'dark'
                 && !document.body.classList.contains('easter-theme')
                 && !document.body.classList.contains('desert-theme')
@@ -8903,8 +8905,10 @@ class YambApp {
                     ? `<img class="winter-trophy-showcase-icon" src="${trophy.winterIcon}" alt="" aria-hidden="true" decoding="async">`
                     : isNeonTheme && trophy.neonIcon
                     ? `<img class="neon-trophy-showcase-icon" src="${trophy.neonIcon}" alt="" aria-hidden="true" decoding="async">`
-                    : isEasterTheme
-                    ? '<img class="easter-trophy-showcase-icon" data-theme-src="assets/easter-soft-clay/statistics/trophies-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">'
+                    : isAmethystTheme && trophy.amethystIcon
+                    ? `<img class="amethyst-trophy-showcase-icon" src="${trophy.amethystIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : isEasterTheme && trophy.easterIcon
+                    ? `<img class="easter-trophy-showcase-icon" src="${trophy.easterIcon}" alt="" aria-hidden="true" decoding="async">`
                     : (isDesertTheme && trophy.desertIcon
                         ? `<img class="desert-trophy-showcase-icon" src="${trophy.desertIcon}" alt="" aria-hidden="true" decoding="async">`
                         : (isGreenTheme && trophy.greenIcon

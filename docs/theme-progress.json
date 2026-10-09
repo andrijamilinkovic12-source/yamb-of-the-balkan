@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-08",
-  "activeThemeId": "neon",
-  "workState": "neon-achievement-trophies-linked-android-three-surfaces-checked",
-  "activeWorkPackage": "Svih devet nezelenih tema ima povezane glavne ikone soba, kanonske dukate, Undo token i po sedam PNG uloga za nagradni video. Svetlo Zlato, Trula Visnja, Plavi Okean i Neon Cyber imaju po 26 originalnih trofeja dostignuca. Android qaLocal WebView je za sva cetiri seta potvrdio 26/26 ucitanih PNG-ova u Riznici i nove ikone u zavrsnom prikazu i obavestenju. Dokazi su pojedinacni QA zapisi i snimci. Trofeji preostalih pet tema i ostale porodice kataloga predstoje; korisnicko odobrenje kompleta nije zabelezeno.",
+  "updatedOn": "2026-10-09",
+  "activeThemeId": "easter",
+  "workState": "easter-achievement-trophies-linked-static-checked",
+  "activeWorkPackage": "Svih devet nezelenih tema ima povezane glavne ikone soba, kanonske dukate, Undo token i po sedam PNG uloga za nagradni video. Svetlo Zlato, Trula Visnja, Plavi Okean, Neon Cyber, Kraljevski Ametist i Vaskrsnja imaju po 26 originalnih trofeja dostignuca. Prva cetiri seta potvrdjena su u Android qaLocal WebView-u na tri mesta upotrebe; Ametist i Vaskrsnja imaju mastere, kanonske PNG-ove, povezana tri mesta upotrebe i staticke provere, ali Android prikaz ceka dostupnost QA builda. Trofeji preostale tri teme i ostale porodice kataloga predstoje; korisnicko odobrenje kompleta nije zabelezeno.",
   "requiredSurfaceIds": [
     "splash-login",
     "main-menu",
@@ -656,9 +656,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 26
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih trofeja Kraljevskog Ametista ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-amethyst-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena jer Gradle build zahteva pristup korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "easter",
@@ -759,9 +759,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 26
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih Vaskrsnjih trofeja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-easter-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "desert",
