@@ -1,0 +1,3 @@
+# Pustinjsko Staklo — Kostur Turnira
+
+The first canonical Tournament role in this theme replaces the old four-entrant bracket. Generated as an original transparent PNG using the approved champion cup for Clay material and palette; the Green reference established only the required eight-entrant topology. Four layered cream sandstone-clay entrant disks stand on each side and connect through broad coral clay branches to one subdued teal finalist. The 1254 × 1254 RGBA master is normalized to a 256 × 256 RGBA runtime PNG with `scripts/build-tournament-room-pack.ps1 -Theme desert -OnlyRole tab-bracket`. The remaining Tournament roles are pending their theme-by-theme pass.

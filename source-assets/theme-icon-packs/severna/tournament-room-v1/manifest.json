@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "themeId": "severna",
+  "status": "partially linked; remaining Tournament roles pending",
+  "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "6e5eaf57803d3d13b8a00d40f9607e2dc6327b62d2b0b341df37afa50187c2f0",
+      "productionSha256": "896a64c16cc30a0c20b5717fee95dfb5f264765c71cd5d521e83b10373b2afca",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

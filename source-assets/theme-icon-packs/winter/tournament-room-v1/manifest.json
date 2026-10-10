@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "themeId": "winter",
+  "status": "linked; visual review pending",
+  "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "e1f47f3298442be5fe03c82997eb1ff7f5af62a6884908170f4e854de688fa64",
+      "productionSha256": "7ede63ebdd8b2e03e9bef3889c371027e3cda8e1561101d22a409541f140fff7",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "aec4df9bc7ce63bce44ecb804217b4de2a0ca3fad00b5a82910a428b8aad223a",
+      "productionSha256": "07889e3ff95226a5d1e32fa1848f16f6c7b7a886162e5d79ce330b4b7d6c345a",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "26585059fd8f3ac96d40cb47e8083a3ca626b91df09a86503e55f9ac93c9b24f",
+      "productionSha256": "22c0396d0ef6fa589619f7aba987dd98842442572c5fa1db9f1329b6ead88244",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "66d248c85fd4e41b080bb22026cfaef3d133e59726956422b9b950171e854585",
+      "productionSha256": "aa80de72f44d7c690cb944a3ca783dfbb0fc29c84c1b03e2430894b45b374733",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "b754d3b81a04c7f65c212a96d1e18c926c6dc43d96936f08ccf998328ed697fc",
+      "productionSha256": "ad561da39995efe7151e4ff8d312d21a56a6cc2d0d9d35441d43bbb3ad482a62",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "cf474f1af0a5ff57cdfa33ec8425de4bdcb574b6843b2cbb40c5a5e175897851",
+      "productionSha256": "c76fea701f8faa85a705e2be67cc4fffa5da5273ba467785d511aba815177034",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "21c2982d0f3482e6067ec2a2495ac034ad7b59c9abd39b41077bbb4e24adccd8",
+      "productionSha256": "c914d62a58803ff85193c84b1d38610882159d09513e5d964667d88409950d9a",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "bd5606a467849b771fb7e61966b4a4781c68ecbde144c5c4ff5d6ae8174d60f0",
+      "productionSha256": "0da1db587d5318ba7d11a857f77c2b5fb4840ed7ebed4dd69df91fa89d121911",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "abc9e6fbbc564db5ff036a864cb3153307548832dc892da734ee9f72a6176287",
+      "productionSha256": "7222dfd9ac07b65fa3ab0c704b7ca5081aa171af4539016f4a58988b441f1634",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "3536b1ef1b823f5b72d87d66825501e9fddfdf1494d9ab152da26e0c66436de6",
+      "productionSha256": "1b712c17a9a451b08b93dae53f116b5ca2df28586e241fef582954de4b128a25",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

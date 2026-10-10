@@ -1041,6 +1041,7 @@
       "id": "canonical/tournament-navigation/tab-bracket-v1",
       "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
       "kind": "canonical-or-approved-variant",
+      "semanticRule": "Exactly eight entrant nodes: four left, four right, paired into one final; theme-specific materials and icon DNA.",
       "width": 256,
       "height": 256,
       "colorType": 6

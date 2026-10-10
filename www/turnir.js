@@ -7,6 +7,12 @@ const tt = (key) => {
 
 const TOURNEY_ENTRY_FEE = 5500;
 
+const getTournamentFinalistSource = (theme = localStorage.getItem('yamb_theme') || 'dark') => {
+    if (['light', 'medium', 'winter', 'neon', 'amethyst', 'easter'].includes(theme)) return `assets/theme-packs/${theme}/canonical/tournament-awards/finalist-silver-v1.png`;
+    if (theme === 'dark') return 'assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png';
+    return getThemeMedalSource('tournament', 'silver', theme);
+};
+
 const tourneySecurityFallback = {
     escapeHtml: (value) => String(value ?? '').replace(/[&<>"']/g, char => ({
         '&': '&amp;',
@@ -789,8 +795,6 @@ class TournamentManager {
                 <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" aria-label="${tt('tourney_tab_bracket') || 'Kostur'}" title="${tt('tourney_tab_bracket') || 'Kostur'}" onclick="app.tournamentManager.switchTab('bracket')">
                     <img class="tourney-tab-icon tourney-tab-icon--tournament tourney-tab-icon-default" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/tournament/tab-bracket-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="tourney-tab-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/tournament/tab-bracket.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="tourney-tab-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/tournament/tab-bracket-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" aria-label="${tt('tourney_tab_fame') || 'Slavni'}" title="${tt('tourney_tab_fame') || 'Slavni'}" onclick="app.tournamentManager.switchTab('leaderboard')">
@@ -1205,7 +1209,7 @@ class TournamentManager {
                             <span class="tourney-champion-final-label">${finalLabel}</span>
                             <strong>${safeFinalScore}</strong>
                         </div>
-                        <div class="tourney-champion-runner-up"><img class="tourney-champion-finalist-icon-canonical" src="${getThemeMedalSource('tournament', 'silver')}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${runnerLabel}:</span> ${safeRunnerUp}</div>
+                        <div class="tourney-champion-runner-up"><img class="tourney-champion-finalist-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${runnerLabel}:</span> ${safeRunnerUp}</div>
                         <div class="tourney-champion-actions">
                             ${journeyButton}
                             <button type="button" class="tourney-champion-action-btn tourney-champion-share-btn" data-champion-index="${playerIndex}" data-championship-index="${championshipIndex}" aria-label="${this.escapeAttr(tt('tourney_share_aria') || 'Podeli karticu osvajača')}" onclick="event.stopPropagation(); app.tournamentManager.shareChampionCard(${playerIndex}, ${championshipIndex})">
@@ -2102,7 +2106,7 @@ class TournamentManager {
                 ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
                 : 'assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png?v=1';
             const finalistHtml = round === 'f'
-                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-canonical" src="${getThemeMedalSource('tournament', 'silver')}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
+                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
                 : '';
             akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" data-theme-src="${easterResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" data-theme-src="assets/desert-soft-clay/${resultIcon}?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-nebula" data-theme-src="assets/severna-soft-clay/${severnaResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-green" data-theme-src="${greenResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
         }

@@ -725,47 +725,50 @@
         "canonical/competition-medals/tournament-bronze-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/competition-medals/tournament-bronze-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/medals-v3-imagegen/tournament-bronze-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tournament-bronze-master-v1.png",
           "consumerRefs": [
-            "www/turnir.js:tournament podium"
+            "www/turnir.js:tournament podium",
+            "www/game.js:tournament room preload"
           ],
           "opticalBoundsPx": [
-            24,
-            22,
-            232,
-            234
+            15,
+            10,
+            239,
+            242
           ],
-          "sizeBytes": 63469
+          "sizeBytes": 95541
         },
         "canonical/competition-medals/tournament-gold-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/competition-medals/tournament-gold-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/medals-v3-imagegen/tournament-gold-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tournament-gold-master-v1.png",
           "consumerRefs": [
-            "www/turnir.js:tournament podium"
+            "www/turnir.js:tournament podium",
+            "www/game.js:tournament room preload"
           ],
           "opticalBoundsPx": [
-            23,
-            22,
-            232,
-            234
+            16,
+            10,
+            238,
+            242
           ],
-          "sizeBytes": 63811
+          "sizeBytes": 97905
         },
         "canonical/competition-medals/tournament-silver-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/competition-medals/tournament-silver-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/medals-v3-imagegen/tournament-silver-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tournament-silver-master-v1.png",
           "consumerRefs": [
-            "www/turnir.js:tournament podium"
+            "www/turnir.js:tournament podium",
+            "www/game.js:tournament room preload"
           ],
           "opticalBoundsPx": [
-            23,
-            22,
-            232,
-            234
+            16,
+            10,
+            239,
+            243
           ],
-          "sizeBytes": 62575
+          "sizeBytes": 86626
         },
         "canonical/daily-room-identity/daily-room-menu-v1": {
           "stage": "linked",
@@ -1518,84 +1521,115 @@
           "sizeBytes": 125719
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 61605
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 63802
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 68303
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 78973
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 52684
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59789
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 65406
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 71352
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 47870
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 67549
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
@@ -3719,84 +3753,115 @@
           "sizeBytes": 121847
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 68772
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 98897
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 57075
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 78253
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 64527
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 54475
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 83854
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 87224
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 88957
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 87381
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
@@ -5920,84 +5985,115 @@
           "sizeBytes": 104274
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55059
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 43712
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 51623
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59711
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 36876
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 47593
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 53047
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 47023
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 37731
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 49154
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
@@ -8121,84 +8217,115 @@
           "sizeBytes": 105465
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 61793
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 40711
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59365
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55015
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 60697
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 52461
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 77193
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55709
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 58313
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55293
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
@@ -10322,84 +10449,115 @@
           "sizeBytes": 101352
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 74106
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 54945
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 75376
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 75463
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 86684
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 85823
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 79270
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 82123
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 75717
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 80539
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
@@ -12523,84 +12681,115 @@
           "sizeBytes": 95041
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 56298
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 45519
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 46323
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 49092
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 63391
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59922
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 48310
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59637
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 54354
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 48511
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
@@ -14732,12 +14921,15 @@
           "sizeBytes": null
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 62998
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
           "stage": "defined",
@@ -16933,12 +17125,15 @@
           "sizeBytes": null
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 53271
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
           "stage": "defined",
@@ -19134,12 +19329,15 @@
           "sizeBytes": null
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/tab-bracket-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Bracket tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 45229
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
           "stage": "defined",

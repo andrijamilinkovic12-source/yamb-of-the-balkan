@@ -423,6 +423,58 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     height: 96px !important;
     flex-basis: 96px !important;
 }
+/* Tournament room geometry follows Green even while a theme still uses a legacy tab or state glyph. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-header-icon-green.theme-main-room-icon {
+    width: 42px !important;
+    height: 42px !important;
+    flex-basis: 42px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-tab-btn > img {
+    width: 38px !important;
+    height: 38px !important;
+    flex: 0 0 38px !important;
+    object-fit: contain;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-action-icon-fallback {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .theme-tournament-room-icon-host > img:not(.theme-tournament-room-icon),
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .theme-tournament-room-icon-host > .tourney-action-icon-fallback {
+    display: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .theme-tournament-room-icon {
+    display: block !important;
+    width: 38px !important;
+    height: 38px !important;
+    flex: 0 0 38px !important;
+    object-fit: contain !important;
+    opacity: 1 !important;
+    pointer-events: none;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .tourney-inline-match-state-green.theme-tournament-room-icon {
+    display: inline-block !important;
+    width: 15px !important;
+    height: 15px !important;
+    flex-basis: 15px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .tourney-inline-active-match-icon-green.theme-tournament-room-icon {
+    display: inline-block !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex-basis: 34px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .tourney-match-result-icon-green.theme-tournament-room-icon {
+    display: inline-block !important;
+    width: 36px !important;
+    height: 36px !important;
+    flex-basis: 36px !important;
+    vertical-align: middle;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.moon-theme,.desert-theme,.severna-theme) #tournament-screen .tourney-action-green-soft-clay-icon.theme-tournament-room-icon.is-pending {
+    animation: easterTournamentPending 1.15s ease-in-out infinite;
+}
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-round-trophy-green.theme-main-room-icon {
     width: 28px !important;
     height: 28px !important;

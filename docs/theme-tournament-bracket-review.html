@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Turnir — Kostur sa osam takmičara</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #eaf5f7; background: #142331; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 28px 16px 70px; }
+    main { max-width: 1100px; margin: auto; }
+    h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 38px); }
+    p { max-width: 80ch; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; margin-top: 24px; }
+    article { background: #20364a; border: 1px solid #698799; border-radius: 18px; padding: 16px; }
+    h2 { font-size: 17px; margin: 0 0 12px; }
+    .sample { min-height: 240px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 12px; }
+    .sample img { width: 210px; height: 210px; object-fit: contain; }
+    .actual { margin-top: 12px; display: flex; align-items: center; gap: 12px; font-size: 13px; }
+    .actual img { width: 38px; height: 38px; object-fit: contain; background: #fff; border-radius: 5px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Kostur Turnira: osam takmičara</h1>
+  <p>Svaka od deset tema ima namensku PNG ikonu sa četiri početna takmičara levo i četiri desno, spojena kroz četiri para do jednog finala. Dole je i stvarna veličina u tabu od 38 CSS px.</p>
+  <div class="grid" id="grid"></div>
+</main>
+<script>
+  const cards = [
+    ['Zelena', '../www/assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Svetlo Zlato', '../www/assets/theme-packs/light/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Trula Višnja', '../www/assets/theme-packs/medium/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Plavi Okean', '../www/assets/theme-packs/winter/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Neon Cyber', '../www/assets/theme-packs/neon/canonical/tournament-navigation/tab-bracket-v1.png?v=2'],
+    ['Kraljevski Ametist', '../www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Vaskršnja', '../www/assets/theme-packs/easter/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Pustinjsko Staklo', '../www/assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Mesečev Sjaj', '../www/assets/theme-packs/moon/canonical/tournament-navigation/tab-bracket-v1.png'],
+    ['Severna Maglina', '../www/assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png']
+  ];
+  document.querySelector('#grid').innerHTML = cards.map(([name, source]) =>
+    `<article><h2>${name}</h2><div class="sample"><img src="${source}" alt="Kostur sa osam takmičara — ${name}"></div><div class="actual"><img src="${source}" alt=""><span>Prikaz u sobi: 38 px</span></div></article>`
+  ).join('');
+</script>
+</body>
+</html>

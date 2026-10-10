@@ -1844,7 +1844,6 @@ class YambApp {
                     'assets/easter-soft-clay/treasury/status-active-v2.png?v=opt2',
                     'assets/easter-soft-clay/treasury/status-locked-v3.png?v=2',
                     'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/tab-bracket-v3.png?v=opt2',
                     'assets/easter-soft-clay/rules-pro-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/record-v2.png?v=opt2',
                     'assets/easter-soft-clay/statistics/games-v2.png?v=opt2',
@@ -1894,15 +1893,7 @@ class YambApp {
                     'assets/easter-soft-clay/ql/rank-majstor-v4.png?v=opt2',
                     'assets/easter-soft-clay/ql/rank-legenda-v2.png?v=opt2',
                     'assets/easter-soft-clay/ql/rank-titan-v4.png?v=opt2',
-                    'assets/easter-soft-clay/ql/rank-alltime-v3.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/tab-info-v2.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/state-register-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament/state-unregister-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament/state-registration-locked-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament/state-start-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament/state-match-active-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament/state-match-complete-v2.png?v=2'
+                    'assets/easter-soft-clay/ql/rank-alltime-v3.png?v=opt2'
                 ]
             },
             desert: {
@@ -1986,7 +1977,7 @@ class YambApp {
                     'assets/desert-soft-clay/statistics/fire-streak/silver-v3.png?v=opt2',
                     'assets/desert-soft-clay/statistics/fire-streak/bronze-v3.png?v=opt2',
                     'assets/desert-soft-clay/tournament/tab-info.png?v=opt2',
-                    'assets/desert-soft-clay/tournament/tab-bracket.png?v=opt2',
+                    'assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png',
                     'assets/desert-soft-clay/tournament/tab-hall-of-fame.png?v=opt2',
                     'assets/desert-soft-clay/tournament/state-register.png?v=3',
                     'assets/desert-soft-clay/tournament/state-unregister.png?v=3',
@@ -2088,7 +2079,7 @@ class YambApp {
                     'assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1',
                     'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
                     'assets/severna-soft-clay/tournament/tab-info-v2.png?v=1',
-                    'assets/severna-soft-clay/tournament/tab-bracket-v2.png?v=1',
+                    'assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png',
                     'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1',
                     'assets/severna-soft-clay/tournament/state-register-v3.png?v=1',
                     'assets/severna-soft-clay/tournament/state-unregister-v3.png?v=1',
@@ -2140,6 +2131,11 @@ class YambApp {
         if (theme === 'desert') return 'assets/desert-soft-clay/';
         if (theme === 'severna') return 'assets/severna-soft-clay/';
         return '';
+    }
+
+    getPartialTournamentBracketSource(theme) {
+        return ['moon', 'desert', 'severna'].includes(theme)
+            ? `assets/theme-packs/${theme}/canonical/tournament-navigation/tab-bracket-v1.png` : '';
     }
 
     getMainRoomPackSource(theme, roomId, variant = 'room') {
@@ -2279,7 +2275,15 @@ class YambApp {
                 .map(role => theme === 'dark'
                     ? `assets/green-soft-clay/canonical/treasury-effect-previews/preview-${role}-v1.png?v=1`
                     : `assets/theme-packs/${theme}/canonical/treasury-effect-previews/preview-${role}-v1.png?v=1`) : [];
-        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...treasuryEffectPreviews])];
+        const tournamentRoomAssets = safeRoomId === 'tournament' && ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter'].includes(theme)
+            ? [
+                ['tournament-awards', 'finalist-silver'],
+                ...['tab-info', 'tab-bracket', 'tab-hall-of-fame'].map(role => ['tournament-navigation', role]),
+                ...['state-register', 'state-unregister', 'state-registration-locked', 'state-start',
+                    'state-match-active', 'state-match-complete'].map(role => ['tournament-states', role])
+            ].map(([group, role]) => `assets/theme-packs/${theme}/canonical/${group}/${role}-v1.png${theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`)
+            : safeRoomId === 'tournament' ? [this.getPartialTournamentBracketSource(theme)].filter(Boolean) : [];
+        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...treasuryEffectPreviews, ...tournamentRoomAssets])];
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
             dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
@@ -2299,8 +2303,8 @@ class YambApp {
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
-        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...treasuryEffectPreviews])];
-        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...treasuryEffectPreviews])];
+        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...treasuryEffectPreviews, ...tournamentRoomAssets])];
+        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...treasuryEffectPreviews, ...tournamentRoomAssets])];
     }
 
     collectThemeSourcesFromRoot(theme, rootElement) {
@@ -4486,7 +4490,7 @@ class YambApp {
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon-canonical" src="${getThemeMedalSource('tournament', 'silver')}" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            `<img class="tourney-prize-result-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈",
                             { contextClass: 'tourney-finalist' }
                         );

@@ -251,7 +251,8 @@ function getThemeMedalSource(context, tier, theme = localStorage.getItem('yamb_t
     const themeIds = new Set(['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     if (!contexts[context] || !['gold', 'silver', 'bronze'].includes(tier) || !themeIds.has(theme)) return '';
     const root = theme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${theme}/canonical`;
-    return `${root}/${contexts[context]}-${tier}-v1.png?v=${theme === 'light' ? 3 : 2}`;
+    const version = theme === 'light' ? (context === 'tournament' ? 4 : 3) : 2;
+    return `${root}/${contexts[context]}-${tier}-v1.png?v=${version}`;
 }
 
 function getThemeTreasuryControlSource(role, theme = localStorage.getItem('yamb_theme') || 'dark') {

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "themeId": "amethyst",
+  "status": "linked; visual review pending",
+  "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "f727a145fe101735e8236e3fb3d9088e092231834dfff14c4bc26a7628d74a94",
+      "productionSha256": "dfde9775436c15947bcba049bf4930082589534d063f242a1c6eba98fff52b15",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "9cee78d5f2f6f2873d04efc92c0bb77c5087e5247d31db370f48ecda17a131ee",
+      "productionSha256": "ef4c94cbc4e86d41fb95a1fd5098e13f773ff089cb7330a3242c9d230aabe6e6",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "a975700bd80d523694d14b7e6fae78d334a116d5626e9d1b667fcf7543091ee0",
+      "productionSha256": "20fac3f84a2bfcf1fcffa19d1cf24294359496c90624957db9513bd54aabacf0",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "2c2848e6632c7bee3a084edbb0d3d0004caabfd4d18e39beea3a0822a60837ce",
+      "productionSha256": "b9111a952a3595b7b78c1bf4f067b489d9f6ba7c38184c47dc92258a79884cd9",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "4164eb96b5f0cd7b7c8a16524cd1b06d7f7a6ab4aeed112b8d773a57d1c36441",
+      "productionSha256": "d1bc3718f85df28ef6196c268dba3941193dd56ba31ece7072cbe6e94aa01b9e",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "64365ba9f964a18e504ddd60597e6d4c8e2ffdcb26069fb95ae83c8b5a6ba2fc",
+      "productionSha256": "5a2d414eb6327eca2690dbbc3d3eb95d09516d16aa28919442e2f2b9c988f6df",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "026f88d3004dad393459a3312293260035631bb9d3bfb2d87f51822db061fe11",
+      "productionSha256": "bdbe04366843cb5402d4def080728c70d480d849b383772f5dddba950d2e4c4b",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "fa892fc6c4af162e01851a94985186ec5cb5b3edc32a155bc27f6b18004b9feb",
+      "productionSha256": "c517ba859c4502a2e27ef23c6f75f06820ac56554d9ac7b3654768b64d80372f",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "d18e81bdc7468d810dbdadf6cd6858f826e423464f64735efb447ed1ca68b5b2",
+      "productionSha256": "a1c38f495a1346a6cc9b764cf202726f6f63293cbc215c79dffabea9ade89081",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "6a972263053182e4ce977029fa2eca527ccbeded4baa1bafd1ef55cefcacdf76",
+      "productionSha256": "94a45646600deb26446d4bad65cebd00c1f6f80de643cadea83e8a28de553aef",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

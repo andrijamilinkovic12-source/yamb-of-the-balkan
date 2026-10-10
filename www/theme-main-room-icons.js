@@ -2,6 +2,7 @@
 (() => {
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const iconPattern = /assets\/green-soft-clay\/canonical\/([a-z-]+)-room-identity\/([a-z-]+)-room-(menu-)?v1\.png/;
+    const tournamentRoomPattern = /assets\/green-soft-clay\/canonical\/tournament-(navigation|states)\/([a-z-]+)-v1\.png/;
     const legacySources = {
         'runtime/menu/treasury-free-v3.png': ['treasury', 'menu'],
         'treasury-free-v3.png': ['treasury', 'room'],
@@ -52,6 +53,23 @@
         root.querySelectorAll?.('img[data-theme-src]').forEach(image => candidates.push(image));
         candidates.forEach(image => {
             const original = image.dataset.themeSrc || '';
+            const tournamentRoom = original.match(tournamentRoomPattern);
+            if (tournamentRoom) {
+                const hasTournamentPack = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter'].includes(theme)
+                    || (tournamentRoom[2] === 'tab-bracket' && ['moon', 'desert', 'severna'].includes(theme));
+                const revision = theme === 'neon' && tournamentRoom[2] === 'tab-bracket' ? '?v=2' : '';
+                const nextSource = hasTournamentPack
+                    ? `assets/theme-packs/${theme}/canonical/tournament-${tournamentRoom[1]}/${tournamentRoom[2]}-v1.png${revision}`
+                    : original;
+                if (image.getAttribute('src') !== nextSource) {
+                    guardImageSwap(image);
+                    image.src = nextSource;
+                    if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
+                }
+                image.classList.toggle('theme-tournament-room-icon', hasTournamentPack);
+                image.parentElement?.classList.toggle('theme-tournament-room-icon-host', hasTournamentPack);
+                return;
+            }
             const match = original.match(iconPattern);
             const legacy = original.match(/assets\/green-soft-clay\/([^?]+)/);
             const mapped = legacy && legacySources[legacy[1]];

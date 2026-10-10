@@ -10,6 +10,17 @@ function rulesAssetIconHtml(src, extraClass = '') {
     return `<img class="${className}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
 }
 
+function rulesEasterTournamentCanonicalSrc(src = '') {
+    const source = String(src);
+    const path = source.split('?')[0];
+    const replacements = {
+        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png',
+        'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/theme-packs/easter/canonical/tournament-states/state-start-v1.png',
+        'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png': 'assets/theme-packs/easter/canonical/tournament-navigation/tab-hall-of-fame-v1.png'
+    };
+    return replacements[path] || source;
+}
+
 function rulesDesertAssetSrc(easterSrc = '') {
     const source = String(easterSrc || '');
     const [path, query = ''] = source.split('?');
@@ -192,7 +203,7 @@ function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${easterSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterTournamentCanonicalSrc(easterSrc)}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
 }
 
 function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
@@ -207,7 +218,7 @@ function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${easterSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterTournamentCanonicalSrc(easterSrc)}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
 }
 
 function rulesTextGlyphHtml(glyph) {

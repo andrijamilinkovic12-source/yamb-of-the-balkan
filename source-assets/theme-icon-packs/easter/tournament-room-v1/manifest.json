@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "themeId": "easter",
+  "status": "linked; visual review pending",
+  "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "3cbc24d1d6386398943e836038f47f8395670e99017f7345fe45cfa45624522a",
+      "productionSha256": "a2430eba42e3665dadd78b802914c12c2d29963b36975ae6880e742cf97eb77a",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "8cbc1ef2855626729cd6ba6074a31f17bb81cf18144aad1f9826564f145b13bb",
+      "productionSha256": "f5945ffefa548459ec24c13065c21a66769cc277529626ed236766b844d10375",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "bda5371deac47e3cabb7393cd68e9c72a75c7b4e5af11d50d7d5f2fb1a5d4e57",
+      "productionSha256": "521aa99f9d9b06eb0a2a59f1b996a91cca81cc2476d5196b369a148de6d169f6",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "ea52295f56680e33c5877fed2587c00cea9020be8666110f5f20dadac4362af6",
+      "productionSha256": "65a6f4ec8c59921492646eb1e66a1c910da81eaa9edd111347160faa4c15757b",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "a5513084429ec8e4ae8b6785f8d74c8a6fe3e07b0b02aad543cf736cc9170245",
+      "productionSha256": "e0a6a3a2482ad491f9d6465755acaf27182d2c6b7e70741beb59d85ab1140bc5",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "1dda04513d45dfb3fe8f982f66de9242a04a72cd19584322ee6c1b73e1a6be11",
+      "productionSha256": "b8e49d6afb818384329d0c01d85dbdf560c27a7891e585aec53b3b6dd83d391c",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "9521568e7810e5281be79f62e8f8af57d7f560b94bd2787506a0a97013dc92d8",
+      "productionSha256": "a2bb39cf5d666287bb2a40debc1f47321398cb11d566f1975b7d7817b391b01e",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "6a597a0d148342fa42757e7667fa683f505296d041b5508ae4646c66105b094f",
+      "productionSha256": "8786cc52a6e2a1e9a6a0ba6b39a34292ea990fcd9523a255b7f6a93c6f112756",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "e4444e778f99bcc917c46748e03de7d8030119ee795e61aeb672b6171081d601",
+      "productionSha256": "68fa5a72b7272db1c3889467672e7d64900c5521b95f718bd84daafdf7e14513",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/easter/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "594e0487cf32a16b02f421c60fb26ca961dac887e5f31a50f0a088cb00406571",
+      "productionSha256": "6cffb6f7271775dca4e86686a227830de79a6bbc485f00c69ed208a61d191e6b",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

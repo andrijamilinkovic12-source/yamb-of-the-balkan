@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "themeId": "moon",
+  "status": "partially linked; remaining Tournament roles pending",
+  "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "5de4cf853a03afbc55d682cdf72845bc600a58e64381084dcc49480e3692e21c",
+      "productionSha256": "ad61dc029089caaf75f9073087cdf65d87111f512f3d2ab218508aa153e06749",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

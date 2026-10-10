@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "themeId": "light",
+  "status": "linked; visual review pending",
+  "generationMethod": "built-in imagegen; original icon prompts and rank-specific edits of one original tournament medal",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "f2aa7c1a959a1f4bd17b6cfd09a5697772499b462ad1ce5d32b42c51f184c4f8",
+      "productionSha256": "0d7d08a8c6ad622e259ff0e2c62ead1490f8444e151e655254b9a2a182ae2c3e",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "ce6aff471ee5a77ccdf76cfb2283b3c809332e48ba3f54dfc1c2c9f7557de03e",
+      "productionSha256": "11bb77af65acff334b42e54d25427782b81231a0a2f5d809e3f57ddfa0a2737f",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "87ffd2caf93f9f0ce7622c5c25e6093c296a184b928ed93f6ed9d534ecbb9604",
+      "productionSha256": "6e44dfbd31523a45d55a1b42e8f6678b836aca645a4931331060a3cd9c240084",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "ec01e0e19277862f8fec8de1c34716ea86b4a5a170b0d4b5add968105fd35997",
+      "productionSha256": "3082da5fe4c3d67f5efd19486f21cd597a839748b12ea10ae55f32629a928147",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "3b98bc1325b1ec73c6ac69495c9187ca866c4051d7d64f9adae1d1cf7d9aff7d",
+      "productionSha256": "2e07589762d05b36325a3b7abead15fc83cbc19bfeb5822b627bf227c082dd3d",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "6782ecef03763eaaa9d6da51fe17a44b56b0f5802fbb8c230e6e4804632fc7ac",
+      "productionSha256": "993869b96588f5a56c9f294f20e73828ded7f483743943bc1cf42e04af71f211",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "2f6b0ec49d21662519ebbb0c41826610b17c910245f50c7ffa6b6534d790c3ed",
+      "productionSha256": "d0081a17d6bb8c20af3669007a820fa6a205a5da55d06d8211f063bc6fb01b6c",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "e6db6add294b6ff3b92005eacc9125e17558ac8b77cccc4f8277d93de533f292",
+      "productionSha256": "9b416ff57eb9d3e1837116356d8acfdfc5ce0cd4931e8c4293faadfa22b730a0",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "0a39cd53b91f05c556bd14a9e47506f4b049cba0a24310e514d29e1e7e5d18dc",
+      "productionSha256": "092ef39ed82773e59133ac09714f43b8864e38bc8f8ed9291ad729a1cf2f169d",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "cd1d7da3f900d1680e3cabc55ee647c0c108087906e2b7d5e7c373ad6b820979",
+      "productionSha256": "602f01bc0c5a9859b7413dd9e27ceced7df7845e654693191bae5a15498660ab",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tournament-gold",
+      "group": "competition-medals",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tournament-gold-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/competition-medals/tournament-gold-v1.png",
+      "masterSha256": "6aeb5b89ad1a377587d35ac91a480cb22e8575dd50ea10b206b702588535f407",
+      "productionSha256": "91d06e28e232a9ac7b0c0d0a385deea19a47f128f1d70ceb599dc801bf1a0a05",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tournament-silver",
+      "group": "competition-medals",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tournament-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/competition-medals/tournament-silver-v1.png",
+      "masterSha256": "09effb71b0ea77ef7e80fe06a279720e460ce79a009797df524c60840a1f71a0",
+      "productionSha256": "ffb13d6aeed34685b0aeb65734228c7b1b07ea9fa603efc3f5986eb3a62199f5",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tournament-bronze",
+      "group": "competition-medals",
+      "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/tournament-bronze-master-v1.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/competition-medals/tournament-bronze-v1.png",
+      "masterSha256": "8ffa3b3dbdafdc5d1a6abdb65285a1c1cf73c69d37057f74d364bc4e103a8ed6",
+      "productionSha256": "40c16c41e5024f7466f04e38cc289fb53b5f46043cb5ba2653970280f47899b1",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

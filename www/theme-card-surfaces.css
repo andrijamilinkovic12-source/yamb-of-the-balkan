@@ -263,3 +263,118 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     -webkit-backdrop-filter: none !important;
     text-align: center;
 }
+
+/* Tournament bracket geometry follows Green; colors and material remain theme-owned. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-pagination .dot {
+    align-items: end;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-tab-content--bracket {
+    padding: 4px 10px max(4px, env(safe-area-inset-bottom));
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-page {
+    padding-inline: 0;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-tab-content--bracket .tourney-card {
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches {
+    overflow: hidden;
+    padding: 2px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--qf {
+    display: grid;
+    grid-template-rows: repeat(4, minmax(max-content, 1fr));
+    gap: clamp(4px, .8vh, 10px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--sf {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: clamp(10px, 2vh, 24px);
+    align-items: center;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--qf .tourney-match {
+    min-height: max-content;
+    height: auto;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--sf .tourney-match,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--f .tourney-match {
+    min-height: var(--match-min-height, 62px);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-match {
+    flex: 0 0 auto;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-row {
+    padding: 2px 6px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-row img {
+    width: 20px !important;
+    height: 20px !important;
+    border-width: 1px !important;
+    margin-right: 5px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-completed-match-result {
+    padding: 1px 4px !important;
+    font-size: .64rem !important;
+    line-height: 1 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-identity {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: visible !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-name {
+    font-size: .72rem !important;
+    line-height: 1.1 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-row.is-loser {
+    opacity: .76 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-power {
+    font-size: .65rem !important;
+    margin-left: 4px;
+}
+@media (min-height: 741px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--qf .tourney-match {
+        height: auto;
+        align-self: center;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-row {
+        padding: 5px 8px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-row img {
+        width: 24px !important;
+        height: 24px !important;
+        border-width: 2px !important;
+        margin-right: 8px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-name {
+        font-size: .84rem !important;
+        line-height: 1.2 !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-participant-power {
+        font-size: .72rem !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-completed-match-result {
+        padding: 2px 8px !important;
+        font-size: .7rem !important;
+        line-height: 1.15 !important;
+    }
+}
+@media (max-height: 640px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--qf {
+        grid-template-rows: repeat(4, minmax(88px, max-content));
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-matches--qf .tourney-match {
+        height: auto;
+    }
+}

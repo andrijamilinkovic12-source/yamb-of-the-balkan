@@ -104,6 +104,14 @@
     object-fit: contain;
     vertical-align: middle;
 }
+.modal-context-tourney-finalist .tourney-prize-result-icon-canonical[src*="/tournament-awards/finalist-silver-"] {
+    display: block !important;
+    width: 92px;
+    height: 92px;
+    flex-basis: 92px;
+    margin: 0 auto 10px;
+    object-fit: contain;
+}
 #tournament-screen .tourney-champion-finalist-icon-canonical {
     display: inline-block !important;
     width: 26px;

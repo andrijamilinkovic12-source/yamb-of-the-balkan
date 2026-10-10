@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "themeId": "desert",
+  "status": "partially linked; remaining Tournament roles pending",
+  "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
+  "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
+  "assets": [
+    {
+      "id": "tab-bracket",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/tab-bracket-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png",
+      "masterSha256": "3bb299b77f8d3071bae05b0e0ed8d5f12a93423a37ea27ebe28a9c8bd04cf6fc",
+      "productionSha256": "a10ccfe7483bf228f8cee8abb31bbe281e40fbd6f8f085506cfa08d4a24a16fa",
+      "productionSize": [
+        256,
+        256
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+# Mesečev Sjaj — Kostur Turnira
+
+Original transparent PNG with exactly eight initial competitors, four low silver-grey clay disks on each side. Dark graphite-clay rails and single broad concave relief lead to one pale silver final. The approved champion cup supplied this theme's material and palette; the Green icon supplied only the eight-entrant knockout topology. No stars, blue glow, repeated craters or photorealistic stone. The 1254 × 1254 RGBA master is normalized to a 256 × 256 RGBA runtime PNG with `scripts/build-tournament-room-pack.ps1 -Theme moon -OnlyRole tab-bracket`. Other Tournament roles remain pending.
