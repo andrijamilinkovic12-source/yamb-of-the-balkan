@@ -1527,7 +1527,8 @@ class YambApp {
 
     ensureThemeDiceSkin(themeId, skinId, { activateAsDefault = false, refreshActiveSkin = false } = {}) {
         const safeSkinId = String(skinId || '').trim();
-        if (!safeSkinId) return;
+        const gift = SHOP_DATA.SKINS.find(item => item.id === safeSkinId && item.themeGift === themeId);
+        if (!gift || !this.isThemeUnlocked(themeId)) return false;
 
         const markerKey = this.getThemeDiceDefaultMarkerKey(themeId);
         const isFirstThemeSelection = localStorage.getItem(markerKey) !== 'true';
@@ -1564,6 +1565,7 @@ class YambApp {
                 this.features?.applySkinToElement(element, element.classList.contains('held'));
             });
         }
+        return true;
     }
 
     getThemeLoadingPack(theme) {
@@ -2622,26 +2624,27 @@ class YambApp {
             this.socket.emit('monitor_theme_seen', { theme: safeTheme });
         }
 
-        const themeDefaultSkins = {
-            dark: 'green_clay',
-            desert: 'desert_glass',
-            easter: 'easter_neumorphic',
-            severna: 'severna_nebula'
-        };
+        const themeDefaultSkins = Object.fromEntries(
+            SHOP_DATA.SKINS.filter(item => item.themeGift).map(item => [item.themeGift, item.id])
+        );
         const defaultSkin = themeDefaultSkins[safeTheme];
-        if (defaultSkin && !skipThemeDiceDefault) {
-            const themeDefaultSkinIds = Object.values(themeDefaultSkins);
+        if (defaultSkin && !skipThemeDiceDefault && this.isThemeUnlocked(safeTheme)) {
+            const themeDefaultSkinIds = [
+                ...Object.values(themeDefaultSkins),
+                'desert_glass', 'easter_neumorphic', 'severna_nebula'
+            ];
             const activeSkin = localStorage.getItem('yamb_active_skin') || 'default';
+            const retiredSkinActive = ['desert_glass', 'easter_neumorphic', 'severna_nebula'].includes(activeSkin);
             const manualSkinChoice = localStorage.getItem('yamb_manual_active_skin');
             const hasManualSkinChoice = !!manualSkinChoice && manualSkinChoice === activeSkin;
             const hasRecentManualSkinSwitch = Date.now() < this.skinManualSwitchUntil;
-            const shouldRefreshThemeDefaultSkin = !hasManualSkinChoice
+            const shouldRefreshThemeDefaultSkin = retiredSkinActive || (!hasManualSkinChoice
                 && !hasRecentManualSkinSwitch
-                && (activeSkin === 'default' || themeDefaultSkinIds.includes(activeSkin));
-            // Pri pravom prvom izboru teme skin postaje aktivan. Pri učitavanju postojećeg
-            // naloga samo ga obezbeđujemo, bez menjanja već odabranog skina igrača.
+                && (activeSkin === 'default' || themeDefaultSkinIds.includes(activeSkin)));
+            // Samo već otključana tema daje besplatan skin. Pri migraciji stari skin
+            // zamenjuje novi; ručno izabran važeći skin ostaje aktivan.
             this.ensureThemeDiceSkin(safeTheme, defaultSkin, {
-                activateAsDefault: !initialLoad || shouldRefreshThemeDefaultSkin,
+                activateAsDefault: shouldRefreshThemeDefaultSkin,
                 refreshActiveSkin: shouldRefreshThemeDefaultSkin
             });
         }
@@ -2878,6 +2881,8 @@ class YambApp {
             this.getFreeThemeIds(),
             this.readLocalJson('yamb_unlocked_themes', []),
             this.readLocalJson('yamb_unlocked', []),
+            this.stats?.unlockedThemes || [],
+            this.readLocalJson('yamb_stats', {})?.unlockedThemes || [],
             ...extraSources
         ];
 

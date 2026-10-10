@@ -41,7 +41,7 @@ function contrast(first, second) {
 }
 
 assert(spec.themes.length === 10, 'The design registry must contain exactly ten themes.');
-assert(spec.schemaVersion === 19, 'Unexpected design registry schema.');
+assert(spec.schemaVersion === 22, 'Unexpected design registry schema.');
 const allowedDirections = ['clay', 'smooth_rubber_matte_plastic'];
 assert(JSON.stringify(spec.allowedDirectionIds) === JSON.stringify(allowedDirections), 'Only Clay and Matte Plastic are permitted.');
 assert(JSON.stringify(Object.keys(spec.directions)) === JSON.stringify(allowedDirections), 'Legacy material directions remain active.');

@@ -3576,6 +3576,28 @@ class ShopManager {
             if (this.type === 'skin' && !savedUnlocked.includes('green_clay')) {
                 savedUnlocked.push('green_clay');
             }
+            if (this.type === 'skin') {
+                const retired = new Set(['desert_glass', 'easter_neumorphic', 'severna_nebula']);
+                const giftItems = this.items.filter(item => item.themeGift);
+                const ownedThemes = this.getOwnedThemeIds();
+                const unavailable = new Set(giftItems.filter(item => !ownedThemes.includes(item.themeGift)).map(item => item.id));
+                const allowed = id => !retired.has(id) && !unavailable.has(id);
+                savedUnlocked = savedUnlocked.filter(allowed);
+                giftItems.filter(item => ownedThemes.includes(item.themeGift)).forEach(item => {
+                    if (!savedUnlocked.includes(item.id)) savedUnlocked.push(item.id);
+                });
+                for (const key of ['yamb_unlocked', 'yamb_unlocked_skins']) {
+                    let entries = [];
+                    try { entries = JSON.parse(localStorage.getItem(key) || '[]'); } catch (_) {}
+                    const next = [...new Set([...(Array.isArray(entries) ? entries : []).filter(allowed), ...giftItems.filter(item => ownedThemes.includes(item.themeGift)).map(item => item.id)])];
+                    localStorage.setItem(key, JSON.stringify(next));
+                }
+                if (window.statsManager?.stats) {
+                    const current = Array.isArray(window.statsManager.stats.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [];
+                    window.statsManager.stats.unlockedSkins = [...new Set([...current.filter(allowed), ...giftItems.filter(item => ownedThemes.includes(item.themeGift)).map(item => item.id)])];
+                    window.statsManager.saveStats();
+                }
+            }
         }
         
         this.unlocked = savedUnlocked;
@@ -3586,6 +3608,10 @@ class ShopManager {
         if (this.type === 'skin') {
             this.activeKey = 'yamb_active_skin';
             this.activeItem = localStorage.getItem(this.activeKey) || 'default';
+            if (!this.items.some(item => item.id === this.activeItem) || !this.unlocked.includes(this.activeItem)) {
+                this.activeItem = 'default';
+                localStorage.setItem(this.activeKey, this.activeItem);
+            }
         } else if (this.type === 'theme') {
             this.activeKey = 'yamb_theme';
             this.activeItem = localStorage.getItem(this.activeKey) || 'dark';
@@ -3602,6 +3628,28 @@ class ShopManager {
 
     updateBalanceDisplay() {
         if(this.balanceEl) this.balanceEl.innerText = this.balance;
+    }
+
+    getOwnedThemeIds() {
+        const read = key => {
+            try { const value = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(value) ? value : []; }
+            catch (_) { return []; }
+        };
+        const stats = window.statsManager?.stats || {};
+        let storedStats = {};
+        try { storedStats = JSON.parse(localStorage.getItem('yamb_stats') || '{}') || {}; } catch (_) {}
+        return [...new Set([
+            ...YAMB_FREE_THEME_IDS, ...filterYambThemeIds(read('yamb_unlocked_themes')),
+            ...filterYambThemeIds(read('yamb_unlocked')),
+            ...filterYambThemeIds(stats.unlockedThemes), ...filterYambThemeIds(stats.unlockedSkins),
+            ...filterYambThemeIds(storedStats.unlockedThemes), ...filterYambThemeIds(storedStats.unlockedSkins)
+        ])];
+    }
+
+    grantThemeDiceSkinForTheme(themeId) {
+        if (this.type !== 'theme' || !window.app || typeof window.app.ensureThemeDiceSkin !== 'function') return;
+        const gift = SHOP_DATA.SKINS.find(item => item.themeGift === themeId);
+        if (gift) window.app.ensureThemeDiceSkin(themeId, gift.id, { activateAsDefault: true, refreshActiveSkin: true });
     }
 
     getItemById(id) {
@@ -3660,6 +3708,7 @@ class ShopManager {
     groupByCategory() {
         const grouped = {};
         this.items.forEach(item => {
+            if (this.type === 'skin' && item.themeGift && !this.getOwnedThemeIds().includes(item.themeGift)) return;
             const cat = resolveText(item.category) || _safeT('category_other');
             if (!grouped[cat]) grouped[cat] = [];
             grouped[cat].push(item);
@@ -3744,10 +3793,8 @@ class ShopManager {
 
                 let visualHtml = '';
                 if (this.type === 'skin') {
-                    const clayPipPreview = item.id === 'green_clay' || (isGreenTreasury && item.id === 'bronze_antique')
-                        ? '<div class="dice-dots-wrapper val-6" aria-hidden="true"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div>'
-                        : '⚅';
-                    visualHtml = `<div class="dice-preview preview-${item.id}">${clayPipPreview}</div>`;
+                    const pipPreview = '<div class="dice-dots-wrapper val-6" aria-hidden="true">' + '<div class="dice-dot"></div>'.repeat(6) + '</div>';
+                    visualHtml = `<div class="dice-preview preview-${item.id}">${pipPreview}</div>`;
                 } else if (this.type === 'effect') {
                     const canonicalEffectPreview = ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
                     const effectPreview = item.id === 'royal_yamb'
@@ -3778,7 +3825,9 @@ class ShopManager {
                         priceHtml = `<div class="price riznica-item-status riznica-item-status--owned">${this.getEasterTreasuryStatusIcon('status-owned')}<span>${visibleBoughtLabel}</span></div>`;
                     } else {
                         // NOVO: Provera da li se otključava reklamama
-                        if (item.adUnlock) {
+                        if (this.type === 'skin' && item.themeGift) {
+                            priceHtml = `<div class="price">${resolveText({ sr: 'Besplatno uz temu', en: 'Free with theme' })}</div>`;
+                        } else if (item.adUnlock) {
                             const watchToUnlockLabel = String(_safeT('shop_watch_to_unlock') || 'Gledaj 📺 za otključavanje');
                             const watchToUnlockText = isGreenTreasury
                                 ? `${this.getTreasuryRewardVideoIcon()}<span>${watchToUnlockLabel.replace(/\s*📺\s*/u, ' ').trim()}</span>`
@@ -3804,6 +3853,10 @@ class ShopManager {
                         btnHtml = `<button class="btn-action btn-active riznica-item-status riznica-item-status--active">${this.getEasterTreasuryStatusIcon('status-active')}<span>${_safeT('btn_active')}</span></button>`;
                     } else if (isUnlocked) {
                         btnHtml = `<button class="btn-action btn-equip" onclick="shop.equip('${item.id}')">${_safeT('btn_equip')}</button>`;
+                    } else if (this.type === 'skin' && item.themeGift) {
+                        const giftTheme = SHOP_DATA.THEMES.find(theme => theme.id === item.themeGift);
+                        const giftThemeName = resolveText(giftTheme?.name) || item.themeGift;
+                        btnHtml = `<div class="req-text riznica-item-status riznica-item-status--locked">${this.getEasterTreasuryStatusIcon('status-locked')}<span>${resolveText({ sr: 'Izaberi temu', en: 'Select theme' })}: ${giftThemeName}</span></div>`;
                     } else {
                         const reqMet = !item.req || this.unlocked.includes(item.req);
                         
@@ -3860,7 +3913,8 @@ class ShopManager {
     equip(id) {
         const itemId = String(id || '').trim();
         const itemExists = this.items.some(item => item.id === itemId);
-        if (!itemExists || !this.unlocked.includes(itemId)) {
+        const item = this.getItemById(itemId);
+        if (!itemExists || !this.unlocked.includes(itemId) || (this.type === 'skin' && item?.themeGift && !this.getOwnedThemeIds().includes(item.themeGift))) {
             this.render();
             return;
         }
@@ -3940,6 +3994,9 @@ class ShopManager {
 
         if (!itemId || !item) return false;
 
+        // Tematski poklon se dobija uz otključanu temu, ne kupovinom za 0 dukata.
+        if (this.type === 'skin' && item.themeGift && !this.unlocked.includes(itemId)) return false;
+
         if (this.unlocked.includes(itemId)) {
             this.updateBalanceDisplay();
             this.render();
@@ -4007,6 +4064,8 @@ class ShopManager {
             }
             window.statsManager.saveStats();
         }
+
+        if (this.type === 'theme') this.grantThemeDiceSkinForTheme(itemId);
 
         if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
             window.app.socket.emit('set_player_data', {
@@ -4145,6 +4204,7 @@ class ShopManager {
                         }
                     }
 
+                    if (this.type === 'theme') this.grantThemeDiceSkinForTheme(item.id);
                     if(window.app && window.app.soundMgr) window.app.soundMgr.trophy();
                     this.syncShopStateToServer();
                     

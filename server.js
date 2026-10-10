@@ -1968,8 +1968,15 @@ const SHOP_ITEM_PRICES = Object.freeze({
     glass_emerald: 50000,
     glass_sapphire: 50000,
     green_clay: 0,
-    desert_glass: 0,
-    easter_neumorphic: 0,
+    theme_light_gold: 0,
+    theme_dark_cherry: 0,
+    theme_blue_ocean: 0,
+    theme_neon_cyber: 0,
+    theme_royal_amethyst: 0,
+    theme_easter: 0,
+    theme_desert: 0,
+    theme_moonlight: 0,
+    theme_northern_nebula: 0,
     magma: 75000,
     galaxy: 85000,
     retro: 100000,
@@ -2006,9 +2013,18 @@ const SHOP_AD_UNLOCK_TARGETS = Object.freeze({
     desert: 3
 });
 const SHOP_AD_UNLOCK_IDS = new Set(Object.keys(SHOP_AD_UNLOCK_TARGETS));
+const THEME_GIFT_SKINS = Object.freeze({
+    dark: 'green_clay', light: 'theme_light_gold', medium: 'theme_dark_cherry',
+    winter: 'theme_blue_ocean', neon: 'theme_neon_cyber', amethyst: 'theme_royal_amethyst',
+    easter: 'theme_easter', desert: 'theme_desert', moon: 'theme_moonlight',
+    severna: 'theme_northern_nebula'
+});
+const GIFT_SKIN_THEMES = Object.freeze(Object.fromEntries(Object.entries(THEME_GIFT_SKINS).map(([theme, skin]) => [skin, theme])));
+const RETIRED_SKIN_IDS = new Set(['desert_glass', 'easter_neumorphic', 'severna_nebula']);
 const FREE_UNLOCK_IDS = new Set(
     Object.entries(SHOP_ITEM_PRICES)
-        .filter(([id, price]) => price === 0 && !SHOP_AD_UNLOCK_IDS.has(id))
+        .filter(([id, price]) => price === 0 && !SHOP_AD_UNLOCK_IDS.has(id)
+            && (!GIFT_SKIN_THEMES[id] || ['dark', 'light', 'medium', 'winter'].includes(GIFT_SKIN_THEMES[id])))
         .map(([id]) => id)
 );
 const SKIN_UNLOCK_IDS = new Set([
@@ -2018,7 +2034,9 @@ const SKIN_UNLOCK_IDS = new Set([
     'gold_classic', 'gold_rose', 'gold_ancient', 'gold_midas',
     'wood', 'marble', 'pearl', 'carbon', 'obsidian', 'leather',
     'neon_blue', 'neon_pink', 'neon_green', 'stealth',
-    'glass_clear', 'glass_ruby', 'glass_emerald', 'glass_sapphire', 'green_clay', 'desert_glass', 'easter_neumorphic',
+    'glass_clear', 'glass_ruby', 'glass_emerald', 'glass_sapphire', 'green_clay',
+    'theme_light_gold', 'theme_dark_cherry', 'theme_blue_ocean', 'theme_neon_cyber',
+    'theme_royal_amethyst', 'theme_easter', 'theme_desert', 'theme_moonlight', 'theme_northern_nebula',
     'magma', 'galaxy', 'retro', 'hologram'
 ]);
 const EFFECT_UNLOCK_IDS = new Set([
@@ -8985,10 +9003,10 @@ function addUnlockedShopItemToUser(user, itemId) {
     if (!user || !itemId) return false;
 
     let changed = false;
-    const addToField = (field) => {
+    const addToField = (field, unlockId = itemId) => {
         const current = sanitizeIdArray(user[field]);
-        if (current.includes(itemId)) return;
-        current.push(itemId);
+        if (current.includes(unlockId)) return;
+        current.push(unlockId);
         user[field] = current;
         changed = true;
     };
@@ -8996,6 +9014,13 @@ function addUnlockedShopItemToUser(user, itemId) {
     addToField('yamb_unlocked');
     if (SKIN_UNLOCK_IDS.has(itemId)) addToField('unlockedSkins');
     if (EFFECT_UNLOCK_IDS.has(itemId)) addToField('unlockedEffects');
+    const giftSkin = THEME_GIFT_SKINS[itemId];
+    if (giftSkin) {
+        addToField('yamb_unlocked', giftSkin);
+        addToField('unlockedSkins', giftSkin);
+        user.activeSkin = giftSkin;
+        changed = true;
+    }
 
     return changed;
 }
@@ -9008,6 +9033,7 @@ function getPaidUnlockPurchaseSummary(requestedUnlocks, existingUnlocks, request
     const discountedIds = [];
 
     requestedUnlocks.forEach(id => {
+        if (GIFT_SKIN_THEMES[id] || RETIRED_SKIN_IDS.has(id)) return;
         if (existingUnlocks.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id)) return;
         if (!isPaidShopUnlockId(id)) {
             total += 50000;
@@ -9176,11 +9202,18 @@ async function claimVerifiedGameRewardBalance(uid, matchId, reward) {
     return { ok: !!existingUser, claimed: false, user: existingUser };
 }
 
-function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks) {
-    const serverSet = new Set(sanitizeIdArray(serverItems));
+function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks, ownedThemes = []) {
+    const themeSet = new Set(['dark', 'light', 'medium', 'winter', ...sanitizeIdArray(ownedThemes)]);
+    const giftAllowed = id => !GIFT_SKIN_THEMES[id] || themeSet.has(GIFT_SKIN_THEMES[id]);
+    const serverSet = new Set(sanitizeIdArray(serverItems).filter(id => !RETIRED_SKIN_IDS.has(id) && giftAllowed(id)));
     const trophySet = new Set(sanitizeIdArray(requestedTrophies));
 
     sanitizeIdArray(clientItems).forEach(id => {
+        if (RETIRED_SKIN_IDS.has(id) || !giftAllowed(id)) return;
+        if (GIFT_SKIN_THEMES[id]) {
+            serverSet.add(id);
+            return;
+        }
         if (serverSet.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id) || (acceptPaidUnlocks && isPaidShopUnlockId(id))) {
             serverSet.add(id);
         }
@@ -9715,6 +9748,8 @@ function buildInitialEconomyState(stats, acceptedTrophies = null) {
         ...sanitizeIdArray(stats?.yamb_unlocked),
         ...sanitizeIdArray(stats?.unlockedThemes)
     ];
+    const acceptedThemeUnlocks = filterAllowedUnlocks(generalUnlocks.filter(id => THEME_UNLOCK_IDS.has(id)), [], requestedTrophies, acceptsPaidUnlocks);
+    const acceptedGeneralUnlocks = filterAllowedUnlocks(generalUnlocks, [], requestedTrophies, acceptsPaidUnlocks, acceptedThemeUnlocks);
 
     if (!acceptsPaidUnlocks && requestedPaidUnlockCost > 0) {
         console.log(`🚨 ECONOMY GUARD: Novi profil poslao unlock-e bez pokrića. Potrebno ${requestedPaidUnlockCost}, pokriće ${purchaseCoverage}.`);
@@ -9724,9 +9759,9 @@ function buildInitialEconomyState(stats, acceptedTrophies = null) {
         balance: Math.max(0, Math.min(MAX_BALANCE, acceptedBalance)),
         undoTokens: Math.max(0, Math.min(MAX_UNDO_TOKENS, undoLimit, toSafeInt(stats?.undoTokens, 0))),
         unlockedTrophies: requestedTrophies,
-        unlockedSkins: filterAllowedUnlocks(stats?.unlockedSkins, [], requestedTrophies, acceptsPaidUnlocks),
+        unlockedSkins: filterAllowedUnlocks(stats?.unlockedSkins, [], requestedTrophies, acceptsPaidUnlocks, acceptedGeneralUnlocks),
         unlockedEffects: filterAllowedUnlocks(stats?.unlockedEffects, [], requestedTrophies, acceptsPaidUnlocks),
-        yamb_unlocked: filterAllowedUnlocks(generalUnlocks, [], requestedTrophies, acceptsPaidUnlocks)
+        yamb_unlocked: acceptedGeneralUnlocks
     };
 }
 
@@ -10426,18 +10461,23 @@ io.on('connection', (socket) => {
                         const mergedTrophies = new Set([...user.unlockedTrophies, ...requestedTrophies]);
                         user.unlockedTrophies = Array.from(mergedTrophies);
                     }
-                    if (s.unlockedSkins && s.unlockedSkins.length > 0) {
-                        user.unlockedSkins = filterAllowedUnlocks(s.unlockedSkins, user.unlockedSkins, requestedTrophies, acceptsPaidUnlocks);
-                    }
-                    if (s.unlockedEffects && s.unlockedEffects.length > 0) {
-                        user.unlockedEffects = filterAllowedUnlocks(s.unlockedEffects, user.unlockedEffects, requestedTrophies, acceptsPaidUnlocks);
-                    }
                     const generalUnlocks = [
                         ...sanitizeIdArray(s.yamb_unlocked),
                         ...sanitizeIdArray(s.unlockedThemes)
                     ];
                     if (generalUnlocks.length > 0) {
-                        user.yamb_unlocked = filterAllowedUnlocks(generalUnlocks, user.yamb_unlocked, requestedTrophies, acceptsPaidUnlocks);
+                        const acceptedThemes = filterAllowedUnlocks(
+                            generalUnlocks.filter(id => THEME_UNLOCK_IDS.has(id)),
+                            sanitizeIdArray(user.yamb_unlocked).filter(id => THEME_UNLOCK_IDS.has(id)),
+                            requestedTrophies, acceptsPaidUnlocks
+                        );
+                        user.yamb_unlocked = filterAllowedUnlocks(generalUnlocks, user.yamb_unlocked, requestedTrophies, acceptsPaidUnlocks, acceptedThemes);
+                    }
+                    if (s.unlockedSkins && s.unlockedSkins.length > 0) {
+                        user.unlockedSkins = filterAllowedUnlocks(s.unlockedSkins, user.unlockedSkins, requestedTrophies, acceptsPaidUnlocks, user.yamb_unlocked);
+                    }
+                    if (s.unlockedEffects && s.unlockedEffects.length > 0) {
+                        user.unlockedEffects = filterAllowedUnlocks(s.unlockedEffects, user.unlockedEffects, requestedTrophies, acceptsPaidUnlocks);
                     }
 
                     if (!acceptsPaidUnlocks && requestedPaidUnlockCost > 0) {

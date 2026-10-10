@@ -26,12 +26,13 @@
     "check:h2h-ledger": "node scripts/check-h2h-ledger-rebuild.js",
     "check:theme-performance": "node scripts/check-theme-performance.js",
     "check:theme-board": "node scripts/check-theme-game-board.js",
+    "check:dice-skins": "node scripts/check-universal-dice-skins.js && node scripts/check-theme-dice-entitlements.js",
     "check:effect-screen-lifecycle": "node scripts/check-effect-screen-lifecycle.js",
     "check:portrait-lock": "node scripts/check-portrait-lock.js",
     "check:easter-coverage": "node scripts/check-easter-asset-coverage.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:ad-consent && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:theme-board && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
+    "test": "npm run check:js && npm run check:ad-consent && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:theme-board && npm run check:dice-skins && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",

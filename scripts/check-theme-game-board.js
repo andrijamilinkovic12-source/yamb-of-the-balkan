@@ -115,7 +115,7 @@ for (const id of themeIds) {
 
 const geometryDeclarations = css.match(/^\s*(?:width|height|min-width|max-width|min-height|max-height|padding(?:-[\w-]+)?|margin(?:-[\w-]+)?|font-size|font-family|font-weight|line-height|letter-spacing|grid-template(?:-[\w-]+)?|gap|transform|flex(?:-[\w-]+)?|border(?:-width|-radius)?|border-(?:top|right|bottom|left)(?:-width)?)\s*:/gm) || [];
 assert.equal(geometryDeclarations.length, 0, 'Board skin must not change geometry or typography');
-for (const selector of ['#game-scene #btn-bacaj', '#game-scene #btn-najava', '.dice.skin-default']) {
+for (const selector of ['#game-scene #btn-bacaj', '#game-scene #btn-najava', '.dice:not([class*="skin-"])']) {
     assert(css.includes(selector), `Missing board control: ${selector}`);
 }
 for (const selector of ['#game-scene :is(.game-header,.controls-area)', '#game-scene .dice-container',
@@ -127,7 +127,7 @@ assert(css.includes('animation: neon-board-trace 22s linear infinite'), 'Neon ri
 assert(css.includes('mask-composite: exclude'), 'Neon trace must stay on the rim');
 assert(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?neon-theme #game-scene \.player-table::after[\s\S]*?animation: none !important/.test(css),
     'Neon rim must stop for reduced motion');
-assert(fs.readFileSync(path.join(root, 'www/index.html'), 'utf8').includes('theme-game-board.css?v=5'),
+assert(fs.readFileSync(path.join(root, 'www/index.html'), 'utf8').includes('theme-game-board.css?v=6'),
     'Board skin must be loaded by the game');
 
 console.log(`PASS: 10 translucent board palettes, minimum modeled text contrast ${lowestContrast.toFixed(2)}:1, geometry untouched.`);

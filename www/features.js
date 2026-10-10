@@ -14,12 +14,12 @@ if (typeof window.YambFeatures === 'undefined') {
             if (!element) return;
 
             const configuredSkins = (typeof SHOP_DATA !== 'undefined' && Array.isArray(SHOP_DATA.SKINS))
-                ? SHOP_DATA.SKINS.map(item => item.id)
+                ? SHOP_DATA.SKINS
                 : [];
             const savedSkin = localStorage.getItem('yamb_active_skin') || 'default';
-            const activeSkin = configuredSkins.length === 0 || configuredSkins.includes(savedSkin)
-                ? savedSkin
-                : 'default';
+            const selected = configuredSkins.find(item => item.id === savedSkin);
+            const activeSkin = configuredSkins.length === 0 || (selected && (!selected.themeGift || this.app?.isThemeUnlocked(selected.themeGift)))
+                ? savedSkin : 'default';
 
             element.classList.add('dice');
             Array.from(element.classList).forEach(className => {

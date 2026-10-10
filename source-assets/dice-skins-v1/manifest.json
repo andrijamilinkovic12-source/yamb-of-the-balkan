@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 3,
+  "scope": "48 selectable skins usable across all ten themes once unlocked; nine new skins are free gifts of owned themes; one pip-free face per catalog skin; dynamic HTML/CSS pips 1–6",
+  "renderSize": [
+    384,
+    384
+  ],
+  "skins": [
+    {
+      "id": "default",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/default-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/default-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "1d0d481b6b88ae2f002139b7a347c0f8cb4a52466722364a5b1917d9b5533389"
+    },
+    {
+      "id": "classic_red",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/classic_red-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/classic_red-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "f5a09287413e8edc6b9c5cc828c94c08ec2eec34aa28e7b1e5d28093ce684857"
+    },
+    {
+      "id": "classic_blue",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/classic_blue-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/classic_blue-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "85068fae2b9ab510b5483b9d64c0d993ccfac64079a88d4309d5a4e27d92026b"
+    },
+    {
+      "id": "classic_black",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/classic_black-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/classic_black-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "b891cdc78af1dcf3b1bfd5b8f660fa548cc9ab22f34ef3c65bc8fe9aac1be871"
+    },
+    {
+      "id": "bronze_antique",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/green-dice-pilot/bronze-antique-face-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/bronze_antique-face-v1.png",
+      "pipColor": "#fff1d8",
+      "sha256": "d7cfea23704aae8fbd2f85b08cfc71c88c697ad29c43cd0094577d7a38dda872"
+    },
+    {
+      "id": "bronze_patina",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/bronze_patina-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/bronze_patina-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "ffdeb840c08cc95f85c247c04c0c309c33268d18a489e3ac204d5a650952c4d8"
+    },
+    {
+      "id": "bronze_steampunk",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/bronze_steampunk-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/bronze_steampunk-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "5a6eaaa80db276b4c5c83b611c9c5c0983fbb0206802c24bc4ff2fe6f08545ff"
+    },
+    {
+      "id": "bronze_spartan",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/bronze_spartan-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/bronze_spartan-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "24c5c05a89d64c4b7270126f8abc6b10256da152344ae83bcda497e611954557"
+    },
+    {
+      "id": "bronze_rose",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/bronze_rose-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/bronze_rose-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "6abf36526c21636b3766bb39ee79f54ecc30e781b5813580d3421c78b1894eac"
+    },
+    {
+      "id": "bronze_forge",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/bronze_forge-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/bronze_forge-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "6ecc23744fde46f546d2c42f0e10753ddce911d5837e401898e8edce622e2ace"
+    },
+    {
+      "id": "silver_classic",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/silver_classic-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/silver_classic-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "ee0db1bdb610d7ff896ff254f91db80d826617f081c1cf50b5d6d3928f324a50"
+    },
+    {
+      "id": "silver_brushed",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/silver_brushed-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/silver_brushed-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "e864b70eec12cf16382ce2796b331391f2ba49e35733314c9429d509f6211dda"
+    },
+    {
+      "id": "silver_moonlight",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/silver_moonlight-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/silver_moonlight-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "7a8407421ef571e08ecb65515a01a2314c37f6c9936e1bbaf645b84f1e3ade59"
+    },
+    {
+      "id": "silver_knight",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/silver_knight-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/silver_knight-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "2b6974d8de28b9f524de445fd0ba47d467c29454537114d736a5b162254e3131"
+    },
+    {
+      "id": "silver_titanium",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/silver_titanium-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/silver_titanium-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "5f3679875ffefb953ebdc8d5e50631dc154f85da397718e75634cd9caa147005"
+    },
+    {
+      "id": "silver_chrome",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/silver_chrome-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/silver_chrome-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "06ae841e62391bbce4e68ee5747f054db9bbd342307462911384101b4db13f04"
+    },
+    {
+      "id": "gold_classic",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/gold_classic-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/gold_classic-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "ac52d71265c99161c599fe5d57ae2abc5fcd9ff6c69d502d51193912947ba93a"
+    },
+    {
+      "id": "gold_rose",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/gold_rose-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/gold_rose-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "ed32d4da5bf9142b44b816e3f07822eac0fe92a411922879b1debbf5b7c9ef17"
+    },
+    {
+      "id": "gold_ancient",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/gold_ancient-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/gold_ancient-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "fbea0701f827de4d0fa2dfd58836e2ef75815ed11d97f77dc9c118a99936509f"
+    },
+    {
+      "id": "gold_midas",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/gold_midas-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/gold_midas-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "5f9786c4d8193fd4fa5696377a703541388abf688126b4e5a787f24235b4489c"
+    },
+    {
+      "id": "wood",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/wood-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/wood-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "61a3fe9fd00d4f7218d79a5bc29fff85d076f5c149c0ccd504b4b5b3ef37448b"
+    },
+    {
+      "id": "marble",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/marble-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/marble-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "e7ecd564563686155601d2ba8ca610875ca504c61c22080a87d9cd8b8e11fc20"
+    },
+    {
+      "id": "pearl",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/pearl-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/pearl-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "77768cf64e8cd097ab66b0c3f1c10bbf424afb33e24063f79c917d1522781270"
+    },
+    {
+      "id": "carbon",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/carbon-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/carbon-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "f01a3873be138981d9d34478aeea171eb35ee476ddf72c8d61c919958e4e4725"
+    },
+    {
+      "id": "obsidian",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/obsidian-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/obsidian-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "a45abcac84de0c7ac350a5304fa9ea6f91d71dbb6eff8e333489b6c585834b18"
+    },
+    {
+      "id": "leather",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/leather-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/leather-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "08b8937c736a668053800ea00a44d7d4f77ec9de90ad30ddde3d551adaae3545"
+    },
+    {
+      "id": "neon_blue",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/neon_blue-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/neon_blue-face-v1.png",
+      "pipColor": "#b2f5ff",
+      "sha256": "ff6c8bf06fc04a72d1b9a1e34b808e3628bfdf81a619fd7d7790f329932e16bf"
+    },
+    {
+      "id": "neon_pink",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/neon_pink-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/neon_pink-face-v1.png",
+      "pipColor": "#ffd0e4",
+      "sha256": "95c47ea0e4b62735d8cdf44dfead415971429e4e32e90f0b2b97ac835e56d7b4"
+    },
+    {
+      "id": "neon_green",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/neon_green-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/neon_green-face-v1.png",
+      "pipColor": "#d1ffe0",
+      "sha256": "74cad66f400e7f2b9a9b0b09ae3cecc03bbf6c11829cc7c4bfca0acf8317eb31"
+    },
+    {
+      "id": "stealth",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/stealth-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/stealth-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "5177fb385a0018185c053d7ea12524b904fdb1179aa25e0a7612f642afae0ee3"
+    },
+    {
+      "id": "glass_clear",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/glass_clear-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/glass_clear-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "437ae693f702116a7b5a9b46403e68ac9037426a0b42d7257db07276e3232370"
+    },
+    {
+      "id": "glass_ruby",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/glass_ruby-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/glass_ruby-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "007c5809e578c7bbf41ca39ba3640e3a606d0f8e7034e19e91a4bb15f1ff46ab"
+    },
+    {
+      "id": "glass_emerald",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/glass_emerald-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/glass_emerald-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "34ad8edb304e3e2ceee31af0ee185f3932939b502f4053f69b14724a6e8fb8b4"
+    },
+    {
+      "id": "glass_sapphire",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/glass_sapphire-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/glass_sapphire-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "533be062a271647699c087bdc089b549bbd5abcba21e23c99746ddf7c3826dd9"
+    },
+    {
+      "id": "green_clay",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/green-dice-pilot/green-clay-face-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/green_clay-face-v1.png",
+      "pipColor": "#edf3df",
+      "sha256": "70e0ce5d6ad2c6610654a558dd9cda4ce0894f979a9e8aa3175696a9f602e27e",
+      "themeGift": "dark"
+    },
+    {
+      "id": "theme_light_gold",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_light_gold-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_light_gold-face-v1.png",
+      "pipColor": "#392817",
+      "sha256": "435ff3cf30025c70710f7a250d6bc7842ed8f0ff26c4070eb404de94e18e7042",
+      "themeGift": "light"
+    },
+    {
+      "id": "theme_dark_cherry",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_dark_cherry-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_dark_cherry-face-v1.png",
+      "pipColor": "#431720",
+      "sha256": "64a9ac863b4b6a337175813aa2e64175c9180a32a745532a420f1a1b81e336b7",
+      "themeGift": "medium"
+    },
+    {
+      "id": "theme_blue_ocean",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_blue_ocean-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_blue_ocean-face-v1.png",
+      "pipColor": "#173D5B",
+      "sha256": "a7db51d54b8b97f0665f3c7c2afd791be31a62c5eaed97da69e86cb7cef09af1",
+      "themeGift": "winter"
+    },
+    {
+      "id": "theme_neon_cyber",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_neon_cyber-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_neon_cyber-face-v1.png",
+      "pipColor": "#56E5D2",
+      "sha256": "54ebc67a1202ba3c25a5777f8d82fc194f8164624f54ea3c90efefc986ec7e84",
+      "themeGift": "neon"
+    },
+    {
+      "id": "theme_royal_amethyst",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_royal_amethyst-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_royal_amethyst-face-v1.png",
+      "pipColor": "#3C284B",
+      "sha256": "fa24a2c4ccaa968fbe4506fc2b94f21c024805a03d8589bba20b179085d94af0",
+      "themeGift": "amethyst"
+    },
+    {
+      "id": "theme_easter",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_easter-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_easter-face-v1.png",
+      "pipColor": "#3D4434",
+      "sha256": "68149efd77b11ccc327eb6ea1604d1e6d942b80515ebb4eac8211a165cf615ce",
+      "themeGift": "easter"
+    },
+    {
+      "id": "theme_desert",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_desert-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_desert-face-v1.png",
+      "pipColor": "#443027",
+      "sha256": "22d7d51da904b75beff7be4e0a2abdbdb0abca9d3955bf7f8dcebeeb55af4c7e",
+      "themeGift": "desert"
+    },
+    {
+      "id": "theme_moonlight",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_moonlight-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_moonlight-face-v1.png",
+      "pipColor": "#252934",
+      "sha256": "67173c6427a7616403efc0f21649bf60f17d13ec62af32cd977180c7ebddfb65",
+      "themeGift": "moon"
+    },
+    {
+      "id": "theme_northern_nebula",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/theme-dice-skins-v1/masters/theme_northern_nebula-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/theme_northern_nebula-face-v1.png",
+      "pipColor": "#0B1830",
+      "sha256": "01bfdc57317f91a0f938af7504d1a3e694a5b558382b8ffd3a46f6b205eed89e",
+      "themeGift": "severna"
+    },
+    {
+      "id": "magma",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "master": "source-assets/dice-skins-v1/masters/magma-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/magma-face-v1.png",
+      "pipColor": "#f6eadc",
+      "sha256": "62564e4e47b1a5d4265d52a5ba97bcc52699224037d72405844cc0fcfd1f1097"
+    },
+    {
+      "id": "galaxy",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/galaxy-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/galaxy-face-v1.png",
+      "pipColor": "#f6f3e9",
+      "sha256": "624059bf1655ab11aab7cdf6fc22ee294af30666d375ad653af6dbe476c4dd61"
+    },
+    {
+      "id": "retro",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/retro-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/retro-face-v1.png",
+      "pipColor": "#e9ead2",
+      "sha256": "62f1d3710d79ab686138243813512fad9768a57a7608a6991257ab9cb1d56877"
+    },
+    {
+      "id": "hologram",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "master": "source-assets/dice-skins-v1/masters/hologram-master-v1.png",
+      "runtime": "www/assets/dice-skins-v1/hologram-face-v1.png",
+      "pipColor": "#20303a",
+      "sha256": "4e484c98714edc0c79540dafd7de7a5cc9de1efe433199b3b1006c31b7776147"
+    }
+  ]
+}

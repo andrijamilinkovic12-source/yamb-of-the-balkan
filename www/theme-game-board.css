@@ -359,8 +359,7 @@ body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-them
     filter: saturate(.72);
 }
 
-/* The default die belongs to the theme; purchased dice retain their own skins. */
-#game-scene #dice-container .dice.skin-default,
+/* A die without a selected catalog skin uses the board's fallback surface. */
 #game-scene #dice-container .dice:not([class*="skin-"]) {
     background: var(--board-die) !important;
     color: var(--board-ink) !important;
@@ -368,7 +367,6 @@ body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-them
     box-shadow: 0 5px 10px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
 }
 
-#game-scene #dice-container .dice.skin-default.held,
 #game-scene #dice-container .dice:not([class*="skin-"]).held {
     border-color: var(--board-announce) !important;
     box-shadow: 0 0 0 2px var(--board-hover), inset 2px 2px 5px var(--board-recess) !important;
@@ -377,11 +375,6 @@ body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-them
 body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme) #game-scene :is(#btn-bacaj,#btn-najava):not(:active),
 body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)) #game-scene :is(#btn-bacaj,#btn-najava):not(:active) {
     box-shadow: 0 5px 12px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
-}
-
-body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme) #game-scene #dice-container .dice.skin-default,
-body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)) #game-scene #dice-container .dice.skin-default {
-    box-shadow: 0 5px 10px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
 }
 
 /* A single dim trace travels along the Neon Cyber rim, then fades away.

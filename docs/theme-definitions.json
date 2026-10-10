@@ -1,8 +1,35 @@
 {
-  "schemaVersion": 19,
-  "updatedOn": "2026-10-09",
+  "schemaVersion": 22,
+  "updatedOn": "2026-10-10",
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
+  "universalDiceSkinRules": {
+    "scope": "Svih 48 skinova iz SHOP_DATA.SKINS mogu se koristiti u svih deset tema kada su otkljucani. Tematski poklon skin je nedostupan dok igrac ne poseduje odgovarajucu temu; po kupovini ili otkljucavanju teme postaje besplatan i automatski aktivan. Kasniji rucni izbor drugog skina se cuva.",
+    "style": "Svaki skin koristi 3D Soft Neomorphism. Pravac Clay ili Smooth Rubber / Matte Plastic bira se posebno za opste skinove prema materijalu i motivu, a za deset poklon skinova jednak je pravcu maticne teme. Pravac vec izabranog skina se ne menja pri prelasku u drugu temu.",
+    "assets": "Svaki skin ima jedan jedinstven PNG master bez tacaka i jedan produkcioni RGBA PNG 384 x 384. Isti produkcioni fajl se prikazuje u partiji i u pregledu Riznice, bez preslikavanja ili pukog prebojavanja drugog skina. Kanonski spisak fajlova i pravaca je source-assets/dice-skins-v1/manifest.json.",
+    "catalogBoundary": "Ovih 48 PNG lica su inventar skinova kockica, odvojen od 186 ostalih tematskih PNG uloga po temi. Deset tematskih poklon skina ima po jedan identitet za svaku temu, ali ostaje upotrebljivo u drugim temama kada je otkljucano. Raniji desert_glass, easter_neumorphic i severna_nebula su uklonjeni iz kataloga i zamenjeni novim tematskim skinovima.",
+    "pips": "Tacke 1–6 se iscrtavaju dinamicki preko PNG lica prema diceFaceRules.pipLayouts. Ne ugradjuju se u PNG, da broj i raspored uvek odgovaraju stanju igre. Svaki skin ima citljivu boju tacaka u svetloj i tamnoj okolini.",
+    "geometry": "Postojece dimenzije kockica, pregleda, zone dodira i animacije ostaju nepromenjene. Transparentna je samo oblast izvan siluete; sredisnji deo lica ostaje pun i citljiv.",
+    "restraint": "Jedan cist materijalni motiv po skinu, bez kica, konfeta, sitnih ukrasa, zvezdica koje lice na tacke ili fotorealistickog sjaja.",
+    "review": "Pre prihvatanja proveriti svih 48 skinova na maloj velicini u igri i Riznici, brojeve 1–6 i kontrast na svetloj i tamnoj podlozi. Pregledi su docs/dice-skins-v1-review.html i docs/theme-dice-skins-review.html."
+  },
+  "themeGiftDiceSkins": {
+    "rule": "Svaka od deset tema ima tacno jedan poklon skin kockice u svom stilu 3D Soft Neomorphism, pravcu i paleti boja teme. Zelena zadrzava postojeci green_clay PNG; devet ostalih imaju nova jedinstvena PNG lica, bez kopiranja i prebojavanja drugih skinova. Poklon skin se ne prikazuje niti moze koristiti dok igrac ne poseduje temu. Kupovina teme ili njeno otkljucavanje reklamama besplatno dodeljuje i aktivira skin. Vec posedovane teme dobijaju skin pri migraciji; cetiri osnovne besplatne teme smatraju se posedovanim od pocetka. Igrac potom moze rucno izabrati bilo koji otkljucani skin. Raniji desert_glass, easter_neumorphic i severna_nebula nisu vise u Riznici ni u aktivnom katalogu.",
+    "themeToSkin": {
+      "dark": "green_clay",
+      "light": "theme_light_gold",
+      "medium": "theme_dark_cherry",
+      "winter": "theme_blue_ocean",
+      "neon": "theme_neon_cyber",
+      "amethyst": "theme_royal_amethyst",
+      "easter": "theme_easter",
+      "desert": "theme_desert",
+      "moon": "theme_moonlight",
+      "severna": "theme_northern_nebula"
+    },
+    "source": "source-assets/theme-dice-skins-v1/masters i source-assets/dice-skins-v1/manifest.json",
+    "qa": "Svih deset tematskih lica imaju pun centar, transparentnu spoljasnju oblast, ispravan kontrast tacaka 1–6 i citljivost na 60 px. Pregledati posebno tamni Neon Cyber, svetli Plavi Okean i donje tacke Mesecevog Sjaja."
+  },
   "diceFaceRules": {
     "scope": "Obavezno za svih deset tema, svaki PNG, logo, ikonu, ilustraciju, preview, animacioni kadar i CSS/3D prikaz koji prikazuje jednu ili vise igrackih kockica. Svaka vidljiva kockica se proverava zasebno; pravilo vazi i kada je kockica samo sporedni detalj.",
     "canonicalOrientation": "Koristi se jedna fizicki ispravna sestostrana kockica: kada je 1 gore, 2 napred, 3 desno, suprotne strane su 6 dole, 5 pozadi i 4 levo. Dozvoljene su samo krute rotacije te iste kockice, bez ogledanja ili nezavisnog biranja brojeva na vidljivim stranama.",
@@ -194,7 +221,7 @@
     "geometry": "Odgovarajuci elementi u svim temama imaju iste dimenzije, odnose stranica, pozicije, poravnanja, razmake, padding, zone dodira, skrol granice i redosled slojeva. Ovo vazi za kartice, panele, dugmad, ikonice, table, modale, obavestenja i kontrole.",
     "typographyAndContent": "Ista hijerarhija naslova i teksta, velicine i raspored tekstualnih zona; isti podaci i lokalizacija na srpskom i engleskom bez skracivanja funkcionalnog sadrzaja po temi.",
     "gameBoardVisual": "Tabla za igranje u svih deset tema, ukljucujuci Zelenu, koristi sopstvenu paletu i materijal teme u 3D Soft Neomorphism stilu: Green, Trula Visnja, Kraljevski Ametist, Pustinjsko Staklo i Mesecev Sjaj imaju Clay dubinu; Svetlo Zlato, Plavi Okean, Neon Cyber, Vaskrsnja i Severna Maglina imaju Smooth Rubber / Matte Plastic povrsine. Oklop devet novih tema koristi alfu 0,72-0,74, polja 0,60-0,62; kroz oba sloja u poljima se nazire oko 10-11% pozadine. Zelena ostaje nijansu providnija: oklop 0,68-0,70, polja 0,55-0,57, kroz oba sloja oko 13-14% pozadine. Zaglavlja i zbirovi su cvrsci radi citljivosti, bez ukrasnih slojeva preko teksta. Boje polja, zaglavlja, zbira, imena igraca, ukupnog rezultata i Najave prate paletu aktivne teme; sitni natpisi i vrednosti moraju ostati citljivi. Menja se samo vizuelna obrada u www/theme-game-board.css. Sirina i visina table, mreza, visina celija, razmaci, padding, polozaji, slova, tekst, nazivi kolona i redova, velicine fonta, velicine i zone dodira svih dugmadi, pravila i vrednosti igre ostaju identicni postojecoj Green geometriji.",
-    "gameBoardControls": "Dugmad za upis, Bacaj i Najava u svih deset tema koriste boje, materijal i Clay ili Smooth Rubber / Matte Plastic pravac aktivne teme. Normalno, aktivno, izabrano i onemoguceno stanje ostaju citljivi i bez kica. Podrazumevane kockice koriste paletu teme; kupljeni i rucno izabrani skinovi zadrzavaju svoj identitet. Gornja pozadina kontrolne trake, donja pozadina oko kockica i dugmadi, leziste kockica i otvoreni meni brzih podesavanja prate istu paletu i pravac table. Zelena zadrzava referentnu Clay obradu, devet ostalih koristi odgovarajucu podlogu zaglavlja i polja table, sa punijim menijem radi citljivosti. Sirina, visina, broj, razmaci, velicine tacaka i zone dodira kockica, kao i dimenzije, tekst, tipografija i zone dodira dugmadi, ostaju nepromenjeni u svim temama i na svim responsive pragovima.",
+    "gameBoardControls": "Dugmad za upis, Bacaj i Najava u svih deset tema koriste boje, materijal i Clay ili Smooth Rubber / Matte Plastic pravac aktivne teme. Normalno, aktivno, izabrano i onemoguceno stanje ostaju citljivi i bez kica. Svi skinovi kockica, ukljucujuci podrazumevani, zadrzavaju svoj univerzalni identitet pri promeni teme. Gornja pozadina kontrolne trake, donja pozadina oko kockica i dugmadi, leziste kockica i otvoreni meni brzih podesavanja prate istu paletu i pravac table. Zelena zadrzava referentnu Clay obradu, devet ostalih koristi odgovarajucu podlogu zaglavlja i polja table, sa punijim menijem radi citljivosti. Sirina, visina, broj, razmaci, velicine tacaka i zone dodira kockica, kao i dimenzije, tekst, tipografija i zone dodira dugmadi, ostaju nepromenjeni u svim temama i na svim responsive pragovima.",
     "neonBoardMotion": "Samo Neon Cyber tabla ima jedan diskretan tirkizni svetlosni trag unutar postojece spoljasnje ivice. Trag obilazi ivicu u ciklusu od 22 s i postepeno nestaje; ne ulazi u polja, ne prekriva tekst, ne treperi i ne menja dimenzije table. Pri prefers-reduced-motion: reduce animacija je iskljucena.",
     "intro": "Svaka soba dostupna iz glavnog menija ima intro sa samo jednom ikonom sobe iz aktivnog tematskog PNG paketa, bez naslova, dodatnog teksta, starih SVG slojeva i dodatnih ikona. To vazi za donji red, Riznicu, Turnir, centralne modove, gornje tri kartice i Global Chat u svih deset tema. Velicina omotaca i ikone je clamp(210px, 34vmin, 290px); puls ikone traje 1,8 s i dostize skalu 1,035 u odnosu na osnovnu skalu te sobe, kao u Zelenoj. Sadrzaj sobe pocinje posle 3,65 s, intro se zavrsava posle 4,6 s. Reduced-motion uklanja puls, ali cuva trajanje. Tematski PNG i materijal menjaju izgled, ne ugovor introa.",
     "introBackground": "U devet nezelenih tema svaki intro ulaska u sobu, ukljucujuci centralne sobe, Riznicu, Dnevni izazov, Kvartalnu ligu i Turnir, prikazuje odobrenu glavnu pozadinu aktivne teme preko celog ekrana. Nema zasebne tamne podloge, gradijenta preko prizora ni zamućenja. Zelena zadrzava svoj referentni intro.",

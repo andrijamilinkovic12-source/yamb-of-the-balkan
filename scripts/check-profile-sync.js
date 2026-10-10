@@ -465,7 +465,7 @@ function checkAdUnlockItemsAreNotFreeUnlocks() {
 function checkGreenClaySkinIsFreeAndServerAllowed() {
     assert(serverSource.includes('green_clay: 0,'), 'Green Clay skin is missing from the server free-price catalog');
     assert(
-        serverSource.includes("'glass_sapphire', 'green_clay', 'desert_glass'"),
+        serverSource.includes("'glass_sapphire', 'green_clay'"),
         'Green Clay skin is missing from the server skin allowlist'
     );
     assert(
@@ -474,8 +474,8 @@ function checkGreenClaySkinIsFreeAndServerAllowed() {
         'Green Clay skin is not granted as a free client inventory item'
     );
     assert(
-        managersSource.includes("item.id === 'green_clay'")
-            && managersSource.includes('dice-dots-wrapper val-6'),
+        managersSource.includes('dice-dots-wrapper val-6')
+            && managersSource.includes("'<div class=\"dice-dot\"></div>'.repeat(6)"),
         'Green Clay treasury card is not using the real six-pip CSS preview'
     );
 }
