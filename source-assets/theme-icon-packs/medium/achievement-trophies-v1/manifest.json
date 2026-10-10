@@ -69,9 +69,9 @@
       ]
     },
     "godlike": {
-      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/godlike-master-v1.png",
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/godlike-master-v2.png",
       "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/godlike-v1.png",
-      "sizeBytes": 55893,
+      "sizeBytes": 57331,
       "opticalBoundsPx": [
         22,
         22,
@@ -91,25 +91,25 @@
       ]
     },
     "hazard": {
-      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/hazard-master-v1.png",
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/hazard-master-v2.png",
       "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/hazard-v1.png",
-      "sizeBytes": 47107,
+      "sizeBytes": 46926,
       "opticalBoundsPx": [
-        32,
+        31,
         22,
         224,
         234
       ]
     },
     "immortal": {
-      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/immortal-master-v1.png",
+      "masterPath": "source-assets/theme-icon-packs/medium/achievement-trophies-v1/immortal-master-v2.png",
       "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/immortal-v1.png",
-      "sizeBytes": 68422,
+      "sizeBytes": 69378,
       "opticalBoundsPx": [
         22,
         26,
         234,
-        230
+        229
       ]
     },
     "kafana": {

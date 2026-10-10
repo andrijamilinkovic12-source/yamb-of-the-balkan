@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "themeId": "severna",
+  "slots": {
+    "achilles": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/achilles-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/achilles-v1.png",
+      "sizeBytes": 48722,
+      "opticalBoundsPx": [
+        23,
+        22,
+        232,
+        234
+      ]
+    },
+    "apprentice": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/apprentice-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/apprentice-v1.png",
+      "sizeBytes": 43290,
+      "opticalBoundsPx": [
+        22,
+        23,
+        234,
+        232
+      ]
+    },
+    "close_call": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/close_call-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/close_call-v1.png",
+      "sizeBytes": 44928,
+      "opticalBoundsPx": [
+        22,
+        24,
+        234,
+        232
+      ]
+    },
+    "concrete": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/concrete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/concrete-v1.png",
+      "sizeBytes": 47414,
+      "opticalBoundsPx": [
+        26,
+        22,
+        229,
+        234
+      ]
+    },
+    "firecracker": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/firecracker-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/firecracker-v1.png",
+      "sizeBytes": 34066,
+      "opticalBoundsPx": [
+        22,
+        25,
+        234,
+        230
+      ]
+    },
+    "first_play": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/first_play-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/first_play-v1.png",
+      "sizeBytes": 54636,
+      "opticalBoundsPx": [
+        24,
+        22,
+        232,
+        234
+      ]
+    },
+    "godlike": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/godlike-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/godlike-v1.png",
+      "sizeBytes": 40106,
+      "opticalBoundsPx": [
+        22,
+        42,
+        234,
+        213
+      ]
+    },
+    "grandmaster": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/grandmaster-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/grandmaster-v1.png",
+      "sizeBytes": 45748,
+      "opticalBoundsPx": [
+        48,
+        22,
+        207,
+        234
+      ]
+    },
+    "hazard": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/hazard-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/hazard-v1.png",
+      "sizeBytes": 47120,
+      "opticalBoundsPx": [
+        39,
+        22,
+        217,
+        234
+      ]
+    },
+    "immortal": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/immortal-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/immortal-v1.png",
+      "sizeBytes": 40334,
+      "opticalBoundsPx": [
+        35,
+        22,
+        221,
+        234
+      ]
+    },
+    "kafana": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/kafana-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/kafana-v1.png",
+      "sizeBytes": 41337,
+      "opticalBoundsPx": [
+        22,
+        63,
+        234,
+        192
+      ]
+    },
+    "legend": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/legend-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/legend-v1.png",
+      "sizeBytes": 42491,
+      "opticalBoundsPx": [
+        22,
+        31,
+        234,
+        224
+      ]
+    },
+    "math": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/math-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/math-v1.png",
+      "sizeBytes": 27230,
+      "opticalBoundsPx": [
+        22,
+        38,
+        234,
+        218
+      ]
+    },
+    "miner": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/miner-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/miner-v1.png",
+      "sizeBytes": 45971,
+      "opticalBoundsPx": [
+        30,
+        22,
+        226,
+        234
+      ]
+    },
+    "minimal": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/minimal-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/minimal-v1.png",
+      "sizeBytes": 26999,
+      "opticalBoundsPx": [
+        22,
+        62,
+        234,
+        194
+      ]
+    },
+    "mythic": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/mythic-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/mythic-v1.png",
+      "sizeBytes": 41268,
+      "opticalBoundsPx": [
+        32,
+        22,
+        224,
+        234
+      ]
+    },
+    "night_owl": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/night_owl-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/night_owl-v1.png",
+      "sizeBytes": 55248,
+      "opticalBoundsPx": [
+        22,
+        35,
+        234,
+        221
+      ]
+    },
+    "perfectionist": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/perfectionist-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/perfectionist-v1.png",
+      "sizeBytes": 31715,
+      "opticalBoundsPx": [
+        22,
+        46,
+        234,
+        210
+      ]
+    },
+    "potato": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/potato-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/potato-v1.png",
+      "sizeBytes": 53450,
+      "opticalBoundsPx": [
+        31,
+        22,
+        225,
+        234
+      ]
+    },
+    "prophet": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/prophet-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/prophet-v1.png",
+      "sizeBytes": 51168,
+      "opticalBoundsPx": [
+        31,
+        22,
+        225,
+        234
+      ]
+    },
+    "score_1000": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/score_1000-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/score_1000-v1.png",
+      "sizeBytes": 36340,
+      "opticalBoundsPx": [
+        22,
+        32,
+        234,
+        224
+      ]
+    },
+    "sniper": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/sniper-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/sniper-v1.png",
+      "sizeBytes": 48641,
+      "opticalBoundsPx": [
+        22,
+        39,
+        234,
+        217
+      ]
+    },
+    "spite": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/spite-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/spite-v1.png",
+      "sizeBytes": 30872,
+      "opticalBoundsPx": [
+        22,
+        50,
+        234,
+        205
+      ]
+    },
+    "surgeon": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/surgeon-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/surgeon-v1.png",
+      "sizeBytes": 33164,
+      "opticalBoundsPx": [
+        22,
+        29,
+        234,
+        226
+      ]
+    },
+    "sveti_ilija": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/sveti_ilija-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/sveti_ilija-v1.png",
+      "sizeBytes": 31658,
+      "opticalBoundsPx": [
+        65,
+        22,
+        191,
+        234
+      ]
+    },
+    "veteran": {
+      "masterPath": "source-assets/theme-icon-packs/severna/achievement-trophies-v1/veteran-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/veteran-v1.png",
+      "sizeBytes": 45803,
+      "opticalBoundsPx": [
+        22,
+        30,
+        234,
+        225
+      ]
+    }
+  }
+}

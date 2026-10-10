@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedOn": "2026-10-06",
+  "capturedOn": "2026-10-10",
   "referenceThemeId": "dark",
   "purpose": "Locked Green reference PNG bytes for the nine-theme rebuild; update only after an intentional Green reference change.",
   "files": [
@@ -102,7 +102,7 @@
     {
       "slotId": "canonical/achievement-trophies/potato-v1",
       "path": "www/assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png",
-      "sha256": "82f7382a559e179df4ac37eb8ccc4903a179c8cab69c680a02d605b938534b06"
+      "sha256": "49da6e9d5fd7881a0965b933e1aa40c29649b6c21fe778266847d6c771d3c8f7"
     },
     {
       "slotId": "canonical/achievement-trophies/prophet-v1",
@@ -117,7 +117,7 @@
     {
       "slotId": "canonical/achievement-trophies/sniper-v1",
       "path": "www/assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png",
-      "sha256": "472da60cce5a26e1a1ce67a079cf99f994f1700487dd4a961445306f116c25ad"
+      "sha256": "0aa9bd45cd55be5a1fddbc0b318c4cee7da7b9ae09dd3e3e18913bb5d8ceec37"
     },
     {
       "slotId": "canonical/achievement-trophies/spite-v1",
@@ -155,6 +155,21 @@
       "sha256": "071bcd49e87312fbf280cd2458ac9756081f9acf8c786691ba6fc83e18d05859"
     },
     {
+      "slotId": "canonical/competition-medals/fire-streak-bronze-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-bronze-v1.png",
+      "sha256": "e77baa66fdb363b5cec3b074186b9207cf514bb54b501f4489df744cf1558a1a"
+    },
+    {
+      "slotId": "canonical/competition-medals/fire-streak-gold-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-gold-v1.png",
+      "sha256": "25690c360dd13eac026cac929d8c60be87d74154799add670ec1e718b7a6781b"
+    },
+    {
+      "slotId": "canonical/competition-medals/fire-streak-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-silver-v1.png",
+      "sha256": "0fac508435cb38d004b24f6832c1cc99ce932120e0b48135dbfffe345f39bce8"
+    },
+    {
       "slotId": "canonical/competition-medals/general-podium-bronze-v1",
       "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
       "sha256": "40330474bbca7ebe87b539e1311307a7a552edd90e9dd4febb60d49218d4d775"
@@ -170,6 +185,21 @@
       "sha256": "cc279768a06b8b2a76543b8266fbe49ab111ed1eb404e8abe2bb06689d8bee7f"
     },
     {
+      "slotId": "canonical/competition-medals/power-index-bronze-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/power-index-bronze-v1.png",
+      "sha256": "4d38d548163eafff1a5ac939d6a73a6e7956621e1eb2e3b2e0916017defc019b"
+    },
+    {
+      "slotId": "canonical/competition-medals/power-index-gold-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/power-index-gold-v1.png",
+      "sha256": "39c779f4e724aa6b5e9222fd35f7533e291dad294d5a51d4dfd6a22b6f633c2c"
+    },
+    {
+      "slotId": "canonical/competition-medals/power-index-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/power-index-silver-v1.png",
+      "sha256": "67a1dc31edb5a0cbb688c814dced7cb98855e6fde89bd39fbf8884d1c28674a9"
+    },
+    {
       "slotId": "canonical/competition-medals/quarterly-league-bronze-v1",
       "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
       "sha256": "8816d19cb16f63b0b03b602cb6b0d06a6208513c6c99ef52a491a687c775f64b"
@@ -183,6 +213,21 @@
       "slotId": "canonical/competition-medals/quarterly-league-silver-v1",
       "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
       "sha256": "2e295ab91a23c792ffd1076dbd0568f060e8268fbc045a1b312549fa268e4eba"
+    },
+    {
+      "slotId": "canonical/competition-medals/tournament-bronze-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/tournament-bronze-v1.png",
+      "sha256": "9bce1e60ba86200df12805408dfa09298edfa640099045c799fb92284a83d1b9"
+    },
+    {
+      "slotId": "canonical/competition-medals/tournament-gold-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/tournament-gold-v1.png",
+      "sha256": "ad265f97889e70dfae649f24259c220bf77f9a7ea545e34c3964e8ab32df5a5c"
+    },
+    {
+      "slotId": "canonical/competition-medals/tournament-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/tournament-silver-v1.png",
+      "sha256": "f4213355cc410661f1b5e8547f4466358d44932f0bfa8195d3f956fe89ec55a1"
     },
     {
       "slotId": "canonical/daily-room-identity/daily-room-menu-v1",
@@ -432,7 +477,7 @@
     {
       "slotId": "canonical/rules-page-illustrations/multiplayer-competitions-v1",
       "path": "www/assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
-      "sha256": "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b"
+      "sha256": "f81a8d9d50d51650db7f0d0b8ce6212c351d7c0b8e7e7157015699a569931d33"
     },
     {
       "slotId": "canonical/rules-page-illustrations/rules-scoring-v1",
@@ -876,8 +921,8 @@
     },
     {
       "slotId": "splash-title-soft-clay-v1",
-      "path": "www/assets/green-soft-clay/splash-title-soft-clay-v1.png",
-      "sha256": "2773c5e488ce046fb2a83266ebfaee4d4597733169dd4bacdf353a046226a6d3"
+      "path": "www/assets/green-soft-clay/splash-title-soft-clay-v2.png",
+      "sha256": "52489c136d4287d145555181ef6d2c8f49d9fa281c185c59207c260fa20715b9"
     },
     {
       "slotId": "treasury-free-v3",

@@ -1,0 +1,40 @@
+/* Canonical Treasury controls. Geometry follows the Green room. */
+#riznica-screen .treasury-control-icon {
+    display: block !important;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    pointer-events: none;
+    transition: transform 180ms ease;
+}
+#riznica-screen .tab-btn.active .treasury-control-icon {
+    transform: translateY(-1px) scale(1.06);
+}
+#riznica-screen .treasury-status-icon {
+    display: block !important;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    object-fit: contain;
+}
+#riznica-screen .treasury-lock-icon {
+    display: inline-block !important;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: -5px;
+}
+#rules-overlay-ui .rules-theme-treasury-control {
+    display: inline-block !important;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: -5px;
+}
+body.easter-theme #riznica-screen .effect-preview-box.prev-confetti::before {
+    background-image: url("assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=2");
+}
+@media (prefers-reduced-motion: reduce) {
+    #riznica-screen .treasury-control-icon { transition: none; }
+}

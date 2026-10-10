@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Riznica · pregled efekata u stvarnom CSS-u</title>
+  <link rel="stylesheet" href="../www/style.css">
+  <link rel="stylesheet" href="../www/teme.css">
+  <link rel="stylesheet" href="../www/efekti.css">
+  <link rel="stylesheet" href="../www/theme-effect-previews.css">
+  <style>
+    body { margin: 0; background: #13202a; color: #f4f2ed; font: 16px system-ui, sans-serif; }
+    header { padding: 18px 24px; }
+    h1 { font-size: 24px; margin: 0 0 5px; }
+    p { margin: 0; opacity: .8; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+    nav a { padding: 7px 10px; background: #314855; color: white; border-radius: 9px; text-decoration: none; }
+    #riznica-screen { max-width: 1200px; margin: auto; padding: 0 20px 30px; }
+    .qa-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 15px; }
+    .qa-card { padding: 10px; border: 1px solid #51616b; border-radius: 14px; background: #293b47; }
+    .qa-card strong { display: block; font-size: 13px; }
+    @media (max-width: 650px) { .qa-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  </style>
+</head>
+<body>
+  <header><h1>Riznica · pregledi efekata</h1><p>Stvarni produkcioni CSS i veličina polja od 70 px</p><nav id="themes"></nav></header>
+  <main id="riznica-screen"><div class="qa-grid" id="previews"></div></main>
+  <script>
+    const themes = [['light','Svetlo Zlato'],['medium','Trula Višnja'],['winter','Plavi Okean'],['neon','Neon Cyber'],['amethyst','Kraljevski Ametist'],['easter','Vaskršnja'],['desert','Pustinjsko Staklo'],['moon','Mesečev Sjaj'],['severna','Severna Maglina']];
+    const previews = [['balkan','Svadba'],['thunder','Grom'],['fireworks','Vatromet'],['bubbles','Mehurići'],['cosmic-dust','Kosmička prašina'],['dragon-fire','Zmajeva vatra'],['royal-yamb','Kraljevski Yamb'],['fireflies','Svitci'],['glass','Ledeno doba'],['black-hole','Crna rupa'],['supernova','Supernova'],['neon','Neon puls'],['drones','Dronovi'],['ufo-abduction','NLO']];
+    const requested = new URLSearchParams(location.search).get('theme');
+    const active = themes.some(([id]) => id === requested) ? requested : 'light';
+    document.body.classList.add(`${active}-theme`);
+    document.getElementById('themes').innerHTML = themes.map(([id,label]) => `<a href="?theme=${id}">${label}</a>`).join('');
+    document.getElementById('previews').innerHTML = previews.map(([name,label]) => `<div class="qa-card"><div class="effect-preview-box prev-${name}"></div><strong>${label}</strong></div>`).join('');
+  </script>
+</body>
+</html>

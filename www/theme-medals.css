@@ -1,0 +1,114 @@
+/* One canonical PNG per theme, competition and tier; geometry follows Green. */
+#riznica-screen .theme-collection-medal {
+    display: inline-block !important;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+}
+
+#highscores-screen .hs-podium-medal {
+    display: block !important;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    max-width: none;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+}
+#highscores-screen .rank-circle:is(.rank-1, .rank-2, .rank-3) .hs-rank-legacy {
+    display: none !important;
+}
+.waiting-podium-medal {
+    display: block !important;
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
+.waiting-podium-mark .waiting-podium-legacy {
+    display: none !important;
+}
+.power-index-rank-mark.has-podium .power-index-podium-medal {
+    display: block !important;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    object-fit: contain;
+}
+.fire-streak-rank-mark.has-podium .fire-streak-podium-medal {
+    display: block !important;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    object-fit: contain;
+}
+.power-index-rank-mark.has-podium .power-index-rank-legacy,
+.fire-streak-rank-mark.has-podium .fire-streak-rank-legacy {
+    display: none !important;
+}
+
+#league-modal-overlay .ql-placement-medal {
+    display: inline-block !important;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+#league-modal-overlay .ql-placement-medal--rank {
+    width: 28px;
+    height: 28px;
+}
+#league-modal-overlay .ql-medal-fallback {
+    display: none !important;
+}
+.ql-placement-medal--reward,
+.ql-quarter-champion-medal {
+    display: inline-block !important;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+.ql-placement-medal--reward + .ql-medal-fallback,
+.ql-quarter-reward-medal .ql-medal-fallback {
+    display: none !important;
+}
+#rules-overlay-ui .rules-podium-pack-canonical {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 1px;
+    margin: 0 4px 0 1px;
+    vertical-align: -8px;
+}
+#rules-overlay-ui .rules-podium-pack-canonical img {
+    display: block !important;
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+
+#tournament-intro .tournament-intro-podium-medal-canonical {
+    display: block !important;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+#tournament-screen .tourney-finalist-result-icon-canonical,
+.modal-context-tourney-finalist .tourney-prize-result-icon-canonical {
+    display: inline-block !important;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+#tournament-screen .tourney-champion-finalist-icon-canonical {
+    display: inline-block !important;
+    width: 26px;
+    height: 26px;
+    margin-right: 2px;
+    object-fit: contain;
+    vertical-align: middle;
+}

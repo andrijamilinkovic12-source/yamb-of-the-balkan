@@ -41,7 +41,7 @@ function contrast(first, second) {
 }
 
 assert(spec.themes.length === 10, 'The design registry must contain exactly ten themes.');
-assert(spec.schemaVersion === 17, 'Unexpected design registry schema.');
+assert(spec.schemaVersion === 19, 'Unexpected design registry schema.');
 const allowedDirections = ['clay', 'smooth_rubber_matte_plastic'];
 assert(JSON.stringify(spec.allowedDirectionIds) === JSON.stringify(allowedDirections), 'Only Clay and Matte Plastic are permitted.');
 assert(JSON.stringify(Object.keys(spec.directions)) === JSON.stringify(allowedDirections), 'Legacy material directions remain active.');
@@ -110,13 +110,13 @@ assert(fs.existsSync(path.join(root, spec.rebuildPolicy.greenFingerprintPath)), 
 assert(spec.rebuildPolicy.workOrderThemeIds.length === 9 && new Set(spec.rebuildPolicy.workOrderThemeIds).size === 9, 'Rebuild order must contain nine distinct target themes.');
 assert(spec.themes.filter(theme => theme.id !== spec.referenceTheme).every(theme => spec.rebuildPolicy.workOrderThemeIds.includes(theme.id)), 'Rebuild order does not cover every target theme.');
 assert(spec.themes[0].designScope === 'locked-reference' && !spec.themes[0].paletteHex, 'Green must not receive a replacement palette.');
-assert(catalog.requiredPngCountPerTheme === 177 && catalog.slots.length === 177, 'The reference catalog must contain 177 PNG slots.');
+assert(catalog.requiredPngCountPerTheme === 186 && catalog.slots.length === 186, 'The reference catalog must contain 186 PNG slots.');
 assert(spec.assetStandardizationRules.requiredProductionPngCount === catalog.slots.length, 'PNG count differs from the reference catalog.');
 assert(new Set(catalog.slots.map(slot => slot.id)).size === catalog.slots.length, 'Duplicate asset slot ID.');
 assert(catalog.slots.filter(slot => slot.kind === 'background').length === 1, 'Exactly one background slot is required.');
 assert(catalog.slots.filter(slot => slot.kind === 'game-logo').length === 1, 'Exactly one game-logo slot is required.');
-assert(usageMap.requiredSlotCount === catalog.slots.length && usageMap.slots.length === catalog.slots.length, 'Usage map must cover all 177 slots.');
-assert(implementationMap.requiredSlotCountPerTheme === catalog.slots.length && implementationMap.themes.length === spec.themes.length - 1, 'Implementation map must cover nine themes with 177 slots each.');
+assert(usageMap.requiredSlotCount === catalog.slots.length && usageMap.slots.length === catalog.slots.length, 'Usage map must cover all 186 slots.');
+assert(implementationMap.requiredSlotCountPerTheme === catalog.slots.length && implementationMap.themes.length === spec.themes.length - 1, 'Implementation map must cover nine themes with 186 slots each.');
 assert(progress.themes.length === spec.themes.length, 'Progress tracker must cover all ten themes.');
 assert(progress.activeThemeId === null ? ['awaiting-additional-user-definitions', 'backgrounds-pending-new-direction-render', 'backgrounds-pending-user-review', 'backgrounds-pending-user-comparison', 'background-feedback-awaiting-three-comments', 'backgrounds-v8-pending-user-review', 'backgrounds-v9-pending-user-review', 'backgrounds-awaiting-medium-light-choice', 'backgrounds-awaiting-further-user-direction', 'backgrounds-eight-approved-two-rejected', 'backgrounds-v10-pending-user-review', 'backgrounds-v11-pending-user-review', 'backgrounds-v12-pending-user-review', 'backgrounds-v13-pending-user-review', 'backgrounds-nine-approved-moon-v14-pending-user-review', 'backgrounds-ten-approved-runtime-integration', 'backgrounds-ten-approved-runtime-linked', 'main-room-icon-packs-nine-created-review-pending', 'main-room-icon-packs-nine-linked-ducat-five-dot-rule-recorded', 'main-room-icons-linked-nine-five-dot-ducat-packs-created', 'nine-undo-token-packs-linked-pending-visual-qa', 'nine-main-room-icon-packs-extended-linked-pending-runtime-visual-qa', 'nine-rewarded-video-packs-linked-pending-runtime-visual-qa'].includes(progress.workState) : spec.rebuildPolicy.workOrderThemeIds.includes(progress.activeThemeId), 'Invalid rebuild work state or active theme.');
 assert(progress.requiredSurfaceIds.length === 19 && new Set(progress.requiredSurfaceIds).size === 19, 'Progress tracker must define 19 distinct surfaces.');

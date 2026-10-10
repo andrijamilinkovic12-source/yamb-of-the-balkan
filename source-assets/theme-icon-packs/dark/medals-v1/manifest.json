@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "themeId": "dark",
+  "slots": {
+    "competition-medals/tournament-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/tournament-gold-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/tournament-gold-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        224
+      ],
+      "sizeBytes": 40959,
+      "sha256": "ad265f97889e70dfae649f24259c220bf77f9a7ea545e34c3964e8ab32df5a5c"
+    },
+    "competition-medals/tournament-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/tournament-silver-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/tournament-silver-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        224
+      ],
+      "sizeBytes": 41560,
+      "sha256": "f4213355cc410661f1b5e8547f4466358d44932f0bfa8195d3f956fe89ec55a1"
+    },
+    "competition-medals/tournament-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/tournament-bronze-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/tournament-bronze-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        224
+      ],
+      "sizeBytes": 40089,
+      "sha256": "9bce1e60ba86200df12805408dfa09298edfa640099045c799fb92284a83d1b9"
+    },
+    "competition-medals/power-index-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/power-index-gold-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/power-index-gold-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        234
+      ],
+      "sizeBytes": 35364,
+      "sha256": "39c779f4e724aa6b5e9222fd35f7533e291dad294d5a51d4dfd6a22b6f633c2c"
+    },
+    "competition-medals/power-index-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/power-index-silver-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/power-index-silver-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        234
+      ],
+      "sizeBytes": 36062,
+      "sha256": "67a1dc31edb5a0cbb688c814dced7cb98855e6fde89bd39fbf8884d1c28674a9"
+    },
+    "competition-medals/power-index-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/power-index-bronze-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/power-index-bronze-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        234
+      ],
+      "sizeBytes": 34307,
+      "sha256": "4d38d548163eafff1a5ac939d6a73a6e7956621e1eb2e3b2e0916017defc019b"
+    },
+    "competition-medals/fire-streak-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/fire-streak-gold-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-gold-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        231
+      ],
+      "sizeBytes": 43440,
+      "sha256": "25690c360dd13eac026cac929d8c60be87d74154799add670ec1e718b7a6781b"
+    },
+    "competition-medals/fire-streak-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/fire-streak-silver-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-silver-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        231
+      ],
+      "sizeBytes": 44185,
+      "sha256": "0fac508435cb38d004b24f6832c1cc99ce932120e0b48135dbfffe345f39bce8"
+    },
+    "competition-medals/fire-streak-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/dark/medals-v1/fire-streak-bronze-master-v2.png",
+      "productionPath": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-bronze-v1.png",
+      "opticalBoundsPx": [
+        30,
+        29,
+        232,
+        231
+      ],
+      "sizeBytes": 42542,
+      "sha256": "e77baa66fdb363b5cec3b074186b9207cf514bb54b501f4489df744cf1558a1a"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "tournament": "www/assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+    "power-index": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+    "fire-streak": "www/assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

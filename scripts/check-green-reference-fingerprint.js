@@ -14,7 +14,7 @@ const files = catalog.slots.map(slot => {
 });
 const fingerprint = {
     schemaVersion: 1,
-    capturedOn: '2026-10-06',
+    capturedOn: '2026-10-10',
     referenceThemeId: spec.referenceTheme,
     purpose: 'Locked Green reference PNG bytes for the nine-theme rebuild; update only after an intentional Green reference change.',
     files

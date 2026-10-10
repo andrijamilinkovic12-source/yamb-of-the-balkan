@@ -1,0 +1,9 @@
+# Kontrole Riznice — DNK revizija 2
+
+Osam semantičkih uloga postoji u svakoj od deset tema: tabovi Trofeji, Kockice, Efekti i Teme; statusi Kupljeno, Aktivno, Zaključano i Nedovoljno dukata. Osam postojećih kontrola Zelene ostaje referenca. U ostalih devet tema zamenjena su 72 PNG-a jer je v1 imao previše zajedničke geometrije.
+
+Svaki produkcioni PNG je 256 × 256 RGBA, a master 768 × 768. Trofeji, Kockice i Efekti koriste postojeći kanonski motiv **iste teme**; Teme i statusi su ponovo nacrtani u njenoj silueti i materijalu. Bez preuzimanja iz drugog paketa, dodatnih podloga ili nakićenih detalja. Tab Kockice preuzima ranije pregledanu kockicu iz sopstvene teme. Veličine prikaza su kao u Zelenoj: tab 34 px, status 22 px, katanac 20 px; kartice i dugmad nisu menjani.
+
+`getThemeTreasuryControlSource(role, theme)` u `www/config.js` daje jedinu kanonsku putanju. Četiri taba u `www/index.html` se menjaju istovremeno sa temom, statusi u `www/managers.js` koriste isti resolver, a tabovi pomenuti u Pravilima koriste isti PNG. Izbor sobe unapred učitava komplet kontrola. Izvorni masteri i manifesti su u `source-assets/theme-icon-packs/<tema>/treasury-controls-v1/`, a produkcioni fajlovi u `www/assets/theme-packs/<tema>/canonical/treasury-controls/`.
+
+[Pregled svih deset tema](theme-treasury-controls-review.html) prikazuje svaku kontrolu na 112 i 44 px. `node scripts/check-theme-treasury-controls.js` proverava 80 jedinstvenih PNG-ova, format, katalog, mastere i povezivanje. Izvor revizije 2 je `scripts/rebuild-theme-dna-medals-controls.py`, a manifesti beleže izvore tri taba iz sopstvene teme. Novi [Android qaLocal izveštaj](qa-theme-dna-medals-controls-emulator-2026-10-10.json) potvrđuje učitavanje osam kontrola u deset tema, tabove na 34 px i promenu prikazanih statusa pri promeni teme. Korisnički vizuelni izbor još nije zabeležen.

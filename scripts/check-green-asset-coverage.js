@@ -134,8 +134,8 @@ for (const relative of runtimePngs) {
     classifications[categories[0]].push(relative);
 }
 
-assert(runtimePngs.length === 177, `Green runtime inventar odstupa: očekivano 177 PNG, pronađeno ${runtimePngs.length}.`);
-assert(classifications.registered.length === 159, `Očekivano 159 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
+assert(runtimePngs.length === 186, `Green runtime inventar odstupa: očekivano 186 PNG, pronađeno ${runtimePngs.length}.`);
+assert(classifications.registered.length === 168, `Očekivano 168 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
 assert(classifications.protected.length === 16, `Očekivano 16 manifestom zaštićenih funkcionalnih PNG-ova, pronađeno ${classifications.protected.length}.`);
 assert(classifications.foundation.length === 1, `Očekivan je jedan splash foundation PNG, pronađeno ${classifications.foundation.length}.`);
 assert(classifications.historicalLogo.length === 1, 'Stari Green logo mora ostati samo istorijski PNG.');
@@ -188,7 +188,9 @@ assert(retiredBackgrounds.length === 3 && retiredBackgroundBytes === 5350456, `I
 const totalBytes = runtimePngs.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const pendingBytes = classifications.pending.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const stagedCanonicalBytes = classifications.stagedCanonical.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
-assert(totalBytes === 17302049 && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od logo v2 bilansa.');
+const newMedalManifest = JSON.parse(fs.readFileSync(path.join(root, 'source-assets/theme-icon-packs/dark/medals-v1/manifest.json'), 'utf8'));
+const newMedalBytes = Object.values(newMedalManifest.slots).reduce((sum, item) => sum + item.sizeBytes, 0);
+assert(totalBytes === 17331791 + newMedalBytes && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od aktuelnog bilansa.');
 
 console.log('Green asset coverage provera je prošla.');
 console.log(`- centralni registar: ${families.length} locked porodica / ${classifications.registered.length} PNG`);

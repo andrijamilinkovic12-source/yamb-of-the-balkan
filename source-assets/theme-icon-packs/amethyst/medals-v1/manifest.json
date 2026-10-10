@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "themeId": "amethyst",
+  "slots": {
+    "collection-medals/collection-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/collection-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/collection-medals/collection-gold-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        235
+      ],
+      "sizeBytes": 52908,
+      "sha256": "33c393958a9b8d7d22af874e41a5d991c5da688e9254c2b948410060123a5d2f"
+    },
+    "collection-medals/collection-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/collection-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/collection-medals/collection-silver-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        235
+      ],
+      "sizeBytes": 53492,
+      "sha256": "2b3736b13be70fc7b1b7cc7f28d3f1bd16c775b7b7adaeaeac38341610db5f75"
+    },
+    "collection-medals/collection-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/collection-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/collection-medals/collection-bronze-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        235
+      ],
+      "sizeBytes": 52147,
+      "sha256": "4a4bd061429693712ab1a923a7506129d019051919bc8a0bdb8ff611db89379a"
+    },
+    "competition-medals/general-podium-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/leaderboard-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-gold-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        228
+      ],
+      "sizeBytes": 46901,
+      "sha256": "14fcdfcfc4d5654569a995c699b9687474dd70666b8f583a7c98728da0330fff"
+    },
+    "competition-medals/general-podium-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/leaderboard-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-silver-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        228
+      ],
+      "sizeBytes": 47505,
+      "sha256": "600f8f9a514fb049bd8b1ae0c64b28a51b1d2c1903bc27c702d13e9832c0f51a"
+    },
+    "competition-medals/general-podium-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/leaderboard-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-bronze-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        228
+      ],
+      "sizeBytes": 46115,
+      "sha256": "de7d8843d7e42a084becb23d12538aed4ae840218e0f65deaa863116e81532c0"
+    },
+    "competition-medals/tournament-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/tournament-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        224
+      ],
+      "sizeBytes": 44774,
+      "sha256": "b0ee861a055b0ae30143ce02fb7bc6f7d1584bdf244a0937d0f09af82f45805a"
+    },
+    "competition-medals/tournament-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/tournament-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        224
+      ],
+      "sizeBytes": 45312,
+      "sha256": "c7f92aa6eb0dc36724bfa19754df738006753cb386e66773c396afbeb3fea3e1"
+    },
+    "competition-medals/tournament-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/tournament-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        224
+      ],
+      "sizeBytes": 43976,
+      "sha256": "adfcba0bf56754756c71456b0a5e6fb68b06481f475a78990a0cec7f98692154"
+    },
+    "competition-medals/quarterly-league-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/quarterly-league-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-gold-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        224
+      ],
+      "sizeBytes": 50719,
+      "sha256": "664eb9352eb705617361e8569f64f0a8137d73949d249696f9e18cfd234a1ec4"
+    },
+    "competition-medals/quarterly-league-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/quarterly-league-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        224
+      ],
+      "sizeBytes": 51307,
+      "sha256": "1cbf436b3afc0f9c2150d2ab67284f4abe22d527f70c88c26ddfe207e30968bf"
+    },
+    "competition-medals/quarterly-league-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/quarterly-league-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-bronze-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        224
+      ],
+      "sizeBytes": 50020,
+      "sha256": "893e3d8cf394289f5d7e266cb3b843a35320c083238f8b52321dc50c0b5f8fa8"
+    },
+    "competition-medals/power-index-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/power-index-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-gold-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        234
+      ],
+      "sizeBytes": 47851,
+      "sha256": "880d593b75ec48f9e3cedfb1c53f222161e760d5e924885038d37771edcc16f3"
+    },
+    "competition-medals/power-index-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/power-index-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-silver-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        234
+      ],
+      "sizeBytes": 48479,
+      "sha256": "e62299bb57c47b49df9fee1928f400d7c01190c0a5a7baa78845945adc7acb4b"
+    },
+    "competition-medals/power-index-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/power-index-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-bronze-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        234
+      ],
+      "sizeBytes": 47055,
+      "sha256": "7f27943b3980c9b22bff22f60288c6a7c565a5c41fbfb0263917df0d61ee0fc3"
+    },
+    "competition-medals/fire-streak-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/fire-streak-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-gold-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        231
+      ],
+      "sizeBytes": 44569,
+      "sha256": "c354033859a5a3ffbb3d3e8593d7790809dc5feaa2cc49557a27c927aec3eaaf"
+    },
+    "competition-medals/fire-streak-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/fire-streak-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-silver-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        231
+      ],
+      "sizeBytes": 45224,
+      "sha256": "3df2c7d10c4211b19ec1437f55630081b89621ee0d7412e31676cf676498213e"
+    },
+    "competition-medals/fire-streak-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/medals-v1/fire-streak-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-bronze-v1.png",
+      "opticalBoundsPx": [
+        23,
+        18,
+        239,
+        231
+      ],
+      "sizeBytes": 43819,
+      "sha256": "6f266f81698036e7a6483a12ad06f82efdffb0c94e3a3e0f40fccb165790cc41"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "collection": "www/assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png",
+    "leaderboard": "www/assets/theme-packs/amethyst/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+    "tournament": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+    "quarterly-league": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+    "power-index": "www/assets/theme-packs/amethyst/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+    "fire-streak": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

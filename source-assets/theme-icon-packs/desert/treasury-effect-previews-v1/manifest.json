@@ -1,0 +1,213 @@
+{
+  "id": "desert-treasury-effect-previews",
+  "version": 1,
+  "style": "3D Soft Neomorphism",
+  "direction": "clay",
+  "format": "transparent RGBA PNG",
+  "masterSize": [
+    768,
+    512
+  ],
+  "runtimeSize": [
+    384,
+    256
+  ],
+  "catalog": [
+    {
+      "id": "wedding",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+      "masterSha256": "66c85e1f558e909dca92cd6ff820063484f955010a55c1c5895e6c20bf365ea4",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "runtimeSha256": "456f45957b0e1773fa5455657f6d654186658ae41bf854b054455072edadc8ea",
+      "opticalBoundsPx": [
+        54,
+        77,
+        332,
+        226
+      ],
+      "sizeBytes": 41484
+    },
+    {
+      "id": "thunder",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+      "masterSha256": "3d8be3fa9821654257e78051179ae3c6880ba9ee228ccd80f2c4f3e66d8146c5",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-thunder-v1.png",
+      "runtimeSha256": "ec694b07e32f6b08e6ce0bf2107b41b6b968a55513663958df02377e3f8c263e",
+      "opticalBoundsPx": [
+        54,
+        58,
+        332,
+        226
+      ],
+      "sizeBytes": 28138
+    },
+    {
+      "id": "fireworks",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+      "masterSha256": "d6d5fd8a5ef26f2918f50355788a29b2a914941058a2081644bfa1a03f397d73",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-fireworks-v1.png",
+      "runtimeSha256": "b0350cb4dddda17f4026ccc9b8553d617e9875dff0e1ab955554a5c6d550d3e9",
+      "opticalBoundsPx": [
+        54,
+        54,
+        332,
+        226
+      ],
+      "sizeBytes": 38025
+    },
+    {
+      "id": "bubbles",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+      "masterSha256": "df1afedaed3efdd11569e85c9c13e03c1252ecff9ec831fe489076fc9eacf38f",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-bubbles-v1.png",
+      "runtimeSha256": "1a76b4dd9b54fd3edeb1b194be86f3a3751bec87809b99e82c70ea8ae8f41acb",
+      "opticalBoundsPx": [
+        54,
+        73,
+        332,
+        226
+      ],
+      "sizeBytes": 52385
+    },
+    {
+      "id": "cosmic-dust",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+      "masterSha256": "fd39f56638dcfc61a08870e8271b478fcd5fe13642b0683cd83f7d1b6e68db80",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
+      "runtimeSha256": "6c935e6bbfb90d23f60dfc60ded6c24f24acb6976be0be817574719f55f4f95a",
+      "opticalBoundsPx": [
+        54,
+        60,
+        332,
+        226
+      ],
+      "sizeBytes": 29920
+    },
+    {
+      "id": "dragon-fire",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+      "masterSha256": "a879b6290d339abda1c54ee812e402c7de23af2bb4c565fbf9da4c8fb2d94599",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
+      "runtimeSha256": "dd6ec98d7179ae012061d7625c48a4f46a3e0c6064c6922f1acb783c09bc8e08",
+      "opticalBoundsPx": [
+        54,
+        70,
+        332,
+        226
+      ],
+      "sizeBytes": 27526
+    },
+    {
+      "id": "royal-yamb",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+      "masterSha256": "b306f73139520a9b0e92a9252d37ed573e1a20b3c713a8ffaadcd3ed4795bf5f",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
+      "runtimeSha256": "cb440199f32ce7fd07f855b96c9f2f419e271c3809b8f762ab5821c86ceeef5e",
+      "opticalBoundsPx": [
+        54,
+        79,
+        332,
+        226
+      ],
+      "sizeBytes": 24943
+    },
+    {
+      "id": "fireflies",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+      "masterSha256": "6009d7d4cfd05bed6af9856cf263e84cae2d454b7e0d6711587ce808e0987a50",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-fireflies-v1.png",
+      "runtimeSha256": "9eb65ad261d1259ff7ebf29a7d938f3f6f58f0706e1954904d2549dc0fc70c3d",
+      "opticalBoundsPx": [
+        54,
+        70,
+        332,
+        226
+      ],
+      "sizeBytes": 28489
+    },
+    {
+      "id": "ice-age",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+      "masterSha256": "8eb3792f667f4e909204b082b85a0099b0438b56340971b5d5d2cba91e047e57",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-ice-age-v1.png",
+      "runtimeSha256": "532702c1fb1c4340937a6e0b46b04c588c094f29d20a766b9ca17322b2a21dd4",
+      "opticalBoundsPx": [
+        54,
+        65,
+        332,
+        226
+      ],
+      "sizeBytes": 23806
+    },
+    {
+      "id": "black-hole",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+      "masterSha256": "0dfd882f7de735c62bb066dbb34fe1429114d4f58605b4a3a927b58bc288d524",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-black-hole-v1.png",
+      "runtimeSha256": "d832f7ef4e6e116f52cf715c89f1d19d1763ce6d188318300f06888cf87ec238",
+      "opticalBoundsPx": [
+        54,
+        50,
+        332,
+        226
+      ],
+      "sizeBytes": 35705
+    },
+    {
+      "id": "supernova",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+      "masterSha256": "3283770334faafafa92fa7aa5d9c0e91fd94bc9d5365a967cde8b915be899254",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-supernova-v1.png",
+      "runtimeSha256": "ca4d42844331d6d89c04fbe6552827e0ff4a071a44a03790388effc6d38b844b",
+      "opticalBoundsPx": [
+        54,
+        56,
+        332,
+        226
+      ],
+      "sizeBytes": 45254
+    },
+    {
+      "id": "neon-pulse",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+      "masterSha256": "d31f8d720e2830405f9f35553ed3817d1c22051fa36c591fc270027683d08d3a",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
+      "runtimeSha256": "95f49c423fcbb979446036fbe9e0c30456fdcc749c43779f23d9acaa894bb250",
+      "opticalBoundsPx": [
+        54,
+        75,
+        332,
+        226
+      ],
+      "sizeBytes": 37151
+    },
+    {
+      "id": "drones",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-drones-master-v1.png",
+      "masterSha256": "7ca222aa81c11e0629507e79bfec23c1ebe36c27240068bf29c7b104bac79629",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-drones-v1.png",
+      "runtimeSha256": "b1932f387511330ceec1d9a1593754a34c238676d6a6d070d62f1255cb4a09b6",
+      "opticalBoundsPx": [
+        54,
+        85,
+        332,
+        226
+      ],
+      "sizeBytes": 21867
+    },
+    {
+      "id": "ufo-abduction",
+      "master": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+      "masterSha256": "376a64c2b9c879e97e6996abb1b2d1f7782b38779081831cd2ea5b70df1a3ff6",
+      "runtime": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
+      "runtimeSha256": "5403def640ac140bc065a68305a19f5802732659bacba3c64406b2501563e661",
+      "opticalBoundsPx": [
+        54,
+        65,
+        332,
+        226
+      ],
+      "sizeBytes": 28499
+    }
+  ]
+}

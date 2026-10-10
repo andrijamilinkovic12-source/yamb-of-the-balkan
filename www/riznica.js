@@ -43,6 +43,8 @@ class RiznicaManager {
             this.warmTrophyAssets('easter');
         } else if (overlay.classList.contains('theme-desert')) {
             this.warmTrophyAssets('desert');
+        } else if (overlay.classList.contains('theme-moon')) {
+            this.warmTrophyAssets('moon');
         } else if (overlay.classList.contains('theme-light')) {
             this.warmTrophyAssets('light');
         } else if (overlay.classList.contains('theme-medium')) {
@@ -53,6 +55,8 @@ class RiznicaManager {
             this.warmTrophyAssets('neon');
         } else if (overlay.classList.contains('theme-amethyst')) {
             this.warmTrophyAssets('amethyst');
+        } else if (overlay.classList.contains('theme-severna')) {
+            this.warmTrophyAssets('severna');
         } else if (overlay.classList.contains('theme-dark')) {
             this.warmTrophyAssets('green');
         }
@@ -105,19 +109,24 @@ class RiznicaManager {
     }
 
     warmTrophyAssets(themeName) {
-        const theme = ['desert', 'green', 'light', 'medium', 'winter', 'neon', 'amethyst'].includes(themeName) ? themeName : 'easter';
+        const theme = ['desert', 'moon', 'green', 'light', 'medium', 'winter', 'neon', 'amethyst', 'severna'].includes(themeName) ? themeName : 'easter';
         if (this.trophyWarmupPromises.has(theme) || typeof SHOP_DATA === 'undefined') {
             return this.trophyWarmupPromises.get(theme) || null;
         }
 
         const sources = (SHOP_DATA.TROPHIES || [])
-            .map(item => theme === 'green' ? item?.greenIcon
-                : (theme === 'light' ? item?.lightIcon
-                    : (theme === 'medium' ? item?.mediumIcon
-                        : (theme === 'winter' ? item?.winterIcon
-                            : (theme === 'neon' ? item?.neonIcon
-                                : (theme === 'amethyst' ? item?.amethystIcon
-                                    : (theme === 'desert' ? item?.desertIcon : item?.easterIcon)))))))
+            .map(item => ({
+                green: item?.greenIcon,
+                light: item?.lightIcon,
+                medium: item?.mediumIcon,
+                winter: item?.winterIcon,
+                neon: item?.neonIcon,
+                amethyst: item?.amethystIcon,
+                desert: item?.desertIcon,
+                moon: item?.moonIcon,
+                severna: item?.severnaIcon,
+                easter: item?.easterIcon
+            })[theme])
             .filter(Boolean)
             .map(source => `${source}${source.includes('?') ? '&' : '?'}card=384-v1`);
         let nextSource = 0;

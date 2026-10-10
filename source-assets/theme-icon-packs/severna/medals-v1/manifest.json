@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "themeId": "severna",
+  "slots": {
+    "collection-medals/collection-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/collection-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/collection-medals/collection-gold-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        235
+      ],
+      "sizeBytes": 46026,
+      "sha256": "15efb3b7d87ddd81c5af99c353886f25e87d1cf1f9c2fa1e93fc5a862984056a"
+    },
+    "collection-medals/collection-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/collection-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/collection-medals/collection-silver-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        235
+      ],
+      "sizeBytes": 46408,
+      "sha256": "23dbe68d4893f78c51c1537a8499a77eea2f22ae3db2695634f15540242e27ea"
+    },
+    "collection-medals/collection-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/collection-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/collection-medals/collection-bronze-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        235
+      ],
+      "sizeBytes": 45299,
+      "sha256": "c8384cb11f6106c9193061bb62976d688319ad9b120a528e1639263e500c43a7"
+    },
+    "competition-medals/general-podium-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/leaderboard-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-gold-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        228
+      ],
+      "sizeBytes": 34762,
+      "sha256": "824963f94b82917242acca1299166aa783819b0266a693976c391bad024e6cf2"
+    },
+    "competition-medals/general-podium-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/leaderboard-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-silver-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        228
+      ],
+      "sizeBytes": 35088,
+      "sha256": "cc19d76a218741e05d47ca890a0ca07591a1a44189e8b5a02c73b1a365850fc1"
+    },
+    "competition-medals/general-podium-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/leaderboard-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-bronze-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        228
+      ],
+      "sizeBytes": 34231,
+      "sha256": "62e003cf672737ffcf3a7945f4cc32f230993ed88fea0968fb2061d6fd5dcba0"
+    },
+    "competition-medals/tournament-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/tournament-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        224
+      ],
+      "sizeBytes": 39030,
+      "sha256": "00d6757e24f62a0adddff82e9f263e870c03ef1f3e1b14cefa7f87d28ae7f06e"
+    },
+    "competition-medals/tournament-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/tournament-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        224
+      ],
+      "sizeBytes": 39354,
+      "sha256": "b4aa31859304ebec06344c1b2f95faf7583e4e8b218067b89e205a02ab42669d"
+    },
+    "competition-medals/tournament-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/tournament-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        224
+      ],
+      "sizeBytes": 38484,
+      "sha256": "e571e9a6578ef2ee7eb2ca2e94f2a5c6a63bdf6ccfb7e57997df6047700093e1"
+    },
+    "competition-medals/quarterly-league-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/quarterly-league-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-gold-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        224
+      ],
+      "sizeBytes": 41675,
+      "sha256": "592f95c3f931745a02195ab47db090333ddda8e49a8111c938952354b1189974"
+    },
+    "competition-medals/quarterly-league-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/quarterly-league-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        224
+      ],
+      "sizeBytes": 42148,
+      "sha256": "ab4610e6885575a7c7825cbef0d4c35d16f0d301a2a381169a4d4c078e3da8cd"
+    },
+    "competition-medals/quarterly-league-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/quarterly-league-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-bronze-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        224
+      ],
+      "sizeBytes": 41225,
+      "sha256": "ab81f8f9ad4aed54f53efd0e3a2768398103a7b158730de13b0f0b99e6ebb1fb"
+    },
+    "competition-medals/power-index-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/power-index-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-gold-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        234
+      ],
+      "sizeBytes": 39971,
+      "sha256": "55cfa784078c320505df6826a3e6e3e284ddf6a224b75c5268ff8aa194cd575f"
+    },
+    "competition-medals/power-index-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/power-index-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-silver-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        234
+      ],
+      "sizeBytes": 40255,
+      "sha256": "3a94849481d5a87ce2504d68d5197f31c3e17c3b3a1b967a33249239e3522292"
+    },
+    "competition-medals/power-index-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/power-index-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-bronze-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        234
+      ],
+      "sizeBytes": 39347,
+      "sha256": "a4bf63a51753d6a1752872c93cd4f64a910121c2ca0affcfabeda12224331c09"
+    },
+    "competition-medals/fire-streak-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/fire-streak-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-gold-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        231
+      ],
+      "sizeBytes": 37917,
+      "sha256": "145871434f3bcc51643717237121297aece8f1976e8201f3ded02459cf2a2a4d"
+    },
+    "competition-medals/fire-streak-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/fire-streak-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-silver-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        231
+      ],
+      "sizeBytes": 38257,
+      "sha256": "0e02fd4f8c02ebcb8bd129331fa5f262dbdf44c02fcf0c6806697116bd5865d0"
+    },
+    "competition-medals/fire-streak-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/severna/medals-v1/fire-streak-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-bronze-v1.png",
+      "opticalBoundsPx": [
+        40,
+        31,
+        221,
+        231
+      ],
+      "sizeBytes": 37412,
+      "sha256": "a65f85222556b58ab59c9a1c8151742ca241113079db2428f9c9b4628b9bd761"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "collection": "www/assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
+    "leaderboard": "www/assets/theme-packs/severna/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+    "tournament": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+    "quarterly-league": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+    "power-index": "www/assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+    "fire-streak": "www/assets/theme-packs/severna/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

@@ -13,7 +13,7 @@ RUNTIME_ROOT = ROOT / "www/assets/green-soft-clay/canonical/rules-page-illustrat
 ASSETS = (
     ("rules-scoring", 188200, "58d0c32e0cd9c8a92e97a95b6ccb4468df19adde7901ef2052e42a45a3ea00ca"),
     ("stats-leaderboards", 174369, "41b88e864d1933b43ba9081c5ebba6d6844e23afc3fba71f5cac45ecb6969b7a"),
-    ("multiplayer-competitions", 193124, "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b"),
+    ("multiplayer-competitions", 200700, "f81a8d9d50d51650db7f0d0b8ce6212c351d7c0b8e7e7157015699a569931d33"),
     ("account-server", 240872, "a1092f5af79c8a73982147c78713de0e0fe7b92cfe0bdf7557babb9ba6cfab7a"),
 )
 
@@ -44,15 +44,16 @@ def copy_verified(source: Path, target: Path, byte_count: int, digest: str) -> N
 def main() -> None:
     for asset_id, byte_count, digest in ASSETS:
         active = ACTIVE_ROOT / f"{asset_id}-v1.png"
-        master = MASTER_ROOT / f"green-rules-page-{asset_id}-master-v1.png"
+        corrected = asset_id == "multiplayer-competitions"
+        master = MASTER_ROOT / f"green-rules-page-{asset_id}-master-v{2 if corrected else 1}.png"
         runtime = RUNTIME_ROOT / f"{asset_id}-v1.png"
-        if active.exists():
+        if active.exists() and not corrected:
             verify(active, byte_count, digest)
             copy_verified(active, master, byte_count, digest)
         else:
             verify(master, byte_count, digest)
         copy_verified(master, runtime, byte_count, digest)
-        if (active.exists() and active.read_bytes() != master.read_bytes()) or master.read_bytes() != runtime.read_bytes():
+        if (active.exists() and not corrected and active.read_bytes() != master.read_bytes()) or master.read_bytes() != runtime.read_bytes():
             raise ValueError(f"Green Rules page copies differ: {asset_id}")
         print(f"{asset_id}: approved/master/canonical 512x512 RGBA, {byte_count} B, byte-identical")
 

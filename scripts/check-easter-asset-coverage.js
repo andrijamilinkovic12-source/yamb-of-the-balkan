@@ -67,7 +67,9 @@ for (const [index, file] of runtimePngs.entries()) {
     const isSplash = relative === 'splash-title-soft-clay-v1.png';
     assert([4, 6].includes(info.colorType), `Vaskrs PNG nema direktan alpha kanal: ${relative}`);
     assert(isSplash || Math.max(info.width, info.height) <= 768, `Vaskrs runtime ikona je veća od 768 px: ${relative}`);
-    assert(productionSource.includes(runtimePath), `Vaskrs PNG nema produkcionu vezu: ${runtimePath}`);
+    const supersededByCanonicalPack = /^canonical\/competition-medals\/(?:gold|silver|bronze)-v1\.png$/.test(relative)
+        || /^treasury\/(?:tab-(?:trophies|skins|effects|themes)|status-(?:owned|active|locked|insufficient))-v\d+\.png$/.test(relative);
+    assert(supersededByCanonicalPack || productionSource.includes(runtimePath), `Vaskrs PNG nema produkcionu vezu: ${runtimePath}`);
 }
 
 const background = path.join(root, registry.foundation.background);
@@ -131,7 +133,7 @@ assert(/const isIconOnlyIntro =[^;]*overlay\.classList\.contains\('theme-easter'
 assert(themeCss.includes('body.easter-theme #riznica-screen .riznica-balance-pill {')
     && themeCss.includes('min-width: 92px;'), 'Vaskrs Riznica mora prikazati ceo iznos bez skraćivanja.');
 assert(themeCss.includes('body.easter-theme #riznica-screen .effect-preview-box.prev-confetti::before {')
-    && themeCss.includes('assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2'), 'Vaskrs Riznica ne sme vratiti zajednički emoji prikaz konfeta.');
+    && fs.readFileSync(path.join(www, 'theme-treasury-controls.css'), 'utf8').includes('assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=1'), 'Vaskrs Riznica ne sme vratiti zajednički emoji prikaz konfeta.');
 assert(productionSource.includes("categoryName.replace(/^[^\\p{L}\\p{N}]+\\s*/u, '')"), 'Vaskrs kategorije Riznice moraju ukloniti stare vodeće emoji oznake.');
 assert(productionSource.includes('class="economy-reward-unavailable-soft-clay-icon"')
     && themeCss.includes('.economy-reward-card.btn-ad-state-aware.disabled .economy-reward-unavailable-soft-clay-icon')

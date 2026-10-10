@@ -218,15 +218,7 @@ class VatreniNizManager {
 
         // Tema bira svoj versionirani Vatreni niz podium pack.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const podiumTheme = activeTheme === 'dark' ? 'green' : (activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter'));
-        const podiumAssetSrc = podiumTheme === 'severna'
-            ? `assets/severna-soft-clay/statistics/fire-streak/${podiumTone}-v10.png?v=1`
-            : podiumTheme === 'green'
-                ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${podiumTone}-v1.png?v=1`
-            : podiumTheme === 'easter'
-                ? `assets/easter-soft-clay/canonical/competition-medals/${podiumTone}-v1.png?v=1`
-                : `assets/desert-soft-clay/statistics/fire-streak/${podiumTone}-v3.png?v=1`;
+        const podiumAssetSrc = podiumTone ? getThemeMedalSource('fireStreak', podiumTone) : '';
         const legacyRank = rank === 1 ? '🔥' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `${rank}.`));
         const podiumRank = podiumTone
             ? `<img class="fire-streak-podium-medal" src="${podiumAssetSrc}" alt="" aria-hidden="true">`

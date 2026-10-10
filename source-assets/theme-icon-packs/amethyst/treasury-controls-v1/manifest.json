@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "themeId": "amethyst",
+  "slots": {
+    "canonical/treasury-controls/tab-trophies-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-trophies-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png",
+      "opticalBoundsPx": [
+        34,
+        49,
+        222,
+        206
+      ],
+      "sizeBytes": 37836,
+      "sha256": "0f8807f2e564809a04463c4be0ec087009bf56ea609840990813feca8d06a9bb"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-skins-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        35,
+        34,
+        221,
+        222
+      ],
+      "sizeBytes": 52048,
+      "sha256": "83366d015d2d6061d004b77fa99a4f9c6f20c6f6ed9821d2b53235b7aea2044c"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-effects-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        53,
+        34,
+        203,
+        222
+      ],
+      "sizeBytes": 33366,
+      "sha256": "b15fc058041526b105cc82e44a81ada17a4b37de7fb7ed72f673ea86534bc1db"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-themes-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        52,
+        34,
+        224,
+        225
+      ],
+      "sizeBytes": 21078,
+      "sha256": "f325f64ea51159e52daeb8e8db73cd2ed04d273ccd8db5498ae4ab13715546ac"
+    },
+    "canonical/treasury-controls/status-owned-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-owned-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-owned-v1.png",
+      "opticalBoundsPx": [
+        50,
+        57,
+        212,
+        209
+      ],
+      "sizeBytes": 21998,
+      "sha256": "2e0e53f7bee00ae6161759cf98c9e4d87c9e8a2d8d03110331674c32c837286b"
+    },
+    "canonical/treasury-controls/status-active-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-active-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-active-v1.png",
+      "opticalBoundsPx": [
+        45,
+        52,
+        218,
+        213
+      ],
+      "sizeBytes": 32400,
+      "sha256": "fd67b1bff9fca5876c2acbba8fd4d74b5ccb1ea5c6fe1ebbd4f62241d1851a66"
+    },
+    "canonical/treasury-controls/status-locked-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-locked-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-locked-v1.png",
+      "opticalBoundsPx": [
+        44,
+        51,
+        219,
+        228
+      ],
+      "sizeBytes": 20268,
+      "sha256": "d46b4ae6507282d93e264eaeb8bec8ad604a73a34d8117202da4f66628ff329a"
+    },
+    "canonical/treasury-controls/status-insufficient-v1": {
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-insufficient-master-v2.png",
+      "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-insufficient-v1.png",
+      "opticalBoundsPx": [
+        45,
+        52,
+        218,
+        213
+      ],
+      "sizeBytes": 31756,
+      "sha256": "20a2262ada15ff530733d24e0a8ea2e54aa2741b7397d2446579f09de75c6fd6"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "tab-trophies": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+    "tab-skins": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/first_play-v1.png",
+    "tab-effects": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

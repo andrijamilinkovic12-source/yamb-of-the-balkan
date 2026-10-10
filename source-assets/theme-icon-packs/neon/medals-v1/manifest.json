@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "themeId": "neon",
+  "slots": {
+    "collection-medals/collection-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/collection-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/collection-medals/collection-gold-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        235
+      ],
+      "sizeBytes": 46090,
+      "sha256": "363590f0fba75526bbfd8c2933404f05e5fadc76c7ff229b73e07b74693f3cc4"
+    },
+    "collection-medals/collection-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/collection-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/collection-medals/collection-silver-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        235
+      ],
+      "sizeBytes": 46363,
+      "sha256": "afde49512586ff0fb899595d44ac7d552987796073f62299f0973f19c5397e99"
+    },
+    "collection-medals/collection-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/collection-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/collection-medals/collection-bronze-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        235
+      ],
+      "sizeBytes": 45295,
+      "sha256": "923d0e5a8f9b35a63efc4e2cd8a553c6857288ff0d27741aa6d170f4b589b6b4"
+    },
+    "competition-medals/general-podium-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/leaderboard-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-gold-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        228
+      ],
+      "sizeBytes": 33777,
+      "sha256": "72f52aa85b12ffac53c39b973a83a78c415bd54edd92ad6f91c1ffe54aa259c8"
+    },
+    "competition-medals/general-podium-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/leaderboard-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-silver-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        228
+      ],
+      "sizeBytes": 34282,
+      "sha256": "e7707c8cf28c1cb1fdde469210464ff524ee403475f5a8b2b8e3bbe4bf0d44df"
+    },
+    "competition-medals/general-podium-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/leaderboard-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-bronze-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        228
+      ],
+      "sizeBytes": 33103,
+      "sha256": "fa0150b3f04e547cd2e7504e15375f8f6b14b8c336a1a54fd42b8cf34c4c0d94"
+    },
+    "competition-medals/tournament-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/tournament-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        224
+      ],
+      "sizeBytes": 35312,
+      "sha256": "164e0dd57997eb4a0f19c440afb951994a178fb04ee3d782e12c07505e7f6115"
+    },
+    "competition-medals/tournament-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/tournament-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        224
+      ],
+      "sizeBytes": 35789,
+      "sha256": "e90474f9c9b7b04ad03972eadbd2a7170ab6430d35f03ebb8adf90043afc12f9"
+    },
+    "competition-medals/tournament-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/tournament-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        224
+      ],
+      "sizeBytes": 34505,
+      "sha256": "7ba78624df5a4bb0abdaa665393be2c18a6a4ffdfded00c826364daa383f53bd"
+    },
+    "competition-medals/quarterly-league-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/quarterly-league-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-gold-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        224
+      ],
+      "sizeBytes": 41184,
+      "sha256": "35bdc47eb01a60383d078c06ce291a46a1f2cdc3c48a9f5b139952e296176060"
+    },
+    "competition-medals/quarterly-league-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/quarterly-league-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        224
+      ],
+      "sizeBytes": 41550,
+      "sha256": "45a86e536cb3854baa56b66773e896c978917184ccf38904cc34a51da77f5c27"
+    },
+    "competition-medals/quarterly-league-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/quarterly-league-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-bronze-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        224
+      ],
+      "sizeBytes": 40446,
+      "sha256": "293859acaf66f66d5684cd6f2f75988e5bc7c7f30596490761617a8a07efcd32"
+    },
+    "competition-medals/power-index-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/power-index-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-gold-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        234
+      ],
+      "sizeBytes": 38001,
+      "sha256": "7464d0a66b809d34f3a19f149929643b71b44f5cb8a26f0ee6a3c69d5200c9c2"
+    },
+    "competition-medals/power-index-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/power-index-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-silver-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        234
+      ],
+      "sizeBytes": 38496,
+      "sha256": "df27869202163b6b4917ade0127ae7b126d364c4e313af137528ffd91b0009fd"
+    },
+    "competition-medals/power-index-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/power-index-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-bronze-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        234
+      ],
+      "sizeBytes": 37282,
+      "sha256": "786ae44b135a552674f0896567f6895d1aa7acba891432bc804dd01a297be0d5"
+    },
+    "competition-medals/fire-streak-gold-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/fire-streak-gold-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-gold-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        231
+      ],
+      "sizeBytes": 39322,
+      "sha256": "e8c4419aea3ebfeda711b96c6f8b1f27467119671f201170d35c3dd6ea6e4870"
+    },
+    "competition-medals/fire-streak-silver-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/fire-streak-silver-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-silver-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        231
+      ],
+      "sizeBytes": 39748,
+      "sha256": "ce81e1757c39aa29980b38c196971593ffe566b53f6e2398e53c0a17add06b8c"
+    },
+    "competition-medals/fire-streak-bronze-v1.png": {
+      "masterPath": "source-assets/theme-icon-packs/neon/medals-v1/fire-streak-bronze-master-v2.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-bronze-v1.png",
+      "opticalBoundsPx": [
+        43,
+        20,
+        218,
+        231
+      ],
+      "sizeBytes": 38736,
+      "sha256": "bf3a5ec2c980944ea9e0334eeb71b98b426bdb40318f70aa3178b3eda9ae4295"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "collection": "www/assets/theme-packs/neon/runtime/menu/treasury-free-v3.png",
+    "leaderboard": "www/assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+    "tournament": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+    "quarterly-league": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+    "power-index": "www/assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+    "fire-streak": "www/assets/theme-packs/neon/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

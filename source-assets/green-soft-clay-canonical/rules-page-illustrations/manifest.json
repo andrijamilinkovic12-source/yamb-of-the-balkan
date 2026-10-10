@@ -9,13 +9,13 @@
     "palette": "forest-green, warm-ivory and restrained terracotta accents",
     "presentation": "one transparent page scene per SR/EN title without text, square frame or backing tile",
     "lighting": "soft upper-left light with controlled clay depth",
-    "mapping": "one immutable 512px PNG for each of four page titles; Communication and Economy/Treasury remain protected outside this family"
+    "mapping": "one canonical 512px PNG for each of four page titles; Communication and Economy/Treasury remain protected outside this family"
   },
   "provenance": {
     "approvedResolution": [512, 512],
     "higherResolutionGreenSource": "not found in source-assets/green-soft-clay-hires",
-    "masterPolicy": "byte-for-byte snapshot of each approved active 512x512 RGBA PNG; never upscale and label it a high-resolution original",
-    "normalization": "direct lossless copy of approved bytes, with no resampling, recompression or pixel edits"
+    "masterPolicy": "original three titles preserve their approved 512px snapshots; multiplayer-competitions uses a corrected 512px v2 master with physically valid dice",
+    "normalization": "each canonical 512px PNG is byte-identical to its selected 512px master; the corrected v2 master was downsampled from a new high-resolution render"
   },
   "catalog": [
     {
@@ -55,11 +55,11 @@
       "usedBy": ["SR Rules page 3", "EN Rules page 3", "Rules room-on-demand package"],
       "displaySizes": [[38, 38]],
       "approvedSource": "www/assets/green-soft-clay/rules/pages/multiplayer-competitions-v1.png",
-      "master": "green-rules-page-multiplayer-competitions-master-v1.png",
+      "master": "green-rules-page-multiplayer-competitions-master-v2.png",
       "runtime": "www/assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
       "size": [512, 512],
-      "bytes": 193124,
-      "sha256": "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b",
+      "bytes": 200700,
+      "sha256": "f81a8d9d50d51650db7f0d0b8ce6212c351d7c0b8e7e7157015699a569931d33",
       "legacyReferencesBeforeIntegration": 2,
       "expectedCanonicalReferences": 2
     },

@@ -140,7 +140,7 @@ function rulesGreenAssetSrc(easterSrc = '') {
     const greenOverrides = {
         'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png?v=1',
         'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png?v=1',
-        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png?v=1',
+        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png?v=2',
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/green-soft-clay/rules/pages/communication-v1.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/green-soft-clay/rules/pages/economy-treasury-v3.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png?v=1',
@@ -197,6 +197,10 @@ function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
 
 function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
+    const treasuryTab = String(easterSrc || '').match(/\/treasury\/(tab-(?:trophies|skins|effects|themes))(?:-v\d+)?\.png/);
+    if (treasuryTab) {
+        return `<img class="rules-inline-icon rules-theme-treasury-control${suffix}" src="${getThemeTreasuryControlSource(treasuryTab[1])}" alt="" aria-hidden="true" decoding="async">`;
+    }
     const desertSrc = rulesDesertAssetSrc(easterSrc);
     const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const severnaSrc = rulesSevernaAssetSrc(easterSrc);
@@ -231,7 +235,10 @@ function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
 }
 
 function rulesQlPodiumPackHtml() {
-    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/easter-soft-clay/canonical/competition-medals/gold-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/easter-soft-clay/canonical/competition-medals/bronze-v1.png?v=1" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/desert-soft-clay/ql/medal-gold.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/desert-soft-clay/ql/medal-silver.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/desert-soft-clay/ql/medal-bronze.png?v=opt2" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/severna-soft-clay/ql/medal-gold-v3.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/severna-soft-clay/ql/medal-silver-v3.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-green rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png?v=1" loading="lazy" alt=""></span>`;
+    const medals = ['gold', 'silver', 'bronze']
+        .map(tier => `<img data-medal-tier="${tier}" src="${getThemeMedalSource('quarterlyLeague', tier)}" loading="lazy" alt="" decoding="async">`)
+        .join('');
+    return `<span class="rules-podium-pack rules-podium-pack-canonical rules-ql-podium-pack" aria-hidden="true">${medals}</span>`;
 }
 
 const RulesData = {
@@ -738,6 +745,9 @@ class RulesUI {
             this.currentLang = currentStoredLang;
             this.init(); 
         }
+        this.overlay.querySelectorAll('.rules-podium-pack-canonical img[data-medal-tier]').forEach(image => {
+            image.src = getThemeMedalSource('quarterlyLeague', image.dataset.medalTier);
+        });
         
         this.overlay.style.display = 'flex';
         

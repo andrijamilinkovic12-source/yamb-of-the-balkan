@@ -1,8 +1,26 @@
 {
-  "schemaVersion": 17,
-  "updatedOn": "2026-10-07",
+  "schemaVersion": 19,
+  "updatedOn": "2026-10-09",
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
+  "diceFaceRules": {
+    "scope": "Obavezno za svih deset tema, svaki PNG, logo, ikonu, ilustraciju, preview, animacioni kadar i CSS/3D prikaz koji prikazuje jednu ili vise igrackih kockica. Svaka vidljiva kockica se proverava zasebno; pravilo vazi i kada je kockica samo sporedni detalj.",
+    "canonicalOrientation": "Koristi se jedna fizicki ispravna sestostrana kockica: kada je 1 gore, 2 napred, 3 desno, suprotne strane su 6 dole, 5 pozadi i 4 levo. Dozvoljene su samo krute rotacije te iste kockice, bez ogledanja ili nezavisnog biranja brojeva na vidljivim stranama.",
+    "oppositeFaces": [[1, 6], [2, 5], [3, 4]],
+    "visibleFaces": "Na susednim vidljivim stranama brojevi moraju biti razliciti i nijedan par ne sme biti suprotan. Ista vrednost nikad ne sme da se ponovi na dve strane iste kockice. Ako se vide tri strane, njihov redosled mora odgovarati kanonskoj fizickoj orijentaciji, ne samo dozvoljenom skupu brojeva.",
+    "pipLayouts": {
+      "1": "jedna tacka tacno u sredini",
+      "2": "dve tacke u suprotnim dijagonalnim uglovima",
+      "3": "dve dijagonalne ugaone tacke i jedna u sredini",
+      "4": "po jedna tacka u svakom od cetiri ugla",
+      "5": "cetiri ugaone tacke i jedna u sredini",
+      "6": "dve paralelne kolone od po tri tacke"
+    },
+    "rendering": "Tacke su okrugle, odvojene, citljive i pripadaju svojoj ravnoj strani kockice. Perspektiva moze promeniti izgled razmaka, ali ne broj, raspored ili pripadnost strani. Nema sedam ili vise tacaka na jednoj strani, dodatnih laznih tacaka, preklapanja koje menja broj ili identicnih brojeva na susednim stranama.",
+    "multipleDice": "U kompoziciji sa vise kockica svaka ima svoj ispravan skup strana. Razlicite kockice mogu pokazivati istu vrednost, sto nije greska.",
+    "nonDiceException": "Pet tacaka na dukatu je oznaka valute, a ne strana kockice; ostaje propisani motiv dukata. Ostale ukrasne tacke ne smeju se rasporediti tako da izgledaju kao neispravna kockica.",
+    "releaseGate": "Pre prihvatanja svakog novog ili izmenjenog asseta sa kockicom pregledati master i produkcioni PNG na stvarnoj velicini prikaza. Neispravan broj ili raspored tacaka zahteva novu verziju motiva, povezivanje svih potrosaca i uklanjanje stare aktivne verzije. Provera obuhvata i assete ranije prihvacenih tema."
+  },
   "visualRestraint": {
     "scope": "Obavezno za svih deset tema i za svaki vizuelni sloj: pozadine, Icon Pack, logo, ilustracije, kartice, tablu, kontrole, stanja i animacije.",
     "principle": "Bez kica i nakicenosti. Koristiti ciste siluete, malo pazljivo izabranih detalja i jasnu vizuelnu hijerarhiju. Svaki detalj mora doprineti prepoznatljivosti teme, funkciji ili citljivosti; ukras bez svrhe se uklanja.",
@@ -86,7 +104,7 @@
   "assetUsageAndOpticalBounds": {
     "path": "docs/theme-asset-usage-map.json",
     "implementationPath": "docs/theme-asset-implementation-map.json",
-    "scope": "Svih 177 produkcionih PNG uloga imaju planirani kontekst, staticki dokaz mesta upotrebe gde je moguce, velicinu fajla, RGBA memoriju i merene vidljive granice Green reference.",
+    "scope": "Svih 186 produkcionih PNG uloga imaju planirani kontekst, staticki dokaz mesta upotrebe gde je moguce, velicinu fajla, RGBA memoriju i merene vidljive granice Green reference.",
     "opticalMeasure": "Granice su najmanji pravougaonik piksela sa alpha >= 16 na originalnom PNG platnu; kod neprozirne pozadine vazi celo platno. Meri se posebno za svaki novi tematski PNG i vizuelno proverava.",
     "consumerEvidence": "Staticki pogodak putanje u kodu je dokaz reference, ali nije dokaz da je asset prikazan. Dinamicki sastavljene putanje i uslovne grane zahtevaju rucnu potvrdu na stvarnom ekranu.",
     "alignment": "Ikonice iste semanticke uloge u istom CSS polju imaju ujednacenu vidljivu zauzetost i centar; ciljna zauzetost je 70-90% polja za izolovane ikonice, uz dokumentovan izuzetak za dugacke logotipe, ilustracije i namerne kompozicije. Ne seci senke ili rubove.",
@@ -121,7 +139,7 @@
     "noCrossThemeReuse": "Ikonice iz jedne teme ne smeju se koristiti u drugoj temi, ukljucujuci preuzimanje iste ikonice i promenu samo njene boje ili teksture.",
     "noCopyOrTracing": "Zabranjeno je preslikavanje, trasiranje, ogledanje ili kopiranje gotove ikonice druge teme uz sitne izmene. Ista funkcija moze imati isti prepoznatljiv pojam, ali svaka tema mora dobiti originalnu kompoziciju i obradu.",
     "style": "Icon Pack nasledjuje zajednicki stil 3D Soft Neomorphism.",
-    "direction": "Icon Pack koristi tacno iconPackDirection svoje teme, jednak njenom direction: Clay ili Smooth Rubber / Matte Plastic. Ovo vazi za svih 177 uloga gde se pojavljuje tematski PNG, ne samo za sest reprezentativnih ikona.",
+    "direction": "Icon Pack koristi tacno iconPackDirection svoje teme, jednak njenom direction: Clay ili Smooth Rubber / Matte Plastic. Ovo vazi za svih 186 uloga gde se pojavljuje tematski PNG, ne samo za sest reprezentativnih ikona.",
     "restraint": "Ikonica ostaje jedan jasan simbol bez kica, ornamentalnog okvira, postolja ili sitnih dekorativnih dodataka; primenjuje se visualRestraint.iconPack.",
     "mainMenuLowerRow": "Pet ikona donjeg reda glavnog menija, od Dnevnog izazova do Pravila, u svih devet tema za preradu prikazuju se kao samostalni transparentni PNG simboli bez kvadratne pozadine dugmeta, podmetaca i dekorativnih pseudoelemenata. Geometrija prati Zelenu: PNG 384 x 384 px, prikaz ikone 52 x 52 px (mobilni portret 46 x 46 px), nevidljiva klik-zona 55 x 55 px (mobilni portret 48 x 48 px), razmak 15 px (mobilni portret 12 px) i maksimalna sirina reda 350 px. Samo ikone prolaze blag sekvencijalni talas, uz iskljucenu animaciju kada korisnik trazi smanjeno kretanje. Zelena ostaje zakljucana referenca.",
     "mainMenuSpecialPair": "Ikone Riznice i Turnira u glavnom meniju svih devet tema za preradu su njihovi novi kanonski PNG simboli bez kvadratne podloge, podmetaca, dekorativnih pseudoelemenata i starih SVG duplikata. Velicina prikaza prati Zelenu: 82 x 82 px, mobilni portret 74 x 74 px; nevidljiva klik-zona 75 x 75 px, na uskim ekranima do 360 px 65 x 65 px. Riznica blago dise u ciklusu 2.6 s, Turnir se blago njise u ciklusu 2.8 s; animira se samo ikona i zaustavlja se uz prefers-reduced-motion. Zelena ostaje zakljucana referenca.",
@@ -133,7 +151,7 @@
     "contrast": "Nosivi obris ili znak ikone mora imati najmanje 3:1 prema stvarnoj kartici na kojoj stoji, ukljucujuci surface i raised. Znacenje ne zavisi samo od boje; pregledati na 44 px i na 320 CSS px sirine ekrana.",
     "material": "Dubina je meka i kontrolisana: jedan glavni izvor svetla, jedan citljiv reljef i blaga senka. Bez metalnog sjaja, refleksija stakla, glitera, sarene aura svetlosti, ukrasnih bordura i ornamentalnih postolja.",
     "distinctDna": "Svaki Icon Pack koristi sopstveni jezik siluete i reljefa iz iconDna. Izuzetak koji sve teme dele jeste pet tacaka na dukatu; svaka tema i dalje originalno oblikuje obod, materijal, reljef, proporcije i paletu, bez preuzimanja tudjeg PNG-a. Unutar jedne teme ostaje isti kanonski motiv svuda.",
-    "approval": "Ciljne boje i opis iconDna nisu potvrda da postojeci PNG-ovi vec prolaze. Pre zakljucavanja paketa uporediti sest reprezentativnih ikona, ukljucujuci dukat, sa svim ostalim temama u istim velicinama i proveriti 177 uloga.",
+    "approval": "Ciljne boje i opis iconDna nisu potvrda da postojeci PNG-ovi vec prolaze. Pre zakljucavanja paketa uporediti sest reprezentativnih ikona, ukljucujuci dukat, sa svim ostalim temama u istim velicinama i proveriti 186 uloga.",
     "auditPath": "docs/theme-icon-pack-palette-audit-2026-10-06.md"
   },
   "gameLogoRules": {
@@ -155,13 +173,16 @@
   },
   "assetStandardizationRules": {
     "catalogId": "shared-room-pack-production-png",
-    "catalogStatus": "Zakljucan ciljni inventar prema aktivnom Green Room Pack-u: 176 PNG u paketu plus jedna glavna renderovana pozadina.",
+    "catalogStatus": "Ciljni inventar: 185 PNG u paketu plus jedna glavna renderovana pozadina. Devet novih uloga medalja razdvaja Turnir, Indeks snage i Vatreni niz od Top-liste.",
     "catalogPath": "docs/theme-asset-role-catalog.json",
-    "requiredProductionPngCount": 177,
-    "equalCount": "Svaka tema mora imati tacno 177 produkcionih PNG asseta, rasporedjenih jedan-prema-jedan po istim obaveznim semantickim ulogama. Izvorni masteri, QA snimci, povuceni asseti i legacy fallback fajlovi ne ulaze u broj.",
+    "requiredProductionPngCount": 186,
+    "equalCount": "Svaka tema mora imati tacno 186 produkcionih PNG asseta, rasporedjenih jedan-prema-jedan po istim obaveznim semantickim ulogama. Izvorni masteri, QA snimci, povuceni asseti i legacy fallback fajlovi ne ulaze u broj.",
     "sameRoles": "Svaka tema mora pokriti isti katalog uloga: pozadine, glavni logo igre, ikonice, tematske ilustracije i ostale renderovane elemente koje standard proglasi obaveznim. Nova obavezna uloga dodaje se svim temama.",
     "standardizedFiles": "Za svaku ulogu standardizuju se naziv/ID, format PNG, dimenzije, transparentnost gde je potrebna, izvorni master, optimizovana produkciona izvedenica i mesto upotrebe. Tehnicke varijante velicine podlezu istom katalogu u svim temama.",
     "oneIdentityPerRole": "Unutar jedne teme svaki motiv koji se pojavljuje na vise mesta ima jedan kanonski vizuelni identitet. To vazi za dukat i za sve ostale ponovljene ikonice, simbole i ilustracije.",
+    "roomToMedalIdentity": "Ovo pravilo vazi za svih deset tema, ukljucujuci prvu obradu Svetlog Zlata i referentnu Zelenu. Pre izrade medalja standardizovati kanonski motiv svake sobe kroz glavnu ikonu, intro i ponovljene prikaze. Medalja odgovarajuceg takmicenja koristi taj isti prepoznatljivi predmet i njegov oblik: ako je ikona Turnira pehar, u zlatnoj, srebrnoj i bronzanoj turnirskoj medalji prikazuje se taj isti pehar, bez izmisljanja novog pehara ili zamene drugim znakom. Medju rangovima smeju da se menjaju boja i materijal ranga, ali ne identitet, osnovna silueta ni znacajni detalji predmeta. Okvir medalje moze pratiti stil teme, ali ne sme sakriti ili promeniti kanonski motiv. Povezana PNG datoteka bez ove vizuelne podudarnosti nije prihvacena.",
+    "medalContract": "Svih deset tema imaju po 18 kanonskih PNG medalja od 256 x 256 RGBA: tri medalje kolekcije i po tri za Top-listu, Turnir, Kvartalnu ligu, Indeks snage i Vatreni niz. Svako takmicenje ima sopstvenu siluetu i znak za zlato, srebro i bronzu; medalja jednog takmicenja ne predstavlja drugo takmicenje. Ista tema, takmicenje i rang koriste isti PNG u svim sobama, pravilima, obavestenjima i zavrsnim prikazima. Medalje prate stil, pravac i paletu teme, bez kopiranja ili prostog prebojavanja iz druge teme. Dimenzije prikaza i raspored kartica ostaju prema Zelenoj.",
+    "treasuryControlContract": "Svih deset tema imaju po osam kanonskih PNG kontrola Riznice od 256 x 256 RGBA: tabovi Trofeji, Kockice, Efekti i Teme; statusi Kupljeno, Aktivno, Zakljucano i Nedovoljno dukata. Ista uloga u temi koristi isti PNG u Riznici i drugim kontekstima poput Pravila. Kockica na tabu prikazuje pravilan raspored pet tacaka. Stil, pravac, paleta i silueta su originalni za svaku temu, bez prostog prebojavanja, nepotrebnih ukrasa i promena Green geometrije prikaza.",
     "ducatFiveDots": "Obavezno za svih deset tema: svaki prikaz dukata nosi tacno pet citljivih tacaka na licu, cetiri oko jedne centralne. Vazi za svih pet kanonskih ducat PNG uloga (front, angle-left, angle-right, inline, particle) i svaku kompoziciju koja prikazuje dukat. Geometrijski znak, romb, list, talas, krater, urez ili drugi motiv ne zamenjuje pet tacaka. Dizajn materijala, rub, volumen i boje ostaju originalni za svaku temu; nema kopiranja ili prebojavanja druge teme.",
     "reuseWithinTheme": "Ista semanticka uloga koristi isti kanonski PNG gde god je moguce. Tehnicke izvedenice iz istog mastera smeju menjati rezoluciju ili razmeru prikaza, ali ne motiv, oblik, boje, materijal ili prepoznatljive detalje.",
     "noCrossThemeReuse": "Kanonski identitet i PNG asseti jedne teme ne preuzimaju se u drugu temu."
@@ -234,7 +255,7 @@
     "contrast": { "normalTextMinimum": 4.5, "largeTextMinimum": 3, "essentialNonTextMinimum": 3, "standard": "WCAG 2.2 AA", "reference": "https://www.w3.org/TR/WCAG22/" },
     "requiredSurfaces": ["splash and login", "main menu", "solo", "hotseat", "online random and waiting", "invite friend and waiting", "game board", "daily challenge", "leaderboard", "statistics and H2H", "settings", "rules", "global chat", "online players", "economy", "quarterly league", "treasury", "tournament", "game over"],
     "requiredStates": ["normal", "pressed", "active", "selected", "locked", "disabled", "empty", "loading", "error", "success", "reduced motion"],
-    "assetGate": "Tacno 177 produkcionih PNG uloga, svi fajlovi validni i dimenzije/alpha po katalogu; odobren originalan dizajn bez preslikavanja druge teme; jedan kanonski motiv po ponovljenoj ulozi.",
+    "assetGate": "Tacno 186 produkcionih PNG uloga, svi fajlovi validni i dimenzije/alpha po katalogu; odobren originalan dizajn bez preslikavanja druge teme; jedan kanonski motiv po ponovljenoj ulozi.",
     "uiGate": "Na svakoj temi i test velicini nema preklapanja, odsecanja bitnog teksta, pomeranja geometrije prema Green referenci, promene vrednosti ili razlike u funkcionalnom toku.",
     "fontGate": "Stvarno dostupne Montserrat tezine 400/600/700/800 proveravaju se na Android prikazu; sinteticka ili zakasnela zamena fonta ne sme promeniti prelom i geometriju. Georgia citat zadrzava citljiv fallback.",
     "motionGate": "Splash 4,5 s; odgovarajuci room intro 4,6 s; isti redosled i vreme faza; reduced-motion varijanta bez dekorativnog kretanja uz ocuvanje sadrzaja i vremena prelaza.",
@@ -243,7 +264,7 @@
     "restraintGate": "Pozadina, Icon Pack, logo i svi UI slojevi prolaze vizuelni pregled bez kica i nakicenosti na 320 CSS px: jasan primarni motiv, mirna zona sadrzaja, citljive ikonice i uklonjeni detalji bez svrhe. Prolaz automatizovanih provera nije dovoljan.",
     "backgroundSceneGate": "Svaka pozadina prikazuje prepoznatljiv svet teme sa dubinom ili jasnim prostornim odnosom, a ne samo boju ili praznu povrsinu. Svih deset kadrova se proverava zajedno radi razlicitosti: bez ponovljene S-vodilje od puta, reke, staze ili svetla. Provera se radi zasebno i sa stvarnim UI-jem; Plavi Okean mora jasno prikazati nadvodni okean. Bez kica i pretrpanosti.",
     "reviewBoardGate": "Konacna pregledna tabla teme sadrzi stvarnu pozadinu, logo, sest ikona, karticu, tablu, intro i SR/EN snimke; sva odstupanja su resena.",
-    "usageMapGate": "Svih 177 slotova imaju potvrdene aktivne potrosace ili dokumentovan razlog zasto je slot rezervisan, stvarne putanje i izmerene vidljive granice.",
+    "usageMapGate": "Svih 186 slotova imaju potvrdene aktivne potrosace ili dokumentovan razlog zasto je slot rezervisan, stvarne putanje i izmerene vidljive granice.",
     "performanceGate": "Startup, svaka soba i vrhunac aktivne PNG memorije prolaze performanceBudget na ciljnom Android uredjaju, uz dokumentovana merenja.",
     "fallbackGate": "Provereni su nedostajuca ikonica, pozadina i logo bez preuzimanja asseta druge teme; obavezni fajlovi postoje u prihvacenoj verziji."
   },

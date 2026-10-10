@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "themeId": "light",
+  "slots": {
+    "canonical/treasury-controls/tab-trophies-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-trophies-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png",
+      "opticalBoundsPx": [
+        34,
+        41,
+        222,
+        215
+      ],
+      "sizeBytes": 39637,
+      "sha256": "f4df6b3ed60e35b0c3ac46cbdb7c7944d4012db9c0e4ebf24e85cfd048460049"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-skins-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        34,
+        49,
+        222,
+        206
+      ],
+      "sizeBytes": 46640,
+      "sha256": "2e67fdb62cef697ab6c605642fe0e745810e47b786674da9952cf45f08eeaefb"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-effects-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        52,
+        34,
+        203,
+        222
+      ],
+      "sizeBytes": 31351,
+      "sha256": "7c944c2cc329c764dbd2355c848644c2dc475c825567a2ce059d949708e14887"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-themes-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        38,
+        36,
+        226,
+        217
+      ],
+      "sizeBytes": 15252,
+      "sha256": "638bc88ec509a23503b5936ee9360b0da9a5328a8b1406e453a6db83e99ee72b"
+    },
+    "canonical/treasury-controls/status-owned-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-owned-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-owned-v1.png",
+      "opticalBoundsPx": [
+        55,
+        58,
+        207,
+        206
+      ],
+      "sizeBytes": 20563,
+      "sha256": "3e92acdffdfeb0ef46b09b8e5b2a8c8eceb3f4bf8fbf9c6a7eeeed8743ed303f"
+    },
+    "canonical/treasury-controls/status-active-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-active-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-active-v1.png",
+      "opticalBoundsPx": [
+        50,
+        54,
+        212,
+        210
+      ],
+      "sizeBytes": 29523,
+      "sha256": "4bb1ab85433b462ab21a3789bf25744e3cb96aa46185f7dbcd606d252d01f990"
+    },
+    "canonical/treasury-controls/status-locked-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-locked-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-locked-v1.png",
+      "opticalBoundsPx": [
+        46,
+        45,
+        217,
+        226
+      ],
+      "sizeBytes": 18966,
+      "sha256": "024d7586111dd3dd82d289e05e2d14e001080a7bf1316c5b29ef3441e5aaea24"
+    },
+    "canonical/treasury-controls/status-insufficient-v1": {
+      "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-insufficient-master-v2.png",
+      "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-insufficient-v1.png",
+      "opticalBoundsPx": [
+        50,
+        54,
+        212,
+        210
+      ],
+      "sizeBytes": 28131,
+      "sha256": "d88fc55235f11f5330f808bca5a3190ce9a4a3d6e37481ac50893e413348f173"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "tab-trophies": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+    "tab-skins": "www/assets/theme-packs/light/canonical/achievement-trophies/first_play-v1.png",
+    "tab-effects": "www/assets/theme-packs/light/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

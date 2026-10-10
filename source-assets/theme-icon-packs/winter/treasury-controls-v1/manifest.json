@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "themeId": "winter",
+  "slots": {
+    "canonical/treasury-controls/tab-trophies-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-trophies-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png",
+      "opticalBoundsPx": [
+        37,
+        34,
+        219,
+        222
+      ],
+      "sizeBytes": 39047,
+      "sha256": "eea21ca908a14be4e15fbabc09665686f2cf6e91401ce926e88633ee7eb12052"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-skins-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        36,
+        34,
+        220,
+        222
+      ],
+      "sizeBytes": 45227,
+      "sha256": "e6fee6a34df54c1d154dba8b15d06d859b3616ec707af1d430429efb82c68872"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-effects-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        43,
+        34,
+        213,
+        222
+      ],
+      "sizeBytes": 31948,
+      "sha256": "9974775dd162182f1fc3102aeded0eb45c0ce610f93a180add0fe0b1dfb30fe4"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-themes-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        41,
+        37,
+        220,
+        221
+      ],
+      "sizeBytes": 15132,
+      "sha256": "4207daf165449bbd3d0fa348d2fbea6150c816801dd8484ac3db641d258bf64d"
+    },
+    "canonical/treasury-controls/status-owned-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-owned-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-owned-v1.png",
+      "opticalBoundsPx": [
+        60,
+        50,
+        208,
+        199
+      ],
+      "sizeBytes": 17622,
+      "sha256": "033ae84b81c07143f0d04b940fed2cb10c2f06e17cf8f00a2900204ec70e19c9"
+    },
+    "canonical/treasury-controls/status-active-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-active-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-active-v1.png",
+      "opticalBoundsPx": [
+        55,
+        45,
+        212,
+        203
+      ],
+      "sizeBytes": 25164,
+      "sha256": "8c981dbc650122dc8ca2570671edd6776656e7db2727fce37add0c873e6d68b3"
+    },
+    "canonical/treasury-controls/status-locked-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-locked-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-locked-v1.png",
+      "opticalBoundsPx": [
+        42,
+        56,
+        220,
+        227
+      ],
+      "sizeBytes": 17349,
+      "sha256": "1aeb530dc3eb5c02ee6abb2f3cb0d6b2e4c923508cfd087d7c8fb94c4a99769b"
+    },
+    "canonical/treasury-controls/status-insufficient-v1": {
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-insufficient-master-v2.png",
+      "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-insufficient-v1.png",
+      "opticalBoundsPx": [
+        55,
+        45,
+        212,
+        203
+      ],
+      "sizeBytes": 23754,
+      "sha256": "4c842d122f6939bd6f94ae627102200dc76512d1d4a35ab304189c5861508a57"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "tab-trophies": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+    "tab-skins": "www/assets/theme-packs/winter/canonical/achievement-trophies/first_play-v1.png",
+    "tab-effects": "www/assets/theme-packs/winter/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

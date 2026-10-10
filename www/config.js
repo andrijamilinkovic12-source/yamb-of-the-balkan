@@ -209,17 +209,53 @@ const SHOP_DATA = {
     ]
 };
 
-// Desert trofeji zadržavaju iste ID-jeve i uslove kao zajednički/Vaskrs set,
-// ali koriste poseban raster pack bez menjanja logike otključavanja.
+// Sve teme dele ID-jeve i uslove dostignuca; svaka koristi sopstvene PNG motive.
+const CORRECTED_DICE_TROPHY_IDS = {
+    desert: new Set(['first_play']),
+    moon: new Set(['concrete', 'first_play', 'godlike']),
+    green: new Set(['potato', 'sniper']),
+    light: new Set(['close_call', 'first_play']),
+    medium: new Set(['godlike', 'hazard', 'immortal']),
+    neon: new Set(['first_play'])
+};
+const trophyImageVersion = (theme, id) => CORRECTED_DICE_TROPHY_IDS[theme]?.has(id) ? 2 : 1;
 SHOP_DATA.TROPHIES.forEach(item => {
-    item.desertIcon = `assets/desert-soft-clay/treasury/trophies/${item.id}-v1.png?v=1`;
-    item.greenIcon = `assets/green-soft-clay/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
-    item.lightIcon = `assets/theme-packs/light/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
-    item.mediumIcon = `assets/theme-packs/medium/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.desertIcon = `assets/theme-packs/desert/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('desert', item.id)}`;
+    item.moonIcon = `assets/theme-packs/moon/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('moon', item.id)}`;
+    item.greenIcon = `assets/green-soft-clay/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('green', item.id)}`;
+    item.lightIcon = `assets/theme-packs/light/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('light', item.id)}`;
+    item.mediumIcon = `assets/theme-packs/medium/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('medium', item.id)}`;
     item.winterIcon = `assets/theme-packs/winter/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
-    item.neonIcon = `assets/theme-packs/neon/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.neonIcon = `assets/theme-packs/neon/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('neon', item.id)}`;
     item.amethystIcon = `assets/theme-packs/amethyst/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    item.severnaIcon = `assets/theme-packs/severna/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
 });
+
+// One medal identity per theme, competition and rank. All consumers resolve
+// the same canonical PNG instead of maintaining independent fallback packs.
+function getThemeMedalSource(context, tier, theme = localStorage.getItem('yamb_theme') || 'dark') {
+    const contexts = {
+        collection: 'collection-medals/collection',
+        leaderboard: 'competition-medals/general-podium',
+        tournament: 'competition-medals/tournament',
+        quarterlyLeague: 'competition-medals/quarterly-league',
+        powerIndex: 'competition-medals/power-index',
+        fireStreak: 'competition-medals/fire-streak'
+    };
+    const themeIds = new Set(['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
+    if (!contexts[context] || !['gold', 'silver', 'bronze'].includes(tier) || !themeIds.has(theme)) return '';
+    const root = theme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${theme}/canonical`;
+    return `${root}/${contexts[context]}-${tier}-v1.png?v=${theme === 'light' ? 3 : 2}`;
+}
+
+function getThemeTreasuryControlSource(role, theme = localStorage.getItem('yamb_theme') || 'dark') {
+    const roles = new Set(['tab-trophies', 'tab-skins', 'tab-effects', 'tab-themes',
+        'status-owned', 'status-active', 'status-locked', 'status-insufficient']);
+    const themes = new Set(['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
+    if (!roles.has(role) || !themes.has(theme)) return '';
+    const root = theme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${theme}/canonical`;
+    return `${root}/treasury-controls/${role}-v1.png?v=2`;
+}
 
 // Export (ako je potrebno za module, mada u browseru radi globalno)
 if (typeof window !== 'undefined') { Object.freeze(CONFIG); }

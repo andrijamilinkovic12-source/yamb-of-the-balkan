@@ -58,12 +58,12 @@
       ]
     },
     "first_play": {
-      "masterPath": "source-assets/theme-icon-packs/neon/achievement-trophies-v1/first_play-master-v1.png",
+      "masterPath": "source-assets/theme-icon-packs/neon/achievement-trophies-v1/first_play-master-v2.png",
       "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/first_play-v1.png",
-      "sizeBytes": 53028,
+      "sizeBytes": 54768,
       "opticalBoundsPx": [
         22,
-        26,
+        25,
         234,
         230
       ]

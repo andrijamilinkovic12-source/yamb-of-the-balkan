@@ -1,9 +1,32 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-09",
-  "activeThemeId": "easter",
-  "workState": "easter-achievement-trophies-linked-static-checked",
-  "activeWorkPackage": "Svih devet nezelenih tema ima povezane glavne ikone soba, kanonske dukate, Undo token i po sedam PNG uloga za nagradni video. Svetlo Zlato, Trula Visnja, Plavi Okean, Neon Cyber, Kraljevski Ametist i Vaskrsnja imaju po 26 originalnih trofeja dostignuca. Prva cetiri seta potvrdjena su u Android qaLocal WebView-u na tri mesta upotrebe; Ametist i Vaskrsnja imaju mastere, kanonske PNG-ove, povezana tri mesta upotrebe i staticke provere, ali Android prikaz ceka dostupnost QA builda. Trofeji preostale tri teme i ostale porodice kataloga predstoje; korisnicko odobrenje kompleta nije zabelezeno.",
+  "updatedOn": "2026-10-10",
+  "activeThemeId": "light",
+  "workState": "room-identity-standardization-before-medals",
+  "activeWorkPackage": "Rad na medaljama je prekinut: prvo standardizovati kanonski identitet svih soba i iste motive kroz glavnu ikonu, intro, povezane prikaze i medalje. Turnirska medalja mora koristiti kanonski pehar turnira, uz tri ranga. Svetlo Zlato v3 je povezani ali privremeni paket za reviziju; Trula Visnja ima samo radne zlatne mastere, bez povezivanja.",
+  "visualQualityBoundary": {
+    "lastIndividuallyIllustratedFamily": "achievement-trophies",
+    "needsRedesign": ["medals", "treasury-controls", "treasury-effect-previews"],
+    "technicalLinkingIsNotVisualAcceptance": true
+  },
+  "medalRedesignV3": {
+    "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "completedThemes": [],
+    "provisionalThemes": ["light"],
+    "draftOnlyThemes": ["medium"],
+    "nextThemeId": null,
+    "lightReview": "docs/theme-medals-light-v3-review.png",
+    "lightManifest": "source-assets/theme-icon-packs/light/medals-v3-imagegen/manifest.json",
+    "visualAcceptance": "paused: canonical room identities must be standardized before any medal family can be accepted"
+  },
+  "medalEvidence": {
+    "review": "docs/theme-medals-review.html",
+    "contract": "docs/theme-medals-v1.md",
+    "check": "scripts/check-theme-medals.js",
+    "runtimeVisualStatus": "Android qaLocal revizija 2: svih 18 PNG medalja učitano u svih deset tema; prikaz u stvarnim rezultatima takmičenja i korisnički vizuelni izbor čekaju proveru",
+    "visualAcceptance": "needs-redesign: shared medal construction remains too uniform across themes",
+    "androidReport": "docs/qa-theme-dna-medals-controls-emulator-2026-10-10.json"
+  },
   "requiredSurfaceIds": [
     "splash-login",
     "main-menu",
@@ -244,7 +267,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 26
+        "measuredThemeBoundsCount": 66
       },
       "notes": "Prvih 26 originalnih trofeja dostignuca za Svetlo Zlato imaju mastere, standardne PNG-ove i povezana tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-light-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -347,7 +370,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 26
+        "measuredThemeBoundsCount": 66
       },
       "notes": "Svih 26 originalnih Trula Visnja trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-medium-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -450,7 +473,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 26
+        "measuredThemeBoundsCount": 66
       },
       "notes": "Svih 26 originalnih Plavi Okean trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-winter-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -553,7 +576,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 26
+        "measuredThemeBoundsCount": 66
       },
       "notes": "Svih 26 originalnih Neon Cyber trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u vidljivom obavestenju. Dokaz: docs/qa-neon-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -656,7 +679,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 26
+        "measuredThemeBoundsCount": 66
       },
       "notes": "Svih 26 originalnih trofeja Kraljevskog Ametista ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-amethyst-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena jer Gradle build zahteva pristup korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -759,7 +782,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 26
+        "measuredThemeBoundsCount": 66
       },
       "notes": "Svih 26 originalnih Vaskrsnjih trofeja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-easter-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -862,9 +885,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 66
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih trofeja Pustinjskog Stakla ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-desert-review.png; staticka provera potvrdjuje 26 razlicitih fajlova, kanonske putanje i odsustvo starih putanja u galeriji. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "moon",
@@ -965,9 +988,9 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 66
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih trofeja Mesecevog Sjaja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-moon-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
     {
       "themeId": "severna",
@@ -1054,7 +1077,11 @@
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
         "logoPng": "www/assets/theme-packs/severna/splash-title-soft-clay-v1.png",
-        "representativeIconPngs": [],
+        "representativeIconPngs": [
+          "www/assets/theme-packs/severna/canonical/achievement-trophies/first_play-v1.png",
+          "www/assets/theme-packs/severna/canonical/achievement-trophies/godlike-v1.png",
+          "www/assets/theme-packs/severna/canonical/achievement-trophies/night_owl-v1.png"
+        ],
         "menuCardCapture": null,
         "gameBoardCapture": null,
         "roomIntroCapture": null,
@@ -1068,9 +1095,27 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 0
+        "measuredThemeBoundsCount": 66
       },
-      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+      "notes": "Svih 26 originalnih trofeja Severne Magline ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-severna-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen; korisnicko odobrenje kompleta nije zabelezeno."
     }
-  ]
+  ],
+  "treasuryControlEvidence": {
+    "review": "docs/theme-treasury-controls-review.html",
+    "check": "scripts/check-theme-treasury-controls.js",
+    "runtimeVisualStatus": "Android qaLocal revizija 2: svih osam kontrola učitano u svih deset tema, tabovi su 34 px i statusi menjaju temu; korisnički vizuelni izbor čeka proveru",
+    "visualAcceptance": "needs-redesign: shared control construction remains too uniform across themes",
+    "androidReport": "docs/qa-theme-dna-medals-controls-emulator-2026-10-10.json",
+    "screenshots": [
+      "docs/qa-light-theme-dna-emulator-2026-10-10.png",
+      "docs/qa-neon-theme-dna-emulator-2026-10-10.png"
+    ]
+  },
+  "effectPreviewEvidence": {
+    "review": "docs/theme-effect-previews-review.html",
+    "generator": "scripts/build-theme-effect-previews.py",
+    "recorder": "scripts/record-theme-effect-previews.py",
+    "runtimeVisualStatus": "pending Android QA and user review",
+    "visualAcceptance": "needs-redesign: common procedural motifs remain too uniform across themes"
+  }
 }

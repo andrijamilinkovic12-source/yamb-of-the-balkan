@@ -1,6 +1,6 @@
 # Standard izgleda tema — ciljna specifikacija
 
-Datum: 2026-10-06. Mašinski izvor istine je [`theme-definitions.json`](theme-definitions.json); svih 177 obaveznih PNG uloga, sa Green referentnim dimenzijama i tipom PNG-a, nalazi se u [`theme-asset-role-catalog.json`](theme-asset-role-catalog.json). Merena Green mapa je u [`theme-asset-usage-map.json`](theme-asset-usage-map.json), a stanje rada u [`theme-progress.json`](theme-progress.json).
+Datum: 2026-10-09. Mašinski izvor istine je [`theme-definitions.json`](theme-definitions.json); svih 186 obaveznih PNG uloga, sa Green referentnim dimenzijama i tipom PNG-a, nalazi se u [`theme-asset-role-catalog.json`](theme-asset-role-catalog.json). Merena Green mapa je u [`theme-asset-usage-map.json`](theme-asset-usage-map.json), a stanje rada u [`theme-progress.json`](theme-progress.json).
 
 ## Obuhvat i status
 
@@ -52,12 +52,15 @@ Sedam raznovrsnih V6 kadrova nalazi se u [pregledu](theme-backgrounds-v6-review.
 
 ## 1. PNG katalog i identitet
 
-- Cilj je **177 produkcionih PNG-ova po temi**: 176 mesta iz aktivnog Green Room Pack-a i jedna zasebna glavna pozadina. Glavni logo igre je već među 176 mesta.
-- Svako od 177 mesta ima jedinstven ID, Green referentnu putanju, dimenzije i PNG tip u katalogu. Druga tema pravi svoj originalni asset za isto semantičko mesto. Green putanja nije šablon za kopiranje slike ili naziv koji drugi moraju doslovno koristiti.
-- U broj ne ulaze izvorni masteri, QA snimci, povučeni asseti i stari fallback fajlovi. Tehničke izvedenice koje su navedene kao posebna produkciona mesta **ulaze** u 177.
+- Cilj je **186 produkcionih PNG-ova po temi**: 185 mesta u Green Room Pack-u i jedna zasebna glavna pozadina. Glavni logo igre je već među 185 mesta.
+- Svako od 186 mesta ima jedinstven ID, Green referentnu putanju, dimenzije i PNG tip u katalogu. Druga tema pravi svoj originalni asset za isto semantičko mesto. Green putanja nije šablon za kopiranje slike ili naziv koji drugi moraju doslovno koristiti.
+- U broj ne ulaze izvorni masteri, QA snimci, povučeni asseti i stari fallback fajlovi. Tehničke izvedenice koje su navedene kao posebna produkciona mesta **ulaze** u 186.
 - Svaka tema ima jedan kanonski dizajn dukata, logotipa i svakog drugog simbola koji se ponavlja. Dozvoljena promena rezolucije ne menja oblik, boje, materijal ili detalje identiteta.
 - **Dukat u svih deset tema ima tačno pet tačaka na licu** (četiri oko jedne centralne). Pravilo važi za front, levu i desnu perspektivu, inline i particle PNG, kao i za svaki drugi asset koji prikazuje dukat. Romb ili drugi simbol ne može zameniti tačke. Materijal, rub, proporcije i boje ostaju originalni za svaku temu; pet tačaka nisu dozvola da se preslika ili samo preboji tuđi dukat.
+- Svaka tema ima **18 medalja**: kolekcija, Top-lista, Turnir, Kvartalna liga, Indeks snage i Vatreni niz imaju zasebne zlatne, srebrne i bronzane PNG-ove. Ista medalja se koristi na svim ekranima tog takmičenja; drugo takmičenje ne preuzima njen motiv.
+- Svaka tema ima **osam kontrolnih ikona Riznice**: četiri taba i četiri statusa. Ista kontrola se koristi u Riznici i na drugim mestima gde predstavlja istu radnju ili stanje, uključujući Pravila. Tab Kockice ima ispravno lice sa pet tačaka. Prikaz je prema geometriji Zelene.
 - Ikonice i logo su optimizovani PNG-ovi sa transparentnom spoljašnjom pozadinom. Preslikavanje, trasiranje, ogledanje i puko prebojenje asseta druge teme nije dozvoljeno.
+- Različit hash, promenjen ton ili sitno promenjen spoljašnji obris nisu dokaz jedinstvenog DNK. Istu semantičku ulogu uporediti kroz svih deset tema na 44 px: silueta, unutrašnja kompozicija, materijalni reljef i paleta moraju činiti prepoznatljiv paket. Potvrđeni promašaji i DNK revizija medalja i kontrola Riznice zabeleženi su u [pregledu od 10. oktobra 2026.](theme-asset-dna-audit-2026-10-10.md).
 - Svaki Icon Pack, glavni logo, pozadina, sobni asset i UI komponenta koriste **isti pravac koji piše u tabeli teme**. U JSON-u `iconPackDirection`, `gameLogo.direction` i `direction` moraju se poklapati. Tema sa Clay pravcem nema staklene, satenske ili silikonske ikonice; tema sa Mat silikon / Meka plastika pravcem nema glinenu teksturu. Stari runtime asseti ne predstavljaju odobrenje novog pravca.
 
 ## 2. Zajedničke brojčane vrednosti
@@ -129,12 +132,12 @@ Za svaku od devet tema pregled obuhvata 320 × 568, 360 × 780, 412 × 915 i 768
 
 Tema je spremna tek kada prođu sledeće provere:
 
-1. **Asseti:** tačno 177 produkcionih PNG mesta; ispravan format, dimenzije i alpha prema katalogu; originalni motivi bez curenja druge teme; jedan kanonski izgled za svaki motiv koji se ponavlja.
+1. **Asseti:** tačno 186 produkcionih PNG mesta; ispravan format, dimenzije i alpha prema katalogu; originalni motivi bez curenja druge teme; jedan kanonski izgled za svaki motiv koji se ponavlja.
 2. **Kontrast i tekst:** pragovi iznad, bez odsečenog teksta, preklapanja i gubitka smisla na oba jezika i u svim primenljivim stanjima.
 3. **Geometrija:** iste dimenzije, poravnanja, zone dodira, redosled slojeva i skrol granice kao Green referenca pri istom stanju i viewportu.
 4. **Funkcionalnost i pokret:** ista pravila igre, podaci, nagrade, odbrojavanja, introi, vremena, prekidi i reduced-motion ponašanje.
 5. **Učitavanje:** početni kadar učitava samo aktivnu pozadinu, logo i potrebne menu izvedenice; ostali PNG-ovi stižu pri ulasku u sobu. Na aktivnom prikazu nema asseta druge teme.
-6. **Dokazi izgleda i potrošača:** pregledna tabla ima stvarne slike; svih 177 uloga ima potvrđenu produkcionu putanju, ekran/potrošača i optičke granice za tu temu.
+6. **Dokazi izgleda i potrošača:** pregledna tabla ima stvarne slike; svih 186 uloga ima potvrđenu produkcionu putanju, ekran/potrošača i optičke granice za tu temu.
 7. **Performanse i rezerva:** izmereni budžeti za početak, svaku sobu i vrhunac memorije prolaze; nedostajući PNG čuva funkcionalan tekstualni/CSS prikaz bez asseta druge teme. Obavezni PNG i dalje mora postojati za prihvatanje.
 8. **Vizuelna uzdržanost:** pozadina, Icon Pack, logo i UI prolaze pregled bez kiča i nakićenosti u stvarnom mobilnom prikazu.
 9. **Živopisan predeo:** pozadina prikazuje prepoznatljiv ambijent sa dubinom, ne samo boju; Plavi Okean je nadvodni okeanski predeo, bez morskog dna.
@@ -149,9 +152,9 @@ Trenutna tabla prikazuje ciljane HEX boje i **šematske** kartice/table. Samo po
 
 ## 7. Upotreba asseta i vidljive granice
 
-[`theme-asset-usage-map.json`](theme-asset-usage-map.json) daje zapis za svako od 177 mesta: očekivane kontekste, statičke reference putanje u produkcionom kodu, broj bajtova, procenu RGBA memorije i izmerene vidljive granice Zelene. Granice su najmanji pravougaonik piksela čija je alpha vrednost najmanje 16; neprozirna pozadina zauzima celo platno. Mapa nastaje iz neizmenjenih Green PNG-ova pomoću `scripts/build-theme-asset-usage-map.py`.
+[`theme-asset-usage-map.json`](theme-asset-usage-map.json) daje zapis za svako od 186 mesta: očekivane kontekste, statičke reference putanje u produkcionom kodu, broj bajtova, procenu RGBA memorije i izmerene vidljive granice Zelene. Granice su najmanji pravougaonik piksela čija je alpha vrednost najmanje 16; neprozirna pozadina zauzima celo platno. Polazna mapa je napravljena pomoću `scripts/build-theme-asset-usage-map.py`, a nove medalje su dopunjene pomoću `scripts/record-theme-medals.js`.
 
-Statičko pojavljivanje putanje ne potvrđuje da je PNG zaista vidljiv: dinamički sastavljene putanje, uslovni prikazi i duplirani elementi proveravaju se na stvarnom ekranu. [`theme-asset-implementation-map.json`](theme-asset-implementation-map.json) već otvara po 177 pojedinačnih mesta za svaku od devet ciljnih tema. Za svaku ulogu se tokom izrade unose **njena** produkciona putanja, master, svi aktivni potrošači, veličina i izmerene optičke granice. Prazna polja znače da tema još nije potvrđena. Izolovana ikonica u istom CSS polju cilja 70–90% vidljive zauzetosti i centriran motiv, osim dokumentovanih namernih kompozicija poput širokog logotipa. Senke i reljef ne smeju biti isečeni. Ako slot nema aktivnog potrošača, potreban je dokumentovan razlog pre prihvatanja.
+Statičko pojavljivanje putanje ne potvrđuje da je PNG zaista vidljiv: dinamički sastavljene putanje, uslovni prikazi i duplirani elementi proveravaju se na stvarnom ekranu. [`theme-asset-implementation-map.json`](theme-asset-implementation-map.json) otvara po 186 pojedinačnih mesta za svaku od devet ciljnih tema. Za svaku ulogu se tokom izrade unose **njena** produkciona putanja, master, svi aktivni potrošači, veličina i izmerene optičke granice. Prazna polja znače da tema još nije potvrđena. Izolovana ikonica u istom CSS polju cilja 70–90% vidljive zauzetosti i centriran motiv, osim dokumentovanih namernih kompozicija poput širokog logotipa. Senke i reljef ne smeju biti isečeni. Ako slot nema aktivnog potrošača, potreban je dokumentovan razlog pre prihvatanja.
 
 ## 8. Budžeti učitavanja i nedostajući asset
 

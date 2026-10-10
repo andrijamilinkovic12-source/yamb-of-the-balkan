@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-09",
+  "assets": [
+    {
+      "themeId": "green",
+      "slot": "sniper",
+      "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "0aa9bd45cd55be5a1fddbc0b318c4cee7da7b9ae09dd3e3e18913bb5d8ceec37"
+    },
+    {
+      "themeId": "green",
+      "slot": "potato",
+      "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "49da6e9d5fd7881a0965b933e1aa40c29649b6c21fe778266847d6c771d3c8f7"
+    },
+    {
+      "themeId": "light",
+      "slot": "close_call",
+      "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/close_call-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "438b033763db8558b4aeca4779d573235c1f967e316a884b5f4fef0fefde2f50"
+    },
+    {
+      "themeId": "light",
+      "slot": "first_play",
+      "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/first_play-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "3a0712e4d0686748b1a8034dfe285a3886fdba4f1eb326eb4b017aa836bd1897"
+    },
+    {
+      "themeId": "medium",
+      "slot": "godlike",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/godlike-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "c1cc2773285d9cc896b49b07dbce7204a0c11fe3129d8804f0a655a1f8ed8ffb"
+    },
+    {
+      "themeId": "medium",
+      "slot": "hazard",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/hazard-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "1e5036ae09b63d85e777f8358439b8d4844891a22e37814dcae220388436227f"
+    },
+    {
+      "themeId": "medium",
+      "slot": "immortal",
+      "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/immortal-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "b9763dd87695249d781f23e9acc6f3bb43a86c639f84884875190a024e192cd3"
+    },
+    {
+      "themeId": "neon",
+      "slot": "first_play",
+      "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/first_play-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "6efdb1648cd9c6c20b6552ca6d1a3bcd672db26ff72f5fa02dba45afdd61d4f0"
+    },
+    {
+      "themeId": "desert",
+      "slot": "first_play",
+      "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/first_play-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "ac70c34f161af0b3cf12a6c378c68a076f6ea047714acc53d4b3a1b6a4994762"
+    },
+    {
+      "themeId": "moon",
+      "slot": "first_play",
+      "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/first_play-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "02d14c1fa362b5f5a2dcbc8d324e8421c1d83ed458dfc5726c5d57ff02a075b4"
+    },
+    {
+      "themeId": "moon",
+      "slot": "godlike",
+      "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/godlike-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "69d036faa18d8355ab9c975ae457e58bdf9203dfcd60a1a57a96ec8afeec9d1a"
+    },
+    {
+      "themeId": "moon",
+      "slot": "concrete",
+      "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/concrete-v1.png",
+      "visibleFaces": "not a die",
+      "sha256": "5c71913d5d8fb11170ce91adb3c8541de41b6aa83bfc0ea81736ca8915f3e49b"
+    },
+    {
+      "themeId": "green",
+      "slot": "rules/multiplayer-competitions",
+      "productionPath": "www/assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
+      "visibleFaces": "top 1, front 2, right 3",
+      "sha256": "f81a8d9d50d51650db7f0d0b8ce6212c351d7c0b8e7e7157015699a569931d33"
+    }
+  ]
+}

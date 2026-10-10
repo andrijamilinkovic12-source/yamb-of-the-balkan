@@ -42,13 +42,18 @@ TROPHY_IDS = (
 def main() -> None:
     for trophy_id in TROPHY_IDS:
         source = HIRES / f"{trophy_id}-v1.png"
-        master = CANONICAL / f"green-{trophy_id}-master-v1.png"
+        corrected = trophy_id in {"potato", "sniper"}
+        master = CANONICAL / f"green-{trophy_id}-master-v{2 if corrected else 1}.png"
         runtime = RUNTIME / f"{trophy_id}-v1.png"
-        if not source.exists():
+        if not corrected and not source.exists():
             raise FileNotFoundError(f"Missing approved achievement trophy source: {source}")
 
         master.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, master)
+        if corrected:
+            if not master.is_file():
+                raise FileNotFoundError(f"Missing corrected achievement trophy master: {master}")
+        else:
+            shutil.copy2(source, master)
 
         with Image.open(master) as source_image:
             image = source_image.convert("RGBA")

@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "themeId": "severna",
+  "slots": {
+    "canonical/treasury-controls/tab-trophies-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-trophies-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png",
+      "opticalBoundsPx": [
+        34,
+        39,
+        222,
+        217
+      ],
+      "sizeBytes": 37624,
+      "sha256": "f15d4ac6cf9eaea9663c4eb6925ab5b27cd68dcb782492c74c15db61e06e28af"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-skins-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        36,
+        34,
+        220,
+        222
+      ],
+      "sizeBytes": 49524,
+      "sha256": "97d8b2c4f7232e3787b9aee5a655ce64b908cd43480f2911028d55296c744494"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-effects-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        34,
+        37,
+        222,
+        219
+      ],
+      "sizeBytes": 31328,
+      "sha256": "a7b35686046ee36238464636fd38c3fd40ca230a8b54b3be3a3553573d31f48e"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-themes-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        52,
+        33,
+        222,
+        225
+      ],
+      "sizeBytes": 19418,
+      "sha256": "8ef4600425d7efd0be73e97c8a23ef21997e2677bb0d37f6e6007a7a9cb0d34b"
+    },
+    "canonical/treasury-controls/status-owned-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-owned-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-owned-v1.png",
+      "opticalBoundsPx": [
+        63,
+        66,
+        199,
+        211
+      ],
+      "sizeBytes": 16881,
+      "sha256": "21fcccfafb6863988b50fdb7614fc23092babb4ff6e81f874c957bdc0fbbd1d9"
+    },
+    "canonical/treasury-controls/status-active-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-active-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-active-v1.png",
+      "opticalBoundsPx": [
+        59,
+        62,
+        204,
+        216
+      ],
+      "sizeBytes": 23692,
+      "sha256": "10c9d89d103b55cdb7e3c7b031b4470defd25d2e5c2a64608ca5c0f83b2ab4bf"
+    },
+    "canonical/treasury-controls/status-locked-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-locked-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-locked-v1.png",
+      "opticalBoundsPx": [
+        46,
+        50,
+        217,
+        226
+      ],
+      "sizeBytes": 17428,
+      "sha256": "25f8ef308f7d30e104910992d04e442112ec13986d98ac95290c5b8991a21f95"
+    },
+    "canonical/treasury-controls/status-insufficient-v1": {
+      "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-insufficient-master-v2.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-insufficient-v1.png",
+      "opticalBoundsPx": [
+        59,
+        62,
+        204,
+        216
+      ],
+      "sizeBytes": 22696,
+      "sha256": "f0c5f0c6b291b9e0baa5c55460d11d747fed02970f039a7159413b60bf153b5f"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "tab-trophies": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+    "tab-skins": "www/assets/theme-packs/severna/canonical/achievement-trophies/first_play-v1.png",
+    "tab-effects": "www/assets/theme-packs/severna/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

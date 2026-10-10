@@ -209,15 +209,7 @@ class PowerIndexLeaderboard {
 
         // Tema bira svoj versionirani Power Index podium pack.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const podiumTheme = activeTheme === 'dark' ? 'green' : (activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter'));
-        const podiumAssetSrc = podiumTheme === 'severna'
-            ? `assets/severna-soft-clay/statistics/power-index/${podiumTone}-v10.png?v=1`
-            : podiumTheme === 'green'
-                ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${podiumTone}-v1.png?v=1`
-            : podiumTheme === 'easter'
-                ? `assets/easter-soft-clay/canonical/competition-medals/${podiumTone}-v1.png?v=1`
-                : `assets/desert-soft-clay/statistics/power-index/${podiumTone}-v3.png?v=1`;
+        const podiumAssetSrc = podiumTone ? getThemeMedalSource('powerIndex', podiumTone) : '';
         const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
         const podiumRank = podiumTone
             ? `<img class="power-index-podium-medal" src="${podiumAssetSrc}" alt="" aria-hidden="true">`

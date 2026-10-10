@@ -13,7 +13,7 @@ OUTPUT = ROOT / "docs/green-asset-standardization-rules-page-illustrations-audit
 PANELS = (
     ("A  Rules & scoring", "canonical/rules-page-illustrations/rules-scoring-v1.png", 188200, "58d0c32e0cd9c8a92e97a95b6ccb4468df19adde7901ef2052e42a45a3ea00ca", "Yamb sheet + checks; SR/EN page 1", "canonical"),
     ("B  Stats & leaderboards", "canonical/rules-page-illustrations/stats-leaderboards-v1.png", 174369, "41b88e864d1933b43ba9081c5ebba6d6844e23afc3fba71f5cac45ecb6969b7a", "rising bars + crown; SR/EN page 2", "canonical"),
-    ("C  Multiplayer & competitions", "canonical/rules-page-illustrations/multiplayer-competitions-v1.png", 193124, "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b", "two players, die + trophy; SR/EN page 3", "canonical"),
+    ("C  Multiplayer & competitions", "canonical/rules-page-illustrations/multiplayer-competitions-v1.png", 200700, "f81a8d9d50d51650db7f0d0b8ce6212c351d7c0b8e7e7157015699a569931d33", "two players, die + trophy; SR/EN page 3", "canonical"),
     ("D  Account, privacy & server", "canonical/rules-page-illustrations/account-server-v1.png", 240872, "a1092f5af79c8a73982147c78713de0e0fe7b92cfe0bdf7557babb9ba6cfab7a", "account, shield + server; SR/EN page 6", "canonical"),
     ("X1  Communication", "rules/pages/communication-v1.png", 175405, "50ed1ec25dbf9c1de01059ad2d4c15cf5ec230b69c29c370a2ba7e0c901ae05d", "PROTECTED: shared chat page scene", "protected"),
     ("X2  Ducats & Treasury", "rules/pages/economy-treasury-v3.png", 303396, "495fe82e49141fb40dcb195c6f1f2c7d0000511d9ea38a6753e61d3db85eb330", "LOCKED: canonical ducats + Undo", "protected"),

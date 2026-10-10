@@ -1,0 +1,213 @@
+{
+  "id": "severna-treasury-effect-previews",
+  "version": 1,
+  "style": "3D Soft Neomorphism",
+  "direction": "smooth_rubber_matte_plastic",
+  "format": "transparent RGBA PNG",
+  "masterSize": [
+    768,
+    512
+  ],
+  "runtimeSize": [
+    384,
+    256
+  ],
+  "catalog": [
+    {
+      "id": "wedding",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+      "masterSha256": "c6735a869b9d2eed5f81ea484e4521b8daf71666d03bb945f4bfd73888875278",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "runtimeSha256": "0c8a5672df19b9eebcf9670cefa923bf828b65529157577aff568f1406dad899",
+      "opticalBoundsPx": [
+        53,
+        68,
+        334,
+        208
+      ],
+      "sizeBytes": 39615
+    },
+    {
+      "id": "thunder",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+      "masterSha256": "4de0cc805416851d3fcfd370c135770b99eab1848c851a0e3c2a7e3874f38935",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-thunder-v1.png",
+      "runtimeSha256": "d12cc7b00509ca4e6e1c04d3eef92e3a93d11f2bf2b1205befcc5f11bd1edccb",
+      "opticalBoundsPx": [
+        53,
+        58,
+        334,
+        213
+      ],
+      "sizeBytes": 23439
+    },
+    {
+      "id": "fireworks",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+      "masterSha256": "2625d8265c304c6ec6f4e124e51fb30b947c908aeae44e1f8a5c19ae00866372",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireworks-v1.png",
+      "runtimeSha256": "eaed6855a78b6b23f774895141e030f2540958ead837bddd362ceeec5380caac",
+      "opticalBoundsPx": [
+        53,
+        52,
+        334,
+        203
+      ],
+      "sizeBytes": 34689
+    },
+    {
+      "id": "bubbles",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+      "masterSha256": "71328c124fa91370c24fabb184b21ebf798694840123cc38ac5e3e2dc380864b",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-bubbles-v1.png",
+      "runtimeSha256": "4471fb7c112cdf0b77d3234f1c4f0eed18e47868007415e86181f465d942b648",
+      "opticalBoundsPx": [
+        53,
+        70,
+        334,
+        212
+      ],
+      "sizeBytes": 44158
+    },
+    {
+      "id": "cosmic-dust",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+      "masterSha256": "f8d33795fd9988c7c4d4a7426e1d6cf3d313fc427b4481a9f25461201db9b7d4",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
+      "runtimeSha256": "73ec42b38c16cb1d7c5087c747f5df5712f9930e7e8c94c009983aef22c6430a",
+      "opticalBoundsPx": [
+        53,
+        58,
+        334,
+        183
+      ],
+      "sizeBytes": 28167
+    },
+    {
+      "id": "dragon-fire",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+      "masterSha256": "7fca104a14964af832028665847583941c153fd96b97b5adc5b38842a52aa261",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
+      "runtimeSha256": "a29cc24811e3c711d89c2c4e6ae5ce52bbe790c72cbe381884953dbb2083d631",
+      "opticalBoundsPx": [
+        53,
+        68,
+        334,
+        213
+      ],
+      "sizeBytes": 25082
+    },
+    {
+      "id": "royal-yamb",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+      "masterSha256": "6c577eaac6f87d1768758f3d17cf3afafc292c6836d85116b1a6cf11201c6381",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
+      "runtimeSha256": "62e7cadf10d836b349f16a30794e4d232f7f54e8988ff4bc339171b3a534d2d2",
+      "opticalBoundsPx": [
+        53,
+        68,
+        334,
+        195
+      ],
+      "sizeBytes": 21659
+    },
+    {
+      "id": "fireflies",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+      "masterSha256": "98604c54cb67e620738f00640b63c1c899fbc7bfc9b0772dbf3e4e9e48107f9e",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireflies-v1.png",
+      "runtimeSha256": "1d3691b78ec1ff954fc11f871a43d5ea6f426446a62024045179e520f31beb75",
+      "opticalBoundsPx": [
+        53,
+        74,
+        334,
+        195
+      ],
+      "sizeBytes": 25907
+    },
+    {
+      "id": "ice-age",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+      "masterSha256": "cf973cdd12a721c1bfa0cbea8afb9a76d6aaf8a68730ff337ae7cab70856fb01",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-ice-age-v1.png",
+      "runtimeSha256": "17a977824dabbf34efd061d756fa9981098d41b637b6ed4724ab399947f47a00",
+      "opticalBoundsPx": [
+        53,
+        59,
+        334,
+        196
+      ],
+      "sizeBytes": 22145
+    },
+    {
+      "id": "black-hole",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+      "masterSha256": "47fb37f9ae6680ec6bb586fae75671eb53a75968a99afe6f255d672707dfe3ce",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-black-hole-v1.png",
+      "runtimeSha256": "b9039c3df71652082fdb6847d5bd027d2d9da1a32f1e3294f691b873cc334125",
+      "opticalBoundsPx": [
+        53,
+        57,
+        334,
+        215
+      ],
+      "sizeBytes": 35729
+    },
+    {
+      "id": "supernova",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+      "masterSha256": "de3bc01f38a11e2868efc3f8212897abbe6debea673ba06b566b2c2a13217cfd",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-supernova-v1.png",
+      "runtimeSha256": "de991ec9c7e25fae6c56c29a9c50d7bc4c3c3522352e6e30277bb4bde36ea73b",
+      "opticalBoundsPx": [
+        53,
+        40,
+        334,
+        225
+      ],
+      "sizeBytes": 50077
+    },
+    {
+      "id": "neon-pulse",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+      "masterSha256": "094aef0c3a0584637e42c5526405f90fda9fc83ac84878b9741014e71bf194d3",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
+      "runtimeSha256": "6cb1a7dd2e709e1a8d9d51bab22ac1f8dad92ece120494d6096d68912220cf80",
+      "opticalBoundsPx": [
+        53,
+        90,
+        334,
+        189
+      ],
+      "sizeBytes": 29043
+    },
+    {
+      "id": "drones",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-drones-master-v1.png",
+      "masterSha256": "3bec92878f3c794722f32ac5f17f55d6596e1694bd0939426fb74267c024d6bd",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-drones-v1.png",
+      "runtimeSha256": "e8dfab4cfe09e4e0d7cbce2164bfce8fe942a1174b328392f3ce0821f381607b",
+      "opticalBoundsPx": [
+        53,
+        74,
+        334,
+        175
+      ],
+      "sizeBytes": 20771
+    },
+    {
+      "id": "ufo-abduction",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+      "masterSha256": "2be9cdeb5a7c450ed826a07f3956c88e600df58a01d2ea9f35e4b6c27a662358",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
+      "runtimeSha256": "3372c21e303f51bc6aef3e5b054cf1b33e143899a385c35d7f4eff86ad379b74",
+      "opticalBoundsPx": [
+        53,
+        65,
+        334,
+        205
+      ],
+      "sizeBytes": 24613
+    }
+  ]
+}

@@ -485,6 +485,8 @@ class TrophyManager {
             || activeTheme === 'easter';
         const isDesertTheme = document.body.classList.contains('desert-theme')
             || activeTheme === 'desert';
+        const isMoonTheme = document.body.classList.contains('moon-theme')
+            || activeTheme === 'moon';
         const isLightTheme = document.body.classList.contains('light-theme')
             || activeTheme === 'light';
         const isMediumTheme = document.body.classList.contains('medium-theme')
@@ -495,11 +497,15 @@ class TrophyManager {
             || activeTheme === 'neon';
         const isAmethystTheme = document.body.classList.contains('amethyst-theme')
             || activeTheme === 'amethyst';
+        const isSevernaTheme = document.body.classList.contains('severna-theme')
+            || activeTheme === 'severna';
         const isGreenTheme = activeTheme === 'dark'
             && !document.body.classList.contains('easter-theme')
             && !document.body.classList.contains('desert-theme')
             && !document.body.classList.contains('severna-theme');
-        const iconHtml = isLightTheme && trophy.lightIcon
+        const iconHtml = isSevernaTheme && trophy.severnaIcon
+            ? `<img class="severna-trophy-popup-icon" src="${trophy.severnaIcon}" alt="" aria-hidden="true" decoding="async">`
+            : isLightTheme && trophy.lightIcon
             ? `<img class="light-trophy-popup-icon" src="${trophy.lightIcon}" alt="" aria-hidden="true" decoding="async">`
             : isMediumTheme && trophy.mediumIcon
             ? `<img class="medium-trophy-popup-icon" src="${trophy.mediumIcon}" alt="" aria-hidden="true" decoding="async">`
@@ -513,9 +519,11 @@ class TrophyManager {
             ? `<img class="easter-trophy-popup-icon" src="${trophy.easterIcon}" alt="" aria-hidden="true" decoding="async">`
             : (isDesertTheme && trophy.desertIcon
                 ? `<img class="desert-trophy-popup-icon" src="${trophy.desertIcon}" alt="" aria-hidden="true" decoding="async">`
-                : (isGreenTheme && trophy.greenIcon
+                : (isMoonTheme && trophy.moonIcon
+                    ? `<img class="moon-trophy-popup-icon" src="${trophy.moonIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : (isGreenTheme && trophy.greenIcon
                     ? `<img class="green-trophy-popup-icon" src="${trophy.greenIcon}" alt="" aria-hidden="true" decoding="async">`
-                    : trophy.icon));
+                    : trophy.icon)));
 
         div.innerHTML = `
             <div class="tp-icon">${iconHtml}</div>

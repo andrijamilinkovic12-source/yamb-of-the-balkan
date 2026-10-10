@@ -3677,30 +3677,27 @@ class ShopManager {
     }
 
     getEasterTreasuryStatusIcon(iconName, className = '') {
-        const easterIconName = iconName === 'status-locked' ? 'status-locked-v3' : `${iconName}-v2`;
-        const easterVersion = iconName === 'status-locked' ? 2 : 1;
-        return `<img class="riznica-status-soft-clay-icon ${className}" data-theme-src="assets/easter-soft-clay/treasury/${easterIconName}.png?v=${easterVersion}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" data-theme-src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" data-theme-src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-green-soft-clay-icon ${className}" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/${iconName}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="treasury-status-icon ${className}" data-treasury-control="${iconName}" src="${getThemeTreasuryControlSource(iconName)}" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getTreasuryLockIcon() {
-        return '<span class="riznica-lock-fallback" aria-hidden="true">🔒</span><img class="riznica-lock-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/status-locked-v3.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/status-locked.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">';
+        return `<img class="treasury-lock-icon" data-treasury-control="status-locked" src="${getThemeTreasuryControlSource('status-locked')}" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getThemedTrophyCardSource(item) {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const source = activeTheme === 'dark'
-            ? item?.greenIcon
-            : (activeTheme === 'light'
-                ? item?.lightIcon
-                : (activeTheme === 'medium'
-                    ? item?.mediumIcon
-                    : (activeTheme === 'winter'
-                        ? item?.winterIcon
-                        : (activeTheme === 'neon'
-                            ? item?.neonIcon
-                            : (activeTheme === 'amethyst'
-                                ? item?.amethystIcon
-                                : (activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon))))));
+        const source = {
+            dark: item?.greenIcon,
+            light: item?.lightIcon,
+            medium: item?.mediumIcon,
+            winter: item?.winterIcon,
+            neon: item?.neonIcon,
+            amethyst: item?.amethystIcon,
+            desert: item?.desertIcon,
+            moon: item?.moonIcon,
+            severna: item?.severnaIcon,
+            easter: item?.easterIcon
+        }[activeTheme] || item?.easterIcon;
         const safeSource = String(source || item?.easterIcon || '');
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }
@@ -3710,12 +3707,7 @@ class ShopManager {
     }
 
     getTreasuryInsufficientIconPath() {
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        if (activeTheme === 'dark') return 'assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png?v=1';
-        if (activeTheme === 'severna') return 'assets/severna-soft-clay/treasury/status-insufficient.png?v=1';
-        return activeTheme === 'desert'
-            ? 'assets/desert-soft-clay/treasury/status-insufficient.png?v=opt2'
-            : 'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=opt2';
+        return getThemeTreasuryControlSource('status-insufficient');
     }
 
     render() {
@@ -3731,7 +3723,7 @@ class ShopManager {
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
             const usesGreenCategoryMark = isGreenTreasury && !categoryMeta && ['skin', 'effect', 'theme'].includes(this.type);
             const categoryHtml = categoryMeta
-                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/collection-medals/collection-${categoryMeta.type}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
+                ? `<img class="theme-collection-medal" src="${getThemeMedalSource('collection', categoryMeta.type)}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
                 : usesGreenCategoryMark
                     ? `<span class="riznica-green-category-mark" aria-hidden="true"></span><span>${categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '')}</span>`
                     : (isEasterTreasury ? categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '') : categoryName);
@@ -3757,11 +3749,11 @@ class ShopManager {
                         : '⚅';
                     visualHtml = `<div class="dice-preview preview-${item.id}">${clayPipPreview}</div>`;
                 } else if (this.type === 'effect') {
-                    const greenClayEffect = isGreenTreasury && ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
+                    const canonicalEffectPreview = ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
                     const effectPreview = item.id === 'royal_yamb'
                         ? `<img class="royal-yamb-logo-preview" src="${getActiveGameLogoSource()}" alt="" loading="lazy" decoding="async">`
                         : (item.innerHtml || '');
-                    visualHtml = `<div class="effect-preview-box ${item.cssClass}">${greenClayEffect ? '' : effectPreview}</div>`;
+                    visualHtml = `<div class="effect-preview-box ${item.cssClass}">${canonicalEffectPreview ? '' : effectPreview}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
                     visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else if (this.type === 'theme' && item.id === 'easter') {

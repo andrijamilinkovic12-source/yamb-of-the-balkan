@@ -660,9 +660,270 @@ body.easter-theme .trophy-showcase-total strong {
     color: #3F4A35 !important;
 }
 
+/* Pustinjsko Staklo: sculpted sandstone clay, cream surface, restrained teal. */
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual,
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    width: 78px;
+    height: 78px;
+}
+
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon,
+body.desert-theme .trophy-popup .tp-icon {
+    filter: drop-shadow(0 5px 7px rgba(68, 48, 39, .23));
+}
+
+body.desert-theme .trophy-showcase {
+    background: rgba(68, 48, 39, .50) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme .trophy-showcase-panel,
+body.desert-theme .trophy-popup {
+    background: linear-gradient(150deg, #FFF0DA, #F0D0AB) !important;
+    border: 1px solid rgba(135, 82, 60, .38) !important;
+    box-shadow: 0 14px 26px rgba(68, 48, 39, .25), inset 0 1px 0 rgba(255, 255, 255, .48) !important;
+    color: #443027 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme .trophy-showcase-panel::before {
+    content: none !important;
+}
+
+body.desert-theme .trophy-showcase-kicker,
+body.desert-theme .trophy-showcase-name,
+body.desert-theme .trophy-popup .tp-title {
+    color: #56372D !important;
+    text-shadow: none !important;
+}
+
+body.desert-theme .trophy-showcase-subtitle,
+body.desert-theme .trophy-showcase-total,
+body.desert-theme .trophy-popup .tp-desc {
+    color: #70513D !important;
+}
+
+body.desert-theme .trophy-showcase-card {
+    background: rgba(255, 240, 218, .63) !important;
+    border-color: rgba(135, 82, 60, .24) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .43), 0 5px 12px rgba(68, 48, 39, .11) !important;
+}
+
+body.desert-theme .trophy-showcase-icon {
+    background: rgba(213, 178, 155, .35) !important;
+    border-color: rgba(135, 82, 60, .25) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .38) !important;
+}
+
+body.desert-theme .trophy-showcase-reward,
+body.desert-theme .trophy-popup .tp-reward {
+    color: #396B72 !important;
+    background: rgba(57, 107, 114, .11) !important;
+    border-color: rgba(57, 107, 114, .26) !important;
+}
+
+body.desert-theme .trophy-showcase-total {
+    background: rgba(213, 178, 155, .26) !important;
+    border-color: rgba(135, 82, 60, .24) !important;
+}
+
+body.desert-theme .trophy-showcase-total strong {
+    color: #56372D !important;
+}
+
+/* Mesecev Sjaj: quiet graphite clay and pale silver, matching the Moon palette. */
+body.moon-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.moon-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.moon-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(8, 9, 12, .32));
+}
+
+body.moon-theme .moon-trophy-popup-icon,
+body.moon-theme .moon-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.moon-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(8, 9, 12, .32));
+}
+
+body.moon-theme .trophy-showcase {
+    background: rgba(8, 9, 12, .62) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.moon-theme .trophy-showcase-panel,
+body.moon-theme .trophy-popup {
+    background: linear-gradient(150deg, #252934, #181B24) !important;
+    border: 1px solid rgba(133, 136, 149, .43) !important;
+    box-shadow: 0 14px 26px rgba(8, 9, 12, .42), inset 0 1px 0 rgba(225, 226, 231, .13) !important;
+    color: #F5F5F7 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.moon-theme .trophy-showcase-panel::before {
+    content: none !important;
+}
+
+body.moon-theme .trophy-showcase-kicker,
+body.moon-theme .trophy-showcase-name,
+body.moon-theme .trophy-popup .tp-title {
+    color: #FAFAFB !important;
+    text-shadow: none !important;
+}
+
+body.moon-theme .trophy-showcase-subtitle,
+body.moon-theme .trophy-showcase-total,
+body.moon-theme .trophy-popup .tp-desc {
+    color: #C9CAD2 !important;
+}
+
+body.moon-theme .trophy-showcase-card,
+body.moon-theme .trophy-showcase-icon {
+    background: rgba(59, 63, 75, .66) !important;
+    border-color: rgba(133, 136, 149, .34) !important;
+    box-shadow: inset 0 1px 0 rgba(225, 226, 231, .11) !important;
+}
+
+body.moon-theme .trophy-showcase-reward,
+body.moon-theme .trophy-popup .tp-reward {
+    color: #E1E2E7 !important;
+    background: rgba(167, 169, 184, .15) !important;
+    border-color: rgba(167, 169, 184, .35) !important;
+}
+
+body.moon-theme .trophy-showcase-total {
+    background: rgba(59, 63, 75, .47) !important;
+    border-color: rgba(133, 136, 149, .32) !important;
+}
+
+body.moon-theme .trophy-showcase-total strong {
+    color: #F5F5F7 !important;
+}
+
+/* Severna Maglina: restrained matte navy surfaces and ice cyan edges. */
+body.severna-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+body.severna-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.severna-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(5, 15, 33, .32));
+}
+
+body.severna-theme .severna-trophy-popup-icon,
+body.severna-theme .severna-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.severna-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 5px 7px rgba(5, 15, 33, .32));
+}
+
+body.severna-theme .trophy-showcase {
+    background: rgba(5, 15, 33, .62) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.severna-theme .trophy-showcase-panel,
+body.severna-theme .trophy-popup {
+    background: linear-gradient(150deg, #24445B, #182C44) !important;
+    border: 1px solid rgba(138, 227, 228, .38) !important;
+    box-shadow: 0 14px 26px rgba(5, 15, 33, .42), inset 0 1px 0 rgba(245, 251, 255, .13) !important;
+    color: #F5FBFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.severna-theme .trophy-showcase-panel::before {
+    content: none !important;
+}
+
+body.severna-theme .trophy-showcase-kicker,
+body.severna-theme .trophy-showcase-name,
+body.severna-theme .trophy-popup .tp-title {
+    color: #F5FBFF !important;
+    text-shadow: none !important;
+}
+
+body.severna-theme .trophy-showcase-subtitle,
+body.severna-theme .trophy-showcase-total,
+body.severna-theme .trophy-popup .tp-desc {
+    color: #D6E9F1 !important;
+}
+
+body.severna-theme .trophy-showcase-card,
+body.severna-theme .trophy-showcase-icon {
+    background: rgba(24, 44, 68, .68) !important;
+    border-color: rgba(138, 227, 228, .27) !important;
+    box-shadow: inset 0 1px 0 rgba(245, 251, 255, .11) !important;
+}
+
+body.severna-theme .trophy-showcase-reward,
+body.severna-theme .trophy-popup .tp-reward {
+    color: #D4F7F6 !important;
+    background: rgba(138, 227, 228, .13) !important;
+    border-color: rgba(138, 227, 228, .32) !important;
+}
+
+body.severna-theme .trophy-showcase-total {
+    background: rgba(24, 44, 68, .47) !important;
+    border-color: rgba(138, 227, 228, .27) !important;
+}
+
+body.severna-theme .trophy-showcase-total strong {
+    color: #F5FBFF !important;
+}
+
 @media (max-width: 480px) {
-    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme) #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual,
-    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme) #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual,
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
         width: 72px;
         height: 72px;
     }

@@ -25,14 +25,14 @@
       ]
     },
     "close_call": {
-      "masterPath": "source-assets/theme-icon-packs/light/achievement-trophies-v1/close_call-master-v1.png",
+      "masterPath": "source-assets/theme-icon-packs/light/achievement-trophies-v1/close_call-master-v2.png",
       "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/close_call-v1.png",
-      "sizeBytes": 42529,
+      "sizeBytes": 37369,
       "opticalBoundsPx": [
         22,
-        49,
+        51,
         234,
-        207
+        205
       ]
     },
     "concrete": {
@@ -58,12 +58,12 @@
       ]
     },
     "first_play": {
-      "masterPath": "source-assets/theme-icon-packs/light/achievement-trophies-v1/first_play-master-v1.png",
+      "masterPath": "source-assets/theme-icon-packs/light/achievement-trophies-v1/first_play-master-v2.png",
       "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/first_play-v1.png",
-      "sizeBytes": 55176,
+      "sizeBytes": 51310,
       "opticalBoundsPx": [
         22,
-        40,
+        39,
         234,
         216
       ]

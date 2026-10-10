@@ -1,5 +1,7 @@
 # Desert Treasury trophy ImageGen prompts
 
+Istorijski zapis prethodnog seta. Ti PNG-ovi su uklonjeni iz aplikacije; aktivni originalni Clay komplet od 26 trofeja, njegovi masteri i prompt set opisani su u [novoj specifikaciji](theme-achievement-trophies-desert-v1.md).
+
 Mode: built-in ImageGen (`image_gen`). Each accepted trophy was generated as one distinct raster asset from its corresponding Easter trophy reference plus `www/assets/desert-soft-clay/treasury-pro.png` as the Desert material reference.
 
 ## `first_play`

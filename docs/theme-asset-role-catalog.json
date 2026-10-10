@@ -10,8 +10,8 @@
     "retired Green cloud logo v1",
     "legacy fallback Logo_green.png outside the active Green Room Pack"
   ],
-  "requiredPngCountPerTheme": 177,
-  "greenPackPngCount": 176,
+  "requiredPngCountPerTheme": 186,
+  "greenPackPngCount": 185,
   "slots": [
     {
       "id": "background/main",
@@ -254,6 +254,30 @@
       "colorType": 6
     },
     {
+      "id": "canonical/competition-medals/fire-streak-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/fire-streak-bronze-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/fire-streak-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/fire-streak-gold-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/fire-streak-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/fire-streak-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
       "id": "canonical/competition-medals/general-podium-bronze-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
       "kind": "canonical-or-approved-variant",
@@ -278,6 +302,30 @@
       "colorType": 6
     },
     {
+      "id": "canonical/competition-medals/power-index-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/power-index-bronze-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/power-index-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/power-index-gold-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/power-index-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/power-index-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
       "id": "canonical/competition-medals/quarterly-league-bronze-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
       "kind": "canonical-or-approved-variant",
@@ -296,6 +344,30 @@
     {
       "id": "canonical/competition-medals/quarterly-league-silver-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/tournament-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/tournament-bronze-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/tournament-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/tournament-gold-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/tournament-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/tournament-silver-v1.png",
       "kind": "canonical-or-approved-variant",
       "width": 256,
       "height": 256,

@@ -45,7 +45,8 @@ def main() -> None:
     draw = ImageDraw.Draw(review)
     metadata = {}
     for index, icon_id in enumerate(sorted(EXPECTED)):
-        master = MASTER_DIR / f"{icon_id}-master-v1.png"
+        master_version = 2 if icon_id in {"close_call", "first_play"} else 1
+        master = MASTER_DIR / f"{icon_id}-master-v{master_version}.png"
         if not master.is_file():
             raise FileNotFoundError(master)
         target = PRODUCTION_DIR / f"{icon_id}-v1.png"

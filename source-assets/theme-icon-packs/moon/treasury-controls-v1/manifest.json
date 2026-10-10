@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "themeId": "moon",
+  "slots": {
+    "canonical/treasury-controls/tab-trophies-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-trophies-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png",
+      "opticalBoundsPx": [
+        34,
+        38,
+        222,
+        218
+      ],
+      "sizeBytes": 40235,
+      "sha256": "f2969907c282ad5e090839d2acadb9b4d36146d77dfca74c8cad979801d67848"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-skins-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        35,
+        34,
+        221,
+        222
+      ],
+      "sizeBytes": 59491,
+      "sha256": "ed70a2514c8fc4eb81b5f9029fcf171678e6b45f548e2f0b60d6af2b74f984c0"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-effects-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        57,
+        34,
+        199,
+        222
+      ],
+      "sizeBytes": 33473,
+      "sha256": "288183280e2f9eeb0390d67991999a807710e9a7fdbd3cea43533cd8745e000a"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-themes-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        45,
+        41,
+        228,
+        217
+      ],
+      "sizeBytes": 21324,
+      "sha256": "8bce8b83cde6a1f758d21b6d6ce781d22261eda850daf93f30947b861f927792"
+    },
+    "canonical/treasury-controls/status-owned-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-owned-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-owned-v1.png",
+      "opticalBoundsPx": [
+        63,
+        64,
+        206,
+        210
+      ],
+      "sizeBytes": 17612,
+      "sha256": "324fd039ad8555dd9976b2c88a0789fd53ce9177080e3b4294aa3bf713ff52b9"
+    },
+    "canonical/treasury-controls/status-active-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-active-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-active-v1.png",
+      "opticalBoundsPx": [
+        58,
+        60,
+        211,
+        215
+      ],
+      "sizeBytes": 25074,
+      "sha256": "be7ebe4a03101fff5edc3bcbbe1dd7050941b85c2b3e9f96e597f97905866de7"
+    },
+    "canonical/treasury-controls/status-locked-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-locked-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-locked-v1.png",
+      "opticalBoundsPx": [
+        37,
+        58,
+        225,
+        231
+      ],
+      "sizeBytes": 20088,
+      "sha256": "f4cfcead953bd7acf5a2c9f921feb4f50e8ad89b8cd9eef7ded780b9e045e987"
+    },
+    "canonical/treasury-controls/status-insufficient-v1": {
+      "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-insufficient-master-v2.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-insufficient-v1.png",
+      "opticalBoundsPx": [
+        58,
+        60,
+        211,
+        215
+      ],
+      "sizeBytes": 24229,
+      "sha256": "205bb57fbb9e846f8cd6b431b9b20d31d1fc9c86f3b70d6bf95d5a9c4006e5d5"
+    }
+  },
+  "dnaRevision": 2,
+  "sameThemeArtSources": {
+    "tab-trophies": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+    "tab-skins": "www/assets/theme-packs/moon/canonical/achievement-trophies/first_play-v1.png",
+    "tab-effects": "www/assets/theme-packs/moon/canonical/achievement-trophies/firecracker-v1.png"
+  }
+}

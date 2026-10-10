@@ -1,0 +1,444 @@
+{
+  "date": "2026-10-10",
+  "device": "Easter_QA_10GB Android emulator",
+  "build": "qaLocal built from current www",
+  "viewport": [
+    411,
+    891,
+    3.5
+  ],
+  "themes": [
+    {
+      "theme": "dark",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "light",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true,
+      "screenshot": "docs/qa-light-treasury-controls-emulator-2026-10-10.png"
+    },
+    {
+      "theme": "medium",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "winter",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "neon",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true,
+      "screenshot": "docs/qa-neon-treasury-controls-emulator-2026-10-10.png"
+    },
+    {
+      "theme": "amethyst",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "easter",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "desert",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "moon",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    },
+    {
+      "theme": "severna",
+      "bodyThemeClass": true,
+      "loadedControls": 8,
+      "loadedMedals": 18,
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=1",
+          "loaded": true,
+          "display": "block",
+          "width": "34px",
+          "height": "34px"
+        }
+      ],
+      "renderedStatusCount": 52,
+      "renderedStatusLoaded": 52,
+      "renderedStatusPathsCorrect": true
+    }
+  ]
+}

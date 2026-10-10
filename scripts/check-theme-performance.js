@@ -219,7 +219,8 @@ const achievementRuntimeHashes = new Set();
 for (const asset of greenAchievementTrophiesManifest.catalog) {
     const master = path.join(path.dirname(greenAchievementTrophiesManifestPath), asset.master);
     const runtime = path.join(root, asset.runtime);
-    assert(asset.master === `green-${asset.id}-master-v1.png`, `Green achievement master ime nije izvedeno iz zaključanog ID-ja: ${asset.id}`);
+    const masterVersion = ['potato', 'sniper'].includes(asset.id) ? 2 : 1;
+    assert(asset.master === `green-${asset.id}-master-v${masterVersion}.png`, `Green achievement master ime nije izvedeno iz zaključanog ID-ja: ${asset.id}`);
     assert(asset.runtime === `www/assets/green-soft-clay/canonical/achievement-trophies/${asset.id}-v1.png`, `Green achievement runtime putanja nije izvedena iz zaključanog ID-ja: ${asset.id}`);
     assert(typeof asset.role === 'string' && asset.role.length > 0, `Green achievement nema zaključanu semantičku ulogu: ${asset.id}`);
     assert(fs.existsSync(master), `Nedostaje Green achievement master: ${master}`);
@@ -1494,7 +1495,8 @@ for (const page of [
     { source: 'account-server', runtime: 'account-server-v1', sr: 'Nalog, privatnost i server', en: 'Account, privacy & server' }
 ]) {
     const protectedScene = ['communication', 'economy-treasury'].includes(page.source);
-    const greenPath = protectedScene ? `assets/green-soft-clay/rules/pages/${page.runtime}.png?v=1` : `assets/green-soft-clay/canonical/rules-page-illustrations/${page.runtime}.png?v=1`;
+    const pageVersion = page.source === 'multiplayer-competitions' ? 2 : 1;
+    const greenPath = protectedScene ? `assets/green-soft-clay/rules/pages/${page.runtime}.png?v=1` : `assets/green-soft-clay/canonical/rules-page-illustrations/${page.runtime}.png?v=${pageVersion}`;
     assert(rulesSource.includes(`'assets/easter-soft-clay/rules/pages/${page.source}.png': '${greenPath}'`), `Green Rules stranica nema odgovarajuću Green ilustraciju: ${page.source}`);
     for (const title of [page.sr, page.en]) {
         assert(rulesSource.includes(`assets/easter-soft-clay/rules/pages/${page.source}.png?v=1')} ${title}`), `Green Rules ilustracija nije vezana za pravi SR/EN naslov: ${title}`);
@@ -1508,12 +1510,12 @@ assert(JSON.stringify(greenRulesPageIllustrationsRegistry.identity) === JSON.str
 const greenRulesPageAudit = [
     { file: 'rules-scoring-v1.png', bytes: 188200, sha256: '58d0c32e0cd9c8a92e97a95b6ccb4468df19adde7901ef2052e42a45a3ea00ca' },
     { file: 'stats-leaderboards-v1.png', bytes: 174369, sha256: '41b88e864d1933b43ba9081c5ebba6d6844e23afc3fba71f5cac45ecb6969b7a' },
-    { file: 'multiplayer-competitions-v1.png', bytes: 193124, sha256: 'efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b' },
+    { file: 'multiplayer-competitions-v1.png', bytes: 200700, sha256: 'f81a8d9d50d51650db7f0d0b8ce6212c351d7c0b8e7e7157015699a569931d33' },
     { file: 'account-server-v1.png', bytes: 240872, sha256: 'a1092f5af79c8a73982147c78713de0e0fe7b92cfe0bdf7557babb9ba6cfab7a' }
 ];
 assert(JSON.stringify(greenRulesPageIllustrationsManifest.catalog.map(asset => `${asset.id}-v1.png`)) === JSON.stringify(greenRulesPageAudit.map(asset => asset.file)), 'Green Rules Page Illustrations canonical katalog ili redosled odstupa.');
-assert(greenRulesPageIllustrationsManifest.identity?.material === 'matte 3D Soft Clay Neumorphism' && greenRulesPageIllustrationsManifest.provenance?.approvedResolution?.join('x') === '512x512' && greenRulesPageIllustrationsManifest.provenance?.normalization === 'direct lossless copy of approved bytes, with no resampling, recompression or pixel edits', 'Green Rules Page Illustrations DNK ili odobrena 512px provenijencija odstupa.');
-assert(greenRulesPageIllustrationsManifest.provenance?.higherResolutionGreenSource === 'not found in source-assets/green-soft-clay-hires' && greenRulesPageIllustrationsManifest.provenance?.masterPolicy === 'byte-for-byte snapshot of each approved active 512x512 RGBA PNG; never upscale and label it a high-resolution original', 'Green Rules Page Illustrations izvorni 512px status ili zabrana lažnog high-res izvora odstupa.');
+assert(greenRulesPageIllustrationsManifest.identity?.material === 'matte 3D Soft Clay Neumorphism' && greenRulesPageIllustrationsManifest.provenance?.approvedResolution?.join('x') === '512x512' && greenRulesPageIllustrationsManifest.provenance?.normalization?.includes('canonical 512px PNG is byte-identical'), 'Green Rules Page Illustrations DNK ili 512px provenijencija odstupa.');
+assert(greenRulesPageIllustrationsManifest.provenance?.higherResolutionGreenSource === 'not found in source-assets/green-soft-clay-hires' && greenRulesPageIllustrationsManifest.provenance?.masterPolicy?.includes('corrected 512px v2 master'), 'Green Rules Page Illustrations korigovani izvor nije evidentiran.');
 assert(JSON.stringify(greenRulesPageIllustrationsManifest.catalog.map(asset => asset.glyph)) === JSON.stringify(['open warm-ivory Yamb score sheet with green grid and terracotta checkmarks', 'rising ivory-to-forest-green bars with a terracotta crown and warm-ivory base', 'two warm-ivory players around a die and terracotta-star trophy with forest-green leaves', 'warm-ivory account figure, green shield with ivory keyhole, and three green server bars']), 'Green Rules Page Illustrations četiri vizuelne siluete odstupaju.');
 assert(greenRulesPageIllustrationsManifest.catalog.every(asset => JSON.stringify(asset.displaySizes) === '[[38,38]]' && asset.usedBy.length === 3), 'Green Rules Page Illustrations SR/EN potrošači ili stvarni prikaz odstupaju.');
 for (const asset of greenRulesPageAudit) {

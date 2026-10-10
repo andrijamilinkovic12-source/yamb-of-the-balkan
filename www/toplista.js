@@ -51,16 +51,7 @@ class TopListManager {
     _podiumMarkup(index) {
         const medal = ['gold', 'silver', 'bronze'][index];
         if (!medal) return '';
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const medalSrc = activeTheme === 'dark'
-            ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${medal}-v1.png?v=1`
-            : activeTheme === 'easter'
-            ? `assets/easter-soft-clay/canonical/competition-medals/${medal}-v1.png?v=1`
-            : activeTheme === 'desert'
-                ? `assets/desert-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
-                : activeTheme === 'severna'
-                    ? `assets/severna-soft-clay/leaderboard/medal-${medal}-v9.png?v=1`
-                    : `assets/yotb-podium/leaderboard/${medal}.png?v=1`;
+        const medalSrc = getThemeMedalSource('leaderboard', medal);
 
         return `
             <img class="hs-podium-medal" src="${medalSrc}" alt="" aria-hidden="true" decoding="async">
