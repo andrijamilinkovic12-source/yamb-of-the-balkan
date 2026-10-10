@@ -124,6 +124,18 @@
         256,
         256
       ]
+    },
+    {
+      "id": "power-index",
+      "group": "statistics-overview",
+      "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/power-index-master-v1.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+      "masterSha256": "230b6d0299aa0e8953d672d42b4f4f343d76666ef97cfd13c88e0044886cf921",
+      "productionSha256": "bfcd2360ab1d565e14f5c96aa4c85e6a841ad5c83c4c993070244f1acf70d2be",
+      "productionSize": [
+        256,
+        256
+      ]
     }
   ]
 }

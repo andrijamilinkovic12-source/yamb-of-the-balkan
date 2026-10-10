@@ -21,6 +21,28 @@ function rulesEasterTournamentCanonicalSrc(src = '') {
     return replacements[path] || source;
 }
 
+function rulesDesertTournamentCanonicalSrc(src = '') {
+    const source = String(src);
+    const path = source.split('?')[0];
+    const replacements = {
+        'assets/desert-soft-clay/tournament-pro.png': 'assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png',
+        'assets/desert-soft-clay/tournament/state-start.png': 'assets/theme-packs/desert/canonical/tournament-states/state-start-v1.png',
+        'assets/desert-soft-clay/tournament/tab-hall-of-fame.png': 'assets/theme-packs/desert/canonical/tournament-navigation/tab-hall-of-fame-v1.png'
+    };
+    return replacements[path] || source;
+}
+
+function rulesSevernaTournamentCanonicalSrc(src = '') {
+    const source = String(src);
+    const path = source.split('?')[0];
+    const replacements = {
+        'assets/severna-soft-clay/tournament-pro-v7.png': 'assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png',
+        'assets/severna-soft-clay/tournament/state-start-v3.png': 'assets/theme-packs/severna/canonical/tournament-states/state-start-v1.png',
+        'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png': 'assets/theme-packs/severna/canonical/tournament-navigation/tab-hall-of-fame-v1.png'
+    };
+    return replacements[path] || source;
+}
+
 function rulesDesertAssetSrc(easterSrc = '') {
     const source = String(easterSrc || '');
     const [path, query = ''] = source.split('?');
@@ -197,9 +219,9 @@ function rulesGreenAssetSrc(easterSrc = '') {
 
 function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
-    const desertSrc = rulesDesertAssetSrc(easterSrc);
+    const desertSrc = rulesDesertTournamentCanonicalSrc(rulesDesertAssetSrc(easterSrc));
     const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaAssetSrc(easterSrc);
+    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
@@ -212,9 +234,9 @@ function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     if (treasuryTab) {
         return `<img class="rules-inline-icon rules-theme-treasury-control${suffix}" src="${getThemeTreasuryControlSource(treasuryTab[1])}" alt="" aria-hidden="true" decoding="async">`;
     }
-    const desertSrc = rulesDesertAssetSrc(easterSrc);
+    const desertSrc = rulesDesertTournamentCanonicalSrc(rulesDesertAssetSrc(easterSrc));
     const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaAssetSrc(easterSrc);
+    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
@@ -228,7 +250,7 @@ function rulesTextGlyphHtml(glyph) {
 function rulesPageTitleIconHtml(defaultSrc, easterSrc) {
     const desertSrc = rulesDesertAssetSrc(easterSrc);
     const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-desert" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaAssetSrc(easterSrc);
+    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-nebula" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-green" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
@@ -238,7 +260,7 @@ function rulesPageTitleIconHtml(defaultSrc, easterSrc) {
 function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
     const desertSrc = rulesDesertAssetSrc(easterSrc);
     const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-desert" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaAssetSrc(easterSrc);
+    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-nebula" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-green" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';

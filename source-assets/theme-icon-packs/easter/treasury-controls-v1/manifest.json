@@ -3,106 +3,124 @@
   "themeId": "easter",
   "slots": {
     "canonical/treasury-controls/tab-trophies-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-trophies-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-trophies-master-v3.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png",
       "opticalBoundsPx": [
-        34,
-        43,
-        222,
-        213
+        17,
+        40,
+        239,
+        216
       ],
-      "sizeBytes": 33783,
-      "sha256": "d588ff50e8519dee9da2e58f67d0f15e2bb59026d3cf86119c04a0f638cf2d6f"
+      "sizeBytes": 41899,
+      "sha256": "150ec056d44b02126f671fb035a7d3abb3b99b8022b11a8baf207b1f77f4754c",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-trophies-generated.png"
     },
     "canonical/treasury-controls/tab-skins-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-skins-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-skins-master-v3.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png",
       "opticalBoundsPx": [
-        34,
-        34,
-        222,
-        221
+        17,
+        22,
+        239,
+        234
       ],
-      "sizeBytes": 49681,
-      "sha256": "abf4da7a87526e38335cd660b8dfc72ff2587526f2694e5fb1f1cfe70c8f18c3"
+      "sizeBytes": 57947,
+      "sha256": "155680b5650371ae8ce9cfa506abf88d628e982639b3093eae75096067d2826f",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-skins-generated.png"
     },
     "canonical/treasury-controls/tab-effects-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-effects-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-effects-master-v3.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png",
       "opticalBoundsPx": [
-        57,
-        34,
-        199,
-        222
+        23,
+        17,
+        233,
+        239
       ],
-      "sizeBytes": 26798,
-      "sha256": "137c4b58b77ec7989040217998db82475bffd70b61f302d41768890dc43229f3"
+      "sizeBytes": 55195,
+      "sha256": "bcc7010b9f7c8213e9afdab6046c7b289914791b2ec4ad7d33bf46964924cd37",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-effects-generated.png"
     },
     "canonical/treasury-controls/tab-themes-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-themes-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-themes-master-v3.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png",
       "opticalBoundsPx": [
-        48,
-        34,
-        216,
-        221
+        17,
+        27,
+        239,
+        229
       ],
-      "sizeBytes": 21820,
-      "sha256": "784848c1bda636a659ed392b89ee5331fe500540cd358322d9d41bb46677d7d9"
+      "sizeBytes": 47143,
+      "sha256": "099474a1ed61242e4aec576b82ee95d24104c5a240a5838c548f473a9a29210a",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-themes-generated.png"
     },
     "canonical/treasury-controls/status-owned-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-owned-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-owned-master-v4.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-owned-v1.png",
       "opticalBoundsPx": [
-        66,
-        55,
-        192,
-        210
+        23,
+        17,
+        233,
+        239
       ],
-      "sizeBytes": 16799,
-      "sha256": "70d2e109aeb1ffa578716184473e577123dbb5adf511de86abc8be1cf588f15c"
+      "sizeBytes": 60441,
+      "sha256": "15df1b3677ad7bb29319dcca0de0d080bcb16f902e9e2e0d20657a2622c2bdbf",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-owned-generated.png"
     },
     "canonical/treasury-controls/status-active-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-active-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-active-master-v4.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-active-v1.png",
       "opticalBoundsPx": [
-        67,
-        50,
-        195,
-        215
+        37,
+        17,
+        219,
+        239
       ],
-      "sizeBytes": 23900,
-      "sha256": "3fa2ceb695ec2a6081e45b865e7e9ce766320361e1a7fa36911156136e246f7e"
+      "sizeBytes": 53341,
+      "sha256": "2adf93e5b2b64bcccc8572f77e1a0b62538a58ae746a7dca34ee708160616137",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-active-generated.png"
     },
     "canonical/treasury-controls/status-locked-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-locked-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-locked-master-v4.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-locked-v1.png",
       "opticalBoundsPx": [
-        43,
-        56,
-        220,
-        230
+        32,
+        17,
+        224,
+        239
       ],
-      "sizeBytes": 21975,
-      "sha256": "9f7643ad05ec78ede05ed2ecc24d5375555504f205186eacab14af7e8ccde48a"
+      "sizeBytes": 48869,
+      "sha256": "9286191860638c75f859f96fe039d414310a3dca0f531a917d6951ed75a0503f",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-locked-generated.png"
     },
     "canonical/treasury-controls/status-insufficient-v1": {
-      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-insufficient-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-insufficient-master-v4.png",
       "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-insufficient-v1.png",
       "opticalBoundsPx": [
-        67,
-        50,
-        195,
-        215
+        17,
+        38,
+        239,
+        218
       ],
-      "sizeBytes": 22866,
-      "sha256": "0e487990d34bbbf3f5cdc3dbe495cfbd78c4fd65482adff49c489f24cb0a1c8a"
+      "sizeBytes": 45795,
+      "sha256": "db525053a9115422ead4bfe36a839b7c8f32cb038e7e0a35ac9436e86814448e",
+      "generatedSourcePath": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-insufficient-generated.png"
     }
   },
-  "dnaRevision": 2,
-  "sameThemeArtSources": {
-    "tab-trophies": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
-    "tab-skins": "www/assets/theme-packs/easter/canonical/achievement-trophies/first_play-v1.png",
-    "tab-effects": "www/assets/theme-packs/easter/canonical/achievement-trophies/firecracker-v1.png"
+  "dnaRevision": 4,
+  "sameThemeArtSources": {},
+  "tabGenerationMethod": "four separate transparent PNG illustrations; one prompt per tab",
+  "tabGeneratedSources": {
+    "tab-trophies": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-trophies-generated.png",
+    "tab-skins": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-skins-generated.png",
+    "tab-effects": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-effects-generated.png",
+    "tab-themes": "source-assets/theme-icon-packs/easter/treasury-tabs-v3/tab-themes-generated.png"
+  },
+  "statusGenerationMethod": "four separate transparent PNG illustrations; one prompt per status",
+  "statusGeneratedSources": {
+    "status-owned": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-owned-generated.png",
+    "status-active": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-active-generated.png",
+    "status-locked": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-locked-generated.png",
+    "status-insufficient": "source-assets/theme-icon-packs/easter/treasury-status-v4/status-insufficient-generated.png"
   }
 }

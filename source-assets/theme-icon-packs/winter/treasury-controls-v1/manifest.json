@@ -3,106 +3,124 @@
   "themeId": "winter",
   "slots": {
     "canonical/treasury-controls/tab-trophies-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-trophies-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-trophies-master-v3.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png",
       "opticalBoundsPx": [
-        37,
-        34,
-        219,
-        222
+        17,
+        50,
+        239,
+        206
       ],
-      "sizeBytes": 39047,
-      "sha256": "eea21ca908a14be4e15fbabc09665686f2cf6e91401ce926e88633ee7eb12052"
+      "sizeBytes": 39101,
+      "sha256": "4d246c3110befc20b6f245aa4d31e234aca397b07014082b58c3ebab338131fe",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-trophies-generated.png"
     },
     "canonical/treasury-controls/tab-skins-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-skins-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-skins-master-v3.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png",
       "opticalBoundsPx": [
-        36,
-        34,
-        220,
-        222
+        17,
+        21,
+        239,
+        234
       ],
-      "sizeBytes": 45227,
-      "sha256": "e6fee6a34df54c1d154dba8b15d06d859b3616ec707af1d430429efb82c68872"
+      "sizeBytes": 59116,
+      "sha256": "963251aa6af6846c5fd9472953bf3d183a058906fc9c05595a7d633457718d5c",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-skins-generated.png"
     },
     "canonical/treasury-controls/tab-effects-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-effects-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-effects-master-v3.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png",
       "opticalBoundsPx": [
-        43,
-        34,
-        213,
-        222
+        17,
+        45,
+        239,
+        211
       ],
-      "sizeBytes": 31948,
-      "sha256": "9974775dd162182f1fc3102aeded0eb45c0ce610f93a180add0fe0b1dfb30fe4"
+      "sizeBytes": 36444,
+      "sha256": "0ca379ad9710aa2dfcff381644cc5bba973e8771c8caa8a60feb0217e6da7eff",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-effects-generated.png"
     },
     "canonical/treasury-controls/tab-themes-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-themes-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-themes-master-v3.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png",
       "opticalBoundsPx": [
-        41,
-        37,
-        220,
-        221
+        43,
+        17,
+        213,
+        239
       ],
-      "sizeBytes": 15132,
-      "sha256": "4207daf165449bbd3d0fa348d2fbea6150c816801dd8484ac3db641d258bf64d"
+      "sizeBytes": 41212,
+      "sha256": "adb64e27506f6f36b39fe471afe9bb5319986fa135f0b98ce2aa5c97effbcba1",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-themes-generated.png"
     },
     "canonical/treasury-controls/status-owned-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-owned-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-owned-master-v4.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-owned-v1.png",
       "opticalBoundsPx": [
-        60,
-        50,
-        208,
-        199
+        20,
+        17,
+        236,
+        239
       ],
-      "sizeBytes": 17622,
-      "sha256": "033ae84b81c07143f0d04b940fed2cb10c2f06e17cf8f00a2900204ec70e19c9"
+      "sizeBytes": 62005,
+      "sha256": "3614ae97c88e2fc8218d04234267c7225ceec3e39d0eb3ca1781caf8566948e1",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-owned-generated.png"
     },
     "canonical/treasury-controls/status-active-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-active-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-active-master-v4.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-active-v1.png",
       "opticalBoundsPx": [
-        55,
+        17,
         45,
-        212,
-        203
+        239,
+        211
       ],
-      "sizeBytes": 25164,
-      "sha256": "8c981dbc650122dc8ca2570671edd6776656e7db2727fce37add0c873e6d68b3"
+      "sizeBytes": 52258,
+      "sha256": "6a8adecfd45b3d5fa0e2b26102e05fb2278efe93e7f78c73de7698a2082c233e",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-active-generated.png"
     },
     "canonical/treasury-controls/status-locked-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-locked-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-locked-master-v4.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-locked-v1.png",
       "opticalBoundsPx": [
-        42,
-        56,
-        220,
-        227
+        31,
+        17,
+        225,
+        239
       ],
-      "sizeBytes": 17349,
-      "sha256": "1aeb530dc3eb5c02ee6abb2f3cb0d6b2e4c923508cfd087d7c8fb94c4a99769b"
+      "sizeBytes": 51996,
+      "sha256": "15a4385754d06f76706d9208a2fdba0f691f609d6ffa2e32de89cfdbd40349b3",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-locked-generated.png"
     },
     "canonical/treasury-controls/status-insufficient-v1": {
-      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-insufficient-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-insufficient-master-v4.png",
       "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-insufficient-v1.png",
       "opticalBoundsPx": [
-        55,
-        45,
-        212,
-        203
+        21,
+        17,
+        235,
+        239
       ],
-      "sizeBytes": 23754,
-      "sha256": "4c842d122f6939bd6f94ae627102200dc76512d1d4a35ab304189c5861508a57"
+      "sizeBytes": 59824,
+      "sha256": "a99248b96bf146aa02be391890fe62c8aa1061e2288c81cc92322668ff71d451",
+      "generatedSourcePath": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-insufficient-generated.png"
     }
   },
-  "dnaRevision": 2,
-  "sameThemeArtSources": {
-    "tab-trophies": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
-    "tab-skins": "www/assets/theme-packs/winter/canonical/achievement-trophies/first_play-v1.png",
-    "tab-effects": "www/assets/theme-packs/winter/canonical/achievement-trophies/firecracker-v1.png"
+  "dnaRevision": 4,
+  "sameThemeArtSources": {},
+  "tabGenerationMethod": "four separate transparent PNG illustrations; one prompt per tab",
+  "tabGeneratedSources": {
+    "tab-trophies": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-trophies-generated.png",
+    "tab-skins": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-skins-generated.png",
+    "tab-effects": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-effects-generated.png",
+    "tab-themes": "source-assets/theme-icon-packs/winter/treasury-tabs-v3/tab-themes-generated.png"
+  },
+  "statusGenerationMethod": "four separate transparent PNG illustrations; one prompt per status",
+  "statusGeneratedSources": {
+    "status-owned": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-owned-generated.png",
+    "status-active": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-active-generated.png",
+    "status-locked": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-locked-generated.png",
+    "status-insufficient": "source-assets/theme-icon-packs/winter/treasury-status-v4/status-insufficient-generated.png"
   }
 }

@@ -308,6 +308,9 @@ def main():
             manifest_path = ROOT / f"source-assets/theme-icon-packs/{theme}/treasury-controls-v1/manifest.json"
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             for role in ("tab-themes", "status-owned", "status-active", "status-locked", "status-insufficient"):
+                if (role.startswith("tab-") and manifest.get("dnaRevision", 0) >= 3) or (
+                        role.startswith("status-") and manifest.get("dnaRevision", 0) >= 4):
+                    continue  # Preserve individually illustrated controls.
                 manifest["slots"][f"canonical/treasury-controls/{role}-v1"] = save_pair(
                     render_control(theme, role), theme, "treasury-controls-v1", f"{role}-v1.png",
                     f"{role}-master-v2.png")
@@ -341,13 +344,17 @@ def main():
             control_manifest_path = ROOT / f"source-assets/theme-icon-packs/{theme}/treasury-controls-v1/manifest.json"
             control_manifest = json.loads(control_manifest_path.read_text(encoding="utf-8"))
             for role in CONTROL_ROLES:
+                if (role.startswith("tab-") and control_manifest.get("dnaRevision", 0) >= 3) or (
+                        role.startswith("status-") and control_manifest.get("dnaRevision", 0) >= 4):
+                    continue  # Preserve individually illustrated controls.
                 filename = f"{role}-v1.png"
                 slot = f"canonical/treasury-controls/{role}-v1"
                 control_manifest["slots"][slot] = save_pair(
                     render_control(theme, role), theme, "treasury-controls-v1", filename,
                     f"{role}-master-v2.png")
-            control_manifest["dnaRevision"] = 2
-            control_manifest["sameThemeArtSources"] = {
+            control_manifest["dnaRevision"] = max(2, control_manifest.get("dnaRevision", 0))
+            previous_sources = control_manifest.get("sameThemeArtSources", {})
+            control_manifest["sameThemeArtSources"] = previous_sources if control_manifest["dnaRevision"] >= 3 else {
                 role: own_art(theme, role).relative_to(ROOT).as_posix()
                 for role in ("tab-trophies", "tab-skins", "tab-effects")
             }

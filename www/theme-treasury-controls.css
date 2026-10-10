@@ -33,7 +33,7 @@
     vertical-align: -5px;
 }
 body.easter-theme #riznica-screen .effect-preview-box.prev-confetti::before {
-    background-image: url("assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=2");
+    background-image: url("assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3");
 }
 @media (prefers-reduced-motion: reduce) {
     #riznica-screen .treasury-control-icon { transition: none; }

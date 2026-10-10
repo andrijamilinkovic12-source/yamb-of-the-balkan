@@ -115,6 +115,7 @@ class RiznicaManager {
         }
 
         const sources = (SHOP_DATA.TROPHIES || [])
+            .slice(0, 4)
             .map(item => ({
                 green: item?.greenIcon,
                 light: item?.lightIcon,

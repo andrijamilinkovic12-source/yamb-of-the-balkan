@@ -1,10 +1,34 @@
 {
   "schemaVersion": 1,
   "themeId": "desert",
-  "status": "partially linked; remaining Tournament roles pending",
+  "status": "linked; visual review pending",
   "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
   "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
   "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "c414dc836bc996ac8611304b91db28ab8e4ceca7441b376ea49910577b95653b",
+      "productionSha256": "5669d9b76054780fef463d16c24666f32e1c7f0d904dae41519d6ae25885cef1",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "664e9dd367e0d1a546cfb23ea310735aea165d8c238f4ebaecda8f6884390f1d",
+      "productionSha256": "80c987b508b4b138f8bdb3fb8d797437f77c3514ce78be5a711f586800118faf",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
     {
       "id": "tab-bracket",
       "group": "tournament-navigation",
@@ -12,6 +36,102 @@
       "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png",
       "masterSha256": "3bb299b77f8d3071bae05b0e0ed8d5f12a93423a37ea27ebe28a9c8bd04cf6fc",
       "productionSha256": "a10ccfe7483bf228f8cee8abb31bbe281e40fbd6f8f085506cfa08d4a24a16fa",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "c63a7854b4eb84aed93ce54b010f69dcfbd8f1ffcb32e24f5e6421432202c129",
+      "productionSha256": "bc4c0d5a695bb38e98a5bfb55081577624318a6ad77a4db4ab65a1933021bc4a",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "c682f78008b8c047dd906c56529cd678d2539ba1d19dbf339eaa7d0bc539d241",
+      "productionSha256": "025a64a77aa8e9ddaf3e0741a1fbc81cbc13939843d2d9404f26fa29cdc9c283",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "714788c3b71397990ab7921d8091bc02c8ccecb254f56292c17dbc07dca03b3e",
+      "productionSha256": "0f2a93536300b06ec5afeac88fbdea099b88bb607dc4cf49aecb07339c3a0fd5",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "af5f94d5cef57fafe35fcf36f8518b728a0fa4f6e709f0c0a07578545fc7efb8",
+      "productionSha256": "6e444a7d346e02df894061b2a20e8b5e53c2a75914f2143861d4ab632bf597a7",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "32039fdb97e4bf5faa6185dbc145401d8243468bbb61ed6671ddb8ab9e02f793",
+      "productionSha256": "e1286e43254a7753af76dc87ce4f6ca5bd160e116cee2ee3e09c6f2cd016d69b",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "d55d42c3f5885434d62859776e2f9c43582e8fd17e45f357ca350149bd044ca4",
+      "productionSha256": "f14144e4ac9de07ff4f0b05885180cc2531905f216e43547ffdfbe10616bfe98",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "ebc869c0281981ca51a8b8dd4b7cdfbe02214ecc40491de40de4e83588a0aa19",
+      "productionSha256": "a675233a522d23392139627c170f93f9eff445594640172e8d8ad877a13f6dc5",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "power-index",
+      "group": "statistics-overview",
+      "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/power-index-master-v1.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+      "masterSha256": "2c318c51935c7c03500842bd6ea9eebc0c064204a17cf9dab2a4246729111180",
+      "productionSha256": "132bb6e49d4849f4e0df4508a1f85932abca0c9b889a421cc28a19ee774b84bd",
       "productionSize": [
         256,
         256

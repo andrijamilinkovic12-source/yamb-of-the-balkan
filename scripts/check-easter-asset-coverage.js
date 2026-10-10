@@ -133,7 +133,7 @@ assert(/const isIconOnlyIntro =[^;]*overlay\.classList\.contains\('theme-easter'
 assert(themeCss.includes('body.easter-theme #riznica-screen .riznica-balance-pill {')
     && themeCss.includes('min-width: 92px;'), 'Vaskrs Riznica mora prikazati ceo iznos bez skraćivanja.');
 assert(themeCss.includes('body.easter-theme #riznica-screen .effect-preview-box.prev-confetti::before {')
-    && fs.readFileSync(path.join(www, 'theme-treasury-controls.css'), 'utf8').includes('assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=1'), 'Vaskrs Riznica ne sme vratiti zajednički emoji prikaz konfeta.');
+    && fs.readFileSync(path.join(www, 'theme-treasury-controls.css'), 'utf8').includes('assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3'), 'Vaskrs Riznica ne sme vratiti zajednički emoji prikaz konfeta.');
 assert(productionSource.includes("categoryName.replace(/^[^\\p{L}\\p{N}]+\\s*/u, '')"), 'Vaskrs kategorije Riznice moraju ukloniti stare vodeće emoji oznake.');
 assert(productionSource.includes('class="economy-reward-unavailable-soft-clay-icon"')
     && themeCss.includes('.economy-reward-card.btn-ad-state-aware.disabled .economy-reward-unavailable-soft-clay-icon')

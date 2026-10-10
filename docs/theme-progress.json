@@ -2,12 +2,30 @@
   "schemaVersion": 1,
   "updatedOn": "2026-10-10",
   "activeThemeId": "light",
-  "workState": "room-identity-standardization-before-medals",
-  "activeWorkPackage": "Rad na medaljama je prekinut: prvo standardizovati kanonski identitet svih soba i iste motive kroz glavnu ikonu, intro, povezane prikaze i medalje. Turnirska medalja mora koristiti kanonski pehar turnira, uz tri ranga. Svetlo Zlato v3 je povezani ali privremeni paket za reviziju; Trula Visnja ima samo radne zlatne mastere, bez povezivanja.",
+  "workState": "treasury-room-standardization-in-progress",
+  "activeWorkPackage": "Riznica: sva cetiri taba v3 i cetiri statusne ikone v4 u devet nezelenih tema sada su zasebno ilustrovani PNG asseti u DNK svake teme. Android qaLocal je potvrdio tabove na 34 px i sva cetiri statusna izvora na 22/20 px u svih deset tema, ukljucujuci prirodni prikaz tri statusa u sobi. Korisnicki vizuelni izbor ceka se za oba paketa. Slede prikazi efekata i medalje nakon zakljucavanja identiteta soba. Evidencija: docs/theme-treasury-controls-v1.md.",
   "visualQualityBoundary": {
-    "lastIndividuallyIllustratedFamily": "achievement-trophies",
-    "needsRedesign": ["medals", "treasury-controls", "treasury-effect-previews"],
+    "lastIndividuallyIllustratedFamily": "treasury-status-v4",
+    "needsRedesign": ["medals", "treasury-effect-previews"],
     "technicalLinkingIsNotVisualAcceptance": true
+  },
+  "treasuryTabRedesignV3": {
+    "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "individuallyIllustratedThemes": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "pendingThemes": [],
+    "review": "docs/theme-treasury-tabs-v3-review.html",
+    "androidReport": "docs/qa-treasury-tabs-v3-emulator-2026-10-10.json",
+    "runtimeStatus": "10 themes x 4 tabs loaded at 34 CSS px; four category PNGs matched active theme",
+    "visualAcceptance": "pending user review"
+  },
+  "treasuryStatusRedesignV4": {
+    "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "individuallyIllustratedThemes": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "pendingThemes": [],
+    "review": "docs/theme-treasury-status-v4-review.html",
+    "runtimeStatus": "Android qaLocal: 36 status PNGs decoded at 22 CSS px; lock probe at 20 CSS px; owned, active and locked natural room icons matched current theme",
+    "androidReport": "docs/qa-treasury-status-v4-emulator-2026-10-10.json",
+    "visualAcceptance": "pending user review"
   },
   "medalRedesignV3": {
     "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
@@ -242,8 +260,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/light/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -345,8 +368,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/medium/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -448,8 +476,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/winter/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -551,8 +584,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/neon/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -654,8 +692,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/amethyst/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -757,8 +800,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/easter/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -860,8 +908,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/desert/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -963,8 +1016,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/moon/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -1066,8 +1124,13 @@
           "evidence": []
         },
         "tournament": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "linked",
+          "evidence": [
+            "source-assets/theme-icon-packs/severna/tournament-room-v1/manifest.json",
+            "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+            "docs/tournament-room-parity-audit.md",
+            "docs/theme-tournament-final-qa.png"
+          ]
         },
         "game-over": {
           "stage": "defined",
@@ -1103,9 +1166,11 @@
   "treasuryControlEvidence": {
     "review": "docs/theme-treasury-controls-review.html",
     "check": "scripts/check-theme-treasury-controls.js",
-    "runtimeVisualStatus": "Android qaLocal revizija 2: svih osam kontrola učitano u svih deset tema, tabovi su 34 px i statusi menjaju temu; korisnički vizuelni izbor čeka proveru",
-    "visualAcceptance": "needs-redesign: shared control construction remains too uniform across themes",
-    "androidReport": "docs/qa-theme-dna-medals-controls-emulator-2026-10-10.json",
+    "runtimeVisualStatus": "Android qaLocal: tabovi v3 i kategorije ucitani na 34 px, a statusi v4 dekodirani na 22/20 px u svih deset tema; prirodni prikaz owned/active/locked u sobi prati aktivnu temu",
+    "visualAcceptance": "tabovi v3 i statusi v4: korisnicki vizuelni izbor na cekanju",
+    "androidReport": "docs/qa-treasury-status-v4-emulator-2026-10-10.json",
+    "previousTabAndroidReport": "docs/qa-treasury-tabs-v3-emulator-2026-10-10.json",
+    "previousAndroidReport": "docs/qa-theme-dna-medals-controls-emulator-2026-10-10.json",
     "screenshots": [
       "docs/qa-light-theme-dna-emulator-2026-10-10.png",
       "docs/qa-neon-theme-dna-emulator-2026-10-10.png"

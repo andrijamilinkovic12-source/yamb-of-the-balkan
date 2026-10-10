@@ -1,0 +1,17 @@
+# Riznica — statusne ikone v4, prompt set
+
+Izvor je ugrađeni ImageGen. Za svaku od 36 ikona poslat je poseban poziv sa `transparent_background: true`. Zajednički zahtev: jedna centrirana 3D Soft Neomorphism ikona za mali mobilni prikaz; jaka silueta; mat materijal i blaga dubina; četiri prepoznatljiva značenja (jedna kvačica, centralna tačka, zatvoren katanac, jedna horizontalna crta); bez teksta, brojeva, nakita, šljokica, podloge, ambijenta i senke izvan same ikone. Svaka tema ima svoj materijal, oblik i paletu, a ne prebojenu kopiju.
+
+| Tema | Pravac, paleta i osnovna forma | Kupljeno | Aktivno | Zaključano | Nedovoljno dukata |
+|---|---|---|---|---|---|
+| Svetlo Zlato | Smooth Rubber/Matte Plastic; `#E6BE83` `#FFF1D7` `#875024` `#76612B`; spljoštena zaobljena forma sa dijagonalnim rezom | Krem kvačica utisnuta u topli zlatni pečat | Plitki zlatni brojčanik sa krem centralnom tačkom i malom maslinastom tačkom | Široko telo sa dijagonalnim rezom, krem luk i tamna ključaonica | Tamna crta u spljoštenom zlatnom žetonu |
+| Trula Višnja | Clay; `#8B3038` `#F1C3B2` `#431720` `#E39A70`; asimetrična ručno oblikovana masa | Ružičasta kvačica u trešnjastom pečatu | Centralna ružičasta tačka u plitkom glinenom udubljenju | Glineni luk i bordo telo | Duboko utisnuta crta u asimetričnom ovalu |
+| Plavi Okean | Smooth Rubber/Matte Plastic; `#0E5A9B` `#FFF4E5` `#173D5B` `#BD684A`; široki obalni luk | Topla bela kvačica u plavoj arhitektonskoj lučnoj pločici | Bela tačka u otvorenom morskoplavom luku | Plavi luk, svetlo telo, tamna ključaonica | Bela crta u morskoplavom lučnom znaku |
+| Neon Cyber | Smooth Rubber/Matte Plastic; `#193455` `#56E5D2` `#080D18` `#F08CE3`; segment sa jednim usekom | Cijan kvačica u tamnom zaobljenom kvadratu | Cijan tačka u jednom prekinutom kvadratnom prstenu | Cijan luk, tamno telo, jedna ivica sa usekom | Cijan crta u tamnoj segmentiranoj pastili |
+| Kraljevski Ametist | Clay; `#5A386A` `#E0CDE5` `#2D1D3C` `#F2C879`; težak širok luk, najviše dve meke facete | Svetla kvačica u masivnom ametistnom lučnom pečatu | Svetla tačka u širokom glinenom udubljenju | Glineni luk i masivno ljubičasto telo | Svetla crta u niskom glinenom bloku |
+| Vaskršnja | Smooth Rubber/Matte Plastic; `#D3D5B7` `#FFF8EA` `#4D6B45` `#A66443`; oval sa lisnim usekom | Tamnozelena kvačica u ovalnom žetonu | Tamnozelena tačka u plitkom ovalnom udubljenju | Žalfija luk, krem ovalno telo | Tamnozelena crta u ovalnom znaku |
+| Pustinjsko Staklo | Clay; `#D79269` `#FFF0DA` `#87523C` `#396B72`; široki niski peščani slojevi | Krem kvačica na dvostepenoj glinenoj pločici | Krem tačka u niskom slojevitom udubljenju | Široki zemljani luk i slojevito telo | Tamna crta u dvostepenoj pločici |
+| Mesečev Sjaj | Clay; `#3B3F4B` `#E1E2E7` `#181B24` `#A7A9B8`; nizak reljef sa jednim konkavnim rubom | Svetla kvačica u niskoj škriljčastoj formi | Svetla tačka u udubljenju sa konkavnim rubom | Glineni luk, nisko telo sa jednim usekom | Svetla crta u tamnom znaku sa konkavnim rubom |
+| Severna Maglina | Smooth Rubber/Matte Plastic; `#24445B` `#F5FBFF` `#0B1830` `#8AE3E4`; neprekinuta kriva sa ledenim suženjem | Bela kvačica u zakrivljenom plavom pečatu | Bela tačka unutar otvorene C krive | Beli luk i plavo telo suženo na jednom kraju | Bela crta u plavom ovalu sa suženjem |
+
+Izvorne datoteke su u `source-assets/theme-icon-packs/<tema>/treasury-status-v4/`; skript `scripts/import-theme-treasury-status-v4.py` ih prevodi u standardne master i produkcione PNG dimenzije.

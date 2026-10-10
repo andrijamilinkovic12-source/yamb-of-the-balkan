@@ -5431,7 +5431,7 @@ body.easter-theme #riznica-screen .effect-preview-box.prev-confetti::before {
     content: "";
     position: absolute;
     inset: 18%;
-    background: url("assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2") center / contain no-repeat;
+    background: url("assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3") center / contain no-repeat;
     filter: drop-shadow(0 5px 7px rgba(94,48,126,.23));
     animation: easterTreasuryEffectFloat 2.8s ease-in-out infinite alternate;
 }

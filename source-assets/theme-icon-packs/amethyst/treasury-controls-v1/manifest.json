@@ -3,106 +3,124 @@
   "themeId": "amethyst",
   "slots": {
     "canonical/treasury-controls/tab-trophies-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-trophies-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-trophies-master-v3.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png",
       "opticalBoundsPx": [
-        34,
-        49,
-        222,
-        206
+        17,
+        53,
+        239,
+        203
       ],
-      "sizeBytes": 37836,
-      "sha256": "0f8807f2e564809a04463c4be0ec087009bf56ea609840990813feca8d06a9bb"
+      "sizeBytes": 42633,
+      "sha256": "cc4593160a899d05455ba8b1ff63a60c21047c821e3a63624eb16c1350209d2c",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-trophies-generated.png"
     },
     "canonical/treasury-controls/tab-skins-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-skins-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-skins-master-v3.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png",
       "opticalBoundsPx": [
-        35,
-        34,
-        221,
-        222
+        17,
+        20,
+        239,
+        236
       ],
-      "sizeBytes": 52048,
-      "sha256": "83366d015d2d6061d004b77fa99a4f9c6f20c6f6ed9821d2b53235b7aea2044c"
+      "sizeBytes": 59563,
+      "sha256": "6015cedc4093f4a47817cea0aa3f5a25764a5140ada553c7ee8ee13c98196c0d",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-skins-generated.png"
     },
     "canonical/treasury-controls/tab-effects-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-effects-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-effects-master-v3.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png",
       "opticalBoundsPx": [
-        53,
-        34,
-        203,
-        222
+        20,
+        17,
+        236,
+        239
       ],
-      "sizeBytes": 33366,
-      "sha256": "b15fc058041526b105cc82e44a81ada17a4b37de7fb7ed72f673ea86534bc1db"
+      "sizeBytes": 58122,
+      "sha256": "8337bb5b449add3086e6ba44bc90840079db783092a342f4c7adf76ed4cd0460",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-effects-generated.png"
     },
     "canonical/treasury-controls/tab-themes-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-themes-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-themes-master-v3.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png",
       "opticalBoundsPx": [
-        52,
-        34,
-        224,
-        225
+        17,
+        17,
+        239,
+        239
       ],
-      "sizeBytes": 21078,
-      "sha256": "f325f64ea51159e52daeb8e8db73cd2ed04d273ccd8db5498ae4ab13715546ac"
+      "sizeBytes": 53141,
+      "sha256": "3f0867fcc6ff0bf15d745f348abe94154f1d79b4de705a1048d07c23bd2d43d1",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-themes-generated.png"
     },
     "canonical/treasury-controls/status-owned-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-owned-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-owned-master-v4.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-owned-v1.png",
       "opticalBoundsPx": [
-        50,
-        57,
-        212,
-        209
+        17,
+        33,
+        239,
+        223
       ],
-      "sizeBytes": 21998,
-      "sha256": "2e0e53f7bee00ae6161759cf98c9e4d87c9e8a2d8d03110331674c32c837286b"
+      "sizeBytes": 55023,
+      "sha256": "55d7d783173c6d221199625150dcd89b31efe8feeed91fd08f23d49aa09b7292",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-owned-generated.png"
     },
     "canonical/treasury-controls/status-active-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-active-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-active-master-v4.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-active-v1.png",
       "opticalBoundsPx": [
-        45,
-        52,
-        218,
-        213
+        17,
+        43,
+        239,
+        212
       ],
-      "sizeBytes": 32400,
-      "sha256": "fd67b1bff9fca5876c2acbba8fd4d74b5ccb1ea5c6fe1ebbd4f62241d1851a66"
+      "sizeBytes": 50672,
+      "sha256": "a4ed19c60a7b51057eafa40fa815776becb8a3f89f4d1b1c7fa2083474bdf3b3",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-active-generated.png"
     },
     "canonical/treasury-controls/status-locked-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-locked-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-locked-master-v4.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-locked-v1.png",
       "opticalBoundsPx": [
-        44,
-        51,
-        219,
-        228
+        32,
+        17,
+        224,
+        239
       ],
-      "sizeBytes": 20268,
-      "sha256": "d46b4ae6507282d93e264eaeb8bec8ad604a73a34d8117202da4f66628ff329a"
+      "sizeBytes": 45041,
+      "sha256": "6adf1e3d84ee132a1b804697c31ae7dbbaab4c8a4efa66baff7c778adb39fea7",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-locked-generated.png"
     },
     "canonical/treasury-controls/status-insufficient-v1": {
-      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-insufficient-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-insufficient-master-v4.png",
       "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-insufficient-v1.png",
       "opticalBoundsPx": [
-        45,
-        52,
-        218,
-        213
+        17,
+        31,
+        239,
+        225
       ],
-      "sizeBytes": 31756,
-      "sha256": "20a2262ada15ff530733d24e0a8ea2e54aa2741b7397d2446579f09de75c6fd6"
+      "sizeBytes": 48688,
+      "sha256": "ab4ec9da38f332b09a7369a7b51aed120df7025fd873c5f95591e4e6661f2040",
+      "generatedSourcePath": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-insufficient-generated.png"
     }
   },
-  "dnaRevision": 2,
-  "sameThemeArtSources": {
-    "tab-trophies": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
-    "tab-skins": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/first_play-v1.png",
-    "tab-effects": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/firecracker-v1.png"
+  "dnaRevision": 4,
+  "sameThemeArtSources": {},
+  "tabGenerationMethod": "four separate transparent PNG illustrations; one prompt per tab",
+  "tabGeneratedSources": {
+    "tab-trophies": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-trophies-generated.png",
+    "tab-skins": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-skins-generated.png",
+    "tab-effects": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-effects-generated.png",
+    "tab-themes": "source-assets/theme-icon-packs/amethyst/treasury-tabs-v3/tab-themes-generated.png"
+  },
+  "statusGenerationMethod": "four separate transparent PNG illustrations; one prompt per status",
+  "statusGeneratedSources": {
+    "status-owned": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-owned-generated.png",
+    "status-active": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-active-generated.png",
+    "status-locked": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-locked-generated.png",
+    "status-insufficient": "source-assets/theme-icon-packs/amethyst/treasury-status-v4/status-insufficient-generated.png"
   }
 }

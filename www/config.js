@@ -172,17 +172,17 @@ const SHOP_DATA = {
     ],
 
     THEMES: [
-        { id: 'dark', name: { sr: 'Zelena', en: 'Green' }, price: 0, desc: { sr: '3D Soft Clay tema sa šumskim motivima i glinenim kockicama.', en: 'A 3D Soft Clay theme with woodland motifs and clay dice.' }, icon: '🎲', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
-        { id: 'light', name: { sr: 'Svetlo Zlato', en: 'Light Gold' }, price: 0, desc: { sr: 'Svetla tema sa zlatnim detaljima.', en: 'Light theme with gold details.' }, icon: '🎨', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
-        { id: 'medium', name: { sr: 'Trula Višnja', en: 'Dark Cherry' }, price: 0, desc: { sr: 'Luksuzna bordo tema.', en: 'Luxurious burgundy theme.' }, icon: '🍒', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
-        { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: 'Opuštajuća plava tema.', en: 'Relaxing blue theme.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
-        { id: 'neon', name: { sr: 'Neon Cyber', en: 'Neon Cyber' }, price: 15000, desc: { sr: 'Futuristička cyberpunk tema.', en: 'Futuristic cyberpunk theme.' }, icon: '⚡', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
-        { id: 'amethyst', name: { sr: 'Kraljevski Ametist', en: 'Royal Amethyst' }, price: 20000, desc: { sr: 'Luksuzna VIP ljubičasta tema.', en: 'Luxurious VIP purple theme.' }, icon: '🔮', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
-        { id: 'easter', name: { sr: 'Vaskršnja', en: 'Joyful Easter' }, price: 10000, desc: { sr: 'Kompletna Vaskrs Soft Clay tema: prolećna pozadina, reljefne PNG ikonice, tabla, UI i mekani audio efekti.', en: 'Complete Easter Soft Clay theme: spring background, sculpted PNG icons, board, UI, and soft audio cues.' }, icon: '🐇', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
-        { id: 'desert', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, adUnlock: 3, desc: { sr: 'Kompletan Pustinjsko staklo Pack: reljefna pustinja, stakleni badges & pills, tabla, UI, motion i topli audio efekti.', en: 'Complete Desert Glass Theme Pack: sculpted desert, glass badges & pills, board, UI, motion and warm audio cues.' }, icon: '🏜️', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
+        { id: 'dark', name: { sr: 'Zelena', en: 'Green' }, price: 0, desc: { sr: '3D Soft Neomorphism, pravac Clay: zeleni balkanski predeo i glineni detalji.', en: '3D Soft Neomorphism, Clay direction: a green Balkan landscape and sculpted details.' }, icon: '🎲', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'light', name: { sr: 'Svetlo Zlato', en: 'Light Gold' }, price: 0, desc: { sr: '3D Soft Neomorphism, mat silikon: topla krem i medena paleta.', en: '3D Soft Neomorphism, matte plastic: warm ivory and honey tones.' }, icon: '🎨', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'medium', name: { sr: 'Trula Višnja', en: 'Dark Cherry' }, price: 0, desc: { sr: '3D Soft Neomorphism, pravac Clay: mirna bordo i topla paleta.', en: '3D Soft Neomorphism, Clay direction: restrained burgundy and warm tones.' }, icon: '🍒', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: '3D Soft Neomorphism, mat silikon: Egejsko more i grčka luka.', en: '3D Soft Neomorphism, matte plastic: the Aegean sea and a Greek harbor.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'neon', name: { sr: 'Neon Cyber', en: 'Neon Cyber' }, price: 15000, desc: { sr: '3D Soft Neomorphism, mat silikon: tamna površina i umereni tirkizni akcenti.', en: '3D Soft Neomorphism, matte plastic: dark surfaces with restrained turquoise accents.' }, icon: '⚡', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
+        { id: 'amethyst', name: { sr: 'Kraljevski Ametist', en: 'Royal Amethyst' }, price: 20000, desc: { sr: '3D Soft Neomorphism, pravac Clay: vajana ljubičasta i mirni zlatni akcenti.', en: '3D Soft Neomorphism, Clay direction: sculpted purple and restrained gold accents.' }, icon: '🔮', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
+        { id: 'easter', name: { sr: 'Vaskršnja', en: 'Joyful Easter' }, price: 10000, desc: { sr: '3D Soft Neomorphism, mat silikon: prolećna krem i kadulja zelena.', en: '3D Soft Neomorphism, matte plastic: spring ivory and sage green.' }, icon: '🐇', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
+        { id: 'desert', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, adUnlock: 3, desc: { sr: '3D Soft Neomorphism, pravac Clay: topli peščani i koralni reljef.', en: '3D Soft Neomorphism, Clay direction: warm sand and coral relief.' }, icon: '🏜️', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
         // --- DODATO: Mesečev Sjaj ---
-        { id: 'moon', name: { sr: 'Mesečev Sjaj', en: 'Moonlight' }, price: 25000, desc: { sr: 'Profesionalna lunarna tema sa realističnim kraterima, zvezdanim nebom i srebrnim UI sjajem.', en: 'Professional lunar theme with realistic craters, starfield depth, and silver UI glow.' }, icon: '🌕', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
-        { id: 'severna', name: { sr: 'Severna Maglina', en: 'Northern Nebula' }, price: 45000, desc: { sr: 'Premium neuphorism tema sa ledenom maglinom, soft clay reljefom, frost glass pozadinom i hladnim cyan-violet ikonama.', en: 'Premium neuphorism theme with icy nebula, soft clay relief, frosted glass background and cool cyan-violet icons.' }, icon: '🌌', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
+        { id: 'moon', name: { sr: 'Mesečev Sjaj', en: 'Moonlight' }, price: 25000, desc: { sr: '3D Soft Neomorphism, pravac Clay: stilizovana Mesečeva površina u srebrnosivim tonovima.', en: '3D Soft Neomorphism, Clay direction: a stylized lunar surface in silver-gray tones.' }, icon: '🌕', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
+        { id: 'severna', name: { sr: 'Severna Maglina', en: 'Northern Nebula' }, price: 45000, desc: { sr: '3D Soft Neomorphism, mat silikon: ledena maglina i mirni cijan-ljubičasti akcenti.', en: '3D Soft Neomorphism, matte plastic: an icy nebula with restrained cyan-violet accents.' }, icon: '🌌', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
     ],
 
     TROPHIES: [
@@ -261,7 +261,8 @@ function getThemeTreasuryControlSource(role, theme = localStorage.getItem('yamb_
     const themes = new Set(['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     if (!roles.has(role) || !themes.has(theme)) return '';
     const root = theme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${theme}/canonical`;
-    return `${root}/treasury-controls/${role}-v1.png?v=2`;
+    const version = theme === 'dark' ? 2 : role.startsWith('tab-') ? 3 : 4;
+    return `${root}/treasury-controls/${role}-v1.png?v=${version}`;
 }
 
 // Export (ako je potrebno za module, mada u browseru radi globalno)

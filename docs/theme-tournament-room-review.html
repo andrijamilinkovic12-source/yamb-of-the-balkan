@@ -23,6 +23,7 @@
     .real { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; margin-top: 12px; border-top: 1px solid #9b754f55; padding-top: 10px; }
     .real img { object-fit: contain; }
     .real .tiny { width: 15px; height: 15px; }
+    .real .power { width: 12px; height: 12px; }
     .real .regular { width: 38px; height: 38px; }
     .real .match { width: 34px; height: 34px; }
     .real .medal { width: 30px; height: 30px; }
@@ -55,14 +56,30 @@
     body.easter .sample { background: #d3d5b7; }
     body.easter .real { border-color: #87937355; }
     body.easter .real span { color: #5f654f; }
+    body.desert { color: #87523c; background: #d79269; }
+    body.desert .note, body.desert article, body.desert .choice select { color: #87523c; background: #fff0da; border-color: #396b72; }
+    body.desert .sample { background: #f0d0ab; }
+    body.desert .real { border-color: #396b7255; }
+    body.desert .real span { color: #87523c; }
+    body.moon { color: #f5f5f7; background: #08090c; }
+    body.moon .note, body.moon article, body.moon .choice select { color: #f5f5f7; background: #252934; border-color: #858895; }
+    body.moon .sample { background: #3b3f4b; }
+    body.moon .real { border-color: #85889555; }
+    body.moon .real span { color: #c9cad2; }
+    body.severna { color: #f5fbff; background: #0b1830; }
+    body.severna .note, body.severna article, body.severna .choice select { color: #f5fbff; background: #182c44; border-color: #759da9; }
+    body.severna .sample { background: #24445b; }
+    body.severna .real { border-color: #759da955; }
+    body.severna .real span { color: #c3d8e0; }
   </style>
 </head>
 <body>
 <main>
   <h1>Turnir: tematski PNG u odnosu na Zelenu</h1>
-  <p class="note">Svetlo Zlato, Trula Višnja, Plavi Okean, Neon Cyber, Kraljevski Ametist i Vaskršnja imaju po 14 kanonskih turnirskih uloga. Svetlo Zlato ima tri nove medalje sa peharom sobe; ostalih pet tema zadržavaju već usklađene medalje. Ispod kartice je stvarna veličina prikaza u sobi ili intru. Provera u pokrenutoj aplikaciji ostaje otvorena.</p>
+  <p class="note">Svih devet tema uz Zelenu imaju po 14 kanonskih turnirskih uloga i zasebnu ikonu indeksa snage iz zajedničkog kataloga statistike. Svetlo Zlato ima tri nove medalje sa peharom sobe; ostalih osam tema zadržavaju već usklađene medalje. Ispod kartice je stvarna veličina prikaza u sobi ili intru. Provera u pokrenutoj aplikaciji ostaje otvorena.</p>
+  <p><a href="theme-tournament-final-qa.png">Pregled svih devet tema: indeks snage na 12/24/64 px i pehar uz medalje</a></p>
   <p><a href="theme-tournament-bracket-review.html">Uporedi ikone Kostura sa osam takmičara u svim dostupnim temama</a></p>
-  <label class="choice" for="theme-select">Tema <select id="theme-select"><option value="light">Svetlo Zlato</option><option value="medium">Trula Višnja</option><option value="winter">Plavi Okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski Ametist</option><option value="easter" selected>Vaskršnja</option></select></label>
+  <label class="choice" for="theme-select">Tema <select id="theme-select"><option value="light">Svetlo Zlato</option><option value="medium">Trula Višnja</option><option value="winter">Plavi Okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski Ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko Staklo</option><option value="moon">Mesečev Sjaj</option><option value="severna" selected>Severna Maglina</option></select></label>
   <div class="grid" id="grid"></div>
 </main>
 <script>
@@ -79,6 +96,7 @@
     ['Početak', 'tournament-states/state-start-v1', 'tournament-states/state-start-v1', 'regular'],
     ['Aktivan meč', 'tournament-states/state-match-active-v1', 'tournament-states/state-match-active-v1', 'match'],
     ['Završen meč', 'tournament-states/state-match-complete-v1', 'tournament-states/state-match-complete-v1', 'tiny'],
+    ['Indeks snage u Kosturu', 'statistics-overview/power-index-v1', 'statistics-overview/power-index-v1', 'power'],
     ['Turnirska medalja: zlato', 'competition-medals/tournament-gold-v1', 'competition-medals/tournament-gold-v1', 'medal'],
     ['Turnirska medalja: srebro', 'competition-medals/tournament-silver-v1', 'competition-medals/tournament-silver-v1', 'medal'],
     ['Turnirska medalja: bronza', 'competition-medals/tournament-bronze-v1', 'competition-medals/tournament-bronze-v1', 'medal']
@@ -86,16 +104,19 @@
   const choice = document.querySelector('#theme-select');
   const render = () => {
     const themeId = choice.value;
-    const themeName = { light: 'Svetlo Zlato', medium: 'Trula Višnja', winter: 'Plavi Okean', neon: 'Neon Cyber', amethyst: 'Kraljevski Ametist', easter: 'Vaskršnja' }[themeId];
+    const themeName = { light: 'Svetlo Zlato', medium: 'Trula Višnja', winter: 'Plavi Okean', neon: 'Neon Cyber', amethyst: 'Kraljevski Ametist', easter: 'Vaskršnja', desert: 'Pustinjsko Staklo', moon: 'Mesečev Sjaj', severna: 'Severna Maglina' }[themeId];
     document.body.classList.toggle('medium', themeId === 'medium');
     document.body.classList.toggle('winter', themeId === 'winter');
     document.body.classList.toggle('neon', themeId === 'neon');
     document.body.classList.toggle('amethyst', themeId === 'amethyst');
     document.body.classList.toggle('easter', themeId === 'easter');
+    document.body.classList.toggle('desert', themeId === 'desert');
+    document.body.classList.toggle('moon', themeId === 'moon');
+    document.body.classList.toggle('severna', themeId === 'severna');
     document.querySelector('#grid').innerHTML = roles.map(([label, green, role, size]) => {
       const greenSrc = `${base}green-soft-clay/canonical/${green}.png`;
       const themeSrc = `${base}theme-packs/${themeId}/canonical/${role}.png`;
-      return `<article><h2>${label}</h2><div class="compare"><div class="sample green"><img src="${greenSrc}" alt=""><small>Zelena</small></div><div class="sample"><img src="${themeSrc}" alt=""><small>${themeName}</small></div></div><div class="real"><span>Prikaz:</span><img class="${size}" src="${themeSrc}" alt="${label}"><span>${size === 'tiny' ? '15' : size === 'medal' ? '30' : size === 'large' ? '42' : size === 'match' ? '34' : '38'} px</span></div></article>`;
+      return `<article><h2>${label}</h2><div class="compare"><div class="sample green"><img src="${greenSrc}" alt=""><small>Zelena</small></div><div class="sample"><img src="${themeSrc}" alt=""><small>${themeName}</small></div></div><div class="real"><span>Prikaz:</span><img class="${size}" src="${themeSrc}" alt="${label}"><span>${size === 'power' ? '12' : size === 'tiny' ? '15' : size === 'medal' ? '30' : size === 'large' ? '42' : size === 'match' ? '34' : '38'} px</span></div></article>`;
     }).join('');
   };
   choice.addEventListener('change', render);

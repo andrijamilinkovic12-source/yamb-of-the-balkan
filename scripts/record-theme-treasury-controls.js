@@ -30,7 +30,7 @@ for (const theme of map.themes) {
     state.assetUsageAudit.measuredThemeBoundsCount = Object.values(theme.slots).filter(item => item.opticalBoundsPx).length;
 }
 const existingQa = progress.treasuryControlEvidence?.androidReport;
-if (!progress.workState?.startsWith('theme-dna-')) {
+if (!progress.workState?.startsWith('theme-dna-') && !progress.treasuryTabRedesignV3?.individuallyIllustratedThemes?.length) {
     progress.workState = existingQa
         ? 'theme-treasury-controls-linked-android-qa-checked'
         : 'theme-treasury-controls-linked-static-checked';
@@ -42,7 +42,9 @@ progress.treasuryControlEvidence = {
     ...progress.treasuryControlEvidence,
     review: 'docs/theme-treasury-controls-review.html',
     check: 'scripts/check-theme-treasury-controls.js',
-    runtimeVisualStatus: progress.workState?.startsWith('theme-dna-')
+    runtimeVisualStatus: progress.treasuryTabRedesignV3?.individuallyIllustratedThemes?.length
+        ? progress.treasuryControlEvidence?.runtimeVisualStatus
+        : progress.workState?.startsWith('theme-dna-')
         ? progress.treasuryControlEvidence?.runtimeVisualStatus || 'Revizija 2 statički povezana; Android i korisnički pregled čekaju proveru'
         : existingQa
             ? 'Android qaLocal loading and tab geometry verified in all 10 themes; user review pending'

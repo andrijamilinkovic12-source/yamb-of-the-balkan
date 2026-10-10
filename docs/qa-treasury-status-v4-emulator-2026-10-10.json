@@ -1,0 +1,721 @@
+{
+  "date": "2026-10-10",
+  "build": "Android qaLocal built from current www",
+  "themes": [
+    {
+      "theme": "dark",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "medium",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "winter",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "neon",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "easter",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "desert",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "moon",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "severna",
+      "probes": [
+        {
+          "role": "status-owned",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/status-owned-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-active",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/status-active-v1.png?v=4",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/status-active-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        },
+        {
+          "role": "status-locked",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/status-locked-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "20px",
+          "height": "20px"
+        },
+        {
+          "role": "status-insufficient",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/status-insufficient-v1.png?v=4",
+          "naturalWidth": 256,
+          "width": "22px",
+          "height": "22px"
+        }
+      ],
+      "natural": [
+        {
+          "tab": "skin",
+          "count": 6,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "effect",
+          "count": 3,
+          "roles": [
+            "status-owned",
+            "status-active",
+            "status-locked"
+          ]
+        },
+        {
+          "tab": "theme",
+          "count": 5,
+          "roles": [
+            "status-owned",
+            "status-active"
+          ]
+        },
+        {
+          "tab": "trophy",
+          "count": 52,
+          "roles": [
+            "status-locked"
+          ]
+        }
+      ]
+    }
+  ],
+  "viewport": [
+    411,
+    891,
+    3.5
+  ]
+}

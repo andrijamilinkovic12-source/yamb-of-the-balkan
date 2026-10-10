@@ -3627,7 +3627,18 @@ class ShopManager {
     }
 
     updateBalanceDisplay() {
-        if(this.balanceEl) this.balanceEl.innerText = this.balance;
+        if (!this.balanceEl) return;
+        const balance = Math.max(0, Number(this.balance) || 0);
+        const compact = (value, unit) => {
+            const scaled = balance / value;
+            return `${Number.isInteger(scaled) ? scaled : scaled.toFixed(1)}${unit}`;
+        };
+        this.balanceEl.innerText = balance >= 1000000
+            ? compact(1000000, 'M')
+            : balance >= 10000 ? compact(1000, 'K') : String(balance);
+        const fullBalance = balance.toLocaleString('sr-RS');
+        this.balanceEl.title = fullBalance;
+        this.balanceEl.setAttribute('aria-label', fullBalance);
     }
 
     getOwnedThemeIds() {
@@ -3751,6 +3762,22 @@ class ShopManager {
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }
 
+    getTreasuryThemePreviewSource(themeId) {
+        // Use the approved background of the item itself, regardless of the active UI theme.
+        return {
+            dark: 'assets/green-clay-balkan-diorama-v4.png',
+            light: 'assets/theme-backgrounds/light-v9.png',
+            medium: 'assets/theme-backgrounds/medium-v9.png',
+            winter: 'assets/theme-backgrounds/winter-v13.png',
+            neon: 'assets/theme-backgrounds/neon-v4.png',
+            amethyst: 'assets/theme-backgrounds/amethyst-v6.png',
+            easter: 'assets/theme-backgrounds/easter-v6-1.png',
+            desert: 'assets/theme-backgrounds/desert-v8-2.png',
+            moon: 'assets/theme-backgrounds/moon-v14.png',
+            severna: 'assets/theme-backgrounds/severna-v4.png'
+        }[themeId] || '';
+    }
+
     getTreasuryRewardVideoIcon() {
         return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">';
     }
@@ -3764,19 +3791,20 @@ class ShopManager {
         this.container.innerHTML = '';
         const groupedItems = this.groupByCategory();
         const isGreenTreasury = document.body.matches('body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme))');
-        const isEasterTreasury = document.body.classList.contains('easter-theme');
 
         for (const [categoryName, items] of Object.entries(groupedItems)) {
             const section = document.createElement('div');
             section.className = 'category-section';
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
-            const usesGreenCategoryMark = isGreenTreasury && !categoryMeta && ['skin', 'effect', 'theme'].includes(this.type);
+            const categoryControl = {
+                trophy: 'tab-trophies', skin: 'tab-skins',
+                effect: 'tab-effects', theme: 'tab-themes'
+            }[this.type];
+            const cleanCategoryName = categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '');
             const categoryHtml = categoryMeta
                 ? `<img class="theme-collection-medal" src="${getThemeMedalSource('collection', categoryMeta.type)}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
-                : usesGreenCategoryMark
-                    ? `<span class="riznica-green-category-mark" aria-hidden="true"></span><span>${categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '')}</span>`
-                    : (isEasterTreasury ? categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '') : categoryName);
-            section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''} ${usesGreenCategoryMark ? `data-green-category="${this.type}"` : ''}>${categoryHtml}</div>`;
+                : `<img class="treasury-category-icon" data-treasury-control="${categoryControl}" src="${getThemeTreasuryControlSource(categoryControl)}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${cleanCategoryName}</span>`;
+            section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
             
             const grid = document.createElement('div');
             grid.className = 'category-grid'; 
@@ -3803,10 +3831,9 @@ class ShopManager {
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${canonicalEffectPreview ? '' : effectPreview}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
                     visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
-                } else if (this.type === 'theme' && item.id === 'easter') {
-                    visualHtml = `<div class="icon riznica-easter-theme-visual"><span class="riznica-easter-theme-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-easter-theme-icon" data-theme-src="assets/easter-soft-clay/settings/display-theme-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>`;
-                } else if (this.type === 'theme' && item.id === 'dark') {
-                    visualHtml = `<div class="icon riznica-green-theme-visual"><span class="riznica-green-theme-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-green-theme-icon" data-theme-src="assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>`;
+                } else if (this.type === 'theme') {
+                    const previewSource = this.getTreasuryThemePreviewSource(item.id);
+                    visualHtml = `<div class="treasury-theme-preview"><img src="${previewSource}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else {
                     visualHtml = `<div class="icon">${item.icon}</div>`;
                 }
@@ -3821,7 +3848,7 @@ class ShopManager {
                 } else {
                     if (isUnlocked) {
                         const boughtLabel = _safeT('btn_bought');
-                        const visibleBoughtLabel = isGreenTreasury ? boughtLabel.replace(/^\s*[✔✓]\s*/u, '') : boughtLabel;
+                        const visibleBoughtLabel = boughtLabel.replace(/^\s*[✔✓]\s*/u, '');
                         priceHtml = `<div class="price riznica-item-status riznica-item-status--owned">${this.getEasterTreasuryStatusIcon('status-owned')}<span>${visibleBoughtLabel}</span></div>`;
                     } else {
                         // NOVO: Provera da li se otključava reklamama

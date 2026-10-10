@@ -1795,8 +1795,8 @@ class YambApp {
                     'assets/rules-icon.svg'
                 ],
                 assets: [
-                    'assets/treasury-icon.svg',
-                    'assets/tournament-icon.svg',
+                    'assets/green-soft-clay/treasury-free-v3.png?v=1',
+                    'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1',
                     'assets/dukat-icon.svg',
                     'assets/undo-token-icon.svg'
                 ]
@@ -1835,10 +1835,6 @@ class YambApp {
                     'assets/easter-soft-clay/settings/language-v2.png?v=opt2',
                     'assets/easter-soft-clay/settings/terms-v2.png?v=opt2',
                     'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2',
                     'assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2',
                     'assets/easter-soft-clay/treasury/status-owned-v2.png?v=opt2',
                     'assets/easter-soft-clay/treasury/status-active-v2.png?v=opt2',
@@ -1949,7 +1945,6 @@ class YambApp {
                     'assets/desert-soft-clay/statistics/ducats-v3.png?v=opt2',
                     'assets/desert-soft-clay/statistics/all-time-points-v3.png?v=opt2',
                     'assets/desert-soft-clay/statistics/h2h-v2.png?v=opt2',
-                    'assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2',
                     'assets/desert-soft-clay/invite/sent.png?v=opt2',
                     'assets/desert-soft-clay/invite/accepted.png?v=opt2',
                     'assets/desert-soft-clay/opponent/reconnected.png?v=opt2',
@@ -1976,24 +1971,11 @@ class YambApp {
                     'assets/desert-soft-clay/statistics/fire-streak/gold-v3.png?v=opt2',
                     'assets/desert-soft-clay/statistics/fire-streak/silver-v3.png?v=opt2',
                     'assets/desert-soft-clay/statistics/fire-streak/bronze-v3.png?v=opt2',
-                    'assets/desert-soft-clay/tournament/tab-info.png?v=opt2',
-                    'assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png',
-                    'assets/desert-soft-clay/tournament/tab-hall-of-fame.png?v=opt2',
-                    'assets/desert-soft-clay/tournament/state-register.png?v=3',
-                    'assets/desert-soft-clay/tournament/state-unregister.png?v=3',
-                    'assets/desert-soft-clay/tournament/state-registration-locked.png?v=3',
-                    'assets/desert-soft-clay/tournament/state-start.png?v=3',
-                    'assets/desert-soft-clay/tournament/state-match-active.png?v=3',
-                    'assets/desert-soft-clay/tournament/state-match-complete.png?v=3',
                     'assets/desert-soft-clay/treasury/status-owned.png?v=opt2',
                     'assets/desert-soft-clay/treasury/status-active.png?v=opt2',
                     'assets/desert-soft-clay/treasury/status-locked.png?v=opt2',
                     'assets/desert-soft-clay/treasury/status-insufficient.png?v=opt2',
                     'assets/desert-soft-clay/treasury/reward-video.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/tab-trophies.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/tab-skins.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/tab-effects.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/tab-themes.png?v=opt2',
                     'assets/theme-packs/desert/canonical/achievement-trophies/first_play-v1.png?v=2',
                     'assets/theme-packs/desert/canonical/achievement-trophies/apprentice-v1.png?v=1',
                     'assets/theme-packs/desert/canonical/achievement-trophies/kafana-v1.png?v=1',
@@ -2070,24 +2052,10 @@ class YambApp {
                     'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
                     'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
                     'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
-                    'assets/severna-soft-clay/treasury/tab-trophies-v2.png?v=1',
-                    'assets/severna-soft-clay/treasury/tab-skins-v2.png?v=1',
-                    'assets/severna-soft-clay/treasury/tab-effects-v2.png?v=1',
-                    'assets/severna-soft-clay/treasury/tab-themes-v2.png?v=1',
                     'assets/severna-soft-clay/economy/ducat-v3.png?v=1',
                     'assets/severna-soft-clay/economy/undo-token-v3.png?v=1',
                     'assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1',
                     'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/tab-info-v2.png?v=1',
-                    'assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png',
-                    'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1',
-                    'assets/severna-soft-clay/tournament/state-register-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/state-unregister-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/state-registration-locked-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/state-start-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/state-match-active-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1',
-                    'assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1',
                     'assets/severna-soft-clay/statistics/power-index/gold-v10.png?v=1',
                     'assets/severna-soft-clay/statistics/power-index/silver-v10.png?v=1',
                     'assets/severna-soft-clay/statistics/power-index/bronze-v10.png?v=1',
@@ -2131,11 +2099,6 @@ class YambApp {
         if (theme === 'desert') return 'assets/desert-soft-clay/';
         if (theme === 'severna') return 'assets/severna-soft-clay/';
         return '';
-    }
-
-    getPartialTournamentBracketSource(theme) {
-        return ['moon', 'desert', 'severna'].includes(theme)
-            ? `assets/theme-packs/${theme}/canonical/tournament-navigation/tab-bracket-v1.png` : '';
     }
 
     getMainRoomPackSource(theme, roomId, variant = 'room') {
@@ -2270,20 +2233,16 @@ class YambApp {
         const treasuryControls = safeRoomId === 'treasury'
             ? ['tab-trophies', 'tab-skins', 'tab-effects', 'tab-themes', 'status-owned', 'status-active', 'status-locked', 'status-insufficient']
                 .map(role => getThemeTreasuryControlSource(role, theme)) : [];
-        const treasuryEffectPreviews = safeRoomId === 'treasury'
-            ? ['wedding', 'thunder', 'fireworks', 'bubbles', 'cosmic-dust', 'dragon-fire', 'royal-yamb', 'fireflies', 'ice-age', 'black-hole', 'supernova', 'neon-pulse', 'drones', 'ufo-abduction']
-                .map(role => theme === 'dark'
-                    ? `assets/green-soft-clay/canonical/treasury-effect-previews/preview-${role}-v1.png?v=1`
-                    : `assets/theme-packs/${theme}/canonical/treasury-effect-previews/preview-${role}-v1.png?v=1`) : [];
-        const tournamentRoomAssets = safeRoomId === 'tournament' && ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter'].includes(theme)
+        const tournamentRoomAssets = safeRoomId === 'tournament' && ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)
             ? [
                 ['tournament-awards', 'finalist-silver'],
                 ...['tab-info', 'tab-bracket', 'tab-hall-of-fame'].map(role => ['tournament-navigation', role]),
                 ...['state-register', 'state-unregister', 'state-registration-locked', 'state-start',
-                    'state-match-active', 'state-match-complete'].map(role => ['tournament-states', role])
+                    'state-match-active', 'state-match-complete'].map(role => ['tournament-states', role]),
+                ['statistics-overview', 'power-index']
             ].map(([group, role]) => `assets/theme-packs/${theme}/canonical/${group}/${role}-v1.png${theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`)
-            : safeRoomId === 'tournament' ? [this.getPartialTournamentBracketSource(theme)].filter(Boolean) : [];
-        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...treasuryEffectPreviews, ...tournamentRoomAssets])];
+            : [];
+        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets])];
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
             dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
@@ -2295,7 +2254,8 @@ class YambApp {
             onlinePlayers: path => path.startsWith('online-players') || path.startsWith('online-add-') || path.startsWith('online-spectate') || path.startsWith('online-duel') || path === 'canonical/online-players-room-identity/online-players-room-v1.png',
             economy: path => path.startsWith('economy/') || path.startsWith('ducats-undo') || path.startsWith('canonical/rewarded-video/'),
             quarterlyLeague: path => path.startsWith('ql/') || path.startsWith('quarterly-league') || path.startsWith('canonical/competition-medals/quarterly-league-') || path === 'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
-            treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/achievement-trophies/') || path.startsWith('canonical/treasury-controls/') || path.startsWith('canonical/treasury-effect-previews/') || (theme !== 'dark' && path.includes('rewarded-video')),
+            // Trophy cards and effect previews load only when their tab is visible.
+            treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/treasury-controls/') || (theme !== 'dark' && path.includes('rewarded-video')),
             tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/') || path === 'canonical/statistics-overview/power-index-v1.png',
             solo: path => path.startsWith('solo/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png',
             hotseat: path => path.startsWith('hotseat/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
@@ -2303,8 +2263,8 @@ class YambApp {
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
-        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...treasuryEffectPreviews, ...tournamentRoomAssets])];
-        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...treasuryEffectPreviews, ...tournamentRoomAssets])];
+        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets])];
+        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...tournamentRoomAssets])];
     }
 
     collectThemeSourcesFromRoot(theme, rootElement) {
@@ -4481,17 +4441,16 @@ class YambApp {
                     if (data.role === 'winner') {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
-                        const championTitle = gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆";
+                        const championTitle = gt('tourney_champion_title') || 'ŠAMPION TURNIRA';
                         this.modal.alert(
                             `<img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
-                            (localStorage.getItem('yamb_theme') || 'dark') === 'dark'
-                                ? championTitle.replace(/\s*🏆/gu, '') : championTitle,
+                            championTitle.replace(/\s*🏆/gu, ''),
                             { contextClass: 'tourney-winner' }
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
                             `<img class="tourney-prize-result-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
-                            gt('tourney_finalist_title') || "FINALISTA 🥈",
+                            (gt('tourney_finalist_title') || 'FINALISTA').replace(/\s*🥈/gu, ''),
                             { contextClass: 'tourney-finalist' }
                         );
                     }
@@ -9110,16 +9069,8 @@ class YambApp {
 
             const isWinner = ceremonyData.role === 'winner';
             const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-            const isEasterTheme = document.body.classList.contains('easter-theme')
-                || activeTheme === 'easter';
-            const isDesertTheme = document.body.classList.contains('desert-theme')
-                || activeTheme === 'desert';
-            const isGreenTheme = activeTheme === 'dark'
-                && !document.body.classList.contains('easter-theme')
-                && !document.body.classList.contains('desert-theme')
-                && !document.body.classList.contains('severna-theme');
             const trophySrc = isWinner
-                ? (this.getMainRoomPackSource(activeTheme, 'tournament') || 'assets/tournament-trophy-yotb.svg')
+                ? (this.getMainRoomPackSource(activeTheme, 'tournament') || 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1')
                 : getThemeMedalSource('tournament', 'silver', activeTheme);
             const rewardLabel = this.formatTourneyDukatAmount(ceremonyData.reward);
             const coinIcon = (typeof dukatIconHtml === 'function') ? dukatIconHtml() : 'dukata';

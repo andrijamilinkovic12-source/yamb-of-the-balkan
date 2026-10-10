@@ -104,8 +104,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.22">
-    <link rel="stylesheet" href="teme.css?v=6.97">
-    <link rel="stylesheet" href="theme-main-room-icons.css?v=19">
+    <link rel="stylesheet" href="teme.css?v=6.98">
+    <link rel="stylesheet" href="theme-main-room-icons.css?v=20">
     <link rel="stylesheet" href="theme-main-menu-typography.css?v=1">
     <link rel="stylesheet" href="theme-game-board.css?v=6">
     <link rel="stylesheet" href="theme-game-logos.css?v=5">
@@ -116,10 +116,11 @@
     <link rel="stylesheet" href="kockice.css?v=1.10">
     <link rel="stylesheet" href="dice-skin-png.css?v=3">
     <link rel="stylesheet" href="efekti.css?v=1.7">
-    <link rel="stylesheet" href="theme-card-surfaces.css?v=2">
+    <link rel="stylesheet" href="theme-card-surfaces.css?v=4">
     <link rel="stylesheet" href="theme-medals.css?v=2">
-    <link rel="stylesheet" href="theme-treasury-controls.css?v=2">
+    <link rel="stylesheet" href="theme-treasury-controls.css?v=3">
     <link rel="stylesheet" href="theme-effect-previews.css?v=1">
+    <link rel="stylesheet" href="theme-treasury-room.css?v=2">
     
     <script src="languages.js?v=5.12"></script>
     <script src="quotes.js"></script>
@@ -1003,20 +1004,19 @@
     <div id="riznica-screen" class="screen">
         <div class="chat-header global-chat-header riznica-header">
             <div class="global-chat-title-group riznica-title-group">
-                <img class="riznica-header-logo riznica-header-logo-default" src="assets/treasury-icon.svg" alt="Riznica" decoding="async">
-                <img class="riznica-header-logo-green" data-theme-src="assets/green-soft-clay/treasury-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="riznica-header-logo riznica-header-logo-green" data-theme-src="assets/green-soft-clay/treasury-free-v3.png?v=1" loading="eager" alt="" aria-hidden="true" decoding="async">
                 <span class="global-chat-title riznica-header-title" data-lang="treasury_title">RIZNICA</span>
             </div>
             <button type="button" class="global-chat-close riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
         </div>
 
         <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice" data-lang-aria="treasury_tabs_aria">
-            <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span><svg class="dukat-icon-inline riznica-balance-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-balance-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
+            <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span><svg class="dukat-icon-inline riznica-balance-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-balance-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-green" src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
                             <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies"><img class="treasury-control-icon" data-treasury-control="tab-trophies" src="assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
                             <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice"><img class="treasury-control-icon" data-treasury-control="tab-skins" src="assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
                             <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" aria-label="Efekti" data-lang-aria="tab_effects" title="Efekti" data-lang-title="tab_effects"><img class="treasury-control-icon" data-treasury-control="tab-effects" src="assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
                             <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" aria-label="Teme" data-lang-aria="tab_themes" title="Teme" data-lang-title="tab_themes"><img class="treasury-control-icon" data-treasury-control="tab-themes" src="assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
-            <button type="button" class="btn-add-coins riznica-ad-btn" onclick="shop.watchAdForCoins()"><img class="riznica-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>+ 500</span><svg class="dukat-icon-inline riznica-ad-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-ad-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span class="riznica-ad-fallback" aria-hidden="true">🎬</span></button>
+            <button type="button" class="btn-add-coins riznica-ad-btn" onclick="shop.watchAdForCoins()"><img class="riznica-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-green-soft-clay-icon" src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" data-theme-src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>+ 500</span><svg class="dukat-icon-inline riznica-ad-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-ad-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-green" src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span class="riznica-ad-fallback" aria-hidden="true">🎬</span></button>
         </div>
 
         <div id="riznica-shop-container" class="content-area"></div>
@@ -1687,7 +1687,6 @@
             <div class="chat-header global-chat-header tourney-card-header">
                 <div class="global-chat-title-group">
                     <span class="global-chat-title tourney-header-title">
-                        <img class="tourney-header-icon tourney-header-icon-default" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
                         <img class="tourney-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="tourney_title">TURNIR</span>
                     </span>
@@ -1755,23 +1754,23 @@
         });
     </script>
 
-    <script src="config.js?v=5.21"></script>
-    <script src="managers.js?v=5.42"></script>
+    <script src="config.js?v=5.24"></script>
+    <script src="managers.js?v=5.44"></script>
     <script src="dnevniizazov.js?v=2.9"></script>
-    <script src="riznica.js?v=1.19"></script>
+    <script src="riznica.js?v=1.20"></script>
     <script src="trophyManager.js?v=4.13"></script>
     <script src="features.js?v=3.9"></script>
     <script src="toplista.js?v=4.9"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
-    <script src="turnir.js?v=1027"></script>
-    <script src="pravilaigre.js?v=1.26"></script>
+    <script src="turnir.js?v=1032"></script>
+    <script src="pravilaigre.js?v=1.28"></script>
     <script src="vracanjeupisa.js?v=1.7"></script>
     <script src="globalchat.js?v=1.7"></script>
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.75"></script>
-    <script src="theme-main-room-icons.js?v=12"></script>
+    <script src="game.js?v=5.82"></script>
+    <script src="theme-main-room-icons.js?v=16"></script>
     <script src="theme-ducat-pack.js?v=1"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>
     <script src="theme-rewarded-video-pack.js?v=1"></script>

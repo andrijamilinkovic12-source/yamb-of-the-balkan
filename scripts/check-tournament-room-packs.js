@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const crypto = require('node:crypto');
 
 const root = path.resolve(__dirname, '..');
 const script = fs.readFileSync(path.join(root, 'www/theme-main-room-icons.js'), 'utf8');
@@ -13,7 +14,10 @@ const roles = [
     ...['state-register', 'state-unregister', 'state-registration-locked', 'state-start',
         'state-match-active', 'state-match-complete'].map(role => ['tournament-states', role])
 ];
-const packs = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter'];
+const powerRole = ['statistics-overview', 'power-index'];
+const routedRoles = [...roles, powerRole];
+const packs = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const powerHashes = new Set();
 
 function pngSize(file) {
     const bytes = fs.readFileSync(file);
@@ -26,7 +30,7 @@ for (const theme of packs) {
     const entry = map.themes.find(item => item.themeId === theme);
     const manifest = JSON.parse(fs.readFileSync(path.join(root,
         `source-assets/theme-icon-packs/${theme}/tournament-room-v1/manifest.json`), 'utf8'));
-    assert(entry && manifest.assets.length === (theme === 'light' ? 13 : 10), `${theme}: incomplete manifest`);
+    assert(entry && manifest.assets.length === (theme === 'light' ? 14 : 11), `${theme}: incomplete manifest`);
     for (const [group, role] of [['tournament-awards', 'finalist-silver'], ...roles]) {
         const slot = entry.slots[`canonical/${group}/${role}-v1`];
         assert.equal(slot?.stage, 'linked', `${theme}: ${role} not linked`);
@@ -38,41 +42,60 @@ for (const theme of packs) {
         assert.equal(slot?.stage, 'linked', `${theme}: ${tier} medal not linked`);
         assert.deepEqual(pngSize(path.join(root, slot.productionPath)), [256, 256]);
     }
+    const powerSlot = entry.slots['canonical/statistics-overview/power-index-v1'];
+    assert.equal(powerSlot?.stage, 'linked', `${theme}: Power Index not linked`);
+    const powerFile = path.join(root, powerSlot.productionPath);
+    assert.deepEqual(pngSize(powerFile), [256, 256]);
+    powerHashes.add(crypto.createHash('sha256').update(fs.readFileSync(powerFile)).digest('hex'));
+    assert(manifest.assets.some(asset => asset.group === 'statistics-overview' && asset.id === 'power-index'),
+        `${theme}: Power Index missing from manifest`);
 }
+assert.equal(powerHashes.size, packs.length, 'Themes must not share a copied Power Index PNG');
 
 const gameScript = fs.readFileSync(path.join(root, 'www/game.js'), 'utf8');
+const roomScript = fs.readFileSync(path.join(root, 'www/turnir.js'), 'utf8');
+const indexHtml = fs.readFileSync(path.join(root, 'www/index.html'), 'utf8');
 const tournamentCss = fs.readFileSync(path.join(root, 'www/theme-main-room-icons.css'), 'utf8');
 assert(tournamentCss.includes('.amethyst-theme,.easter-theme,.moon-theme')
     && tournamentCss.includes('#tournament-screen .theme-tournament-room-icon-host > img:not(.theme-tournament-room-icon)'),
     'Easter canonical Tournament icon CSS or legacy-image hiding missing');
 assert(!gameScript.includes('assets/easter-soft-clay/tournament/tab-bracket-v3.png'),
     'Old Easter Tournament bracket is still preloaded');
-const partialPacks = ['moon', 'desert', 'severna'];
-for (const theme of partialPacks) {
-    const entry = map.themes.find(item => item.themeId === theme);
-    const manifest = JSON.parse(fs.readFileSync(path.join(root,
-        `source-assets/theme-icon-packs/${theme}/tournament-room-v1/manifest.json`), 'utf8'));
-    const role = 'canonical/tournament-navigation/tab-bracket-v1';
-    const slot = entry?.slots[role];
-    assert.equal(manifest.assets.length, 1, `${theme}: partial bracket manifest`);
-    assert.equal(manifest.assets[0].id, 'tab-bracket');
-    assert.equal(slot?.stage, 'linked', `${theme}: bracket not linked`);
-    assert.deepEqual(pngSize(path.join(root, slot.productionPath)), [256, 256]);
-    assert.deepEqual(pngSize(path.join(root, slot.masterPath)), [1254, 1254]);
+assert(!gameScript.includes('assets/desert-soft-clay/tournament/tab-info.png')
+    && !gameScript.includes('assets/desert-soft-clay/tournament/finalist-silver-v2.png'),
+    'Old Desert Tournament icons are still preloaded');
+assert(!gameScript.includes('assets/severna-soft-clay/tournament/tab-info-v2.png')
+    && !gameScript.includes('assets/severna-soft-clay/tournament/finalist-silver-v3.png'),
+    'Old Northern Nebula Tournament icons are still preloaded');
+assert(!/assets\/(?:tournament-[^"'\s]*\.svg|(?:easter|desert|severna)-soft-clay\/tournament[^"'\s]*)/.test(roomScript),
+    'Tournament room still renders a legacy SVG or theme PNG');
+assert(!indexHtml.includes('tourney-header-icon-default'),
+    'Tournament header still renders a legacy SVG beside the canonical trophy');
+assert(!gameScript.includes('assets/tournament-trophy-yotb.svg'),
+    'Tournament winner ceremony still falls back to the legacy SVG');
+assert(roomScript.includes('const powerMark = \'<img class="tourney-participant-power-icon-green"')
+    && !roomScript.includes("powerMark = isGreenTheme"),
+    'Tournament bracket still uses the emoji Power Index in a non-Green theme');
+assert(gameScript.includes("['statistics-overview', 'power-index']"),
+    'Tournament room does not preload the themed Power Index');
+for (const iconClass of ['tourney-match-result-icon-green', 'tourney-inline-active-match-icon-green',
+    'tourney-finalist-result-icon-canonical', 'tourney-journey-final-trophy']) {
+    assert(tournamentCss.includes(`#custom-modal-overlay .${iconClass}`),
+        `Tournament duel modal lacks Green-size styling for ${iconClass}`);
 }
-assert(gameScript.includes('getPartialTournamentBracketSource(theme)'), 'Partial bracket preload missing');
 
 class ClassList {
     constructor(values = []) { this.values = new Set(values); }
     contains(value) { return this.values.has(value); }
     toggle(value, force) { force ? this.values.add(value) : this.values.delete(value); }
 }
-const images = roles.map(([group, role]) => {
+const images = routedRoles.map(([group, role]) => {
     const source = `assets/green-soft-clay/canonical/${group}/${role}-v1.png?v=1`;
     const properties = new Map();
     const listeners = {};
     return {
         dataset: { themeSrc: source },
+        closest: selector => role === 'power-index' && selector === '#tournament-screen' ? {} : null,
         classList: new ClassList(),
         parentElement: { classList: new ClassList() },
         attributes: {},
@@ -107,31 +130,15 @@ vm.runInNewContext(script, {
 function checkTheme(theme) {
     for (let index = 0; index < images.length; index++) {
         const image = images[index];
-        const [group, role] = roles[index];
+        const [group, role] = routedRoles[index];
         const expected = theme === 'dark' ? image.dataset.themeSrc
-            : `assets/theme-packs/${theme}/canonical/${group}/${role}-v1.png${theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`;
+            : `assets/theme-packs/${theme}/canonical/${group}/${role}-v1.png${role === 'power-index' ? '?v=1' : theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`;
         assert.equal(image.getAttribute('src'), expected, `${theme}: wrong ${role} source`);
-        assert.equal(image.classList.contains('theme-tournament-room-icon'), theme !== 'dark');
-        assert.equal(image.parentElement.classList.contains('theme-tournament-room-icon-host'), theme !== 'dark');
-        assert.equal(image.style.getPropertyValue('visibility'), theme === 'dark' && role !== 'tab-bracket' ? '' : 'hidden');
-        image.complete = true;
-        image.naturalWidth = 256;
-        image.fire('load');
-        assert.equal(image.style.getPropertyValue('visibility'), '');
-    }
-}
-function checkPartialTheme(theme) {
-    for (let index = 0; index < images.length; index++) {
-        const image = images[index];
-        const [, role] = roles[index];
-        const bracket = role === 'tab-bracket';
-        const expected = bracket
-            ? `assets/theme-packs/${theme}/canonical/tournament-navigation/tab-bracket-v1.png`
-            : image.dataset.themeSrc;
-        assert.equal(image.getAttribute('src'), expected, `${theme}: wrong ${role} source`);
-        assert.equal(image.classList.contains('theme-tournament-room-icon'), bracket);
-        assert.equal(image.parentElement.classList.contains('theme-tournament-room-icon-host'), bracket);
-        assert.equal(image.style.getPropertyValue('visibility'), bracket || theme === partialPacks[0] ? 'hidden' : '');
+        if (role !== 'power-index') {
+            assert.equal(image.classList.contains('theme-tournament-room-icon'), theme !== 'dark');
+            assert.equal(image.parentElement.classList.contains('theme-tournament-room-icon-host'), theme !== 'dark');
+        }
+        assert.equal(image.style.getPropertyValue('visibility'), 'hidden');
         image.complete = true;
         image.naturalWidth = 256;
         image.fire('load');
@@ -165,15 +172,23 @@ document.documentElement.dataset.splashTheme = 'easter';
 observerCallback([{ type: 'attributes' }]);
 checkTheme('easter');
 body.classList.toggle('easter-theme', false);
-for (const theme of partialPacks) {
-    body.classList.toggle(`${theme}-theme`, true);
-    document.documentElement.dataset.splashTheme = theme;
-    observerCallback([{ type: 'attributes' }]);
-    checkPartialTheme(theme);
-    body.classList.toggle(`${theme}-theme`, false);
-}
+body.classList.toggle('desert-theme', true);
+document.documentElement.dataset.splashTheme = 'desert';
+observerCallback([{ type: 'attributes' }]);
+checkTheme('desert');
+body.classList.toggle('desert-theme', false);
+body.classList.toggle('moon-theme', true);
+document.documentElement.dataset.splashTheme = 'moon';
+observerCallback([{ type: 'attributes' }]);
+checkTheme('moon');
+body.classList.toggle('moon-theme', false);
+body.classList.toggle('severna-theme', true);
+document.documentElement.dataset.splashTheme = 'severna';
+observerCallback([{ type: 'attributes' }]);
+checkTheme('severna');
+body.classList.toggle('severna-theme', false);
 document.documentElement.dataset.splashTheme = 'dark';
 observerCallback([{ type: 'attributes' }]);
 checkTheme('dark');
 
-console.log('PASS: six complete Tournament PNG packs, three bracket-only packs, and theme-switch routing back to Green.');
+console.log('PASS: all nine complete Tournament PNG packs and theme-switch routing back to Green.');

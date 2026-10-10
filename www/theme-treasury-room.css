@@ -1,0 +1,138 @@
+/* Treasury geometry is shared by all ten themes; only materials and colors vary. */
+#riznica-screen .riznica-header-logo-green,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen .riznica-header-logo-green.theme-main-room-icon {
+    display: block !important;
+    width: 46px !important;
+    height: 46px !important;
+    flex: 0 0 46px !important;
+    object-fit: contain !important;
+}
+
+#riznica-screen .riznica-header,
+#riznica-screen .riznica-tabs,
+#riznica-screen .content-area,
+#riznica-screen .category-grid > .card {
+    box-sizing: border-box;
+}
+
+/* A locked trophy keeps its theme colors and readable text, as in Green. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen .card.locked {
+    opacity: 1;
+    filter: none;
+    border-style: dashed !important;
+}
+
+#riznica-screen .category-header .treasury-category-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    object-fit: contain;
+}
+
+#riznica-screen .category-header > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#riznica-screen .balance-display {
+    gap: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+#riznica-screen #riznica-balance {
+    font-variant-numeric: tabular-nums;
+}
+
+/* The Treasury actions and secondary copy use the active theme palette. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen .card :is(.desc,.duration,.price:not(.riznica-item-status)) {
+    color: var(--theme-card-muted) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen .card .riznica-item-status--owned {
+    color: var(--theme-card-ink) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen .card :is(.btn-buy,.btn-active) {
+    background: var(--theme-card-primary) !important;
+    color: var(--theme-card-surface) !important;
+    border: 1px solid var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen .card :is(.btn-equip,.btn-discount) {
+    color: var(--theme-card-primary) !important;
+    border: 1px solid var(--theme-card-primary) !important;
+    background: var(--theme-subcard-fill) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+
+#riznica-screen .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+}
+
+#riznica-screen .category-grid > .card {
+    min-width: 0;
+    min-height: 180px !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen .category-header {
+    box-sizing: border-box;
+    min-height: 38px;
+    margin-left: 0;
+    padding: 8px 12px;
+    border-radius: 12px;
+}
+
+/* The approved background PNG gives each theme card its own visual identity. */
+#riznica-screen .treasury-theme-preview {
+    box-sizing: border-box;
+    width: 72px;
+    height: 96px;
+    flex: 0 0 96px;
+    margin: 0 auto 8px;
+    border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    border-radius: 12px;
+    overflow: hidden;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+#riznica-screen .treasury-theme-preview img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: center center;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+@media (min-width: 600px) {
+    #riznica-screen .category-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    #riznica-screen .riznica-header-logo-green,
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+        #riznica-screen .riznica-header-logo-green.theme-main-room-icon {
+        width: 42px !important;
+        height: 42px !important;
+        flex-basis: 42px !important;
+    }
+}

@@ -27,7 +27,9 @@ for (const theme of themes) {
     const manifest = theme === 'dark' ? null : read(`source-assets/theme-icon-packs/${theme}/treasury-controls-v1/manifest.json`);
     if (manifest) {
         assert.equal(Object.keys(manifest.slots).length, 8);
-        assert.equal(manifest.dnaRevision, 2);
+        assert.equal(manifest.dnaRevision, 4);
+        assert.equal(Object.keys(manifest.tabGeneratedSources).length, 4);
+        assert.equal(Object.keys(manifest.statusGeneratedSources).length, 4);
         for (const artPath of Object.values(manifest.sameThemeArtSources)) {
             assert(artPath.startsWith(`www/assets/theme-packs/${theme}/`));
             assert(fs.existsSync(path.join(root, artPath)));
@@ -54,7 +56,21 @@ for (const theme of themes) {
             assert.equal(slot.sizeBytes, data.length);
             assert.equal(slot.opticalBoundsPx.length, 4);
             assert.equal(manifest.slots[id].sha256, hash);
-            assert(manifest.slots[id].masterPath.endsWith('-master-v2.png'));
+            assert(manifest.slots[id].masterPath.endsWith(
+                role.startsWith('tab-') ? '-master-v3.png' : '-master-v4.png'));
+            if (role.startsWith('tab-')) {
+                const generated = manifest.slots[id].generatedSourcePath;
+                assert(generated.startsWith(`source-assets/theme-icon-packs/${theme}/treasury-tabs-v3/`));
+                assert(fs.existsSync(path.join(root, generated)));
+                assert.equal(fs.readFileSync(path.join(root, generated)).toString('hex', 0, 8), '89504e470d0a1a0a');
+                assert(source.endsWith('?v=3'));
+            } else {
+                const generated = manifest.slots[id].generatedSourcePath;
+                assert(generated.startsWith(`source-assets/theme-icon-packs/${theme}/treasury-status-v4/`));
+                assert(fs.existsSync(path.join(root, generated)));
+                assert.equal(fs.readFileSync(path.join(root, generated)).toString('hex', 0, 8), '89504e470d0a1a0a');
+                assert(source.endsWith('?v=4'));
+            }
         }
     }
 }
@@ -72,5 +88,5 @@ assert(managers.includes('getThemeTreasuryControlSource(iconName)'));
 assert(managers.includes("getThemeTreasuryControlSource('status-locked')"));
 assert(managers.includes("getThemeTreasuryControlSource('status-insufficient')"));
 assert(rules.includes('getThemeTreasuryControlSource(treasuryTab[1])'));
-assert(index.includes('theme-treasury-controls.css?v=2'));
+assert(index.includes('theme-treasury-controls.css?v=3'));
 console.log('PASS: 80 unique 256px RGBA Treasury controls, eight roles per theme; nine target packs linked.');

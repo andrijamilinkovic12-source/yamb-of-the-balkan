@@ -1,10 +1,34 @@
 {
   "schemaVersion": 1,
   "themeId": "severna",
-  "status": "partially linked; remaining Tournament roles pending",
+  "status": "linked; visual review pending",
   "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
   "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
   "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "b2aac41f5227224f781b07c341edc6d975f5b59797c307d86d3ce6672db1e180",
+      "productionSha256": "8bfcd58c64daabb2548ac9f6878ee0c89618a30c965cea2ac134d00b08ec1ea9",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "0316c22853614f85c6dfff419bafd75be8267046dcdcd87f5e970807c879f13a",
+      "productionSha256": "59a4edbdee8c5956664e631558d5248c3fd6aa14b287074ab0699fbc95b9fcc6",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
     {
       "id": "tab-bracket",
       "group": "tournament-navigation",
@@ -12,6 +36,102 @@
       "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png",
       "masterSha256": "6e5eaf57803d3d13b8a00d40f9607e2dc6327b62d2b0b341df37afa50187c2f0",
       "productionSha256": "896a64c16cc30a0c20b5717fee95dfb5f264765c71cd5d521e83b10373b2afca",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "9d4dc8def914de4f4a1d5eb1215b7c0983907c7e2a610e1d1e6e99dfb5e81915",
+      "productionSha256": "0c56521135021c051c6eb321ff4df2c4db4e826c028e828b4f248f1974278052",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "d5edd1602e610f54315debf347926ccb889744929b277d57fdfc2160f92797ad",
+      "productionSha256": "852412ebc92fe924e6f73ec4e2822e8c62c1337dfb20e3a0d04eec9cf592307c",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "07e060bc660523b4fc28534c86cfd3325c192a7d2ea2321a7c8f4d9af95ee4ee",
+      "productionSha256": "c395b065f6b612dea37f6b98a4488660a88cff4314383dad58bacac7809756f1",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "5e88feca4000fcb02d92547fa7735a4ceafb691c4f0cebad0f20f31c31c353c4",
+      "productionSha256": "252907983e7ca58ec0978b2121f1c830cf31a7e7dc56adbf7274d7b5908574a1",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "89a9e99d041341a8436d7ee68eae03652bc9fb3799f18ef7aa2998227a155c3c",
+      "productionSha256": "4053a239c9a63faefaa4ac3a24f1f8fea32b4f8dfbc3a0fc0b4ccdd58349a393",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "a57a3d07ac444eb5ee26d8577a2a0c70baedda70e4b7395bd2552b7df462199d",
+      "productionSha256": "226c9ebfc72996b7e86ddc7f78f4d439b30bd676efbcf6fd66fd028a5542e0c7",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "d14420eecaed7e060cba52b0ddff07ca0c2a9ef4f320e6d954f87e88d03b76f1",
+      "productionSha256": "e8c4852bc924ace005957f7bd12dbcd7778c955dc606704b42af9f2cfc607514",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "power-index",
+      "group": "statistics-overview",
+      "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/power-index-master-v1.png",
+      "productionPath": "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+      "masterSha256": "664327fc8af9edccaa245908a3e2fc03ee59ebf029bbb1fc8ce5fa395b05cf7b",
+      "productionSha256": "f6ae9223fbe49cbcb7b78c048ccad4dd42383eb7b9fd59db0fb3f281aff06d33",
       "productionSize": [
         256,
         256

@@ -1,10 +1,34 @@
 {
   "schemaVersion": 1,
   "themeId": "moon",
-  "status": "partially linked; remaining Tournament roles pending",
+  "status": "linked; visual review pending",
   "generationMethod": "built-in imagegen; each distinct icon generated or edited for its semantic role",
   "productionRule": "one RGBA PNG per Tournament semantic role; 256x256 runtime; shared Green CSS geometry",
   "assets": [
+    {
+      "id": "finalist-silver",
+      "group": "tournament-awards",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/finalist-silver-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v1.png",
+      "masterSha256": "4e146420419097c0e47728a8a72af0f3c41a90cc04288512b1dfc412fb6fb560",
+      "productionSha256": "4fe339d098317ee8cc5e0fbd76c8ff2eeb05a26be38675bae5e74b91fcb02139",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-info",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/tab-info-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-info-v1.png",
+      "masterSha256": "0e4e8eaddac32fab3086179757148515b4d278baa79b520aacb103ca409ea871",
+      "productionSha256": "1d5bb8c486a545e0ccfa8c9e48178169210ac4ad1682ccdd4727088738986e8f",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
     {
       "id": "tab-bracket",
       "group": "tournament-navigation",
@@ -12,6 +36,102 @@
       "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-bracket-v1.png",
       "masterSha256": "5de4cf853a03afbc55d682cdf72845bc600a58e64381084dcc49480e3692e21c",
       "productionSha256": "ad61dc029089caaf75f9073087cdf65d87111f512f3d2ab218508aa153e06749",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "group": "tournament-navigation",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "masterSha256": "ba154e28a2c9181cb5dec28ba0b13605eb6913b8594107191e089e0d7291f0bf",
+      "productionSha256": "29b789ff74dffa03eea7f91622b60338ea895a70f1736656ed0bdae2b701ab0b",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-register",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-register-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-register-v1.png",
+      "masterSha256": "26615c38962fa7c40e0be1ee52540d95259fffc4166c56fd49695b9d80451e1e",
+      "productionSha256": "acd40bf58b9457ba0b7f4504473d1551fd6fdc5e715117dfeb357ca38d79a81d",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-unregister",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-unregister-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-unregister-v1.png",
+      "masterSha256": "333303e07c98c56e9d73f26118fbecb3a9c3b149333c1fd276e30b1d2cb2e41e",
+      "productionSha256": "b710c0a53f14f3c22a01507ae6f2e5ddf00f698bbad7416ffc0b0298e1e4b0fd",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-registration-locked",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-registration-locked-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-registration-locked-v1.png",
+      "masterSha256": "0824f6499c9473aebb8e444e8fc0bd9054ee1c061542b43ae9725d454e2b4ebf",
+      "productionSha256": "7d50f8e2a03ff3a42d1697cbb180b9049ad2cb47e3e47c9228badbed9e4401dc",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-start",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-start-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-start-v1.png",
+      "masterSha256": "8cf5cb4f72b9e65f0b5e9832e4fbef2b3675b71e960f5744e3e59cae314b8374",
+      "productionSha256": "c2fc8a07ad2de6faa3e7d6a9ad27f144ad9be02408641c246b69cbcc21440c12",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-active",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-match-active-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-match-active-v1.png",
+      "masterSha256": "35d64999bd71561ec217e76b1e39fa8a481f67edcfb03096044002fc085e0f43",
+      "productionSha256": "73298bdf06875a29c70f6ae00a87ef0b75f2fe717fe4f88cee7ec1bd7f516cbc",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "state-match-complete",
+      "group": "tournament-states",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-match-complete-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-match-complete-v1.png",
+      "masterSha256": "8f87f81facd1043c1d910681ae5290180ab42ef79a22163e0a02f8062a15838f",
+      "productionSha256": "dcfdbba7952c50674667e1dc5b33ff5f6937e308d252c2f8dcb07f8176f7824c",
+      "productionSize": [
+        256,
+        256
+      ]
+    },
+    {
+      "id": "power-index",
+      "group": "statistics-overview",
+      "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/power-index-master-v1.png",
+      "productionPath": "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+      "masterSha256": "8037e43eafb81053c784c61865044639da6811b4558a529fb18c5b6bf9f9be31",
+      "productionSha256": "7bc305f573ab38cad1ed64d2cf92c07a864107c5cb2a289c80fe61942fe65aad",
       "productionSize": [
         256,
         256

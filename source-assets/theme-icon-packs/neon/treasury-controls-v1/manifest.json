@@ -3,106 +3,124 @@
   "themeId": "neon",
   "slots": {
     "canonical/treasury-controls/tab-trophies-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-trophies-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-trophies-master-v3.png",
       "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png",
       "opticalBoundsPx": [
-        34,
-        48,
-        222,
-        208
-      ],
-      "sizeBytes": 35317,
-      "sha256": "22fe819629bcdda232cdcc9f23d903c311197060090aa1dc4f8f4a699bb672e0"
-    },
-    "canonical/treasury-controls/tab-skins-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-skins-master-v2.png",
-      "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png",
-      "opticalBoundsPx": [
-        34,
-        37,
-        222,
-        219
-      ],
-      "sizeBytes": 47516,
-      "sha256": "81fa28c30229b7ca85decec1492a065c44228013f1c666be638eab44d1f85885"
-    },
-    "canonical/treasury-controls/tab-effects-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-effects-master-v2.png",
-      "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png",
-      "opticalBoundsPx": [
-        47,
-        34,
-        209,
-        222
-      ],
-      "sizeBytes": 41779,
-      "sha256": "cef5edb5b4c359ca8631b95caab00ed90774435d9ed1297f10bb58084ad57e3b"
-    },
-    "canonical/treasury-controls/tab-themes-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-themes-master-v2.png",
-      "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png",
-      "opticalBoundsPx": [
-        47,
-        31,
-        224,
+        17,
+        32,
+        239,
         224
       ],
-      "sizeBytes": 16805,
-      "sha256": "9eaa2b364ca981c21395e21a57534fddc0e07505275e683476b736170dd64312"
+      "sizeBytes": 47624,
+      "sha256": "a461d6057041d7ae26648e84957251f9fee07b35f6f456b909731b7ce6ab46f2",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-trophies-generated.png"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-skins-master-v3.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        17,
+        19,
+        239,
+        237
+      ],
+      "sizeBytes": 68688,
+      "sha256": "b76cbc88af5fb2463ceef3a8c34aa9568785ceaa3ff5f940631407ab969b1a73",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-skins-generated.png"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-effects-master-v3.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        17,
+        18,
+        239,
+        238
+      ],
+      "sizeBytes": 71204,
+      "sha256": "9dd440b111c57bf1fa96a4df13a1351ff26efcf74991d4b099de6f8af8b6bb28",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-effects-generated.png"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-themes-master-v3.png",
+      "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        17,
+        20,
+        239,
+        235
+      ],
+      "sizeBytes": 58355,
+      "sha256": "626e3eb047bd71395b6459d5787ae5e4891422fd65178bda5d48b9cdacce3b70",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-themes-generated.png"
     },
     "canonical/treasury-controls/status-owned-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-owned-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-owned-master-v4.png",
       "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-owned-v1.png",
       "opticalBoundsPx": [
-        65,
-        58,
-        197,
-        205
+        17,
+        23,
+        239,
+        233
       ],
-      "sizeBytes": 13734,
-      "sha256": "564f05703361e09b804ecaa1a78d9a08058d758ed37d3a4f69ce7adfa4e9fa03"
+      "sizeBytes": 65235,
+      "sha256": "7b6ef2faf1c1ef6819d9a12c811cbffdd2ce6205017ebee6abb051b4e50a9fe2",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-owned-generated.png"
     },
     "canonical/treasury-controls/status-active-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-active-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-active-master-v4.png",
       "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-active-v1.png",
       "opticalBoundsPx": [
-        61,
-        54,
-        202,
-        210
+        17,
+        26,
+        239,
+        231
       ],
-      "sizeBytes": 19071,
-      "sha256": "7a7631ce993e54c264bb8c9e477f2945fc8c6c969a1d0b3059936a00d22758c0"
+      "sizeBytes": 63542,
+      "sha256": "5532b6c048298fd1e65b59bfd81b62bf190cbea425faef2ad823224796885702",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-active-generated.png"
     },
     "canonical/treasury-controls/status-locked-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-locked-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-locked-master-v4.png",
       "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-locked-v1.png",
       "opticalBoundsPx": [
         42,
-        50,
-        220,
-        227
+        17,
+        214,
+        239
       ],
-      "sizeBytes": 15585,
-      "sha256": "383cacc9e214cbd44a202e1a0eddefae05a02838d38ae30d6ebfc68281cbe52f"
+      "sizeBytes": 44770,
+      "sha256": "61c9e0e7783bb8666281465ce01f45a8b3c532f8510e3b3b9c247c11a7403026",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-locked-generated.png"
     },
     "canonical/treasury-controls/status-insufficient-v1": {
-      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-insufficient-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-insufficient-master-v4.png",
       "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-insufficient-v1.png",
       "opticalBoundsPx": [
-        61,
-        54,
-        202,
-        210
+        17,
+        60,
+        239,
+        195
       ],
-      "sizeBytes": 18265,
-      "sha256": "546e1617c8598ab60d738e5a50ed075e782af059f22db163b2b3395db17eafd7"
+      "sizeBytes": 40594,
+      "sha256": "2cb9f493cd5e2a5419cfe17d675eb6856b08ed34c1392931cf0c84066bcb9840",
+      "generatedSourcePath": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-insufficient-generated.png"
     }
   },
-  "dnaRevision": 2,
-  "sameThemeArtSources": {
-    "tab-trophies": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
-    "tab-skins": "www/assets/theme-packs/neon/canonical/achievement-trophies/first_play-v1.png",
-    "tab-effects": "www/assets/theme-packs/neon/canonical/achievement-trophies/firecracker-v1.png"
+  "dnaRevision": 4,
+  "sameThemeArtSources": {},
+  "tabGenerationMethod": "four separate transparent PNG illustrations; one prompt per tab",
+  "tabGeneratedSources": {
+    "tab-trophies": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-trophies-generated.png",
+    "tab-skins": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-skins-generated.png",
+    "tab-effects": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-effects-generated.png",
+    "tab-themes": "source-assets/theme-icon-packs/neon/treasury-tabs-v3/tab-themes-generated.png"
+  },
+  "statusGenerationMethod": "four separate transparent PNG illustrations; one prompt per status",
+  "statusGeneratedSources": {
+    "status-owned": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-owned-generated.png",
+    "status-active": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-active-generated.png",
+    "status-locked": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-locked-generated.png",
+    "status-insufficient": "source-assets/theme-icon-packs/neon/treasury-status-v4/status-insufficient-generated.png"
   }
 }

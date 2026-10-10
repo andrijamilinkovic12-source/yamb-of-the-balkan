@@ -423,7 +423,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     height: 96px !important;
     flex-basis: 96px !important;
 }
-/* Tournament room geometry follows Green even while a theme still uses a legacy tab or state glyph. */
+/* Tournament room geometry follows Green for every canonical theme PNG. */
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-header-icon-green.theme-main-room-icon {
     width: 42px !important;
     height: 42px !important;
@@ -484,6 +484,49 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     width: 30px !important;
     height: 30px !important;
     flex-basis: 30px !important;
+}
+
+/* Tournament dialogs live outside #tournament-screen. Keep their one canonical icon
+   visible and at Green's scale after the theme router swaps its PNG. */
+#custom-modal-overlay .tourney-match-result-icon-green {
+    display: inline-block !important;
+    width: 36px !important;
+    height: 36px !important;
+    flex: 0 0 36px !important;
+    object-fit: contain !important;
+    vertical-align: middle;
+}
+#custom-modal-overlay .tourney-finalist-result {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid var(--glass-border);
+    color: var(--text-main);
+    font-size: .86rem;
+}
+#custom-modal-overlay .tourney-finalist-result-icon-canonical {
+    display: inline-block !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+    object-fit: contain !important;
+}
+#custom-modal-overlay .tourney-inline-active-match-icon-green {
+    display: inline-block !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+    object-fit: contain !important;
+    vertical-align: middle;
+}
+#custom-modal-overlay .tourney-journey-final-trophy {
+    display: inline-block !important;
+    width: 28px !important;
+    height: 28px !important;
+    flex: 0 0 28px !important;
+    object-fit: contain !important;
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen .green-invite-header-icon.theme-main-room-icon { display: none !important; }

@@ -3,6 +3,7 @@
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const iconPattern = /assets\/green-soft-clay\/canonical\/([a-z-]+)-room-identity\/([a-z-]+)-room-(menu-)?v1\.png/;
     const tournamentRoomPattern = /assets\/green-soft-clay\/canonical\/tournament-(navigation|states)\/([a-z-]+)-v1\.png/;
+    const tournamentPowerPattern = /assets\/green-soft-clay\/canonical\/statistics-overview\/power-index-v1\.png/;
     const legacySources = {
         'runtime/menu/treasury-free-v3.png': ['treasury', 'menu'],
         'treasury-free-v3.png': ['treasury', 'room'],
@@ -53,10 +54,20 @@
         root.querySelectorAll?.('img[data-theme-src]').forEach(image => candidates.push(image));
         candidates.forEach(image => {
             const original = image.dataset.themeSrc || '';
+            if (tournamentPowerPattern.test(original) && image.closest('#tournament-screen')) {
+                const nextSource = themes.has(theme)
+                    ? `assets/theme-packs/${theme}/canonical/statistics-overview/power-index-v1.png?v=1`
+                    : original;
+                if (image.getAttribute('src') !== nextSource) {
+                    guardImageSwap(image);
+                    image.src = nextSource;
+                    if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
+                }
+                return;
+            }
             const tournamentRoom = original.match(tournamentRoomPattern);
             if (tournamentRoom) {
-                const hasTournamentPack = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter'].includes(theme)
-                    || (tournamentRoom[2] === 'tab-bracket' && ['moon', 'desert', 'severna'].includes(theme));
+                const hasTournamentPack = themes.has(theme);
                 const revision = theme === 'neon' && tournamentRoom[2] === 'tab-bracket' ? '?v=2' : '';
                 const nextSource = hasTournamentPack
                     ? `assets/theme-packs/${theme}/canonical/tournament-${tournamentRoom[1]}/${tournamentRoom[2]}-v1.png${revision}`

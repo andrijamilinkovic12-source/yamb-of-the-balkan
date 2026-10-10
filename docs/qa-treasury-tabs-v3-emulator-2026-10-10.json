@@ -1,0 +1,721 @@
+{
+  "date": "2026-10-10",
+  "build": "Android qaLocal built from current www",
+  "themes": [
+    {
+      "theme": "dark",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=2",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=2",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=2",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=2",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=2",
+          "expected": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=2",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "medium",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "winter",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "neon",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "easter",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "desert",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "moon",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    },
+    {
+      "theme": "severna",
+      "tabs": [
+        {
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-skins",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-effects",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        },
+        {
+          "role": "tab-themes",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256,
+          "width": "34px",
+          "height": "34px",
+          "visible": true
+        }
+      ],
+      "categories": [
+        {
+          "tab": "trophy",
+          "role": "tab-trophies",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "skin",
+          "role": "tab-skins",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "effect",
+          "role": "tab-effects",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png?v=3",
+          "naturalWidth": 256
+        },
+        {
+          "tab": "theme",
+          "role": "tab-themes",
+          "src": "assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "expected": "assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=3",
+          "naturalWidth": 256
+        }
+      ]
+    }
+  ],
+  "viewport": [
+    411,
+    891,
+    3.5
+  ]
+}

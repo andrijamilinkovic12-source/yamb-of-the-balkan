@@ -1456,12 +1456,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 93522
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -1634,134 +1637,134 @@
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            50,
-            54,
-            212,
-            210
+            17,
+            22,
+            239,
+            234
           ],
-          "sizeBytes": 29523
+          "sizeBytes": 61551
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            50,
-            54,
-            212,
-            210
+            17,
+            20,
+            239,
+            235
           ],
-          "sizeBytes": 28131
+          "sizeBytes": 60410
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            46,
-            45,
-            217,
-            226
+            30,
+            17,
+            226,
+            239
           ],
-          "sizeBytes": 18966
+          "sizeBytes": 52936
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            55,
-            58,
-            207,
-            206
+            17,
+            19,
+            239,
+            237
           ],
-          "sizeBytes": 20563
+          "sizeBytes": 61896
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            52,
-            34,
-            203,
-            222
+            21,
+            17,
+            235,
+            239
           ],
-          "sizeBytes": 31351
+          "sizeBytes": 42806
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            49,
-            222,
-            206
+            17,
+            20,
+            239,
+            236
           ],
-          "sizeBytes": 46640
+          "sizeBytes": 61822
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            38,
-            36,
-            226,
-            217
+            17,
+            34,
+            239,
+            222
           ],
-          "sizeBytes": 15252
+          "sizeBytes": 45521
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            41,
-            222,
-            215
+            17,
+            38,
+            239,
+            218
           ],
-          "sizeBytes": 39637
+          "sizeBytes": 46724
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -3688,12 +3691,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 73161
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -3866,134 +3872,134 @@
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            37,
-            39,
-            225,
-            227
+            18,
+            17,
+            238,
+            239
           ],
-          "sizeBytes": 26601
+          "sizeBytes": 59782
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            37,
-            39,
-            225,
+            17,
+            29,
+            239,
             227
           ],
-          "sizeBytes": 28123
+          "sizeBytes": 54968
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            39,
-            56,
-            224,
-            226
+            36,
+            17,
+            219,
+            239
           ],
-          "sizeBytes": 21577
+          "sizeBytes": 51306
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            43,
-            45,
-            219,
-            221
+            19,
+            17,
+            237,
+            239
           ],
-          "sizeBytes": 19647
+          "sizeBytes": 62679
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            38,
-            34,
-            217,
-            222
+            31,
+            17,
+            225,
+            239
           ],
-          "sizeBytes": 29571
+          "sizeBytes": 57946
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            34,
-            221,
-            222
+            17,
+            25,
+            239,
+            231
           ],
-          "sizeBytes": 49412
+          "sizeBytes": 68464
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            39,
-            32,
-            229,
-            230
+            17,
+            36,
+            239,
+            220
           ],
-          "sizeBytes": 22006
+          "sizeBytes": 53593
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            46,
-            222,
-            210
+            17,
+            32,
+            239,
+            224
           ],
-          "sizeBytes": 39689
+          "sizeBytes": 48202
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -5920,12 +5926,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 82383
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -6098,71 +6107,105 @@
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            55,
+            17,
             45,
-            212,
-            203
+            239,
+            211
           ],
-          "sizeBytes": 25164
+          "sizeBytes": 52258
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            55,
-            45,
-            212,
-            203
+            21,
+            17,
+            235,
+            239
           ],
-          "sizeBytes": 23754
+          "sizeBytes": 59824
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            42,
-            56,
-            220,
-            227
+            31,
+            17,
+            225,
+            239
           ],
-          "sizeBytes": 17349
+          "sizeBytes": 51996
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            60,
-            50,
-            208,
-            199
+            20,
+            17,
+            236,
+            239
           ],
-          "sizeBytes": 17622
+          "sizeBytes": 62005
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-effects-master-v3.png",
+          "consumerRefs": [
+            "www/index.html:Treasury tab",
+            "www/game.js:theme switch and preload",
+            "www/pravilaigre.js:rules Treasury section"
+          ],
+          "opticalBoundsPx": [
+            17,
+            45,
+            239,
+            211
+          ],
+          "sizeBytes": 36444
+        },
+        "canonical/treasury-controls/tab-skins-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-skins-master-v3.png",
+          "consumerRefs": [
+            "www/index.html:Treasury tab",
+            "www/game.js:theme switch and preload",
+            "www/pravilaigre.js:rules Treasury section"
+          ],
+          "opticalBoundsPx": [
+            17,
+            21,
+            239,
+            234
+          ],
+          "sizeBytes": 59116
+        },
+        "canonical/treasury-controls/tab-themes-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
@@ -6170,62 +6213,28 @@
           ],
           "opticalBoundsPx": [
             43,
-            34,
+            17,
             213,
-            222
+            239
           ],
-          "sizeBytes": 31948
-        },
-        "canonical/treasury-controls/tab-skins-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-skins-master-v2.png",
-          "consumerRefs": [
-            "www/index.html:Treasury tab",
-            "www/game.js:theme switch and preload",
-            "www/pravilaigre.js:rules Treasury section"
-          ],
-          "opticalBoundsPx": [
-            36,
-            34,
-            220,
-            222
-          ],
-          "sizeBytes": 45227
-        },
-        "canonical/treasury-controls/tab-themes-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-themes-master-v2.png",
-          "consumerRefs": [
-            "www/index.html:Treasury tab",
-            "www/game.js:theme switch and preload",
-            "www/pravilaigre.js:rules Treasury section"
-          ],
-          "opticalBoundsPx": [
-            41,
-            37,
-            220,
-            221
-          ],
-          "sizeBytes": 15132
+          "sizeBytes": 41212
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            37,
-            34,
-            219,
-            222
+            17,
+            50,
+            239,
+            206
           ],
-          "sizeBytes": 39047
+          "sizeBytes": 39101
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -8152,12 +8161,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 50305
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -8330,134 +8342,134 @@
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            61,
-            54,
-            202,
-            210
+            17,
+            26,
+            239,
+            231
           ],
-          "sizeBytes": 19071
+          "sizeBytes": 63542
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            61,
-            54,
-            202,
-            210
+            17,
+            60,
+            239,
+            195
           ],
-          "sizeBytes": 18265
+          "sizeBytes": 40594
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
             42,
-            50,
-            220,
-            227
+            17,
+            214,
+            239
           ],
-          "sizeBytes": 15585
+          "sizeBytes": 44770
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            65,
-            58,
-            197,
-            205
+            17,
+            23,
+            239,
+            233
           ],
-          "sizeBytes": 13734
+          "sizeBytes": 65235
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            47,
-            34,
-            209,
-            222
+            17,
+            18,
+            239,
+            238
           ],
-          "sizeBytes": 41779
+          "sizeBytes": 71204
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            37,
-            222,
-            219
+            17,
+            19,
+            239,
+            237
           ],
-          "sizeBytes": 47516
+          "sizeBytes": 68688
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            47,
-            31,
-            224,
-            224
+            17,
+            20,
+            239,
+            235
           ],
-          "sizeBytes": 16805
+          "sizeBytes": 58355
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            48,
-            222,
-            208
+            17,
+            32,
+            239,
+            224
           ],
-          "sizeBytes": 35317
+          "sizeBytes": 47624
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -10384,12 +10396,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 74811
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -10562,134 +10577,134 @@
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            45,
-            52,
-            218,
-            213
+            17,
+            43,
+            239,
+            212
           ],
-          "sizeBytes": 32400
+          "sizeBytes": 50672
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            45,
-            52,
-            218,
-            213
+            17,
+            31,
+            239,
+            225
           ],
-          "sizeBytes": 31756
+          "sizeBytes": 48688
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            44,
-            51,
-            219,
-            228
+            32,
+            17,
+            224,
+            239
           ],
-          "sizeBytes": 20268
+          "sizeBytes": 45041
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            50,
-            57,
-            212,
-            209
+            17,
+            33,
+            239,
+            223
           ],
-          "sizeBytes": 21998
+          "sizeBytes": 55023
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            53,
-            34,
-            203,
-            222
+            20,
+            17,
+            236,
+            239
           ],
-          "sizeBytes": 33366
+          "sizeBytes": 58122
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            35,
-            34,
-            221,
-            222
+            17,
+            20,
+            239,
+            236
           ],
-          "sizeBytes": 52048
+          "sizeBytes": 59563
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            52,
-            34,
-            224,
-            225
+            17,
+            17,
+            239,
+            239
           ],
-          "sizeBytes": 21078
+          "sizeBytes": 53141
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            49,
-            222,
-            206
+            17,
+            53,
+            239,
+            203
           ],
-          "sizeBytes": 37836
+          "sizeBytes": 42633
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -12616,12 +12631,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 65019
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -12794,134 +12812,134 @@
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            67,
-            50,
-            195,
-            215
+            37,
+            17,
+            219,
+            239
           ],
-          "sizeBytes": 23900
+          "sizeBytes": 53341
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            67,
-            50,
-            195,
-            215
+            17,
+            38,
+            239,
+            218
           ],
-          "sizeBytes": 22866
+          "sizeBytes": 45795
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            43,
-            56,
-            220,
-            230
+            32,
+            17,
+            224,
+            239
           ],
-          "sizeBytes": 21975
+          "sizeBytes": 48869
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            66,
-            55,
-            192,
-            210
+            23,
+            17,
+            233,
+            239
           ],
-          "sizeBytes": 16799
+          "sizeBytes": 60441
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            57,
-            34,
-            199,
-            222
+            23,
+            17,
+            233,
+            239
           ],
-          "sizeBytes": 26798
+          "sizeBytes": 55195
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            34,
-            222,
-            221
+            17,
+            22,
+            239,
+            234
           ],
-          "sizeBytes": 49681
+          "sizeBytes": 57947
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            48,
-            34,
-            216,
-            221
+            17,
+            27,
+            239,
+            229
           ],
-          "sizeBytes": 21820
+          "sizeBytes": 47143
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            43,
-            222,
-            213
+            17,
+            40,
+            239,
+            216
           ],
-          "sizeBytes": 33783
+          "sizeBytes": 41899
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -14848,12 +14866,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 63281
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -14913,12 +14934,16 @@
           "sizeBytes": 125582
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 72297
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
           "stage": "linked",
@@ -14932,200 +14957,224 @@
           "sizeBytes": 62998
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 66277
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 93895
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 107994
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 109613
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 105829
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 90216
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 105209
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 93599
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            42,
-            53,
-            220,
-            212
+            17,
+            57,
+            239,
+            199
           ],
-          "sizeBytes": 29491
+          "sizeBytes": 47133
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            42,
-            53,
-            220,
-            212
+            17,
+            37,
+            239,
+            219
           ],
-          "sizeBytes": 29589
+          "sizeBytes": 64525
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            40,
-            60,
-            222,
-            228
+            21,
+            17,
+            235,
+            239
           ],
-          "sizeBytes": 19910
+          "sizeBytes": 70235
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            47,
-            58,
-            215,
+            17,
+            48,
+            239,
             208
           ],
-          "sizeBytes": 20572
+          "sizeBytes": 56586
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            45,
-            34,
-            210,
-            222
+            26,
+            17,
+            229,
+            239
           ],
-          "sizeBytes": 37802
+          "sizeBytes": 59596
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            36,
-            34,
-            220,
-            222
+            17,
+            21,
+            239,
+            235
           ],
-          "sizeBytes": 65021
+          "sizeBytes": 72416
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            32,
-            39,
-            231,
-            219
+            17,
+            30,
+            239,
+            226
           ],
-          "sizeBytes": 19072
+          "sizeBytes": 61891
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            54,
-            222,
-            203
+            17,
+            36,
+            239,
+            219
           ],
-          "sizeBytes": 39866
+          "sizeBytes": 48058
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -17052,12 +17101,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 67992
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -17117,12 +17169,16 @@
           "sizeBytes": 102153
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 52624
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
           "stage": "linked",
@@ -17136,200 +17192,224 @@
           "sizeBytes": 53271
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 41237
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 50494
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 56571
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 64659
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 62269
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 63455
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55089
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 48614
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            58,
-            60,
-            211,
-            215
+            18,
+            17,
+            238,
+            239
           ],
-          "sizeBytes": 25074
+          "sizeBytes": 54713
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            58,
-            60,
-            211,
-            215
+            17,
+            20,
+            239,
+            236
           ],
-          "sizeBytes": 24229
+          "sizeBytes": 49892
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            37,
-            58,
-            225,
-            231
+            32,
+            17,
+            223,
+            239
           ],
-          "sizeBytes": 20088
+          "sizeBytes": 48293
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            63,
-            64,
-            206,
-            210
+            17,
+            18,
+            239,
+            238
           ],
-          "sizeBytes": 17612
+          "sizeBytes": 53347
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            57,
-            34,
-            199,
-            222
+            17,
+            17,
+            239,
+            239
           ],
-          "sizeBytes": 33473
+          "sizeBytes": 51310
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            35,
-            34,
-            221,
-            222
+            17,
+            18,
+            239,
+            238
           ],
-          "sizeBytes": 59491
+          "sizeBytes": 58118
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            45,
-            41,
-            228,
-            217
+            17,
+            24,
+            239,
+            232
           ],
-          "sizeBytes": 21324
+          "sizeBytes": 52573
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            38,
-            222,
-            218
+            17,
+            50,
+            239,
+            206
           ],
-          "sizeBytes": 40235
+          "sizeBytes": 41058
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
@@ -19256,12 +19336,15 @@
           "sizeBytes": null
         },
         "canonical/statistics-overview/power-index-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/power-index-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:bracket participant Power Index",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 48863
         },
         "canonical/statistics-overview/record-v1": {
           "stage": "defined",
@@ -19321,12 +19404,16 @@
           "sizeBytes": 117034
         },
         "canonical/tournament-awards/finalist-silver-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/finalist-silver-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:finalist history and result",
+            "www/game.js:runner-up reward modal",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55960
         },
         "canonical/tournament-navigation/tab-bracket-v1": {
           "stage": "linked",
@@ -19340,200 +19427,224 @@
           "sizeBytes": 45229
         },
         "canonical/tournament-navigation/tab-hall-of-fame-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/tab-hall-of-fame-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Hall of Fame tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 50865
         },
         "canonical/tournament-navigation/tab-info-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-info-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/tab-info-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:Info tab",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55639
         },
         "canonical/tournament-states/state-match-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-match-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-match-active-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:start match action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 45318
         },
         "canonical/tournament-states/state-match-complete-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-match-complete-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-match-complete-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:completed match result",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 88686
         },
         "canonical/tournament-states/state-register-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-register-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-register-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:register action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 53665
         },
         "canonical/tournament-states/state-registration-locked-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-registration-locked-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-registration-locked-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:registration unavailable",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 60883
         },
         "canonical/tournament-states/state-start-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-start-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-start-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:tournament start",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59126
         },
         "canonical/tournament-states/state-unregister-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-states/state-unregister-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/tournament-room-v1/state-unregister-master-v1.png",
+          "consumerRefs": [
+            "www/turnir.js:unregister action",
+            "www/theme-main-room-icons.js:theme-specific source routing"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 57851
         },
         "canonical/treasury-controls/status-active-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-active-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-active-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-active-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            59,
-            62,
-            204,
-            216
+            22,
+            17,
+            233,
+            239
           ],
-          "sizeBytes": 23692
+          "sizeBytes": 47360
         },
         "canonical/treasury-controls/status-insufficient-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-insufficient-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-insufficient-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-insufficient-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            59,
-            62,
-            204,
-            216
+            17,
+            43,
+            239,
+            213
           ],
-          "sizeBytes": 22696
+          "sizeBytes": 46840
         },
         "canonical/treasury-controls/status-locked-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-locked-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-locked-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-locked-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            46,
-            50,
-            217,
-            226
+            35,
+            17,
+            221,
+            239
           ],
-          "sizeBytes": 17428
+          "sizeBytes": 44100
         },
         "canonical/treasury-controls/status-owned-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/status-owned-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-owned-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/status-owned-master-v4.png",
           "consumerRefs": [
             "www/managers.js:Treasury state",
             "www/game.js:Treasury preload"
           ],
           "opticalBoundsPx": [
-            63,
-            66,
-            199,
-            211
+            25,
+            17,
+            231,
+            239
           ],
-          "sizeBytes": 16881
+          "sizeBytes": 56867
         },
         "canonical/treasury-controls/tab-effects-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-effects-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-effects-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-effects-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            37,
-            222,
-            219
+            17,
+            54,
+            239,
+            202
           ],
-          "sizeBytes": 31328
+          "sizeBytes": 33581
         },
         "canonical/treasury-controls/tab-skins-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-skins-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-skins-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            36,
-            34,
-            220,
-            222
+            17,
+            23,
+            239,
+            233
           ],
-          "sizeBytes": 49524
+          "sizeBytes": 63794
         },
         "canonical/treasury-controls/tab-themes-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-themes-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-themes-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            52,
-            33,
-            222,
-            225
+            17,
+            18,
+            239,
+            237
           ],
-          "sizeBytes": 19418
+          "sizeBytes": 49590
         },
         "canonical/treasury-controls/tab-trophies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-trophies-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-controls-v1/tab-trophies-master-v3.png",
           "consumerRefs": [
             "www/index.html:Treasury tab",
             "www/game.js:theme switch and preload",
             "www/pravilaigre.js:rules Treasury section"
           ],
           "opticalBoundsPx": [
-            34,
-            39,
-            222,
-            217
+            17,
+            40,
+            239,
+            216
           ],
-          "sizeBytes": 37624
+          "sizeBytes": 46646
         },
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",

@@ -1,0 +1,1981 @@
+{
+  "date": "2026-10-10",
+  "build": "qaLocal from current www",
+  "themes": [
+    {
+      "theme": "dark",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 18,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              61.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              42
+            ],
+            "contentTop": 168.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 11,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              61.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              42
+            ],
+            "contentTop": 168.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              61.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              42
+            ],
+            "contentTop": 168.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 11,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "block"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              61.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              42
+            ],
+            "contentTop": 168.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-dark-2026-10-10-final.png"
+    },
+    {
+      "theme": "light",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 16,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 13,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-light-2026-10-10-final.png"
+    },
+    {
+      "theme": "medium",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 16,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 13,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-medium-2026-10-10-final.png"
+    },
+    {
+      "theme": "winter",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 16,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 13,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-winter-2026-10-10-final.png"
+    },
+    {
+      "theme": "neon",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 16,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 12,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-neon-2026-10-10-final.png"
+    },
+    {
+      "theme": "amethyst",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 16,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 12,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-amethyst-2026-10-10-final.png"
+    },
+    {
+      "theme": "easter",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "blur(0px)",
+          "visibleImages": 18,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 92.00000762939453
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 92.00000762939453
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 92.00000762939453
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 12,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 92.00000762939453
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-easter-2026-10-10-final.png"
+    },
+    {
+      "theme": "desert",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 18,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 12,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              383.4285888671875,
+              43.71428680419922
+            ],
+            "contentTop": 168.42857360839844
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-desert-2026-10-10-final.png"
+    },
+    {
+      "theme": "moon",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 16,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 12,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-moon-2026-10-10-final.png"
+    },
+    {
+      "theme": "severna",
+      "tabs": {
+        "trophy": {
+          "cardCount": 26,
+          "categoryCount": 12,
+          "categoryPngCount": 12,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": "1",
+          "lockedFilter": "none",
+          "visibleImages": 18,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "trophy"
+        },
+        "skin": {
+          "cardCount": 42,
+          "categoryCount": 10,
+          "categoryPngCount": 10,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 9,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "skin"
+        },
+        "effect": {
+          "cardCount": 16,
+          "categoryCount": 4,
+          "categoryPngCount": 4,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 10,
+          "visibleBrokenImages": [],
+          "previewSize": null,
+          "previewLoaded": null,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "effect"
+        },
+        "theme": {
+          "cardCount": 10,
+          "categoryCount": 3,
+          "categoryPngCount": 3,
+          "categoryEmojiCount": 0,
+          "categoryPathsCorrect": true,
+          "cardMinHeight": "180px",
+          "cardPadding": "12px",
+          "cardRadius": "20px",
+          "lockedOpacity": null,
+          "lockedFilter": null,
+          "visibleImages": 12,
+          "visibleBrokenImages": [],
+          "previewSize": [
+            "72px",
+            "96px"
+          ],
+          "previewLoaded": true,
+          "balance": {
+            "text": "1000",
+            "title": "1.000",
+            "width": 40.31696701049805,
+            "scrollWidth": 40,
+            "pillWidth": 82
+          },
+          "greenDucatIcons": [
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            },
+            {
+              "src": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1",
+              "naturalWidth": 192,
+              "display": "none"
+            }
+          ],
+          "layout": {
+            "header": [
+              371.4285888671875,
+              59.71428680419922
+            ],
+            "tabs": [
+              371.4285888671875,
+              42
+            ],
+            "contentTop": 166.71429443359375
+          },
+          "activeTab": "theme"
+        }
+      },
+      "screenshot": "docs/qa-treasury-themes-severna-2026-10-10-final.png"
+    }
+  ],
+  "viewport": [
+    411,
+    891,
+    3.5
+  ]
+}

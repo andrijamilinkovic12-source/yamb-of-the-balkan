@@ -3,106 +3,124 @@
   "themeId": "desert",
   "slots": {
     "canonical/treasury-controls/tab-trophies-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-trophies-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-trophies-master-v3.png",
       "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png",
       "opticalBoundsPx": [
-        34,
-        54,
-        222,
-        203
-      ],
-      "sizeBytes": 39866,
-      "sha256": "4b2a630f1bae3dc5e7888347b201082d63620e4dd2609b46a0f6867a68ed99a9"
-    },
-    "canonical/treasury-controls/tab-skins-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-skins-master-v2.png",
-      "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png",
-      "opticalBoundsPx": [
+        17,
         36,
-        34,
-        220,
-        222
-      ],
-      "sizeBytes": 65021,
-      "sha256": "54dbe5314e7b1950f9b4134cd2c05bd2b23c929edba1eb5853805aca8a9b9f62"
-    },
-    "canonical/treasury-controls/tab-effects-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-effects-master-v2.png",
-      "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png",
-      "opticalBoundsPx": [
-        45,
-        34,
-        210,
-        222
-      ],
-      "sizeBytes": 37802,
-      "sha256": "c52c058d789dc906b83ae851a0d0d2356bbd13a890b2d1290b07abc139065d32"
-    },
-    "canonical/treasury-controls/tab-themes-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-themes-master-v2.png",
-      "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png",
-      "opticalBoundsPx": [
-        32,
-        39,
-        231,
+        239,
         219
       ],
-      "sizeBytes": 19072,
-      "sha256": "b7c350663178fd7a3152b499c8319260893935531a06f1b1c47139efa91eac36"
+      "sizeBytes": 48058,
+      "sha256": "1d6ac6886227336bed1d10ee2e2afac9f34e5b53cb03090bc98c2bdeef091d21",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-trophies-generated.png"
+    },
+    "canonical/treasury-controls/tab-skins-v1": {
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-skins-master-v3.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png",
+      "opticalBoundsPx": [
+        17,
+        21,
+        239,
+        235
+      ],
+      "sizeBytes": 72416,
+      "sha256": "5d5c12b5e7dce7b5e35f50c0c4aed75053c6bcc7f852d5eaa096dd139e1d8a8b",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-skins-generated.png"
+    },
+    "canonical/treasury-controls/tab-effects-v1": {
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-effects-master-v3.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-effects-v1.png",
+      "opticalBoundsPx": [
+        26,
+        17,
+        229,
+        239
+      ],
+      "sizeBytes": 59596,
+      "sha256": "9ff453a7fe7b8417003d3ba46672dbf3a1c3980ec73de636ccd5e7becb1244a5",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-effects-generated.png"
+    },
+    "canonical/treasury-controls/tab-themes-v1": {
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/tab-themes-master-v3.png",
+      "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png",
+      "opticalBoundsPx": [
+        17,
+        30,
+        239,
+        226
+      ],
+      "sizeBytes": 61891,
+      "sha256": "2be5fb83cca0f05df96831d0d3b76f10565102cf558cb164d5fc5a331b28298a",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-themes-generated.png"
     },
     "canonical/treasury-controls/status-owned-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-owned-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-owned-master-v4.png",
       "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-owned-v1.png",
       "opticalBoundsPx": [
-        47,
-        58,
-        215,
+        17,
+        48,
+        239,
         208
       ],
-      "sizeBytes": 20572,
-      "sha256": "069b1a367f67f5ca6e89190dc5f946cc69a091a80d13f71c2461a1a73a2ed1f2"
+      "sizeBytes": 56586,
+      "sha256": "7b2dfaff59deb5ae127510965f85f636f1be9499898eebb2dcfea3f6395a59b1",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-owned-generated.png"
     },
     "canonical/treasury-controls/status-active-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-active-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-active-master-v4.png",
       "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-active-v1.png",
       "opticalBoundsPx": [
-        42,
-        53,
-        220,
-        212
+        17,
+        57,
+        239,
+        199
       ],
-      "sizeBytes": 29491,
-      "sha256": "b8a85da1fc052a97e880f40414eb4f091b25c288ff76293ed82e42455d6fe0b3"
+      "sizeBytes": 47133,
+      "sha256": "dac251d46b200e7d544132c93e26b6fd0f07a14f3a269525d4866842f9bcdf72",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-active-generated.png"
     },
     "canonical/treasury-controls/status-locked-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-locked-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-locked-master-v4.png",
       "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-locked-v1.png",
       "opticalBoundsPx": [
-        40,
-        60,
-        222,
-        228
+        21,
+        17,
+        235,
+        239
       ],
-      "sizeBytes": 19910,
-      "sha256": "1ffc99a3df6315b13d465c24c520862ae1752dbcee2c02a192357ac7f28c7cbd"
+      "sizeBytes": 70235,
+      "sha256": "c9b47418be5419fe68cdaff2ac68c438afc2bd1f17e711f3b653e600bd5938d2",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-locked-generated.png"
     },
     "canonical/treasury-controls/status-insufficient-v1": {
-      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-insufficient-master-v2.png",
+      "masterPath": "source-assets/theme-icon-packs/desert/treasury-controls-v1/status-insufficient-master-v4.png",
       "productionPath": "www/assets/theme-packs/desert/canonical/treasury-controls/status-insufficient-v1.png",
       "opticalBoundsPx": [
-        42,
-        53,
-        220,
-        212
+        17,
+        37,
+        239,
+        219
       ],
-      "sizeBytes": 29589,
-      "sha256": "346d3fa4db54395191a3d0029bf1db1b14628f96d5730b0c8cac59a05219ac4e"
+      "sizeBytes": 64525,
+      "sha256": "6e18399bfa20ad9f43ada04cc8d90e05b00c069bbccd477c0b08945a29c9d652",
+      "generatedSourcePath": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-insufficient-generated.png"
     }
   },
-  "dnaRevision": 2,
-  "sameThemeArtSources": {
-    "tab-trophies": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
-    "tab-skins": "www/assets/theme-packs/desert/canonical/achievement-trophies/first_play-v1.png",
-    "tab-effects": "www/assets/theme-packs/desert/canonical/achievement-trophies/firecracker-v1.png"
+  "dnaRevision": 4,
+  "sameThemeArtSources": {},
+  "tabGenerationMethod": "four separate transparent PNG illustrations; one prompt per tab",
+  "tabGeneratedSources": {
+    "tab-trophies": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-trophies-generated.png",
+    "tab-skins": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-skins-generated.png",
+    "tab-effects": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-effects-generated.png",
+    "tab-themes": "source-assets/theme-icon-packs/desert/treasury-tabs-v3/tab-themes-generated.png"
+  },
+  "statusGenerationMethod": "four separate transparent PNG illustrations; one prompt per status",
+  "statusGeneratedSources": {
+    "status-owned": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-owned-generated.png",
+    "status-active": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-active-generated.png",
+    "status-locked": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-locked-generated.png",
+    "status-insufficient": "source-assets/theme-icon-packs/desert/treasury-status-v4/status-insufficient-generated.png"
   }
 }
