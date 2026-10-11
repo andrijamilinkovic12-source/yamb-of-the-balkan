@@ -422,3 +422,67 @@ body.neon-theme #game-scene .player-table::after {
     }
 }
 
+/* Neon Cyber board: matte rubber volume, restrained cyan signal and one magenta
+   accent. These rules change paint only; grid geometry and score controls stay shared. */
+body.neon-theme #game-scene .player-table {
+    border-color: rgba(86,229,210,.43) !important;
+    box-shadow: 0 12px 23px rgba(1,7,16,.43),
+        inset 1px 1px 2px rgba(185,249,244,.21),
+        inset -2px -2px 4px rgba(2,9,20,.48) !important;
+}
+
+body.neon-theme #game-scene .player-table .grid-container {
+    background: rgba(3,11,22,.49) !important;
+    box-shadow: inset 2px 2px 4px rgba(2,9,20,.46),
+        inset -1px -1px 2px rgba(120,215,213,.10) !important;
+}
+
+body.neon-theme #game-scene .player-table .grid-cell {
+    border-color: rgba(120,215,213,.18) !important;
+    box-shadow: inset 1px 1px 2px rgba(2,9,20,.43),
+        inset -1px -1px 2px rgba(171,245,239,.16) !important;
+}
+
+body.neon-theme #game-scene .player-table :is(.col-header,.row-header,.cell-sum) {
+    box-shadow: inset 1px 1px 2px rgba(187,250,245,.23),
+        inset -2px -2px 3px rgba(2,9,20,.39) !important;
+    text-shadow: 0 1px 1px rgba(2,9,20,.70);
+}
+
+body.neon-theme #game-scene .player-table .row-header {
+    color: #E9FFFF !important;
+}
+
+body.neon-theme #game-scene .player-table .row-header:is([data-score-row="Max"],[data-score-row="Min"]) {
+    color: #A9F3E9 !important;
+}
+
+body.neon-theme #game-scene .player-table .row-header[data-score-row="Yamb"] {
+    color: #F08CE3 !important;
+}
+
+body.neon-theme #game-scene .player-table :is(.row-header.sum,.cell-sum) {
+    color: #B9F5EC !important;
+    border-top-color: rgba(86,229,210,.42) !important;
+    border-bottom-color: rgba(86,229,210,.42) !important;
+}
+
+body.neon-theme #game-scene .player-table .col-header.c-nadole { color: #74CBFF !important; }
+body.neon-theme #game-scene .player-table .col-header.c-slobodna { color: #B4C6D8 !important; }
+body.neon-theme #game-scene .player-table .col-header.c-sredina { color: #FFD17B !important; }
+body.neon-theme #game-scene .player-table .col-header.c-nagore { color: #FF96C8 !important; }
+body.neon-theme #game-scene .player-table .col-header.c-rucno { color: #C9A2FF !important; }
+body.neon-theme #game-scene .player-table .col-header.c-najava { color: #56E5D2 !important; }
+
+body.neon-theme #game-scene .player-table .score-btn.filled {
+    color: #F4FAFF !important;
+    background: rgba(86,229,210,.055) !important;
+    text-shadow: 0 1px 1px rgba(2,9,20,.72) !important;
+}
+
+body.neon-theme #game-scene .player-table .player-name,
+body.neon-theme #game-scene .player-table .total-score {
+    color: #E9FFFF !important;
+    text-shadow: 0 1px 2px rgba(2,9,20,.68) !important;
+}
+

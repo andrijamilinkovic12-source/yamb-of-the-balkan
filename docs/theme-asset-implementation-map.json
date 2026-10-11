@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "referenceUsageMap": "docs/theme-asset-usage-map.json",
-  "requiredSlotCountPerTheme": 188,
+  "requiredSlotCountPerTheme": 189,
   "slotStageOrder": [
     "defined",
     "created",
@@ -1220,6 +1220,25 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 56988
+        },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            47,
+            240,
+            209
+          ],
+          "sizeBytes": 52400
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -3474,6 +3493,25 @@
           "opticalBoundsPx": null,
           "sizeBytes": 66316
         },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            29,
+            240,
+            227
+          ],
+          "sizeBytes": 68331
+        },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
           "productionPath": null,
@@ -5726,6 +5764,25 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 53737
+        },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            32,
+            240,
+            224
+          ],
+          "sizeBytes": 59002
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -7980,6 +8037,25 @@
           "opticalBoundsPx": null,
           "sizeBytes": 65567
         },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            17,
+            16,
+            239,
+            240
+          ],
+          "sizeBytes": 77613
+        },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
           "productionPath": null,
@@ -10232,6 +10308,25 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 64116
+        },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            18,
+            240,
+            237
+          ],
+          "sizeBytes": 70541
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -12486,6 +12581,25 @@
           "opticalBoundsPx": null,
           "sizeBytes": 56997
         },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            34,
+            16,
+            222,
+            240
+          ],
+          "sizeBytes": 61821
+        },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
           "productionPath": null,
@@ -14738,6 +14852,25 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 70028
+        },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            40,
+            240,
+            216
+          ],
+          "sizeBytes": 75504
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -16992,6 +17125,25 @@
           "opticalBoundsPx": null,
           "sizeBytes": 54203
         },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            28,
+            240,
+            228
+          ],
+          "sizeBytes": 56146
+        },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
           "productionPath": null,
@@ -19244,6 +19396,25 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 64969
+        },
+        "canonical/room-controls/close-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/room-controls/close-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/room-close-v2-imagegen/close-master-v2.png",
+          "consumerRefs": [
+            "www/theme-room-close-controls.css:room-close-image",
+            "www/index.html:room headers",
+            "www/kvartalnaliga.js:league close",
+            "www/pravilaigre.js:rules close",
+            "www/game.js:H2H detail close"
+          ],
+          "opticalBoundsPx": [
+            16,
+            47,
+            240,
+            209
+          ],
+          "sizeBytes": 50670
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",

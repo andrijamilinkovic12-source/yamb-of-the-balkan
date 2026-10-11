@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "moon",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Low charcoal lunar relief, one concave edge and pale inlaid X",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/theme-packs/moon/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/moon/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/moon/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/theme-packs/moon/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    16,
+    28,
+    240,
+    228
+  ],
+  "sha256": "d4baf97e331674f0a73160f70dcc0c2b693aa8b5341c0407b379d34d7b9ca9e2",
+  "sizeBytes": 56146
+}

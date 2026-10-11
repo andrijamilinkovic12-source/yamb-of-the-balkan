@@ -4969,6 +4969,7 @@ body.easter-theme #waiting-screen .opponent-scan span {
 .easter-spectating-live-icon,
 .easter-game-exit-icon,
 .easter-announce-col-icon,
+.neon-announce-col-icon,
 .custom-toast-soft-clay-icon {
     display: none;
 }
@@ -5158,6 +5159,20 @@ body.easter-theme #game-scene .col-header.c-najava .easter-announce-col-icon {
     max-width: 100%;
     object-fit: contain;
     margin: auto;
+}
+
+body.neon-theme #game-scene .col-header.c-najava .easter-announce-col-fallback {
+    display: none;
+}
+
+body.neon-theme #game-scene .col-header.c-najava .neon-announce-col-icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+    max-width: 100%;
+    object-fit: contain;
+    margin: auto;
+    filter: drop-shadow(0 1px 1px rgba(2,9,20,.45));
 }
 
 body.easter-theme #game-scene.random-online-duel-room.opponent-reconnecting #turn-timer-display {
@@ -22842,7 +22857,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 }
 
 /* Green UI contract: shared type, contrast, controls and containment. */
-.league-close-green { display: none !important; }
 .green-game-over-ducat { display: none !important; }
 .green-game-over-result-icon { display: none; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) {
@@ -22856,8 +22870,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     --green-ui-inset-x: max(12px, env(safe-area-inset-left), env(safe-area-inset-right));
     --global-chat-height: var(--green-visible-viewport-height, 100dvh);
 }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-close-legacy { display: none !important; }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-close-green { display: inline-flex !important; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .game-over-ducat-legacy { display: none !important; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-technical-result .green-game-over-ducat { display: block !important; object-fit: contain; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result):not(.is-technical-result) .green-solo-finish-score-mark {

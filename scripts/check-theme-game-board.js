@@ -127,7 +127,7 @@ assert(css.includes('animation: neon-board-trace 22s linear infinite'), 'Neon ri
 assert(css.includes('mask-composite: exclude'), 'Neon trace must stay on the rim');
 assert(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?neon-theme #game-scene \.player-table::after[\s\S]*?animation: none !important/.test(css),
     'Neon rim must stop for reduced motion');
-assert(fs.readFileSync(path.join(root, 'www/index.html'), 'utf8').includes('theme-game-board.css?v=6'),
+assert(fs.readFileSync(path.join(root, 'www/index.html'), 'utf8').includes('theme-game-board.css?v=7'),
     'Board skin must be loaded by the game');
 
 console.log(`PASS: 10 translucent board palettes, minimum modeled text contrast ${lowestContrast.toFixed(2)}:1, geometry untouched.`);

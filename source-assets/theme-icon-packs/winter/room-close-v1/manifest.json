@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "winter",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Aegean matte-blue arch and two tapered ivory coastal blades",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/theme-packs/winter/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/winter/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/winter/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/theme-packs/winter/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    16,
+    32,
+    240,
+    224
+  ],
+  "sha256": "5f50ac9cf2542e9cf87e87970c1f1efd5bc349e6d4561d7e2d3908b059c860b2",
+  "sizeBytes": 59002
+}

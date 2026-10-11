@@ -6,10 +6,10 @@
     flex: 0 0 34px;
     object-fit: contain;
     pointer-events: none;
-    transition: transform 180ms ease;
+    transition: none;
 }
 #riznica-screen .tab-btn.active .treasury-control-icon {
-    transform: translateY(-1px) scale(1.06);
+    transform: none;
 }
 #riznica-screen .treasury-status-icon {
     display: block !important;

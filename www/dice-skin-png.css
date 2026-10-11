@@ -49,6 +49,18 @@ body #game-scene #dice-container .dice.skin-galaxy, body .dice.skin-galaxy, body
 body #game-scene #dice-container .dice.skin-retro, body .dice.skin-retro, body .dice-preview.preview-retro { background: transparent url("assets/dice-skins-v1/retro-face-v1.png") center / 110% 110% no-repeat !important; border-color: transparent !important; box-shadow: none !important; color: #e9ead2 !important; opacity: 1 !important; text-shadow: none !important; }
 body #game-scene #dice-container .dice.skin-hologram, body .dice.skin-hologram, body .dice-preview.preview-hologram { background: transparent url("assets/dice-skins-v1/hologram-face-v1.png") center / 110% 110% no-repeat !important; border-color: transparent !important; box-shadow: none !important; color: #20303a !important; opacity: 1 !important; text-shadow: none !important; }
 body .dice-preview.preview-green_clay::before { content: none !important; }
+
+/* Treasury previews are lazy <img> elements. Keep the game dice backgrounds above unchanged. */
+body #riznica-screen .dice-preview[class*="preview-"] { background-image: none !important; }
+body #riznica-screen .dice-preview .treasury-skin-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+}
+body #riznica-screen .dice-preview .dice-dots-wrapper { position: relative; z-index: 1; }
 body #game-scene #dice-container .dice[class*="skin-"].held, body .dice[class*="skin-"].held { border-color: rgba(255, 241, 212, .85) !important; box-shadow: 0 0 0 3px rgba(255, 239, 202, .23), 0 0 12px rgba(255, 242, 214, .24) !important; filter: brightness(.92) !important; }
 body :is(.dice.skin-bronze_antique,.dice-preview.preview-bronze_antique) .dice-dot { background: radial-gradient(circle at 34% 28%, #fff5df, #e5cdab 78%) !important; box-shadow: inset 1px 2px 3px rgba(81,43,22,.31), 0 1px 1px rgba(31,14,7,.48) !important; }
 body #game-scene #dice-container .dice.skin-green_clay.held, body .dice.skin-green_clay.held { border-color: rgba(236,243,211,.78) !important; box-shadow: 0 0 0 3px rgba(205,223,171,.18), 0 0 18px rgba(210,229,178,.20), 5px 6px 12px rgba(7,28,15,.42) !important; filter: brightness(1.04) saturate(.94) !important; }

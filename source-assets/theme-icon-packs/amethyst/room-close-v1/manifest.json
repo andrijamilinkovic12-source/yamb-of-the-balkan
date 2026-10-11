@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "amethyst",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Heavy amethyst clay arch, two broad planes and a pale X in dark pressed channels",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/theme-packs/amethyst/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/amethyst/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/amethyst/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/theme-packs/amethyst/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    16,
+    18,
+    240,
+    237
+  ],
+  "sha256": "e7812932209d996cf6f6d8dbb7c32225de7d8ce003d31a2e29d670ff2f3a95f9",
+  "sizeBytes": 70541
+}

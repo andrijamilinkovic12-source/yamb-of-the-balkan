@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "easter",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Sage matte oval with one leaf-cut edge and two smooth olive blades",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/theme-packs/easter/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/easter/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/easter/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/theme-packs/easter/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    34,
+    16,
+    222,
+    240
+  ],
+  "sha256": "17934ed7e43bb032f7828eab66dce464702143fccb98d8587a98e727eb4f40bc",
+  "sizeBytes": 61821
+}

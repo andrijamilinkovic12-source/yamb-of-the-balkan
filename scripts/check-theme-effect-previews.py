@@ -30,9 +30,9 @@ def main():
     dice_audit = json.loads((ROOT / "docs/theme-effect-dice-visual-audit.json").read_text(encoding="utf-8"))
     audited_ufo = {item["themeId"]: item for item in dice_audit["ufoAbduction"]}
     assert set(audited_ufo) == set(THEMES)
-    assert 'theme-effect-previews.css?v=6' in page
+    assert 'theme-effect-previews.css?v=8' in page
     assert 'canonicalEffectPreview ?' in manager
-    assert catalog["requiredPngCountPerTheme"] == 188
+    assert catalog["requiredPngCountPerTheme"] == 189
     assert len(green_manifest["catalog"]) == 16
     for role in ("confetti", "gold-rain"):
         item = next(entry for entry in green_manifest["catalog"] if entry["id"] == role)

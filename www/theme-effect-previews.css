@@ -174,3 +174,38 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .effect-preview-box.prev-confetti::after { content: none !important; display: none !important; }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .effect-preview-box.prev-gold_rain::before { content: "" !important; position: absolute; inset: 2px; display: block !important; width: auto; height: auto; background: transparent url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-gold-rain-v1.png?v=2") center / contain no-repeat !important; opacity: 1 !important; transform: none !important; animation: none !important; filter: none !important; }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .effect-preview-box.prev-gold_rain::after { content: none !important; display: none !important; }
+
+/* In the nine theme packs the same canonical PNG is loaded by a lazy <img>.
+   Suppress the eager pseudo-element background without changing the card art. */
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #riznica-screen#riznica-screen .effect-preview-box:is(.prev-confetti, .prev-gold_rain, .prev-balkan, .prev-thunder, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::before {
+    content: none !important;
+    display: none !important;
+    background-image: none !important;
+}
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #riznica-screen .effect-preview-box .treasury-effect-image {
+    display: block;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme))
+    #riznica-screen#riznica-screen .effect-preview-box:is(.prev-confetti, .prev-gold_rain, .prev-balkan, .prev-thunder, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::before {
+    content: none !important;
+    display: none !important;
+    background-image: none !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme))
+    #riznica-screen .effect-preview-box .treasury-effect-image {
+    display: block;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}

@@ -36,9 +36,10 @@ function pngInfo(file) {
 
 const files = walk(greenRoot)
     .map(file => path.relative(greenRoot, file).replaceAll('\\', '/'))
-    .filter(relative => relative !== 'splash-title-soft-clay-v1.png') // Retired cloud title, preserved for history.
+    .filter(relative => relative !== 'splash-title-soft-clay-v1.png' &&
+        !relative.startsWith('canonical/treasury-effect-thumbnails/')) // Technical previews are not semantic slots.
     .sort();
-if (files.length !== 187) throw new Error(`Expected 187 Green pack PNGs, found ${files.length}`);
+if (files.length !== 188) throw new Error(`Expected 188 Green pack PNGs, found ${files.length}`);
 
 const slots = [
     {

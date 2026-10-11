@@ -5,7 +5,7 @@
   "measurement": "Pillow alpha bounding box on each unmodified Green PNG; RGB background uses full canvas.",
   "sourceReferenceScope": "Top-level production www JS/CSS/HTML/JSON and Green manifest/asset registry only; dynamic references and other consumers require runtime review.",
   "note": "Contexts are initial route candidates, not verified per-screen usage. False runtimeUseVerified is deliberate until each slot is checked in the app.",
-  "requiredSlotCount": 188,
+  "requiredSlotCount": 189,
   "slots": [
     {
       "slotId": "background/main",
@@ -35,8 +35,8 @@
         "top": 0,
         "rightExclusive": 941,
         "bottomExclusive": 1672,
-        "widthFraction": 1.0,
-        "heightFraction": 1.0,
+        "widthFraction": 1,
+        "heightFraction": 1,
         "centerXFraction": 0.5,
         "centerYFraction": 0.5
       }
@@ -2506,6 +2506,40 @@
         "heightFraction": 0.6445,
         "centerXFraction": 0.5039,
         "centerYFraction": 0.5215
+      }
+    },
+    {
+      "slotId": "canonical/room-controls/close-v1",
+      "greenReference": "assets/green-soft-clay/canonical/room-controls/close-v1.png",
+      "intendedContexts": [
+        "main-menu-rooms",
+        "shared-room-close",
+        "tournament",
+        "treasury",
+        "quarterly-league",
+        "rules",
+        "chat",
+        "waiting",
+        "modal"
+      ],
+      "contextEvidence": "shared CSS consumer and emulator QA",
+      "staticSourceReferences": [
+        "www/theme-room-close-controls.css:2",
+        "www/index.html:124",
+        "www/kvartalnaliga.js:545"
+      ],
+      "runtimeUseVerified": true,
+      "greenByteSize": 73352,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 16,
+        "top": 18,
+        "rightExclusive": 240,
+        "bottomExclusive": 238,
+        "widthFraction": 0.875,
+        "heightFraction": 0.859375,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
       }
     },
     {

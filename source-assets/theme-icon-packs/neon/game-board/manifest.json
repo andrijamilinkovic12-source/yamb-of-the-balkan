@@ -1,0 +1,13 @@
+{
+  "themeId": "neon",
+  "role": "game-board-announcement-megaphone",
+  "style": "3D Soft Neomorphism",
+  "direction": "smooth_rubber_matte_plastic",
+  "master": "announce-megaphone-master-v1.png",
+  "masterSha256": "239a4f4989a8d02f76886e112428b0ae9e75c1a7a79fbb1da9b4f4d25bddacc4",
+  "runtime": "www/assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png",
+  "runtimeSha256": "ca42a54fdf353b8ba4c16da6463361a74c0eb279c8376a69a1311b2559eabb99",
+  "runtimeSize": [256, 256],
+  "runtimeFormat": "RGBA PNG",
+  "displaySizeCssPx": [18, 18]
+}

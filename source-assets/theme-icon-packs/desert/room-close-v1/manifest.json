@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "desert",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Terraced sandstone clay tablet with two strata and carved crossing grooves",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/theme-packs/desert/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/desert/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/desert/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/theme-packs/desert/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    16,
+    40,
+    240,
+    216
+  ],
+  "sha256": "550646d7bdaa74786b389702a1cf0a12e5a48c33a47047813c3db006783b1570",
+  "sizeBytes": 75504
+}

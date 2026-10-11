@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "light",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Wide flattened matte-gold lozenge with a sloping cut and inset cocoa X",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/theme-packs/light/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/light/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/light/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/theme-packs/light/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    16,
+    47,
+    240,
+    209
+  ],
+  "sha256": "c425581b3fad4ba088b7e1d55fc78ac57bfb098258c9ffd6442bc18195f77ebf",
+  "sizeBytes": 52400
+}

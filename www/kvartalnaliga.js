@@ -542,8 +542,7 @@ class KvartalnaLigaManager {
                         <img class="league-modal-header-icon league-modal-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <h2 id="league-modal-title" style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     </div>
-                    <span class="league-close-legacy" style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="window.kvartalnaLiga.closeModal()">✖</span>
-                    <button type="button" class="global-chat-close league-close-green" onclick="window.kvartalnaLiga.closeModal()" aria-label="${this.escapeAttr(gt('aria_close_league', 'Zatvori kvartalnu ligu'))}">×</button>
+                    <button type="button" class="global-chat-close league-close-standard" onclick="window.kvartalnaLiga.closeModal()" aria-label="${this.escapeAttr(gt('aria_close_league', 'Zatvori kvartalnu ligu'))}">×</button>
                 </div>
 
                 <div role="group" aria-label="${this.escapeAttr(gt('aria_league_sections', 'Sekcije kvartalne lige'))}" style="display: flex; justify-content: center; gap: 10px; padding: 15px 15px 5px 15px; flex-shrink: 0;">
@@ -597,7 +596,7 @@ class KvartalnaLigaManager {
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
         if (document.documentElement.dataset.splashTheme === 'dark') {
-            document.querySelector('#league-modal-overlay .league-close-green')?.focus({ preventScroll: true });
+            document.querySelector('#league-modal-overlay .league-close-standard')?.focus({ preventScroll: true });
         }
         document.getElementById('league-modal-overlay')?.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') this.closeModal();

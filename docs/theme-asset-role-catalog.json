@@ -10,8 +10,8 @@
     "retired Green cloud logo v1",
     "legacy fallback Logo_green.png outside the active Green Room Pack"
   ],
-  "requiredPngCountPerTheme": 188,
-  "greenPackPngCount": 187,
+  "requiredPngCountPerTheme": 189,
+  "greenPackPngCount": 188,
   "slots": [
     {
       "id": "background/main",
@@ -752,6 +752,14 @@
     {
       "id": "canonical/rewarded-video/rewarded-video-unavailable-v1",
       "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/room-controls/close-v1",
+      "greenReference": "assets/green-soft-clay/canonical/room-controls/close-v1.png",
       "kind": "canonical-or-approved-variant",
       "width": 256,
       "height": 256,

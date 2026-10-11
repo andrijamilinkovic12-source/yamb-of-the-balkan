@@ -3763,19 +3763,33 @@ class ShopManager {
     }
 
     getTreasuryThemePreviewSource(themeId) {
-        // Use the approved background of the item itself, regardless of the active UI theme.
-        return {
-            dark: 'assets/green-clay-balkan-diorama-v4.png',
-            light: 'assets/theme-backgrounds/light-v9.png',
-            medium: 'assets/theme-backgrounds/medium-v9.png',
-            winter: 'assets/theme-backgrounds/winter-v13.png',
-            neon: 'assets/theme-backgrounds/neon-v4.png',
-            amethyst: 'assets/theme-backgrounds/amethyst-v6.png',
-            easter: 'assets/theme-backgrounds/easter-v6-1.png',
-            desert: 'assets/theme-backgrounds/desert-v8-2.png',
-            moon: 'assets/theme-backgrounds/moon-v14.png',
-            severna: 'assets/theme-backgrounds/severna-v4.png'
-        }[themeId] || '';
+        // Small PNGs derived from the approved backgrounds; full backgrounds stay in the game.
+        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst',
+            'easter', 'desert', 'moon', 'severna'];
+        return knownThemes.includes(themeId)
+            ? `assets/treasury-theme-previews/${themeId}-v1.png`
+            : '';
+    }
+
+    getTreasuryEffectPreviewSource(effectId) {
+        const theme = localStorage.getItem('yamb_theme') || 'dark';
+        const roles = {
+            confetti: 'confetti', gold_rain: 'gold-rain', balkan: 'wedding',
+            thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles',
+            cosmic_dust: 'cosmic-dust', dragon_fire: 'dragon-fire',
+            royal_yamb: 'royal-yamb', fireflies: 'fireflies', ice_age: 'ice-age',
+            black_hole: 'black-hole', supernova: 'supernova', neon_pulse: 'neon-pulse',
+            drones: 'drones', ufo_abduction: 'ufo-abduction'
+        };
+        const role = roles[effectId];
+        if (theme === 'dark' && role) {
+            return `assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-${role}-v1.png`;
+        }
+        const validThemes = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter',
+            'desert', 'moon', 'severna'];
+        return role && validThemes.includes(theme)
+            ? `assets/theme-packs/${theme}/canonical/treasury-effect-thumbnails/preview-${role}-v1.png`
+            : '';
     }
 
     getTreasuryRewardVideoIcon() {
@@ -3822,13 +3836,18 @@ class ShopManager {
                 let visualHtml = '';
                 if (this.type === 'skin') {
                     const pipPreview = '<div class="dice-dots-wrapper val-6" aria-hidden="true">' + '<div class="dice-dot"></div>'.repeat(6) + '</div>';
-                    visualHtml = `<div class="dice-preview preview-${item.id}">${pipPreview}</div>`;
+                    const skinSource = `assets/treasury-skin-previews/${item.id}-face-v1.png`;
+                    visualHtml = `<div class="dice-preview preview-${item.id}"><img class="treasury-skin-image" src="${skinSource}" loading="lazy" decoding="async" alt="" aria-hidden="true">${pipPreview}</div>`;
                 } else if (this.type === 'effect') {
                     const canonicalEffectPreview = ['confetti', 'gold_rain', 'balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
                     const effectPreview = item.id === 'royal_yamb'
                         ? `<img class="royal-yamb-logo-preview" src="${getActiveGameLogoSource()}" alt="" loading="lazy" decoding="async">`
                         : (item.innerHtml || '');
-                    visualHtml = `<div class="effect-preview-box ${item.cssClass}">${canonicalEffectPreview ? '' : effectPreview}</div>`;
+                    const effectSource = canonicalEffectPreview ? this.getTreasuryEffectPreviewSource(item.id) : '';
+                    const effectImage = effectSource
+                        ? `<img class="treasury-effect-image" src="${effectSource}" loading="lazy" decoding="async" alt="" aria-hidden="true">`
+                        : '';
+                    visualHtml = `<div class="effect-preview-box ${item.cssClass}">${effectImage || (canonicalEffectPreview ? '' : effectPreview)}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
                     visualHtml = `<div class="icon riznica-trophy-visual"><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else if (this.type === 'theme') {

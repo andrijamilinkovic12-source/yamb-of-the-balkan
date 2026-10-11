@@ -40,7 +40,7 @@ body.desert-theme {
     --theme-card-surface: #FFF0DA; --theme-card-raised: #F0D0AB;
     --theme-card-inset: #D5B29B; --theme-card-border: #A87759;
     --theme-card-ink: #443027; --theme-card-muted: #70513D;
-    --theme-card-primary: #87523C;
+    --theme-card-primary: #7D4D38;
 }
 body.moon-theme {
     --theme-card-surface: #252934; --theme-card-raised: #3B3F4B;
@@ -136,6 +136,33 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 
 /* Green room geometry at the same viewport, language and state. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen .tourney-header-title {
+    font-size: 1.08rem;
+}
+
+/* Bracket outlines follow each room's accent instead of the old fixed gold. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen .tourney-round-title {
+    border-bottom-color: color-mix(in srgb, var(--theme-card-primary) 35%, transparent);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen .tourney-participant-row:first-child {
+    border-bottom-color: color-mix(in srgb, var(--theme-card-primary) 28%, transparent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen .tourney-participant-identity img {
+    border-color: color-mix(in srgb, var(--theme-card-primary) 68%, transparent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen .tourney-match--empty {
+    border-color: color-mix(in srgb, var(--theme-card-primary) 40%, transparent);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen .tourney-match--mine {
+    box-shadow: 0 0 10px color-mix(in srgb, var(--theme-card-primary) 35%, transparent);
+}
+
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) {
     --theme-room-top: max(10px, var(--safe-top));
     --theme-room-bottom: max(16px, calc(var(--safe-bottom) + 8px));

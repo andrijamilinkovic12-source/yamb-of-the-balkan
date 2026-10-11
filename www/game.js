@@ -2564,6 +2564,11 @@ class YambApp {
 
         document.body.classList.remove(...themeClasses);
         if (safeTheme !== 'dark') document.body.classList.add(`${safeTheme}-theme`);
+        if (safeTheme === 'neon') {
+            document.querySelectorAll('.neon-announce-col-icon').forEach(icon => {
+                if (!icon.getAttribute('src')) icon.src = icon.dataset.neonBoardSrc;
+            });
+        }
         document.querySelectorAll('img[data-treasury-control]').forEach(image => {
             image.src = getThemeTreasuryControlSource(image.dataset.treasuryControl, safeTheme);
         });
@@ -8223,6 +8228,17 @@ class YambApp {
                     icon.setAttribute('aria-hidden', 'true');
                     icon.decoding = 'async';
                     d.appendChild(icon);
+                    const neonIcon = document.createElement('img');
+                    neonIcon.className = 'neon-announce-col-icon';
+                    neonIcon.dataset.neonBoardSrc = 'assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png?v=1';
+                    neonIcon.loading = 'lazy';
+                    neonIcon.alt = '';
+                    neonIcon.setAttribute('aria-hidden', 'true');
+                    neonIcon.decoding = 'async';
+                    if (document.body.classList.contains('neon-theme')) {
+                        neonIcon.src = neonIcon.dataset.neonBoardSrc;
+                    }
+                    d.appendChild(neonIcon);
                     d.setAttribute('aria-label', gt('game_announce') || 'Najava');
                 } else {
                     d.innerText = colLabels[colName] || colName;
@@ -8233,6 +8249,7 @@ class YambApp {
             REDOVI_PRIKAZ.forEach(row => { 
                 let lbl = document.createElement('div'); 
                 lbl.className = 'grid-cell row-header' + (row.includes("ZBIR") ? " sum" : ""); 
+                lbl.dataset.scoreRow = row;
                 
                 let displayRow = row;
                 if(row.includes("ZBIR")) { displayRow = row.replace("ZBIR", gt('row_sum') || "SUM"); } 

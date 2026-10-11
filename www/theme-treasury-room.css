@@ -47,6 +47,29 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     font-variant-numeric: tabular-nums;
 }
 
+/* Keep trophy labels and actions at Green's measured size in every pack. */
+#riznica-screen .riznica-item-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+#riznica-screen .category-grid > .card .btn-action {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    height: 44px;
+    padding: 4px 6px;
+    line-height: 1.2;
+}
+
+body.easter-theme #riznica-screen .riznica-balance-pill {
+    min-width: 82px;
+}
+
 /* The Treasury actions and secondary copy use the active theme palette. */
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
     #riznica-screen#riznica-screen .card :is(.desc,.duration,.price:not(.riznica-item-status)) {
@@ -141,5 +164,13 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
         width: 42px !important;
         height: 42px !important;
         flex-basis: 42px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #riznica-screen .riznica-tabs {
+        width: calc(100% - 8px);
+        height: 42px;
+        gap: 2px;
     }
 }

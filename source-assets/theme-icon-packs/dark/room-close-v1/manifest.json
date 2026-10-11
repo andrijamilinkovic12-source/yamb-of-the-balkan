@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3,
+  "themeId": "dark",
+  "slotId": "canonical/room-controls/close-v1",
+  "designConcept": "Organic Clay pebble, unequal ivory clay ribbons and one warm hand mark",
+  "creationMethod": "individual built-in image_gen render using same-theme material reference",
+  "materialReference": "www/assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png",
+  "generatedSource": "source-assets/theme-icon-packs/dark/room-close-v2-imagegen/close-generated.png",
+  "masterPath": "source-assets/theme-icon-packs/dark/room-close-v2-imagegen/close-master-v2.png",
+  "productionPath": "www/assets/green-soft-clay/canonical/room-controls/close-v1.png",
+  "opticalBoundsPx": [
+    16,
+    18,
+    240,
+    238
+  ],
+  "sha256": "e6a214cdb14ab3b71914939f2fe700c87852321231c4360aabd888e37acfd877",
+  "sizeBytes": 73352
+}

@@ -345,8 +345,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Prvih 26 originalnih trofeja dostignuca za Svetlo Zlato imaju mastere, standardne PNG-ove i povezana tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-light-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -453,8 +453,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih Trula Visnja trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-medium-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -561,8 +561,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih Plavi Okean trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-winter-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -669,8 +669,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih Neon Cyber trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u vidljivom obavestenju. Dokaz: docs/qa-neon-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -777,8 +777,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih trofeja Kraljevskog Ametista ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-amethyst-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena jer Gradle build zahteva pristup korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -885,8 +885,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih Vaskrsnjih trofeja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-easter-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -993,8 +993,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih trofeja Pustinjskog Stakla ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-desert-review.png; staticka provera potvrdjuje 26 razlicitih fajlova, kanonske putanje i odsustvo starih putanja u galeriji. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -1101,8 +1101,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih trofeja Mesecevog Sjaja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-moon-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -1213,8 +1213,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 68
+        "confirmedSlotCount": 1,
+        "measuredThemeBoundsCount": 69
       },
       "notes": "Svih 26 originalnih trofeja Severne Magline ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-severna-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen; korisnicko odobrenje kompleta nije zabelezeno."
     }
@@ -1259,7 +1259,11 @@
     "weddingRedesignedThemes": 9,
     "diceGeometryBuilder": "scripts/build-theme-ufo-dice-previews.js",
     "diceGeometryCheck": "scripts/check-theme-ufo-dice.js",
-    "diceVisibleFaces": [1, 2, 3],
+    "diceVisibleFaces": [
+      1,
+      2,
+      3
+    ],
     "runtimeStatus": "Android qaLocal: 10 themes x 16 effect previews decoded from active theme PNGs at 152 x 70 CSS px with no after overlay; nine rounded 3D NLO gift-skin dice use cache version 5",
     "visualAcceptance": "pending user review"
   }

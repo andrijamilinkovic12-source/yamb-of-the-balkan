@@ -1,0 +1,56 @@
+/* One canonical PNG close control per theme. The 44px hit box stays fixed. */
+body { --theme-room-close-image: url("assets/green-soft-clay/canonical/room-controls/close-v1.png?v=3"); }
+body.light-theme { --theme-room-close-image: url("assets/theme-packs/light/canonical/room-controls/close-v1.png?v=3"); }
+body.medium-theme { --theme-room-close-image: url("assets/theme-packs/medium/canonical/room-controls/close-v1.png?v=3"); }
+body.winter-theme { --theme-room-close-image: url("assets/theme-packs/winter/canonical/room-controls/close-v1.png?v=3"); }
+body.neon-theme { --theme-room-close-image: url("assets/theme-packs/neon/canonical/room-controls/close-v1.png?v=3"); }
+body.amethyst-theme { --theme-room-close-image: url("assets/theme-packs/amethyst/canonical/room-controls/close-v1.png?v=3"); }
+body.easter-theme { --theme-room-close-image: url("assets/theme-packs/easter/canonical/room-controls/close-v1.png?v=3"); }
+body.desert-theme { --theme-room-close-image: url("assets/theme-packs/desert/canonical/room-controls/close-v1.png?v=3"); }
+body.moon-theme { --theme-room-close-image: url("assets/theme-packs/moon/canonical/room-controls/close-v1.png?v=3"); }
+body.severna-theme { --theme-room-close-image: url("assets/theme-packs/severna/canonical/room-controls/close-v1.png?v=3"); }
+
+body :is(#stats-screen#stats-screen, #settings-screen#settings-screen,
+    #highscores-screen#highscores-screen, #rules-overlay-ui#rules-overlay-ui,
+    #league-modal-overlay#league-modal-overlay, #tournament-screen#tournament-screen,
+    #riznica-screen#riznica-screen, #global-chat-overlay#global-chat-overlay,
+    #online-players-overlay#online-players-overlay, #waiting-screen#waiting-screen,
+    #undo-menu-overlay#undo-menu-overlay, #pi-modal-overlay#pi-modal-overlay,
+    #streak-overlay#streak-overlay) .global-chat-close,
+body #custom-modal-overlay#custom-modal-overlay .cm-close,
+body #h2h-detail-modal#h2h-detail-modal .h2h-detail-close {
+    box-sizing: border-box !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    flex: 0 0 44px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: var(--theme-room-close-image) center / contain no-repeat !important;
+    box-shadow: none !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    text-shadow: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+body #custom-modal-overlay#custom-modal-overlay .cm-close::after {
+    content: none !important;
+}
+
+body :is(#stats-screen#stats-screen, #settings-screen#settings-screen,
+    #highscores-screen#highscores-screen, #rules-overlay-ui#rules-overlay-ui,
+    #league-modal-overlay#league-modal-overlay, #tournament-screen#tournament-screen,
+    #riznica-screen#riznica-screen, #global-chat-overlay#global-chat-overlay,
+    #online-players-overlay#online-players-overlay, #waiting-screen#waiting-screen,
+    #undo-menu-overlay#undo-menu-overlay, #pi-modal-overlay#pi-modal-overlay,
+    #streak-overlay#streak-overlay) .global-chat-close:focus-visible,
+body #custom-modal-overlay#custom-modal-overlay .cm-close:focus-visible,
+body #h2h-detail-modal#h2h-detail-modal .h2h-detail-close:focus-visible {
+    outline: 2px solid var(--theme-card-primary, var(--gold-main));
+    outline-offset: 2px;
+}

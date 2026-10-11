@@ -106,7 +106,7 @@ assert(dailyStatesManifest.status === 'locked', 'Daily States manifest mora imat
 assert(leaderboardControlsManifest.status === 'locked', 'Leaderboard Controls manifest mora imati locked status posle završnog audita.');
 assert(rulesPageIllustrationsManifest.status === 'locked' && registry.families?.rulesPageIllustrations?.status === 'locked', 'Rules Page Illustrations manifest i registar moraju biti zaključani posle Koraka 4.');
 assert(settingsControlsManifest.status === 'locked' && registry.families?.settingsControls?.status === 'locked' && settingsControlsManifest.catalog.length === 8, 'Settings Controls završni audit mora imati osam zaključanih kontrola.');
-const stagedCanonical = new Set();
+const stagedCanonical = new Set(['canonical/room-controls/close-v1.png']);
 const pendingGroups = {};
 const pending = new Map();
 for (const [groupName, paths] of Object.entries(pendingGroups)) {
@@ -119,6 +119,7 @@ for (const [groupName, paths] of Object.entries(pendingGroups)) {
 const runtimePngs = walkFiles(greenRoot)
     .filter(file => file.toLowerCase().endsWith('.png'))
     .map(file => slash(path.relative(greenRoot, file)))
+    .filter(relative => !relative.startsWith('canonical/treasury-effect-thumbnails/'))
     .sort();
 const classifications = { registered: [], protected: [], foundation: [], historicalLogo: [], pending: [], stagedCanonical: [] };
 for (const relative of runtimePngs) {
@@ -134,13 +135,13 @@ for (const relative of runtimePngs) {
     classifications[categories[0]].push(relative);
 }
 
-assert(runtimePngs.length === 188, `Green runtime inventar odstupa: očekivano 188 PNG, pronađeno ${runtimePngs.length}.`);
+assert(runtimePngs.length === 189, `Green runtime inventar odstupa: očekivano 189 PNG, pronađeno ${runtimePngs.length}.`);
 assert(classifications.registered.length === 170, `Očekivano 170 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
 assert(classifications.protected.length === 16, `Očekivano 16 manifestom zaštićenih funkcionalnih PNG-ova, pronađeno ${classifications.protected.length}.`);
 assert(classifications.foundation.length === 1, `Očekivan je jedan splash foundation PNG, pronađeno ${classifications.foundation.length}.`);
 assert(classifications.historicalLogo.length === 1, 'Stari Green logo mora ostati samo istorijski PNG.');
 assert(classifications.pending.length === 0, `Nema preostalih pending Green PNG-ova, pronađeno ${classifications.pending.length}.`);
-assert(classifications.stagedCanonical.length === 0, `Nema preostalih staged Green PNG-ova, pronađeno ${classifications.stagedCanonical.length}.`);
+assert(classifications.stagedCanonical.length === 1, `Očekivan je jedan novi kanonski Green close PNG, pronađeno ${classifications.stagedCanonical.length}.`);
 
 const activeBackground = path.join(www, themeManifest.background);
 assert(themeManifest.status === 'complete' && themeManifest.version === 63, 'Green theme manifest status ili cache verzija odstupa.');
@@ -191,7 +192,7 @@ const stagedCanonicalBytes = classifications.stagedCanonical.reduce((sum, relati
 const newMedalManifest = JSON.parse(fs.readFileSync(path.join(root, 'source-assets/theme-icon-packs/dark/medals-v1/manifest.json'), 'utf8'));
 const newMedalBytes = Object.values(newMedalManifest.slots).reduce((sum, item) => sum + item.sizeBytes, 0);
 const greenNewEffectBytes = ['confetti', 'gold-rain'].reduce((sum, role) => sum + fs.statSync(path.join(greenRoot, `canonical/treasury-effect-previews/preview-${role}-v1.png`)).size, 0);
-assert(totalBytes === 17331791 + newMedalBytes + greenNewEffectBytes && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od aktuelnog bilansa.');
+assert(totalBytes === 17331791 + newMedalBytes + greenNewEffectBytes + stagedCanonicalBytes && pendingBytes === 0 && stagedCanonicalBytes > 0, 'Green coverage veličine odstupaju od aktuelnog bilansa.');
 
 console.log('Green asset coverage provera je prošla.');
 console.log(`- centralni registar: ${families.length} locked porodica / ${classifications.registered.length} PNG`);
