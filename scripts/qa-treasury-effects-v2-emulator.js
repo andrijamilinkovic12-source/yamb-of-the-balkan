@@ -49,7 +49,7 @@ async function main() {
                 window.app.applyTheme(theme, {initialLoad: true});
                 riznicaManager.showRiznica();
                 riznicaManager.switchTab('effect');
-                await new Promise(resolve => setTimeout(resolve, 550));
+                await new Promise(resolve => setTimeout(resolve, 950));
                 const boxes = [...document.querySelectorAll('#riznica-screen .effect-preview-box')];
                 const preview = await Promise.all(boxes.map(async box => {
                     const source = getComputedStyle(box, '::before').backgroundImage;
@@ -58,6 +58,7 @@ async function main() {
                     if (match) image.src = match[1];
                     await image.decode().catch(() => null);
                     return {classes: box.className, source, width: image.naturalWidth, height: image.naturalHeight,
+                        children: box.childElementCount, beforeDisplay: getComputedStyle(box, '::before').display,
                         after: getComputedStyle(box, '::after').content,
                         boxWidth: Math.round(box.getBoundingClientRect().width), boxHeight: Math.round(box.getBoundingClientRect().height)};
                 }));
@@ -71,10 +72,16 @@ async function main() {
                     ? `green-soft-clay/canonical/treasury-effect-previews/preview-${roles[index]}-v1.png`
                     : `theme-packs/${theme}/canonical/treasury-effect-previews/preview-${roles[index]}-v1.png`;
                 assert(item.source.includes(expected), `${theme}/${roles[index]}: incorrect PNG binding ${item.source}`);
+                if (theme !== 'dark' && (roles[index] === 'wedding' || roles[index] === 'ufo-abduction')) {
+                    const version = roles[index] === 'wedding' ? 3 : 5;
+                    assert(item.source.includes(`?v=${version}`), `${theme}/${roles[index]}: outdated PNG cache version`);
+                }
                 assert.equal(item.width, 384, `${theme}/${roles[index]}: PNG did not decode`);
                 assert.equal(item.height, 256, `${theme}/${roles[index]}: unexpected PNG dimensions`);
                 assert.equal(item.boxWidth, 152, `${theme}/${roles[index]}: preview width differs from Green`);
                 assert.equal(item.boxHeight, 70, `${theme}/${roles[index]}: preview height differs from Green`);
+                assert.equal(item.beforeDisplay, 'block', `${theme}/${roles[index]}: PNG layer is hidden`);
+                assert.equal(item.children, 0, `${theme}/${roles[index]}: legacy visual elements remain`);
                 assert.equal(item.after, 'none', `${theme}/${roles[index]}: legacy overlay remains`);
             }
             report.themes.push({theme, count: result.count, decoded: result.preview.length,
@@ -83,6 +90,21 @@ async function main() {
                 afterLayers: result.preview.filter(item => item.after !== 'none').length});
             console.log(`${theme}: 16/16 theme-specific PNGs decoded`);
         }
+        await send('Page.enable');
+        for (const [role, selector] of [
+            ['wedding', '.effect-preview-box.prev-balkan'],
+            ['ufo', '.effect-preview-box.prev-ufo-abduction']
+        ]) {
+            await evaluate(`document.querySelector('#riznica-screen ${selector}').scrollIntoView({block: 'center'})`);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            const capture = await send('Page.captureScreenshot', {format: 'png'});
+            const screenshot = `docs/qa-severna-${role}-effect-emulator-2026-10-11.png`;
+            fs.writeFileSync(path.join(root, screenshot), Buffer.from(capture.data, 'base64'));
+            report[`${role}Screenshot`] = screenshot;
+        }
+        report.checkedCards = report.themes.reduce((sum, entry) => sum + entry.count, 0);
+        report.checkedWeddingCacheVersion = 3;
+        report.checkedUfoCacheVersion = 5;
         report.pass = true;
     } finally {
         socket.close();

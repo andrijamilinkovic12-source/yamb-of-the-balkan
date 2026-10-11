@@ -1967,12 +1967,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            15,
-            313,
-            241
+            57,
+            3,
+            326,
+            254
           ],
-          "sizeBytes": 77507
+          "sizeBytes": 95811
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -4220,12 +4220,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            78,
-            15,
-            305,
-            241
+            66,
+            3,
+            318,
+            254
           ],
-          "sizeBytes": 70368
+          "sizeBytes": 87637
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -6473,12 +6473,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            66,
-            15,
-            318,
-            241
+            54,
+            0,
+            331,
+            255
           ],
-          "sizeBytes": 77010
+          "sizeBytes": 98925
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -8726,12 +8726,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            65,
-            15,
-            319,
-            241
+            48,
+            1,
+            336,
+            256
           ],
-          "sizeBytes": 70769
+          "sizeBytes": 85996
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -10979,12 +10979,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            15,
-            330,
-            241
+            34,
+            0,
+            350,
+            255
           ],
-          "sizeBytes": 85350
+          "sizeBytes": 112665
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -13232,12 +13232,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            73,
-            15,
-            311,
-            241
+            52,
+            0,
+            332,
+            256
           ],
-          "sizeBytes": 79010
+          "sizeBytes": 108088
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -15485,12 +15485,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            60,
-            15,
-            324,
-            241
+            42,
+            1,
+            341,
+            256
           ],
-          "sizeBytes": 86713
+          "sizeBytes": 113124
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -17738,12 +17738,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            76,
-            15,
-            308,
-            241
+            63,
+            2,
+            321,
+            256
           ],
-          "sizeBytes": 69967
+          "sizeBytes": 90597
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
@@ -19991,12 +19991,12 @@
             "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            60,
-            15,
-            324,
-            241
+            54,
+            5,
+            342,
+            251
           ],
-          "sizeBytes": 87341
+          "sizeBytes": 111592
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",

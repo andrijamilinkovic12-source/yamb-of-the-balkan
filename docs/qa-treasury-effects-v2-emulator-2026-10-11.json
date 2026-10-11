@@ -118,5 +118,10 @@
     891,
     3.5
   ],
+  "weddingScreenshot": "docs/qa-severna-wedding-effect-emulator-2026-10-11.png",
+  "ufoScreenshot": "docs/qa-severna-ufo-effect-emulator-2026-10-11.png",
+  "checkedCards": 160,
+  "checkedWeddingCacheVersion": 3,
+  "checkedUfoCacheVersion": 5,
   "pass": true
 }

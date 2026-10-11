@@ -3,7 +3,7 @@
   "updatedOn": "2026-10-11",
   "activeThemeId": "light",
   "workState": "treasury-room-standardization-in-progress",
-  "activeWorkPackage": "Riznica: svih 16 prikaza efekata su zasebni transparentni PNG asseti za svaku od devet nezelenih tema. Vizuelni pregled svih 144 prikaza zavrsen je tema po temu; prenatrpani motiv Svadbe je zamenjen sa devet novih jedinstvenih kompozicija, po jedna za svaku temu. Novi PNG su povezani, prikazani na 384 x 256 i uporedjeni u docs/theme-wedding-effects-v3-review.png. Ostali efekti zadrzani su jer probna pojednostavljenja Vatrometa i Supernove nisu ocuvavala njihovu prepoznatljivost. NLO kockice ostaju 3D sa ispravnim stranama 5/3/6. Staticke i vizuelne provere prolaze; Android qaLocal nije ponovljen nakon poslednjih izmena. Vizuelni izbor celog seta ceka korisnika u docs/theme-effect-previews-review.html.",
+  "activeWorkPackage": "Riznica: NLO prikazi su preradjeni u jednu zaobljenu 3D kockicu sa materijalom poklon skina maticne teme na svim vidljivim stranama; strane 1 gore, 2 napred i 3 desno postuju kanonsku orijentaciju. Devet novih PNG prikaza su povezani na 384 x 256, a Android qaLocal je potvrdio svih 160/160 prikaza efekata u deset tema na 152 x 70 CSS px, bez starih slojeva. Uporedni pregled novih NLO prikaza je docs/theme-ufo-dice-v3-review.png; korisnicki vizuelni izbor je na cekanju.",
   "visualQualityBoundary": {
     "lastIndividuallyIllustratedFamily": "treasury-effect-previews-v2",
     "needsRedesign": [
@@ -1236,7 +1236,7 @@
     "review": "docs/theme-effect-previews-review.html",
     "generator": "scripts/build-theme-effect-previews.py",
     "recorder": "scripts/record-theme-effect-previews.py",
-    "runtimeVisualStatus": "pending Android QA and user review",
+    "runtimeVisualStatus": "Android qaLocal: 160/160 prikaza efekata dekodirano u deset tema na 152 x 70 CSS px, bez starih slojeva; korisnicki vizuelni pregled je na cekanju",
     "visualAcceptance": "needs-redesign: common procedural motifs remain too uniform across themes"
   },
   "treasuryEffectPreviewsV2": {
@@ -1246,15 +1246,21 @@
     "greenReferencePngAdded": 2,
     "review": "docs/theme-effect-previews-review.html",
     "androidReport": "docs/qa-treasury-effects-v2-emulator-2026-10-11.json",
+    "androidScreenshots": [
+      "docs/qa-treasury-effects-final-emulator-2026-10-11.png",
+      "docs/qa-severna-wedding-effect-emulator-2026-10-11.png",
+      "docs/qa-severna-ufo-effect-emulator-2026-10-11.png"
+    ],
     "diceVisualAudit": "docs/theme-effect-dice-visual-audit.json",
-    "diceRuntimeReview": "docs/theme-ufo-dice-corrected-review.png",
+    "diceRuntimeReview": "docs/theme-ufo-dice-v3-review.png",
+    "diceRecorder": "scripts/record-theme-ufo-dice-v3.py",
     "weddingRedesignReview": "docs/theme-wedding-effects-v3-review.png",
     "weddingMobileReview": "docs/theme-wedding-effects-v3-mobile-review.png",
     "weddingRedesignedThemes": 9,
     "diceGeometryBuilder": "scripts/build-theme-ufo-dice-previews.js",
     "diceGeometryCheck": "scripts/check-theme-ufo-dice.js",
-    "diceVisibleFaces": [5, 3, 6],
-    "runtimeStatus": "10 themes x 16 effect previews decoded from active theme PNGs at 152 x 70 CSS px with no after overlay",
+    "diceVisibleFaces": [1, 2, 3],
+    "runtimeStatus": "Android qaLocal: 10 themes x 16 effect previews decoded from active theme PNGs at 152 x 70 CSS px with no after overlay; nine rounded 3D NLO gift-skin dice use cache version 5",
     "visualAcceptance": "pending user review"
   }
 }

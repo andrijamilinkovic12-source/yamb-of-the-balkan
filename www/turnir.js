@@ -2066,7 +2066,7 @@ class TournamentManager {
                         <p style="color: var(--success); font-weight: bold; margin-bottom: 5px;">${tt('tourney_time_agreed') || 'Vreme meča je dogovoreno!'}</p>
                         <p style="font-size: 1.1rem;">${this.formatDate(match.time)}</p>
                     </div>
-                    <button class="btn-menu btn-primary tourney-start-match-button" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})"><img class="tourney-inline-active-match-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${match.rematchRequired ? (tt('tourney_replay_match') || 'POKRENI PONAVLJANJE') : `▶ ${tt('tourney_start_match') || 'POKRENI MEČ'}`}</span></button>
+                    <button class="btn-menu btn-primary tourney-start-match-button" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})"><img class="tourney-inline-active-match-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${match.rematchRequired ? (tt('tourney_replay_match') || 'POKRENI PONAVLJANJE') : (tt('tourney_start_match') || 'POKRENI MEČ')}</span></button>
                     ${replayScheduleHtml}
                 `;
             }
@@ -2091,7 +2091,7 @@ class TournamentManager {
                             <p style="color: #2196F3; font-weight: bold; margin-bottom: 5px;">${tt('tourney_opp_proposes_time') || 'Protivnik predlaže vreme:'}</p>
                             <p style="font-size: 1.1rem; color: var(--text-main); font-weight: bold;">${this.formatDate(match.proposedTime)}</p>
                         </div>
-                        <button class="btn-menu" style="width: 100%; background: var(--success); color: white; border: none; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);" onclick="app.tournamentManager.acceptTime('${round}', ${index})">✅ ${tt('tourney_accept_time') || 'PRIHVATI TERMIN'}</button>
+                        <button class="btn-menu" style="width: 100%; background: var(--success); color: white; border: none; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);" onclick="app.tournamentManager.acceptTime('${round}', ${index})">${tt('tourney_accept_time') || 'PRIHVATI TERMIN'}</button>
 
                         <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 15px 0;">
 
@@ -2127,13 +2127,19 @@ class TournamentManager {
             const p1Name = this.escape(match.p1.name || tt('player_guest') || 'Igrač');
             const p2Name = this.escape(match.p2.name || tt('player_guest') || 'Igrač');
 
+        const duelIcon = match.winnerId
+            ? (round === 'f'
+                ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
+                : 'assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png?v=1')
+            : 'assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png?v=1';
         this.app.modal.alert(`
             <div style="text-align:center;">
+                <img class="tourney-duel-heading-icon" data-theme-src="${duelIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <h3 style="color:var(--gold-main); margin-bottom: 5px; font-size: 1.4rem;">${p1Name} <span style="color:var(--text-muted); font-size:0.9rem;">VS</span> ${p2Name}</h3>
                 <hr style="border: 0; border-top: 1px solid rgba(255,215,0,0.2); margin: 15px 0;">
                 ${akcijeHtml}
             </div>
-        `, titleFallback + ((localStorage.getItem('yamb_theme') || 'dark') === 'dark' ? '' : ' ⚔️'));
+        `, titleFallback);
     }
 
     proposeTime(round, index) {

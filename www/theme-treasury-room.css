@@ -87,6 +87,13 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     border-radius: 20px !important;
 }
 
+/* Easter's generic screen-entry animation can restart when a Treasury tab rerenders.
+   Keep trophy and item cards visible throughout the tab change. */
+body.easter-theme #riznica-screen.screen.active .category-grid > .card {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
     #riznica-screen .category-header {
     box-sizing: border-box;

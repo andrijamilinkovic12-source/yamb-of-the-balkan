@@ -242,16 +242,16 @@
       "id": "ufo-abduction",
       "generatedSource": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v2/preview-ufo-abduction-generated.png",
       "master": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
-      "masterSha256": "62649b31a187c485792de7fdece0e69c6e7c9afbed8bc9066d2d46ad0fe8830a",
+      "masterSha256": "503642a60ec18442d0d819bdcf6667eab5a23f135093cf7404dc923f74101b5e",
       "runtime": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-      "runtimeSha256": "3ae06f2e5b0f470c338cfea000fe7b5d60fb5eb5184f642b64860b2585f04cb9",
+      "runtimeSha256": "628b9c34c917ab8aef7cc05b0405518675d154865eeda5dcbeee193377837ddd",
       "opticalBoundsPx": [
-        78,
-        15,
-        305,
-        241
+        66,
+        3,
+        318,
+        254
       ],
-      "sizeBytes": 70368
+      "sizeBytes": 87637
     }
   ],
   "generationMethod": "one theme-specific transparent PNG per effect; UFO backgrounds are illustrated separately and their 3D dice are composited from controlled face geometry and theme gift skins"

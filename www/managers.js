@@ -3779,7 +3779,7 @@ class ShopManager {
     }
 
     getTreasuryRewardVideoIcon() {
-        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">';
+        return '<img class="riznica-item-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">';
     }
 
     getTreasuryInsufficientIconPath() {
@@ -3830,7 +3830,7 @@ class ShopManager {
                         : (item.innerHtml || '');
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${canonicalEffectPreview ? '' : effectPreview}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
-                    visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
+                    visualHtml = `<div class="icon riznica-trophy-visual"><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else if (this.type === 'theme') {
                     const previewSource = this.getTreasuryThemePreviewSource(item.id);
                     visualHtml = `<div class="treasury-theme-preview"><img src="${previewSource}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
@@ -3919,7 +3919,7 @@ class ShopManager {
                 card.innerHTML = `
                     ${visualHtml}
                     <div class="title">${itemName}</div>
-                    ${this.type === 'effect' ? `<div class="duration">${isGreenTreasury ? '' : '⏱ '}${resolveText(item.duration)}</div>` : ''} ${this.type !== 'trophy' ? `<div class="desc">${itemDesc || ''}</div>` : ''}
+                    ${this.type === 'effect' ? `<div class="duration">${resolveText(item.duration)}</div>` : ''} ${this.type !== 'trophy' ? `<div class="desc">${itemDesc || ''}</div>` : ''}
                     ${priceHtml}
                     ${btnHtml}
                 `;

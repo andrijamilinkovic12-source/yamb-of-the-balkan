@@ -30,7 +30,7 @@ def main():
     dice_audit = json.loads((ROOT / "docs/theme-effect-dice-visual-audit.json").read_text(encoding="utf-8"))
     audited_ufo = {item["themeId"]: item for item in dice_audit["ufoAbduction"]}
     assert set(audited_ufo) == set(THEMES)
-    assert 'theme-effect-previews.css?v=5' in page
+    assert 'theme-effect-previews.css?v=6' in page
     assert 'canonicalEffectPreview ?' in manager
     assert catalog["requiredPngCountPerTheme"] == 188
     assert len(green_manifest["catalog"]) == 16
@@ -68,16 +68,16 @@ def main():
             assert entry["stage"] == "linked" and entry["productionPath"] == item["runtime"]
             assert entry["masterPath"] == item["master"] and entry["opticalBoundsPx"] == list(bounds)
             assert f"body.{theme}-theme #riznica-screen#riznica-screen .effect-preview-box.prev-{css_class}::before" in css
-            cache_version = 4 if role == "ufo-abduction" else (3 if role == "wedding" else 2)
+            cache_version = 5 if role == "ufo-abduction" else (3 if role == "wedding" else 2)
             assert f'url("assets/theme-packs/{theme}/canonical/treasury-effect-previews/preview-{role}-v1.png?v={cache_version}")' in css
             if role == "ufo-abduction":
                 visual_audit = audited_ufo[theme]
                 assert visual_audit["generatedSourceSha256"] == digest(generated), theme
                 assert visual_audit["runtimeSha256"] == digest(path), theme
-                assert visual_audit["visibleFaces"] == [5, 3, 6], theme
-                assert visual_audit["fivePipLayout"] == "four-corners-and-center", theme
+                assert visual_audit["visibleFaces"] == [1, 2, 3], theme
+                assert visual_audit["onePipLayout"] == "single-center", theme
+                assert visual_audit["twoPipLayout"] == "opposite-diagonal-corners", theme
                 assert visual_audit["threePipLayout"] == "diagonal-corners-and-center", theme
-                assert visual_audit["sixPipLayout"] == "two-parallel-columns-of-three", theme
             own.add(item["runtimeSha256"])
             by_role[role].add(item["runtimeSha256"])
             assert item["runtimeSha256"] not in all_hashes, f"Reused image: {theme}/{role}"

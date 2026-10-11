@@ -1,142 +1,142 @@
 {
-  "method": "Manual visual inspection at 1536x1024 and 384x256, backed by deterministic pip-grid and physical-face geometry checks",
+  "method": "Visual review at 1536x1024 and 384x256, backed by deterministic rounded 3D surface rendering and canonical 1/2/3 pip checks",
   "reviewedAt": "2026-10-11",
   "reference": "docs/theme-definitions.json diceFaceRules",
   "ufoAbduction": [
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "a4e67370fbb7c073067ff913e4b0a3447ca3df7a97749e6984e43212baa25992",
+      "runtimeSha256": "e635778c422855a89c0114edb31f85ad84b743b82a9f42c11fdcf2f40375009b",
       "themeId": "light",
-      "generatedSourceSha256": "8c71a3862e86cc7351a779ce2f74d8675cbdb8ab09f61fd482fc9f73ae6e81e6",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "02bccb755c453eef4f9b7f048a0a98d5c7f0434d7ccda61aa440d54b200745fa",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "3ae06f2e5b0f470c338cfea000fe7b5d60fb5eb5184f642b64860b2585f04cb9",
+      "runtimeSha256": "628b9c34c917ab8aef7cc05b0405518675d154865eeda5dcbeee193377837ddd",
       "themeId": "medium",
-      "generatedSourceSha256": "4a07a561ae58d7b6d709f523229845d13da671c190cc89c495abd2686895592d",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "f19a22b4dfcca9be403bee4faddf72fc97825f9dd267eb3e87ac3d40f0573bd6",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "fa196baffcab8ed205ea8505bceae0ec38dfda64e225e26f8e458cfa107aafe4",
+      "runtimeSha256": "6a203774d84e73c5a745623b754eb198a06f0cda881324dd456b56184a7fddfa",
       "themeId": "winter",
-      "generatedSourceSha256": "2ef320fe1f8ea8e6c8f480cea5272fe45adbcd77932ab045de10714f40052e97",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "cf53e3ed0e3ad8445eb4e565530f76aaf0a0a7f7534b798f75d1bd061d029bdc",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "b326b3698c7ad6771ec107c23093e86145f6efd9f26b4249c3b683f490348260",
+      "runtimeSha256": "d7a69548271d2e4116ba5db7d578f110381e145954a68b0458ed2089b7e35d3c",
       "themeId": "neon",
-      "generatedSourceSha256": "10ef7b17d2c829161d7d476cb495519deb3fbbba765c8eeff8f2bcbb589e3b8b",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "74050ed3002586d8c0122bb0b68a24390cec0f761420c8290fa4d6a4103424a5",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "11e5d4ea948a4cf93f8edad9e1aa781ccf197b6320951fc73a29ec9ef3e4ac7c",
+      "runtimeSha256": "e3aaacf0ee4881fc8944462c7de69454680eb9f69d6853770c53235cd036edb8",
       "themeId": "amethyst",
-      "generatedSourceSha256": "bd9ab8adf441f7e9bd190225971e8b48216da0b566a41701d2f3a59a59826440",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "f9f66fafd76cb48ed641911f6c3e521eabe5867207521a052df2e8c42c2699c7",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "4603ec07b5926d1ad43aabfc9951f94ad7dc9fa5c74e378fb8cec4770e1c7852",
+      "runtimeSha256": "aa5651b2db6f6bc40629d62d1a0bea9322b27b3a0ca40cecc3b116c9b9457765",
       "themeId": "easter",
-      "generatedSourceSha256": "df0943906134fba065cbddc42649f7eec10d43cfe42c2b312cd0b1540b488880",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "309bf4070e2c6e808165c8bf54b4518089f72512313e277b8b080e042a543053",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "8420a24756daeb9e5e1b579cdb6bb8b4a3a65d6faf2479a0338125f9a362ef2c",
+      "runtimeSha256": "c209f0993a94daba08e8337dda428bc0e3dc85a024e92b8b66eadb98cb3b8097",
       "themeId": "desert",
-      "generatedSourceSha256": "9af900cb2b085bf3523c634c6176d2bf8b9d8f648b21acddf6af28db175ce17f",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "fcca57d2ff7489327611fc1be78ac7479aeb9ee909496d188fb006fc09540bb1",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "e5f1422b823a06adcd52be96bb9e68998c18391845bd0e3d10a4239332754720",
+      "runtimeSha256": "9f950a807f0cfdd4720969c8cf222e04b32b950e60963deda9787701cc32fd3c",
       "themeId": "moon",
-      "generatedSourceSha256": "5754b874f8d2a8f58ab0ceef0d6051e4302b18164f39f7488b14bafe73ed44b5",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "4552cca1976dfa1555198d34e3b58e25288746f1122fa53df254f3825e735858",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     },
     {
       "visibleFaces": [
-        5,
-        3,
-        6
+        1,
+        2,
+        3
       ],
       "role": "ufo-abduction",
-      "runtimeSha256": "c16468f9dfb8e1b04aecef6a65c7593a6a6aade1559397b90492192c1401405b",
+      "runtimeSha256": "2c7d4c302ca5246312604449bd8c43f6c9348a505cdea009eb78a3a4f0534857",
       "themeId": "severna",
-      "generatedSourceSha256": "7313cdceac3da13a8002c641d39266dd2b8647ab21b69ba8a5e24c5d195190a0",
-      "fivePipLayout": "four-corners-and-center",
+      "generatedSourceSha256": "0cec08a637927552b2347f246e2fa9814084894d2c31398d91b5325d2f3dff82",
       "threePipLayout": "diagonal-corners-and-center",
-      "sixPipLayout": "two-parallel-columns-of-three",
-      "construction": "theme-specific UFO background plus physical 3D cube with deterministic pips and theme gift skin"
+      "construction": "one rounded 3D cube, theme gift skin wrapped across top/front/right surfaces, physically valid 1/2/3 pips",
+      "onePipLayout": "single-center",
+      "twoPipLayout": "opposite-diagonal-corners"
     }
   ]
 }

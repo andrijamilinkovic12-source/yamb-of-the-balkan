@@ -1,7 +1,8 @@
-/** Compose a physically valid 3D die into each theme's individually illustrated UFO beam. */
+/** Compose a rounded, three-sided gift-skin die into each theme's UFO beam. */
 const fs = require('node:fs');
 const path = require('node:path');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
+const { FACE_VALUES, PIPS, renderThemeDie } = require('./render-theme-die-3d');
 
 const ROOT = path.resolve(__dirname, '..');
 const WIDTH = 1536;
@@ -18,72 +19,6 @@ const THEMES = {
   severna: { skin: 'theme_northern_nebula', pip: '#215779', rim: '#E6FAFF', left: '#79B6D6', bottom: '#3C80AA', glow: '#C6F4FF' },
 };
 
-// One rigid rotation of the canonical die in docs/theme-definitions.json:
-// canonical front 2, right 3, top 1; turn 180 degrees about the vertical axis.
-// This exposes front 5, viewer-left 3 and lower 6.
-const FACE_VALUES = Object.freeze({ front: 5, left: 3, bottom: 6 });
-const PIPS = Object.freeze({
-  3: [[0.24, 0.76], [0.50, 0.50], [0.76, 0.24]],
-  5: [[0.25, 0.25], [0.75, 0.25], [0.50, 0.50], [0.25, 0.75], [0.75, 0.75]],
-  6: [[0.27, 0.22], [0.73, 0.22], [0.27, 0.50], [0.73, 0.50], [0.27, 0.78], [0.73, 0.78]],
-});
-
-// Basis vectors of three planar faces. Each face is a real parallelogram, so
-// circles and coordinates are transformed together instead of hand-placing dots.
-const FACES = Object.freeze({
-  left: { origin: [618, 642], u: [70, -60], v: [-65, 175] },
-  bottom: { origin: [623, 757], u: [205, 60], v: [-70, 60] },
-  front: { origin: [688, 582], u: [205, 60], v: [-65, 175] },
-});
-
-function affine(ctx, face) {
-  const { origin: [x, y], u: [ux, uy], v: [vx, vy] } = face;
-  ctx.transform(ux, uy, vx, vy, x, y);
-}
-
-function drawPips(ctx, points, colors, radius) {
-  for (const [x, y] of points) {
-    ctx.beginPath();
-    ctx.ellipse(x, y, radius + 0.014, radius + 0.014, 0, 0, Math.PI * 2);
-    ctx.fillStyle = colors.rim;
-    ctx.globalAlpha = 0.65;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-    ctx.beginPath();
-    ctx.ellipse(x, y, radius, radius, 0, 0, Math.PI * 2);
-    ctx.fillStyle = colors.pip;
-    ctx.fill();
-  }
-}
-
-function drawSide(ctx, face, value, colors, fill) {
-  ctx.save();
-  affine(ctx, face);
-  const gradient = ctx.createLinearGradient(0, 0, 1, 1);
-  gradient.addColorStop(0, colors.rim);
-  gradient.addColorStop(0.20, fill);
-  gradient.addColorStop(1, colors.bottom);
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 1, 1);
-  ctx.lineWidth = 0.018;
-  ctx.strokeStyle = colors.rim;
-  ctx.globalAlpha = 0.45;
-  ctx.strokeRect(0.012, 0.012, 0.976, 0.976);
-  ctx.globalAlpha = 1;
-  drawPips(ctx, PIPS[value], colors, value === 6 ? 0.065 : 0.075);
-  ctx.restore();
-}
-
-function drawFront(ctx, skin, colors) {
-  ctx.save();
-  affine(ctx, FACES.front);
-  ctx.fillStyle = colors.left;
-  ctx.fillRect(0, 0, 1, 1);
-  ctx.drawImage(skin, 0, 0, 1, 1);
-  drawPips(ctx, PIPS[FACE_VALUES.front], colors, 0.074);
-  ctx.restore();
-}
-
 async function build(theme) {
   const colors = THEMES[theme];
   if (!colors) throw new Error(`Unknown theme: ${theme}`);
@@ -91,18 +26,16 @@ async function build(theme) {
   const basePath = path.join(dir, 'preview-ufo-abduction-background.png');
   const skinPath = path.join(ROOT, 'www', 'assets', 'dice-skins-v1', `${colors.skin}-face-v1.png`);
   const outputPath = path.join(dir, 'preview-ufo-abduction-generated.png');
-  const [base, skin] = await Promise.all([loadImage(basePath), loadImage(skinPath)]);
+  const [base, die] = await Promise.all([loadImage(basePath), renderThemeDie(skinPath, colors)]);
   if (base.width !== WIDTH || base.height !== HEIGHT) throw new Error(`${theme}: unexpected base dimensions`);
   const canvas = createCanvas(WIDTH, HEIGHT);
   const ctx = canvas.getContext('2d');
   ctx.drawImage(base, 0, 0);
   ctx.save();
   ctx.shadowColor = colors.glow;
-  ctx.shadowBlur = 28;
-  drawSide(ctx, FACES.left, FACE_VALUES.left, colors, colors.left);
-  drawSide(ctx, FACES.bottom, FACE_VALUES.bottom, colors, colors.bottom);
+  ctx.shadowBlur = 24;
+  ctx.drawImage(die, 568, 460, 384, 384);
   ctx.restore();
-  drawFront(ctx, skin, colors);
   fs.writeFileSync(outputPath, canvas.toBuffer('image/png'));
   console.log(`${theme}: ${outputPath}`);
 }
@@ -117,4 +50,4 @@ if (require.main === module) {
   main().catch(error => { console.error(error); process.exitCode = 1; });
 }
 
-module.exports = { FACE_VALUES, PIPS, FACES, THEMES };
+module.exports = { FACE_VALUES, PIPS, THEMES };
