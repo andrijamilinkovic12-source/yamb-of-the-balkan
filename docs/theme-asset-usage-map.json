@@ -5,7 +5,7 @@
   "measurement": "Pillow alpha bounding box on each unmodified Green PNG; RGB background uses full canvas.",
   "sourceReferenceScope": "Top-level production www JS/CSS/HTML/JSON and Green manifest/asset registry only; dynamic references and other consumers require runtime review.",
   "note": "Contexts are initial route candidates, not verified per-screen usage. False runtimeUseVerified is deliberate until each slot is checked in the app.",
-  "requiredSlotCount": 186,
+  "requiredSlotCount": 188,
   "slots": [
     {
       "slotId": "background/main",
@@ -17,13 +17,14 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1588",
-        "www/index.html:202",
+        "www/game.js:1590",
+        "www/index.html:207",
+        "www/managers.js:3768",
         "www/teme.css:7074",
         "www/teme.css:7176",
-        "www/teme.css:19022",
-        "www/teme.css:20202",
-        "www/teme.css:21832",
+        "www/teme.css:19019",
+        "www/teme.css:20199",
+        "www/teme.css:21829",
         "www/themes/green/manifest.json:6"
       ],
       "runtimeUseVerified": false,
@@ -34,8 +35,8 @@
         "top": 0,
         "rightExclusive": 941,
         "bottomExclusive": 1672,
-        "widthFraction": 1,
-        "heightFraction": 1,
+        "widthFraction": 1.0,
+        "heightFraction": 1.0,
         "centerXFraction": 0.5,
         "centerYFraction": 0.5
       }
@@ -49,8 +50,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1732",
-        "www/themes/green/asset-registry.json:308"
+        "www/game.js:1730",
+        "www/themes/green/asset-registry.json:674"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 62954,
@@ -75,8 +76,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1712",
-        "www/themes/green/asset-registry.json:287"
+        "www/game.js:1710",
+        "www/themes/green/asset-registry.json:548"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 48569,
@@ -101,8 +102,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1733",
-        "www/themes/green/asset-registry.json:309"
+        "www/game.js:1731",
+        "www/themes/green/asset-registry.json:680"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 52391,
@@ -127,8 +128,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1726",
-        "www/themes/green/asset-registry.json:299"
+        "www/game.js:1724",
+        "www/themes/green/asset-registry.json:620"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 57601,
@@ -153,8 +154,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1725",
-        "www/themes/green/asset-registry.json:305"
+        "www/game.js:1723",
+        "www/themes/green/asset-registry.json:656"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 59464,
@@ -179,8 +180,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1711",
-        "www/themes/green/asset-registry.json:286"
+        "www/game.js:1709",
+        "www/themes/green/asset-registry.json:542"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 50086,
@@ -205,8 +206,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1718",
-        "www/themes/green/asset-registry.json:294"
+        "www/game.js:1716",
+        "www/themes/green/asset-registry.json:590"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 76642,
@@ -231,8 +232,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1715",
-        "www/themes/green/asset-registry.json:291"
+        "www/game.js:1713",
+        "www/themes/green/asset-registry.json:572"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 55057,
@@ -257,8 +258,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1724",
-        "www/themes/green/asset-registry.json:304"
+        "www/game.js:1722",
+        "www/themes/green/asset-registry.json:650"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 62054,
@@ -283,8 +284,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1729",
-        "www/themes/green/asset-registry.json:302"
+        "www/game.js:1727",
+        "www/themes/green/asset-registry.json:638"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 71945,
@@ -309,8 +310,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1713",
-        "www/themes/green/asset-registry.json:289"
+        "www/game.js:1711",
+        "www/themes/green/asset-registry.json:560"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 53916,
@@ -335,8 +336,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1716",
-        "www/themes/green/asset-registry.json:292"
+        "www/game.js:1714",
+        "www/themes/green/asset-registry.json:578"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 46692,
@@ -361,8 +362,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1722",
-        "www/themes/green/asset-registry.json:298"
+        "www/game.js:1720",
+        "www/themes/green/asset-registry.json:614"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 54645,
@@ -387,8 +388,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1728",
-        "www/themes/green/asset-registry.json:301"
+        "www/game.js:1726",
+        "www/themes/green/asset-registry.json:632"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 65615,
@@ -413,8 +414,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1731",
-        "www/themes/green/asset-registry.json:307"
+        "www/game.js:1729",
+        "www/themes/green/asset-registry.json:668"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 38616,
@@ -439,8 +440,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1717",
-        "www/themes/green/asset-registry.json:293"
+        "www/game.js:1715",
+        "www/themes/green/asset-registry.json:584"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 65532,
@@ -465,8 +466,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1734",
-        "www/themes/green/asset-registry.json:310"
+        "www/game.js:1732",
+        "www/themes/green/asset-registry.json:686"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 64780,
@@ -491,8 +492,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1727",
-        "www/themes/green/asset-registry.json:300"
+        "www/game.js:1725",
+        "www/themes/green/asset-registry.json:626"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 69834,
@@ -517,8 +518,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1730",
-        "www/themes/green/asset-registry.json:306"
+        "www/game.js:1728",
+        "www/themes/green/asset-registry.json:662"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 72432,
@@ -543,8 +544,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1720",
-        "www/themes/green/asset-registry.json:296"
+        "www/game.js:1718",
+        "www/themes/green/asset-registry.json:602"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 61655,
@@ -569,8 +570,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1714",
-        "www/themes/green/asset-registry.json:290"
+        "www/game.js:1712",
+        "www/themes/green/asset-registry.json:566"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 63328,
@@ -595,8 +596,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1721",
-        "www/themes/green/asset-registry.json:297"
+        "www/game.js:1719",
+        "www/themes/green/asset-registry.json:608"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 65244,
@@ -621,8 +622,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1735",
-        "www/themes/green/asset-registry.json:311"
+        "www/game.js:1733",
+        "www/themes/green/asset-registry.json:692"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 52958,
@@ -647,8 +648,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1719",
-        "www/themes/green/asset-registry.json:295"
+        "www/game.js:1717",
+        "www/themes/green/asset-registry.json:596"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 57255,
@@ -673,8 +674,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1723",
-        "www/themes/green/asset-registry.json:303"
+        "www/game.js:1721",
+        "www/themes/green/asset-registry.json:644"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 63866,
@@ -699,8 +700,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1736",
-        "www/themes/green/asset-registry.json:288"
+        "www/game.js:1734",
+        "www/themes/green/asset-registry.json:554"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 55949,
@@ -725,8 +726,7 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1708",
-        "www/themes/green/asset-registry.json:247"
+        "www/themes/green/asset-registry.json:498"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 70264,
@@ -751,8 +751,7 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1710",
-        "www/themes/green/asset-registry.json:245"
+        "www/themes/green/asset-registry.json:486"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 67133,
@@ -777,8 +776,7 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1709",
-        "www/themes/green/asset-registry.json:246"
+        "www/themes/green/asset-registry.json:492"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 64571,
@@ -798,21 +796,23 @@
       "slotId": "canonical/competition-medals/fire-streak-bronze-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/fire-streak-bronze-v1.png",
       "intendedContexts": [
-        "statistics-h2h"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/vatreniniz.js:fire streak podium"
+        "www/themes/green/asset-registry.json:428"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 35912,
+      "greenByteSize": 42542,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 231,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.7891,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.5078
@@ -822,21 +822,23 @@
       "slotId": "canonical/competition-medals/fire-streak-gold-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/fire-streak-gold-v1.png",
       "intendedContexts": [
-        "statistics-h2h"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/vatreniniz.js:fire streak podium"
+        "www/themes/green/asset-registry.json:416"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 37089,
+      "greenByteSize": 43440,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 231,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.7891,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.5078
@@ -846,21 +848,23 @@
       "slotId": "canonical/competition-medals/fire-streak-silver-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/fire-streak-silver-v1.png",
       "intendedContexts": [
-        "statistics-h2h"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/vatreniniz.js:fire streak podium"
+        "www/themes/green/asset-registry.json:422"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 37959,
+      "greenByteSize": 44185,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 231,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.7891,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.5078
@@ -870,12 +874,13 @@
       "slotId": "canonical/competition-medals/general-podium-bronze-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
       "intendedContexts": [
-        "leaderboard"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated Top-lista medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/toplista.js:leaderboard podium",
-        "www/game.js:waiting hall of fame"
+        "www/themes/green/asset-registry.json:356"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 60710,
@@ -895,12 +900,13 @@
       "slotId": "canonical/competition-medals/general-podium-gold-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png",
       "intendedContexts": [
-        "leaderboard"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated Top-lista medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/toplista.js:leaderboard podium",
-        "www/game.js:waiting hall of fame"
+        "www/themes/green/asset-registry.json:344"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 60173,
@@ -920,12 +926,13 @@
       "slotId": "canonical/competition-medals/general-podium-silver-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png",
       "intendedContexts": [
-        "leaderboard"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated Top-lista medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/toplista.js:leaderboard podium",
-        "www/game.js:waiting hall of fame"
+        "www/themes/green/asset-registry.json:350"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 57252,
@@ -945,21 +952,23 @@
       "slotId": "canonical/competition-medals/power-index-bronze-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/power-index-bronze-v1.png",
       "intendedContexts": [
-        "statistics-h2h"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/powerindex.js:power index podium"
+        "www/themes/green/asset-registry.json:410"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 36815,
+      "greenByteSize": 34307,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 234,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.8008,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.5137
@@ -969,21 +978,23 @@
       "slotId": "canonical/competition-medals/power-index-gold-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/power-index-gold-v1.png",
       "intendedContexts": [
-        "statistics-h2h"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/powerindex.js:power index podium"
+        "www/themes/green/asset-registry.json:398"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 37846,
+      "greenByteSize": 35364,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 234,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.8008,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.5137
@@ -993,21 +1004,23 @@
       "slotId": "canonical/competition-medals/power-index-silver-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/power-index-silver-v1.png",
       "intendedContexts": [
-        "statistics-h2h"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/powerindex.js:power index podium"
+        "www/themes/green/asset-registry.json:404"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 38582,
+      "greenByteSize": 36062,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 234,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.8008,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.5137
@@ -1018,12 +1031,12 @@
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
       "intendedContexts": [
         "quarterly-league",
-        "rules"
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated Kvartalna liga medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/kvartalnaliga.js:quarterly league medals",
-        "www/pravilaigre.js:quarterly league rules"
+        "www/themes/green/asset-registry.json:374"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 58523,
@@ -1044,12 +1057,12 @@
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png",
       "intendedContexts": [
         "quarterly-league",
-        "rules"
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated Kvartalna liga medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/kvartalnaliga.js:quarterly league medals",
-        "www/pravilaigre.js:quarterly league rules"
+        "www/themes/green/asset-registry.json:362"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 61215,
@@ -1070,12 +1083,12 @@
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
       "intendedContexts": [
         "quarterly-league",
-        "rules"
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated Kvartalna liga medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/kvartalnaliga.js:quarterly league medals",
-        "www/pravilaigre.js:quarterly league rules"
+        "www/themes/green/asset-registry.json:368"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 56129,
@@ -1095,21 +1108,23 @@
       "slotId": "canonical/competition-medals/tournament-bronze-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/tournament-bronze-v1.png",
       "intendedContexts": [
-        "tournament"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/turnir.js:tournament podium"
+        "www/themes/green/asset-registry.json:392"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 35880,
+      "greenByteSize": 40089,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 224,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.7617,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.4941
@@ -1119,21 +1134,23 @@
       "slotId": "canonical/competition-medals/tournament-gold-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/tournament-gold-v1.png",
       "intendedContexts": [
-        "tournament"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/turnir.js:tournament podium"
+        "www/themes/green/asset-registry.json:380"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 36867,
+      "greenByteSize": 40959,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 224,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.7617,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.4941
@@ -1143,21 +1160,23 @@
       "slotId": "canonical/competition-medals/tournament-silver-v1",
       "greenReference": "assets/green-soft-clay/canonical/competition-medals/tournament-silver-v1.png",
       "intendedContexts": [
-        "tournament"
+        "quarterly-league",
+        "tournament",
+        "game-over"
       ],
-      "contextEvidence": "dedicated competition medal; verify in app",
+      "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/turnir.js:tournament podium"
+        "www/themes/green/asset-registry.json:386"
       ],
       "runtimeUseVerified": false,
-      "greenByteSize": 37656,
+      "greenByteSize": 41560,
       "greenDecodedRgbaBytes": 262144,
       "greenOpticalBoundsPx": {
-        "left": 29,
+        "left": 30,
         "top": 29,
-        "rightExclusive": 233,
+        "rightExclusive": 232,
         "bottomExclusive": 224,
-        "widthFraction": 0.7969,
+        "widthFraction": 0.7891,
         "heightFraction": 0.7617,
         "centerXFraction": 0.5117,
         "centerYFraction": 0.4941
@@ -1172,8 +1191,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:648",
-        "www/themes/green/asset-registry.json:1054"
+        "www/index.html:653",
+        "www/themes/green/asset-registry.json:1746"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 124828,
@@ -1199,10 +1218,10 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/dnevniizazov.js:727",
-        "www/game.js:1598",
-        "www/index.html:1038",
-        "www/pravilaigre.js:147",
-        "www/themes/green/asset-registry.json:1053"
+        "www/game.js:1600",
+        "www/index.html:1042",
+        "www/pravilaigre.js:180",
+        "www/themes/green/asset-registry.json:1740"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 209611,
@@ -1227,8 +1246,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/dnevniizazov.js:1006",
-        "www/game.js:1628",
-        "www/themes/green/asset-registry.json:1508"
+        "www/game.js:1630",
+        "www/themes/green/asset-registry.json:2315"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 118655,
@@ -1253,8 +1272,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/dnevniizazov.js:1248",
-        "www/game.js:1627",
-        "www/themes/green/asset-registry.json:1507"
+        "www/game.js:1629",
+        "www/themes/green/asset-registry.json:2309"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 117989,
@@ -1279,8 +1298,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/dnevniizazov.js:728",
-        "www/game.js:1626",
-        "www/themes/green/asset-registry.json:1506"
+        "www/game.js:1628",
+        "www/themes/green/asset-registry.json:2303"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 106757,
@@ -1308,8 +1327,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1633",
-        "www/themes/green/asset-registry.json:21"
+        "www/game.js:1635",
+        "www/themes/green/asset-registry.json:35"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 184816,
@@ -1337,8 +1356,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1634",
-        "www/themes/green/asset-registry.json:22"
+        "www/game.js:1636",
+        "www/themes/green/asset-registry.json:40"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 185826,
@@ -1366,11 +1385,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1630",
-        "www/index.html:314",
-        "www/index.html:334",
-        "www/index.html:360",
-        "www/themes/green/asset-registry.json:18"
+        "www/game.js:1632",
+        "www/index.html:319",
+        "www/index.html:339",
+        "www/index.html:365",
+        "www/themes/green/asset-registry.json:20"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 200404,
@@ -1399,15 +1418,15 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/dnevniizazov.js:1297",
-        "www/game.js:1631",
-        "www/index.html:381",
-        "www/index.html:822",
-        "www/index.html:1010",
-        "www/index.html:1015",
-        "www/index.html:1252",
+        "www/game.js:1633",
+        "www/index.html:386",
+        "www/index.html:827",
+        "www/index.html:1014",
+        "www/index.html:1019",
+        "www/index.html:1256",
         "www/languages.js:1701",
-        "www/pravilaigre.js:166",
-        "www/themes/green/asset-registry.json:19"
+        "www/pravilaigre.js:199",
+        "www/themes/green/asset-registry.json:25"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 34617,
@@ -1436,10 +1455,10 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/efekti.css:3482",
-        "www/game.js:1632",
+        "www/game.js:1634",
         "www/managers.js:1744",
         "www/teme.css:2864",
-        "www/themes/green/asset-registry.json:20"
+        "www/themes/green/asset-registry.json:30"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 18036,
@@ -1464,8 +1483,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:540",
-        "www/themes/green/asset-registry.json:1208"
+        "www/index.html:545",
+        "www/themes/green/asset-registry.json:1930"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 108756,
@@ -1490,11 +1509,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1611",
-        "www/game.js:6033",
-        "www/index.html:1610",
-        "www/pravilaigre.js:160",
-        "www/themes/green/asset-registry.json:1207"
+        "www/game.js:1613",
+        "www/game.js:5988",
+        "www/index.html:1614",
+        "www/pravilaigre.js:193",
+        "www/themes/green/asset-registry.json:1924"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 178822,
@@ -1520,9 +1539,9 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:871",
-        "www/game.js:1652",
-        "www/game.js:3053",
-        "www/themes/green/asset-registry.json:887"
+        "www/game.js:1651",
+        "www/game.js:3017",
+        "www/themes/green/asset-registry.json:1510"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 49705,
@@ -1547,11 +1566,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1651",
-        "www/index.html:836",
-        "www/index.html:847",
-        "www/pravilaigre.js:175",
-        "www/themes/green/asset-registry.json:886"
+        "www/game.js:1650",
+        "www/index.html:841",
+        "www/index.html:852",
+        "www/pravilaigre.js:208",
+        "www/themes/green/asset-registry.json:1504"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 32497,
@@ -1577,8 +1596,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1042",
-        "www/game.js:1653",
-        "www/themes/green/asset-registry.json:888"
+        "www/game.js:1652",
+        "www/themes/green/asset-registry.json:1516"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 32775,
@@ -1604,8 +1623,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1043",
-        "www/game.js:1654",
-        "www/themes/green/asset-registry.json:889"
+        "www/game.js:1653",
+        "www/themes/green/asset-registry.json:1522"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 8856,
@@ -1631,8 +1650,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1084",
-        "www/game.js:1656",
-        "www/themes/green/asset-registry.json:891"
+        "www/game.js:1655",
+        "www/themes/green/asset-registry.json:1535"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 52887,
@@ -1658,8 +1677,8 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1044",
-        "www/game.js:1655",
-        "www/themes/green/asset-registry.json:890"
+        "www/game.js:1654",
+        "www/themes/green/asset-registry.json:1529"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 29980,
@@ -1684,9 +1703,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1592",
-        "www/index.html:602",
-        "www/themes/green/asset-registry.json:1384"
+        "www/game.js:1594",
+        "www/index.html:607",
+        "www/themes/green/asset-registry.json:2156"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 74765,
@@ -1711,9 +1730,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1671",
-        "www/game.js:6003",
-        "www/themes/green/asset-registry.json:1383"
+        "www/game.js:1670",
+        "www/game.js:5958",
+        "www/themes/green/asset-registry.json:2150"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 120269,
@@ -1738,9 +1757,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1672",
-        "www/index.html:1238",
-        "www/themes/green/asset-registry.json:731"
+        "www/game.js:1671",
+        "www/index.html:1242",
+        "www/themes/green/asset-registry.json:1279"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 38409,
@@ -1765,9 +1784,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1594",
-        "www/index.html:624",
-        "www/themes/green/asset-registry.json:1466"
+        "www/game.js:1596",
+        "www/index.html:629",
+        "www/themes/green/asset-registry.json:2258"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 92386,
@@ -1792,11 +1811,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1679",
-        "www/game.js:6023",
-        "www/index.html:1288",
-        "www/pravilaigre.js:159",
-        "www/themes/green/asset-registry.json:1465"
+        "www/game.js:1678",
+        "www/game.js:5978",
+        "www/index.html:1292",
+        "www/pravilaigre.js:192",
+        "www/themes/green/asset-registry.json:2252"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 150862,
@@ -1820,11 +1839,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1637",
-        "www/game.js:3786",
-        "www/game.js:3880",
+        "www/game.js:1639",
+        "www/game.js:3750",
+        "www/game.js:3844",
         "www/toplista.js:42",
-        "www/themes/green/asset-registry.json:1548"
+        "www/themes/green/asset-registry.json:2372"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 68504,
@@ -1848,10 +1867,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1635",
-        "www/index.html:1078",
-        "www/index.html:1099",
-        "www/themes/green/asset-registry.json:1546"
+        "www/game.js:1637",
+        "www/index.html:1082",
+        "www/index.html:1103",
+        "www/themes/green/asset-registry.json:2358"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 47269,
@@ -1875,10 +1894,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1636",
-        "www/index.html:1086",
-        "www/index.html:1119",
-        "www/themes/green/asset-registry.json:1547"
+        "www/game.js:1638",
+        "www/index.html:1090",
+        "www/index.html:1123",
+        "www/themes/green/asset-registry.json:2365"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 38952,
@@ -1903,8 +1922,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:652",
-        "www/themes/green/asset-registry.json:1003"
+        "www/index.html:657",
+        "www/themes/green/asset-registry.json:1685"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 72226,
@@ -1929,11 +1948,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1599",
-        "www/game.js:5963",
-        "www/index.html:1068",
-        "www/pravilaigre.js:148",
-        "www/themes/green/asset-registry.json:1002"
+        "www/game.js:1601",
+        "www/game.js:5918",
+        "www/index.html:1072",
+        "www/pravilaigre.js:181",
+        "www/themes/green/asset-registry.json:1679"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 116808,
@@ -1958,9 +1977,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1590",
-        "www/index.html:549",
-        "www/themes/green/asset-registry.json:1255"
+        "www/game.js:1592",
+        "www/index.html:554",
+        "www/themes/green/asset-registry.json:1992"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 94595,
@@ -1985,11 +2004,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1614",
-        "www/game.js:6041",
-        "www/index.html:1655",
-        "www/pravilaigre.js:161",
-        "www/themes/green/asset-registry.json:1254"
+        "www/game.js:1616",
+        "www/game.js:5996",
+        "www/index.html:1659",
+        "www/pravilaigre.js:194",
+        "www/themes/green/asset-registry.json:1986"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 154856,
@@ -2014,9 +2033,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1593",
-        "www/index.html:615",
-        "www/themes/green/asset-registry.json:1424"
+        "www/game.js:1595",
+        "www/index.html:620",
+        "www/themes/green/asset-registry.json:2206"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 83367,
@@ -2041,11 +2060,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1673",
-        "www/game.js:6013",
-        "www/index.html:1287",
-        "www/pravilaigre.js:158",
-        "www/themes/green/asset-registry.json:1423"
+        "www/game.js:1672",
+        "www/game.js:5968",
+        "www/index.html:1291",
+        "www/pravilaigre.js:191",
+        "www/themes/green/asset-registry.json:2200"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 135692,
@@ -2070,10 +2089,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:2263",
-        "www/index.html:559",
-        "www/teme.css:19441",
-        "www/themes/green/asset-registry.json:1304"
+        "www/game.js:2198",
+        "www/index.html:564",
+        "www/teme.css:19438",
+        "www/themes/green/asset-registry.json:2056"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 136653,
@@ -2098,12 +2117,12 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1748",
-        "www/game.js:10578",
-        "www/index.html:1028",
-        "www/kvartalnaliga.js:544",
-        "www/pravilaigre.js:165",
-        "www/themes/green/asset-registry.json:1303"
+        "www/game.js:1746",
+        "www/game.js:10490",
+        "www/index.html:1032",
+        "www/kvartalnaliga.js:542",
+        "www/pravilaigre.js:198",
+        "www/themes/green/asset-registry.json:2050"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 217526,
@@ -2127,8 +2146,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1752",
-        "www/themes/green/asset-registry.json:534"
+        "www/game.js:1750",
+        "www/themes/green/asset-registry.json:1022"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 63985,
@@ -2152,8 +2171,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1750",
-        "www/themes/green/asset-registry.json:532"
+        "www/game.js:1748",
+        "www/themes/green/asset-registry.json:1010"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 53357,
@@ -2177,8 +2196,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1749",
-        "www/themes/green/asset-registry.json:531"
+        "www/game.js:1747",
+        "www/themes/green/asset-registry.json:1004"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 29593,
@@ -2202,8 +2221,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1751",
-        "www/themes/green/asset-registry.json:533"
+        "www/game.js:1749",
+        "www/themes/green/asset-registry.json:1016"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 58295,
@@ -2227,8 +2246,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1758",
-        "www/themes/green/asset-registry.json:481"
+        "www/game.js:1756",
+        "www/themes/green/asset-registry.json:949"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 153842,
@@ -2252,8 +2271,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1753",
-        "www/themes/green/asset-registry.json:476"
+        "www/game.js:1751",
+        "www/themes/green/asset-registry.json:919"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 102592,
@@ -2277,8 +2296,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1756",
-        "www/themes/green/asset-registry.json:479"
+        "www/game.js:1754",
+        "www/themes/green/asset-registry.json:937"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 177107,
@@ -2302,8 +2321,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1755",
-        "www/themes/green/asset-registry.json:478"
+        "www/game.js:1753",
+        "www/themes/green/asset-registry.json:931"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 136674,
@@ -2327,8 +2346,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1754",
-        "www/themes/green/asset-registry.json:477"
+        "www/game.js:1752",
+        "www/themes/green/asset-registry.json:925"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 139794,
@@ -2352,8 +2371,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1757",
-        "www/themes/green/asset-registry.json:480"
+        "www/game.js:1755",
+        "www/themes/green/asset-registry.json:943"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 157456,
@@ -2380,9 +2399,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1623",
-        "www/pravilaigre.js:168",
-        "www/themes/green/asset-registry.json:135"
+        "www/game.js:1625",
+        "www/pravilaigre.js:201",
+        "www/themes/green/asset-registry.json:214"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 15743,
@@ -2409,10 +2428,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1622",
-        "www/index.html:377",
-        "www/index.html:423",
-        "www/themes/green/asset-registry.json:134"
+        "www/game.js:1624",
+        "www/index.html:382",
+        "www/index.html:428",
+        "www/themes/green/asset-registry.json:208"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 48652,
@@ -2439,9 +2458,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1625",
-        "www/pravilaigre.js:169",
-        "www/themes/green/asset-registry.json:137"
+        "www/game.js:1627",
+        "www/pravilaigre.js:202",
+        "www/themes/green/asset-registry.json:226"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 16809,
@@ -2468,12 +2487,12 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1624",
-        "www/index.html:378",
-        "www/index.html:389",
-        "www/index.html:424",
-        "www/index.html:435",
-        "www/themes/green/asset-registry.json:136"
+        "www/game.js:1626",
+        "www/index.html:383",
+        "www/index.html:394",
+        "www/index.html:429",
+        "www/index.html:440",
+        "www/themes/green/asset-registry.json:220"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 51284,
@@ -2497,9 +2516,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1610",
-        "www/pravilaigre.js:146",
-        "www/themes/green/asset-registry.json:1590"
+        "www/game.js:1612",
+        "www/pravilaigre.js:179",
+        "www/themes/green/asset-registry.json:2438"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 240872,
@@ -2523,9 +2542,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1607",
-        "www/pravilaigre.js:143",
-        "www/themes/green/asset-registry.json:1589"
+        "www/game.js:1609",
+        "www/pravilaigre.js:176",
+        "www/themes/green/asset-registry.json:2431"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 200700,
@@ -2549,9 +2568,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1605",
-        "www/pravilaigre.js:141",
-        "www/themes/green/asset-registry.json:1587"
+        "www/game.js:1607",
+        "www/pravilaigre.js:174",
+        "www/themes/green/asset-registry.json:2417"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 188200,
@@ -2575,9 +2594,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1606",
-        "www/pravilaigre.js:142",
-        "www/themes/green/asset-registry.json:1588"
+        "www/game.js:1608",
+        "www/pravilaigre.js:175",
+        "www/themes/green/asset-registry.json:2424"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 174369,
@@ -2602,8 +2621,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:664",
-        "www/themes/green/asset-registry.json:1156"
+        "www/index.html:669",
+        "www/themes/green/asset-registry.json:1868"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 108123,
@@ -2628,11 +2647,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1602",
-        "www/game.js:5987",
-        "www/pravilaigre.js:153",
-        "www/pravilaigre.js:598",
-        "www/themes/green/asset-registry.json:1155"
+        "www/game.js:1604",
+        "www/game.js:5942",
+        "www/pravilaigre.js:186",
+        "www/pravilaigre.js:638",
+        "www/themes/green/asset-registry.json:1862"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 175314,
@@ -2656,10 +2675,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1662",
-        "www/index.html:1195",
-        "www/managers.js:3768",
-        "www/themes/green/asset-registry.json:1636"
+        "www/game.js:1661",
+        "www/index.html:1199",
+        "www/themes/green/asset-registry.json:2514"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 57344,
@@ -2683,9 +2701,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1663",
-        "www/index.html:1195",
-        "www/themes/green/asset-registry.json:1637"
+        "www/game.js:1662",
+        "www/index.html:1199",
+        "www/themes/green/asset-registry.json:2521"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 47659,
@@ -2709,9 +2727,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1660",
-        "www/index.html:1184",
-        "www/themes/green/asset-registry.json:1634"
+        "www/game.js:1659",
+        "www/index.html:1188",
+        "www/themes/green/asset-registry.json:2500"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 31850,
@@ -2735,10 +2753,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1665",
-        "www/index.html:1219",
-        "www/pravilaigre.js:152",
-        "www/themes/green/asset-registry.json:1639"
+        "www/game.js:1664",
+        "www/index.html:1223",
+        "www/pravilaigre.js:185",
+        "www/themes/green/asset-registry.json:2535"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 46345,
@@ -2762,10 +2780,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1658",
-        "www/index.html:1159",
-        "www/pravilaigre.js:151",
-        "www/themes/green/asset-registry.json:1632"
+        "www/game.js:1657",
+        "www/index.html:1163",
+        "www/pravilaigre.js:184",
+        "www/themes/green/asset-registry.json:2486"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 40077,
@@ -2789,9 +2807,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1659",
-        "www/index.html:1179",
-        "www/themes/green/asset-registry.json:1633"
+        "www/game.js:1658",
+        "www/index.html:1183",
+        "www/themes/green/asset-registry.json:2493"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 41850,
@@ -2815,9 +2833,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1664",
-        "www/index.html:1217",
-        "www/themes/green/asset-registry.json:1638"
+        "www/game.js:1663",
+        "www/index.html:1221",
+        "www/themes/green/asset-registry.json:2528"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 50701,
@@ -2841,9 +2859,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1661",
-        "www/index.html:1189",
-        "www/themes/green/asset-registry.json:1635"
+        "www/game.js:1660",
+        "www/index.html:1193",
+        "www/themes/green/asset-registry.json:2507"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 42238,
@@ -2868,8 +2886,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:660",
-        "www/themes/green/asset-registry.json:1105"
+        "www/index.html:665",
+        "www/themes/green/asset-registry.json:1807"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 118253,
@@ -2894,11 +2912,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1601",
-        "www/game.js:5979",
-        "www/index.html:1149",
-        "www/pravilaigre.js:150",
-        "www/themes/green/asset-registry.json:1104"
+        "www/game.js:1603",
+        "www/game.js:5934",
+        "www/index.html:1153",
+        "www/pravilaigre.js:183",
+        "www/themes/green/asset-registry.json:1801"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 195989,
@@ -2923,9 +2941,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1670",
-        "www/index.html:1277",
-        "www/themes/green/asset-registry.json:771"
+        "www/game.js:1669",
+        "www/index.html:1281",
+        "www/themes/green/asset-registry.json:1334"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 39844,
@@ -2950,9 +2968,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1668",
-        "www/index.html:1254",
-        "www/themes/green/asset-registry.json:770"
+        "www/game.js:1667",
+        "www/index.html:1258",
+        "www/themes/green/asset-registry.json:1328"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 49334,
@@ -2977,9 +2995,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1667",
-        "www/index.html:1246",
-        "www/themes/green/asset-registry.json:769"
+        "www/game.js:1666",
+        "www/index.html:1250",
+        "www/themes/green/asset-registry.json:1322"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 36303,
@@ -3004,9 +3022,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1591",
-        "www/index.html:589",
-        "www/themes/green/asset-registry.json:1345"
+        "www/game.js:1593",
+        "www/index.html:594",
+        "www/themes/green/asset-registry.json:2107"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 93182,
@@ -3031,9 +3049,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1666",
-        "www/game.js:5995",
-        "www/themes/green/asset-registry.json:1344"
+        "www/game.js:1665",
+        "www/game.js:5950",
+        "www/themes/green/asset-registry.json:2101"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 156807,
@@ -3057,10 +3075,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1650",
-        "www/index.html:831",
-        "www/pravilaigre.js:174",
-        "www/themes/green/asset-registry.json:825"
+        "www/game.js:1649",
+        "www/index.html:836",
+        "www/pravilaigre.js:207",
+        "www/themes/green/asset-registry.json:1438"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 48898,
@@ -3085,10 +3103,10 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1047",
-        "www/game.js:1648",
-        "www/index.html:801",
-        "www/themes/green/asset-registry.json:823",
-        "www/themes/green/asset-registry.json:896"
+        "www/game.js:1647",
+        "www/index.html:806",
+        "www/themes/green/asset-registry.json:1426",
+        "www/themes/green/asset-registry.json:1559"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 28397,
@@ -3113,11 +3131,11 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1046",
-        "www/game.js:1645",
-        "www/index.html:770",
-        "www/index.html:1241",
-        "www/themes/green/asset-registry.json:820",
-        "www/themes/green/asset-registry.json:895"
+        "www/game.js:1644",
+        "www/index.html:775",
+        "www/index.html:1245",
+        "www/themes/green/asset-registry.json:1408",
+        "www/themes/green/asset-registry.json:1552"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 21877,
@@ -3142,13 +3160,13 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/game.js:1045",
-        "www/game.js:1647",
-        "www/index.html:791",
-        "www/pravilaigre.js:173",
+        "www/game.js:1646",
+        "www/index.html:796",
+        "www/pravilaigre.js:206",
         "www/vatreniniz.js:44",
-        "www/vatreniniz.js:281",
-        "www/themes/green/asset-registry.json:822",
-        "www/themes/green/asset-registry.json:894"
+        "www/vatreniniz.js:273",
+        "www/themes/green/asset-registry.json:1420",
+        "www/themes/green/asset-registry.json:1545"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 37145,
@@ -3172,9 +3190,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1643",
-        "www/index.html:762",
-        "www/themes/green/asset-registry.json:818"
+        "www/game.js:1642",
+        "www/index.html:767",
+        "www/themes/green/asset-registry.json:1396"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 24371,
@@ -3198,10 +3216,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1646",
-        "www/index.html:771",
-        "www/index.html:1240",
-        "www/themes/green/asset-registry.json:821"
+        "www/game.js:1645",
+        "www/index.html:776",
+        "www/index.html:1244",
+        "www/themes/green/asset-registry.json:1414"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 24382,
@@ -3225,12 +3243,12 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1641",
+        "www/game.js:1640",
         "www/powerindex.js:77",
-        "www/powerindex.js:283",
-        "www/pravilaigre.js:170",
-        "www/turnir.js:2025",
-        "www/themes/green/asset-registry.json:816"
+        "www/powerindex.js:275",
+        "www/pravilaigre.js:203",
+        "www/turnir.js:1970",
+        "www/themes/green/asset-registry.json:1384"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 38478,
@@ -3254,10 +3272,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1642",
-        "www/index.html:758",
-        "www/pravilaigre.js:171",
-        "www/themes/green/asset-registry.json:817"
+        "www/game.js:1641",
+        "www/index.html:763",
+        "www/pravilaigre.js:204",
+        "www/themes/green/asset-registry.json:1390"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 16242,
@@ -3281,9 +3299,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1649",
-        "www/index.html:812",
-        "www/themes/green/asset-registry.json:824"
+        "www/game.js:1648",
+        "www/index.html:817",
+        "www/themes/green/asset-registry.json:1432"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 39193,
@@ -3307,11 +3325,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1644",
-        "www/index.html:769",
-        "www/index.html:1239",
-        "www/pravilaigre.js:172",
-        "www/themes/green/asset-registry.json:819"
+        "www/game.js:1643",
+        "www/index.html:774",
+        "www/index.html:1243",
+        "www/pravilaigre.js:205",
+        "www/themes/green/asset-registry.json:1402"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 44712,
@@ -3336,9 +3354,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1657",
-        "www/index.html:656",
-        "www/themes/green/asset-registry.json:951"
+        "www/game.js:1656",
+        "www/index.html:661",
+        "www/themes/green/asset-registry.json:1623"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 60928,
@@ -3363,11 +3381,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1600",
-        "www/game.js:5971",
-        "www/index.html:733",
-        "www/pravilaigre.js:149",
-        "www/themes/green/asset-registry.json:950"
+        "www/game.js:1602",
+        "www/game.js:5926",
+        "www/index.html:738",
+        "www/pravilaigre.js:182",
+        "www/themes/green/asset-registry.json:1617"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 99726,
@@ -3392,20 +3410,21 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1737",
-        "www/game.js:4492",
-        "www/game.js:9147",
-        "www/index.html:640",
-        "www/index.html:1057",
-        "www/index.html:1687",
-        "www/pravilaigre.js:155",
-        "www/turnir.js:733",
-        "www/turnir.js:1173",
-        "www/turnir.js:1415",
-        "www/turnir.js:1580",
-        "www/turnir.js:1932",
-        "www/turnir.js:2107",
-        "www/themes/green/asset-registry.json:686"
+        "www/game.js:1735",
+        "www/game.js:1801",
+        "www/game.js:4448",
+        "www/game.js:9075",
+        "www/index.html:645",
+        "www/index.html:1061",
+        "www/index.html:1690",
+        "www/pravilaigre.js:188",
+        "www/turnir.js:730",
+        "www/turnir.js:1154",
+        "www/turnir.js:1402",
+        "www/turnir.js:1532",
+        "www/turnir.js:1880",
+        "www/turnir.js:2046",
+        "www/themes/green/asset-registry.json:1224"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 99449,
@@ -3430,11 +3449,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1747",
-        "www/game.js:4499",
-        "www/game.js:9148",
-        "www/turnir.js:2110",
-        "www/themes/green/asset-registry.json:687"
+        "www/game.js:1745",
+        "www/turnir.js:12",
+        "www/themes/green/asset-registry.json:1230"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 40256,
@@ -3458,9 +3475,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1739",
-        "www/turnir.js:799",
-        "www/themes/green/asset-registry.json:583"
+        "www/game.js:1737",
+        "www/turnir.js:788",
+        "www/themes/green/asset-registry.json:1081"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 35866,
@@ -3484,10 +3501,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1740",
-        "www/pravilaigre.js:157",
-        "www/turnir.js:806",
-        "www/themes/green/asset-registry.json:584"
+        "www/game.js:1738",
+        "www/pravilaigre.js:190",
+        "www/turnir.js:791",
+        "www/themes/green/asset-registry.json:1087"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 44655,
@@ -3511,9 +3528,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1738",
-        "www/turnir.js:792",
-        "www/themes/green/asset-registry.json:582"
+        "www/game.js:1736",
+        "www/turnir.js:785",
+        "www/themes/green/asset-registry.json:1075"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 39459,
@@ -3537,9 +3554,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1745",
-        "www/turnir.js:2130",
-        "www/themes/green/asset-registry.json:633"
+        "www/game.js:1743",
+        "www/turnir.js:2069",
+        "www/themes/green/asset-registry.json:1161"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 38362,
@@ -3563,10 +3580,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1746",
-        "www/turnir.js:2051",
-        "www/turnir.js:2108",
-        "www/themes/green/asset-registry.json:634"
+        "www/game.js:1744",
+        "www/turnir.js:1995",
+        "www/turnir.js:2047",
+        "www/themes/green/asset-registry.json:1167"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 52754,
@@ -3590,9 +3607,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1741",
-        "www/turnir.js:1569",
-        "www/themes/green/asset-registry.json:629"
+        "www/game.js:1739",
+        "www/turnir.js:1521",
+        "www/themes/green/asset-registry.json:1137"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 40494,
@@ -3616,8 +3633,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1743",
-        "www/themes/green/asset-registry.json:631"
+        "www/game.js:1741",
+        "www/themes/green/asset-registry.json:1149"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 61608,
@@ -3641,9 +3658,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1744",
-        "www/pravilaigre.js:156",
-        "www/themes/green/asset-registry.json:632"
+        "www/game.js:1742",
+        "www/pravilaigre.js:189",
+        "www/themes/green/asset-registry.json:1155"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 42740,
@@ -3667,9 +3684,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1742",
-        "www/turnir.js:1550",
-        "www/themes/green/asset-registry.json:630"
+        "www/game.js:1740",
+        "www/turnir.js:1506",
+        "www/themes/green/asset-registry.json:1143"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 51667,
@@ -3693,8 +3710,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1691",
-        "www/themes/green/asset-registry.json:414"
+        "www/game.js:1690",
+        "www/themes/green/asset-registry.json:835"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 49897,
@@ -3718,9 +3735,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1693",
-        "www/managers.js:3712",
-        "www/themes/green/asset-registry.json:416"
+        "www/game.js:1692",
+        "www/themes/green/asset-registry.json:847"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 54964,
@@ -3744,9 +3760,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1692",
-        "www/managers.js:3686",
-        "www/themes/green/asset-registry.json:415"
+        "www/game.js:1691",
+        "www/themes/green/asset-registry.json:841"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 58765,
@@ -3770,8 +3785,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1690",
-        "www/themes/green/asset-registry.json:413"
+        "www/game.js:1689",
+        "www/themes/green/asset-registry.json:829"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 71702,
@@ -3795,12 +3810,12 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1687",
-        "www/index.html:1013",
-        "www/pravilaigre.js:180",
-        "www/teme.css:23668",
-        "www/teme.css:23696",
-        "www/themes/green/asset-registry.json:411"
+        "www/game.js:1686",
+        "www/index.html:1017",
+        "www/pravilaigre.js:213",
+        "www/teme.css:23665",
+        "www/teme.css:23693",
+        "www/themes/green/asset-registry.json:817"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 35484,
@@ -3824,11 +3839,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1686",
-        "www/index.html:1012",
-        "www/pravilaigre.js:179",
-        "www/teme.css:23665",
-        "www/themes/green/asset-registry.json:410"
+        "www/game.js:1685",
+        "www/index.html:1016",
+        "www/pravilaigre.js:212",
+        "www/teme.css:23662",
+        "www/themes/green/asset-registry.json:811"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 68689,
@@ -3852,11 +3867,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1688",
-        "www/index.html:1014",
-        "www/pravilaigre.js:181",
-        "www/teme.css:23671",
-        "www/themes/green/asset-registry.json:412"
+        "www/game.js:1687",
+        "www/index.html:1018",
+        "www/pravilaigre.js:214",
+        "www/teme.css:23668",
+        "www/themes/green/asset-registry.json:823"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 58182,
@@ -3880,10 +3895,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1685",
-        "www/index.html:1011",
-        "www/pravilaigre.js:178",
-        "www/themes/green/asset-registry.json:409"
+        "www/game.js:1684",
+        "www/index.html:1015",
+        "www/pravilaigre.js:211",
+        "www/themes/green/asset-registry.json:805"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 64596,
@@ -3907,9 +3922,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1703",
-        "www/teme.css:23794",
-        "www/themes/green/asset-registry.json:1694"
+        "www/game.js:1702",
+        "www/teme.css:23791",
+        "www/themes/green/asset-registry.json:2650"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 92203,
@@ -3933,9 +3948,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1697",
-        "www/teme.css:23788",
-        "www/themes/green/asset-registry.json:1688"
+        "www/game.js:1696",
+        "www/teme.css:23785",
+        "www/themes/green/asset-registry.json:2608"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 83672,
@@ -3952,6 +3967,32 @@
       }
     },
     {
+      "slotId": "canonical/treasury-effect-previews/preview-confetti-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-confetti-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1707",
+        "www/theme-effect-previews.css:173",
+        "www/themes/green/asset-registry.json:2685"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 84825,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 25,
+        "top": 15,
+        "rightExclusive": 358,
+        "bottomExclusive": 241,
+        "widthFraction": 0.8672,
+        "heightFraction": 0.8828,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.5
+      }
+    },
+    {
       "slotId": "canonical/treasury-effect-previews/preview-cosmic-dust-v1",
       "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
       "intendedContexts": [
@@ -3959,9 +4000,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1698",
-        "www/teme.css:23789",
-        "www/themes/green/asset-registry.json:1689"
+        "www/game.js:1697",
+        "www/teme.css:23786",
+        "www/themes/green/asset-registry.json:2615"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 85198,
@@ -3985,9 +4026,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1699",
-        "www/teme.css:23790",
-        "www/themes/green/asset-registry.json:1690"
+        "www/game.js:1698",
+        "www/teme.css:23787",
+        "www/themes/green/asset-registry.json:2622"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 75841,
@@ -4011,9 +4052,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1706",
-        "www/teme.css:23797",
-        "www/themes/green/asset-registry.json:1697"
+        "www/game.js:1705",
+        "www/teme.css:23794",
+        "www/themes/green/asset-registry.json:2671"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 88396,
@@ -4037,9 +4078,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1701",
-        "www/teme.css:23792",
-        "www/themes/green/asset-registry.json:1692"
+        "www/game.js:1700",
+        "www/teme.css:23789",
+        "www/themes/green/asset-registry.json:2636"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 84450,
@@ -4063,9 +4104,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1696",
-        "www/teme.css:23787",
-        "www/themes/green/asset-registry.json:1687"
+        "www/game.js:1695",
+        "www/teme.css:23784",
+        "www/themes/green/asset-registry.json:2601"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 60176,
@@ -4082,6 +4123,32 @@
       }
     },
     {
+      "slotId": "canonical/treasury-effect-previews/preview-gold-rain-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1708",
+        "www/theme-effect-previews.css:175",
+        "www/themes/green/asset-registry.json:2692"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 111142,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 19,
+        "top": 20,
+        "rightExclusive": 365,
+        "bottomExclusive": 236,
+        "widthFraction": 0.901,
+        "heightFraction": 0.8438,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
       "slotId": "canonical/treasury-effect-previews/preview-ice-age-v1",
       "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png",
       "intendedContexts": [
@@ -4089,9 +4156,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1702",
-        "www/teme.css:23793",
-        "www/themes/green/asset-registry.json:1693"
+        "www/game.js:1701",
+        "www/teme.css:23790",
+        "www/themes/green/asset-registry.json:2643"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 91378,
@@ -4115,9 +4182,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1705",
-        "www/teme.css:23796",
-        "www/themes/green/asset-registry.json:1696"
+        "www/game.js:1704",
+        "www/teme.css:23793",
+        "www/themes/green/asset-registry.json:2664"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 84355,
@@ -4141,10 +4208,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1700",
+        "www/game.js:1699",
         "www/managers.js:1131",
-        "www/teme.css:23791",
-        "www/themes/green/asset-registry.json:1691"
+        "www/teme.css:23788",
+        "www/themes/green/asset-registry.json:2629"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 78593,
@@ -4168,9 +4235,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1704",
-        "www/teme.css:23795",
-        "www/themes/green/asset-registry.json:1695"
+        "www/game.js:1703",
+        "www/teme.css:23792",
+        "www/themes/green/asset-registry.json:2657"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 85674,
@@ -4194,10 +4261,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1695",
+        "www/game.js:1694",
         "www/managers.js:989",
-        "www/teme.css:23785",
-        "www/themes/green/asset-registry.json:1686"
+        "www/teme.css:23782",
+        "www/themes/green/asset-registry.json:2594"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 78083,
@@ -4221,10 +4288,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1707",
+        "www/game.js:1706",
         "www/managers.js:1203",
-        "www/teme.css:23798",
-        "www/themes/green/asset-registry.json:1698"
+        "www/teme.css:23795",
+        "www/themes/green/asset-registry.json:2678"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 85437,
@@ -4248,10 +4315,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1694",
+        "www/game.js:1693",
         "www/managers.js:1024",
-        "www/teme.css:23786",
-        "www/themes/green/asset-registry.json:1685"
+        "www/teme.css:23783",
+        "www/themes/green/asset-registry.json:2587"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 93423,
@@ -4277,10 +4344,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1620",
-        "www/index.html:315",
-        "www/index.html:348",
-        "www/themes/green/asset-registry.json:92"
+        "www/game.js:1622",
+        "www/index.html:320",
+        "www/index.html:353",
+        "www/themes/green/asset-registry.json:146"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 177525,
@@ -4306,11 +4373,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1621",
-        "www/index.html:408",
-        "www/index.html:427",
-        "www/pravilaigre.js:167",
-        "www/themes/green/asset-registry.json:93"
+        "www/game.js:1623",
+        "www/index.html:413",
+        "www/index.html:432",
+        "www/pravilaigre.js:200",
+        "www/themes/green/asset-registry.json:151"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 33758,
@@ -4335,9 +4402,9 @@
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
         "www/dnevniizazov.js:1254",
-        "www/game.js:1629",
-        "www/themes/green/asset-registry.json:27",
-        "www/themes/green/asset-registry.json:140"
+        "www/game.js:1631",
+        "www/themes/green/asset-registry.json:57",
+        "www/themes/green/asset-registry.json:234"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 107898,
@@ -4361,10 +4428,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1619",
-        "www/game.js:6051",
-        "www/themes/green/asset-registry.json:25",
-        "www/themes/green/asset-registry.json:96"
+        "www/game.js:1621",
+        "www/game.js:6006",
+        "www/themes/green/asset-registry.json:47",
+        "www/themes/green/asset-registry.json:158"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 222876,
@@ -4388,9 +4455,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1613",
+        "www/game.js:1615",
         "www/globalchat.js:95",
-        "www/index.html:1625"
+        "www/index.html:1629"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 84201,
@@ -4414,8 +4481,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1612",
-        "www/index.html:1638"
+        "www/game.js:1614",
+        "www/index.html:1642"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 88665,
@@ -4439,8 +4506,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1683",
-        "www/game.js:7751"
+        "www/game.js:1682",
+        "www/game.js:7692"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 91098,
@@ -4464,8 +4531,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1681",
-        "www/game.js:3666"
+        "www/game.js:1680",
+        "www/game.js:3630"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 60682,
@@ -4489,8 +4556,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1680",
-        "www/game.js:3654"
+        "www/game.js:1679",
+        "www/game.js:3618"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 73781,
@@ -4514,8 +4581,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1682",
-        "www/game.js:3766"
+        "www/game.js:1681",
+        "www/game.js:3730"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 70705,
@@ -4539,11 +4606,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1616",
-        "www/game.js:3578",
+        "www/game.js:1618",
+        "www/game.js:3542",
         "www/onlinenumber.js:446",
         "www/onlinenumber.js:449",
-        "www/pravilaigre.js:162"
+        "www/pravilaigre.js:195"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 76237,
@@ -4567,10 +4634,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1618",
+        "www/game.js:1620",
         "www/onlinenumber.js:463",
         "www/onlinenumber.js:465",
-        "www/pravilaigre.js:164"
+        "www/pravilaigre.js:197"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 78685,
@@ -4594,8 +4661,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1615",
-        "www/index.html:1673",
+        "www/game.js:1617",
+        "www/index.html:1677",
         "www/onlinenumber.js:319"
       ],
       "runtimeUseVerified": false,
@@ -4620,12 +4687,12 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1617",
-        "www/game.js:6839",
-        "www/index.html:688",
+        "www/game.js:1619",
+        "www/game.js:6794",
+        "www/index.html:693",
         "www/onlinenumber.js:456",
         "www/onlinenumber.js:458",
-        "www/pravilaigre.js:163"
+        "www/pravilaigre.js:196"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 61861,
@@ -4650,9 +4717,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1677",
-        "www/game.js:6751",
-        "www/pravilaigre.js:177"
+        "www/game.js:1676",
+        "www/game.js:6706",
+        "www/pravilaigre.js:210"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 52841,
@@ -4677,8 +4744,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1675",
-        "www/index.html:1349"
+        "www/game.js:1674",
+        "www/index.html:1353"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 79707,
@@ -4703,9 +4770,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1678",
-        "www/game.js:6953",
-        "www/pravilaigre.js:176"
+        "www/game.js:1677",
+        "www/game.js:6908",
+        "www/pravilaigre.js:209"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 54836,
@@ -4730,8 +4797,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1674",
-        "www/index.html:1338"
+        "www/game.js:1673",
+        "www/index.html:1342"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 70869,
@@ -4756,8 +4823,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1676",
-        "www/index.html:1330"
+        "www/game.js:1675",
+        "www/index.html:1334"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 102760,
@@ -4781,8 +4848,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1608",
-        "www/pravilaigre.js:144"
+        "www/game.js:1610",
+        "www/pravilaigre.js:177"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 175405,
@@ -4806,10 +4873,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1609",
-        "www/pravilaigre.js:145",
-        "www/themes/green/asset-registry.json:30",
-        "www/themes/green/asset-registry.json:98"
+        "www/game.js:1611",
+        "www/pravilaigre.js:178",
+        "www/themes/green/asset-registry.json:72",
+        "www/themes/green/asset-registry.json:168"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 303396,
@@ -4833,9 +4900,9 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:574",
-        "www/themes/green/asset-registry.json:31",
-        "www/themes/green/asset-registry.json:97"
+        "www/index.html:579",
+        "www/themes/green/asset-registry.json:77",
+        "www/themes/green/asset-registry.json:163"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 131899,
@@ -4859,8 +4926,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/index.html:636",
-        "www/themes/green/asset-registry.json:32"
+        "www/index.html:641",
+        "www/themes/green/asset-registry.json:82"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 129017,
@@ -4885,10 +4952,10 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1669",
-        "www/index.html:1272",
-        "www/themes/green/asset-registry.json:29",
-        "www/themes/green/asset-registry.json:142"
+        "www/game.js:1668",
+        "www/index.html:1276",
+        "www/themes/green/asset-registry.json:67",
+        "www/themes/green/asset-registry.json:246"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 91400,
@@ -4913,8 +4980,8 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1597",
-        "www/game.js:2221",
+        "www/game.js:1599",
+        "www/game.js:2156",
         "www/index.html:23",
         "www/managers.js:22"
       ],
@@ -4940,11 +5007,12 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1684",
-        "www/index.html:1003",
-        "www/index.html:1022",
-        "www/pravilaigre.js:154",
-        "www/themes/green/asset-registry.json:26"
+        "www/game.js:1683",
+        "www/game.js:1800",
+        "www/index.html:1007",
+        "www/index.html:1026",
+        "www/pravilaigre.js:187",
+        "www/themes/green/asset-registry.json:52"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 215248,
@@ -4968,11 +5036,11 @@
       ],
       "contextEvidence": "derived-from-slot-family; verify in app",
       "staticSourceReferences": [
-        "www/game.js:1689",
-        "www/index.html:1015",
-        "www/managers.js:3707",
-        "www/themes/green/asset-registry.json:28",
-        "www/themes/green/asset-registry.json:141"
+        "www/game.js:1688",
+        "www/index.html:1019",
+        "www/managers.js:3782",
+        "www/themes/green/asset-registry.json:62",
+        "www/themes/green/asset-registry.json:240"
       ],
       "runtimeUseVerified": false,
       "greenByteSize": 50685,

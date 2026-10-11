@@ -1704,6 +1704,8 @@ class YambApp {
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-confetti-v1.png?v=2',
+                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-gold-rain-v1.png?v=2',
                     'assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png?v=1',
                     'assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png?v=1',
                     'assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png?v=1',

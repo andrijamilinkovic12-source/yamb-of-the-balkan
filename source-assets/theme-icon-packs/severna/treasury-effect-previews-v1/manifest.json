@@ -1,6 +1,6 @@
 {
   "id": "severna-treasury-effect-previews",
-  "version": 1,
+  "version": 2,
   "style": "3D Soft Neomorphism",
   "direction": "smooth_rubber_matte_plastic",
   "format": "transparent RGBA PNG",
@@ -14,200 +14,245 @@
   ],
   "catalog": [
     {
-      "id": "wedding",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-wedding-master-v1.png",
-      "masterSha256": "c6735a869b9d2eed5f81ea484e4521b8daf71666d03bb945f4bfd73888875278",
-      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-wedding-v1.png",
-      "runtimeSha256": "0c8a5672df19b9eebcf9670cefa923bf828b65529157577aff568f1406dad899",
+      "id": "confetti",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-confetti-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+      "masterSha256": "9d1b0407df6d9d9de003977c3fc9a49feb833d0897fff87352a805d0079d64b3",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-confetti-v1.png",
+      "runtimeSha256": "71581fcb261086c3181972aa8bb2ccfe82e9bca74634508f2d58c8a3a65c47e9",
       "opticalBoundsPx": [
-        53,
-        68,
-        334,
-        208
+        19,
+        26,
+        365,
+        230
       ],
-      "sizeBytes": 39615
+      "sizeBytes": 62959
+    },
+    {
+      "id": "gold-rain",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-gold-rain-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+      "masterSha256": "c36e7c8aa9b159082449872b28c4497c3d563de54ee9c321d1478fc6ab5d4f78",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+      "runtimeSha256": "66a3f46493bfb58d654db4b46df1298513b6f903c86aeda6f663d4f9c4decc79",
+      "opticalBoundsPx": [
+        63,
+        15,
+        321,
+        241
+      ],
+      "sizeBytes": 89928
+    },
+    {
+      "id": "wedding",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-wedding-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-wedding-master-v2.png",
+      "masterSha256": "3ccdad272d7844befdc1aecbcdfdd110ed9c5845d6fa6d43e8673a53ea8ba76c",
+      "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "runtimeSha256": "9525fb36b78016a74ca2de1832388545cb1b738d45a6e791461d46f41c5595d4",
+      "opticalBoundsPx": [
+        38,
+        15,
+        346,
+        241
+      ],
+      "sizeBytes": 109290
     },
     {
       "id": "thunder",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-thunder-master-v1.png",
-      "masterSha256": "4de0cc805416851d3fcfd370c135770b99eab1848c851a0e3c2a7e3874f38935",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-thunder-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-thunder-master-v2.png",
+      "masterSha256": "327d93dd07f8d6c71a6c4266626b733e87cfe9a92e891e83b225ff49349081ac",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-thunder-v1.png",
-      "runtimeSha256": "d12cc7b00509ca4e6e1c04d3eef92e3a93d11f2bf2b1205befcc5f11bd1edccb",
+      "runtimeSha256": "69622bae7b2f9048d0f1026d677936f52fcd72e2938a6b30e030ee23f9ebd23c",
       "opticalBoundsPx": [
-        53,
-        58,
-        334,
-        213
+        19,
+        16,
+        365,
+        240
       ],
-      "sizeBytes": 23439
+      "sizeBytes": 89348
     },
     {
       "id": "fireworks",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
-      "masterSha256": "2625d8265c304c6ec6f4e124e51fb30b947c908aeae44e1f8a5c19ae00866372",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-fireworks-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
+      "masterSha256": "a618ef2d2da166f8227de2d0fd05c9de9b951deee9cb810959a108d4c5af9ee8",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-      "runtimeSha256": "eaed6855a78b6b23f774895141e030f2540958ead837bddd362ceeec5380caac",
+      "runtimeSha256": "4255fa10bc2d35adfcee8a1cd455db22eb5086f47e4ddf53233dbff030556638",
       "opticalBoundsPx": [
-        53,
-        52,
-        334,
-        203
+        31,
+        15,
+        353,
+        241
       ],
-      "sizeBytes": 34689
+      "sizeBytes": 105912
     },
     {
       "id": "bubbles",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
-      "masterSha256": "71328c124fa91370c24fabb184b21ebf798694840123cc38ac5e3e2dc380864b",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-bubbles-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
+      "masterSha256": "84ef827abda2170c8de803008fa3d1dd606b1d4ad530ad87f8773ce4a103fe9f",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-      "runtimeSha256": "4471fb7c112cdf0b77d3234f1c4f0eed18e47868007415e86181f465d942b648",
+      "runtimeSha256": "64e2d3d6b2c021ce617eb933f53fb73ff46094f4b84dcec52ba8e331f1072b20",
       "opticalBoundsPx": [
-        53,
-        70,
-        334,
-        212
+        19,
+        30,
+        365,
+        226
       ],
-      "sizeBytes": 44158
+      "sizeBytes": 86452
     },
     {
       "id": "cosmic-dust",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
-      "masterSha256": "f8d33795fd9988c7c4d4a7426e1d6cf3d313fc427b4481a9f25461201db9b7d4",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-cosmic-dust-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
+      "masterSha256": "faa8deb38688592900eb22fcf151b5e78cc499ab8674a09296b018bbb7f738fe",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-      "runtimeSha256": "73ec42b38c16cb1d7c5087c747f5df5712f9930e7e8c94c009983aef22c6430a",
+      "runtimeSha256": "be07b1e35b04552c622049092ebf3afe95da18642a1870276e95a616e6723114",
       "opticalBoundsPx": [
-        53,
-        58,
-        334,
-        183
+        19,
+        21,
+        365,
+        235
       ],
-      "sizeBytes": 28167
+      "sizeBytes": 72024
     },
     {
       "id": "dragon-fire",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
-      "masterSha256": "7fca104a14964af832028665847583941c153fd96b97b5adc5b38842a52aa261",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-dragon-fire-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
+      "masterSha256": "306e70699c44b852af35f8eebc6461cfef15215de4f4f9b223f8236213f7f7ee",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-      "runtimeSha256": "a29cc24811e3c711d89c2c4e6ae5ce52bbe790c72cbe381884953dbb2083d631",
+      "runtimeSha256": "257e3d934bea266a7b684acf7f7ee6f7a4dd6a7bc461cd0f1559f630eb359390",
       "opticalBoundsPx": [
-        53,
-        68,
-        334,
-        213
+        19,
+        21,
+        365,
+        235
       ],
-      "sizeBytes": 25082
+      "sizeBytes": 80094
     },
     {
       "id": "royal-yamb",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
-      "masterSha256": "6c577eaac6f87d1768758f3d17cf3afafc292c6836d85116b1a6cf11201c6381",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-royal-yamb-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
+      "masterSha256": "0847f70ade84dc8b6a6ccda1afdf239019d5d46030b8bb6e93c605b511cbc790",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-      "runtimeSha256": "62e7cadf10d836b349f16a30794e4d232f7f54e8988ff4bc339171b3a534d2d2",
+      "runtimeSha256": "596cf5b233254af69a1d1f466da872b0b54e6a745d99c1e5bcdbcbdd512d906c",
       "opticalBoundsPx": [
-        53,
-        68,
-        334,
-        195
+        48,
+        15,
+        336,
+        241
       ],
-      "sizeBytes": 21659
+      "sizeBytes": 92638
     },
     {
       "id": "fireflies",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
-      "masterSha256": "98604c54cb67e620738f00640b63c1c899fbc7bfc9b0772dbf3e4e9e48107f9e",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-fireflies-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
+      "masterSha256": "800513b4892feaa4699b06802e8dc61df27dfed8cff43b74611918c0e0a5a1e5",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-      "runtimeSha256": "1d3691b78ec1ff954fc11f871a43d5ea6f426446a62024045179e520f31beb75",
+      "runtimeSha256": "866bb759e205c781455df416c1249081adb43fe0de33e1a5e6d3ff0df8463b83",
       "opticalBoundsPx": [
-        53,
-        74,
-        334,
-        195
+        19,
+        35,
+        365,
+        221
       ],
-      "sizeBytes": 25907
+      "sizeBytes": 70367
     },
     {
       "id": "ice-age",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
-      "masterSha256": "cf973cdd12a721c1bfa0cbea8afb9a76d6aaf8a68730ff337ae7cab70856fb01",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-ice-age-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
+      "masterSha256": "ca3a7e2777d1430536957d6bf5e0f7937390cefb1be23afc9036d19172d585c7",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-      "runtimeSha256": "17a977824dabbf34efd061d756fa9981098d41b637b6ed4724ab399947f47a00",
+      "runtimeSha256": "04c5fd78bbd2989758fed37bd8f61c36d18a3d6140d5685e81f3c73abb295774",
       "opticalBoundsPx": [
-        53,
-        59,
-        334,
-        196
+        19,
+        33,
+        365,
+        222
       ],
-      "sizeBytes": 22145
+      "sizeBytes": 85141
     },
     {
       "id": "black-hole",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
-      "masterSha256": "47fb37f9ae6680ec6bb586fae75671eb53a75968a99afe6f255d672707dfe3ce",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-black-hole-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
+      "masterSha256": "52e2109e8bc26cf8fbdcdb263d623ea98e25b2ed308adad661dded4af463a73f",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-      "runtimeSha256": "b9039c3df71652082fdb6847d5bd027d2d9da1a32f1e3294f691b873cc334125",
+      "runtimeSha256": "b5edff53e47ca24c8090fa7b21d6572f05e69f0cdf1194833e5f3f05b047f857",
       "opticalBoundsPx": [
-        53,
-        57,
-        334,
-        215
+        19,
+        39,
+        365,
+        217
       ],
-      "sizeBytes": 35729
+      "sizeBytes": 85742
     },
     {
       "id": "supernova",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-supernova-master-v1.png",
-      "masterSha256": "de3bc01f38a11e2868efc3f8212897abbe6debea673ba06b566b2c2a13217cfd",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-supernova-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-supernova-master-v2.png",
+      "masterSha256": "4e14ea0cbb96184c78abbc492aecca92fc93d3d81ac388f25d84a164022ea99b",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-supernova-v1.png",
-      "runtimeSha256": "de991ec9c7e25fae6c56c29a9c50d7bc4c3c3522352e6e30277bb4bde36ea73b",
+      "runtimeSha256": "b3d4d828ee6951c82e87191c19537a05859f0737f683379e2db3aa118ce5cbe4",
       "opticalBoundsPx": [
-        53,
-        40,
-        334,
-        225
+        30,
+        15,
+        353,
+        241
       ],
-      "sizeBytes": 50077
+      "sizeBytes": 67463
     },
     {
       "id": "neon-pulse",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
-      "masterSha256": "094aef0c3a0584637e42c5526405f90fda9fc83ac84878b9741014e71bf194d3",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-neon-pulse-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
+      "masterSha256": "fbdcc6e35043baaeec2942452d70a6df7a72ebb55601639f59325cee4e3297b7",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-      "runtimeSha256": "6cb1a7dd2e709e1a8d9d51bab22ac1f8dad92ece120494d6096d68912220cf80",
+      "runtimeSha256": "2e2ba59ae7f8543b1228ef0a035ab27eec9a239e514fd19dee362001f5f8e91b",
       "opticalBoundsPx": [
+        19,
         53,
-        90,
-        334,
-        189
+        365,
+        203
       ],
-      "sizeBytes": 29043
+      "sizeBytes": 67870
     },
     {
       "id": "drones",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-drones-master-v1.png",
-      "masterSha256": "3bec92878f3c794722f32ac5f17f55d6596e1694bd0939426fb74267c024d6bd",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-drones-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-drones-master-v2.png",
+      "masterSha256": "db112b8e3e070a84d2d6656c23c243b526a7a651cc32a301d1702d9064d3be8b",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-drones-v1.png",
-      "runtimeSha256": "e8dfab4cfe09e4e0d7cbce2164bfce8fe942a1174b328392f3ce0821f381607b",
+      "runtimeSha256": "50774b7c4c067e1b6bd444fde58d7d8b69feb947ac44ac63f2e80ae718f12dc1",
       "opticalBoundsPx": [
-        53,
-        74,
-        334,
-        175
+        19,
+        31,
+        365,
+        224
       ],
-      "sizeBytes": 20771
+      "sizeBytes": 82100
     },
     {
       "id": "ufo-abduction",
-      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
-      "masterSha256": "2be9cdeb5a7c450ed826a07f3956c88e600df58a01d2ea9f35e4b6c27a662358",
+      "generatedSource": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v2/preview-ufo-abduction-generated.png",
+      "master": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
+      "masterSha256": "18589e25ef640ab49163e9fa05830866be8c36a3031a467b500a8cf16cee114c",
       "runtime": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-      "runtimeSha256": "3372c21e303f51bc6aef3e5b054cf1b33e143899a385c35d7f4eff86ad379b74",
+      "runtimeSha256": "c16468f9dfb8e1b04aecef6a65c7593a6a6aade1559397b90492192c1401405b",
       "opticalBoundsPx": [
-        53,
-        65,
-        334,
-        205
+        60,
+        15,
+        324,
+        241
       ],
-      "sizeBytes": 24613
+      "sizeBytes": 87341
     }
-  ]
+  ],
+  "generationMethod": "one theme-specific transparent PNG per effect; UFO backgrounds are illustrated separately and their 3D dice are composited from controlled face geometry and theme gift skins"
 }

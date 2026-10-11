@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '..');
 const www = path.join(root, 'www');
 const indexSource = fs.readFileSync(path.join(www, 'index.html'), 'utf8');
 const themeCssSource = fs.readFileSync(path.join(www, 'teme.css'), 'utf8');
+const effectPreviewCssSource = fs.readFileSync(path.join(www, 'theme-effect-previews.css'), 'utf8');
 const themeLogoCssSource = fs.readFileSync(path.join(www, 'theme-game-logos.css'), 'utf8');
 const styleCssSource = fs.readFileSync(path.join(www, 'style.css'), 'utf8');
 const configSource = fs.readFileSync(path.join(www, 'config.js'), 'utf8');
@@ -337,14 +338,14 @@ assert(managersSource.split("getEasterTreasuryStatusIcon('status-active')").leng
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-locked')").length - 1 === 2, 'Locked status mora ostati vezan za trophy i requirement stanje.');
 assert(greenTreasuryControlsManifest.integration?.treasuryTabs === 'connected' && greenTreasuryControlsManifest.integration?.rulesNavigationGlyphs === 'connected' && greenTreasuryControlsManifest.integration?.itemStatusHelper === 'connected' && greenTreasuryControlsManifest.integration?.hiddenDescriptionLock === 'connected' && greenTreasuryControlsManifest.integration?.insufficientFundsAlerts === 'connected' && greenTreasuryControlsManifest.integration?.roomOnDemand === 'connected', 'Green Treasury Controls integracija nije kompletno evidentirana.');
 const greenEffectPreviewRegistry = greenAssetRegistry.families?.treasuryEffectPreviews;
-const effectPreviewIds = ['wedding', 'thunder', 'fireworks', 'bubbles', 'cosmic-dust', 'dragon-fire', 'royal-yamb', 'fireflies', 'ice-age', 'black-hole', 'supernova', 'neon-pulse', 'drones', 'ufo-abduction'];
-const effectPreviewClasses = { wedding: 'balkan', thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles', 'cosmic-dust': 'cosmic-dust', 'dragon-fire': 'dragon-fire', 'royal-yamb': 'royal-yamb', fireflies: 'fireflies', 'ice-age': 'glass', 'black-hole': 'black-hole', supernova: 'supernova', 'neon-pulse': 'neon', drones: 'drones', 'ufo-abduction': 'ufo-abduction' };
+const effectPreviewIds = ['wedding', 'thunder', 'fireworks', 'bubbles', 'cosmic-dust', 'dragon-fire', 'royal-yamb', 'fireflies', 'ice-age', 'black-hole', 'supernova', 'neon-pulse', 'drones', 'ufo-abduction', 'confetti', 'gold-rain'];
+const effectPreviewClasses = { wedding: 'balkan', thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles', 'cosmic-dust': 'cosmic-dust', 'dragon-fire': 'dragon-fire', 'royal-yamb': 'royal-yamb', fireflies: 'fireflies', 'ice-age': 'glass', 'black-hole': 'black-hole', supernova: 'supernova', 'neon-pulse': 'neon', drones: 'drones', 'ufo-abduction': 'ufo-abduction', confetti: 'confetti', 'gold-rain': 'gold_rain' };
 assert(greenTreasuryEffectPreviewsManifest.status === 'locked' && greenEffectPreviewRegistry?.status === 'locked', 'Green Treasury effect preview katalog mora biti zaključan.');
 assert(greenTreasuryEffectPreviewsManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js'
     && greenTreasuryEffectPreviewsManifest.integration?.liveEffects === 'unchanged'
     && greenTreasuryEffectPreviewsManifest.integration?.roomOnDemand === 'connected', 'Green Treasury effect preview integracija nije kompletna.');
 assert(JSON.stringify(greenTreasuryEffectPreviewsManifest.catalog.map(asset => asset.id)) === JSON.stringify(effectPreviewIds)
-    && greenEffectPreviewRegistry.canonicalRuntime.length === effectPreviewIds.length, 'Green Treasury mora imati četrnaest zasebnih preview motiva.');
+    && greenEffectPreviewRegistry.canonicalRuntime.length === effectPreviewIds.length, 'Green Treasury mora imati šesnaest zasebnih preview motiva.');
 const effectPreviewHashes = new Set();
 for (const asset of greenTreasuryEffectPreviewsManifest.catalog) {
     const master = path.join(root, asset.master);
@@ -363,7 +364,9 @@ for (const asset of greenTreasuryEffectPreviewsManifest.catalog) {
         `Green Treasury effect preview sadržaj je promenjen: ${asset.id}`);
     assert(!effectPreviewHashes.has(asset.runtimeSha256), `Green Treasury effect preview je dupliran: ${asset.id}`);
     effectPreviewHashes.add(asset.runtimeSha256);
-    assert(themeCssSource.includes(`#riznica-screen .prev-${effectPreviewClasses[asset.id]}::before { background-image: url("${registered.path}?v=1"); }`),
+    assert(['confetti', 'gold-rain'].includes(asset.id)
+        ? effectPreviewCssSource.includes(`url("${registered.path}?v=2")`)
+        : themeCssSource.includes(`#riznica-screen .prev-${effectPreviewClasses[asset.id]}::before { background-image: url("${registered.path}?v=1"); }`),
         `Green Treasury effect preview nije vezan za karticu: ${asset.id}`);
     assert(gameSource.split(registered.path).length - 1 === 1, `Green Treasury effect preview nije tačno jednom u room-on-demand paketu: ${asset.id}`);
 }

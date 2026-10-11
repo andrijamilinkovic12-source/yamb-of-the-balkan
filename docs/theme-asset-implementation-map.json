@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "referenceUsageMap": "docs/theme-asset-usage-map.json",
-  "requiredSlotCountPerTheme": 186,
+  "requiredSlotCountPerTheme": 188,
   "slotStageOrder": [
     "defined",
     "created",
@@ -1769,240 +1769,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            58,
-            316,
-            218
+            19,
+            19,
+            365,
+            237
           ],
-          "sizeBytes": 35189
+          "sizeBytes": 108654
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            55,
-            316,
-            218
+            19,
+            19,
+            365,
+            237
           ],
-          "sizeBytes": 47554
+          "sizeBytes": 110077
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            49,
-            316,
-            218
+            19,
+            27,
+            365,
+            229
           ],
-          "sizeBytes": 31450
+          "sizeBytes": 71631
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            63,
-            316,
-            218
+            21,
+            15,
+            363,
+            241
           ],
-          "sizeBytes": 25031
+          "sizeBytes": 92884
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            97,
-            316,
-            218
+            19,
+            36,
+            365,
+            220
           ],
-          "sizeBytes": 16393
+          "sizeBytes": 96527
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            70,
-            316,
-            218
+            19,
+            41,
+            365,
+            215
           ],
-          "sizeBytes": 23529
+          "sizeBytes": 60206
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            69,
-            63,
-            316,
-            218
+            20,
+            15,
+            364,
+            241
           ],
-          "sizeBytes": 31661
+          "sizeBytes": 132360
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            69,
-            316,
-            218
+            19,
+            29,
+            365,
+            227
           ],
-          "sizeBytes": 19669
+          "sizeBytes": 108122
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            66,
-            72,
-            316,
-            218
+            19,
+            36,
+            365,
+            220
           ],
-          "sizeBytes": 29536
+          "sizeBytes": 79311
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            88,
-            316,
-            218
+            76,
+            15,
+            308,
+            241
           ],
-          "sizeBytes": 20322
+          "sizeBytes": 86227
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            54,
-            316,
-            218
+            30,
+            15,
+            353,
+            241
           ],
-          "sizeBytes": 30334
+          "sizeBytes": 103545
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            58,
-            316,
-            218
+            38,
+            15,
+            346,
+            241
           ],
-          "sizeBytes": 23912
+          "sizeBytes": 81963
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
             71,
-            65,
-            316,
-            218
+            15,
+            313,
+            241
           ],
-          "sizeBytes": 24573
+          "sizeBytes": 77507
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            76,
-            316,
-            218
+            47,
+            15,
+            337,
+            241
           ],
-          "sizeBytes": 37555
+          "sizeBytes": 87389
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -2247,6 +2233,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 47593
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            25,
+            365,
+            231
+          ],
+          "sizeBytes": 67679
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            73,
+            15,
+            311,
+            241
+          ],
+          "sizeBytes": 76468
         }
       }
     },
@@ -4004,240 +4022,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            65,
-            316,
-            230
+            19,
+            16,
+            365,
+            239
           ],
-          "sizeBytes": 32059
+          "sizeBytes": 102285
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            72,
-            316,
-            230
+            35,
+            15,
+            349,
+            241
           ],
-          "sizeBytes": 48111
+          "sizeBytes": 101064
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            62,
-            316,
-            230
+            19,
+            22,
+            365,
+            233
           ],
-          "sizeBytes": 29070
+          "sizeBytes": 78662
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            80,
-            316,
-            230
+            27,
+            15,
+            357,
+            241
           ],
-          "sizeBytes": 23210
+          "sizeBytes": 81913
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            80,
-            316,
-            230
+            19,
+            37,
+            365,
+            219
           ],
-          "sizeBytes": 16119
+          "sizeBytes": 86365
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            79,
-            316,
-            230
+            24,
+            15,
+            360,
+            241
           ],
-          "sizeBytes": 24134
+          "sizeBytes": 80775
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            57,
-            316,
-            230
+            38,
+            15,
+            346,
+            241
           ],
-          "sizeBytes": 36510
+          "sizeBytes": 107991
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            82,
-            316,
-            230
+            19,
+            33,
+            365,
+            223
           ],
-          "sizeBytes": 21537
+          "sizeBytes": 107036
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            91,
-            316,
-            230
+            19,
+            31,
+            365,
+            224
           ],
-          "sizeBytes": 32265
+          "sizeBytes": 86893
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            75,
-            316,
-            230
+            29,
+            15,
+            355,
+            241
           ],
-          "sizeBytes": 21710
+          "sizeBytes": 96466
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
             47,
-            316,
-            230
+            15,
+            337,
+            241
           ],
-          "sizeBytes": 40391
+          "sizeBytes": 78532
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            58,
-            316,
-            230
+            27,
+            15,
+            357,
+            241
           ],
-          "sizeBytes": 24454
+          "sizeBytes": 85393
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            65,
-            316,
-            230
+            78,
+            15,
+            305,
+            241
           ],
-          "sizeBytes": 27154
+          "sizeBytes": 70368
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            63,
-            67,
-            316,
-            230
+            44,
+            15,
+            340,
+            241
           ],
-          "sizeBytes": 36676
+          "sizeBytes": 83277
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -4482,6 +4486,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 62092
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            29,
+            365,
+            226
+          ],
+          "sizeBytes": 65731
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            34,
+            15,
+            350,
+            241
+          ],
+          "sizeBytes": 95448
         }
       }
     },
@@ -6239,240 +6275,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            52,
-            348,
-            221
+            19,
+            23,
+            365,
+            233
           ],
-          "sizeBytes": 36435
+          "sizeBytes": 98253
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            61,
-            348,
-            213
+            19,
+            29,
+            365,
+            227
           ],
-          "sizeBytes": 47539
+          "sizeBytes": 101209
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            58,
-            348,
-            213
+            19,
+            49,
+            365,
+            206
           ],
-          "sizeBytes": 30889
+          "sizeBytes": 72626
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            67,
-            348,
-            213
+            19,
+            21,
+            365,
+            235
           ],
-          "sizeBytes": 24808
+          "sizeBytes": 91251
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            74,
-            348,
-            213
+            19,
+            26,
+            365,
+            230
           ],
-          "sizeBytes": 22511
+          "sizeBytes": 97148
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            65,
-            348,
-            213
+            19,
+            33,
+            365,
+            223
           ],
-          "sizeBytes": 27475
+          "sizeBytes": 77725
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            62,
-            348,
-            213
+            30,
+            15,
+            354,
+            241
           ],
-          "sizeBytes": 36683
+          "sizeBytes": 115282
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            70,
-            348,
-            213
+            19,
+            24,
+            365,
+            232
           ],
-          "sizeBytes": 21715
+          "sizeBytes": 92534
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            62,
-            348,
-            213
+            19,
+            28,
+            365,
+            227
           ],
-          "sizeBytes": 32856
+          "sizeBytes": 87141
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            88,
-            348,
-            213
+            42,
+            15,
+            342,
+            241
           ],
-          "sizeBytes": 20580
+          "sizeBytes": 97022
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            42,
-            348,
-            225
+            24,
+            15,
+            360,
+            241
           ],
-          "sizeBytes": 47922
+          "sizeBytes": 80504
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            58,
-            348,
-            213
+            21,
+            15,
+            363,
+            241
           ],
-          "sizeBytes": 24827
+          "sizeBytes": 93985
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            65,
-            348,
-            213
+            66,
+            15,
+            318,
+            241
           ],
-          "sizeBytes": 27388
+          "sizeBytes": 77010
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            40,
-            77,
-            348,
-            213
+            19,
+            52,
+            365,
+            204
           ],
-          "sizeBytes": 39261
+          "sizeBytes": 73938
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -6717,6 +6739,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 47194
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            21,
+            365,
+            235
+          ],
+          "sizeBytes": 66146
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            72,
+            15,
+            312,
+            241
+          ],
+          "sizeBytes": 91922
         }
       }
     },
@@ -8474,240 +8528,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            70,
-            345,
-            224
+            19,
+            31,
+            365,
+            225
           ],
-          "sizeBytes": 26470
+          "sizeBytes": 91304
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            56,
-            345,
-            224
+            24,
+            15,
+            359,
+            241
           ],
-          "sizeBytes": 39241
+          "sizeBytes": 99358
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            57,
-            345,
-            224
+            19,
+            27,
+            365,
+            229
           ],
-          "sizeBytes": 21955
+          "sizeBytes": 71500
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            74,
-            345,
-            224
+            19,
+            17,
+            365,
+            238
           ],
-          "sizeBytes": 17574
+          "sizeBytes": 86133
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            82,
-            345,
-            224
+            19,
+            36,
+            365,
+            220
           ],
-          "sizeBytes": 11398
+          "sizeBytes": 77441
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            82,
-            345,
-            224
+            19,
+            27,
+            365,
+            229
           ],
-          "sizeBytes": 18488
+          "sizeBytes": 75264
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            41,
-            345,
-            224
+            19,
+            19,
+            365,
+            237
           ],
-          "sizeBytes": 29946
+          "sizeBytes": 104207
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            58,
-            345,
-            224
+            19,
+            28,
+            365,
+            228
           ],
-          "sizeBytes": 15391
+          "sizeBytes": 88455
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            86,
-            345,
-            224
+            19,
+            40,
+            365,
+            216
           ],
-          "sizeBytes": 23146
+          "sizeBytes": 70550
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            71,
-            345,
-            224
+            77,
+            15,
+            307,
+            241
           ],
-          "sizeBytes": 17700
+          "sizeBytes": 78550
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            55,
-            345,
-            224
+            40,
+            15,
+            344,
+            240
           ],
-          "sizeBytes": 31394
+          "sizeBytes": 88928
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            58,
-            345,
-            224
+            21,
+            15,
+            363,
+            241
           ],
-          "sizeBytes": 18351
+          "sizeBytes": 86939
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
             65,
-            345,
-            224
+            15,
+            319,
+            241
           ],
-          "sizeBytes": 20424
+          "sizeBytes": 70769
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            39,
-            81,
-            345,
-            224
+            74,
+            15,
+            310,
+            241
           ],
-          "sizeBytes": 27177
+          "sizeBytes": 64918
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -8952,6 +8992,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 60325
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            31,
+            365,
+            225
+          ],
+          "sizeBytes": 56769
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            30,
+            15,
+            354,
+            241
+          ],
+          "sizeBytes": 115497
         }
       }
     },
@@ -10709,240 +10781,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            55,
-            314,
-            224
+            19,
+            21,
+            365,
+            235
           ],
-          "sizeBytes": 32082
+          "sizeBytes": 98817
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            73,
-            314,
-            224
+            23,
+            15,
+            360,
+            241
           ],
-          "sizeBytes": 46698
+          "sizeBytes": 109561
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            63,
-            314,
-            224
+            19,
+            27,
+            365,
+            229
           ],
-          "sizeBytes": 27515
+          "sizeBytes": 78118
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            60,
-            314,
-            224
+            27,
+            15,
+            356,
+            241
           ],
-          "sizeBytes": 23658
+          "sizeBytes": 83484
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            82,
-            314,
-            224
+            19,
+            25,
+            365,
+            231
           ],
-          "sizeBytes": 14334
+          "sizeBytes": 94728
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            73,
-            314,
-            224
+            19,
+            52,
+            365,
+            204
           ],
-          "sizeBytes": 25022
+          "sizeBytes": 63663
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            56,
-            314,
-            224
+            28,
+            15,
+            356,
+            241
           ],
-          "sizeBytes": 34004
+          "sizeBytes": 123292
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            74,
-            314,
-            224
+            19,
+            35,
+            365,
+            220
           ],
-          "sizeBytes": 19026
+          "sizeBytes": 95585
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            67,
-            323,
-            224
+            19,
+            42,
+            365,
+            214
           ],
-          "sizeBytes": 32885
+          "sizeBytes": 69965
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            82,
-            314,
-            224
+            19,
+            19,
+            365,
+            237
           ],
-          "sizeBytes": 19276
+          "sizeBytes": 94640
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            50,
-            314,
-            224
+            46,
+            15,
+            338,
+            241
           ],
-          "sizeBytes": 36313
+          "sizeBytes": 67207
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            58,
-            314,
-            224
+            22,
+            15,
+            362,
+            241
           ],
-          "sizeBytes": 24823
+          "sizeBytes": 97258
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            65,
-            314,
-            224
+            53,
+            15,
+            330,
+            241
           ],
-          "sizeBytes": 24440
+          "sizeBytes": 85350
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            71,
-            75,
-            314,
-            224
+            78,
+            15,
+            305,
+            241
           ],
-          "sizeBytes": 37650
+          "sizeBytes": 65262
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -11187,6 +11245,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 60761
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            25,
+            365,
+            230
+          ],
+          "sizeBytes": 63611
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            26,
+            15,
+            358,
+            241
+          ],
+          "sizeBytes": 109145
         }
       }
     },
@@ -12944,240 +13034,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            67,
-            301,
-            214
+            19,
+            20,
+            365,
+            236
           ],
-          "sizeBytes": 32925
+          "sizeBytes": 102760
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            69,
-            301,
-            214
+            20,
+            15,
+            363,
+            241
           ],
-          "sizeBytes": 48488
+          "sizeBytes": 117620
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            52,
-            301,
-            214
+            19,
+            23,
+            365,
+            233
           ],
-          "sizeBytes": 31657
+          "sizeBytes": 89998
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            79,
-            301,
-            214
+            40,
+            15,
+            344,
+            241
           ],
-          "sizeBytes": 25163
+          "sizeBytes": 86916
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            73,
-            301,
-            214
+            19,
+            33,
+            365,
+            222
           ],
-          "sizeBytes": 16695
+          "sizeBytes": 89862
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            80,
-            301,
-            214
+            19,
+            29,
+            365,
+            226
           ],
-          "sizeBytes": 24504
+          "sizeBytes": 83994
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            55,
-            301,
-            214
+            28,
+            15,
+            356,
+            241
           ],
-          "sizeBytes": 34547
+          "sizeBytes": 108033
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            77,
-            301,
-            214
+            19,
+            23,
+            365,
+            233
           ],
-          "sizeBytes": 17779
+          "sizeBytes": 86671
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            69,
-            102,
-            306,
-            214
+            19,
+            46,
+            365,
+            210
           ],
-          "sizeBytes": 29861
+          "sizeBytes": 73548
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            82,
-            301,
-            214
+            60,
+            15,
+            324,
+            241
           ],
-          "sizeBytes": 20341
+          "sizeBytes": 86251
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            40,
-            301,
-            225
+            70,
+            15,
+            314,
+            241
           ],
-          "sizeBytes": 43516
+          "sizeBytes": 75083
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            58,
-            301,
-            214
+            20,
+            15,
+            363,
+            241
           ],
-          "sizeBytes": 25135
+          "sizeBytes": 82320
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            65,
-            301,
-            214
+            73,
+            15,
+            311,
+            241
           ],
-          "sizeBytes": 26340
+          "sizeBytes": 79010
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            84,
-            69,
-            301,
-            214
+            19,
+            30,
+            365,
+            226
           ],
-          "sizeBytes": 36895
+          "sizeBytes": 80283
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -13422,6 +13498,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 55781
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            28,
+            15,
+            355,
+            241
+          ],
+          "sizeBytes": 62323
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            32,
+            15,
+            352,
+            241
+          ],
+          "sizeBytes": 103122
         }
       }
     },
@@ -15179,240 +15287,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            50,
-            332,
-            226
+            19,
+            46,
+            365,
+            209
           ],
-          "sizeBytes": 35705
+          "sizeBytes": 85511
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            73,
-            332,
-            226
+            19,
+            33,
+            365,
+            223
           ],
-          "sizeBytes": 52385
+          "sizeBytes": 93312
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            60,
-            332,
-            226
+            19,
+            63,
+            365,
+            193
           ],
-          "sizeBytes": 29920
+          "sizeBytes": 65424
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            70,
-            332,
-            226
+            19,
+            37,
+            365,
+            219
           ],
-          "sizeBytes": 27526
+          "sizeBytes": 83269
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            85,
-            332,
-            226
+            19,
+            29,
+            365,
+            227
           ],
-          "sizeBytes": 21867
+          "sizeBytes": 99222
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            70,
-            332,
-            226
+            19,
+            56,
+            365,
+            200
           ],
-          "sizeBytes": 28489
+          "sizeBytes": 63110
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            54,
-            332,
-            226
+            19,
+            20,
+            365,
+            236
           ],
-          "sizeBytes": 38025
+          "sizeBytes": 120316
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            65,
-            332,
-            226
+            19,
+            59,
+            365,
+            197
           ],
-          "sizeBytes": 23806
+          "sizeBytes": 77443
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            75,
-            332,
-            226
+            19,
+            58,
+            365,
+            198
           ],
-          "sizeBytes": 37151
+          "sizeBytes": 72730
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            79,
-            332,
-            226
+            19,
+            16,
+            365,
+            239
           ],
-          "sizeBytes": 24943
+          "sizeBytes": 92079
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            56,
-            332,
-            226
+            19,
+            18,
+            365,
+            238
           ],
-          "sizeBytes": 45254
+          "sizeBytes": 93915
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            58,
-            332,
-            226
+            19,
+            21,
+            365,
+            235
           ],
-          "sizeBytes": 28138
+          "sizeBytes": 95350
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            65,
-            332,
-            226
+            60,
+            15,
+            324,
+            241
           ],
-          "sizeBytes": 28499
+          "sizeBytes": 86713
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            54,
-            77,
-            332,
-            226
+            78,
+            15,
+            306,
+            241
           ],
-          "sizeBytes": 41484
+          "sizeBytes": 70681
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -15657,6 +15751,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 72598
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            39,
+            365,
+            217
+          ],
+          "sizeBytes": 60045
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            24,
+            365,
+            232
+          ],
+          "sizeBytes": 105111
         }
       }
     },
@@ -17414,240 +17540,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            61,
-            333,
-            216
+            19,
+            17,
+            365,
+            239
           ],
-          "sizeBytes": 34608
+          "sizeBytes": 97531
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            51,
-            333,
-            216
+            26,
+            15,
+            358,
+            241
           ],
-          "sizeBytes": 49779
+          "sizeBytes": 92897
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            57,
-            333,
-            216
+            19,
+            23,
+            365,
+            232
           ],
-          "sizeBytes": 30858
+          "sizeBytes": 69070
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            56,
-            333,
-            216
+            22,
+            15,
+            362,
+            241
           ],
-          "sizeBytes": 26140
+          "sizeBytes": 91681
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            82,
-            333,
-            216
+            19,
+            17,
+            365,
+            239
           ],
-          "sizeBytes": 17857
+          "sizeBytes": 84039
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            83,
-            333,
-            216
+            19,
+            16,
+            365,
+            239
           ],
-          "sizeBytes": 25209
+          "sizeBytes": 86765
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            58,
-            333,
-            216
+            47,
+            15,
+            337,
+            241
           ],
-          "sizeBytes": 37680
+          "sizeBytes": 95467
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            74,
-            333,
-            216
+            19,
+            46,
+            365,
+            210
           ],
-          "sizeBytes": 21336
+          "sizeBytes": 89216
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            57,
-            333,
-            216
+            19,
+            27,
+            365,
+            228
           ],
-          "sizeBytes": 34920
+          "sizeBytes": 82675
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            78,
-            333,
-            216
+            73,
+            15,
+            311,
+            241
           ],
-          "sizeBytes": 21754
+          "sizeBytes": 76443
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            47,
-            333,
-            217
+            42,
+            15,
+            342,
+            241
           ],
-          "sizeBytes": 40294
+          "sizeBytes": 85220
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            58,
-            333,
-            216
+            19,
+            23,
+            365,
+            233
           ],
-          "sizeBytes": 25086
+          "sizeBytes": 87407
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            65,
-            333,
-            216
+            76,
+            15,
+            308,
+            241
           ],
-          "sizeBytes": 28525
+          "sizeBytes": 69967
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            51,
-            72,
-            333,
+            19,
+            40,
+            365,
             216
           ],
-          "sizeBytes": 33664
+          "sizeBytes": 74960
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -17892,6 +18004,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 47633
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            18,
+            365,
+            237
+          ],
+          "sizeBytes": 60155
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            59,
+            15,
+            325,
+            241
+          ],
+          "sizeBytes": 91645
         }
       }
     },
@@ -19649,240 +19793,226 @@
         "canonical/treasury-effect-previews/preview-black-hole-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            57,
-            334,
-            215
+            19,
+            39,
+            365,
+            217
           ],
-          "sizeBytes": 35729
+          "sizeBytes": 85742
         },
         "canonical/treasury-effect-previews/preview-bubbles-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            70,
-            334,
-            212
+            19,
+            30,
+            365,
+            226
           ],
-          "sizeBytes": 44158
+          "sizeBytes": 86452
         },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            58,
-            334,
-            183
+            19,
+            21,
+            365,
+            235
           ],
-          "sizeBytes": 28167
+          "sizeBytes": 72024
         },
         "canonical/treasury-effect-previews/preview-dragon-fire-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            68,
-            334,
-            213
+            19,
+            21,
+            365,
+            235
           ],
-          "sizeBytes": 25082
+          "sizeBytes": 80094
         },
         "canonical/treasury-effect-previews/preview-drones-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-drones-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-drones-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-drones-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            74,
-            334,
-            175
+            19,
+            31,
+            365,
+            224
           ],
-          "sizeBytes": 20771
+          "sizeBytes": 82100
         },
         "canonical/treasury-effect-previews/preview-fireflies-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            74,
-            334,
-            195
+            19,
+            35,
+            365,
+            221
           ],
-          "sizeBytes": 25907
+          "sizeBytes": 70367
         },
         "canonical/treasury-effect-previews/preview-fireworks-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            52,
-            334,
-            203
+            31,
+            15,
+            353,
+            241
           ],
-          "sizeBytes": 34689
+          "sizeBytes": 105912
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            59,
-            334,
-            196
+            19,
+            33,
+            365,
+            222
           ],
-          "sizeBytes": 22145
+          "sizeBytes": 85141
         },
         "canonical/treasury-effect-previews/preview-neon-pulse-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
+            19,
             53,
-            90,
-            334,
-            189
+            365,
+            203
           ],
-          "sizeBytes": 29043
+          "sizeBytes": 67870
         },
         "canonical/treasury-effect-previews/preview-royal-yamb-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            68,
-            334,
-            195
+            48,
+            15,
+            336,
+            241
           ],
-          "sizeBytes": 21659
+          "sizeBytes": 92638
         },
         "canonical/treasury-effect-previews/preview-supernova-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-supernova-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-supernova-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-supernova-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            40,
-            334,
-            225
+            30,
+            15,
+            353,
+            241
           ],
-          "sizeBytes": 50077
+          "sizeBytes": 67463
         },
         "canonical/treasury-effect-previews/preview-thunder-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-thunder-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-thunder-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-thunder-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            58,
-            334,
-            213
+            19,
+            16,
+            365,
+            240
           ],
-          "sizeBytes": 23439
+          "sizeBytes": 89348
         },
         "canonical/treasury-effect-previews/preview-ufo-abduction-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            65,
-            334,
-            205
+            60,
+            15,
+            324,
+            241
           ],
-          "sizeBytes": 24613
+          "sizeBytes": 87341
         },
         "canonical/treasury-effect-previews/preview-wedding-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-wedding-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-wedding-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-wedding-master-v2.png",
           "consumerRefs": [
             "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview",
-            "www/index.html:stylesheet"
+            "www/theme-effect-previews.css:themed preview"
           ],
           "opticalBoundsPx": [
-            53,
-            68,
-            334,
-            208
+            38,
+            15,
+            346,
+            241
           ],
-          "sizeBytes": 39615
+          "sizeBytes": 109290
         },
         "canonical/undo-token/undo-token-front-v1": {
           "stage": "linked",
@@ -20127,6 +20257,38 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 68261
+        },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            26,
+            365,
+            230
+          ],
+          "sizeBytes": 62959
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            63,
+            15,
+            321,
+            241
+          ],
+          "sizeBytes": 89928
         }
       }
     }

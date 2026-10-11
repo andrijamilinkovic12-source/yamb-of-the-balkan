@@ -10,8 +10,8 @@
     "retired Green cloud logo v1",
     "legacy fallback Logo_green.png outside the active Green Room Pack"
   ],
-  "requiredPngCountPerTheme": 186,
-  "greenPackPngCount": 185,
+  "requiredPngCountPerTheme": 188,
+  "greenPackPngCount": 187,
   "slots": [
     {
       "id": "background/main",
@@ -1041,7 +1041,6 @@
       "id": "canonical/tournament-navigation/tab-bracket-v1",
       "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
       "kind": "canonical-or-approved-variant",
-      "semanticRule": "Exactly eight entrant nodes: four left, four right, paired into one final; theme-specific materials and icon DNA.",
       "width": 256,
       "height": 256,
       "colorType": 6
@@ -1191,6 +1190,14 @@
       "colorType": 6
     },
     {
+      "id": "canonical/treasury-effect-previews/preview-confetti-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-confetti-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
       "id": "canonical/treasury-effect-previews/preview-cosmic-dust-v1",
       "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
       "kind": "canonical-or-approved-variant",
@@ -1225,6 +1232,14 @@
     {
       "id": "canonical/treasury-effect-previews/preview-fireworks-v1",
       "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-gold-rain-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
       "kind": "canonical-or-approved-variant",
       "width": 384,
       "height": 256,

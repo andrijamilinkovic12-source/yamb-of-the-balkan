@@ -3824,7 +3824,7 @@ class ShopManager {
                     const pipPreview = '<div class="dice-dots-wrapper val-6" aria-hidden="true">' + '<div class="dice-dot"></div>'.repeat(6) + '</div>';
                     visualHtml = `<div class="dice-preview preview-${item.id}">${pipPreview}</div>`;
                 } else if (this.type === 'effect') {
-                    const canonicalEffectPreview = ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
+                    const canonicalEffectPreview = ['confetti', 'gold_rain', 'balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
                     const effectPreview = item.id === 'royal_yamb'
                         ? `<img class="royal-yamb-logo-preview" src="${getActiveGameLogoSource()}" alt="" loading="lazy" decoding="async">`
                         : (item.innerHtml || '');

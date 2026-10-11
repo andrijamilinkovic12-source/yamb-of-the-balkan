@@ -1,17 +1,39 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-10",
+  "updatedOn": "2026-10-11",
   "activeThemeId": "light",
   "workState": "treasury-room-standardization-in-progress",
-  "activeWorkPackage": "Riznica: sva cetiri taba v3 i cetiri statusne ikone v4 u devet nezelenih tema sada su zasebno ilustrovani PNG asseti u DNK svake teme. Android qaLocal je potvrdio tabove na 34 px i sva cetiri statusna izvora na 22/20 px u svih deset tema, ukljucujuci prirodni prikaz tri statusa u sobi. Korisnicki vizuelni izbor ceka se za oba paketa. Slede prikazi efekata i medalje nakon zakljucavanja identiteta soba. Evidencija: docs/theme-treasury-controls-v1.md.",
+  "activeWorkPackage": "Riznica: svih 16 prikaza efekata su zasebni transparentni PNG asseti za svaku od devet nezelenih tema. Vizuelni pregled svih 144 prikaza zavrsen je tema po temu; prenatrpani motiv Svadbe je zamenjen sa devet novih jedinstvenih kompozicija, po jedna za svaku temu. Novi PNG su povezani, prikazani na 384 x 256 i uporedjeni u docs/theme-wedding-effects-v3-review.png. Ostali efekti zadrzani su jer probna pojednostavljenja Vatrometa i Supernove nisu ocuvavala njihovu prepoznatljivost. NLO kockice ostaju 3D sa ispravnim stranama 5/3/6. Staticke i vizuelne provere prolaze; Android qaLocal nije ponovljen nakon poslednjih izmena. Vizuelni izbor celog seta ceka korisnika u docs/theme-effect-previews-review.html.",
   "visualQualityBoundary": {
-    "lastIndividuallyIllustratedFamily": "treasury-status-v4",
-    "needsRedesign": ["medals", "treasury-effect-previews"],
+    "lastIndividuallyIllustratedFamily": "treasury-effect-previews-v2",
+    "needsRedesign": [
+      "medals"
+    ],
     "technicalLinkingIsNotVisualAcceptance": true
   },
   "treasuryTabRedesignV3": {
-    "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
-    "individuallyIllustratedThemes": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "order": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
+    "individuallyIllustratedThemes": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
     "pendingThemes": [],
     "review": "docs/theme-treasury-tabs-v3-review.html",
     "androidReport": "docs/qa-treasury-tabs-v3-emulator-2026-10-10.json",
@@ -19,8 +41,28 @@
     "visualAcceptance": "pending user review"
   },
   "treasuryStatusRedesignV4": {
-    "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
-    "individuallyIllustratedThemes": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "order": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
+    "individuallyIllustratedThemes": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
     "pendingThemes": [],
     "review": "docs/theme-treasury-status-v4-review.html",
     "runtimeStatus": "Android qaLocal: 36 status PNGs decoded at 22 CSS px; lock probe at 20 CSS px; owned, active and locked natural room icons matched current theme",
@@ -28,10 +70,24 @@
     "visualAcceptance": "pending user review"
   },
   "medalRedesignV3": {
-    "order": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"],
+    "order": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
     "completedThemes": [],
-    "provisionalThemes": ["light"],
-    "draftOnlyThemes": ["medium"],
+    "provisionalThemes": [
+      "light"
+    ],
+    "draftOnlyThemes": [
+      "medium"
+    ],
     "nextThemeId": null,
     "lightReview": "docs/theme-medals-light-v3-review.png",
     "lightManifest": "source-assets/theme-icon-packs/light/medals-v3-imagegen/manifest.json",
@@ -290,7 +346,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Prvih 26 originalnih trofeja dostignuca za Svetlo Zlato imaju mastere, standardne PNG-ove i povezana tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-light-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -398,7 +454,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih Trula Visnja trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-medium-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -506,7 +562,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih Plavi Okean trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-winter-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -614,7 +670,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih Neon Cyber trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u vidljivom obavestenju. Dokaz: docs/qa-neon-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -722,7 +778,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih trofeja Kraljevskog Ametista ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-amethyst-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena jer Gradle build zahteva pristup korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -830,7 +886,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih Vaskrsnjih trofeja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-easter-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -938,7 +994,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih trofeja Pustinjskog Stakla ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-desert-review.png; staticka provera potvrdjuje 26 razlicitih fajlova, kanonske putanje i odsustvo starih putanja u galeriji. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -1046,7 +1102,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih trofeja Mesecevog Sjaja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-moon-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -1158,7 +1214,7 @@
       },
       "assetUsageAudit": {
         "confirmedSlotCount": 0,
-        "measuredThemeBoundsCount": 66
+        "measuredThemeBoundsCount": 68
       },
       "notes": "Svih 26 originalnih trofeja Severne Magline ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-severna-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen; korisnicko odobrenje kompleta nije zabelezeno."
     }
@@ -1182,5 +1238,23 @@
     "recorder": "scripts/record-theme-effect-previews.py",
     "runtimeVisualStatus": "pending Android QA and user review",
     "visualAcceptance": "needs-redesign: common procedural motifs remain too uniform across themes"
+  },
+  "treasuryEffectPreviewsV2": {
+    "rolesPerTheme": 16,
+    "nonGreenThemes": 9,
+    "newThemeSpecificPng": 144,
+    "greenReferencePngAdded": 2,
+    "review": "docs/theme-effect-previews-review.html",
+    "androidReport": "docs/qa-treasury-effects-v2-emulator-2026-10-11.json",
+    "diceVisualAudit": "docs/theme-effect-dice-visual-audit.json",
+    "diceRuntimeReview": "docs/theme-ufo-dice-corrected-review.png",
+    "weddingRedesignReview": "docs/theme-wedding-effects-v3-review.png",
+    "weddingMobileReview": "docs/theme-wedding-effects-v3-mobile-review.png",
+    "weddingRedesignedThemes": 9,
+    "diceGeometryBuilder": "scripts/build-theme-ufo-dice-previews.js",
+    "diceGeometryCheck": "scripts/check-theme-ufo-dice.js",
+    "diceVisibleFaces": [5, 3, 6],
+    "runtimeStatus": "10 themes x 16 effect previews decoded from active theme PNGs at 152 x 70 CSS px with no after overlay",
+    "visualAcceptance": "pending user review"
   }
 }

@@ -1,6 +1,6 @@
 {
   "id": "moon-treasury-effect-previews",
-  "version": 1,
+  "version": 2,
   "style": "3D Soft Neomorphism",
   "direction": "clay",
   "format": "transparent RGBA PNG",
@@ -14,200 +14,245 @@
   ],
   "catalog": [
     {
-      "id": "wedding",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-wedding-master-v1.png",
-      "masterSha256": "f5c63044b91e5f321c7255456625842f194e7c5196b4266cfd86b6a32a096909",
-      "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-wedding-v1.png",
-      "runtimeSha256": "05053a977103c86a532b750f0ca7488b31bb160b1878158fcf6e8ab5c9acd8ad",
+      "id": "confetti",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-confetti-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+      "masterSha256": "c0cf839e9f7342764a8dfa705e489422030acb6e6931dc2789cfdc2abb2594fd",
+      "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-confetti-v1.png",
+      "runtimeSha256": "03209e30552b4996bc540449a5f91891605747cf212392111c88d0bb39a6cc90",
       "opticalBoundsPx": [
-        51,
-        72,
-        333,
+        19,
+        18,
+        365,
+        237
+      ],
+      "sizeBytes": 60155
+    },
+    {
+      "id": "gold-rain",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-gold-rain-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+      "masterSha256": "c50fca2a5c36e1f18c8eddad780efa47d4542e122ab398bca50a51d9e3d46cdb",
+      "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+      "runtimeSha256": "88b164588b3942095c39feb2ace969c99fad5d1f46d6d90e3ecf8a1789696ba9",
+      "opticalBoundsPx": [
+        59,
+        15,
+        325,
+        241
+      ],
+      "sizeBytes": 91645
+    },
+    {
+      "id": "wedding",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-wedding-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-wedding-master-v2.png",
+      "masterSha256": "c66a228fc7c102894bf50747f1e8d42f1c368748b558c7c75423c3d508d659f3",
+      "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "runtimeSha256": "f4ba1c8d95057c1f27fc8bd3d30a40dd39d0771a5f2c323a0387223d0a88b363",
+      "opticalBoundsPx": [
+        19,
+        40,
+        365,
         216
       ],
-      "sizeBytes": 33664
+      "sizeBytes": 74960
     },
     {
       "id": "thunder",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-thunder-master-v1.png",
-      "masterSha256": "854c95d580b94a0417704f1b491a75db2e7dfe3ff574eccb1a6a221138441ad7",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-thunder-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-thunder-master-v2.png",
+      "masterSha256": "71873b39907c0f9745cdfa030150f597d2d556950dbd1a5d1d6e2fc1f6e60f90",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-thunder-v1.png",
-      "runtimeSha256": "27cb1a8b0cf1f16c8f5eee1872f63b7c22b6a5c9c41026120bdf78a7fc65ee05",
+      "runtimeSha256": "ff55fa0aef169c1f4b3f70120041a6ef080d819f629c65c16361c75ee3c61a36",
       "opticalBoundsPx": [
-        51,
-        58,
-        333,
-        216
+        19,
+        23,
+        365,
+        233
       ],
-      "sizeBytes": 25086
+      "sizeBytes": 87407
     },
     {
       "id": "fireworks",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireworks-master-v1.png",
-      "masterSha256": "e992bad65b866670ee4c055fc939f1a1a93e89de16a6230810ea87abe9b09917",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-fireworks-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireworks-master-v2.png",
+      "masterSha256": "44e897bf9490e1188456be456db2b20344e06fa62dac0236016a2d072300286b",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-fireworks-v1.png",
-      "runtimeSha256": "687641065965d125fbebc4a0591962950df2f4799f28a9a8d8ec6a0925ae31fc",
+      "runtimeSha256": "00743551d9ae5b93b90861513ea98c2c127a5dd41800bd8a06752b9c26645b18",
       "opticalBoundsPx": [
-        51,
-        58,
-        333,
-        216
+        47,
+        15,
+        337,
+        241
       ],
-      "sizeBytes": 37680
+      "sizeBytes": 95467
     },
     {
       "id": "bubbles",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-bubbles-master-v1.png",
-      "masterSha256": "8e937b70960f59ff87a3d25a96d6e6d534a12d899d17748e0b55cb6d53ce0b5e",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-bubbles-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-bubbles-master-v2.png",
+      "masterSha256": "5c205ec75e8879827a4fef3c8d21bcdd2534141439a5851a791140fcba125a25",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-bubbles-v1.png",
-      "runtimeSha256": "05c57d9ed64737fd96b01b4027c78c2992cacd5b15f9fd4eb9007ff7600c1149",
+      "runtimeSha256": "28dda47265bdea429add874f43725682af921c3ba9627f1717e053bd1b4cfc64",
       "opticalBoundsPx": [
-        51,
-        51,
-        333,
-        216
+        26,
+        15,
+        358,
+        241
       ],
-      "sizeBytes": 49779
+      "sizeBytes": 92897
     },
     {
       "id": "cosmic-dust",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-cosmic-dust-master-v1.png",
-      "masterSha256": "1f8635caae731a5ec3f9b8a4b80504d2b92b734e97fcda207bf98c2e3f4e7441",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-cosmic-dust-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-cosmic-dust-master-v2.png",
+      "masterSha256": "b4e98e4f0c3f3a159025fb15a02a4139f907116eda23c39dca2ee36a6851cf62",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
-      "runtimeSha256": "5f41030b07bad451e2ff0d7a86b401b22d2f5f6d786f5a4b43df167cbb9baad3",
+      "runtimeSha256": "8cdc274aebd9fc131cd7cd0a8799312af7b19c9ef25730d27dd6bdfb1538c5b9",
       "opticalBoundsPx": [
-        51,
-        57,
-        333,
-        216
+        19,
+        23,
+        365,
+        232
       ],
-      "sizeBytes": 30858
+      "sizeBytes": 69070
     },
     {
       "id": "dragon-fire",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-dragon-fire-master-v1.png",
-      "masterSha256": "b7946cab3767b68e4183e39b71382a9d751ba367056e758dce8b2e6f6ad5542a",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-dragon-fire-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-dragon-fire-master-v2.png",
+      "masterSha256": "095c778b429d53af982e5d1a2c32924fefdcde83bcd5e67e19e85e18bb32a259",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
-      "runtimeSha256": "ce10ca2a00da936c86e9b7965b9863a092a3df2b6aa1635737d50543fb62aefb",
+      "runtimeSha256": "40371bea251bfbd22b9b7c3bf9a5d94731e104e2af2dd3cf13b1c6bf0356fef5",
       "opticalBoundsPx": [
-        51,
-        56,
-        333,
-        216
+        22,
+        15,
+        362,
+        241
       ],
-      "sizeBytes": 26140
+      "sizeBytes": 91681
     },
     {
       "id": "royal-yamb",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-royal-yamb-master-v1.png",
-      "masterSha256": "143201e7cb4de70469c3a317f29407095e3cf91aa838fbac753ee8b01144756e",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-royal-yamb-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-royal-yamb-master-v2.png",
+      "masterSha256": "6341614d4f99d4e0630fefd3d6c1d7fd27d3892a11703a052916b93e3b495178",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
-      "runtimeSha256": "7ac4284b47f1a0b537c61841bfbed8344976007836bdbc1c448bf386533c18c5",
+      "runtimeSha256": "cd42399c8ecc70ad7c833f9a437757e7a2d5d192eb86ede6153fb92f99d5d573",
       "opticalBoundsPx": [
-        51,
-        78,
-        333,
-        216
+        73,
+        15,
+        311,
+        241
       ],
-      "sizeBytes": 21754
+      "sizeBytes": 76443
     },
     {
       "id": "fireflies",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireflies-master-v1.png",
-      "masterSha256": "f6dcd6e19c04a153e9d2627153980b12769bc49be366312aebf4e5b9a3fd4317",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-fireflies-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-fireflies-master-v2.png",
+      "masterSha256": "528426761b3feea4234459ea1f23893f5e5d7250f5b3c48b060f652d449304e4",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-fireflies-v1.png",
-      "runtimeSha256": "6bb43f4f454dad5017d717db5b910f187afc26f194265aa51f331dea8e329c8c",
+      "runtimeSha256": "52f2296ccfce13319ecb546f479030035f3d180c7cbd32f95ed23f4b5653ad01",
       "opticalBoundsPx": [
-        51,
-        83,
-        333,
-        216
+        19,
+        16,
+        365,
+        239
       ],
-      "sizeBytes": 25209
+      "sizeBytes": 86765
     },
     {
       "id": "ice-age",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ice-age-master-v1.png",
-      "masterSha256": "59f652da34cd1c44f87a94fb850f3780c64f71c3a9a3ed143a4b1b87c577a86d",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-ice-age-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ice-age-master-v2.png",
+      "masterSha256": "59ada6fd33694d3eae32a93a8132379fe7df8c1cd43259b724b62ff60084a4e2",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-ice-age-v1.png",
-      "runtimeSha256": "129e485e921215c41c85ced765c5ee32e524f38db732537de3c6824b84bf2694",
+      "runtimeSha256": "88fabfc962a2cbdc743517c96c8aeb767b831ecaebde75e6bab1aef459df677f",
       "opticalBoundsPx": [
-        51,
-        74,
-        333,
-        216
+        19,
+        46,
+        365,
+        210
       ],
-      "sizeBytes": 21336
+      "sizeBytes": 89216
     },
     {
       "id": "black-hole",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-black-hole-master-v1.png",
-      "masterSha256": "1fb84177e2115fee821d72ca168c93fbafdca806f4cd32e7fdae693933e1be84",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-black-hole-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-black-hole-master-v2.png",
+      "masterSha256": "179b85c59a420624cf09d8f97fff33e929c71dd3941e27d8302dda10a232f37f",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-black-hole-v1.png",
-      "runtimeSha256": "25663d3bd2abcb4442415e08c012d5448abad4fdd7741cccf3e77a5e5b0dc964",
+      "runtimeSha256": "2831afc67b330d39b9b591b063aef57cb6a0dc46da6aa133aba25fbbd9e44f77",
       "opticalBoundsPx": [
-        51,
-        61,
-        333,
-        216
+        19,
+        17,
+        365,
+        239
       ],
-      "sizeBytes": 34608
+      "sizeBytes": 97531
     },
     {
       "id": "supernova",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-supernova-master-v1.png",
-      "masterSha256": "62de73437577788afb4c5d5999da4e8560e87c0d6ad400a28f245ffd553d9354",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-supernova-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-supernova-master-v2.png",
+      "masterSha256": "da5cffae93c49cb2694b3cd0a12d2459abe32fef6a7917fc86a27501f2ef5c37",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-supernova-v1.png",
-      "runtimeSha256": "0183ee5ace489dd1e6d680d866c36b3aa366fdd7dd7b7e5772cb5d50388bfa5c",
+      "runtimeSha256": "23a93313486fe4c2c59bd92050823ffd150b760a362b9e7c3fb0787d65092b2c",
       "opticalBoundsPx": [
-        51,
-        47,
-        333,
-        217
+        42,
+        15,
+        342,
+        241
       ],
-      "sizeBytes": 40294
+      "sizeBytes": 85220
     },
     {
       "id": "neon-pulse",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-neon-pulse-master-v1.png",
-      "masterSha256": "8de4c6a14e73e004f23ad588e6d5190c1fdc43277d0812b359cd0d3c699cf0f1",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-neon-pulse-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-neon-pulse-master-v2.png",
+      "masterSha256": "af566d12ece91666e98a51792560e23936b766be119eee3682503ec440121afe",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
-      "runtimeSha256": "8b7b18399a18b88b0251b19bef7819f96c77b57494481604cf3866dcd63bf7aa",
+      "runtimeSha256": "52161b36b1ea64d9143205a1ddc10954ce4803a832d3fff7983d78b3921b6185",
       "opticalBoundsPx": [
-        51,
-        57,
-        333,
-        216
+        19,
+        27,
+        365,
+        228
       ],
-      "sizeBytes": 34920
+      "sizeBytes": 82675
     },
     {
       "id": "drones",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-drones-master-v1.png",
-      "masterSha256": "63a9861e058aa00726a68a7f7e18022a3c33ed9e591969c5df61cebf700c58b0",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-drones-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-drones-master-v2.png",
+      "masterSha256": "4ff669f4d8871967184d208785a4abfdcfc05d15fd2b10a30b9a08f1088e3960",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-drones-v1.png",
-      "runtimeSha256": "486bfecfdd0d767e45f23f7e4f14fcc3122a7feee2c909102e19ebd2176831f7",
+      "runtimeSha256": "e655e4ea19e926703ff724802e07c6c51edfbe043bee3f215402ead03e8e2e0e",
       "opticalBoundsPx": [
-        51,
-        82,
-        333,
-        216
+        19,
+        17,
+        365,
+        239
       ],
-      "sizeBytes": 17857
+      "sizeBytes": 84039
     },
     {
       "id": "ufo-abduction",
-      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ufo-abduction-master-v1.png",
-      "masterSha256": "b8bc7dcb677bc05c906fe74c1995538cfc10f10d1d652d770b7ef175f5f9b874",
+      "generatedSource": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v2/preview-ufo-abduction-generated.png",
+      "master": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-ufo-abduction-master-v2.png",
+      "masterSha256": "f68cd3e9902e51e3da1724121a7772794b1fbce614beb570d6e11f684bc3cad5",
       "runtime": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
-      "runtimeSha256": "a95f4f2b1a215c4104225c199634b7c3e0a87736932156b9c53827af74e4085b",
+      "runtimeSha256": "e5f1422b823a06adcd52be96bb9e68998c18391845bd0e3d10a4239332754720",
       "opticalBoundsPx": [
-        51,
-        65,
-        333,
-        216
+        76,
+        15,
+        308,
+        241
       ],
-      "sizeBytes": 28525
+      "sizeBytes": 69967
     }
-  ]
+  ],
+  "generationMethod": "one theme-specific transparent PNG per effect; UFO backgrounds are illustrated separately and their 3D dice are composited from controlled face geometry and theme gift skins"
 }

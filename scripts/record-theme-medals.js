@@ -102,7 +102,7 @@ for (const theme of implementation.themes) {
 catalog.slots.sort((a, b) => a.id.localeCompare(b.id));
 usage.slots.sort((a, b) => a.slotId.localeCompare(b.slotId));
 catalog.requiredPngCountPerTheme = catalog.slots.length;
-catalog.greenPackPngCount = 185;
+catalog.greenPackPngCount = 187;
 usage.requiredSlotCount = usage.slots.length;
 implementation.requiredSlotCountPerTheme = catalog.slots.length;
 write('docs/theme-asset-role-catalog.json', catalog);

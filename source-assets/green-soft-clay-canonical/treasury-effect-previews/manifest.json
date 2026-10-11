@@ -3,7 +3,7 @@
   "version": 3,
   "status": "locked",
   "registry": "www/themes/green/asset-registry.json",
-  "semanticRole": "distinct Green-only Treasury preview motifs for fourteen celebration effects",
+  "semanticRole": "distinct Green-only Treasury preview motifs for sixteen celebration effects",
   "identity": {
     "material": "matte 3D Soft Clay Neumorphism",
     "palette": "forest-green, warm-ivory and restrained terracotta clay",
@@ -23,7 +23,9 @@
     { "id": "supernova", "effectId": "supernova", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-supernova-master-v1.png", "masterSha256": "e9ee25817d010b3747f4107fc385a4d7e4bed69c0f11c872db17c1e4fb3aca3c", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png", "runtimeSha256": "2672f0b807ef0770601ca8f17693bb780bc098b883e22e6e16b793ebca671d09" },
     { "id": "neon-pulse", "effectId": "neon_pulse", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-neon-pulse-master-v1.png", "masterSha256": "b5d69da5f033cb27958e5fb272f0ae7f36ba39880587ed1330b7ff26fb89b99e", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png", "runtimeSha256": "3ab788d23fe0c19d02805aafc45c2bb263915900923fca965d90b2c23a9704e3" },
     { "id": "drones", "effectId": "drones", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-drones-master-v1.png", "masterSha256": "53ec84e658432785938d7d4ff0a1597300ed26c2a51fe0be2c2f3f562a20ee56", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png", "runtimeSha256": "b282dcd67ea4ee389d14f19a34486dfe4b9b78ed5143a21c53bc731b1e769e4f" },
-    { "id": "ufo-abduction", "effectId": "ufo_abduction", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-ufo-abduction-master-v1.png", "masterSha256": "2038780d04875a3a904e123c75a262c0ed5f2364040b0dd347e67d9d4f32a423", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png", "runtimeSha256": "ab6c825ecdf6bb4cce45387d23cded27f2f9a7d37d3f5527fa83fe892b905cc1" }
+    { "id": "ufo-abduction", "effectId": "ufo_abduction", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-ufo-abduction-master-v1.png", "masterSha256": "2038780d04875a3a904e123c75a262c0ed5f2364040b0dd347e67d9d4f32a423", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png", "runtimeSha256": "ab6c825ecdf6bb4cce45387d23cded27f2f9a7d37d3f5527fa83fe892b905cc1" },
+    { "id": "confetti", "effectId": "confetti", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-confetti-master-v2.png", "masterSha256": "741d759c8ef5724003d1de5b9142665a994102134a2f95a13d4df15d42c22b1e", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-confetti-v1.png", "runtimeSha256": "2f5efc5a6b51e2391ddffdeee6fb80468bfb554dc54f49da206bd0fb0a067a1e" },
+    { "id": "gold-rain", "effectId": "gold_rain", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-gold-rain-master-v2.png", "masterSha256": "154e07e9ffe3e0c4282bd4ac21584f6be07de00eec2c7dc4c9b37210c5ad1986", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-gold-rain-v1.png", "runtimeSha256": "33586f07466b4243089d10a9dfba73c2ef840f10523aee2d61d7acc3c31641c4" }
   ],
   "runtimeSize": [384, 256],
   "masterSize": [1536, 1024],

@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-11",
+  "build": "Android qaLocal from current www",
+  "themes": [
+    {
+      "theme": "dark",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "light",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "medium",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "winter",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "neon",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "amethyst",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "easter",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "desert",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "moon",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    },
+    {
+      "theme": "severna",
+      "count": 16,
+      "decoded": 16,
+      "previewWidth": 152,
+      "previewHeight": 70,
+      "dimensions": [
+        "152x70"
+      ],
+      "afterLayers": 0
+    }
+  ],
+  "viewport": [
+    411,
+    891,
+    3.5
+  ],
+  "pass": true
+}

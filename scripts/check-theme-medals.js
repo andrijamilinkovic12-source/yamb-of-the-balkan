@@ -20,10 +20,10 @@ const themes = definitions.themes.map(theme => theme.id);
 assert.equal(themes.length, 10);
 assert.equal(ids.length, 18);
 assert.equal(new Set(ids).size, 18);
-assert.equal(catalog.requiredPngCountPerTheme, 186);
-assert.equal(usage.requiredSlotCount, 186);
-assert.equal(map.requiredSlotCountPerTheme, 186);
-assert.equal(definitions.assetStandardizationRules.requiredProductionPngCount, 186);
+assert.equal(catalog.requiredPngCountPerTheme, 188);
+assert.equal(usage.requiredSlotCount, 188);
+assert.equal(map.requiredSlotCountPerTheme, 188);
+assert.equal(definitions.assetStandardizationRules.requiredProductionPngCount, 188);
 assert(definitions.assetStandardizationRules.medalContract.includes('18 kanonskih PNG medalja'));
 const config = fs.readFileSync(path.join(root, 'www/config.js'), 'utf8');
 const context = {
