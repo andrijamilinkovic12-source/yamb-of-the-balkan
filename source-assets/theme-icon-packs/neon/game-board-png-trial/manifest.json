@@ -1,0 +1,46 @@
+{
+  "themeId": "neon",
+  "status": "applied-trial-awaiting-user-review",
+  "style": "3D Soft Neomorphism",
+  "direction": "smooth_rubber_matte_plastic",
+  "canonicalFallback": "theme-game-board.css?v=7",
+  "geometry": "unchanged shared game board DOM and CSS dimensions",
+  "assets": [
+    {
+      "role": "board-frame",
+      "master": "frame-master-v1.png",
+      "masterSha256": "dc77b29ca49afe6c8e4f6a1ab32d40cda9245c3e865eb584c08d80f9c0b9fdbc",
+      "runtime": "www/assets/theme-packs/neon/trial/game-board-png-v1/board-frame-v1.png",
+      "runtimeSha256": "91949c37649194b0f2b5ca84edcd2fc9f30508bb657552ceb51c45bcdeb1f6fd",
+      "runtimeSize": [
+        768,
+        1024
+      ],
+      "format": "RGBA PNG"
+    },
+    {
+      "role": "score-cell",
+      "master": "score-cell-master-v1.png",
+      "masterSha256": "6b0b7722527b058235f1ad1db62e1a8706cedbd6193bfebf7c6e5df53facf37b",
+      "runtime": "www/assets/theme-packs/neon/trial/game-board-png-v1/score-cell-v1.png",
+      "runtimeSha256": "0b3e07f2e8f79e1322bef7c89baf70026dac98e809936975884bd0916e27a272",
+      "runtimeSize": [
+        512,
+        256
+      ],
+      "format": "RGBA PNG"
+    },
+    {
+      "role": "header-cell",
+      "master": "header-cell-master-v1.png",
+      "masterSha256": "3e0f94487997caab078c1532abed65724349dc90c6f261dfbe161e7fb1646afa",
+      "runtime": "www/assets/theme-packs/neon/trial/game-board-png-v1/header-cell-v1.png",
+      "runtimeSha256": "35261ce6d841815892c9605943ab2a684406aef48ec88065acce94568aa6864c",
+      "runtimeSize": [
+        512,
+        256
+      ],
+      "format": "RGBA PNG"
+    }
+  ]
+}

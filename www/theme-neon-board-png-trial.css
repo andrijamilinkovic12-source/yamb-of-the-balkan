@@ -1,0 +1,31 @@
+/* Reversible Neon Cyber PNG trial. The committed CSS board remains underneath.
+   Only paint changes here; the live grid, labels, controls and sizes are shared. */
+body.neon-theme #game-scene .player-table::before {
+    content: "" !important;
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: url("assets/theme-packs/neon/trial/game-board-png-v1/board-frame-v1.png") center / 100% 100% no-repeat;
+}
+
+body.neon-theme #game-scene .player-table::after {
+    z-index: 3;
+}
+
+body.neon-theme #game-scene .player-table .grid-cell {
+    background: url("assets/theme-packs/neon/trial/game-board-png-v1/score-cell-v1.png") center / 100% 100% no-repeat !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+body.neon-theme #game-scene .player-table :is(.col-header,.row-header,.cell-sum) {
+    background: url("assets/theme-packs/neon/trial/game-board-png-v1/header-cell-v1.png") center / 100% 100% no-repeat !important;
+    box-shadow: none !important;
+}
+
+body.neon-theme #game-scene .player-table :is(.row-header.sum,.cell-sum) {
+    border-top-color: rgba(86,229,210,.34) !important;
+    border-bottom-color: rgba(86,229,210,.34) !important;
+}
