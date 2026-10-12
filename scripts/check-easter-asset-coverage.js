@@ -68,6 +68,7 @@ for (const [index, file] of runtimePngs.entries()) {
     assert([4, 6].includes(info.colorType), `Vaskrs PNG nema direktan alpha kanal: ${relative}`);
     assert(isSplash || Math.max(info.width, info.height) <= 768, `Vaskrs runtime ikona je veća od 768 px: ${relative}`);
     const supersededByCanonicalPack = /^canonical\/competition-medals\/(?:gold|silver|bronze)-v1\.png$/.test(relative)
+        || /^global-chat-(?:empty|send)-pro-v2\.png$/.test(relative)
         || /^treasury\/(?:tab-(?:trophies|skins|effects|themes)|status-(?:owned|active|locked|insufficient))-v\d+\.png$/.test(relative);
     assert(supersededByCanonicalPack || productionSource.includes(runtimePath), `Vaskrs PNG nema produkcionu vezu: ${runtimePath}`);
 }
@@ -109,7 +110,8 @@ assert(themeCss.includes('@media (prefers-reduced-motion: reduce)'), 'Vaskrs nem
 const stateBindings = [
     ['Leaderboard empty/loading', 'assets/easter-soft-clay/leaderboard/empty-loading-v2.png', 'hs-state-soft-clay-icon'],
     ['H2H empty', 'assets/easter-soft-clay/statistics/h2h-empty-v2.png', 'h2h-empty-state'],
-    ['Global Chat empty/loading', 'assets/easter-soft-clay/global-chat-empty-pro-v2.png', 'global-chat-state'],
+    ['Global Chat empty/loading', 'assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png', 'global-chat-state'],
+    ['Global Chat send', 'assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png', 'theme-chat-send-icon'],
     ['Online Players empty/loading/error', 'assets/easter-soft-clay/online-players-state-pro-v2.png', 'data-online-state'],
     ['Invite Friend empty', 'assets/easter-soft-clay/invite/empty.png', 'easter-invite-empty-state'],
     ['Daily complete', 'assets/easter-soft-clay/daily/complete-v2.png', 'daily-glass-complete-mark-easter'],

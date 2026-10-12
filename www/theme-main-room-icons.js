@@ -4,6 +4,7 @@
     const iconPattern = /assets\/green-soft-clay\/canonical\/([a-z-]+)-room-identity\/([a-z-]+)-room-(menu-)?v1\.png/;
     const tournamentRoomPattern = /assets\/green-soft-clay\/canonical\/tournament-(navigation|states)\/([a-z-]+)-v1\.png/;
     const tournamentPowerPattern = /assets\/green-soft-clay\/canonical\/statistics-overview\/power-index-v1\.png/;
+    const chatInternalPattern = /assets\/green-soft-clay\/global-chat-(empty|send)-v1\.png/;
     const legacySources = {
         'runtime/menu/treasury-free-v3.png': ['treasury', 'menu'],
         'treasury-free-v3.png': ['treasury', 'room'],
@@ -54,6 +55,19 @@
         root.querySelectorAll?.('img[data-theme-src]').forEach(image => candidates.push(image));
         candidates.forEach(image => {
             const original = image.dataset.themeSrc || '';
+            const chatInternal = original.match(chatInternalPattern);
+            if (chatInternal && image.closest('#global-chat-overlay')) {
+                const role = chatInternal[1] === 'empty' ? 'empty-state' : 'send';
+                const nextSource = themes.has(theme)
+                    ? `assets/theme-packs/${theme}/canonical/global-chat-internal/${role}-v1.png?v=2`
+                    : original;
+                if (image.getAttribute('src') !== nextSource) {
+                    guardImageSwap(image);
+                    image.src = nextSource;
+                    if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
+                }
+                return;
+            }
             if (tournamentPowerPattern.test(original) && image.closest('#tournament-screen')) {
                 const nextSource = themes.has(theme)
                     ? `assets/theme-packs/${theme}/canonical/statistics-overview/power-index-v1.png?v=1`

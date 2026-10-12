@@ -1,0 +1,109 @@
+/* Dukati / Ispravi zadnji upis: Green geometry with each theme's own material.
+   The existing font sizes, spacing, icon sizes and reward actions stay shared. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay {
+    --economy-ink: var(--theme-card-ink);
+    --economy-muted: var(--theme-card-muted);
+    --economy-accent: var(--theme-card-primary);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-card-header .global-chat-title {
+    color: var(--economy-ink) !important;
+    font-size: clamp(1.05rem, 4.2vw, 1.22rem) !important;
+    line-height: 1.2 !important;
+    font-weight: 850 !important;
+    letter-spacing: .025em !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay :is(.economy-kicker,.economy-undo-panel p,.economy-token-box > span) {
+    color: var(--economy-muted) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay :is(.economy-hero strong,.economy-token-box strong) {
+    color: var(--economy-accent) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-hero {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-tabs .tab-btn {
+    background: var(--theme-subcard-fill) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-tabs .tab-btn.active {
+    background: var(--theme-card-inset) !important;
+    border-color: var(--economy-accent) !important;
+    box-shadow: inset 0 2px 5px color-mix(in srgb, var(--theme-card-border) 38%, transparent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-tabs .tab-btn:focus-visible {
+    outline: 2px solid var(--economy-accent) !important;
+    outline-offset: 2px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay :is(.economy-ad-grid,.economy-token-box) {
+    color: var(--economy-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-inset) 19%, transparent) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: inset 0 2px 5px color-mix(in srgb, var(--theme-card-inset) 24%, transparent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-reward-card {
+    color: var(--economy-accent) !important;
+    background: var(--theme-subcard-fill) !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--theme-card-line) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-reward-top {
+    color: var(--economy-ink) !important;
+    text-shadow: none !important;
+}
+/* The global unavailable-ad rule paints a generic charcoal card and hides its
+   reward amount. Keep unavailable unmistakable using the theme's inset tone. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled {
+    opacity: 1 !important;
+    filter: none !important;
+    color: var(--economy-ink) !important;
+    background: var(--theme-card-inset) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: inset 0 2px 5px color-mix(in srgb, var(--theme-card-border) 32%, transparent) !important;
+    cursor: not-allowed;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled::after {
+    content: none !important;
+    display: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled :is(.economy-reward-top,strong) {
+    color: var(--economy-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #undo-menu-overlay .economy-banner-slot:is([data-ad-state="loading"],[data-ad-state="failed"]) {
+    color: var(--economy-muted) !important;
+}
+
+/* Green wraps the long undo title on narrow phones instead of cutting it off. */
+@media (max-width: 360px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+        #undo-menu-overlay .economy-card-header .global-chat-title {
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: normal;
+    }
+}

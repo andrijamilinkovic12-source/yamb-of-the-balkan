@@ -41,6 +41,12 @@ def contexts(slot_id):
         return ["splash", "login"]
     if slot_id.startswith("runtime/menu/"):
         return ["main-menu"]
+    if slot_id.startswith("canonical/online-players-internal/"):
+        role = slot_id.rsplit("/", 1)[1].removesuffix("-v1")
+        shared = {"friend": ["invite-friend", "rules"],
+                  "spectate": ["game-header", "spectator-live", "rules"],
+                  "duel": ["rules"]}
+        return ["online-players", *shared.get(role, [])]
     family = slot_id.split("/")[1] if slot_id.startswith("canonical/") else slot_id.split("/")[0]
     lookups = {
         "achievement-trophies": ["statistics", "treasury"],

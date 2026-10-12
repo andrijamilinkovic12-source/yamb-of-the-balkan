@@ -1,0 +1,55 @@
+{
+  "themeId": "severna",
+  "style": "3D Soft Neomorphism",
+  "direction": "smooth_rubber_matte_plastic",
+  "status": "canonical",
+  "roles": [
+    {
+      "role": "empty",
+      "illustrationStatus": "new-original-for-this-theme",
+      "catalogSlot": "global-chat-empty-v1",
+      "master": "source-assets/theme-icon-packs/severna/global-chat-internal-v1/empty-master-v1.png",
+      "masterSha256": "32a3c4ba8a0ebd89fa3ac6a0d253a6cd8c08440ea992e74a3ad6afa7f3feaa62",
+      "masterOpticalBoundsPx": [
+        106,
+        177,
+        1187,
+        1104
+      ],
+      "runtime": "www/assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png",
+      "runtimeSha256": "78cee78f6f113530973a6cdc07a0787530411757df19539e1d6f7956a2c2ed4f",
+      "runtimeSizePx": [
+        384,
+        384
+      ],
+      "runtimeBytes": 116153,
+      "format": "RGBA PNG"
+    },
+    {
+      "role": "send",
+      "illustrationStatus": "new-original-for-this-theme",
+      "catalogSlot": "global-chat-send-v1",
+      "master": "source-assets/theme-icon-packs/severna/global-chat-internal-v1/send-master-v1.png",
+      "masterSha256": "42ea881e35152b1a9242ba5792de3ce3ea0bf379413118ca7c41a8a7708c360d",
+      "masterOpticalBoundsPx": [
+        43,
+        176,
+        1226,
+        1072
+      ],
+      "runtime": "www/assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png",
+      "runtimeSha256": "f00640a2cc1253c1677164948c0bb9515d62be3b5c977aa4ea59a651bf9c8ca7",
+      "runtimeSizePx": [
+        384,
+        384
+      ],
+      "runtimeBytes": 77194,
+      "format": "RGBA PNG"
+    }
+  ],
+  "displayCssPx": {
+    "empty": 76,
+    "send": 32
+  },
+  "note": "Empty/loading and send are separate from the canonical room identity; no cross-theme reuse."
+}

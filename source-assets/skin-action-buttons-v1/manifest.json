@@ -1,0 +1,1023 @@
+{
+  "schemaVersion": 1,
+  "scope": "Three PNG action surfaces per dice skin: roll, announce, cancel. Button geometry and live text remain in HTML/CSS.",
+  "runtimeRenderSize": [
+    768,
+    240
+  ],
+  "stateOrder": [
+    "roll",
+    "announce",
+    "cancel"
+  ],
+  "skins": [
+    {
+      "id": "default",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/default-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/default-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/default-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/default-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/default-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "classic_red",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/classic_red-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/classic_red-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_red-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_red-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_red-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "classic_blue",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/classic_blue-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/classic_blue-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_blue-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_blue-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_blue-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "classic_black",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/classic_black-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/classic_black-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_black-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_black-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/classic_black-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "bronze_antique",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/green-dice-pilot/bronze-antique-face-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/bronze_antique-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_antique-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_antique-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_antique-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "bronze_patina",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/bronze_patina-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/bronze_patina-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_patina-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_patina-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_patina-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "bronze_steampunk",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/bronze_steampunk-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/bronze_steampunk-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_steampunk-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_steampunk-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_steampunk-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "bronze_spartan",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/bronze_spartan-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/bronze_spartan-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_spartan-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_spartan-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_spartan-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "bronze_rose",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/bronze_rose-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/bronze_rose-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_rose-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_rose-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_rose-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "bronze_forge",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/bronze_forge-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/bronze_forge-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_forge-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_forge-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/bronze_forge-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "silver_classic",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/silver_classic-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/silver_classic-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_classic-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_classic-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_classic-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "silver_brushed",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/silver_brushed-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/silver_brushed-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_brushed-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_brushed-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_brushed-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "silver_moonlight",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/silver_moonlight-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/silver_moonlight-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_moonlight-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_moonlight-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_moonlight-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "silver_knight",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/silver_knight-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/silver_knight-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_knight-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_knight-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_knight-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "silver_titanium",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/silver_titanium-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/silver_titanium-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_titanium-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_titanium-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_titanium-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "silver_chrome",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/silver_chrome-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/silver_chrome-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_chrome-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_chrome-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/silver_chrome-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "gold_classic",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/gold_classic-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/gold_classic-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_classic-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_classic-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_classic-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "gold_rose",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/gold_rose-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/gold_rose-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_rose-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_rose-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_rose-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "gold_ancient",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/gold_ancient-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/gold_ancient-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_ancient-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_ancient-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_ancient-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "gold_midas",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/gold_midas-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/gold_midas-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_midas-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_midas-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/gold_midas-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "wood",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/wood-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/wood-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/wood-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/wood-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/wood-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "marble",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/marble-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/marble-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/marble-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/marble-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/marble-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "pearl",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/pearl-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/pearl-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/pearl-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/pearl-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/pearl-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "carbon",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/carbon-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/carbon-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/carbon-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/carbon-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/carbon-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "obsidian",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/obsidian-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/obsidian-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/obsidian-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/obsidian-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/obsidian-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "leather",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/leather-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/leather-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/leather-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/leather-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/leather-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "neon_blue",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/neon_blue-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/neon_blue-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_blue-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_blue-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_blue-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "neon_pink",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/neon_pink-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/neon_pink-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_pink-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_pink-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_pink-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "neon_green",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/neon_green-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/neon_green-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_green-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_green-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/neon_green-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "stealth",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/stealth-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/stealth-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/stealth-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/stealth-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/stealth-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "glass_clear",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/glass_clear-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/glass_clear-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_clear-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_clear-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_clear-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "glass_ruby",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/glass_ruby-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/glass_ruby-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_ruby-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_ruby-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_ruby-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "glass_emerald",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/glass_emerald-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/glass_emerald-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_emerald-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_emerald-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_emerald-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "glass_sapphire",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/glass_sapphire-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/glass_sapphire-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_sapphire-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_sapphire-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/glass_sapphire-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "green_clay",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/green-dice-pilot/green-clay-face-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/green_clay-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/green_clay-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/green_clay-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/green_clay-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "theme_light_gold",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_light_gold-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_light_gold-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_light_gold-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_light_gold-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_light_gold-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "theme_dark_cherry",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_dark_cherry-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_dark_cherry-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_dark_cherry-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_dark_cherry-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_dark_cherry-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "theme_blue_ocean",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_blue_ocean-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_blue_ocean-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_blue_ocean-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_blue_ocean-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_blue_ocean-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "theme_neon_cyber",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_neon_cyber-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_neon_cyber-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_neon_cyber-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_neon_cyber-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_neon_cyber-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "theme_royal_amethyst",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_royal_amethyst-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_royal_amethyst-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_royal_amethyst-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_royal_amethyst-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_royal_amethyst-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "theme_easter",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_easter-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_easter-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_easter-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_easter-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_easter-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "theme_desert",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_desert-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_desert-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_desert-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_desert-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_desert-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "theme_moonlight",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_moonlight-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_moonlight-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_moonlight-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_moonlight-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_moonlight-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "theme_northern_nebula",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/theme-dice-skins-v1/masters/theme_northern_nebula-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/theme_northern_nebula-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_northern_nebula-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_northern_nebula-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/theme_northern_nebula-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    },
+    {
+      "id": "magma",
+      "style": "3D Soft Neomorphism",
+      "direction": "Clay",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/magma-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/magma-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/magma-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/magma-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/magma-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "galaxy",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/galaxy-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/galaxy-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/galaxy-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/galaxy-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/galaxy-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "retro",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/retro-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/retro-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/retro-roll-v1.png",
+          "ink": "#ffffff"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/retro-announce-v1.png",
+          "ink": "#ffffff"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/retro-cancel-v1.png",
+          "ink": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "hologram",
+      "style": "3D Soft Neomorphism",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "referenceDiceMaster": "source-assets/dice-skins-v1/masters/hologram-master-v1.png",
+      "master": "source-assets/skin-action-buttons-v1/masters/hologram-master-v1.png",
+      "states": {
+        "roll": {
+          "runtime": "www/assets/skin-action-buttons-v1/hologram-roll-v1.png",
+          "ink": "#000000"
+        },
+        "announce": {
+          "runtime": "www/assets/skin-action-buttons-v1/hologram-announce-v1.png",
+          "ink": "#000000"
+        },
+        "cancel": {
+          "runtime": "www/assets/skin-action-buttons-v1/hologram-cancel-v1.png",
+          "ink": "#000000"
+        }
+      }
+    }
+  ]
+}

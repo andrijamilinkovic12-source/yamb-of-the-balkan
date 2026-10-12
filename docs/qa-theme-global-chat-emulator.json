@@ -1,0 +1,1672 @@
+[
+  {
+    "theme": "dark",
+    "bodyTheme": "",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/green-soft-clay/global-chat-empty-v1.png?v=opt2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/green-soft-clay/global-chat-send-v1.png?v=opt2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(231, 239, 218)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(231, 239, 218)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(231, 239, 218)",
+        "background": "rgba(28, 63, 36, 0.34)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(231, 239, 218)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(231, 239, 218)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(242, 246, 232)",
+        "background": "rgba(30, 66, 38, 0.62)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/green-soft-clay/global-chat-empty-v1.png?v=opt2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgba(0, 0, 0, 0)",
+        "outgoingBackground": "rgba(0, 0, 0, 0)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "light",
+    "bodyTheme": "light-theme theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/light/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/light/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(57, 40, 23)",
+        "background": "rgb(255, 241, 215)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(57, 40, 23)",
+        "background": "rgb(243, 214, 168)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(57, 40, 23)",
+        "background": "rgb(255, 241, 215)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(57, 40, 23)",
+        "background": "rgb(243, 214, 168)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(57, 40, 23)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(57, 40, 23)",
+        "background": "rgb(219, 180, 123)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(243, 214, 168)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/light/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(243, 214, 168)",
+        "outgoingBackground": "rgb(135, 80, 36)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "medium",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active medium-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/medium/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/medium/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(255, 246, 242)",
+        "background": "rgb(67, 23, 32)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(255, 246, 242)",
+        "background": "rgb(96, 37, 46)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(255, 246, 242)",
+        "background": "rgb(67, 23, 32)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(255, 246, 242)",
+        "background": "rgb(96, 37, 46)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(255, 246, 242)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(255, 246, 242)",
+        "background": "rgb(48, 16, 25)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(96, 37, 46)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/medium/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(96, 37, 46)",
+        "outgoingBackground": "rgb(241, 195, 178)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "winter",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active winter-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/winter/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/winter/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(24, 56, 75)",
+        "background": "rgb(255, 244, 229)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(24, 56, 75)",
+        "background": "rgb(222, 236, 235)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(24, 56, 75)",
+        "background": "rgb(255, 244, 229)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(24, 56, 75)",
+        "background": "rgb(222, 236, 235)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(24, 56, 75)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(24, 56, 75)",
+        "background": "rgb(187, 216, 222)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(222, 236, 235)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/winter/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(222, 236, 235)",
+        "outgoingBackground": "rgb(11, 92, 140)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "neon",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active neon-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/neon/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/neon/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(244, 250, 255)",
+        "background": "rgb(18, 27, 43)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(244, 250, 255)",
+        "background": "rgb(26, 43, 64)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(244, 250, 255)",
+        "background": "rgb(18, 27, 43)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(244, 250, 255)",
+        "background": "rgb(26, 43, 64)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(244, 250, 255)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(244, 250, 255)",
+        "background": "rgb(12, 22, 37)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(26, 43, 64)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/neon/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(26, 43, 64)",
+        "outgoingBackground": "rgb(86, 229, 210)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "amethyst",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active amethyst-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/amethyst/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/amethyst/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(251, 246, 255)",
+        "background": "rgb(60, 40, 75)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(251, 246, 255)",
+        "background": "rgb(86, 54, 96)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(251, 246, 255)",
+        "background": "rgb(60, 40, 75)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(251, 246, 255)",
+        "background": "rgb(86, 54, 96)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(251, 246, 255)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(251, 246, 255)",
+        "background": "rgb(45, 29, 60)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(86, 54, 96)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/amethyst/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(86, 54, 96)",
+        "outgoingBackground": "rgb(242, 200, 121)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "easter",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active easter-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(61, 68, 52)",
+        "background": "rgb(255, 248, 234)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(61, 68, 52)",
+        "background": "rgb(238, 229, 211)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(61, 68, 52)",
+        "background": "rgb(255, 248, 234)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(61, 68, 52)",
+        "background": "rgb(238, 229, 211)",
+        "fontSize": "12.16px",
+        "borderRadius": "18px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(61, 68, 52)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(61, 68, 52)",
+        "background": "rgb(211, 213, 183)",
+        "fontSize": "15.2px",
+        "borderRadius": "16px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(238, 229, 211)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(238, 229, 211)",
+        "outgoingBackground": "rgb(77, 107, 69)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "desert",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active desert-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/desert/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(68, 48, 39)",
+        "background": "rgb(255, 240, 218)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(68, 48, 39)",
+        "background": "rgb(240, 208, 171)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(68, 48, 39)",
+        "background": "rgb(255, 240, 218)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(68, 48, 39)",
+        "background": "rgb(240, 208, 171)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(68, 48, 39)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(68, 48, 39)",
+        "background": "rgb(213, 178, 155)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(240, 208, 171)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(240, 208, 171)",
+        "outgoingBackground": "rgb(125, 77, 56)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "moon",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active moon-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/moon/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/moon/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(245, 245, 247)",
+        "background": "rgb(37, 41, 52)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(245, 245, 247)",
+        "background": "rgb(59, 63, 75)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(245, 245, 247)",
+        "background": "rgb(37, 41, 52)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(245, 245, 247)",
+        "background": "rgb(59, 63, 75)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(245, 245, 247)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(245, 245, 247)",
+        "background": "rgb(24, 27, 36)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(59, 63, 75)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/moon/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(59, 63, 75)",
+        "outgoingBackground": "rgb(225, 226, 231)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  },
+  {
+    "theme": "severna",
+    "bodyTheme": "theme-ducat-pack-active theme-undo-token-pack-active theme-rewarded-video-pack-active severna-theme",
+    "shell": [
+      10,
+      45,
+      391.43,
+      803
+    ],
+    "header": [
+      10.86,
+      45.86,
+      389.71,
+      68.86
+    ],
+    "body": [
+      10.86,
+      114.71,
+      389.71,
+      644.57
+    ],
+    "footer": [
+      10.86,
+      759.29,
+      389.71,
+      87.86
+    ],
+    "title": [
+      24.86,
+      63.86,
+      194.93,
+      32
+    ],
+    "state": [
+      55.71,
+      364,
+      300,
+      146
+    ],
+    "sendButton": [
+      341.57,
+      770.14,
+      45,
+      45
+    ],
+    "input": [
+      24.86,
+      770.14,
+      306.71,
+      45
+    ],
+    "close": [
+      342.57,
+      57.86,
+      44,
+      44
+    ],
+    "images": [
+      {
+        "src": "assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          512,
+          512
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "width": 76,
+        "height": 76,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      },
+      {
+        "src": "assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png?v=2",
+        "width": 32,
+        "height": 32,
+        "natural": [
+          384,
+          384
+        ],
+        "display": "block",
+        "visibility": "visible"
+      }
+    ],
+    "styles": {
+      "shell": {
+        "color": "rgb(245, 251, 255)",
+        "background": "rgb(24, 44, 68)",
+        "fontSize": "16px",
+        "borderRadius": "20px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "header": {
+        "color": "rgb(245, 251, 255)",
+        "background": "rgb(36, 68, 91)",
+        "fontSize": "14.4px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "body": {
+        "color": "rgb(245, 251, 255)",
+        "background": "rgb(24, 44, 68)",
+        "fontSize": "16px",
+        "borderRadius": "0px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "state": {
+        "color": "rgb(245, 251, 255)",
+        "background": "rgb(36, 68, 91)",
+        "fontSize": "12.16px",
+        "borderRadius": "8px",
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "text": {
+        "color": "rgb(245, 251, 255)",
+        "background": "rgba(0, 0, 0, 0)",
+        "fontSize": "12.16px",
+        "borderRadius": "0px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "input": {
+        "color": "rgb(245, 251, 255)",
+        "background": "rgb(15, 33, 55)",
+        "fontSize": "15.2px",
+        "borderRadius": "12px",
+        "display": "block",
+        "visibility": "visible"
+      },
+      "send": {
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(36, 68, 91)",
+        "fontSize": "17.6px",
+        "borderRadius": "50%",
+        "display": "flex",
+        "visibility": "visible"
+      }
+    },
+    "functional": {
+      "loading": {
+        "present": true,
+        "source": "assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png?v=2",
+        "animation": "1.55s"
+      },
+      "messages": {
+        "count": 2,
+        "reportButtons": 1,
+        "incomingBackground": "rgb(36, 68, 91)",
+        "outgoingBackground": "rgb(138, 227, 228)",
+        "inputLimit": 550,
+        "sendLabel": "Pošalji poruku",
+        "closeLabel": "Zatvori chat"
+      }
+    }
+  }
+]

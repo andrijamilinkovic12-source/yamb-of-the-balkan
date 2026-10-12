@@ -1,0 +1,62 @@
+{
+  "theme": "severna",
+  "style": "3D Soft Neomorphism",
+  "direction": "rubber",
+  "source": "Six separately prompted and generated transparent ImageGen illustrations; no procedural icon drawing or cross-theme recoloring",
+  "roles": {
+    "state": {
+      "master": "source-assets/theme-icon-packs/severna/online-players-internal-v1/state-master.png",
+      "production": "www/assets/theme-packs/severna/canonical/online-players-internal/state-v1.png",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "919afcb5e40ff9d43e3fc3c0b35a91225e2d268014974e1c17b6f0f7f102d5e7"
+    },
+    "search": {
+      "master": "source-assets/theme-icon-packs/severna/online-players-internal-v1/search-master.png",
+      "production": "www/assets/theme-packs/severna/canonical/online-players-internal/search-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "0f52b61102082db92e8b977f237c84648241cd1a79a75d54fe458e66c6bf08a7"
+    },
+    "friend": {
+      "master": "source-assets/theme-icon-packs/severna/online-players-internal-v1/friend-master.png",
+      "production": "www/assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "1a8f23cc3955900588661ae0630660a65576663727732ae135338a9afa373b9c"
+    },
+    "spectate": {
+      "master": "source-assets/theme-icon-packs/severna/online-players-internal-v1/spectate-master.png",
+      "production": "www/assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "7217f473d8fe5989079476ad1efc2f640efa0aeb7350b1eae51984849d0a73fd"
+    },
+    "duel": {
+      "master": "source-assets/theme-icon-packs/severna/online-players-internal-v1/duel-master.png",
+      "production": "www/assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "d213a8bf5233c2b9b7341685b84ae443ada5eb3e322537a153ef75e2258fb74d"
+    },
+    "avatar": {
+      "master": "source-assets/theme-icon-packs/severna/online-players-internal-v1/avatar-master.png",
+      "production": "www/assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "68b7ab0bc4012b3583b12b9a420e2b308b0ecc5c34ef55e5d9712d60a1fd3ae9"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "theme": "desert",
+  "style": "3D Soft Neomorphism",
+  "direction": "clay",
+  "source": "Six separately prompted and generated transparent ImageGen illustrations; no procedural icon drawing or cross-theme recoloring",
+  "roles": {
+    "state": {
+      "master": "source-assets/theme-icon-packs/desert/online-players-internal-v1/state-master.png",
+      "production": "www/assets/theme-packs/desert/canonical/online-players-internal/state-v1.png",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "8d41be7ae645ec345ddc93a5a82fe1ee783c87e38bf6324cbe5ed746678d14f8"
+    },
+    "search": {
+      "master": "source-assets/theme-icon-packs/desert/online-players-internal-v1/search-master.png",
+      "production": "www/assets/theme-packs/desert/canonical/online-players-internal/search-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "689161db366a90005c3bfb1cbdcc2c26abba08c72f0871d9171723c2877185b0"
+    },
+    "friend": {
+      "master": "source-assets/theme-icon-packs/desert/online-players-internal-v1/friend-master.png",
+      "production": "www/assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "2028c17c6bb535e56f57e55280877d537a16762c854f6398a51f132e95f96e0b"
+    },
+    "spectate": {
+      "master": "source-assets/theme-icon-packs/desert/online-players-internal-v1/spectate-master.png",
+      "production": "www/assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "4c0ff65b942ea9c2910d4d7bd73584fb858f66ed6472449ea848aa883e775933"
+    },
+    "duel": {
+      "master": "source-assets/theme-icon-packs/desert/online-players-internal-v1/duel-master.png",
+      "production": "www/assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "22691f73532ff6442af60930cbffaf906919c7cda218ece6bb5001b6e8b870bd"
+    },
+    "avatar": {
+      "master": "source-assets/theme-icon-packs/desert/online-players-internal-v1/avatar-master.png",
+      "production": "www/assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "29619abe74db45c00fa34d082e96262c6240ab57a1b938180ccd402d50a67cb4"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "referenceUsageMap": "docs/theme-asset-usage-map.json",
-  "requiredSlotCountPerTheme": 189,
+  "requiredSlotCountPerTheme": 191,
   "slotStageOrder": [
     "defined",
     "created",
@@ -1031,6 +1031,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 194320
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            17,
+            6,
+            127,
+            137
+          ],
+          "sizeBytes": 18953
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            7,
+            6,
+            137,
+            137
+          ],
+          "sizeBytes": 23976
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            13,
+            6,
+            131,
+            137
+          ],
+          "sizeBytes": 20454
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            10,
+            137,
+            133
+          ],
+          "sizeBytes": 17837
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            33,
+            137,
+            110
+          ],
+          "sizeBytes": 18760
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            15,
+            55,
+            240,
+            200
+          ],
+          "sizeBytes": 40011
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -1817,6 +1919,22 @@
           ],
           "sizeBytes": 110077
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            25,
+            365,
+            231
+          ],
+          "sizeBytes": 67679
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -1896,6 +2014,22 @@
             241
           ],
           "sizeBytes": 132360
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            73,
+            15,
+            311,
+            241
+          ],
+          "sizeBytes": 76468
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -2052,20 +2186,38 @@
           "sizeBytes": 251903
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            53,
+            364,
+            330
+          ],
+          "sizeBytes": 86582
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/light/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            74,
+            364,
+            310
+          ],
+          "sizeBytes": 66949
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -2092,38 +2244,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -2252,38 +2372,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 47593
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            25,
-            365,
-            231
-          ],
-          "sizeBytes": 67679
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/light/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            73,
-            15,
-            311,
-            241
-          ],
-          "sizeBytes": 76468
         }
       }
     },
@@ -3303,6 +3391,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 207735
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            12,
+            6,
+            131,
+            137
+          ],
+          "sizeBytes": 21915
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            9,
+            137,
+            134
+          ],
+          "sizeBytes": 21874
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            8,
+            6,
+            135,
+            137
+          ],
+          "sizeBytes": 22591
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            6,
+            137,
+            137
+          ],
+          "sizeBytes": 18805
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            31,
+            137,
+            112
+          ],
+          "sizeBytes": 16699
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            17,
+            15,
+            238,
+            240
+          ],
+          "sizeBytes": 67939
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -4089,6 +4279,22 @@
           ],
           "sizeBytes": 101064
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            29,
+            365,
+            226
+          ],
+          "sizeBytes": 65731
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -4168,6 +4374,22 @@
             241
           ],
           "sizeBytes": 107991
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            34,
+            15,
+            350,
+            241
+          ],
+          "sizeBytes": 95448
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -4324,20 +4546,38 @@
           "sizeBytes": 215383
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            52,
+            364,
+            332
+          ],
+          "sizeBytes": 115049
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/medium/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            53,
+            364,
+            330
+          ],
+          "sizeBytes": 82296
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -4364,38 +4604,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -4524,38 +4732,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 62092
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            29,
-            365,
-            226
-          ],
-          "sizeBytes": 65731
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/medium/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            34,
-            15,
-            350,
-            241
-          ],
-          "sizeBytes": 95448
         }
       }
     },
@@ -5575,6 +5751,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 181630
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            11,
+            6,
+            132,
+            137
+          ],
+          "sizeBytes": 18995
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            8,
+            137,
+            135
+          ],
+          "sizeBytes": 26551
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            13,
+            137,
+            130
+          ],
+          "sizeBytes": 20837
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            10,
+            6,
+            134,
+            137
+          ],
+          "sizeBytes": 22452
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            33,
+            137,
+            111
+          ],
+          "sizeBytes": 18358
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            15,
+            16,
+            240,
+            239
+          ],
+          "sizeBytes": 66050
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -6361,6 +6639,22 @@
           ],
           "sizeBytes": 101209
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            21,
+            365,
+            235
+          ],
+          "sizeBytes": 66146
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -6440,6 +6734,22 @@
             241
           ],
           "sizeBytes": 115282
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            72,
+            15,
+            312,
+            241
+          ],
+          "sizeBytes": 91922
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -6596,20 +6906,38 @@
           "sizeBytes": 227737
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            54,
+            364,
+            330
+          ],
+          "sizeBytes": 99670
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/winter/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            61,
+            364,
+            322
+          ],
+          "sizeBytes": 78976
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -6636,38 +6964,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -6796,38 +7092,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 47194
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            21,
-            365,
-            235
-          ],
-          "sizeBytes": 66146
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/winter/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            72,
-            15,
-            312,
-            241
-          ],
-          "sizeBytes": 91922
         }
       }
     },
@@ -7847,6 +8111,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 197192
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            12,
+            6,
+            132,
+            137
+          ],
+          "sizeBytes": 20964
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            11,
+            137,
+            133
+          ],
+          "sizeBytes": 24981
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            9,
+            6,
+            135,
+            137
+          ],
+          "sizeBytes": 23858
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            7,
+            6,
+            137,
+            137
+          ],
+          "sizeBytes": 20072
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            28,
+            137,
+            115
+          ],
+          "sizeBytes": 21289
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            15,
+            19,
+            240,
+            236
+          ],
+          "sizeBytes": 71941
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -8633,6 +8999,22 @@
           ],
           "sizeBytes": 99358
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            31,
+            365,
+            225
+          ],
+          "sizeBytes": 56769
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -8712,6 +9094,22 @@
             237
           ],
           "sizeBytes": 104207
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            30,
+            15,
+            354,
+            241
+          ],
+          "sizeBytes": 115497
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -8868,20 +9266,38 @@
           "sizeBytes": 232563
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            69,
+            364,
+            315
+          ],
+          "sizeBytes": 100522
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/neon/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            70,
+            364,
+            313
+          ],
+          "sizeBytes": 74953
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -8908,38 +9324,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -9068,38 +9452,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 60325
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            31,
-            365,
-            225
-          ],
-          "sizeBytes": 56769
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            30,
-            15,
-            354,
-            241
-          ],
-          "sizeBytes": 115497
         }
       }
     },
@@ -10119,6 +10471,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 246192
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            9,
+            137,
+            134
+          ],
+          "sizeBytes": 21122
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            8,
+            137,
+            135
+          ],
+          "sizeBytes": 22760
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            12,
+            137,
+            132
+          ],
+          "sizeBytes": 26243
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            9,
+            137,
+            135
+          ],
+          "sizeBytes": 19433
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            32,
+            137,
+            111
+          ],
+          "sizeBytes": 16735
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            18,
+            15,
+            237,
+            240
+          ],
+          "sizeBytes": 77887
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -10905,6 +11359,22 @@
           ],
           "sizeBytes": 109561
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            25,
+            365,
+            230
+          ],
+          "sizeBytes": 63611
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -10984,6 +11454,22 @@
             241
           ],
           "sizeBytes": 123292
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            26,
+            15,
+            358,
+            241
+          ],
+          "sizeBytes": 109145
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -11140,20 +11626,38 @@
           "sizeBytes": 239312
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            43,
+            364,
+            340
+          ],
+          "sizeBytes": 105995
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            56,
+            364,
+            327
+          ],
+          "sizeBytes": 81854
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -11180,38 +11684,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -11340,38 +11812,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 60761
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            25,
-            365,
-            230
-          ],
-          "sizeBytes": 63611
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/amethyst/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            26,
-            15,
-            358,
-            241
-          ],
-          "sizeBytes": 109145
         }
       }
     },
@@ -12391,6 +12831,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 189914
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            8,
+            6,
+            136,
+            137
+          ],
+          "sizeBytes": 21368
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            6,
+            137,
+            137
+          ],
+          "sizeBytes": 22423
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            10,
+            6,
+            133,
+            137
+          ],
+          "sizeBytes": 24063
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            7,
+            137,
+            137
+          ],
+          "sizeBytes": 16278
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            30,
+            137,
+            114
+          ],
+          "sizeBytes": 17930
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            18,
+            15,
+            237,
+            240
+          ],
+          "sizeBytes": 68377
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -13177,6 +13719,22 @@
           ],
           "sizeBytes": 117620
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            28,
+            15,
+            355,
+            241
+          ],
+          "sizeBytes": 62323
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -13256,6 +13814,22 @@
             241
           ],
           "sizeBytes": 108033
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            32,
+            15,
+            352,
+            241
+          ],
+          "sizeBytes": 103122
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -13412,20 +13986,38 @@
           "sizeBytes": 217901
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            47,
+            364,
+            337
+          ],
+          "sizeBytes": 95215
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            52,
+            364,
+            332
+          ],
+          "sizeBytes": 83323
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -13452,38 +14044,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -13612,38 +14172,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 55781
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            28,
-            15,
-            355,
-            241
-          ],
-          "sizeBytes": 62323
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            32,
-            15,
-            352,
-            241
-          ],
-          "sizeBytes": 103122
         }
       }
     },
@@ -14663,6 +15191,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 172710
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            11,
+            6,
+            132,
+            137
+          ],
+          "sizeBytes": 20029
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            6,
+            137,
+            137
+          ],
+          "sizeBytes": 28767
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            15,
+            6,
+            128,
+            137
+          ],
+          "sizeBytes": 21099
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            12,
+            137,
+            132
+          ],
+          "sizeBytes": 19864
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            14,
+            137,
+            129
+          ],
+          "sizeBytes": 25673
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            15,
+            20,
+            240,
+            235
+          ],
+          "sizeBytes": 74218
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -15449,6 +16079,22 @@
           ],
           "sizeBytes": 93312
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            39,
+            365,
+            217
+          ],
+          "sizeBytes": 60045
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -15528,6 +16174,22 @@
             236
           ],
           "sizeBytes": 120316
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            24,
+            365,
+            232
+          ],
+          "sizeBytes": 105111
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -15684,20 +16346,38 @@
           "sizeBytes": 228743
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            72,
+            364,
+            312
+          ],
+          "sizeBytes": 120272
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/desert/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            66,
+            364,
+            317
+          ],
+          "sizeBytes": 77561
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -15724,38 +16404,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -15884,38 +16532,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 72598
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            39,
-            365,
-            217
-          ],
-          "sizeBytes": 60045
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            24,
-            365,
-            232
-          ],
-          "sizeBytes": 105111
         }
       }
     },
@@ -16935,6 +17551,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 151340
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            9,
+            6,
+            134,
+            137
+          ],
+          "sizeBytes": 23108
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            10,
+            137,
+            134
+          ],
+          "sizeBytes": 26304
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            9,
+            137,
+            135
+          ],
+          "sizeBytes": 22648
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            7,
+            137,
+            136
+          ],
+          "sizeBytes": 19032
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            10,
+            6,
+            134,
+            137
+          ],
+          "sizeBytes": 26435
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            15,
+            21,
+            240,
+            234
+          ],
+          "sizeBytes": 65911
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -17721,6 +18439,22 @@
           ],
           "sizeBytes": 92897
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            18,
+            365,
+            237
+          ],
+          "sizeBytes": 60155
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -17800,6 +18534,22 @@
             241
           ],
           "sizeBytes": 95467
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            59,
+            15,
+            325,
+            241
+          ],
+          "sizeBytes": 91645
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -17956,20 +18706,38 @@
           "sizeBytes": 197246
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            83,
+            364,
+            300
+          ],
+          "sizeBytes": 72845
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/moon/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            67,
+            364,
+            317
+          ],
+          "sizeBytes": 69323
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -17996,38 +18764,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -18156,38 +18892,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 47633
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            18,
-            365,
-            237
-          ],
-          "sizeBytes": 60155
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/moon/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            59,
-            15,
-            325,
-            241
-          ],
-          "sizeBytes": 91645
         }
       }
     },
@@ -19207,6 +19911,108 @@
           "opticalBoundsPx": null,
           "sizeBytes": 163959
         },
+        "canonical/online-players-internal/avatar-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/online-players-internal-v1/avatar-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            6,
+            137,
+            137
+          ],
+          "sizeBytes": 21304
+        },
+        "canonical/online-players-internal/duel-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/online-players-internal-v1/duel-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            7,
+            137,
+            136
+          ],
+          "sizeBytes": 21617
+        },
+        "canonical/online-players-internal/friend-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/online-players-internal-v1/friend-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            18,
+            137,
+            126
+          ],
+          "sizeBytes": 18269
+        },
+        "canonical/online-players-internal/search-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/online-players-internal/search-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/online-players-internal-v1/search-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/index.html:#online-players-search-icon",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            12,
+            6,
+            132,
+            137
+          ],
+          "sizeBytes": 16673
+        },
+        "canonical/online-players-internal/spectate-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/online-players-internal-v1/spectate-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            6,
+            34,
+            137,
+            110
+          ],
+          "sizeBytes": 16446
+        },
+        "canonical/online-players-internal/state-v1": {
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/online-players-internal/state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/online-players-internal-v1/state-master.png",
+          "consumerRefs": [
+            "www/theme-online-players-room.js:apply",
+            "www/onlinenumber.js:renderOnlinePlayersList",
+            "www/game.js:getThemeRoomSources(onlinePlayers)"
+          ],
+          "opticalBoundsPx": [
+            17,
+            15,
+            238,
+            240
+          ],
+          "sizeBytes": 68017
+        },
         "canonical/online-players-room-identity/online-players-room-menu-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-menu-v1.png",
@@ -19993,6 +20799,22 @@
           ],
           "sizeBytes": 86452
         },
+        "canonical/treasury-effect-previews/preview-confetti-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-confetti-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-confetti-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            19,
+            26,
+            365,
+            230
+          ],
+          "sizeBytes": 62959
+        },
         "canonical/treasury-effect-previews/preview-cosmic-dust-v1": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
@@ -20072,6 +20894,22 @@
             241
           ],
           "sizeBytes": 105912
+        },
+        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
+          "consumerRefs": [
+            "www/managers.js:Treasury effect card",
+            "www/theme-effect-previews.css:themed preview"
+          ],
+          "opticalBoundsPx": [
+            63,
+            15,
+            321,
+            241
+          ],
+          "sizeBytes": 89928
         },
         "canonical/treasury-effect-previews/preview-ice-age-v1": {
           "stage": "linked",
@@ -20228,20 +21066,38 @@
           "sizeBytes": 243288
         },
         "global-chat-empty-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/global-chat-internal-v1/empty-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/globalchat.js:renderHistoryState",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            44,
+            364,
+            339
+          ],
+          "sizeBytes": 116153
         },
         "global-chat-send-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
+          "stage": "verified",
+          "productionPath": "www/assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/global-chat-internal-v1/send-master-v1.png",
+          "consumerRefs": [
+            "www/theme-main-room-icons.js:syncIcons #global-chat-overlay",
+            "www/index.html:#btn-global-send",
+            "www/game.js:getThemeRoomSources(globalChat)"
+          ],
+          "opticalBoundsPx": [
+            20,
+            61,
+            364,
+            322
+          ],
+          "sizeBytes": 77194
         },
         "invite/accepted-v1": {
           "stage": "defined",
@@ -20268,38 +21124,6 @@
           "sizeBytes": null
         },
         "invite/sent-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-add-friend-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-duel-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-players-state-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
-          "opticalBoundsPx": null,
-          "sizeBytes": null
-        },
-        "online-spectate-v1": {
           "stage": "defined",
           "productionPath": null,
           "masterPath": null,
@@ -20428,38 +21252,6 @@
           ],
           "opticalBoundsPx": null,
           "sizeBytes": 68261
-        },
-        "canonical/treasury-effect-previews/preview-confetti-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-confetti-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-confetti-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            19,
-            26,
-            365,
-            230
-          ],
-          "sizeBytes": 62959
-        },
-        "canonical/treasury-effect-previews/preview-gold-rain-v1": {
-          "stage": "linked",
-          "productionPath": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/treasury-effect-previews-v1/preview-gold-rain-master-v2.png",
-          "consumerRefs": [
-            "www/managers.js:Treasury effect card",
-            "www/theme-effect-previews.css:themed preview"
-          ],
-          "opticalBoundsPx": [
-            63,
-            15,
-            321,
-            241
-          ],
-          "sizeBytes": 89928
         }
       }
     }

@@ -1,0 +1,62 @@
+{
+  "theme": "medium",
+  "style": "3D Soft Neomorphism",
+  "direction": "clay",
+  "source": "Six separately prompted and generated transparent ImageGen illustrations; no procedural icon drawing or cross-theme recoloring",
+  "roles": {
+    "state": {
+      "master": "source-assets/theme-icon-packs/medium/online-players-internal-v1/state-master.png",
+      "production": "www/assets/theme-packs/medium/canonical/online-players-internal/state-v1.png",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "3e9c40a47a92fe7e4516ba421e21092a47b6b769656024f96036b5817506875c"
+    },
+    "search": {
+      "master": "source-assets/theme-icon-packs/medium/online-players-internal-v1/search-master.png",
+      "production": "www/assets/theme-packs/medium/canonical/online-players-internal/search-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "0ba4cf2e311e8136bd0174d04364452914f2ba218d6cd4ecfeb5282db3f95f99"
+    },
+    "friend": {
+      "master": "source-assets/theme-icon-packs/medium/online-players-internal-v1/friend-master.png",
+      "production": "www/assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "e413796512a41f10372f323b6039080faedb5852bd2d2b54e63db617e835f854"
+    },
+    "spectate": {
+      "master": "source-assets/theme-icon-packs/medium/online-players-internal-v1/spectate-master.png",
+      "production": "www/assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "3f28e8219a09efce5b8686bb6e5075cf2fab312cdd3a4fbd7d1e9b7e31feb3b0"
+    },
+    "duel": {
+      "master": "source-assets/theme-icon-packs/medium/online-players-internal-v1/duel-master.png",
+      "production": "www/assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "04e46ce1a4498e07f2acf6748429cd2ae5cb3428ddbc2e74d1319ece52b6f9d2"
+    },
+    "avatar": {
+      "master": "source-assets/theme-icon-packs/medium/online-players-internal-v1/avatar-master.png",
+      "production": "www/assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "6bc089d0ad5d2d44fa09cd10260f30ef681d33b58a47e466afc6c4633a03f664"
+    }
+  }
+}

@@ -123,6 +123,10 @@
     <link rel="stylesheet" href="theme-treasury-room.css?v=5">
     <link rel="stylesheet" href="theme-room-close-controls.css?v=3">
     <link rel="stylesheet" href="theme-neon-board-png-trial.css?v=1">
+    <link rel="stylesheet" href="theme-global-chat-room.css?v=5">
+    <link rel="stylesheet" href="theme-online-players-room.css?v=3">
+    <link rel="stylesheet" href="theme-economy-room.css?v=1">
+    <link rel="stylesheet" href="skin-action-buttons.css?v=1">
     
     <script src="languages.js?v=5.12"></script>
     <script src="quotes.js"></script>
@@ -692,7 +696,7 @@
 
                 <img id="gh-current-avatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; display: none; box-shadow: 0 0 5px rgba(255,215,0,0.5);">
 
-                <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators"><span class="gh-spectator-fallback" aria-hidden="true">👁️</span><img class="easter-spectator-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="desert-spectator-soft-clay-icon" data-theme-src="assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="severna-spectator-soft-clay-icon" data-theme-src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="green-spectator-soft-clay-icon" data-theme-src="assets/green-soft-clay/online-spectate-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></span>
+                <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators"><img class="theme-online-game-spectator-icon" data-online-role="spectate" alt="" aria-hidden="true" decoding="async"></span>
 
                 <button id="btn-undo-move" class="btn-secondary game-header-icon gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza" data-lang-title="tooltip_undo_move">↩️</button>
                 
@@ -1625,10 +1629,7 @@
 
             <div id="global-chat-body" class="chat-body global-chat-body">
                 <div class="global-chat-welcome global-chat-state" data-chat-state="empty" role="status" aria-live="polite">
-                    <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="global-chat-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="global-chat-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="global-chat-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/global-chat-empty-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="global-chat-state-soft-clay-icon-green theme-chat-state-icon" data-theme-src="assets/green-soft-clay/global-chat-empty-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <span data-lang="global_chat_empty">Još nema poruka. Započnite razgovor.</span>
                 </div>
             </div>
@@ -1638,10 +1639,7 @@
                     <textarea id="global-chat-input" class="modal-input global-chat-input" maxlength="550" rows="1" placeholder="Napiši poruku..." data-lang-placeholder="global_chat_placeholder" autocomplete="off" enterkeyhint="send"></textarea>
                     <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku" data-lang-aria="aria_send_message">
                         <span class="global-chat-send-fallback" aria-hidden="true">➤</span>
-                        <img class="global-chat-send-soft-clay-icon global-chat-send-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/global-chat-send-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="global-chat-send-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/global-chat-send-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="global-chat-send-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/global-chat-send-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="global-chat-send-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/global-chat-send-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="global-chat-send-soft-clay-icon-green theme-chat-send-icon" data-theme-src="assets/green-soft-clay/global-chat-send-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     </button>
                 </div>
                 <div class="global-chat-hint-row">
@@ -1667,16 +1665,13 @@
             </div>
 
             <label class="online-players-search-wrap" for="online-players-search">
-                <span class="online-players-search-icon" aria-hidden="true"></span>
+                <img class="theme-online-search-icon" data-online-role="search" alt="" aria-hidden="true" decoding="async">
                 <input id="online-players-search" class="online-players-search" type="search" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Pretraži igrača po imenu..." data-lang-placeholder="online_search_placeholder" aria-label="Pretraži online igrače" data-lang-aria="online_search_aria">
             </label>
 
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">
                 <div class="online-players-state is-loading" data-online-state="loading" role="status" aria-live="polite">
-                    <img class="online-players-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="online-players-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="online-players-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-players-state-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="online-players-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-players-state-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="theme-online-state-icon" data-online-role="state" alt="" aria-hidden="true" decoding="async">
                     <span data-lang="online_loading">Učitavam igrače...</span>
                 </div>
             </div>
@@ -1765,19 +1760,22 @@
     <script src="toplista.js?v=4.9"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="turnir.js?v=1033"></script>
-    <script src="pravilaigre.js?v=1.28"></script>
+    <script src="pravilaigre.js?v=1.29"></script>
     <script src="vracanjeupisa.js?v=1.7"></script>
-    <script src="globalchat.js?v=1.7"></script>
+    <script src="globalchat.js?v=1.8"></script>
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.84"></script>
-    <script src="theme-main-room-icons.js?v=16"></script>
+    <script src="game.js?v=5.87"></script>
+    <script src="skin-action-buttons-data.js?v=1"></script>
+    <script src="skin-action-buttons.js?v=1"></script>
+    <script src="theme-main-room-icons.js?v=18"></script>
+    <script src="theme-online-players-room.js?v=3"></script>
     <script src="theme-ducat-pack.js?v=1"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>
     <script src="theme-rewarded-video-pack.js?v=1"></script>
     <script src="kvartalnaliga.js?v=1028"></script>
-    <script src="onlinenumber.js?v=1012"></script>
+    <script src="onlinenumber.js?v=1014"></script>
     <script src="vatreniniz.js?v=1009"></script>
     <script src="powerindex.js?v=1.10"></script>
 

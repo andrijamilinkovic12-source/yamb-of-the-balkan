@@ -32,10 +32,7 @@ function getOnlineNumberSecurity() {
 function setOnlineActionButtonDisabled(button, isDisabled) {
     if (!button) return;
     button.disabled = !!isDisabled;
-    button.style.opacity = isDisabled ? '0.4' : '1';
-    button.style.background = isDisabled ? 'rgba(255,255,255,0.05)' : 'rgba(76, 175, 80, 0.2)';
-    button.style.borderColor = isDisabled ? 'rgba(255,255,255,0.1)' : 'var(--success)';
-    button.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+    button.classList.toggle('is-disabled', !!isDisabled);
 }
 
 window.handleOnlinePlayerFriendRequest = async function(button, socketId, name, uid) {
@@ -297,7 +294,8 @@ window.openOnlinePlayersModal = function() {
         return value && value !== key ? value : fallback;
     };
     const overlay = document.getElementById('online-players-overlay');
-    
+    window.themeOnlinePlayers.preload();
+
     if (overlay) {
         overlay.style.display = 'flex';
     }
@@ -313,12 +311,10 @@ window.openOnlinePlayersModal = function() {
         if (!body) return;
         body.innerHTML = `
             <div class="online-players-state ${state === 'loading' ? 'is-loading' : ''}" data-online-state="${sec.escapeAttr(state)}" role="${state === 'error' ? 'alert' : 'status'}" aria-live="${state === 'error' ? 'assertive' : 'polite'}">
-                <img class="online-players-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="online-players-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="online-players-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-players-state-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="online-players-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-players-state-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="theme-online-state-icon" data-online-role="state" src="${window.themeOnlinePlayers.asset('state')}" alt="" aria-hidden="true" decoding="async">
                 <span>${sec.escapeHtml(text)}</span>
             </div>`;
+        window.themeOnlinePlayers.apply(body);
     };
     if (body) {
         body.style.flex = '1';
@@ -416,8 +412,9 @@ window.openOnlinePlayersModal = function() {
                 const nameArg = sec.jsString(rawName);
                 const uidArg = sec.jsString(playerUid);
                 const roomIdArg = sec.jsString(roomId);
-                const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(rawName)}&background=333&color=E0C995`;
-                const photoSrc = sec.escapeAttr(sec.safeUrl(p.photoUrl, fallbackPhoto));
+                const externalPhoto = sec.safeUrl(p.photoUrl, '');
+                const photoSrc = sec.escapeAttr(externalPhoto || window.themeOnlinePlayers.asset('avatar'));
+                const avatarRole = externalPhoto ? '' : ' data-online-role="avatar"';
 
                 let actionButtons = '';
                 if (!isMe) {
@@ -440,43 +437,29 @@ window.openOnlinePlayersModal = function() {
                     const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
                     const challengeHandler = sec.escapeAttr(`if(window.app && window.app.challengePlayer) { window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg}) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
 
-                    // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
-                    let addFriendBtn = '';
-                    if (isAlreadyFriend) {
-                        addFriendBtn = `<button class="online-player-action online-player-action--friend is-disabled" disabled title="${sec.escapeAttr(alreadyFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;"><span class="online-player-action-fallback" aria-hidden="true">➕</span><img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-add-friend-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-add-friend-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>`;
-                    } else {
-                        // Dodata logika da se dugme "ugasi" čim se klikne da bi se izbegao spam
-                        addFriendBtn = `<button class="online-player-action online-player-action--friend" onclick="${addFriendHandler}" title="${sec.escapeAttr(addFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><span class="online-player-action-fallback" aria-hidden="true">➕</span><img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-add-friend-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-add-friend-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>`;
-                    }
-
-                    // 2. Dugme za GLEDANJE (Zatamnjeno ako igrač ne igra)
-                    let spectateBtn = '';
-                    if (!canSpectate) {
-                        const spectateTitle = alreadyPlayingOnline ? spectateBusySelfTitle : spectateNotPlayingTitle;
-                        spectateBtn = `<button class="online-player-action online-player-action--spectate is-disabled" disabled title="${sec.escapeAttr(spectateTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255,0.1); color: gray; cursor: not-allowed; opacity: 0.4;"><span class="online-player-action-fallback" aria-hidden="true">👁️</span><img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-spectate-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>`;
-                    } else {
-                        spectateBtn = `<button class="online-player-action online-player-action--spectate" onclick="${spectateHandler}" title="${sec.escapeAttr(spectateTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><span class="online-player-action-fallback" aria-hidden="true">👁️</span><img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-spectate-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>`;
-                    }
-
-                    let challengeBtn = '';
-                    if (isBusy) {
-                        challengeBtn = `<button class="online-player-action online-player-action--duel is-disabled" disabled title="${sec.escapeAttr(playerBusyTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;"><span class="online-player-action-fallback" aria-hidden="true">⚔️</span><img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-duel-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-duel-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-duel-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>`;
-                    } else {
-                        challengeBtn = `<button class="online-player-action online-player-action--duel" onclick="${challengeHandler}" title="${sec.escapeAttr(challengeTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><span class="online-player-action-fallback" aria-hidden="true">⚔️</span><img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-duel-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-duel-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="online-player-action-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-duel-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>`;
-                    }
-
-                    actionButtons = `
-                    <div class="online-player-actions" style="display: flex; gap: 8px; flex-shrink: 0;">
-                        ${addFriendBtn}
-                        ${spectateBtn}
-                        ${challengeBtn}
-                    </div>`;
+                    const actionButton = (role, title, handler, disabled) => `
+                        <button type="button" class="online-player-action online-player-action--${role}${disabled ? ' is-disabled' : ''}"
+                            ${disabled ? 'disabled' : `onclick="${handler}"`}
+                            title="${sec.escapeAttr(title)}">
+                            <img class="theme-online-action-icon" data-online-role="${role}"
+                                src="${window.themeOnlinePlayers.asset(role)}" alt="" aria-hidden="true" decoding="async">
+                        </button>`;
+                    const friendButton = actionButton('friend', isAlreadyFriend ? alreadyFriendTitle : addFriendTitle,
+                        addFriendHandler, !!isAlreadyFriend);
+                    const spectateButton = actionButton('spectate', canSpectate ? spectateTitleText
+                        : (alreadyPlayingOnline ? spectateBusySelfTitle : spectateNotPlayingTitle),
+                        spectateHandler, !canSpectate);
+                    const duelButton = actionButton('duel', isBusy ? playerBusyTitle : challengeTitleText,
+                        challengeHandler, isBusy);
+                    actionButtons = `<div class="online-player-actions">${friendButton}${spectateButton}${duelButton}</div>`;
                 }
 
                 html += `
                 <div class="online-player-card" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
                     <div class="online-player-identity" style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-                        <img src="${photoSrc}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : (p.isBusy ? '#FF9800' : 'var(--success)')}; object-fit: cover; flex-shrink: 0;">
+                        <img class="theme-online-avatar${p.isPlaying ? ' is-playing' : (p.isBusy ? ' is-busy' : '')}"
+                            src="${photoSrc}"${avatarRole} onerror="window.themeOnlinePlayers.handleAvatarError(this)"
+                            alt="" aria-hidden="true" decoding="async">
                         <span class="online-player-name${playerNameLengthClass}" data-player-name="${sec.escapeAttr(rawName)}" title="${sec.escapeAttr(rawName)}">
                             ${safeNameHtml} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${sec.escapeHtml(youText)}</span>` : ''}
                         </span>
@@ -493,6 +476,7 @@ window.openOnlinePlayersModal = function() {
             }
 
             body.innerHTML = html;
+            window.themeOnlinePlayers.apply(body);
             body.querySelectorAll('.online-player-action[title]').forEach(button => {
                 button.setAttribute('aria-label', button.title);
             });

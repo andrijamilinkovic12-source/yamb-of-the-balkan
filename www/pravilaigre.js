@@ -230,6 +230,11 @@ function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
 
 function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
+    const onlineRole = String(easterSrc || '').match(/\/online-(add-friend|spectate|duel)-/);
+    if (onlineRole) {
+        const role = onlineRole[1] === 'add-friend' ? 'friend' : onlineRole[1];
+        return `<img class="rules-inline-icon rules-online-canonical${suffix}" data-online-role="${role}" src="${window.themeOnlinePlayers.asset(role)}" alt="" aria-hidden="true" decoding="async">`;
+    }
     const treasuryTab = String(easterSrc || '').match(/\/treasury\/(tab-(?:trophies|skins|effects|themes))(?:-v\d+)?\.png/);
     if (treasuryTab) {
         return `<img class="rules-inline-icon rules-theme-treasury-control${suffix}" src="${getThemeTreasuryControlSource(treasuryTab[1])}" alt="" aria-hidden="true" decoding="async">`;

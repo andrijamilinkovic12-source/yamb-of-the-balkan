@@ -19,7 +19,7 @@ const expectedSizes = [256, 128, 256, 128, 384, 256, 384];
 const consumers = [
   ['www/index.html', roles[0]], ['www/pravilaigre.js', roles[1]],
   ['www/index.html', roles[2]], ['www/pravilaigre.js', roles[3]],
-  ['www/dnevniizazov.js', roles[4]], ['www/index.html', roles[5]],
+  ['www/dnevniizazov.js', roles[4]], ['www/game.js', roles[5]],
   ['www/index.html', roles[6]]
 ];
 for (const [file, role] of consumers) {
@@ -31,6 +31,7 @@ class Classes {
   contains(value) { return this.values.has(value); }
   toggle(value, enabled) { enabled ? this.values.add(value) : this.values.delete(value); }
   add(value) { this.values.add(value); }
+  remove(value) { this.values.delete(value); }
 }
 function pngSize(filename) {
   const bytes = fs.readFileSync(filename);
@@ -38,11 +39,12 @@ function pngSize(filename) {
   assert.equal(bytes[25], 6, `Expected RGBA: ${filename}`);
   return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 }
-for (const theme of themes) {
+for (const theme of ['dark', ...themes]) {
   const images = roles.map(relative => {
     const image = {
       dataset: { themeSrc: `assets/green-soft-clay/${relative}?v=1` },
       classList: new Classes(), attributes: {},
+      closest: selector => selector === '#undo-menu-overlay' ? {} : null,
       getAttribute(name) { return this.attributes[name] || null; },
       set src(value) { this.attributes.src = value; }
     };
@@ -57,16 +59,16 @@ for (const theme of themes) {
   };
   vm.runInNewContext(code, { document, localStorage: { getItem: () => theme },
     MutationObserver: class { observe() {} }, Node: { ELEMENT_NODE: 1 } });
-  assert(body.classList.contains('theme-rewarded-video-pack-active'));
+  assert.equal(body.classList.contains('theme-rewarded-video-pack-active'), theme !== 'dark');
   images.forEach((image, index) => {
     const actual = image.getAttribute('src');
-    const expected = `assets/theme-packs/${theme}/${roles[index]}`;
+    const expected = theme === 'dark' ? `assets/green-soft-clay/${roles[index]}?v=1` : `assets/theme-packs/${theme}/${roles[index]}`;
     assert.equal(actual, expected, `${theme} ${roles[index]}`);
-    assert(image.classList.contains('theme-rewarded-video-icon'));
-    assert(image.parentElement.legacy.classList.contains('theme-rewarded-video-legacy'));
-    const filename = path.join(repo, 'www', actual);
+    assert.equal(image.classList.contains('theme-rewarded-video-icon'), theme !== 'dark');
+    assert.equal(image.parentElement.legacy.classList.contains('theme-rewarded-video-legacy'), theme !== 'dark');
+    const filename = path.join(repo, 'www', actual.split('?')[0]);
     assert(fs.existsSync(filename), `Missing ${filename}`);
     assert.deepEqual(pngSize(filename), [expectedSizes[index], expectedSizes[index]]);
   });
 }
-console.log('PASS: 9 themes × 7 mapped rewarded-video roles, correct PNG paths, RGBA and sizes.');
+console.log('PASS: 10 themes × 7 mapped rewarded-video roles, correct PNG paths, RGBA and sizes.');

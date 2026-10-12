@@ -1,0 +1,62 @@
+{
+  "theme": "easter",
+  "style": "3D Soft Neomorphism",
+  "direction": "rubber",
+  "source": "Six separately prompted and generated transparent ImageGen illustrations; no procedural icon drawing or cross-theme recoloring",
+  "roles": {
+    "state": {
+      "master": "source-assets/theme-icon-packs/easter/online-players-internal-v1/state-master.png",
+      "production": "www/assets/theme-packs/easter/canonical/online-players-internal/state-v1.png",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "e908bbf0e513b09982708b188685cf2b6fa46fd55194f2f5e70a5d2a3a98a42c"
+    },
+    "search": {
+      "master": "source-assets/theme-icon-packs/easter/online-players-internal-v1/search-master.png",
+      "production": "www/assets/theme-packs/easter/canonical/online-players-internal/search-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "4e7775a25180e20f0e5e282d3a2b28a6bd4696b3835ca0ab216eae3114831a15"
+    },
+    "friend": {
+      "master": "source-assets/theme-icon-packs/easter/online-players-internal-v1/friend-master.png",
+      "production": "www/assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "f0d21e3447ab53b73eb3e983ca2d2b131ff90c09c93ec140fa34971fb9db87d4"
+    },
+    "spectate": {
+      "master": "source-assets/theme-icon-packs/easter/online-players-internal-v1/spectate-master.png",
+      "production": "www/assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "b62f9187c39e8a267f9441072870c8c6c92415a551bf161ac262313af9911594"
+    },
+    "duel": {
+      "master": "source-assets/theme-icon-packs/easter/online-players-internal-v1/duel-master.png",
+      "production": "www/assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "c8014d17d4f45d7167973ba4ff76c23183ba1df68651de7804ab983aba6592e2"
+    },
+    "avatar": {
+      "master": "source-assets/theme-icon-packs/easter/online-players-internal-v1/avatar-master.png",
+      "production": "www/assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "f49d832d77c1824d4f05e0f42332a37088d85b0148fac754fce3c6e9c2e3c77e"
+    }
+  }
+}

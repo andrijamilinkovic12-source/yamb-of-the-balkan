@@ -34,12 +34,29 @@ function pngInfo(file) {
     };
 }
 
-const files = walk(greenRoot)
+const retiredOnlinePlayers = new Set([
+    'online-add-friend-v1.png', 'online-duel-v1.png',
+    'online-players-state-v1.png', 'online-spectate-v1.png'
+]);
+const greenFiles = walk(greenRoot)
     .map(file => path.relative(greenRoot, file).replaceAll('\\', '/'))
     .filter(relative => relative !== 'splash-title-soft-clay-v1.png' &&
-        !relative.startsWith('canonical/treasury-effect-thumbnails/')) // Technical previews are not semantic slots.
-    .sort();
-if (files.length !== 188) throw new Error(`Expected 188 Green pack PNGs, found ${files.length}`);
+        !relative.startsWith('canonical/treasury-effect-thumbnails/') &&
+        !retiredOnlinePlayers.has(relative)) // Technical previews and replaced icons are retired slots.
+    .map(relative => ({
+        id: relative === 'splash-title-soft-clay-v2.png' ? 'splash-title-soft-clay-v1' : relative.slice(0, -4),
+        reference: `assets/green-soft-clay/${relative}`,
+        file: path.join(greenRoot, relative),
+        relative
+    }));
+const onlineFiles = ['state', 'search', 'friend', 'spectate', 'duel', 'avatar'].map(role => ({
+    id: `canonical/online-players-internal/${role}-v1`,
+    reference: `assets/theme-packs/dark/canonical/online-players-internal/${role}-v1.png`,
+    file: path.join(www, 'assets', 'theme-packs', 'dark', 'canonical', 'online-players-internal', `${role}-v1.png`),
+    relative: `canonical/online-players-internal/${role}-v1.png`
+}));
+const files = [...greenFiles, ...onlineFiles].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+if (files.length !== 190) throw new Error(`Expected 190 active Green pack PNGs, found ${files.length}`);
 
 const slots = [
     {
@@ -48,7 +65,7 @@ const slots = [
         kind: 'background',
         ...pngInfo(path.join(www, background))
     },
-    ...files.map(relative => {
+    ...files.map(({ id, reference, file, relative }) => {
         const kind = relative === 'splash-title-soft-clay-v2.png'
             ? 'game-logo'
             : relative.startsWith('runtime/menu/')
@@ -57,10 +74,10 @@ const slots = [
                     ? 'canonical-or-approved-variant'
                     : 'room-or-composite';
         return {
-            id: relative === 'splash-title-soft-clay-v2.png' ? 'splash-title-soft-clay-v1' : relative.slice(0, -4),
-            greenReference: `assets/green-soft-clay/${relative}`,
+            id,
+            greenReference: reference,
             kind,
-            ...pngInfo(path.join(greenRoot, relative))
+            ...pngInfo(file)
         };
     })
 ];

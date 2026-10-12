@@ -1,0 +1,3401 @@
+[
+  {
+    "theme": "dark",
+    "active": "dark",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(242, 246, 232)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(242, 246, 232)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(231, 239, 218)",
+        "bg": "rgba(30, 66, 38, 0.62)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(240, 245, 230)",
+        "bg": "rgba(60, 94, 58, 0.9)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(231, 239, 218)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(231, 239, 218)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(242, 246, 232)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(247, 249, 233)",
+        "bg": "rgb(82, 116, 82)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/dark/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/dark/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(225, 236, 210)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1
+  },
+  {
+    "theme": "light",
+    "active": "light",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(74, 49, 27)",
+        "bg": "rgb(243, 214, 168)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(74, 49, 27)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(57, 40, 23)",
+        "bg": "rgb(219, 180, 123)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(57, 40, 23)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(57, 40, 23)",
+        "bg": "rgb(255, 241, 215)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(57, 40, 23)",
+        "bg": "rgb(243, 214, 168)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(57, 40, 23)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(57, 40, 23)",
+        "bg": "rgb(243, 214, 168)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/light/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/light/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(93, 67, 44)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "medium",
+    "active": "medium",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(255, 237, 230)",
+        "bg": "rgb(96, 37, 46)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(255, 237, 230)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(255, 246, 242)",
+        "bg": "rgb(48, 16, 25)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(255, 246, 242)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(255, 246, 242)",
+        "bg": "rgb(67, 23, 32)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(255, 246, 242)",
+        "bg": "rgb(96, 37, 46)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(255, 246, 242)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(255, 246, 242)",
+        "bg": "rgb(96, 37, 46)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/medium/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(230, 201, 196)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "winter",
+    "active": "winter",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(23, 61, 91)",
+        "bg": "rgb(222, 236, 235)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(23, 61, 91)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(24, 56, 75)",
+        "bg": "rgb(187, 216, 222)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(24, 56, 75)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(24, 56, 75)",
+        "bg": "rgb(255, 244, 229)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(24, 56, 75)",
+        "bg": "rgb(222, 236, 235)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(24, 56, 75)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(24, 56, 75)",
+        "bg": "rgb(222, 236, 235)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/winter/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/winter/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(58, 91, 103)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "neon",
+    "active": "neon",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(233, 255, 255)",
+        "bg": "rgb(26, 43, 64)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(233, 255, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(244, 250, 255)",
+        "bg": "rgb(12, 22, 37)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(244, 250, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(244, 250, 255)",
+        "bg": "rgb(18, 27, 43)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(244, 250, 255)",
+        "bg": "rgb(26, 43, 64)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(244, 250, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(244, 250, 255)",
+        "bg": "rgb(26, 43, 64)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/neon/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/neon/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(181, 199, 214)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "amethyst",
+    "active": "amethyst",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(255, 242, 227)",
+        "bg": "rgb(86, 54, 96)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(255, 242, 227)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(251, 246, 255)",
+        "bg": "rgb(45, 29, 60)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(251, 246, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(251, 246, 255)",
+        "bg": "rgb(60, 40, 75)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(251, 246, 255)",
+        "bg": "rgb(86, 54, 96)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(251, 246, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(251, 246, 255)",
+        "bg": "rgb(86, 54, 96)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/amethyst/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(224, 205, 229)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "easter",
+    "active": "easter",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(63, 74, 53)",
+        "bg": "rgb(238, 229, 211)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(63, 74, 53)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(61, 68, 52)",
+        "bg": "rgb(211, 213, 183)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(61, 68, 52)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(61, 68, 52)",
+        "bg": "rgb(255, 248, 234)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(61, 68, 52)",
+        "bg": "rgb(238, 229, 211)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(61, 68, 52)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(61, 68, 52)",
+        "bg": "rgb(238, 229, 211)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/easter/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(77, 88, 65)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "desert",
+    "active": "desert",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(86, 55, 45)",
+        "bg": "rgb(240, 208, 171)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(86, 55, 45)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(68, 48, 39)",
+        "bg": "rgb(213, 178, 155)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(68, 48, 39)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(68, 48, 39)",
+        "bg": "rgb(255, 240, 218)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(68, 48, 39)",
+        "bg": "rgb(240, 208, 171)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(68, 48, 39)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(68, 48, 39)",
+        "bg": "rgb(240, 208, 171)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/desert/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(94, 67, 50)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "moon",
+    "active": "moon",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(250, 250, 251)",
+        "bg": "rgb(59, 63, 75)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(250, 250, 251)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(245, 245, 247)",
+        "bg": "rgb(24, 27, 36)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(245, 245, 247)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(245, 245, 247)",
+        "bg": "rgb(37, 41, 52)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(245, 245, 247)",
+        "bg": "rgb(59, 63, 75)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(245, 245, 247)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(245, 245, 247)",
+        "bg": "rgb(59, 63, 75)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/moon/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/moon/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(201, 202, 210)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  },
+  {
+    "theme": "severna",
+    "active": "severna",
+    "viewport": [
+      768,
+      1024
+    ],
+    "viewportState": [
+      0,
+      0,
+      0,
+      768,
+      768,
+      768
+    ],
+    "overlayStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "0px",
+      "width": "768px",
+      "display": "flex"
+    },
+    "shellStyle": {
+      "position": "fixed",
+      "transform": "none",
+      "left": "10px",
+      "margin": "0px"
+    },
+    "box": {
+      ".online-players-shell": [
+        10,
+        45,
+        748,
+        936
+      ],
+      ".online-players-header": [
+        10.86,
+        45.86,
+        746.29,
+        68.86
+      ],
+      ".online-players-title": [
+        28.86,
+        63.86,
+        202.45,
+        32
+      ],
+      ".online-players-search-wrap": [
+        24.86,
+        124.71,
+        718.29,
+        42
+      ],
+      ".online-players-search": [
+        67.71,
+        125.71,
+        660.57,
+        40
+      ],
+      "#online-players-body": [
+        10.86,
+        168.71,
+        746.29,
+        811.43
+      ],
+      ".online-player-card": [
+        28.86,
+        184.71,
+        710.29,
+        70.71
+      ],
+      ".online-player-identity": [
+        44.71,
+        197.57,
+        538.57,
+        45
+      ],
+      ".theme-online-avatar": [
+        44.71,
+        197.57,
+        45,
+        45
+      ],
+      ".online-player-name": [
+        101.71,
+        210.95,
+        481.57,
+        18.24
+      ],
+      ".online-player-actions": [
+        593.29,
+        201.07,
+        130,
+        38
+      ],
+      ".online-player-action": [
+        593.29,
+        201.07,
+        38,
+        38
+      ],
+      ".theme-online-action-icon": [
+        594.29,
+        202.07,
+        36,
+        36
+      ],
+      ".global-chat-close": [
+        695.14,
+        57.86,
+        44,
+        44
+      ]
+    },
+    "css": {
+      ".online-players-header": {
+        "color": "rgb(242, 251, 255)",
+        "bg": "rgb(36, 68, 91)",
+        "size": "14.4px",
+        "weight": "700",
+        "padding": "12px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-title": {
+        "color": "rgb(242, 251, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "19.52px",
+        "weight": "850",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-players-search-wrap": {
+        "color": "rgb(245, 251, 255)",
+        "bg": "rgb(15, 33, 55)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "0px 14px",
+        "radius": "999px",
+        "display": "flex"
+      },
+      ".online-players-search": {
+        "color": "rgb(245, 251, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "13.44px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      "#online-players-body": {
+        "color": "rgb(245, 251, 255)",
+        "bg": "rgb(24, 44, 68)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "16px 18px",
+        "radius": "0px",
+        "display": "flex"
+      },
+      ".online-player-card": {
+        "color": "rgb(245, 251, 255)",
+        "bg": "rgb(36, 68, 91)",
+        "size": "16px",
+        "weight": "400",
+        "padding": "12px 15px",
+        "radius": "18px",
+        "display": "flex"
+      },
+      ".online-player-name": {
+        "color": "rgb(245, 251, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "size": "15.2px",
+        "weight": "700",
+        "padding": "0px",
+        "radius": "0px",
+        "display": "block"
+      },
+      ".online-player-action": {
+        "color": "rgb(245, 251, 255)",
+        "bg": "rgb(36, 68, 91)",
+        "size": "13.3333px",
+        "weight": "400",
+        "padding": "0px",
+        "radius": "12px",
+        "display": "flex"
+      }
+    },
+    "images": [
+      {
+        "role": "header",
+        "src": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-v1.png",
+        "natural": [
+          512,
+          512
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "search",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/search-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "avatar",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "friend",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "spectate",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      },
+      {
+        "role": "duel",
+        "src": "assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png?v=2",
+        "natural": [
+          144,
+          144
+        ],
+        "visible": "visible"
+      }
+    ],
+    "cards": 2,
+    "emptyState": {
+      "src": "assets/theme-packs/severna/canonical/online-players-internal/state-v1.png?v=2",
+      "natural": [
+        256,
+        256
+      ],
+      "visible": "visible"
+    },
+    "search": {
+      "placeholder": "Pretraži igrača po imenu...",
+      "aria": "Pretraži online igrače",
+      "visibility": "visible",
+      "placeholderColor": "rgb(195, 216, 224)"
+    },
+    "actions": [
+      [
+        {
+          "role": "online-player-action online-player-action--friend",
+          "disabled": false,
+          "title": "Dodaj prijatelja"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno ne igra"
+        },
+        {
+          "role": "online-player-action online-player-action--duel",
+          "disabled": false,
+          "title": "Izazovi na duel"
+        }
+      ],
+      [
+        {
+          "role": "online-player-action online-player-action--friend is-disabled",
+          "disabled": true,
+          "title": "Već ste prijatelji"
+        },
+        {
+          "role": "online-player-action online-player-action--spectate",
+          "disabled": false,
+          "title": "Gledaj partiju"
+        },
+        {
+          "role": "online-player-action online-player-action--duel is-disabled",
+          "disabled": true,
+          "title": "Igrač trenutno igra"
+        }
+      ]
+    ],
+    "scroll": [
+      746,
+      746,
+      811,
+      811
+    ],
+    "searchCount": 1,
+    "geometryMismatches": []
+  }
+]

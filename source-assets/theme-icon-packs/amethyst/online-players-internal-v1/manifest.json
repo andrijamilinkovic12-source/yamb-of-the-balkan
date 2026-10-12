@@ -1,0 +1,62 @@
+{
+  "theme": "amethyst",
+  "style": "3D Soft Neomorphism",
+  "direction": "clay",
+  "source": "Six separately prompted and generated transparent ImageGen illustrations; no procedural icon drawing or cross-theme recoloring",
+  "roles": {
+    "state": {
+      "master": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/state-master.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/online-players-internal/state-v1.png",
+      "size": [
+        256,
+        256
+      ],
+      "sha256": "fbbbd67a98c6e8fca37278ef23f3c256849b9f3b3f730a48fa2d0f59a06d349c"
+    },
+    "search": {
+      "master": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/search-master.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "0679e8ec854f43817ea965c1519ba44ae681037136fcb1c31f73eb4777fdcab4"
+    },
+    "friend": {
+      "master": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/friend-master.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "31a2e775562201d37c4c208bc845726eb2fe20e48a1edacfcc32fae9ba59ec57"
+    },
+    "spectate": {
+      "master": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/spectate-master.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "315cf3c9d8e795cc0acb95014dc28c2a8bac255da515c6099f9916a6dd9cfba5"
+    },
+    "duel": {
+      "master": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/duel-master.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "f1b9cae3654ffc841ba507eb247c9e4409806a82ac2d4d8cea2ed00cc1875c29"
+    },
+    "avatar": {
+      "master": "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/avatar-master.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png",
+      "size": [
+        144,
+        144
+      ],
+      "sha256": "24b268a0ee69ed74008cff450ca2cf4d7270548210aed63ca8b427d12ee320e4"
+    }
+  }
+}

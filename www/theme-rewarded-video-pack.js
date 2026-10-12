@@ -1,4 +1,4 @@
-// Rewarded-video identity for nine rebuilt themes. Green stays the reference.
+// Rewarded-video identity for all themes, including the Green reference.
 (() => {
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const greenPrefix = 'assets/green-soft-clay/';
@@ -31,7 +31,12 @@
             if (!original.startsWith(greenPrefix)) return;
             const relative = original.slice(greenPrefix.length).split('?')[0];
             if (!paths.has(relative)) return;
-            const source = enabled ? `assets/theme-packs/${theme}/${relative}` : original;
+            if (theme === 'dark') {
+                if (image.closest?.('#undo-menu-overlay') && image.getAttribute('src') !== original) image.src = original;
+                image.classList.remove('theme-rewarded-video-icon');
+                return;
+            }
+            const source = themes.has(theme) ? `assets/theme-packs/${theme}/${relative}` : original;
             if (image.getAttribute('src') !== source) image.src = source;
             image.classList.toggle('theme-rewarded-video-icon', enabled);
             if (!enabled) return;

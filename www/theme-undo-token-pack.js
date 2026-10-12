@@ -1,4 +1,4 @@
-// Canonical undo tokens for the nine rebuilt themes. Green remains unchanged.
+// Canonical undo tokens for every theme, including the Green reference.
 (() => {
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const placements = [
@@ -17,7 +17,7 @@
 
     function sync() {
         const theme = activeTheme();
-        const enabled = themes.has(theme);
+        const enabled = themes.has(theme) || theme === 'dark';
         document.body.classList.toggle('theme-undo-token-pack-active', enabled);
         for (const [role, anchorSelector, oldSelector] of placements) {
             const anchor = document.querySelector(anchorSelector);
@@ -44,7 +44,9 @@
                 else anchor.after(image);
             }
             const variant = role === 'header' ? 'front' : 'inline';
-            const source = `assets/theme-packs/${theme}/canonical/undo-token/undo-token-${variant}-v1.png`;
+            const source = theme === 'dark'
+                ? `assets/green-soft-clay/canonical/undo-token/undo-token-${variant}-v1.png`
+                : `assets/theme-packs/${theme}/canonical/undo-token/undo-token-${variant}-v1.png`;
             if (image.getAttribute('src') !== source) image.src = source;
         }
     }

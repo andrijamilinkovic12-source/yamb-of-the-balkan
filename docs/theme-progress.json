@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-11",
-  "activeThemeId": "light",
-  "workState": "treasury-room-standardization-in-progress",
-  "activeWorkPackage": "Riznica: NLO prikazi su preradjeni u jednu zaobljenu 3D kockicu sa materijalom poklon skina maticne teme na svim vidljivim stranama; strane 1 gore, 2 napred i 3 desno postuju kanonsku orijentaciju. Devet novih PNG prikaza su povezani na 384 x 256, a Android qaLocal je potvrdio svih 160/160 prikaza efekata u deset tema na 152 x 70 CSS px, bez starih slojeva. Uporedni pregled novih NLO prikaza je docs/theme-ufo-dice-v3-review.png; korisnicki vizuelni izbor je na cekanju.",
+  "updatedOn": "2026-10-12",
+  "activeThemeId": null,
+  "workState": "online-players-visual-review-pending",
+  "activeWorkPackage": "Online igraci: sest novih kanonskih PNG uloga za svaku od deset tema (60 ukupno) zamenjuje cetiri prethodne uloge. Glavna ikona sobe ostaje ranije odobrena. Green geometrija, aktivna paleta, ucitavanje pri ulasku i promeni teme, pretraga, privatnost akcija i izgled svih deset tema provereni su u Android qaLocal. Korisnicko vizuelno prihvatanje je na cekanju.",
   "visualQualityBoundary": {
-    "lastIndividuallyIllustratedFamily": "treasury-effect-previews-v2",
+    "lastIndividuallyIllustratedFamily": "online-players-internal-v1",
     "needsRedesign": [
       "medals"
     ],
@@ -296,12 +296,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/light/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/light.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/light/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/light.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -345,8 +356,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Prvih 26 originalnih trofeja dostignuca za Svetlo Zlato imaju mastere, standardne PNG-ove i povezana tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-light-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -404,12 +415,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/medium/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/medium.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/medium/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/medium.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -453,8 +475,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih Trula Visnja trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, EN, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-medium-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -512,12 +534,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/winter/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/winter.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/winter/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/winter.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -561,8 +594,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih Plavi Okean trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u obavestenju. Dokaz: docs/qa-winter-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -620,12 +653,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/neon/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/neon.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/neon/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/neon.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -669,8 +713,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih Neon Cyber trofeja ima master, standardni PNG i ista tri mesta upotrebe. Android qaLocal na 412 x 892 CSS px, SR, ucitao je 26/26 PNG-ova u Riznici, dve u zavrsnom prikazu i jednu u vidljivom obavestenju. Dokaz: docs/qa-neon-trophy-emulator-2026-10-08.json i tri QA snimka; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -728,12 +772,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/amethyst/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/amethyst.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/amethyst/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/amethyst.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -777,8 +832,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih trofeja Kraljevskog Ametista ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-amethyst-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena jer Gradle build zahteva pristup korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -836,12 +891,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/easter/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/easter.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/easter/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/easter.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -885,8 +951,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih Vaskrsnjih trofeja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-easter-review.png; staticka provera potvrdjuje 26 razlicitih fajlova i kanonske putanje. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -944,12 +1010,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/desert/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/desert.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/desert/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/desert.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -993,8 +1070,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih trofeja Pustinjskog Stakla ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-desert-review.png; staticka provera potvrdjuje 26 razlicitih fajlova, kanonske putanje i odsustvo starih putanja u galeriji. Android qaLocal provera nije zavrsena zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -1052,12 +1129,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/moon/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/moon.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/moon/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/moon.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -1101,8 +1189,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih trofeja Mesecevog Sjaja ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-moon-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen zbog ogranicenja pristupa korisnickom .gradle kesu van workspace sandboxa; korisnicko odobrenje kompleta nije zabelezeno."
     },
@@ -1160,12 +1248,23 @@
           "evidence": []
         },
         "global-chat": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/severna/global-chat-internal-v1/manifest.json",
+            "docs/qa-theme-global-chat-emulator.json",
+            "docs/theme-global-chat-qa/severna.png",
+            "docs/theme-global-chat-android-review.png",
+            "docs/theme-global-chat-room-review.html"
+          ]
         },
         "online-players": {
-          "stage": "defined",
-          "evidence": []
+          "stage": "visually-checked",
+          "evidence": [
+            "source-assets/theme-icon-packs/severna/online-players-internal-v1/manifest.json",
+            "docs/qa-theme-online-players-room.json",
+            "docs/theme-online-players-qa/severna.png",
+            "docs/theme-online-players-room-review.html"
+          ]
         },
         "economy": {
           "stage": "defined",
@@ -1213,8 +1312,8 @@
         "activePeak": null
       },
       "assetUsageAudit": {
-        "confirmedSlotCount": 1,
-        "measuredThemeBoundsCount": 69
+        "confirmedSlotCount": 9,
+        "measuredThemeBoundsCount": 77
       },
       "notes": "Svih 26 originalnih trofeja Severne Magline ima master, standardni RGBA PNG i povezana tri mesta upotrebe. Vizuelni pregled na 112 i 44 px je u docs/theme-achievement-trophies-severna-review.png. Staticke provere potvrdjuju 26 razlicitih fajlova i kanonske putanje. Android qaLocal prikaz jos nije potvrdjen; korisnicko odobrenje kompleta nije zabelezeno."
     }
@@ -1265,6 +1364,86 @@
       3
     ],
     "runtimeStatus": "Android qaLocal: 10 themes x 16 effect previews decoded from active theme PNGs at 152 x 70 CSS px with no after overlay; nine rounded 3D NLO gift-skin dice use cache version 5",
+    "visualAcceptance": "pending user review"
+  },
+  "globalChatRoomV1": {
+    "themes": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
+    "pngRolesPerTheme": 2,
+    "newOriginalPngs": 18,
+    "pendingAndroidThemes": [],
+    "roomIdentityRole": "previously canonical",
+    "manifestRoot": "source-assets/theme-icon-packs/{theme}/global-chat-internal-v1/manifest.json",
+    "review": "docs/theme-global-chat-room-review.html",
+    "androidReview": "docs/theme-global-chat-android-review.png",
+    "androidReport": "docs/qa-theme-global-chat-emulator.json",
+    "layoutAndroidReport": "docs/qa-theme-global-chat-layout.json",
+    "smallScreenAndroidReport": "docs/qa-theme-global-chat-layout-320x568.json",
+    "tabletAndroidReport": "docs/qa-theme-global-chat-layout-768x1024.json",
+    "largeFontAndroidReport": "docs/qa-theme-global-chat-layout-320x568-font130.json",
+    "messageReview": "docs/theme-global-chat-messages-review.png",
+    "layoutStatus": "Android qaLocal: all nine theme layouts match Green at normal, 320 x 568 and 768 x 1024 CSS px, plus 320 x 568 at 130% UI font; tested text roles meet 4.5:1 contrast, outgoing timestamps included",
+    "visualAcceptance": "pending user review"
+  },
+  "onlinePlayersRoomV1": {
+    "themes": [
+      "dark",
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ],
+    "pngRolesPerTheme": 6,
+    "newOriginalPngs": 60,
+    "individuallyGeneratedMasters": 60,
+    "replacedProceduralControls": 50,
+    "generationMethod": "one separate built-in ImageGen call per theme and semantic PNG role",
+    "roomIdentityRole": "previously canonical",
+    "manifestRoot": "source-assets/theme-icon-packs/{theme}/online-players-internal-v1/manifest.json",
+    "promptSet": "source-assets/theme-icon-packs/online-players-internal-v1-prompts.md",
+    "assetContactSheet": "docs/theme-online-players-assets-review.png",
+    "review": "docs/theme-online-players-room-review.html",
+    "androidReport": "docs/qa-theme-online-players-room.json",
+    "smallScreenAndroidReport": "docs/qa-theme-online-players-room-320x568.json",
+    "largeFontAndroidReport": "docs/qa-theme-online-players-room-320x568-font130.json",
+    "tabletAndroidReport": "docs/qa-theme-online-players-room-768x1024.json",
+    "layoutStatus": "Android qaLocal: svih devet tema ima Green geometriju sobe, kartica, pretrage i akcija na 320 x 568 sa 100% i 130% fontom, kao i na 768 x 1024 CSS px; nula geometrijskih razlika i bez horizontalnog prelivanja. Pretraga po imenu radi u svih deset tema, PNG se dekodiraju i stanja akcija su ispravna. Tematski tekst na testiranim punim podlogama ima najmanje 4,5:1 kontrast.",
+    "visualAcceptance": "pending user review"
+  },
+  "economyDucatsUndoAssets": {
+    "themes": 10,
+    "tabsPerTheme": 2,
+    "canonicalVisiblePngsPerTab": 6,
+    "androidReport": "docs/qa-theme-economy-room.json",
+    "review": "docs/theme-economy-room-review.html",
+    "status": "Android qaLocal: 20/20 tabova imaju kanonske PNG dukate, tokene i stanje nagradnog videa sopstvene teme; nema vidljivih starih SVG ikona, neucitanih slika ili horizontalnog prelivanja. Klik na oba taba radi, kao i prebacivanje aktivne/nedostupne video ikone. Stvarna isplata reklame i serverska potvrda nisu testirane ovim lokalnim QA.",
+    "visualAcceptance": "pending user review"
+  },
+  "economyLayoutAndContrast": {
+    "themes": 10,
+    "tabsPerTheme": 2,
+    "style": "3D Soft Neomorphism, Clay ili Smooth Rubber / Matte Plastic prema maticnoj temi",
+    "implementation": "www/theme-economy-room.css",
+    "contrastCheck": "scripts/check-theme-economy-contrast.js",
+    "androidQa": "scripts/qa-theme-economy-room.js",
+    "normalReport": "docs/qa-theme-economy-room.json",
+    "smallFont130Report": "docs/qa-theme-economy-room-320x568-font130.json",
+    "tabletReport": "docs/qa-theme-economy-room-768x1024.json",
+    "status": "Green geometrija i tipografija u oba taba, tematske povrsine i citljiv nedostupan video; Android QA proverava 20/20 prikaza po velicini, a staticki kontrast paleta je najmanje 4,5:1.",
     "visualAcceptance": "pending user review"
   }
 }

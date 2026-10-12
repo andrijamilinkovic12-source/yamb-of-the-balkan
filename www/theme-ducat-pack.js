@@ -1,4 +1,4 @@
-// One canonical five-pip ducat family per non-Green theme.
+// One canonical five-pip ducat family per theme, including the Green reference.
 (() => {
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const placements = [
@@ -11,6 +11,7 @@
         ['ad', '.riznica-ad-ducat-default', '[class*="riznica-ad-ducat-"]'],
         ['game-over', '.game-over-ducat-legacy', '.game-over-ducat-legacy, .green-game-over-ducat']
     ];
+    const greenEconomyRoles = new Set(['header', 'tab', 'hero', 'reward']);
 
     function currentTheme() {
         return [...themes].find(id => document.body.classList.contains(`${id}-theme`))
@@ -21,12 +22,17 @@
 
     function sync() {
         const theme = currentTheme();
-        const enabled = themes.has(theme);
+        const enabled = themes.has(theme) || theme === 'dark';
         document.body.classList.toggle('theme-ducat-pack-active', enabled);
         for (const [role, anchorSelector, oldSelector] of placements) {
             const anchor = document.querySelector(anchorSelector);
             if (!anchor) continue;
             const host = anchor.parentElement;
+            if (theme === 'dark' && !greenEconomyRoles.has(role)) {
+                host.querySelectorAll('.theme-ducat-pack-legacy').forEach(icon => icon.classList.remove('theme-ducat-pack-legacy'));
+                host.querySelector(`.theme-ducat-pack-image[data-ducat-role="${role}"]`)?.remove();
+                continue;
+            }
             host.querySelectorAll(oldSelector).forEach(icon => {
                 if (!icon.classList.contains('theme-ducat-pack-image')) icon.classList.add('theme-ducat-pack-legacy');
             });
@@ -46,7 +52,9 @@
                 else anchor.after(image);
             }
             const variant = role === 'header' || role === 'hero' ? 'front' : 'inline';
-            const source = `assets/theme-packs/${theme}/canonical/ducat/ducat-${variant}-v1.png`;
+            const source = theme === 'dark'
+                ? `assets/green-soft-clay/canonical/ducat/ducat-${variant}-v1.png`
+                : `assets/theme-packs/${theme}/canonical/ducat/ducat-${variant}-v1.png`;
             if (image.getAttribute('src') !== source) image.src = source;
         }
     }

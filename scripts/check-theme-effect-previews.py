@@ -32,7 +32,7 @@ def main():
     assert set(audited_ufo) == set(THEMES)
     assert 'theme-effect-previews.css?v=8' in page
     assert 'canonicalEffectPreview ?' in manager
-    assert catalog["requiredPngCountPerTheme"] == 189
+    assert catalog["requiredPngCountPerTheme"] == 191
     assert len(green_manifest["catalog"]) == 16
     for role in ("confetti", "gold-rain"):
         item = next(entry for entry in green_manifest["catalog"] if entry["id"] == role)

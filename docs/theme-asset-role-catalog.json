@@ -10,8 +10,8 @@
     "retired Green cloud logo v1",
     "legacy fallback Logo_green.png outside the active Green Room Pack"
   ],
-  "requiredPngCountPerTheme": 189,
-  "greenPackPngCount": 188,
+  "requiredPngCountPerTheme": 191,
+  "greenPackPngCount": 190,
   "slots": [
     {
       "id": "background/main",
@@ -595,6 +595,54 @@
       "kind": "canonical-or-approved-variant",
       "width": 512,
       "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-internal/avatar-v1",
+      "greenReference": "assets/theme-packs/dark/canonical/online-players-internal/avatar-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 144,
+      "height": 144,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-internal/duel-v1",
+      "greenReference": "assets/theme-packs/dark/canonical/online-players-internal/duel-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 144,
+      "height": 144,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-internal/friend-v1",
+      "greenReference": "assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 144,
+      "height": 144,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-internal/search-v1",
+      "greenReference": "assets/theme-packs/dark/canonical/online-players-internal/search-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 144,
+      "height": 144,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-internal/spectate-v1",
+      "greenReference": "assets/theme-packs/dark/canonical/online-players-internal/spectate-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 144,
+      "height": 144,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-internal/state-v1",
+      "greenReference": "assets/theme-packs/dark/canonical/online-players-internal/state-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
       "colorType": 6
     },
     {
@@ -1384,38 +1432,6 @@
     {
       "id": "invite/sent-v1",
       "greenReference": "assets/green-soft-clay/invite/sent-v1.png",
-      "kind": "room-or-composite",
-      "width": 384,
-      "height": 384,
-      "colorType": 6
-    },
-    {
-      "id": "online-add-friend-v1",
-      "greenReference": "assets/green-soft-clay/online-add-friend-v1.png",
-      "kind": "room-or-composite",
-      "width": 384,
-      "height": 384,
-      "colorType": 6
-    },
-    {
-      "id": "online-duel-v1",
-      "greenReference": "assets/green-soft-clay/online-duel-v1.png",
-      "kind": "room-or-composite",
-      "width": 384,
-      "height": 384,
-      "colorType": 6
-    },
-    {
-      "id": "online-players-state-v1",
-      "greenReference": "assets/green-soft-clay/online-players-state-v1.png",
-      "kind": "room-or-composite",
-      "width": 384,
-      "height": 384,
-      "colorType": 6
-    },
-    {
-      "id": "online-spectate-v1",
-      "greenReference": "assets/green-soft-clay/online-spectate-v1.png",
       "kind": "room-or-composite",
       "width": 384,
       "height": 384,

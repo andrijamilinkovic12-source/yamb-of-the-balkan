@@ -1,0 +1,55 @@
+{
+  "themeId": "light",
+  "style": "3D Soft Neomorphism",
+  "direction": "smooth_rubber_matte_plastic",
+  "status": "canonical",
+  "roles": [
+    {
+      "role": "empty",
+      "illustrationStatus": "new-original-for-this-theme",
+      "catalogSlot": "global-chat-empty-v1",
+      "master": "source-assets/theme-icon-packs/light/global-chat-internal-v1/empty-master-v1.png",
+      "masterSha256": "af94c663ddd167d8e3e3e3cc100e4283c7621949ce89ad5dce3a2684f39722bf",
+      "masterOpticalBoundsPx": [
+        112,
+        222,
+        1141,
+        1051
+      ],
+      "runtime": "www/assets/theme-packs/light/canonical/global-chat-internal/empty-state-v1.png",
+      "runtimeSha256": "5643e4cfe2167d6f3160e64316ecda217e8f8100954124038c69e78b0b7e3076",
+      "runtimeSizePx": [
+        384,
+        384
+      ],
+      "runtimeBytes": 86582,
+      "format": "RGBA PNG"
+    },
+    {
+      "role": "send",
+      "illustrationStatus": "new-original-for-this-theme",
+      "catalogSlot": "global-chat-send-v1",
+      "master": "source-assets/theme-icon-packs/light/global-chat-internal-v1/send-master-v1.png",
+      "masterSha256": "cba8d3fd60d40fb3bc1e037d0ca17e1c956d07a83cfd114359457bba847991cd",
+      "masterOpticalBoundsPx": [
+        82,
+        263,
+        1173,
+        1012
+      ],
+      "runtime": "www/assets/theme-packs/light/canonical/global-chat-internal/send-v1.png",
+      "runtimeSha256": "4a6f120043849d22853089b0a623ba06fb7570f117f2672b0c373779a00a2d85",
+      "runtimeSizePx": [
+        384,
+        384
+      ],
+      "runtimeBytes": 66949,
+      "format": "RGBA PNG"
+    }
+  ],
+  "displayCssPx": {
+    "empty": 76,
+    "send": 32
+  },
+  "note": "Empty/loading and send are separate from the canonical room identity; no cross-theme reuse."
+}

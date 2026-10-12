@@ -7,7 +7,8 @@ body.neon-theme #game-scene .player-table::before {
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    background: url("assets/theme-packs/neon/trial/game-board-png-v1/board-frame-v1.png") center / 100% 100% no-repeat;
+    /* The rendered rim is thick; crop its sides so the outer columns stay inside it. */
+    background: url("assets/theme-packs/neon/trial/game-board-png-v1/board-frame-v1.png") center / 104.5% 100% no-repeat;
 }
 
 body.neon-theme #game-scene .player-table::after {

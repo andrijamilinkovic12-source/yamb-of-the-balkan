@@ -20,10 +20,10 @@ const themes = definitions.themes.map(theme => theme.id);
 assert.equal(themes.length, 10);
 assert.equal(ids.length, 18);
 assert.equal(new Set(ids).size, 18);
-assert.equal(catalog.requiredPngCountPerTheme, 189);
-assert.equal(usage.requiredSlotCount, 189);
-assert.equal(map.requiredSlotCountPerTheme, 189);
-assert.equal(definitions.assetStandardizationRules.requiredProductionPngCount, 189);
+assert.equal(catalog.requiredPngCountPerTheme, 191);
+assert.equal(usage.requiredSlotCount, 191);
+assert.equal(map.requiredSlotCountPerTheme, 191);
+assert.equal(definitions.assetStandardizationRules.requiredProductionPngCount, 191);
 assert(definitions.assetStandardizationRules.medalContract.includes('18 kanonskih PNG medalja'));
 const config = fs.readFileSync(path.join(root, 'www/config.js'), 'utf8');
 const context = {
@@ -50,7 +50,7 @@ for (const theme of themes) {
         const tier = tiers[index % 3];
         const medalContext = contexts[Math.floor(index / 3)];
         const source = resolver(medalContext, tier, theme);
-        assert(source.endsWith(`/${id.replace(/^canonical\//, '')}.png?v=${theme === 'light' ? 3 : 2}`), `${theme}/${id}: wrong source ${source}`);
+        assert(source.endsWith(`/${id.replace(/^canonical\//, '')}.png?v=${theme === 'light' ? (medalContext === 'tournament' ? 4 : 3) : 2}`), `${theme}/${id}: wrong source ${source}`);
         const png = path.join(root, 'www', source.split('?')[0]);
         const data = fs.readFileSync(png);
         assert.equal(data.toString('hex', 0, 8), '89504e470d0a1a0a');

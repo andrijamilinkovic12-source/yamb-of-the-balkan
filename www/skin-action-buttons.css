@@ -1,0 +1,30 @@
+/* PNG artwork follows the selected dice skin. The existing button geometry,
+   layout, text and click behavior remain in the game styles and markup. */
+#game-scene[data-action-skin-ready] :is(#btn-bacaj, #btn-najava) {
+    background-color: transparent !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 100% 100% !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .16) !important;
+}
+
+#game-scene[data-action-skin-ready] #btn-bacaj {
+    background-image: var(--skin-roll-png) !important;
+    color: var(--skin-roll-ink) !important;
+}
+
+#game-scene[data-action-skin-ready] #btn-najava {
+    background-image: var(--skin-announce-png) !important;
+    color: var(--skin-announce-ink) !important;
+}
+
+#game-scene[data-action-skin-ready] #btn-najava.btn-active-toggle {
+    background-image: var(--skin-cancel-png) !important;
+    color: var(--skin-cancel-ink) !important;
+}
+
+#game-scene[data-action-skin-ready] #btn-bacaj::after {
+    content: none !important;
+}

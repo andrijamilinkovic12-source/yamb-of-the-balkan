@@ -1614,10 +1614,6 @@ class YambApp {
                     'assets/green-soft-clay/global-chat-send-v1.png?v=opt2',
                     'assets/green-soft-clay/global-chat-empty-v1.png?v=opt2',
                     'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
-                    'assets/green-soft-clay/online-players-state-v1.png?v=opt2',
-                    'assets/green-soft-clay/online-add-friend-v1.png?v=opt2',
-                    'assets/green-soft-clay/online-spectate-v1.png?v=opt2',
-                    'assets/green-soft-clay/online-duel-v1.png?v=opt2',
                     'assets/green-soft-clay/ducats-undo-free-v3.png?v=1',
                     'assets/green-soft-clay/canonical/undo-token/undo-token-front-v1.png?v=1',
                     'assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1',
@@ -1809,13 +1805,9 @@ class YambApp {
                 icons: [],
                 assets: [
                     'assets/easter-soft-clay/global-chat-pro-v6.png?v=1',
-                    'assets/easter-soft-clay/global-chat-send-pro-v2.png?v=opt2',
-                    'assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=opt2',
+                    'assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png?v=2',
+                    'assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/easter-soft-clay/online-players-pro-v4.png?v=1',
-                    'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2',
-                    'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2',
-                    'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2',
-                    'assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2',
                     'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2',
                     'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
                     'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
@@ -1900,13 +1892,9 @@ class YambApp {
                 icons: [],
                 assets: [
                     'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
-                    'assets/desert-soft-clay/global-chat-send-pro-v2.png?v=opt2',
-                    'assets/desert-soft-clay/global-chat-empty-pro-v2.png?v=opt2',
+                    'assets/theme-packs/desert/canonical/global-chat-internal/send-v1.png?v=2',
+                    'assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
-                    'assets/desert-soft-clay/online-add-friend-pro-v2.png?v=opt2',
-                    'assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2',
-                    'assets/desert-soft-clay/online-duel-pro-v2.png?v=opt2',
-                    'assets/desert-soft-clay/online-players-state-pro-v2.png?v=opt2',
                     'assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2',
                     'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
                     'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
@@ -2013,12 +2001,8 @@ class YambApp {
                 assets: [
                     'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
                     'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
-                    'assets/severna-soft-clay/global-chat-send-pro-v2.png?v=1',
-                    'assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1',
-                    'assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1',
-                    'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
-                    'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
-                    'assets/severna-soft-clay/online-players-state-pro-v2.png?v=1',
+                    'assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png?v=2',
+                    'assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/severna-soft-clay/opponent/scanning-v3.png?v=1',
                     'assets/severna-soft-clay/opponent/found-v3.png?v=1',
                     'assets/severna-soft-clay/opponent/vs-v3.png?v=1',
@@ -2244,7 +2228,14 @@ class YambApp {
                 ['statistics-overview', 'power-index']
             ].map(([group, role]) => `assets/theme-packs/${theme}/canonical/${group}/${role}-v1.png${theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`)
             : [];
-        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets])];
+        const globalChatInternal = safeRoomId === 'globalChat' && ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)
+            ? ['empty-state', 'send'].map(role => `assets/theme-packs/${theme}/canonical/global-chat-internal/${role}-v1.png?v=2`)
+            : [];
+        const onlinePlayersInternal = safeRoomId === 'onlinePlayers'
+            ? ['state', 'search', 'friend', 'spectate', 'duel', 'avatar']
+                .map(role => `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png?v=2`)
+            : [];
+        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
             dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
@@ -2252,8 +2243,8 @@ class YambApp {
             statistics: path => path.startsWith('statistics/') || path.startsWith('statistics-') || path.startsWith('canonical/statistics-overview/') || path.startsWith('canonical/h2h-statistics/') || path === 'canonical/statistics-room-identity/statistics-room-v1.png',
             settings: path => path.startsWith('settings/') || path.startsWith('settings-') || path.startsWith('canonical/settings-controls/') || path === 'canonical/settings-room-identity/settings-room-v1.png',
             rules: path => path.startsWith('rules/') || path.startsWith('rules-') || path.startsWith('canonical/rules-page-illustrations/') || path === 'canonical/rules-room-identity/rules-room-v1.png',
-            globalChat: path => path.startsWith('global-chat') || path === 'canonical/global-chat-room-identity/global-chat-room-v1.png',
-            onlinePlayers: path => path.startsWith('online-players') || path.startsWith('online-add-') || path.startsWith('online-spectate') || path.startsWith('online-duel') || path === 'canonical/online-players-room-identity/online-players-room-v1.png',
+            globalChat: path => path.startsWith('canonical/global-chat-internal/') || path === 'canonical/global-chat-room-identity/global-chat-room-v1.png',
+            onlinePlayers: path => path === 'canonical/online-players-room-identity/online-players-room-v1.png',
             economy: path => path.startsWith('economy/') || path.startsWith('ducats-undo') || path.startsWith('canonical/rewarded-video/'),
             quarterlyLeague: path => path.startsWith('ql/') || path.startsWith('quarterly-league') || path.startsWith('canonical/competition-medals/quarterly-league-') || path === 'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
             // Trophy cards and effect previews load only when their tab is visible.
@@ -2265,8 +2256,8 @@ class YambApp {
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
-        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets])];
-        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...tournamentRoomAssets])];
+        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
     }
 
     collectThemeSourcesFromRoot(theme, rootElement) {
@@ -3541,11 +3532,7 @@ class YambApp {
 
         let html = `
             <div class="friend-card add-new" onclick="app.searchAndAddFriend()">
-                <img class="easter-invite-add-icon" data-theme-src="assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-invite-add-icon" data-theme-src="assets/desert-soft-clay/online-add-friend-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="severna-invite-add-icon" data-theme-src="assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="green-invite-add-icon" data-theme-src="assets/green-soft-clay/online-add-friend-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <div class="friend-card-add-fallback" style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
+                <img class="theme-online-invite-add-icon" data-online-role="friend" src="${window.themeOnlinePlayers.asset('friend')}" alt="" aria-hidden="true" decoding="async">
                 <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; line-height: 1.2;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
         `;
@@ -4031,12 +4018,14 @@ class YambApp {
     async openGlobalChat(options = {}) {
         if (!this.requireLogin()) return;
         this.reportMonitorRoomVisit('globalChat');
+        const assetsReady = this.prepareThemeRoomAssets('globalChat');
 
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('globalChat')) {
             this.playEasterRoomIntro('globalChat', () => this.openGlobalChat({ skipRoomIntro: true }));
             return;
         }
 
+        await assetsReady;
         if (this.globalChat) await this.globalChat.open();
     }
 
@@ -6796,7 +6785,7 @@ class YambApp {
             if (this.isSpectator) {
                 timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" data-theme-src="assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" data-theme-src="assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="severna-spectating-live-icon" data-theme-src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="green-spectating-live-icon" data-theme-src="assets/green-soft-clay/online-spectate-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
+                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><img class="theme-online-spectator-icon" data-online-role="spectate" src="${window.themeOnlinePlayers.asset('spectate')}" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
@@ -8407,6 +8396,7 @@ class YambApp {
     }
     
     updateDiceVisuals() { 
+        window.skinActionButtons?.sync();
         this.diceBtns.forEach((b, i) => { 
             if (this.brojBacanja > 0) { 
                 b.innerHTML = this.getDiceDotsHTML(this.kockiceVals[i]); 
