@@ -1059,9 +1059,9 @@ const REQUIRE_ADMOB_SSV = parseRequiredAdMobSsv(process.env.REQUIRE_ADMOB_SSV);
 if (!REQUIRE_ADMOB_SSV) {
     console.warn('⚠️ REQUIRE_ADMOB_SSV je isključen. Rewarded ad ekonomija koristi bypass bez server-side verifikacije.');
 }
-// Native SDK reward mora ostati funkcionalan i kada AdMob SSV callback nije podešen
-// na deployment-u. SSV i dalje ima prednost tokom kratkog grace perioda.
-const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, true);
+// Client SDK signal is not proof that Google verified the reward.
+// Keep the fallback available only as an explicit emergency override.
+const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);
 if (REQUIRE_ADMOB_SSV && ALLOW_ADMOB_CLIENT_REWARD_FALLBACK) {
     console.warn('⚠️ ALLOW_ADMOB_CLIENT_REWARD_FALLBACK je uključen. Koristim SDK rewarded fallback ako SSV callback zakasni ili nije konfigurisan.');
 }
@@ -8851,6 +8851,7 @@ app.get('/api/admob/reward-ssv', async (req, res) => {
 
         const recordResult = await recordVerifiedAdMobReward(verified.params);
         if (recordResult.recorded) {
+            console.info('✅ AdMob SSV nagrada verifikovana i upisana.');
             const uid = recordResult.reward?.uid;
             const socketId = uid ? onlinePlayers[uid] : null;
             if (socketId) {

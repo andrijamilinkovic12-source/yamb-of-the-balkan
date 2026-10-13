@@ -245,18 +245,18 @@ function checkAdMobRewardVerificationDefaults() {
     assert.strictEqual(parseRequiredAdMobSsv('true'), true, 'REQUIRE_ADMOB_SSV=true must require SSV');
     assert.strictEqual(parseRequiredAdMobSsv('false'), false, 'REQUIRE_ADMOB_SSV=false must explicitly disable SSV');
     assert.strictEqual(parseRequiredAdMobSsv('0'), false, 'REQUIRE_ADMOB_SSV=0 must explicitly disable SSV');
-    assert.strictEqual(parseOptionalBooleanEnv(undefined, true), true, 'Client rewarded fallback must keep completed rewarded ads payable by default');
+    assert.strictEqual(parseOptionalBooleanEnv(undefined, false), false, 'Client rewarded fallback must be disabled by default');
     assert.strictEqual(parseOptionalBooleanEnv('true', false), true, 'Client rewarded fallback env true is not accepted');
     assert.strictEqual(parseOptionalBooleanEnv('false', true), false, 'Client rewarded fallback env false is not accepted');
     assert(envExampleSource.includes('REQUIRE_ADMOB_SSV=true'), '.env.example disables AdMob SSV verification');
-    assert(envExampleSource.includes('ALLOW_ADMOB_CLIENT_REWARD_FALLBACK=true'), '.env.example omits client rewarded fallback switch');
+    assert(envExampleSource.includes('ALLOW_ADMOB_CLIENT_REWARD_FALLBACK=false'), '.env.example must disable client rewarded fallback');
     assert(envExampleSource.includes('LOCAL_GAME_SESSION_SECRET='), '.env.example omits the signed local session secret');
 }
 
 async function checkRewardedAdClientFallback() {
     assert(
-        serverSource.includes('const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, true);'),
-        'Server can silently reject completed rewarded ads when the deployment omits the fallback env switch'
+        serverSource.includes('const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);'),
+        'Server must require Google-signed SSV unless the fallback is explicitly enabled'
     );
     assert(serverSource.includes('ADMOB_CLIENT_FALLBACK_GRACE_MS'), 'Server is missing a bounded fallback grace window');
     assert(serverSource.includes('const clientFallbackAllowed = ALLOW_ADMOB_CLIENT_REWARD_FALLBACK && options.clientRewarded === true;'), 'SSV fallback is not gated by the SDK rewarded signal');
@@ -339,6 +339,16 @@ async function checkRewardedAdClientFallback() {
     );
     assert.strictEqual(missingSdkReward.ok, false, 'Reward was accepted without SSV or the native rewarded signal');
     assert.strictEqual(missingSdkReward.reason, 'ad_verification_pending', 'Missing native reward returned the wrong verification state');
+
+    verificationContext.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = false;
+    const rejectedClientReward = await waitForVerifiedAdMobReward(
+        'firebase-user-1234567890',
+        'reward-nonce-987654',
+        ['shop_ad_reward'],
+        { claimedBy: 'shop_ad_reward', clientRewarded: true }
+    );
+    assert.strictEqual(rejectedClientReward.ok, false, 'Client reward was accepted without signed SSV in production mode');
+    assert.strictEqual(rejectedClientReward.reason, 'ad_verification_pending');
 
     verificationContext.AdMobRewardVerification.findOneAndUpdate = async () => ({
         uid: 'firebase-user-1234567890',
