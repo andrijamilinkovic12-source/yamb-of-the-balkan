@@ -9822,6 +9822,24 @@ io.on('connection', (socket) => {
 
     updateOnlineCount();
 
+    let adDiagnosticWindowStartedAt = Date.now();
+    let adDiagnosticCount = 0;
+    socket.on('admob_client_diagnostic', (data = {}) => {
+        if (!data || typeof data !== 'object') return;
+        if (!getVerifiedUid(socket)) return;
+        const now = Date.now();
+        if (now - adDiagnosticWindowStartedAt > 60 * 60 * 1000) {
+            adDiagnosticWindowStartedAt = now;
+            adDiagnosticCount = 0;
+        }
+        if (++adDiagnosticCount > 12) return;
+        const phase = String(data.phase || '');
+        if (phase !== 'load_failed' && phase !== 'ready_timeout') return;
+        const code = Number.isInteger(data.code) && data.code >= -1 && data.code <= 20 ? data.code : 'unknown';
+        const message = String(data.message || '').replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 160);
+        console.warn(`[AdMob client] ${phase} code=${code} loading=${data.loading === true} message=${message}`);
+    });
+
     socket.on('monitor_theme_seen', (data = {}) => {
         socket.activeTheme = normalizeMonitorTheme(data.theme);
         touchMonitorActivity(getVerifiedUid(socket), socket.activeTheme);

@@ -4803,11 +4803,16 @@ class AdMobController {
 
         adState.retryTimer = setTimeout(() => {
             adState.retryTimer = null;
-            this.preloadAd(type, rewardOptions);
+            const nextOptions = type === 'rewarded'
+                ? (this.pendingRewardOptions || rewardOptions)
+                : rewardOptions;
+            if (type === 'rewarded') this.pendingRewardOptions = null;
+            this.preloadAd(type, nextOptions);
         }, nextDelay);
     }
 
     handleAdFailed(type, err) {
+        if (type === 'rewarded') this.reportRewardAdDiagnostic('load_failed', err);
         this.ads[type].isReady = false; 
         this.ads[type].isLoading = false;
         this.adLoadedAt[type] = 0;
@@ -4826,6 +4831,18 @@ class AdMobController {
         }
 
         this.scheduleAdRetry(type);
+    }
+
+    reportRewardAdDiagnostic(phase, err = {}) {
+        const socket = window.app?.socket;
+        if (!socket?.connected) return;
+        const code = err?.code;
+        socket.emit('admob_client_diagnostic', {
+            phase,
+            code: Number.isInteger(code) ? code : null,
+            message: String(err?.message || '').slice(0, 160),
+            loading: !!this.ads.rewarded.isLoading
+        });
     }
 
     handleAdDismissed(type) {
@@ -5051,6 +5068,12 @@ class AdMobController {
             const matchingLoading = this.ads.rewarded.isLoading && this.isRewardSsvInfoMatch(this.rewardSsvInfo, rewardOptions);
             if (matchingReady || matchingLoading) return;
 
+            // A tap during backoff must not create another request before the retry.
+            if (this.ads.rewarded.retryTimer) {
+                this.pendingRewardOptions = this.normalizeRewardOptions(rewardOptions);
+                return;
+            }
+
             if (this.ads.rewarded.isLoading) {
                 this.pendingRewardOptions = this.normalizeRewardOptions(rewardOptions);
                 return;
@@ -5100,7 +5123,9 @@ class AdMobController {
             await new Promise(resolve => setTimeout(resolve, 250));
         }
 
-        return this.isRewardVideoReadyFor(rewardOptions);
+        const ready = this.isRewardVideoReadyFor(rewardOptions);
+        if (!ready) this.reportRewardAdDiagnostic('ready_timeout');
+        return ready;
     }
 
     setBannerSlotState(state, text = '') {

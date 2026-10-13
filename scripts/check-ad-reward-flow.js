@@ -66,6 +66,15 @@ async function main() {
     assert.equal(controller.isRewardVideoReadyFor(coin), true);
     assert.equal(controller.isRewardVideoReadyFor(undo), false);
 
+    controller.ads.rewarded.isReady = false;
+    controller.ads.rewarded.retryTimer = setTimeout(() => {}, 1000);
+    controller.prepareReward(undo);
+    assert.equal(requests.length, 1, 'Pritisak tokom retry pauze ne sme poslati novi AdMob zahtev');
+    assert.equal(controller.pendingRewardOptions.context, 'undo_tokens', 'Retry mora sačuvati poslednji izabrani tip nagrade');
+    clearTimeout(controller.ads.rewarded.retryTimer);
+    controller.ads.rewarded.retryTimer = null;
+    controller.pendingRewardOptions = null;
+
     controller.prepareReward(undo);
     assert.equal(requests.length, 2, 'Promena nagrade zahteva novi SSV kontekst');
     assert.equal(controller.isRewardVideoReadyFor(undo), true);
