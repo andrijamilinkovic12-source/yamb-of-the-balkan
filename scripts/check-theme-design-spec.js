@@ -41,10 +41,16 @@ function contrast(first, second) {
 }
 
 assert(spec.themes.length === 10, 'The design registry must contain exactly ten themes.');
-assert(spec.schemaVersion === 25, 'Unexpected design registry schema.');
+assert(spec.schemaVersion === 28, 'Unexpected design registry schema.');
 assert(spec.skinActionButtonRules && ['scope', 'assets', 'style', 'geometry', 'loading'].every(key =>
     typeof spec.skinActionButtonRules[key] === 'string' && spec.skinActionButtonRules[key].length > 40),
     'Dice-skin PNG action button rules are incomplete.');
+assert(spec.skinRollCounterRules && ['scope', 'assets', 'progress', 'readability', 'accessibility'].every(key =>
+    typeof spec.skinRollCounterRules[key] === 'string' && spec.skinRollCounterRules[key].length > 40),
+    'Skin roll counter rules are incomplete.');
+assert(spec.gameHeaderControlRules && ['scope', 'assets', 'states', 'skinSelection', 'layout'].every(key =>
+    typeof spec.gameHeaderControlRules[key] === 'string' && spec.gameHeaderControlRules[key].length > 40),
+    'Game header PNG and quick skin rules are incomplete.');
 const allowedDirections = ['clay', 'smooth_rubber_matte_plastic'];
 assert(JSON.stringify(spec.allowedDirectionIds) === JSON.stringify(allowedDirections), 'Only Clay and Matte Plastic are permitted.');
 assert(JSON.stringify(Object.keys(spec.directions)) === JSON.stringify(allowedDirections), 'Legacy material directions remain active.');

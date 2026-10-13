@@ -12,10 +12,11 @@ const scene = {
     removeAttribute: key => { if (key === 'data-action-skin-ready') delete scene.dataset.actionSkinReady; }
 };
 const storage = new Map([['yamb_active_skin', 'default']]);
+const loaded = [];
 let unlocked = false;
 const listeners = new Map();
 class InstantImage {
-    set src(value) { this._src = value; this.complete = true; this.naturalWidth = 768; }
+    set src(value) { this._src = value; loaded.push(value); this.complete = true; this.naturalWidth = 768; }
     get src() { return this._src; }
 }
 const context = vm.createContext({
@@ -28,6 +29,7 @@ const context = vm.createContext({
 });
 vm.runInContext(`const SHOP_DATA = ${JSON.stringify({ SKINS: dice.skins })}`, context);
 vm.runInContext(fs.readFileSync(path.join(root, 'www/skin-action-buttons-data.js'), 'utf8'), context);
+vm.runInContext(fs.readFileSync(path.join(root, 'www/skin-roll-counter-data.js'), 'utf8'), context);
 vm.runInContext(fs.readFileSync(path.join(root, 'www/skin-action-buttons.js'), 'utf8'), context);
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
@@ -36,6 +38,8 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
     assert.equal(scene.dataset.actionSkinReady, 'default');
     const defaultUrl = style.get('--skin-roll-png');
     assert(defaultUrl.includes('/default-roll-v1.png'));
+    assert.equal(loaded.filter(src => src.includes('/default-') && src.includes('/skin-roll-counter-v1/')).length, 4,
+        'all four default counter states must preload with the buttons');
 
     storage.set('yamb_active_skin', 'classic_red');
     context.window.skinActionButtons.sync();
@@ -44,6 +48,8 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
     assert.equal(scene.dataset.actionSkinReady, 'classic_red');
     assert(style.get('--skin-roll-png').includes('/classic_red-roll-v1.png'));
     assert(style.get('--skin-cancel-png').includes('/classic_red-cancel-v1.png'));
+    assert.equal(loaded.filter(src => src.includes('/classic_red-') && src.includes('/skin-roll-counter-v1/')).length, 4,
+        'all four selected-skin counter states must preload with the buttons');
 
     storage.set('yamb_active_skin', 'theme_neon_cyber');
     context.window.skinActionButtons.sync();
@@ -55,5 +61,5 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
     await settle();
     assert.equal(scene.dataset.actionSkinReady, 'theme_neon_cyber');
     assert(style.get('--skin-announce-png').includes('/theme_neon_cyber-announce-v1.png'));
-    console.log('Skin switch, three PNG roles, locked gift fallback and unlocked gift activation passed.');
+    console.log('Skin switch, three button PNGs plus four counter states, locked gift fallback and unlocked gift activation passed.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

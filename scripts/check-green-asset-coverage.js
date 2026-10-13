@@ -116,10 +116,13 @@ for (const [groupName, paths] of Object.entries(pendingGroups)) {
     }
 }
 
+const greenHeaderPngs = walkFiles(path.join(greenRoot, 'canonical', 'game-header'))
+    .filter(file => file.toLowerCase().endsWith('.png'));
+assert(greenHeaderPngs.length === 6, `Green funkcionalni paket gornjeg panela mora imati 6 PNG-ova, pronađeno ${greenHeaderPngs.length}.`);
 const runtimePngs = walkFiles(greenRoot)
     .filter(file => file.toLowerCase().endsWith('.png'))
     .map(file => slash(path.relative(greenRoot, file)))
-    .filter(relative => !relative.startsWith('canonical/treasury-effect-thumbnails/'))
+    .filter(relative => !relative.startsWith('canonical/treasury-effect-thumbnails/') && !relative.startsWith('canonical/game-header/'))
     .sort();
 const classifications = { registered: [], protected: [], foundation: [], historicalLogo: [], pending: [], stagedCanonical: [] };
 for (const relative of runtimePngs) {

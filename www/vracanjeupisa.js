@@ -528,7 +528,7 @@ class UndoManager {
                 btnN.classList.remove('btn-highlight');
             } else if (this.app.najavljenoPolje) {
                 btnN.disabled = true;
-                btnN.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.app.najavljenoPolje.row}`;
+                btnN.innerText = this.app.announcedRowButtonLabel(this.app.najavljenoPolje.row);
                 btnN.classList.remove('btn-active-toggle');
                 btnN.classList.remove('btn-highlight');
             } else if (this.app.brojBacanja === 1) {

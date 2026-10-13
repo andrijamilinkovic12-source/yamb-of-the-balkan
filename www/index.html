@@ -127,6 +127,8 @@
     <link rel="stylesheet" href="theme-online-players-room.css?v=3">
     <link rel="stylesheet" href="theme-economy-room.css?v=1">
     <link rel="stylesheet" href="skin-action-buttons.css?v=1">
+    <link rel="stylesheet" href="skin-roll-counter.css?v=1">
+    <link rel="stylesheet" href="theme-game-header.css?v=3">
     
     <script src="languages.js?v=5.12"></script>
     <script src="quotes.js"></script>
@@ -688,7 +690,7 @@
 
     <div id="game-scene" class="screen">
         <div class="game-header">
-            <button class="btn-secondary game-header-icon game-header-exit" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre" data-lang-title="tooltip_exit_game" data-lang-aria="tooltip_exit_game"><span class="game-header-exit-fallback" aria-hidden="true">🚪</span><img class="easter-game-exit-icon" data-theme-src="assets/easter-soft-clay/game/exit-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>
+            <button class="btn-secondary game-header-icon game-header-exit" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre" data-lang-title="tooltip_exit_game" data-lang-aria="tooltip_exit_game"><img class="game-header-png" data-game-header-role="exit" alt="" aria-hidden="true" decoding="async"></button>
             
             <div class="game-header-controls" style="display:flex; gap:12px; align-items:center; justify-content: flex-end; flex: 1;">
                 
@@ -698,22 +700,33 @@
 
                 <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators"><img class="theme-online-game-spectator-icon" data-online-role="spectate" alt="" aria-hidden="true" decoding="async"></span>
 
-                <button id="btn-undo-move" class="btn-secondary game-header-icon gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza" data-lang-title="tooltip_undo_move">↩️</button>
+                <button id="btn-undo-move" class="btn-secondary game-header-icon gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza" data-lang-title="tooltip_undo_move"><img class="game-header-png" data-game-header-role="undo" alt="" aria-hidden="true" decoding="async"></button>
                 
-                <button id="btn-game-menu-toggle" class="btn-secondary game-header-icon" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-weight: bold; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; padding-bottom: 4px;" onclick="app.toggleGameMenu()">⋮</button>
+                <button id="btn-game-menu-toggle" class="btn-secondary game-header-icon" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-weight: bold; font-size: 1.4rem; display: flex; align-items: center; justify-content: center;" onclick="app.toggleGameMenu()" title="Opcije igre" data-lang-title="game_quick_menu" data-lang-aria="game_quick_menu" aria-expanded="false"><img class="game-header-png" data-game-header-role="menu" alt="" aria-hidden="true" decoding="async"></button>
             </div>
         </div>
 
         <div id="game-dropdown-menu" style="position: absolute; top: calc(var(--safe-top) + 60px); right: 15px; background: var(--glass-panel); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; transform: translateY(-20px); opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
             <div style="display: flex; gap: 10px; justify-content: space-between;">
-                <button class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleTheme(); app.toggleGameMenu();" title="Promeni Temu" data-lang-title="tooltip_change_theme">🎨</button>
-                <button id="btn-gh-sound" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickSound()" title="Zvuk" data-lang-title="tooltip_sound">🔊</button>
-                <button id="btn-gh-vib" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickVib()" title="Vibracija" data-lang-title="tooltip_vibration">📳</button>
+                <button class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleTheme(); app.toggleGameMenu();" title="Promeni Temu" data-lang-title="tooltip_change_theme"><img class="game-quick-png" data-game-header-role="theme" alt="" aria-hidden="true" decoding="async"></button>
+                <button id="btn-gh-sound" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickSound()" title="Zvuk" data-lang-title="tooltip_sound"><img class="game-quick-png" data-game-header-role="sound" alt="" aria-hidden="true" decoding="async"></button>
+                <button id="btn-gh-vib" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickVib()" title="Vibracija" data-lang-title="tooltip_vibration"><img class="game-quick-png" data-game-header-role="vibration" alt="" aria-hidden="true" decoding="async"></button>
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                <button id="btn-gh-music" class="btn-secondary" style="border-radius:50%; padding:0; width:30px; height:30px; font-size: 1rem; border: none; background: transparent; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickMusic()" title="Muzika" data-lang-title="tooltip_music">🎧</button>
+                <button id="btn-gh-music" class="btn-secondary" style="border-radius:50%; padding:0; width:30px; height:30px; font-size: 1rem; border: none; background: transparent; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickMusic()" title="Muzika" data-lang-title="tooltip_music"><img class="game-quick-png" data-game-header-role="music" alt="" aria-hidden="true" decoding="async"></button>
                 <input type="range" id="music-volume-slider" min="0" max="1" step="0.05" value="0.4" oninput="app.changeMusicVolume(this.value)" style="flex: 1; accent-color: var(--gold-main); height: 4px; outline: none;">
+            </div>
+            <button id="game-quick-skin-open" class="game-quick-skin-row" type="button" onclick="app.openQuickSkinPicker()" aria-haspopup="dialog" aria-controls="game-skin-picker"><img class="game-quick-png" data-game-header-role="skin" alt="" aria-hidden="true" decoding="async"><span class="game-quick-skin-label" data-lang="game_skin_select">Skin kockica</span><span id="game-quick-skin-current" class="game-quick-skin-current"></span></button>
+        </div>
+
+        <div id="game-skin-picker" class="game-skin-picker" role="dialog" aria-modal="true" aria-labelledby="game-skin-picker-title" onclick="if(event.target===this) app.closeQuickSkinPicker()" hidden>
+            <div class="game-skin-picker-panel">
+                <div class="game-skin-picker-header">
+                    <h2 id="game-skin-picker-title" data-lang="game_skin_select">Skin kockica</h2>
+                    <button id="game-skin-picker-close" class="game-skin-picker-close" type="button" onclick="app.closeQuickSkinPicker()" data-lang-aria="game_skin_picker_close" aria-label="Zatvori izbor skinova"><img class="game-header-png" data-game-header-role="close" alt="" aria-hidden="true" decoding="async"></button>
+                </div>
+                <div id="game-skin-picker-list" class="game-skin-picker-list" aria-labelledby="game-skin-picker-title"></div>
             </div>
         </div>
 
@@ -1766,9 +1779,12 @@
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.87"></script>
+    <script src="game.js?v=5.89"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
+    <script src="skin-roll-counter-data.js?v=1"></script>
+    <script src="skin-roll-counter.js?v=1"></script>
     <script src="skin-action-buttons.js?v=1"></script>
+    <script src="theme-game-header.js?v=3"></script>
     <script src="theme-main-room-icons.js?v=18"></script>
     <script src="theme-online-players-room.js?v=3"></script>
     <script src="theme-ducat-pack.js?v=1"></script>

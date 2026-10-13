@@ -1,6 +1,6 @@
 /* One canonical PNG close control per theme. The 44px hit box stays fixed. */
 body { --theme-room-close-image: url("assets/green-soft-clay/canonical/room-controls/close-v1.png?v=3"); }
-body.light-theme { --theme-room-close-image: url("assets/theme-packs/light/canonical/room-controls/close-v1.png?v=3"); }
+body.light-theme { --theme-room-close-image: url("assets/theme-packs/light/canonical/room-controls/close-v1.png?v=4"); }
 body.medium-theme { --theme-room-close-image: url("assets/theme-packs/medium/canonical/room-controls/close-v1.png?v=3"); }
 body.winter-theme { --theme-room-close-image: url("assets/theme-packs/winter/canonical/room-controls/close-v1.png?v=3"); }
 body.neon-theme { --theme-room-close-image: url("assets/theme-packs/neon/canonical/room-controls/close-v1.png?v=3"); }
@@ -8,7 +8,7 @@ body.amethyst-theme { --theme-room-close-image: url("assets/theme-packs/amethyst
 body.easter-theme { --theme-room-close-image: url("assets/theme-packs/easter/canonical/room-controls/close-v1.png?v=3"); }
 body.desert-theme { --theme-room-close-image: url("assets/theme-packs/desert/canonical/room-controls/close-v1.png?v=3"); }
 body.moon-theme { --theme-room-close-image: url("assets/theme-packs/moon/canonical/room-controls/close-v1.png?v=3"); }
-body.severna-theme { --theme-room-close-image: url("assets/theme-packs/severna/canonical/room-controls/close-v1.png?v=3"); }
+body.severna-theme { --theme-room-close-image: url("assets/theme-packs/severna/canonical/room-controls/close-v1.png?v=4"); }
 
 body :is(#stats-screen#stats-screen, #settings-screen#settings-screen,
     #highscores-screen#highscores-screen, #rules-overlay-ui#rules-overlay-ui,

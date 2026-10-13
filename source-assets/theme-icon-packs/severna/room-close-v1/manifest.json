@@ -2,7 +2,7 @@
   "schemaVersion": 3,
   "themeId": "severna",
   "slotId": "canonical/room-controls/close-v1",
-  "designConcept": "Continuous blue northern curve, two icy ribbons and one softened endpoint",
+  "designConcept": "Mat ponocno plavosiva severna obala sa tankim ledenim cijan rubom i mekim belim X",
   "creationMethod": "individual built-in image_gen render using same-theme material reference",
   "materialReference": "www/assets/theme-packs/severna/canonical/treasury-controls/tab-trophies-v1.png",
   "generatedSource": "source-assets/theme-icon-packs/severna/room-close-v2-imagegen/close-generated.png",
@@ -10,10 +10,10 @@
   "productionPath": "www/assets/theme-packs/severna/canonical/room-controls/close-v1.png",
   "opticalBoundsPx": [
     16,
-    47,
+    48,
     240,
     209
   ],
-  "sha256": "f5f25d65c096c90d0835327a5b0fb9d073cec98045d4377cbf5ec1cef3f2b824",
-  "sizeBytes": 50670
+  "sha256": "a14d2953b89d5c8ccf4aea6bfdf1381972d18fddf43602cf8ec0756f248660e1",
+  "sizeBytes": 49828
 }

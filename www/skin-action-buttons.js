@@ -46,7 +46,11 @@
 
         // Never show the previous skin while the new PNGs are decoding.
         scene.removeAttribute('data-action-skin-ready');
-        Promise.all(['roll', 'announce', 'cancel'].map(state => preload(entry[state].src)))
+        const counterStates = Object.values(window.SKIN_ROLL_COUNTER?.[id] || {});
+        Promise.all([
+            ...['roll', 'announce', 'cancel'].map(state => entry[state].src),
+            ...counterStates
+        ].map(preload))
             .then(() => {
                 if (request !== requestNumber) return;
                 for (const state of ['roll', 'announce', 'cancel']) {

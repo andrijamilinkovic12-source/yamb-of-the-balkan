@@ -106,7 +106,14 @@ vm.runInContext(`
 `, lifecycleSandbox);
 
 const sceneClasses = new Set();
-const timerDisplay = { style: {}, innerHTML: '' };
+const timerClasses = new Set();
+const timerDisplay = {
+    style: {}, innerHTML: '',
+    classList: {
+        add: (...names) => names.forEach(name => timerClasses.add(name)),
+        remove: (...names) => names.forEach(name => timerClasses.delete(name))
+    }
+};
 const sandbox = {
     setTimeout,
     clearTimeout,

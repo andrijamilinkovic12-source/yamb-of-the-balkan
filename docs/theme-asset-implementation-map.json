@@ -1336,11 +1336,11 @@
           ],
           "opticalBoundsPx": [
             16,
-            47,
+            42,
             240,
-            209
+            214
           ],
-          "sizeBytes": 52400
+          "sizeBytes": 54145
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -20216,11 +20216,11 @@
           ],
           "opticalBoundsPx": [
             16,
-            47,
+            48,
             240,
             209
           ],
-          "sizeBytes": 50670
+          "sizeBytes": 49828
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",

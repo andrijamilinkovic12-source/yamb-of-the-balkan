@@ -1,0 +1,778 @@
+{
+    "schemaVersion":  1,
+    "scope":  "One unique circular counter master per dice skin; four exact PNG progress states per skin. 0 is an empty three-part ring.",
+    "runtimeRenderSize":  [
+                              256,
+                              256
+                          ],
+    "skins":  [
+                  {
+                      "skinId":  "default",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/default-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/default-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/default-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#BBBEBF",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/default-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/default-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/default-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/default-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "classic_red",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/classic_red-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/classic_red-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/classic_red-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#B84C59",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/classic_red-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/classic_red-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/classic_red-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/classic_red-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "classic_blue",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/classic_blue-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/classic_blue-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/classic_blue-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#4A93EA",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/classic_blue-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/classic_blue-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/classic_blue-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/classic_blue-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "classic_black",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/classic_black-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/classic_black-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/classic_black-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#525354",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/classic_black-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/classic_black-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/classic_black-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/classic_black-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "bronze_antique",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/bronze_antique-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/bronze_antique-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/bronze_antique-master-v1.png",
+                      "progressColor":  "#FFF1D8",
+                      "trackColor":  "#AC7855",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/bronze_antique-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/bronze_antique-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/bronze_antique-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/bronze_antique-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "bronze_patina",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/bronze_patina-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/bronze_patina-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/bronze_patina-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#C68F6A",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/bronze_patina-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/bronze_patina-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/bronze_patina-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/bronze_patina-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "bronze_steampunk",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/bronze_steampunk-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/bronze_steampunk-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/bronze_steampunk-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#B8916F",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/bronze_steampunk-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/bronze_steampunk-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/bronze_steampunk-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/bronze_steampunk-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "bronze_spartan",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/bronze_spartan-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/bronze_spartan-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/bronze_spartan-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#866B5A",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/bronze_spartan-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/bronze_spartan-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/bronze_spartan-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/bronze_spartan-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "bronze_rose",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/bronze_rose-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/bronze_rose-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/bronze_rose-master-v1.png",
+                      "progressColor":  "#FFFFFF",
+                      "trackColor":  "#AC8A8D",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/bronze_rose-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/bronze_rose-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/bronze_rose-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/bronze_rose-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "bronze_forge",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/bronze_forge-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/bronze_forge-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/bronze_forge-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#B6765A",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/bronze_forge-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/bronze_forge-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/bronze_forge-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/bronze_forge-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "silver_classic",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/silver_classic-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/silver_classic-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/silver_classic-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#9CACB9",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/silver_classic-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/silver_classic-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/silver_classic-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/silver_classic-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "silver_brushed",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/silver_brushed-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/silver_brushed-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/silver_brushed-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#939EA8",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/silver_brushed-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/silver_brushed-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/silver_brushed-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/silver_brushed-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "silver_moonlight",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/silver_moonlight-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/silver_moonlight-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/silver_moonlight-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#9CAFC2",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/silver_moonlight-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/silver_moonlight-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/silver_moonlight-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/silver_moonlight-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "silver_knight",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/silver_knight-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/silver_knight-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/silver_knight-master-v1.png",
+                      "progressColor":  "#000000",
+                      "trackColor":  "#5B7086",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/silver_knight-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/silver_knight-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/silver_knight-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/silver_knight-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "silver_titanium",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/silver_titanium-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/silver_titanium-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/silver_titanium-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#64707C",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/silver_titanium-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/silver_titanium-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/silver_titanium-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/silver_titanium-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "silver_chrome",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/silver_chrome-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/silver_chrome-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/silver_chrome-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#889AA7",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/silver_chrome-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/silver_chrome-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/silver_chrome-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/silver_chrome-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "gold_classic",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/gold_classic-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/gold_classic-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/gold_classic-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#B0A37E",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/gold_classic-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/gold_classic-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/gold_classic-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/gold_classic-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "gold_rose",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/gold_rose-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/gold_rose-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/gold_rose-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#8D696A",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/gold_rose-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/gold_rose-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/gold_rose-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/gold_rose-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "gold_ancient",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/gold_ancient-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/gold_ancient-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/gold_ancient-master-v1.png",
+                      "progressColor":  "#000000",
+                      "trackColor":  "#8F652A",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/gold_ancient-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/gold_ancient-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/gold_ancient-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/gold_ancient-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "gold_midas",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/gold_midas-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/gold_midas-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/gold_midas-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#9C8235",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/gold_midas-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/gold_midas-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/gold_midas-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/gold_midas-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "wood",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/wood-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/wood-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/wood-master-v1.png",
+                      "progressColor":  "#FFFFFF",
+                      "trackColor":  "#AF8F76",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/wood-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/wood-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/wood-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/wood-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "marble",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/marble-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/marble-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/marble-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#B7BBBC",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/marble-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/marble-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/marble-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/marble-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "pearl",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/pearl-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/pearl-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/pearl-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#BCBEC0",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/pearl-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/pearl-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/pearl-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/pearl-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "carbon",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/carbon-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/carbon-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/carbon-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#5A5E60",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/carbon-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/carbon-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/carbon-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/carbon-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "obsidian",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/obsidian-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/obsidian-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/obsidian-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#585563",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/obsidian-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/obsidian-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/obsidian-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/obsidian-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "leather",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/leather-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/leather-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/leather-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#7E685D",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/leather-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/leather-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/leather-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/leather-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "neon_blue",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/neon_blue-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/neon_blue-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/neon_blue-master-v1.png",
+                      "progressColor":  "#B2F5FF",
+                      "trackColor":  "#325A7C",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/neon_blue-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/neon_blue-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/neon_blue-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/neon_blue-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "neon_pink",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/neon_pink-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/neon_pink-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/neon_pink-master-v1.png",
+                      "progressColor":  "#FFD0E4",
+                      "trackColor":  "#5C4262",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/neon_pink-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/neon_pink-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/neon_pink-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/neon_pink-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "neon_green",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/neon_green-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/neon_green-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/neon_green-master-v1.png",
+                      "progressColor":  "#D1FFE0",
+                      "trackColor":  "#405E54",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/neon_green-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/neon_green-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/neon_green-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/neon_green-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "stealth",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/stealth-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/stealth-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/stealth-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#5C6872",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/stealth-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/stealth-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/stealth-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/stealth-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "glass_clear",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/glass_clear-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/glass_clear-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/glass_clear-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#B4C2C6",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/glass_clear-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/glass_clear-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/glass_clear-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/glass_clear-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "glass_ruby",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/glass_ruby-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/glass_ruby-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/glass_ruby-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#995564",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/glass_ruby-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/glass_ruby-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/glass_ruby-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/glass_ruby-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "glass_emerald",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/glass_emerald-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/glass_emerald-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/glass_emerald-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#4A9E94",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/glass_emerald-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/glass_emerald-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/glass_emerald-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/glass_emerald-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "glass_sapphire",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/glass_sapphire-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/glass_sapphire-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/glass_sapphire-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#5594DF",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/glass_sapphire-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/glass_sapphire-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/glass_sapphire-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/glass_sapphire-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "green_clay",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/green_clay-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/green_clay-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/green_clay-master-v1.png",
+                      "progressColor":  "#EDF3DF",
+                      "trackColor":  "#809A7A",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/green_clay-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/green_clay-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/green_clay-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/green_clay-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_light_gold",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_light_gold-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_light_gold-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_light_gold-master-v1.png",
+                      "progressColor":  "#392817",
+                      "trackColor":  "#CABEAA",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_light_gold-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_light_gold-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_light_gold-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_light_gold-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_dark_cherry",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_dark_cherry-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_dark_cherry-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_dark_cherry-master-v1.png",
+                      "progressColor":  "#431720",
+                      "trackColor":  "#BA8F87",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_dark_cherry-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_dark_cherry-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_dark_cherry-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_dark_cherry-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_blue_ocean",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_blue_ocean-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_blue_ocean-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_blue_ocean-master-v1.png",
+                      "progressColor":  "#173D5B",
+                      "trackColor":  "#C0C6C6",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_blue_ocean-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_blue_ocean-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_blue_ocean-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_blue_ocean-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_neon_cyber",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_neon_cyber-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_neon_cyber-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_neon_cyber-master-v1.png",
+                      "progressColor":  "#56E5D2",
+                      "trackColor":  "#1D5570",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_neon_cyber-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_neon_cyber-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_neon_cyber-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_neon_cyber-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_royal_amethyst",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_royal_amethyst-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_royal_amethyst-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_royal_amethyst-master-v1.png",
+                      "progressColor":  "#3C284B",
+                      "trackColor":  "#9A88C2",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_royal_amethyst-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_royal_amethyst-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_royal_amethyst-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_royal_amethyst-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_easter",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_easter-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_easter-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_easter-master-v1.png",
+                      "progressColor":  "#3D4434",
+                      "trackColor":  "#CCC8BB",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_easter-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_easter-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_easter-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_easter-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_desert",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_desert-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_desert-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_desert-master-v1.png",
+                      "progressColor":  "#443027",
+                      "trackColor":  "#CAB7A4",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_desert-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_desert-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_desert-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_desert-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_moonlight",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_moonlight-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_moonlight-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_moonlight-master-v1.png",
+                      "progressColor":  "#252934",
+                      "trackColor":  "#9EA6B4",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_moonlight-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_moonlight-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_moonlight-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_moonlight-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "theme_northern_nebula",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/theme_northern_nebula-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/theme_northern_nebula-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/theme_northern_nebula-master-v1.png",
+                      "progressColor":  "#0B1830",
+                      "trackColor":  "#AEBEC9",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/theme_northern_nebula-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/theme_northern_nebula-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/theme_northern_nebula-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/theme_northern_nebula-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "magma",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Clay",
+                      "diceFace":  "www/assets/dice-skins-v1/magma-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/magma-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/magma-master-v1.png",
+                      "progressColor":  "#F6EADC",
+                      "trackColor":  "#5E5C59",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/magma-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/magma-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/magma-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/magma-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "galaxy",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/galaxy-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/galaxy-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/galaxy-master-v1.png",
+                      "progressColor":  "#F6F3E9",
+                      "trackColor":  "#434A8E",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/galaxy-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/galaxy-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/galaxy-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/galaxy-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "retro",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/retro-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/retro-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/retro-master-v1.png",
+                      "progressColor":  "#E9EAD2",
+                      "trackColor":  "#7B8267",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/retro-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/retro-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/retro-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/retro-3-v1.png"
+                                 }
+                  },
+                  {
+                      "skinId":  "hologram",
+                      "style":  "3D Soft Neomorphism",
+                      "direction":  "Smooth Rubber / Matte Plastic",
+                      "diceFace":  "www/assets/dice-skins-v1/hologram-face-v1.png",
+                      "actionButton":  "www/assets/skin-action-buttons-v1/hologram-announce-v1.png",
+                      "master":  "source-assets/skin-roll-counter-v1/masters/hologram-master-v1.png",
+                      "progressColor":  "#20303A",
+                      "trackColor":  "#8DA4BC",
+                      "states":  {
+                                     "0":  "www/assets/skin-roll-counter-v1/hologram-0-v1.png",
+                                     "1":  "www/assets/skin-roll-counter-v1/hologram-1-v1.png",
+                                     "2":  "www/assets/skin-roll-counter-v1/hologram-2-v1.png",
+                                     "3":  "www/assets/skin-roll-counter-v1/hologram-3-v1.png"
+                                 }
+                  }
+              ]
+}

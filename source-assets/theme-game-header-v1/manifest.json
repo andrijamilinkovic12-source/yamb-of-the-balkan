@@ -1,0 +1,436 @@
+{
+  "schemaVersion": 1,
+  "style": "3D Soft Neomorphism",
+  "themes": [
+    {
+      "id": "dark",
+      "direction": "clay",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/dark-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/dark-exit-master-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/game-header/exit-v1.png",
+          "sha256": "e86f26d54a947689b853dc3478a2a4025f6002773c7d24923258f27cfc2d69ff",
+          "bytes": 70202
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/dark-timer-master-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/game-header/timer-v1.png",
+          "sha256": "9b95d89a06c1222c38eaf2b10cd0e45e345ee2ed7d7baba73a1c727dfc4d5208",
+          "bytes": 74712
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/dark-menu-master-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/game-header/menu-v1.png",
+          "sha256": "1d2b3090ebaff6daedb431d15c04063d5162e49f309c6ff5c1d0fe4b3d483a75",
+          "bytes": 75285
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/dark-sound-master-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/game-header/sound-v1.png",
+          "sha256": "a084907789b8f8838498fcc199afcb24ef900b8043fc443445add1279579b13d",
+          "bytes": 74157
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/dark-vibration-master-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/game-header/vibration-v1.png",
+          "sha256": "656b5176d611d669a875a33646eb7aac58959a40432af55bfcc1706c385c49a8",
+          "bytes": 72931
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/dark-music-master-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/game-header/music-v1.png",
+          "sha256": "df4115fa606706cac83cdff14fd81949c2265540cd493673e22485ca6a9e410e",
+          "bytes": 74389
+        }
+      }
+    },
+    {
+      "id": "light",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/light-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/light-exit-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/game-header/exit-v1.png",
+          "sha256": "43eafa1f732984b9082c12a6fe3bbda8db2d9cfcdf150c667a5d490b4e928234",
+          "bytes": 39319
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/light-timer-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/game-header/timer-v1.png",
+          "sha256": "7c4769c45ebff2b0d20c63aad599a111905ba62727f7b6926e3b1de83b4bde0b",
+          "bytes": 45094
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/light-menu-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/game-header/menu-v1.png",
+          "sha256": "967ebaa6ea20d8e853c413cc44e25f93284eba4727ba98edd3673e5e0bb70fd8",
+          "bytes": 42143
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/light-sound-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/game-header/sound-v1.png",
+          "sha256": "8d6670abfa04757dfaa65bbc4d5e146ba39b954eb4e15ba49ce8960b30dbe004",
+          "bytes": 42987
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/light-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/game-header/vibration-v1.png",
+          "sha256": "e5f8c3afa489296d896078046770f0dae4567c5dc8159a6b6cafdc924c2032be",
+          "bytes": 42275
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/light-music-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/game-header/music-v1.png",
+          "sha256": "70a9ed965d1aff486239e3d3860b573977b45d0a4e1d04ae7bb3d72ae17d78a5",
+          "bytes": 42980
+        }
+      }
+    },
+    {
+      "id": "medium",
+      "direction": "clay",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/medium-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/medium-exit-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/game-header/exit-v1.png",
+          "sha256": "431b2d67765d9273731f632b873c7c3b02ebcf3c3ce1b650492b99034c93f55a",
+          "bytes": 59456
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/medium-timer-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/game-header/timer-v1.png",
+          "sha256": "9c5fed3653b9833cc927d76b955b4f031bcfee837f09a10aa99e64392c814644",
+          "bytes": 64064
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/medium-menu-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/game-header/menu-v1.png",
+          "sha256": "07172b7dc3eb681e6d027a399c04a2f43377a021b37850255e4245d988ebadd1",
+          "bytes": 63922
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/medium-sound-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/game-header/sound-v1.png",
+          "sha256": "ee2d1d70f687245174564fc8609b5a897770cdba6e53c2630ebb562f050e8781",
+          "bytes": 63138
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/medium-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/game-header/vibration-v1.png",
+          "sha256": "7ae62238a14feba7a3ef1569d4c54609c9a4c8ddbaead29a5c51f3e5bcbffdc9",
+          "bytes": 62090
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/medium-music-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/game-header/music-v1.png",
+          "sha256": "370e402e430da780cc18684af604daba5c26df2c8a481d743d5450eebafa66d2",
+          "bytes": 63456
+        }
+      }
+    },
+    {
+      "id": "winter",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/winter-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/winter-exit-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/game-header/exit-v1.png",
+          "sha256": "6278ba97653b885002ac14c97a2f3503fe89e69efdfecd9208da0bb0f5cff371",
+          "bytes": 45426
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/winter-timer-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/game-header/timer-v1.png",
+          "sha256": "725f7dfe3cd4876cf1811996050d4043245d9e0e94a5be74985e21de010a2f08",
+          "bytes": 51774
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/winter-menu-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/game-header/menu-v1.png",
+          "sha256": "41a7c594675c8347852991e529957d415503626664e35186fa4d02006014f6e0",
+          "bytes": 48641
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/winter-sound-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/game-header/sound-v1.png",
+          "sha256": "e7447819df0b4b83fa876e3d49b752c8bf638ccb6c7b6e461937fb66eb9c0c31",
+          "bytes": 49312
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/winter-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/game-header/vibration-v1.png",
+          "sha256": "7b47c8c60aa62012909048a46ba98fb0fe8f2dc1f2df770fa714858731ec3212",
+          "bytes": 48487
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/winter-music-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/game-header/music-v1.png",
+          "sha256": "8990f0d6ee36c03ebb022fcdc9a9e7a9aba98e592bfe7c5670de0cb3e43e148c",
+          "bytes": 49329
+        }
+      }
+    },
+    {
+      "id": "neon",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/neon-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/neon-exit-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/game-header/exit-v1.png",
+          "sha256": "7100d0c32e4dc9b5307a6368d71285608ccc2bc04fc3ef220aa30854a87b9e5d",
+          "bytes": 60832
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/neon-timer-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/game-header/timer-v1.png",
+          "sha256": "1461794c5da337defbad2174764d373a79e3cfdf84d381efe2ffc09a14d8882e",
+          "bytes": 67254
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/neon-menu-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/game-header/menu-v1.png",
+          "sha256": "258f96df35b04a22aae8a79686d6e1defd22619073ef6cc9d5dc756aa0c83f8c",
+          "bytes": 63771
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/neon-sound-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/game-header/sound-v1.png",
+          "sha256": "1c51f3732815f6d32b629471cc6751931f362bcff8d439c8bd032f4e224f2335",
+          "bytes": 64680
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/neon-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/game-header/vibration-v1.png",
+          "sha256": "c71cf20d65e955617398001a2c90d92b19adb499f51a3564753e01031d741adb",
+          "bytes": 64092
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/neon-music-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/game-header/music-v1.png",
+          "sha256": "4ec258276301a7a80f5f5ca62efb164a548bc172a9fc1267f111ebe653ed6f01",
+          "bytes": 64681
+        }
+      }
+    },
+    {
+      "id": "amethyst",
+      "direction": "clay",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/amethyst-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/amethyst-exit-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/game-header/exit-v1.png",
+          "sha256": "d7acc16ba726d71e4f4bb496ceb6d1ba3f29b23a8d135166c85c4c215cc4313b",
+          "bytes": 57592
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/amethyst-timer-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/game-header/timer-v1.png",
+          "sha256": "7d314a1002848d031055fda2b1f3ac05ee41fbd88aea11a8102431a3e257f4d9",
+          "bytes": 62637
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/amethyst-menu-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/game-header/menu-v1.png",
+          "sha256": "3af5d8a5973ad58bd84c75d94d41f418ba5a8c3d8d97e424bd721982ffa13157",
+          "bytes": 61196
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/amethyst-sound-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/game-header/sound-v1.png",
+          "sha256": "64fa7139b92d50e69c924244b0a8e4d520ea63bbd8d6093637669e7d064c66f7",
+          "bytes": 61113
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/amethyst-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/game-header/vibration-v1.png",
+          "sha256": "ebb69b3f26126668d09c839624f2b2b581dba2173ee8def40827362da19914ce",
+          "bytes": 60352
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/amethyst-music-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/game-header/music-v1.png",
+          "sha256": "dc28ad7a70ed5d2f41ca7642a85633e8fe401e17918ce7a4f342c3fb5da4fbfa",
+          "bytes": 61182
+        }
+      }
+    },
+    {
+      "id": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/easter-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/easter-exit-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/game-header/exit-v1.png",
+          "sha256": "b10d1eaf1667049dff8682bc616a84733be35e83393c08887a49dfc81cd09ac1",
+          "bytes": 49836
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/easter-timer-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/game-header/timer-v1.png",
+          "sha256": "8c0465f9982e11c140ce2cacb1c15b163d226eae4c073c9f4b7726c61994f4b8",
+          "bytes": 55936
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/easter-menu-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/game-header/menu-v1.png",
+          "sha256": "8e4391a2631a10c024e4a0d06d07bf98291fa202b32c4595cec3151fe15849ab",
+          "bytes": 52860
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/easter-sound-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/game-header/sound-v1.png",
+          "sha256": "536c49c5ed3bf645b5162ddfdd1d8860b346afbf1dc80123808e22fb518d9e22",
+          "bytes": 52994
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/easter-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/game-header/vibration-v1.png",
+          "sha256": "b73e7f761f2d99e910792f07eb177eeaae250cacbf60ec43ecf2aadca742eca2",
+          "bytes": 53091
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/easter-music-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/game-header/music-v1.png",
+          "sha256": "795868c202525f5c1fda2c48b62fa5fdf780456c122a6d670d0a41a78f89c419",
+          "bytes": 53807
+        }
+      }
+    },
+    {
+      "id": "desert",
+      "direction": "clay",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/desert-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/desert-exit-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/game-header/exit-v1.png",
+          "sha256": "999e1200bf5ebef3ee4090851641393086f51f3b983766580b9120e85d5de258",
+          "bytes": 61460
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/desert-timer-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/game-header/timer-v1.png",
+          "sha256": "ac0112f30e28736edd69c3271c0e739e10be83c2c92b4eb9ab641e3b4842edf3",
+          "bytes": 64294
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/desert-menu-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/game-header/menu-v1.png",
+          "sha256": "4bd40da55723e67ddf2a543217f16594c70f4753f6ebd8b5baca0fa0870b6916",
+          "bytes": 66123
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/desert-sound-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/game-header/sound-v1.png",
+          "sha256": "3a6feed804b8aa7e1791ddb9cb3f48a13e409669ecc25e2115dbb7ecc75aae72",
+          "bytes": 64265
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/desert-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/game-header/vibration-v1.png",
+          "sha256": "adb974aebe6b7ce33d3b7be090343259b1bdc3a215397b57d5ccd966469bc705",
+          "bytes": 63167
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/desert-music-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/game-header/music-v1.png",
+          "sha256": "f6295e3c32cd82824982e115469615dfa0d4cc7b20e0988678b99077bd1d5cdf",
+          "bytes": 64720
+        }
+      }
+    },
+    {
+      "id": "moon",
+      "direction": "clay",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/moon-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/moon-exit-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/game-header/exit-v1.png",
+          "sha256": "a49a0836fd3daf16a6b23c609c6a0fcf58e55c728de1b26b8e898ab08874a2f2",
+          "bytes": 42454
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/moon-timer-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/game-header/timer-v1.png",
+          "sha256": "a2a6ea8e39395c655bd71e46371f6fa5c8d4435bb4cc57ff78fe884282edc565",
+          "bytes": 47747
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/moon-menu-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/game-header/menu-v1.png",
+          "sha256": "ea660799abc42db12c1935f1f4b18f71a3893fe6cc2058b18ff63b5d5dff4c52",
+          "bytes": 45829
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/moon-sound-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/game-header/sound-v1.png",
+          "sha256": "ba9593cce4e59da5b9d956dbcc10cc50e92c973602d2568dd8b8c96ce1ba316c",
+          "bytes": 45933
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/moon-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/game-header/vibration-v1.png",
+          "sha256": "5225b9f7f78415137bc36e01b448edb22e6af74623aa187bd5a3a4f103e882e1",
+          "bytes": 45462
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/moon-music-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/game-header/music-v1.png",
+          "sha256": "77eb738242ab12e65c928f1a6cfd8a0e3dfae8bef8acfadfa0252c3efb993e42",
+          "bytes": 45924
+        }
+      }
+    },
+    {
+      "id": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedBase": "source-assets/theme-game-header-v1/bases/severna-generated.png",
+      "roles": {
+        "exit": {
+          "master": "source-assets/theme-game-header-v1/masters/severna-exit-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/game-header/exit-v1.png",
+          "sha256": "4dbb76de916145c3d5782150d990f366305ee0857b889f71acb7d1c009e99720",
+          "bytes": 39355
+        },
+        "timer": {
+          "master": "source-assets/theme-game-header-v1/masters/severna-timer-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/game-header/timer-v1.png",
+          "sha256": "a9f6010c10aa0d47369eabf5f18b18f170348b3ecef4545391b38189f16d8dd8",
+          "bytes": 45524
+        },
+        "menu": {
+          "master": "source-assets/theme-game-header-v1/masters/severna-menu-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/game-header/menu-v1.png",
+          "sha256": "1cbcec88c42f6284539d8e613adb62dae139142d0ea7662d7670a69e8c8c4edb",
+          "bytes": 43023
+        },
+        "sound": {
+          "master": "source-assets/theme-game-header-v1/masters/severna-sound-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/game-header/sound-v1.png",
+          "sha256": "8e8485c304a4b9ebee9bccfcc1f4dd0023d3124110c13aad6c0d8470f32314c8",
+          "bytes": 43568
+        },
+        "vibration": {
+          "master": "source-assets/theme-game-header-v1/masters/severna-vibration-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/game-header/vibration-v1.png",
+          "sha256": "32fa82704be84aa605537dd4f29883cd6a3999b628b881dc514585b6e69520ae",
+          "bytes": 42962
+        },
+        "music": {
+          "master": "source-assets/theme-game-header-v1/masters/severna-music-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/game-header/music-v1.png",
+          "sha256": "eba6df77955ce5f2391d60b53515f063825cad15e2a8db63997730c7658a7657",
+          "bytes": 43074
+        }
+      }
+    }
+  ]
+}

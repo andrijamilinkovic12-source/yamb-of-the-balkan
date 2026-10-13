@@ -20,6 +20,16 @@ const gt = (key) => {
     return key; 
 };
 
+// The game controls share the theme's canonical lock with the Treasury.
+// The header controller supplies the PNG; this text remains an accessible fallback.
+function setOpponentActionLock(button, key) {
+    if (!button) return;
+    const label = gt(key);
+    button.dataset.opponentLocked = key;
+    button.innerText = label;
+    button.setAttribute('aria-label', label);
+}
+
 function getFallbackPlayerName() {
     const name = gt('player_guest');
     return name && name !== 'player_guest' ? name : 'Igrač';
@@ -401,8 +411,129 @@ class YambApp {
         const menu = document.getElementById('game-dropdown-menu');
         if(menu) {
             menu.classList.toggle('active');
+            const open = menu.classList.contains('active');
+            document.getElementById('btn-game-menu-toggle')?.setAttribute?.('aria-expanded', String(open));
+            if (open) this.renderQuickSkinChoices();
             this.soundMgr.click();
         }
+    }
+
+    availableQuickSkins() {
+        const items = typeof SHOP_DATA !== 'undefined' && Array.isArray(SHOP_DATA.SKINS) ? SHOP_DATA.SKINS : [];
+        const stored = key => {
+            const value = this.readLocalJson(key, []);
+            return Array.isArray(value) ? value : [];
+        };
+        const inventory = new Set([
+            ...stored('yamb_unlocked_skins'),
+            ...stored('yamb_unlocked'),
+            ...(Array.isArray(this.stats?.unlockedSkins) ? this.stats.unlockedSkins : []),
+            ...(Array.isArray(window.statsManager?.stats?.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [])
+        ]);
+        return items.filter(item => item.themeGift
+            ? this.isThemeUnlocked(item.themeGift)
+            : Number(item.price) === 0 || inventory.has(item.id));
+    }
+
+    renderQuickSkinChoices() {
+        const language = document.documentElement.lang === 'en' ? 'en' : 'sr';
+        const available = this.availableQuickSkins();
+        const selected = localStorage.getItem('yamb_active_skin') || 'default';
+        const active = available.find(item => item.id === selected) || available.find(item => item.id === 'default');
+        const current = document.getElementById('game-quick-skin-current');
+        if (current) current.textContent = active?.name?.[language] || active?.name?.sr || '';
+
+        const picker = document.getElementById('game-skin-picker');
+        const list = document.getElementById('game-skin-picker-list');
+        if (!picker || picker.hidden || !list) return;
+        const choices = available.map(item => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'game-skin-choice';
+            button.dataset.skinId = item.id;
+            const isActive = item.id === active?.id;
+            button.setAttribute('aria-pressed', String(isActive));
+            button.addEventListener('click', () => this.equipQuickSkin(item.id));
+
+            const preview = document.createElement('img');
+            preview.src = `assets/treasury-skin-previews/${item.id}-face-v1.png`;
+            preview.alt = '';
+            preview.loading = 'lazy';
+            preview.decoding = 'async';
+            const name = document.createElement('span');
+            name.className = 'game-skin-choice-name';
+            name.textContent = item.name?.[language] || item.name?.sr || item.id;
+            button.append(preview, name);
+            if (isActive) {
+                const badge = document.createElement('span');
+                badge.className = 'game-skin-choice-active';
+                badge.textContent = gt('game_skin_active');
+                button.append(badge);
+            }
+            return button;
+        });
+        if (!choices.length) {
+            const empty = document.createElement('p');
+            empty.className = 'game-skin-picker-empty';
+            empty.textContent = gt('game_skin_empty');
+            choices.push(empty);
+        }
+        list.replaceChildren(...choices);
+    }
+
+    openQuickSkinPicker() {
+        const picker = document.getElementById('game-skin-picker');
+        if (!picker || !picker.hidden) return;
+        document.getElementById('game-dropdown-menu')?.classList.remove('active');
+        document.getElementById('btn-game-menu-toggle')?.setAttribute('aria-expanded', 'false');
+        picker.hidden = false;
+        this.renderQuickSkinChoices();
+        this.quickSkinPickerKeyHandler = event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this.closeQuickSkinPicker();
+            } else if (event.key === 'Tab') {
+                const focusable = [...picker.querySelectorAll('button')];
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+            }
+        };
+        document.addEventListener('keydown', this.quickSkinPickerKeyHandler);
+        const focusTarget = picker.querySelector('.game-skin-choice[aria-pressed="true"]')
+            || document.getElementById('game-skin-picker-close');
+        focusTarget?.focus();
+    }
+
+    closeQuickSkinPicker(restoreFocus = true) {
+        const picker = document.getElementById('game-skin-picker');
+        if (!picker || picker.hidden) return;
+        picker.hidden = true;
+        if (this.quickSkinPickerKeyHandler) {
+            document.removeEventListener('keydown', this.quickSkinPickerKeyHandler);
+            this.quickSkinPickerKeyHandler = null;
+        }
+        if (restoreFocus) document.getElementById('btn-game-menu-toggle')?.focus();
+    }
+
+    equipQuickSkin(id) {
+        const item = this.availableQuickSkins().find(skin => skin.id === id);
+        if (!item) { this.renderQuickSkinChoices(); return; }
+        localStorage.setItem('yamb_active_skin', item.id);
+        localStorage.setItem('yamb_manual_active_skin', item.id);
+        localStorage.setItem('yamb_manual_active_skin_at', String(Date.now()));
+        this.skinManualSwitchUntil = Date.now() + 3500;
+        this.updateDiceVisuals();
+        document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
+            this.features?.applySkinToElement(element, element.classList.contains('held'));
+        });
+        window.skinActionButtons?.sync();
+        if (this.soundEnabled) this.soundMgr?.click();
+        this.renderQuickSkinChoices();
+        this.closeQuickSkinPicker();
+        if (this.socket?.connected && localStorage.getItem('yamb_uid')) this.emitPlayerData();
     }
 
     toggleQuickSound() {
@@ -410,8 +541,7 @@ class YambApp {
         if (this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
         localStorage.setItem('yamb_sound', this.soundEnabled);
         
-        const btn = document.getElementById('btn-gh-sound');
-        if(btn) btn.innerText = this.soundEnabled ? '🔊' : '🔇';
+        this.updateQuickMenuIcons();
         
         if(this.soundEnabled) {
             this.soundMgr.click();
@@ -432,8 +562,7 @@ class YambApp {
         this.vibrationEnabled = !this.vibrationEnabled;
         localStorage.setItem('yamb_vibration', this.vibrationEnabled);
         
-        const btn = document.getElementById('btn-gh-vib');
-        if(btn) btn.innerText = this.vibrationEnabled ? '📳' : '📴';
+        this.updateQuickMenuIcons();
         
         if(this.vibrationEnabled) this.vibrate(30);
 
@@ -449,8 +578,7 @@ class YambApp {
         this.soundMgr.setMusicEnabled(isEnabled);
         localStorage.setItem('yamb_music', isEnabled);
         
-        const btn = document.getElementById('btn-gh-music');
-        if (btn) btn.innerText = isEnabled ? '🎧' : '🔇';
+        this.updateQuickMenuIcons();
         
         const mainSetting = document.getElementById('setting-music');
         if (mainSetting) mainSetting.checked = isEnabled;
@@ -462,24 +590,22 @@ class YambApp {
         
         this.soundMgr.setMusicVolume(val);
         
-        const btn = document.getElementById('btn-gh-music');
         const mainSetting = document.getElementById('setting-music');
         
         // Ako korisnik svuče slajder na 0, tretiraj kao 'Muted'
         if (parseFloat(val) === 0) {
-            if (btn) btn.innerText = '🔇';
             this.soundMgr.setMusicEnabled(false);
             localStorage.setItem('yamb_music', 'false');
             if (mainSetting) mainSetting.checked = false;
         } else {
             // Ako korisnik pojača sa 0, automatski upali muziku
-            if (btn) btn.innerText = '🎧';
             if (!this.soundMgr.musicEnabled) {
                 this.soundMgr.setMusicEnabled(true);
                 localStorage.setItem('yamb_music', 'true');
                 if (mainSetting) mainSetting.checked = true;
             }
         }
+        this.updateQuickMenuIcons();
         this.syncProfileSettingsToCloud();
     }
 
@@ -497,15 +623,16 @@ class YambApp {
     }
 
     updateQuickMenuIcons() {
-        const btnSound = document.getElementById('btn-gh-sound');
-        if(btnSound) btnSound.innerText = this.soundEnabled ? '🔊' : '🔇';
-        
-        const btnVib = document.getElementById('btn-gh-vib');
-        if(btnVib) btnVib.innerText = this.vibrationEnabled ? '📳' : '📴';
-
-        // --- DODATO ZA MUZIKU ---
-        const btnMusic = document.getElementById('btn-gh-music');
-        if(btnMusic) btnMusic.innerText = (this.soundMgr && this.soundMgr.musicEnabled) ? '🎧' : '🔇';
+        const setState = (id, enabled, labelKey) => {
+            const button = document.getElementById(id);
+            if (!button) return;
+            button.dataset.enabled = String(!!enabled);
+            button.setAttribute('aria-pressed', String(!!enabled));
+            button.title = `${gt(labelKey)}: ${gt(enabled ? 'game_control_on' : 'game_control_off')}`;
+        };
+        setState('btn-gh-sound', this.soundEnabled, 'tooltip_sound');
+        setState('btn-gh-vib', this.vibrationEnabled, 'tooltip_vibration');
+        setState('btn-gh-music', this.soundMgr?.musicEnabled, 'tooltip_music');
         
         const sliderMusic = document.getElementById('music-volume-slider');
         if(sliderMusic && this.soundMgr) {
@@ -570,7 +697,7 @@ class YambApp {
         if (count > 0) {
             eye.classList.remove('gh-btn-inactive');
             eye.classList.add('gh-btn-active');
-            eye.style.filter = 'drop-shadow(0 0 8px var(--gold-glow))';
+            eye.style.filter = '';
             eye.title = (gt('spectator_count') || '{0} gledalaca').replace('{0}', count);
         } else {
             eye.classList.add('gh-btn-inactive');
@@ -5370,6 +5497,7 @@ class YambApp {
     }
 
     navigateTo(screenId) {
+        if (screenId !== 'game-scene') this.closeQuickSkinPicker(false);
         if (screenId !== 'game-scene') this.clearOnlineGameOverDelay();
         if (screenId === 'game-scene' || screenId === 'game-over-screen') {
             this.prepareThemeRoomAssets('gameOver', { root: document.getElementById('game-over-screen') });
@@ -5655,7 +5783,11 @@ class YambApp {
             localStorage.setItem('yamb_lang_pending_sync', nextLanguage);
             document.documentElement.lang = nextLanguage;
             if (typeof applyTranslations === 'function') applyTranslations();
+            this.renderQuickSkinChoices();
+            this.updateQuickMenuIcons();
         }
+
+        if (type === 'sound' || type === 'music' || type === 'vibration') this.updateQuickMenuIcons();
 
         if (this.socket && this.socket.connected) {
             this.emitPlayerData();
@@ -6156,6 +6288,7 @@ class YambApp {
 
         const menu = document.getElementById('game-dropdown-menu');
         if(menu) menu.classList.remove('active');
+        document.getElementById('btn-game-menu-toggle')?.setAttribute?.('aria-expanded', 'false');
 
         // ---> DODATO OVDJE: Zaustavljanje muzike kada se pređe u glavni meni <---
         if(this.soundMgr) this.soundMgr.stopMusic();
@@ -6697,6 +6830,7 @@ class YambApp {
                 : fallbackText;
 
             timerDisplay.style.display = 'flex';
+            timerDisplay.classList.add('timer-turn--disconnected');
             timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" data-theme-src="assets/easter-soft-clay/opponent/disconnected.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" data-theme-src="assets/desert-soft-clay/opponent/disconnected.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" data-theme-src="assets/severna-soft-clay/opponent/disconnected-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="green-opponent-connection-icon" data-theme-src="assets/green-soft-clay/opponent/disconnected-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
             timerDisplay.style.animation = 'pulse 1s infinite';
 
@@ -6774,44 +6908,53 @@ class YambApp {
         }, 1000);
     }
     
+    announcedRowButtonLabel(row) {
+        const raw = String(row ?? '');
+        const key = raw === 'Ful' ? 'row_full' : `row_${raw.toLowerCase()}`;
+        const localized = gt(key);
+        return localized && localized !== key ? localized : raw;
+    }
+
     updateStatusLabel() {
         const statusLbl = document.getElementById('lbl-status');
         if (statusLbl) {
-            statusLbl.innerHTML = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
+            if (window.skinRollCounter) window.skinRollCounter.render(this.brojBacanja);
+            else statusLbl.innerHTML = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
         }
 
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay) {
+            if (this.opponentReconnectNoticeVisible) return;
+            timerDisplay.classList.remove('timer-turn--disconnected');
             if (this.isSpectator) {
-                timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
+                timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent', 'timer-turn--expired');
+                timerDisplay.classList.add('timer-turn--spectator');
                 timerDisplay.style.display = 'flex';
                 timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><img class="theme-online-spectator-icon" data-online-role="spectate" src="${window.themeOnlinePlayers.asset('spectate')}" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
+                timerDisplay.classList.remove('timer-turn--spectator');
                 timerDisplay.style.display = 'flex';
                 const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
 
                 const isUrgent = this.timeLeft <= 10;
                 timerDisplay.classList.toggle('timer-turn--opponent', !isMyTurn && !isUrgent);
                 timerDisplay.classList.toggle('timer-turn--urgent', isUrgent);
+                timerDisplay.classList.toggle('timer-turn--expired', this.timeLeft <= 0);
 
                 // Opponent's timer needs a universal high-contrast color: some themes use a light background.
-                const color = isUrgent ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#ffffff');
+                const color = isUrgent ? 'var(--gh-urgent-ink)' : 'var(--gh-ink)';
                 
                 if (this.timeLeft <= 0) {
-                    timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">⏳ ${gt('timeout_grace') || 'Ističe...'}</span>`;
-                    timerDisplay.style.animation = 'pulse 0.5s infinite';
+                    timerDisplay.innerHTML = `<span style="color:var(--gh-urgent-ink); font-size: 0.8rem;">${gt('timeout_grace') || 'Ističe...'}</span>`;
+                    timerDisplay.style.animation = 'none';
                 } else {
-                    timerDisplay.innerHTML = `<span style="color:${color};">⏱️ ${this.timeLeft}s</span>`;
-                    if (this.timeLeft <= 10 && isMyTurn) {
-                        timerDisplay.style.animation = 'pulse 1s infinite';
-                    } else {
-                        timerDisplay.style.animation = 'none';
-                    }
+                    timerDisplay.innerHTML = `<span style="color:${color};">${this.timeLeft}s</span>`;
+                    timerDisplay.style.animation = 'none';
                 }
                 
             } else {
-                timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
+                timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent', 'timer-turn--expired', 'timer-turn--spectator');
                 timerDisplay.style.display = 'none';
                 timerDisplay.style.animation = 'none';
             }
@@ -7194,13 +7337,13 @@ class YambApp {
                     const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
                     if (btnBacaj) {
                         if (turnTimerPaused) {
-                            btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                            btnBacaj.disabled = true; setOpponentActionLock(btnBacaj, 'game_opponent_turn');
                         } else if (isMyTurn && this.brojBacanja < 3) {
                             btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll') || "BACAJ";
                         } else if (isMyTurn) {
                             btnBacaj.disabled = true; btnBacaj.innerText = gt('game_write') || "UPIŠI";
                         } else {
-                            btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                            btnBacaj.disabled = true; setOpponentActionLock(btnBacaj, 'game_opponent_turn');
                         }
                     }
 
@@ -7209,11 +7352,12 @@ class YambApp {
                         if (turnTimerPaused) {
                             btnNajava.disabled = true;
                         } else if (this.najavaAktivna) {
-                            btnNajava.innerText = isMyTurn ? (gt('game_announce_cancel') || "OTKAŽI") : (gt('game_opponent_choosing') || "PROTIVNIK BIRA...");
+                            if (isMyTurn) btnNajava.innerText = gt('game_announce_cancel') || "OTKAŽI";
+                            else setOpponentActionLock(btnNajava, 'game_opponent_choosing');
                             btnNajava.classList.add('btn-active-toggle');
                             btnNajava.disabled = !isMyTurn; // <-- EKSPLICITNO OTKLJUČAVANJE/ZAKLJUČAVANJE
                         } else if (this.najavljenoPolje) {
-                            btnNajava.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
+                            btnNajava.innerText = this.announcedRowButtonLabel(this.najavljenoPolje.row);
                             btnNajava.classList.remove('btn-active-toggle');
                             btnNajava.disabled = true; // <-- Nema najave ponovo na isto polje
                         } else {
@@ -7460,7 +7604,7 @@ class YambApp {
                 if (btnBacaj) {
                     if (isOnlineTurnPaused) {
                         btnBacaj.disabled = true;
-                        btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                        setOpponentActionLock(btnBacaj, 'game_opponent_turn');
                     } else if (isMyTurn && this.brojBacanja < 3) {
                         btnBacaj.disabled = false;
                         btnBacaj.innerText = gt('game_roll') || "BACAJ";
@@ -7469,7 +7613,7 @@ class YambApp {
                         btnBacaj.innerText = gt('game_write') || "UPIŠI";
                     } else {
                         btnBacaj.disabled = true;
-                        btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                        setOpponentActionLock(btnBacaj, 'game_opponent_turn');
                     }
                 }
 
@@ -7502,7 +7646,7 @@ class YambApp {
             if (type === 'start') {
                 this.najavaAktivna = true; 
                 this.najavljenoPolje = null;
-                if(!this.isSpectator && btn) { btn.classList.add('btn-active-toggle'); btn.innerText = gt('game_opponent_choosing'); }
+                if(!this.isSpectator && btn) { btn.classList.add('btn-active-toggle'); setOpponentActionLock(btn, 'game_opponent_choosing'); }
             } else if (type === 'cancel') {
                 this.najavaAktivna = false;
                 this.najavljenoPolje = null;
@@ -7510,7 +7654,7 @@ class YambApp {
             } else if (type === 'selected') {
                 this.najavaAktivna = false;
                 this.najavljenoPolje = { row: data.row, col: 'Najava' };
-                if(!this.isSpectator && btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = `${gt('game_announce')}: ${data.row}`; }
+                if(!this.isSpectator && btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = this.announcedRowButtonLabel(data.row); }
             }
 
             this.updateTableVisuals();
@@ -8292,7 +8436,7 @@ class YambApp {
 
         if(btnBacaj && !this.isSpectator) {
             if ((isMyTurnOnline && !isOnlineTurnPaused) || isLocalGame) { btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll'); }
-            else { btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn'); }
+            else { btnBacaj.disabled = true; setOpponentActionLock(btnBacaj, 'game_opponent_turn'); }
         }
         
         const btnNajava = document.getElementById('btn-najava'); 
@@ -8632,7 +8776,7 @@ class YambApp {
             this.najavljenoPolje = {row, col}; this.najavaAktivna = false; 
             document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava'); 
             const btnN = document.getElementById('btn-najava'); 
-            btnN.innerText = `${gt('game_announce')}: ${row}`; 
+            btnN.innerText = this.announcedRowButtonLabel(row);
             btnN.disabled = false; btnN.classList.remove('btn-active-toggle'); // FIX: false
             const btnBacaj = document.getElementById('btn-bacaj'); btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll');
             
@@ -10424,7 +10568,7 @@ class YambApp {
                 if (this.najavaAktivna) {
                     btnN.disabled = false; btnN.innerText = gt('game_announce_cancel'); btnN.classList.add('btn-active-toggle');
                 } else if (this.najavljenoPolje) {
-                    btnN.disabled = true; btnN.innerText = `${gt('game_announce')}: ${this.najavljenoPolje.row}`;
+                    btnN.disabled = true; btnN.innerText = this.announcedRowButtonLabel(this.najavljenoPolje.row);
                 } else if (this.brojBacanja === 1) {
                     btnN.disabled = false; btnN.classList.add('btn-highlight');
                 } else {
