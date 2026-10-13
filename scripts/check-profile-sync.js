@@ -2,6 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
 const serverSource = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
@@ -283,7 +284,7 @@ async function checkRewardedAdClientFallback() {
         'showRewardVideo can still fail immediately instead of waiting for the exact rewarded ad'
     );
     assert(
-        showRewardVideo.includes('const rewardItem = await this.adMobPlugin.showRewardVideoAd();') &&
+        showRewardVideo.includes('.then(() => this.adMobPlugin.showRewardVideoAd())') &&
         showRewardVideo.includes('if (rewardItem && this.rewardResolve) this.settleRewardVideo(true);'),
         'showRewardVideo does not accept the native rewarded promise result as a client reward signal'
     );
@@ -363,6 +364,72 @@ async function checkRewardedAdClientFallback() {
         tokenReward.includes("if (!isTokenRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);"),
         'Undo token reward flow can still reject before showRewardVideo waits for the ad'
     );
+}
+
+async function checkAdMobSsvAdUnitBoundary() {
+    const allowedUnit = '7896891915';
+    let storedRewards = 0;
+    const verificationContext = {
+        Buffer,
+        URLSearchParams,
+        crypto,
+        MONGO_URI: 'mock',
+        MAX_BALANCE: 1000000,
+        ADMOB_ALLOWED_REWARDED_AD_UNITS: new Set([allowedUnit]),
+        toSafeInt,
+        console: { warn() {} },
+        AdMobRewardVerification: {
+            findOneAndUpdate: async (_query, update) => {
+                storedRewards++;
+                return update.$setOnInsert;
+            }
+        }
+    };
+    vm.createContext(verificationContext);
+    [
+        'getRawAdMobSsvQuery', 'base64UrlToBuffer', 'splitAdMobSsvSignedQuery',
+        'isAllowedAdMobRewardUnit', 'parseAdMobCustomData', 'sanitizeAdMobUid',
+        'sanitizeAdMobNonce', 'sanitizeAdMobContext', 'parseAdMobTimestamp',
+        'verifyAdMobRewardSignatureAndParams'
+    ].forEach(name => vm.runInContext(extractFunction(serverSource, name), verificationContext));
+    vm.runInContext(extractAsyncFunction(serverSource, 'recordVerifiedAdMobReward'), verificationContext);
+
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
+    const verify = vm.runInContext('verifyAdMobRewardSignatureAndParams', verificationContext);
+    const record = vm.runInContext('recordVerifiedAdMobReward', verificationContext);
+    const signedRequest = adUnit => {
+        const customData = encodeURIComponent(JSON.stringify({
+            uid: 'firebase-user-1234567890',
+            nonce: 'reward-nonce-123456',
+            context: 'shop_ad_reward',
+            amount: 500
+        }));
+        const signedPart = `ad_network=5450213213286189855&ad_unit=${adUnit}&custom_data=${customData}&reward_amount=1&reward_item=coins&timestamp=${Date.now()}&transaction_id=ssv-test-${adUnit}`;
+        const signature = crypto.sign('sha256', Buffer.from(signedPart), privateKey).toString('base64url');
+        const req = { originalUrl: `/api/admob/reward-ssv?${signedPart}&signature=${signature}&key_id=1` };
+        const signed = vm.runInContext('splitAdMobSsvSignedQuery', verificationContext)(signedPart + `&signature=${signature}&key_id=1`);
+        return { req, signed };
+    };
+
+    const googleTest = signedRequest('1234567890');
+    const verifiedTest = verify(googleTest.req, googleTest.signed, publicKey.export({ type: 'spki', format: 'pem' }));
+    assert.strictEqual(verifiedTest.ok, true, 'Signed AdMob setup callback must pass signature verification');
+    const ignoredTest = await record(verifiedTest.params);
+    assert.strictEqual(ignoredTest.recorded, false, 'AdMob setup callback must never create a reward');
+    assert.strictEqual(ignoredTest.reason, 'invalid_ad_unit');
+    assert.strictEqual(storedRewards, 0);
+
+    const realAd = signedRequest(allowedUnit);
+    const verifiedReal = verify(realAd.req, realAd.signed, publicKey.export({ type: 'spki', format: 'pem' }));
+    assert.strictEqual(verifiedReal.ok, true);
+    const recordedReal = await record(verifiedReal.params);
+    assert.strictEqual(recordedReal.recorded, true, 'Allowed ad unit must be stored for reward verification');
+    assert.strictEqual(storedRewards, 1);
+
+    const tampered = { originalUrl: googleTest.req.originalUrl.replace('reward_amount=1', 'reward_amount=2') };
+    const tamperedQuery = tampered.originalUrl.split('?')[1];
+    const tamperedSignature = vm.runInContext('splitAdMobSsvSignedQuery', verificationContext)(tamperedQuery);
+    assert.strictEqual(verify(tampered, tamperedSignature, publicKey.export({ type: 'spki', format: 'pem' })).reason, 'invalid_signature');
 }
 
 function checkUnverifiedInterstitialRewardsBlocked() {
@@ -986,6 +1053,7 @@ async function main() {
     checkBalanceSyncAllowance();
     checkAdMobRewardVerificationDefaults();
     await checkRewardedAdClientFallback();
+    await checkAdMobSsvAdUnitBoundary();
     checkUnverifiedInterstitialRewardsBlocked();
     checkUndoRewardedTokenAmount();
     checkShopDiscountRequiresServerVerification();

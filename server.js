@@ -8726,14 +8726,15 @@ function verifyAdMobRewardSignatureAndParams(req, signed, publicKey) {
         params[key] = value;
     }
 
-    if (!isAllowedAdMobRewardUnit(params.ad_unit)) {
-        return { ok: false, reason: 'invalid_ad_unit' };
-    }
-
     return { ok: true, params };
 }
 
 async function recordVerifiedAdMobReward(params) {
+    // AdMob URL verification sends a signed callback for a test ad unit.
+    // Acknowledge it, but never store or grant a reward for an unknown unit.
+    if (!isAllowedAdMobRewardUnit(params.ad_unit)) {
+        return { ok: true, recorded: false, reason: 'invalid_ad_unit' };
+    }
     if (!MONGO_URI) return { ok: true, recorded: false, reason: 'mongo_unavailable' };
 
     const customData = parseAdMobCustomData(params.custom_data);

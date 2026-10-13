@@ -196,12 +196,6 @@ class RiznicaManager {
         // Poveži globalnu referencu da bi HTML onclick='shop.tryBuy()' radili nesmetano
         window.shop = this.shop;
 
-        // Priprema reklame u pozadini
-        setTimeout(() => {
-            if (this.shop && this.shop.getAdController()) {
-                this.shop.getAdController().prepareReward();
-            }
-        }, 1000);
     }
 
     // Povezujemo funkcije sa postojećim ModalManager-om

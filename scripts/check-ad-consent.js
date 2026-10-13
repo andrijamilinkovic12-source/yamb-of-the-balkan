@@ -56,7 +56,8 @@ async function checkLegacyWaitsForNativeForm() {
     assert.equal(controller.canRequestAds, true);
     assert.equal(privacyButton.hidden, false);
     assert(events.indexOf('admob-init') > events.indexOf('retry-scheduled'));
-    assert(events.includes('load:rewarded') && events.includes('load:interstitial'));
+    assert(events.includes('load:interstitial'));
+    assert(!events.includes('load:rewarded'), 'Rewarded oglas se ne učitava bez konkretne nagrade');
 }
 
 async function checkLegacyFailureBlocksAds() {
