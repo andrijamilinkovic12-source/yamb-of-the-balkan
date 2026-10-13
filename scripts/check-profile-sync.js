@@ -415,7 +415,8 @@ async function checkAdMobSsvAdUnitBoundary() {
             amount: 500
         }));
         const signedPart = `ad_network=5450213213286189855&ad_unit=${adUnit}&custom_data=${customData}&reward_amount=1&reward_item=coins&timestamp=${Date.now()}&transaction_id=ssv-test-${adUnit}`;
-        const signature = crypto.sign('sha256', Buffer.from(signedPart), privateKey).toString('base64url');
+        // Google's reference verifier signs URI.getQuery(), which decodes percent escapes.
+        const signature = crypto.sign('sha256', Buffer.from(decodeURIComponent(signedPart), 'utf8'), privateKey).toString('base64url');
         const req = { originalUrl: `/api/admob/reward-ssv?${signedPart}&signature=${signature}&key_id=1` };
         const signed = vm.runInContext('splitAdMobSsvSignedQuery', verificationContext)(signedPart + `&signature=${signature}&key_id=1`);
         return { req, signed };
@@ -430,11 +431,15 @@ async function checkAdMobSsvAdUnitBoundary() {
     assert.strictEqual(storedRewards, 0);
 
     const realAd = signedRequest(allowedUnit);
+    assert(realAd.signed.signedPart.includes('%7B'), 'Real rewarded callback must exercise percent-encoded custom_data');
     const verifiedReal = verify(realAd.req, realAd.signed, publicKey.export({ type: 'spki', format: 'pem' }));
     assert.strictEqual(verifiedReal.ok, true);
     const recordedReal = await record(verifiedReal.params);
     assert.strictEqual(recordedReal.recorded, true, 'Allowed ad unit must be stored for reward verification');
     assert.strictEqual(storedRewards, 1);
+
+    const invalidEncoding = { ...realAd.signed, signedPart: realAd.signed.signedPart.replace('%7B', '%ZZ') };
+    assert.strictEqual(verify(realAd.req, invalidEncoding, publicKey.export({ type: 'spki', format: 'pem' })).reason, 'invalid_encoding');
 
     const tampered = { originalUrl: googleTest.req.originalUrl.replace('reward_amount=1', 'reward_amount=2') };
     const tamperedQuery = tampered.originalUrl.split('?')[1];

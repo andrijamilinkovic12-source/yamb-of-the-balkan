@@ -8712,8 +8712,16 @@ async function verifyAdMobRewardSsvRequest(req) {
 }
 
 function verifyAdMobRewardSignatureAndParams(req, signed, publicKey) {
+    let signedContent;
+    try {
+        // The Google verifier uses URI.getQuery(): percent escapes are decoded once
+        // before signature verification, while parameter order is preserved.
+        signedContent = decodeURIComponent(signed.signedPart);
+    } catch (_) {
+        return { ok: false, reason: 'invalid_encoding' };
+    }
     const verifier = crypto.createVerify('sha256');
-    verifier.update(signed.signedPart);
+    verifier.update(signedContent, 'utf8');
     verifier.end();
 
     const signature = base64UrlToBuffer(signed.signature);
