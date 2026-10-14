@@ -30,7 +30,7 @@
     "check:dice-skins": "node scripts/check-universal-dice-skins.js && node scripts/check-theme-dice-entitlements.js",
     "check:skin-action-buttons": "node scripts/check-skin-action-buttons.js && node scripts/test-skin-action-buttons.js",
     "check:skin-roll-counter": "node scripts/check-skin-roll-counter.js",
-    "check:theme-game-header": "node scripts/check-theme-game-header.js && node scripts/check-theme-game-header-contrast.js && node scripts/test-game-quick-skins.js && node scripts/test-game-header-states.js && node scripts/check-game-action-lock.js",
+    "check:theme-game-header": "node scripts/check-theme-game-header.js && node scripts/check-theme-game-header-contrast.js && node scripts/test-game-quick-skins.js && node scripts/test-game-theme-switch-preload.js && node scripts/test-game-header-states.js && node scripts/check-game-action-lock.js",
     "check:theme-quote": "node scripts/check-theme-quote-contrast.js",
     "check:effect-screen-lifecycle": "node scripts/check-effect-screen-lifecycle.js",
     "check:portrait-lock": "node scripts/check-portrait-lock.js",

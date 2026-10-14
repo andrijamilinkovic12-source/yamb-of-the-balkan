@@ -55,6 +55,13 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
     const countBeforeRepeat = loaded.length;
     await context.window.skinActionButtons.prepare('classic_red');
     assert.equal(loaded.length, countBeforeRepeat, 'decoded skin files must be reused on repeat selection');
+    storage.set('yamb_active_skin', 'default');
+    assert.equal(context.window.skinActionButtons.activatePrepared('default'), true,
+        'A prepared skin must activate in the same turn as the selection');
+    assert.equal(scene.dataset.actionSkinReady, 'default');
+    storage.set('yamb_active_skin', 'classic_red');
+    assert.equal(context.window.skinActionButtons.activatePrepared('classic_red'), true);
+    assert.equal(scene.dataset.actionSkinReady, 'classic_red');
 
     storage.set('yamb_active_skin', 'theme_neon_cyber');
     context.window.skinActionButtons.sync();

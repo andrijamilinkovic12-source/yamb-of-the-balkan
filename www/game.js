@@ -158,6 +158,9 @@ class YambApp {
         this.themeLoadingHideTimer = null;
         this.themeWarmups = new Map();
         this.themeRoomWarmups = new Map();
+        this.gameThemeWarmups = new Map();
+        this.gameThemeImages = new Map();
+        this.gameThemeLoading = new Set();
         this.themeImageObserver = null;
         this.installThemeImageHydrationObserver();
         this.themeManualSwitchUntil = 0;
@@ -413,7 +416,10 @@ class YambApp {
             menu.classList.toggle('active');
             const open = menu.classList.contains('active');
             document.getElementById('btn-game-menu-toggle')?.setAttribute?.('aria-expanded', String(open));
-            if (open) this.renderQuickSkinChoices();
+            if (open) {
+                this.renderQuickSkinChoices();
+                this.warmGameSwitchAssets();
+            }
             this.soundMgr.click();
         }
     }
@@ -490,7 +496,7 @@ class YambApp {
                     this.quickSkinPreviewObserver.unobserve(entry.target);
                     window.skinActionButtons?.prepare(entry.target.dataset.skinId)?.catch(() => {});
                 });
-            }, { root: list, rootMargin: '80px' });
+            }, { root: list, rootMargin: '300px' });
             choices.filter(choice => choice.dataset.skinId).forEach(choice => this.quickSkinPreviewObserver.observe(choice));
         }
     }
@@ -562,6 +568,7 @@ class YambApp {
         localStorage.setItem('yamb_manual_active_skin', item.id);
         localStorage.setItem('yamb_manual_active_skin_at', String(Date.now()));
         this.skinManualSwitchUntil = Date.now() + 3500;
+        window.skinActionButtons?.activatePrepared?.(item.id);
         this.updateDiceVisuals();
         document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
             this.features?.applySkinToElement(element, element.classList.contains('held'));
@@ -700,12 +707,144 @@ class YambApp {
         const nextTheme = unlockedThemes[nextIndex];
 
         // 3. Primeni novu temu i sačuvaj je (ova funkcija već radi sve što treba)
-        this.saveSettingAuto('theme', nextTheme);
+        if (document.getElementById('game-scene')?.classList.contains('active')) {
+            this.switchGameTheme(nextTheme);
+        } else {
+            this.saveSettingAuto('theme', nextTheme);
+        }
         
         // Zvuk klika
         if (this.soundEnabled && this.soundMgr) {
             this.soundMgr.click();
         }
+    }
+
+    getProspectiveThemeSkin(theme) {
+        const gift = SHOP_DATA.SKINS.find(item => item.themeGift === theme)?.id;
+        if (!gift || !this.isThemeUnlocked(theme)) return null;
+        const themeGiftIds = SHOP_DATA.SKINS.filter(item => item.themeGift).map(item => item.id);
+        const active = localStorage.getItem('yamb_active_skin') || 'default';
+        const retired = ['desert_glass', 'easter_neumorphic', 'severna_nebula'];
+        const manual = localStorage.getItem('yamb_manual_active_skin') === active;
+        return (retired.includes(active) || (!manual && Date.now() >= this.skinManualSwitchUntil
+            && (active === 'default' || themeGiftIds.includes(active)))) ? gift : null;
+    }
+
+    getGameThemeSources(theme) {
+        const background = this.getThemeLoadingPack(theme)?.background;
+        const eye = window.themeOnlinePlayers?.asset('spectate', theme);
+        const special = theme === 'neon' ? [
+            'assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png?v=1',
+            ...['board-frame', 'score-cell', 'header-cell'].map(role =>
+                `assets/theme-packs/neon/trial/game-board-png-v1/${role}-v1.png`)
+        ] : theme === 'easter' ? ['assets/easter-soft-clay/game/announce-v1.png?v=1'] : [];
+        return [...new Set([background, eye, ...special].filter(Boolean))];
+    }
+
+    prepareGameTheme(theme) {
+        if (this.gameThemeWarmups.has(theme)
+            && (this.gameThemeImages.has(theme) || this.gameThemeLoading.has(theme))) {
+            return this.gameThemeWarmups.get(theme);
+        }
+        this.gameThemeLoading.add(theme);
+        const images = [];
+        const loadImage = source => new Promise((resolve, reject) => {
+            const image = new Image();
+            let settled = false;
+            image.decoding = 'async';
+            image.fetchPriority = 'high';
+            image.onload = async () => {
+                if (settled) return;
+                settled = true;
+                try { if (typeof image.decode === 'function') await image.decode(); }
+                catch (_) { /* A loaded image can still be painted. */ }
+                if (!image.naturalWidth) { reject(new Error(`Theme image unavailable: ${source}`)); return; }
+                images.push(image);
+                resolve();
+            };
+            image.onerror = () => {
+                if (settled) return;
+                settled = true;
+                reject(new Error(`Theme image unavailable: ${source}`));
+            };
+            image.src = source;
+            if (image.complete && image.naturalWidth) image.onload();
+        });
+        const gift = this.getProspectiveThemeSkin(theme);
+        const warmup = Promise.all([
+            ...this.getGameThemeSources(theme).map(loadImage),
+            window.themeGameHeader?.prepare(theme),
+            window.themeOnlinePlayers?.preload?.(theme, ['spectate']),
+            gift ? window.skinActionButtons?.prepare(gift) : Promise.resolve()
+        ]).then(() => {
+            this.gameThemeLoading.delete(theme);
+            this.gameThemeImages.set(theme, images);
+            // Retain decoded images for the current and upcoming themes only.
+            while (this.gameThemeImages.size > 3) this.gameThemeImages.delete(this.gameThemeImages.keys().next().value);
+            return true;
+        }).catch(error => {
+            this.gameThemeLoading.delete(theme);
+            this.gameThemeWarmups.delete(theme);
+            console.warn('Game theme preload failed:', theme, error);
+            return false;
+        });
+        this.gameThemeWarmups.set(theme, warmup);
+        return warmup;
+    }
+
+    warmQuickSkinChoices() {
+        if (!window.skinActionButtons?.prepare) return;
+        const selected = localStorage.getItem('yamb_active_skin') || 'default';
+        const available = this.availableQuickSkins();
+        const ordered = [...available.filter(item => item.id === selected),
+            ...available.filter(item => item.id !== selected)];
+        // Eight complete skins fit in the decoded PNG cache; visible choices beyond that warm on scroll.
+        ordered.slice(0, 8).reduce((pending, item) => pending.then(() =>
+            window.skinActionButtons.prepare(item.id).catch(() => {})), Promise.resolve());
+    }
+
+    warmGameSwitchAssets() {
+        const unlocked = this.getUnlockedThemeIds();
+        const current = localStorage.getItem('yamb_theme') || 'dark';
+        const index = Math.max(0, unlocked.indexOf(current));
+        const next = unlocked[(index + 1) % unlocked.length];
+        if (next && next !== current) this.prepareGameTheme(next);
+        this.warmQuickSkinChoices();
+    }
+
+    async switchGameTheme(theme) {
+        const token = this.themeSwitchRequestToken = (this.themeSwitchRequestToken || 0) + 1;
+        const button = document.querySelector('#game-dropdown-menu button[onclick*="toggleTheme"]');
+        const menuButton = document.getElementById('btn-game-menu-toggle');
+        button?.setAttribute('aria-busy', 'true');
+        menuButton?.setAttribute('aria-busy', 'true');
+        const ready = await this.prepareGameTheme(theme);
+        if (token !== this.themeSwitchRequestToken) return;
+        if (!ready) {
+            button?.removeAttribute('aria-busy');
+            menuButton?.removeAttribute('aria-busy');
+            return;
+        }
+        const gift = this.getProspectiveThemeSkin(theme);
+        if (gift) {
+            try { await window.skinActionButtons?.prepare(gift); }
+            catch (error) {
+                button?.removeAttribute('aria-busy');
+                menuButton?.removeAttribute('aria-busy');
+                console.warn('Theme skin preload failed:', gift, error);
+                return;
+            }
+        }
+        if (token !== this.themeSwitchRequestToken) return;
+        button?.removeAttribute('aria-busy');
+        menuButton?.removeAttribute('aria-busy');
+        this.themeManualSwitchUntil = Date.now() + 2500;
+        localStorage.setItem('yamb_theme', theme);
+        this.applyTheme(theme);
+        const activeSkin = localStorage.getItem('yamb_active_skin');
+        if (activeSkin) window.skinActionButtons?.activatePrepared?.(activeSkin);
+        if (this.socket?.connected) this.emitPlayerData();
+        this.warmGameSwitchAssets();
     }
 
     updateHeaderAvatar() {
@@ -2731,7 +2870,8 @@ class YambApp {
         if (typeof syncGreenRecordLabels === 'function') syncGreenRecordLabels();
         this.configureThemeSplashImage(safeTheme);
         const loadingPack = this.getThemeLoadingPack(safeTheme);
-        this.hydrateThemeImageSources(safeTheme, {
+        const inGame = document.getElementById('game-scene')?.classList.contains('active');
+        if (!inGame) this.hydrateThemeImageSources(safeTheme, {
             sources: this.getThemeStartupSources(safeTheme, loadingPack)
         });
         const splashScreen = document.getElementById('splash-screen');
@@ -2775,7 +2915,10 @@ class YambApp {
             });
         }
 
-        const showLoadingGate = () => this.prepareThemeLoadingGate(safeTheme, { initialLoad, manualSwitch });
+        const showLoadingGate = () => {
+            if (inGame) this.hideThemeLoadingGate({ immediate: true });
+            else this.prepareThemeLoadingGate(safeTheme, { initialLoad, manualSwitch });
+        };
         if (loadingDelayMs > 0) {
             setTimeout(showLoadingGate, loadingDelayMs);
         } else {
@@ -5546,6 +5689,7 @@ class YambApp {
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
+        if (['quote-screen', 'waiting-screen', 'game-scene'].includes(screenId)) this.warmGameSwitchAssets();
         if (screenId === 'splash-screen') this.restartThemedSplashLogoAnimation();
         if (this.soundMgr) {
             if (screenId === 'splash-screen' && this.soundMgr.playIntro) {

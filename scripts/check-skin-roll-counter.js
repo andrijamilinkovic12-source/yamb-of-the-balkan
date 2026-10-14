@@ -88,6 +88,6 @@ assert(css.includes('#btn-najava {\n        flex: 2 1 0') && css.includes('#btn-
     'Mobile roll/announce button widths must remain 60/40');
 assert(css.includes('transform: none !important'), 'Action buttons must stay fixed while pressed');
 const buttonController = fs.readFileSync(path.join(root, 'www/skin-action-buttons.js'), 'utf8');
-assert(buttonController.includes('window.SKIN_ROLL_COUNTER') && buttonController.includes('...counterStates'),
+assert(buttonController.includes('window.SKIN_ROLL_COUNTER') && buttonController.includes('sourcesForSkin(id).map(preload)'),
     'Counter states must preload together with action buttons');
 console.log(`Verified ${manifest.skins.length} skin counter sets, ${hashes.size} distinct PNG states, runtime 0→3, and skin switching.`);

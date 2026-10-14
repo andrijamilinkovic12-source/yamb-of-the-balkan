@@ -5,6 +5,7 @@
     const generatedRoles = new Set(['exit', 'timer', 'menu', 'sound', 'vibration', 'music']);
     const roles = new Set([...generatedRoles, 'undo', 'theme', 'skin', 'lock', 'close']);
     const cache = new Map();
+    const ready = new Set();
     let request = 0;
     let appliedTheme = null;
     const activeTheme = () => themes.find(id => id !== 'dark' && document.body.classList.contains(`${id}-theme`)) || 'dark';
@@ -23,15 +24,29 @@
         if (cache.has(source)) return cache.get(source);
         const promise = new Promise((resolve, reject) => {
             const image = new Image();
-            image.onload = resolve;
-            image.onerror = reject;
+            let settled = false;
+            image.onload = async () => {
+                if (settled) return;
+                settled = true;
+                try { if (typeof image.decode === 'function') await image.decode(); }
+                catch (_) { /* Loaded PNG remains usable if decode rejects. */ }
+                ready.add(source);
+                resolve(image);
+            };
+            image.onerror = error => {
+                if (settled) return;
+                settled = true;
+                reject(error);
+            };
             image.src = source;
-            if (image.complete && image.naturalWidth) resolve();
+            if (image.complete && image.naturalWidth) image.onload();
         });
         cache.set(source, promise);
         promise.catch(() => cache.delete(source));
         return promise;
     };
+    const sourcesForTheme = theme => [...new Set([...roles].map(role => asset(role, theme)))];
+    const prepare = theme => Promise.all(sourcesForTheme(theme).map(preload));
     const ensureSettingsIcons = () => {
         for (const [id, role] of [['setting-sound', 'sound'], ['setting-music', 'music'], ['setting-vibration', 'vibration']]) {
             const label = document.getElementById(id)?.previousElementSibling;
@@ -61,15 +76,11 @@
         if (theme === appliedTheme) return;
         const token = ++request;
         const images = [...document.querySelectorAll('img[data-game-header-role]')];
-        images.forEach(image => { image.style.visibility = 'hidden'; });
         const scene = document.getElementById('game-scene');
-        scene?.style.setProperty('--gh-timer-png', 'none');
-        scene?.style.setProperty('--gh-lock-png', 'none');
         if (scene) delete scene.dataset.gameLockReady;
         const sources = [...new Set([...images.map(image => asset(image.dataset.gameHeaderRole, theme)), asset('timer', theme), asset('lock', theme)])];
-        const results = await Promise.allSettled(sources.map(preload));
+        if (!sources.every(source => ready.has(source))) await Promise.allSettled(sources.map(preload));
         if (token !== request) return;
-        const ready = new Set(sources.filter((_, index) => results[index].status === 'fulfilled'));
         images.forEach(image => {
             const source = asset(image.dataset.gameHeaderRole, theme);
             if (ready.has(source)) {
@@ -84,7 +95,7 @@
             scene.style.setProperty('--gh-lock-png', `url("${lockSource}")`);
             scene.dataset.gameLockReady = theme;
         }
-        appliedTheme = ready.size === sources.length ? theme : null;
+        appliedTheme = sources.every(source => ready.has(source)) ? theme : null;
     };
     const start = () => {
         ensureSettingsIcons();
@@ -96,7 +107,7 @@
         apply();
         new MutationObserver(apply).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     };
-    window.themeGameHeader = { asset, apply, activeTheme };
+    window.themeGameHeader = { asset, apply, prepare, activeTheme };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
     else start();
 })();

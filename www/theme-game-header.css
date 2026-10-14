@@ -223,6 +223,16 @@ body #game-scene #gh-spectator-icon.gh-btn-active .theme-online-game-spectator-i
 #game-scene .game-skin-picker-empty { grid-column:1 / -1; padding:12px; color:var(--gh-ink); font-size:.8rem; }
 #game-scene .game-skin-picker-status { min-height:1.1rem; margin:8px 2px 0; color:var(--gh-accent); font-size:.68rem; font-weight:700; }
 #game-scene #game-skin-picker[data-loading-skin] .game-skin-choice[data-skin-id] { cursor:progress; }
+#game-scene #btn-game-menu-toggle[aria-busy="true"] { position:relative; }
+#game-scene #btn-game-menu-toggle[aria-busy="true"]::after {
+    content:""; position:absolute; inset:-4px; border:2px solid transparent;
+    border-top-color:var(--gh-accent); border-radius:50%; pointer-events:none;
+    animation:gh-theme-switch-loading .75s linear infinite;
+}
+@keyframes gh-theme-switch-loading { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    #game-scene #btn-game-menu-toggle[aria-busy="true"]::after { animation:none; border-color:var(--gh-accent); }
+}
 
 /* The same newly authored sound, music and vibration symbols serve Settings. */
 #settings-screen .settings-shared-icon-row .settings-row-icon-legacy,
