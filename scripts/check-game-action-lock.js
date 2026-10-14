@@ -77,7 +77,7 @@ assert(css.includes('width: 28px;') && css.includes('height: 28px;'));
 const languages = read('www/languages.js');
 assert(!/"game_opponent_(?:turn|choosing)": "🔒"/.test(languages), 'Old emoji lock remains in translations');
 const html = read('www/index.html');
-assert(html.includes('theme-game-header.css?v=3') && html.includes('theme-game-header.js?v=3'));
+assert(html.includes('theme-game-header.css?v=5') && html.includes('theme-game-header.js?v=3'));
 
 (async () => {
     buttons['btn-bacaj'].dataset.opponentLocked = 'game_opponent_turn';

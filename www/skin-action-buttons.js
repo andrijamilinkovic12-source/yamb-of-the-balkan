@@ -8,6 +8,8 @@
     let appliedId = null;
     let requestedId = null;
     let requestNumber = 0;
+    const imageCache = new Map();
+    const MAX_CACHED_IMAGES = 96;
 
     function selectedSkinId() {
         const saved = localStorage.getItem('yamb_active_skin') || 'default';
@@ -20,13 +22,48 @@
     }
 
     function preload(src) {
-        return new Promise((resolve, reject) => {
+        if (imageCache.has(src)) {
+            const cached = imageCache.get(src);
+            imageCache.delete(src);
+            imageCache.set(src, cached);
+            return cached;
+        }
+        const pending = new Promise((resolve, reject) => {
             const image = new Image();
-            image.onload = resolve;
-            image.onerror = reject;
+            let handled = false;
+            image.onload = async () => {
+                if (handled) return;
+                handled = true;
+                try {
+                    if (typeof image.decode === 'function') await image.decode();
+                    resolve(image);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            image.onerror = error => {
+                if (handled) return;
+                handled = true;
+                reject(error);
+            };
             image.src = src;
-            if (image.complete && image.naturalWidth) resolve();
+            if (image.complete && image.naturalWidth) image.onload();
         });
+        imageCache.set(src, pending);
+        while (imageCache.size > MAX_CACHED_IMAGES) imageCache.delete(imageCache.keys().next().value);
+        pending.catch(() => { if (imageCache.get(src) === pending) imageCache.delete(src); });
+        return pending;
+    }
+
+    function prepare(id) {
+        const entry = catalog[id];
+        if (!entry) return Promise.reject(new Error(`Unknown skin: ${id}`));
+        const counterStates = Object.values(window.SKIN_ROLL_COUNTER?.[id] || {});
+        return Promise.all([
+            `assets/dice-skins-v1/${id}-face-v1.png`,
+            ...['roll', 'announce', 'cancel'].map(state => entry[state].src),
+            ...counterStates
+        ].map(preload));
     }
 
     function sync() {
@@ -44,13 +81,8 @@
         requestedId = id;
         const request = ++requestNumber;
 
-        // Never show the previous skin while the new PNGs are decoding.
-        scene.removeAttribute('data-action-skin-ready');
-        const counterStates = Object.values(window.SKIN_ROLL_COUNTER?.[id] || {});
-        Promise.all([
-            ...['roll', 'announce', 'cancel'].map(state => entry[state].src),
-            ...counterStates
-        ].map(preload))
+        // Keep the previous complete set visible until the face, buttons and counter are decoded.
+        prepare(id)
             .then(() => {
                 if (request !== requestNumber) return;
                 for (const state of ['roll', 'announce', 'cancel']) {
@@ -61,15 +93,14 @@
                 appliedId = id;
             })
             .catch(() => {
-                // Keep the board palette button as the visible fallback.
-                if (request === requestNumber) appliedId = null;
+                // Keep the last complete skin visible if one asset fails.
             })
             .finally(() => {
                 if (request === requestNumber) requestedId = null;
             });
     }
 
-    window.skinActionButtons = { sync };
+    window.skinActionButtons = { sync, prepare };
     sync();
     window.addEventListener('storage', event => {
         if (event.key === 'yamb_active_skin') sync();

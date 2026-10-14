@@ -18,6 +18,32 @@ body.severna-theme { --gh-panel:#182C44; --gh-ink:#F5FBFF; --gh-edge:#759DA9; --
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
+/* The dice/action dock is a single themed surface through its bottom safe area.
+   Its material uses the same board palette; geometry remains in style.css. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #game-scene:is(#game-scene) .controls-area {
+    color: var(--gh-ink) !important;
+    background: var(--board-control-menu) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 -8px 18px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
+    #game-scene:is(#game-scene) .controls-area {
+    box-shadow: 0 -9px 20px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
+}
+#game-scene:is(#game-scene) .controls-area :is(#lbl-turn,#lbl-status) {
+    color: var(--gh-ink) !important;
+    text-shadow: none !important;
+}
+/* The wider-layout turn badge previously retained a generic green/gold fill. */
+@media (min-width: 600px) and (orientation: portrait) {
+    #game-scene:is(#game-scene) .controls-area #lbl-turn {
+        background: color-mix(in srgb, var(--gh-panel) 90%, var(--gh-ink) 10%) !important;
+        border-color: var(--board-edge) !important;
+    }
+}
 #game-scene:is(#game-scene) .game-header-icon,
 #game-scene:is(#game-scene) #game-dropdown-menu button {
     background: color-mix(in srgb, var(--gh-panel) 92%, var(--gh-ink) 8%) !important;
@@ -195,6 +221,8 @@ body #game-scene #gh-spectator-icon.gh-btn-active .theme-online-game-spectator-i
 #game-scene .game-skin-picker-close:focus-visible,
 #game-scene #game-quick-skin-open:focus-visible { outline:2px solid var(--gh-accent); outline-offset:2px; }
 #game-scene .game-skin-picker-empty { grid-column:1 / -1; padding:12px; color:var(--gh-ink); font-size:.8rem; }
+#game-scene .game-skin-picker-status { min-height:1.1rem; margin:8px 2px 0; color:var(--gh-accent); font-size:.68rem; font-weight:700; }
+#game-scene #game-skin-picker[data-loading-skin] .game-skin-choice[data-skin-id] { cursor:progress; }
 
 /* The same newly authored sound, music and vibration symbols serve Settings. */
 #settings-screen .settings-shared-icon-row .settings-row-icon-legacy,

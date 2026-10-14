@@ -187,6 +187,7 @@ class GlobalChatManager {
         const pokreniChat = async () => {
             const overlay = document.getElementById('global-chat-overlay');
             if (overlay) overlay.style.display = 'flex';
+            this.openedAt = Date.now();
             this.updateViewportVars();
             this.resizeInput();
             this.clearStatus();
@@ -213,10 +214,13 @@ class GlobalChatManager {
 
     async close(skipAd = false) {
         const overlay = document.getElementById('global-chat-overlay');
+        const wasOpen = !!overlay && overlay.style.display !== 'none';
+        const viewedLongEnough = Date.now() - (this.openedAt || 0) >= 8000;
         if (overlay) overlay.style.display = 'none';
+        this.openedAt = 0;
         document.documentElement.style.removeProperty('--global-chat-top');
 
-        if (!skipAd && this.app.adMob && this.app.adMob.showInterstitial) {
+        if (!skipAd && wasOpen && viewedLongEnough && this.app.adMob && this.app.adMob.showInterstitial) {
             await this.app.adMob.showInterstitial();
         }
     }

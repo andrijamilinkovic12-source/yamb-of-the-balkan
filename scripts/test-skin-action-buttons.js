@@ -40,16 +40,21 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
     assert(defaultUrl.includes('/default-roll-v1.png'));
     assert.equal(loaded.filter(src => src.includes('/default-') && src.includes('/skin-roll-counter-v1/')).length, 4,
         'all four default counter states must preload with the buttons');
+    assert(loaded.includes('assets/dice-skins-v1/default-face-v1.png'), 'default dice face must load with the controls');
 
     storage.set('yamb_active_skin', 'classic_red');
     context.window.skinActionButtons.sync();
-    assert.equal(scene.dataset.actionSkinReady, undefined, 'previous skin must not flash while loading');
+    assert.equal(scene.dataset.actionSkinReady, 'default', 'previous complete skin must remain visible while loading');
     await settle();
     assert.equal(scene.dataset.actionSkinReady, 'classic_red');
     assert(style.get('--skin-roll-png').includes('/classic_red-roll-v1.png'));
     assert(style.get('--skin-cancel-png').includes('/classic_red-cancel-v1.png'));
     assert.equal(loaded.filter(src => src.includes('/classic_red-') && src.includes('/skin-roll-counter-v1/')).length, 4,
         'all four selected-skin counter states must preload with the buttons');
+    assert(loaded.includes('assets/dice-skins-v1/classic_red-face-v1.png'), 'new dice face must load with the controls');
+    const countBeforeRepeat = loaded.length;
+    await context.window.skinActionButtons.prepare('classic_red');
+    assert.equal(loaded.length, countBeforeRepeat, 'decoded skin files must be reused on repeat selection');
 
     storage.set('yamb_active_skin', 'theme_neon_cyber');
     context.window.skinActionButtons.sync();

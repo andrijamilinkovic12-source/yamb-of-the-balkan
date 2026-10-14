@@ -34,7 +34,7 @@ class Element {
     }
     querySelectorAll(selector) { return selector === 'button' ? elements.get('game-skin-picker-list').children : []; }
 }
-for (const id of ['game-quick-skin-current', 'game-skin-picker', 'game-skin-picker-list', 'game-dropdown-menu', 'btn-game-menu-toggle', 'game-skin-picker-close']) {
+for (const id of ['game-quick-skin-current', 'game-skin-picker', 'game-skin-picker-list', 'game-skin-picker-status', 'game-dropdown-menu', 'btn-game-menu-toggle', 'game-skin-picker-close']) {
     elements.set(id, new Element());
 }
 elements.get('game-skin-picker').hidden = true;
@@ -48,9 +48,11 @@ const document = {
     activeElement: null
 };
 let buttonSyncs = 0;
-const window = { skinActionButtons: { sync: () => { buttonSyncs++; } } };
+const prepared = [];
+const window = { skinActionButtons: { sync: () => { buttonSyncs++; }, prepare: id => { prepared.push(id); return Promise.resolve(); } } };
 const context = {
     window, document, localStorage, console, setTimeout, clearTimeout,
+    t: key => ({ game_skin_loading: 'Učitavanje skina...', game_skin_load_error: 'Skin nije učitan.' })[key] || key,
     SHOP_DATA: { SKINS: [
         { id: 'default', price: 0, name: { sr: 'Bela' } },
         { id: 'purchased', price: 3000, name: { sr: 'Kupljeni' } },
@@ -68,12 +70,13 @@ app.updateDiceVisuals = () => { app.visualUpdates = (app.visualUpdates || 0) + 1
 app.soundEnabled = false;
 app.socket = { connected: false };
 window.app = app;
+(async () => {
 assert.deepEqual(Array.from(app.availableQuickSkins(), item => item.id), ['default', 'purchased', 'gift_owned']);
-app.equipQuickSkin('locked');
+await app.equipQuickSkin('locked');
 assert.equal(localStorage.getItem('yamb_active_skin'), null, 'Locked purchase cannot be selected');
-app.equipQuickSkin('gift_locked');
+await app.equipQuickSkin('gift_locked');
 assert.equal(localStorage.getItem('yamb_active_skin'), null, 'Locked theme gift cannot be selected');
-app.equipQuickSkin('purchased');
+await app.equipQuickSkin('purchased');
 assert.equal(localStorage.getItem('yamb_active_skin'), 'purchased');
 assert.equal(localStorage.getItem('yamb_manual_active_skin'), 'purchased');
 assert.equal(app.visualUpdates, 1);
@@ -87,10 +90,44 @@ assert.equal(list.children[1].attributes['aria-pressed'], 'true');
 assert.equal(list.children[1].children[0].src, 'assets/treasury-skin-previews/purchased-face-v1.png');
 assert.equal(elements.get('game-quick-skin-current').textContent, 'Kupljeni');
 assert.equal(document.activeElement, list.children[1]);
-list.children[0].handlers.click();
+await list.children[0].handlers.click();
 assert.equal(localStorage.getItem('yamb_active_skin'), 'default', 'One click must equip a visible owned skin');
 assert.equal(picker.hidden, true, 'Picker must close after equipping');
 assert.equal(listeners.has('keydown'), false, 'Keyboard handler must be removed on close');
+
+let releaseFace;
+window.skinActionButtons.prepare = id => id === 'gift_owned'
+    ? new Promise(resolve => { releaseFace = resolve; })
+    : Promise.resolve();
+app.openQuickSkinPicker();
+const visualsBeforePrepare = app.visualUpdates;
+const pendingGift = app.equipQuickSkin('gift_owned');
+assert.equal(localStorage.getItem('yamb_active_skin'), 'default', 'Dice must keep their old face during PNG loading');
+assert.equal(app.visualUpdates, visualsBeforePrepare, 'Dice classes must not change before the PNG is ready');
+assert.equal(elements.get('game-skin-picker-status').textContent, 'Učitavanje skina...');
+releaseFace();
+await pendingGift;
+assert.equal(localStorage.getItem('yamb_active_skin'), 'gift_owned');
+assert.equal(app.visualUpdates, visualsBeforePrepare + 1);
+assert.equal(picker.hidden, true);
+app.openQuickSkinPicker();
+window.skinActionButtons.prepare = () => Promise.reject(new Error('PNG unavailable'));
+await app.equipQuickSkin('purchased');
+assert.equal(localStorage.getItem('yamb_active_skin'), 'gift_owned', 'Failed PNG must leave the previous skin active');
+assert.equal(picker.hidden, false, 'Keep picker open so the player can retry');
+assert.equal(elements.get('game-skin-picker-status').textContent, 'Skin nije učitan.');
+app.closeQuickSkinPicker();
+app.openQuickSkinPicker();
+const releases = {};
+window.skinActionButtons.prepare = id => new Promise(resolve => { releases[id] = resolve; });
+const firstChoice = app.equipQuickSkin('purchased');
+const latestChoice = app.equipQuickSkin('gift_owned');
+releases.gift_owned();
+await latestChoice;
+releases.purchased();
+await firstChoice;
+assert.equal(localStorage.getItem('yamb_active_skin'), 'gift_owned', 'Late loading from an earlier click must not replace the latest selection');
+window.skinActionButtons.prepare = id => { prepared.push(id); return Promise.resolve(); };
 
 // Exercise the actual 48-item shop catalog, not only a small synthetic example.
 const config = fs.readFileSync(path.join(__dirname, '../www/config.js'), 'utf8');
@@ -111,10 +148,10 @@ assert(!allowed.includes(lockedId));
 assert(allowed.includes(actualSkins.find(skin => skin.themeGift === 'light').id));
 assert(!allowed.includes(actualSkins.find(skin => skin.themeGift === 'moon').id));
 const balanceBefore = values.get('yamb_dukati') || null;
-app.equipQuickSkin(purchasedId);
+await app.equipQuickSkin(purchasedId);
 assert.equal(localStorage.getItem('yamb_active_skin'), purchasedId);
 assert.equal(values.get('yamb_dukati') || null, balanceBefore, 'Equipping owned skin must not charge again');
-app.equipQuickSkin(lockedId);
+await app.equipQuickSkin(lockedId);
 assert.equal(localStorage.getItem('yamb_active_skin'), purchasedId, 'Locked real skin must not replace owned skin');
 for (const skin of actualSkins) {
     assert(fs.existsSync(path.join(__dirname, '../www/assets/treasury-skin-previews', `${skin.id}-face-v1.png`)), `${skin.id}: missing PNG preview`);
@@ -123,4 +160,6 @@ app.openQuickSkinPicker();
 assert.deepEqual(Array.from(list.children, choice => choice.dataset.skinId), Array.from(allowed));
 listeners.get('keydown')({ key: 'Escape', preventDefault() {} });
 assert.equal(picker.hidden, true, 'Escape must close the picker');
+assert(prepared.includes('purchased') && prepared.includes(purchasedId), 'Skin face and controls must be prepared before equipping');
 console.log('Quick skin picker shows only usable PNG skins, selects with one click, closes on Escape and blocks locked purchases and gifts.');
+})().catch(error => { console.error(error); process.exitCode = 1; });

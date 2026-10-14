@@ -4524,6 +4524,10 @@ class AdMobController {
         this.rewardShowInProgress = false;
         this.adLoadedAt = { rewarded: 0, interstitial: 0 };
         this.adMaxAgeMs = 55 * 60 * 1000;
+        this.interstitialCooldownMs = 10 * 60 * 1000;
+        this.interstitialLastShownKey = 'yamb_interstitial_last_shown_at';
+        this.lastInterstitialShownAt = 0;
+        this.interstitialShowInProgress = false;
         this.rewardClaimRetryTimeoutMs = 60000;
         
         this.uiSelectors = ['.btn-ad-double', '.daily-glass-btn-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware'];
@@ -5340,19 +5344,35 @@ class AdMobController {
         })();
     }
 
-    showInterstitial() {
-        return new Promise(async (resolve) => {
-            if (!this.canRequestAds || !this.adMobPlugin) { resolve(false); return; }
-            if (this.ads.interstitial.isReady && this.isAdFresh('interstitial')) {
-                try {
-                    await this.adMobPlugin.showInterstitial(); resolve(true);
-                } catch (e) {
-                    this.handleAdFailed('interstitial', e); resolve(false);
-                }
-            } else {
-                this.triggerHighPriorityLoad('interstitial'); resolve(false);
-            }
-        });
+    async showInterstitial() {
+        if (!this.canRequestAds || !this.adMobPlugin || this.interstitialShowInProgress) return false;
+
+        let lastShownAt = this.lastInterstitialShownAt;
+        try {
+            lastShownAt = Math.max(lastShownAt, Number(localStorage.getItem(this.interstitialLastShownKey)) || 0);
+        } catch (_) {}
+        const elapsed = Date.now() - lastShownAt;
+        if (lastShownAt > 0 && elapsed >= 0 && elapsed < this.interstitialCooldownMs) return false;
+
+        if (!this.ads.interstitial.isReady || !this.isAdFresh('interstitial')) {
+            this.triggerHighPriorityLoad('interstitial');
+            return false;
+        }
+
+        this.interstitialShowInProgress = true;
+        try {
+            await this.adMobPlugin.showInterstitial();
+            this.lastInterstitialShownAt = Date.now();
+            try {
+                localStorage.setItem(this.interstitialLastShownKey, String(this.lastInterstitialShownAt));
+            } catch (_) {}
+            return true;
+        } catch (err) {
+            this.handleAdFailed('interstitial', err);
+            return false;
+        } finally {
+            this.interstitialShowInProgress = false;
+        }
     }
 }
 

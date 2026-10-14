@@ -595,6 +595,7 @@ class KvartalnaLigaManager {
         if (existing) existing.remove();
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+        this.openedAt = Date.now();
         if (document.documentElement.dataset.splashTheme === 'dark') {
             document.querySelector('#league-modal-overlay .league-close-standard')?.focus({ preventScroll: true });
         }
@@ -611,10 +612,17 @@ class KvartalnaLigaManager {
         }, 300);
     }
 
-    closeModal() {
-        document.getElementById('league-modal-overlay')?.remove();
+    async closeModal() {
+        const overlay = document.getElementById('league-modal-overlay');
+        if (!overlay) return;
+        const viewedLongEnough = Date.now() - (this.openedAt || 0) >= 8000;
+        overlay.remove();
+        this.openedAt = 0;
         if (this.previousFocus?.isConnected) this.previousFocus.focus({ preventScroll: true });
         this.previousFocus = null;
+        if (viewedLongEnough && window.app?.adMob?.showInterstitial) {
+            await window.app.adMob.showInterstitial();
+        }
     }
 
     toggleMainView(view) {

@@ -167,6 +167,8 @@ const TRANSLATIONS = {
         "game_skin_picker_close": "Zatvori izbor skinova",
         "game_skin_active": "Aktivan",
         "game_skin_empty": "Nema dostupnih skinova.",
+        "game_skin_loading": "Učitavanje skina...",
+        "game_skin_load_error": "Skin nije učitan. Pokušajte ponovo.",
         "game_control_on": "uključeno",
         "game_control_off": "isključeno",
         "tooltip_global_chat_online": "Trenutno igrača na serveru",
@@ -439,7 +441,7 @@ const TRANSLATIONS = {
         "msg_game_finished": "Završili ste partiju.",
         
         // Dodato za ispravku upisa i tokene
-        "undo_confirm": "Želite li da ispravite zadnji upis gledanjem reklame?",
+        "undo_confirm": "Želite li da ispravite zadnji upis gledanjem nagradnog videa?",
         "undo_title": "Ispravi zadnji upis",
         "undo_info_text": "Polja su sitna i greške se dešavaju! Ovi tokeni ti omogućavaju da poništiš slučajan pogrešan upis. Zbog toga u online duelima postoji zadrška od 2.5 sekunde pre protivnikovog bacanja – kako bi imao dovoljno vremena da reaguješ i ispraviš potez.",
         "undo_no_tokens": "Nemate dovoljno tokena za vraćanje poteza! Nabavite ih u glavnom meniju (ikona u gornjem desnom uglu).",
@@ -604,7 +606,7 @@ const TRANSLATIONS = {
         "tourney_registering": "Prijava u toku...",
         "tourney_unregistering": "Odjava u toku...",
         "tourney_cannot_unregister": "Turnir je već počeo, odjava više nije moguća!",
-        "tourney_confirm_unregister": "Da li ste sigurni da želite da se odjavite sa turnira?\nPrikazaće se reklama pre povraćaja dukata.",
+        "tourney_confirm_unregister": "Da li ste sigurni da želite da se odjavite sa turnira?\nDukati će biti vraćeni na vaše stanje.",
         "tourney_unregistered_success": "Uspešno ste se odjavili. Vraćeno Vam je 5500 {DUKAT_ICON}.",
         "tourney_register_me": "PRIJAVI ME",
         "tourney_not_enough_money": "Nemate dovoljno dukata za prijavu!\nCena prijave je 5500 {DUKAT_ICON}.",
@@ -1010,6 +1012,8 @@ const TRANSLATIONS = {
         "game_skin_picker_close": "Close dice skins",
         "game_skin_active": "Active",
         "game_skin_empty": "No available skins.",
+        "game_skin_loading": "Loading skin...",
+        "game_skin_load_error": "Skin could not load. Try again.",
         "game_control_on": "on",
         "game_control_off": "off",
         "tooltip_global_chat_online": "Players currently on the server",
@@ -1282,7 +1286,7 @@ const TRANSLATIONS = {
         "msg_game_finished": "You finished the game.",
 
         // Dodato za ispravku upisa i tokene
-        "undo_confirm": "Do you want to correct the last move by watching an ad?",
+        "undo_confirm": "Do you want to correct the last move by watching a rewarded ad?",
         "undo_title": "Undo last move",
         "undo_info_text": "The fields are small and mistakes happen! These tokens allow you to undo an accidental wrong entry. Because of this, there is a 2.5-second delay before the opponent's roll in online duels – so you have enough time to react and correct your move.",
         "undo_no_tokens": "You don't have enough tokens to undo your move! Get them in the main menu (top right icon).",
@@ -1447,7 +1451,7 @@ const TRANSLATIONS = {
         "tourney_registering": "Registering...",
         "tourney_unregistering": "Unregistering...",
         "tourney_cannot_unregister": "The tournament has already started, unregistering is no longer possible!",
-        "tourney_confirm_unregister": "Are you sure you want to unregister from the tournament?\nAn ad will be shown before refunding your coins.",
+        "tourney_confirm_unregister": "Are you sure you want to unregister from the tournament?\nYour ducats will be returned to your balance.",
         "tourney_unregistered_success": "Successfully unregistered. 5500 {DUKAT_ICON} have been refunded to you.",
         "tourney_register_me": "REGISTER ME",
         "tourney_not_enough_money": "Not enough coins to register!\nEntry fee is 5500 {DUKAT_ICON}.",

@@ -454,6 +454,9 @@ class YambApp {
             const isActive = item.id === active?.id;
             button.setAttribute('aria-pressed', String(isActive));
             button.addEventListener('click', () => this.equipQuickSkin(item.id));
+            const warmSkin = () => { window.skinActionButtons?.prepare(item.id)?.catch(() => {}); };
+            button.addEventListener('pointerenter', warmSkin, { once: true });
+            button.addEventListener('focus', warmSkin, { once: true });
 
             const preview = document.createElement('img');
             preview.src = `assets/treasury-skin-previews/${item.id}-face-v1.png`;
@@ -479,6 +482,17 @@ class YambApp {
             choices.push(empty);
         }
         list.replaceChildren(...choices);
+        if (this.quickSkinPreviewObserver) this.quickSkinPreviewObserver.disconnect();
+        if (typeof IntersectionObserver === 'function') {
+            this.quickSkinPreviewObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    this.quickSkinPreviewObserver.unobserve(entry.target);
+                    window.skinActionButtons?.prepare(entry.target.dataset.skinId)?.catch(() => {});
+                });
+            }, { root: list, rootMargin: '80px' });
+            choices.filter(choice => choice.dataset.skinId).forEach(choice => this.quickSkinPreviewObserver.observe(choice));
+        }
     }
 
     openQuickSkinPicker() {
@@ -487,6 +501,8 @@ class YambApp {
         document.getElementById('game-dropdown-menu')?.classList.remove('active');
         document.getElementById('btn-game-menu-toggle')?.setAttribute('aria-expanded', 'false');
         picker.hidden = false;
+        const status = document.getElementById('game-skin-picker-status');
+        if (status) status.textContent = '';
         this.renderQuickSkinChoices();
         this.quickSkinPickerKeyHandler = event => {
             if (event.key === 'Escape') {
@@ -511,16 +527,37 @@ class YambApp {
         const picker = document.getElementById('game-skin-picker');
         if (!picker || picker.hidden) return;
         picker.hidden = true;
+        delete picker.dataset.loadingSkin;
         if (this.quickSkinPickerKeyHandler) {
             document.removeEventListener('keydown', this.quickSkinPickerKeyHandler);
             this.quickSkinPickerKeyHandler = null;
         }
+        this.quickSkinPreviewObserver?.disconnect();
+        this.quickSkinPreviewObserver = null;
         if (restoreFocus) document.getElementById('btn-game-menu-toggle')?.focus();
     }
 
-    equipQuickSkin(id) {
+    async equipQuickSkin(id) {
         const item = this.availableQuickSkins().find(skin => skin.id === id);
         if (!item) { this.renderQuickSkinChoices(); return; }
+        const selection = this.quickSkinSelectionToken = (this.quickSkinSelectionToken || 0) + 1;
+        const picker = document.getElementById('game-skin-picker');
+        if (picker && !picker.hidden) picker.dataset.loadingSkin = id;
+        const status = document.getElementById('game-skin-picker-status');
+        if (status) status.textContent = gt('game_skin_loading');
+        try {
+            await window.skinActionButtons.prepare(item.id);
+        } catch (error) {
+            if (selection === this.quickSkinSelectionToken && picker) {
+                delete picker.dataset.loadingSkin;
+                if (status) status.textContent = gt('game_skin_load_error');
+            }
+            return;
+        }
+        if (selection !== this.quickSkinSelectionToken) return;
+        if (picker) delete picker.dataset.loadingSkin;
+        if (status) status.textContent = '';
+        if (!this.availableQuickSkins().some(skin => skin.id === item.id)) return;
         localStorage.setItem('yamb_active_skin', item.id);
         localStorage.setItem('yamb_manual_active_skin', item.id);
         localStorage.setItem('yamb_manual_active_skin_at', String(Date.now()));
@@ -5497,6 +5534,10 @@ class YambApp {
     }
 
     navigateTo(screenId) {
+        const previousScreenId = document.querySelector('.screen.active')?.id;
+        if (screenId !== previousScreenId && ['highscores-screen', 'tournament-screen'].includes(screenId)) {
+            this.roomExitAdEntry = { screenId, enteredAt: Date.now() };
+        }
         if (screenId !== 'game-scene') this.closeQuickSkinPicker(false);
         if (screenId !== 'game-scene') this.clearOnlineGameOverDelay();
         if (screenId === 'game-scene' || screenId === 'game-over-screen') {
@@ -6243,6 +6284,14 @@ class YambApp {
             if (!rewardReady) return;
         }
 
+        const leavingScreenId = document.querySelector('.screen.active')?.id;
+        if (this.roomExitAdPending && ['highscores-screen', 'tournament-screen'].includes(leavingScreenId)) return;
+        const showRoomExitAd = !options.closedOnlineRoom
+            && !this.gameActive && !this.onlineMode && !this.isSpectator
+            && ['highscores-screen', 'tournament-screen'].includes(leavingScreenId)
+            && this.roomExitAdEntry?.screenId === leavingScreenId
+            && Date.now() - this.roomExitAdEntry.enteredAt >= 8000;
+
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
         const wasSpectator = this.isSpectator;
@@ -6314,6 +6363,17 @@ class YambApp {
         // Animations can still be running after a Yamb or result celebration.
         // They must not remain over the menu (or restart there from a delayed timer).
         if (this.effectMgr) this.effectMgr.stop();
+        if (showRoomExitAd && this.adMob?.showInterstitial) {
+            this.roomExitAdPending = true;
+            try {
+                await this.adMob.showInterstitial();
+            } catch (err) {
+                console.warn('Interstitial pri izlasku iz sobe nije prikazan.', err);
+            } finally {
+                this.roomExitAdPending = false;
+            }
+        }
+        this.roomExitAdEntry = null;
         this.navigateTo('main-menu');
         const waitingScreen = document.getElementById('waiting-screen');
         if (waitingScreen) waitingScreen.classList.remove('is-hosting-invite', 'is-friend-invite', 'is-random-online');

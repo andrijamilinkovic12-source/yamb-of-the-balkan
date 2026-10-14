@@ -475,15 +475,18 @@ class UndoManager {
             }
 
         } else {
-            // OFFLINE MOD: Solo i Dva Igrača (reklama)
-            const confirmUndo = await this.app.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
+            // Solo i Dva Igrača: ispravka se daje tek posle potvrđene rewarded reklame.
+            const confirmUndo = await this.app.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem nagradnog videa?");
             if (!confirmUndo) return;
 
-            if (window.adMobGlobal && window.Capacitor && window.Capacitor.isNativePlatform) {
-                if (window.adMobGlobal.showInterstitial) {
-                    const success = await window.adMobGlobal.showInterstitial();
-                    if (!success) return; 
-                }
+            const isNative = typeof window.Capacitor?.isNativePlatform === 'function'
+                ? window.Capacitor.isNativePlatform()
+                : Boolean(window.Capacitor?.isNativePlatform);
+            if (isNative) {
+                const adMob = window.adMobGlobal;
+                if (!adMob || typeof adMob.showRewardVideo !== 'function') return;
+                const success = await adMob.showRewardVideo({ context: 'offline_undo', amount: 1 });
+                if (!success) return;
             }
         }
 

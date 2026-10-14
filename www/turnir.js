@@ -1604,17 +1604,13 @@ class TournamentManager {
             return;
         }
 
-        const confirmMsg = tt('tourney_confirm_unregister') || "Da li ste sigurni da želite da se odjavite sa turnira?\nPrikazaće se reklama pre povraćaja dukata.";
+        const confirmMsg = tt('tourney_confirm_unregister') || "Da li ste sigurni da želite da se odjavite sa turnira?\nDukati će biti vraćeni na vaše stanje.";
         const potvrda = await this.app.modal.confirm(confirmMsg);
 
         if (potvrda) {
             if (!this.app.socket || !this.app.socket.connected) {
                 this.app.modal.alert(tt('sys_no_conn') || "Niste povezani na server.", tt('err_title') || "GREŠKA");
                 return;
-            }
-
-            if (window.adMobGlobal && window.adMobGlobal.showInterstitial) {
-                await window.adMobGlobal.showInterstitial();
             }
 
             this.pendingUnregister = true;

@@ -1,0 +1,24 @@
+/* A bounded palette surface keeps the existing quote layout readable over
+   every part of the approved artwork. Colors reuse the ten theme palettes. */
+#quote-screen #quote-copy {
+    position: relative;
+    isolation: isolate;
+    max-width: 100%;
+}
+#quote-screen #quote-copy::before {
+    content: '';
+    position: absolute;
+    inset: -10px -12px;
+    z-index: -1;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--gh-panel) 94%, transparent);
+    pointer-events: none;
+}
+#quote-screen #quote-text {
+    color: var(--gh-ink) !important;
+    text-shadow: none !important;
+}
+#quote-screen #quote-author {
+    color: var(--gh-accent) !important;
+    text-shadow: none !important;
+}

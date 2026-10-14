@@ -128,9 +128,10 @@
     <link rel="stylesheet" href="theme-economy-room.css?v=1">
     <link rel="stylesheet" href="skin-action-buttons.css?v=1">
     <link rel="stylesheet" href="skin-roll-counter.css?v=1">
-    <link rel="stylesheet" href="theme-game-header.css?v=3">
+    <link rel="stylesheet" href="theme-game-header.css?v=5">
+    <link rel="stylesheet" href="theme-quote-contrast.css?v=1">
     
-    <script src="languages.js?v=5.12"></script>
+    <script src="languages.js?v=5.14"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -683,8 +684,10 @@
     <div id="quote-screen" class="screen">
         <div id="quote-anim-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; max-width: 600px; height: 100dvh; margin: 0 auto; opacity: 0;">
             <div style="font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--gold-glow));">💡</div>
-            <p id="quote-text" style="font-family: 'Georgia', serif; font-size: 1.4rem; font-style: italic; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></p>
-            <p id="quote-author" style="font-size: 1.1rem; color: var(--gold-main); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;"></p>
+            <div id="quote-copy">
+                <p id="quote-text" style="font-family: 'Georgia', serif; font-size: 1.4rem; font-style: italic; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></p>
+                <p id="quote-author" style="font-size: 1.1rem; color: var(--gold-main); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;"></p>
+            </div>
         </div>
     </div>
 
@@ -727,6 +730,7 @@
                     <button id="game-skin-picker-close" class="game-skin-picker-close" type="button" onclick="app.closeQuickSkinPicker()" data-lang-aria="game_skin_picker_close" aria-label="Zatvori izbor skinova"><img class="game-header-png" data-game-header-role="close" alt="" aria-hidden="true" decoding="async"></button>
                 </div>
                 <div id="game-skin-picker-list" class="game-skin-picker-list" aria-labelledby="game-skin-picker-title"></div>
+                <p id="game-skin-picker-status" class="game-skin-picker-status" role="status" aria-live="polite"></p>
             </div>
         </div>
 
@@ -1765,32 +1769,32 @@
     </script>
 
     <script src="config.js?v=5.24"></script>
-    <script src="managers.js?v=5.50"></script>
+    <script src="managers.js?v=5.51"></script>
     <script src="dnevniizazov.js?v=2.9"></script>
     <script src="riznica.js?v=1.21"></script>
     <script src="trophyManager.js?v=4.13"></script>
     <script src="features.js?v=3.9"></script>
     <script src="toplista.js?v=4.9"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
-    <script src="turnir.js?v=1033"></script>
+    <script src="turnir.js?v=1034"></script>
     <script src="pravilaigre.js?v=1.29"></script>
-    <script src="vracanjeupisa.js?v=1.7"></script>
-    <script src="globalchat.js?v=1.8"></script>
+    <script src="vracanjeupisa.js?v=1.8"></script>
+    <script src="globalchat.js?v=1.9"></script>
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.89"></script>
+    <script src="game.js?v=5.91"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
-    <script src="skin-action-buttons.js?v=1"></script>
+    <script src="skin-action-buttons.js?v=2"></script>
     <script src="theme-game-header.js?v=3"></script>
     <script src="theme-main-room-icons.js?v=18"></script>
     <script src="theme-online-players-room.js?v=3"></script>
     <script src="theme-ducat-pack.js?v=1"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>
     <script src="theme-rewarded-video-pack.js?v=1"></script>
-    <script src="kvartalnaliga.js?v=1028"></script>
+    <script src="kvartalnaliga.js?v=1029"></script>
     <script src="onlinenumber.js?v=1014"></script>
     <script src="vatreniniz.js?v=1009"></script>
     <script src="powerindex.js?v=1.10"></script>

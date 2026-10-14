@@ -8755,6 +8755,8 @@ async function recordVerifiedAdMobReward(params) {
     }
 
     const context = sanitizeAdMobContext(customData.context);
+    // Offline undo is completed locally after the SDK reward callback; no server claim follows.
+    if (context === 'offline_undo') return { ok: true, recorded: false, reason: 'offline_undo_client_reward' };
     const rewardAmount = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(customData.amount || params.reward_amount, 0)));
     const adTimestamp = parseAdMobTimestamp(params.timestamp);
     const record = {

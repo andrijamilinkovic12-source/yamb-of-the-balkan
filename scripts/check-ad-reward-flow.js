@@ -13,6 +13,10 @@ const requests = [];
 let shows = 0;
 let showMode = 'pending';
 let notifications = 0;
+let interstitialShows = 0;
+let interstitialMode = 'success';
+let resolveInterstitial;
+const savedValues = new Map();
 let button = { classList: { add() {}, remove() {} }, disabled: true, style: {}, dataset: {}, innerHTML: 'Reward' };
 const plugin = {
     addListener: async (name, callback) => listeners.set(name, callback),
@@ -26,6 +30,12 @@ const plugin = {
         if (showMode === 'throw') throw new Error('mock show failure');
         if (showMode === 'reward') return Promise.resolve({ type: 'coins', amount: 1 });
         return new Promise(() => {});
+    },
+    showInterstitial: () => {
+        interstitialShows++;
+        if (interstitialMode === 'throw') throw new Error('mock interstitial failure');
+        if (interstitialMode === 'pending') return new Promise(resolve => { resolveInterstitial = resolve; });
+        return Promise.resolve();
     }
 };
 
@@ -35,7 +45,10 @@ const context = {
         querySelectorAll: selector => selector === '.btn-ad-state-aware' ? [button] : [],
         getElementById: () => null
     },
-    localStorage: { getItem: key => key === 'yamb_uid' ? 'test-user' : null },
+    localStorage: {
+        getItem: key => key === 'yamb_uid' ? 'test-user' : (savedValues.get(key) || null),
+        setItem: (key, value) => savedValues.set(key, String(value))
+    },
     navigator: { onLine: true },
     console: { info() {}, warn() {}, error() {} },
     _safeT: () => '',
@@ -113,6 +126,34 @@ async function main() {
     assert.equal(controller.rewardShowInProgress, false);
     assert.equal(notifications, 2);
 
+    controller.ads.interstitial.isReady = true;
+    controller.adLoadedAt.interstitial = Date.now();
+    interstitialMode = 'pending';
+    const firstInterstitial = controller.showInterstitial();
+    assert.equal(await controller.showInterstitial(), false, 'Paralelni interstitial ne sme se prikazati');
+    assert.equal(interstitialShows, 1);
+    resolveInterstitial();
+    assert.equal(await firstInterstitial, true);
+    assert.equal(await controller.showInterstitial(), false, 'Desetominutna pauza važi posle prikaza');
+    assert.equal(interstitialShows, 1);
+
+    const restartedController = new AdMobController();
+    restartedController.canRequestAds = true;
+    restartedController.adMobPlugin = plugin;
+    restartedController.ads.interstitial.isReady = true;
+    restartedController.adLoadedAt.interstitial = Date.now();
+    assert.equal(await restartedController.showInterstitial(), false, 'Pauza ostaje i posle ponovnog otvaranja aplikacije');
+
+    savedValues.set(controller.interstitialLastShownKey, String(Date.now() - controller.interstitialCooldownMs - 1));
+    controller.lastInterstitialShownAt = Number(savedValues.get(controller.interstitialLastShownKey));
+    interstitialMode = 'throw';
+    controller.handleAdFailed = () => {};
+    assert.equal(await controller.showInterstitial(), false, 'Neuspeo prikaz ne sme važiti kao prikazan oglas');
+    assert(Number(savedValues.get(controller.interstitialLastShownKey)) < Date.now() - controller.interstitialCooldownMs);
+    interstitialMode = 'success';
+    assert.equal(await controller.showInterstitial(), true, 'Posle pauze novi oglas može da se prikaže');
+    assert.equal(interstitialShows, 3);
+
     controller.canRequestAds = false;
     controller.updateUI(false);
     assert.equal(button.disabled, true, 'Bez saglasnosti dugme mora biti onemogućeno');
@@ -120,7 +161,7 @@ async function main() {
     context.navigator.onLine = false;
     controller.updateUI(false);
     assert.equal(button.disabled, true, 'Offline dugme ne sme pokretati učitavanje oglasa');
-    console.log('Rewarded flow checks passed: contextual load, UI, single flight, success, failed show, expiration, offline.');
+    console.log('Ad flow checks passed: rewarded contexts and results, interstitial cooldown, single flight, failure, restart.');
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });
