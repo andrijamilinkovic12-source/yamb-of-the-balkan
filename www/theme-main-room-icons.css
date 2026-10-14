@@ -1,4 +1,18 @@
 /* The canonical pack replaces legacy room identity images only in non-Green themes. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #rules-overlay-ui .rules-daily-canonical-icon.theme-main-room-icon {
+    display: inline-block !important;
+    width: 1.22em !important;
+    height: 1.22em !important;
+    flex: none !important;
+    vertical-align: -0.28em !important;
+    margin-right: 0.24em !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-slide-content li .rules-daily-canonical-icon {
+    width: 1.22em;
+    height: 1.22em;
+    margin-right: .24em;
+    vertical-align: -.28em;
+}
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .theme-main-room-icon-host > img:not(.theme-main-room-icon),
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .theme-main-room-icon-host > svg,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .theme-main-room-icon-host > .main-global-chat-fallback,

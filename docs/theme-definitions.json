@@ -1,8 +1,17 @@
 {
-  "schemaVersion": 28,
+  "schemaVersion": 29,
   "updatedOn": "2026-10-14",
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
+  "dailyChallengeRoomRules": {
+    "scope": "Dnevni izazov u svih deset tema koristi istu logiku igre, iste dimenzije kartice, mreze sest kockica, bodovnog polja, dugmadi, intro trajanje i redosled interakcija kao zelena referenca.",
+    "assets": "Zelena zadrzava postojece kanonske PNG oznake. Svaka od devet ostalih tema ima tri nova, pojedinacno renderovana transparentna RGBA PNG od 384 x 384: zadatak, zavrsetak i vec odigrano. Kanonski fajlovi su www/assets/theme-packs/{tema}/canonical/daily-states/{task,complete,already-played}-v1.png; izvorni masteri i SHA inventar su source-assets/theme-daily-states-v1/. Nema preslikavanja i pukog prebojavanja iz druge teme.",
+    "reuse": "Identitet sobe je postojeci kanonski daily-room-identity PNG teme. Ikona dupliranja nagrade koristi odgovarajuci tematski reward-video PNG, a dukat isti kanonski PNG kao ekonomija i ostale sobe. U sobi se ne prikazuju stari tematski daily/task/complete/already-played fajlovi.",
+    "style": "Sve tri oznake imaju 3D Soft Neomorphism, Clay ili Smooth Rubber / Matte Plastic pravac maticne teme, svoju siluetu i ogranicenu paletu boja teme. Bez kica, sitnih ukrasa, fotorealizma i neon odsjaja van Neon Cyber teme.",
+    "geometry": "Prema zelenoj: identitet sobe 54 x 54 CSS px, zadatak 44 x 44, zavrsetak 58 x 58 unutar bodovnog polja, vec odigrano 104 x 104, video 28 x 28. Isti raspored, font hijerarhija i klik zone u svih deset tema.",
+    "contrast": "Kartica, mreza kockica, bodovno polje, dugmad i tekst koriste paletu svake teme uz citljiv kontrast. Pozadina ostaje vidljiva kroz blagi tematski sloj; efekti su mirni i ne zaklanjaju kockice i iznos nagrade. Tematske povrsine ne smeju prekriti PNG aktivnog skina kockica i boju njegovih tacaka, ni za jedan od 48 skinova.",
+    "loading": "Pri ulasku se tematske PNG uloge pripremaju paralelno sa zahtevom serveru pre prikaza sobe; menjanje teme osvezava izvore slika, bez prethodnih tematskih oznaka u novoj sobi. Greska ucitavanja slike ne menja pravila izazova ili zahtev serveru."
+  },
   "universalDiceSkinRules": {
     "scope": "Svih 48 skinova iz SHOP_DATA.SKINS mogu se koristiti u svih deset tema kada su otkljucani. Tematski poklon skin je nedostupan dok igrac ne poseduje odgovarajucu temu; po kupovini ili otkljucavanju teme postaje besplatan i automatski aktivan. Kasniji rucni izbor drugog skina se cuva.",
     "style": "Svaki skin koristi 3D Soft Neomorphism. Pravac Clay ili Smooth Rubber / Matte Plastic bira se posebno za opste skinove prema materijalu i motivu, a za deset poklon skinova jednak je pravcu maticne teme. Pravac vec izabranog skina se ne menja pri prelasku u drugu temu.",

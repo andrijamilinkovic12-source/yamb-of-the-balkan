@@ -8,7 +8,6 @@ OUT = ROOT / "www" / "assets" / "severna-soft-clay"
 
 
 SOURCES = {
-    "daily-challenge-pro.png": ROOT / "www/assets/desert-soft-clay/daily-challenge-pro.png",
     "leaderboard-pro.png": ROOT / "www/assets/desert-soft-clay/leaderboard-pro.png",
     "statistics-pro.png": ROOT / "www/assets/desert-soft-clay/statistics-pro.png",
     "settings-pro.png": ROOT / "www/assets/desert-soft-clay/settings-pro.png",

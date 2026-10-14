@@ -55,7 +55,6 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/desert-soft-clay/rules/pages/communication.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/desert-soft-clay/rules/pages/economy-treasury.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/desert-soft-clay/rules/pages/account-server.png?v=opt2',
-        'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1',
         'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/desert-soft-clay/settings-pro-v2.png?v=1',
@@ -112,7 +111,6 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
-        'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
         'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
@@ -177,7 +175,6 @@ function rulesGreenAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/green-soft-clay/rules/pages/communication-v1.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/green-soft-clay/rules/pages/economy-treasury-v3.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png?v=1',
-        'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1',
         'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
@@ -219,6 +216,10 @@ function rulesGreenAssetSrc(easterSrc = '') {
 
 function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
+    if (defaultSrc.startsWith('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png')) {
+        const source = 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1';
+        return `<img class="rules-inline-icon rules-asset-icon rules-daily-canonical-icon${suffix}" data-theme-src="${source}" src="${source}" alt="" aria-hidden="true" decoding="async">`;
+    }
     const desertSrc = rulesDesertTournamentCanonicalSrc(rulesDesertAssetSrc(easterSrc));
     const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
@@ -389,7 +390,7 @@ const RulesData = {
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('🎲')} Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1', 'assets/theme-packs/easter/canonical/daily-room-identity/daily-room-v1.png')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
@@ -553,7 +554,7 @@ const RulesData = {
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('🎲')} Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1', 'assets/theme-packs/easter/canonical/daily-room-identity/daily-room-v1.png')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>

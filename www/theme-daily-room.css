@@ -1,0 +1,230 @@
+/* Daily Challenge uses Green's geometry and each theme's own restrained palette. */
+#glass-daily-overlay .daily-room-mark,
+#glass-daily-overlay .daily-task-mark,
+#glass-daily-overlay .daily-complete-mark,
+#glass-daily-overlay .daily-reward-video-mark {
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+#glass-daily-overlay .daily-room-mark {
+    position: absolute;
+    top: -7px;
+    left: 2px;
+    width: 54px;
+    height: 54px;
+    filter: drop-shadow(0 7px 8px var(--daily-shadow, rgba(7, 29, 15, .28)));
+}
+
+#glass-daily-overlay .daily-task-mark {
+    position: absolute;
+    top: -2px;
+    right: 6px;
+    width: 44px;
+    height: 44px;
+    filter: drop-shadow(0 6px 7px var(--daily-shadow, rgba(7, 29, 15, .25)));
+}
+
+#glass-daily-overlay .daily-glass-title { padding-inline: 52px; }
+#glass-daily-overlay .daily-glass-card { width: min(430px, 100%); max-height: 100%; }
+#glass-daily-overlay .daily-glass-dice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-items: center;
+    width: 100%;
+    min-width: 0;
+    margin-inline: auto;
+}
+#glass-daily-overlay .daily-glass-die.dice {
+    width: min(100%, 14vw, 60px) !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    aspect-ratio: 1;
+    justify-self: center;
+    line-height: 1 !important;
+}
+#glass-daily-overlay .daily-glass-score-box { position: relative; }
+#glass-daily-overlay .daily-glass-score-box.is-complete .daily-glass-score-lbl {
+    max-width: 82px;
+    line-height: 1.12;
+    letter-spacing: .7px;
+}
+
+#glass-daily-overlay .daily-complete-mark {
+    position: absolute;
+    width: 58px;
+    height: 58px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 8px 10px var(--daily-shadow, rgba(7, 29, 15, .3)));
+}
+
+#glass-daily-overlay .daily-reward-video-mark {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    margin-right: 2px;
+    filter: drop-shadow(0 4px 5px var(--daily-shadow, rgba(7, 29, 15, .25)));
+}
+
+.daily-already {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.daily-already-icon {
+    width: 104px;
+    height: 104px;
+    object-fit: contain;
+    filter: drop-shadow(0 9px 12px rgba(0, 0, 0, .25));
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #custom-modal-overlay .daily-already span {
+    color: var(--theme-card-ink) !important;
+    font-size: .9rem;
+    line-height: 1.4;
+}
+
+#glass-daily-overlay .daily-ducat-icon,
+.daily-ducat-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin: 0 3px;
+    vertical-align: -6px;
+    object-fit: contain;
+}
+
+#glass-daily-overlay .daily-glass-btn .daily-ducat-icon { width: 26px; height: 26px; margin: 0 1px 0 3px; }
+.daily-ducat-icon--reward-end { margin-right: 0; }
+
+body.light-theme #glass-daily-overlay {
+    --daily-surface: rgba(255, 241, 215, .9); --daily-inset: rgba(219, 180, 123, .62);
+    --daily-text: #392817; --daily-muted: #705237; --daily-edge: rgba(155, 117, 79, .4);
+    --daily-accent: #4A311B; --daily-button: #875024; --daily-button-text: #FFFFFF;
+    --daily-shadow: rgba(83, 56, 27, .23); --daily-overlay: rgba(49, 32, 16, .52);
+}
+body.medium-theme #glass-daily-overlay {
+    --daily-surface: rgba(67, 23, 32, .92); --daily-inset: rgba(48, 16, 25, .9);
+    --daily-text: #FFF6F2; --daily-muted: #E6C9C4; --daily-edge: rgba(175, 119, 119, .43);
+    --daily-accent: #FFEDE6; --daily-button: #F1C3B2; --daily-button-text: #3A1424;
+    --daily-shadow: rgba(36, 8, 21, .4); --daily-overlay: rgba(22, 7, 17, .65);
+}
+body.winter-theme #glass-daily-overlay {
+    --daily-surface: rgba(255, 244, 229, .92); --daily-inset: rgba(187, 216, 222, .88);
+    --daily-text: #18384B; --daily-muted: #476874; --daily-edge: rgba(109, 155, 168, .43);
+    --daily-accent: #173D5B; --daily-button: #0B5C8C; --daily-button-text: #FFFFFF;
+    --daily-shadow: rgba(14, 57, 88, .26); --daily-overlay: rgba(12, 45, 69, .55);
+}
+body.neon-theme #glass-daily-overlay {
+    --daily-surface: rgba(18, 27, 43, .93); --daily-inset: rgba(12, 22, 37, .95);
+    --daily-text: #F4FAFF; --daily-muted: #B5C7D6; --daily-edge: rgba(58, 138, 148, .52);
+    --daily-accent: #E9FFFF; --daily-button: #56E5D2; --daily-button-text: #071923;
+    --daily-shadow: rgba(0, 10, 27, .48); --daily-overlay: rgba(2, 9, 26, .75);
+}
+body.amethyst-theme #glass-daily-overlay {
+    --daily-surface: rgba(60, 40, 75, .93); --daily-inset: rgba(45, 29, 60, .94);
+    --daily-text: #FBF6FF; --daily-muted: #E0CDE5; --daily-edge: rgba(163, 126, 174, .48);
+    --daily-accent: #FFF2E3; --daily-button: #F2C879; --daily-button-text: #2C183A;
+    --daily-shadow: rgba(26, 12, 34, .42); --daily-overlay: rgba(25, 11, 34, .7);
+}
+body.easter-theme #glass-daily-overlay {
+    --daily-surface: rgba(255, 248, 234, .92); --daily-inset: rgba(211, 213, 183, .8);
+    --daily-text: #3D4434; --daily-muted: #5F654F; --daily-edge: rgba(135, 147, 115, .44);
+    --daily-accent: #3F4A35; --daily-button: #4D6B45; --daily-button-text: #FFFFFF;
+    --daily-shadow: rgba(51, 69, 50, .23); --daily-overlay: rgba(32, 50, 34, .5);
+}
+body.desert-theme #glass-daily-overlay {
+    --daily-surface: rgba(255, 240, 218, .92); --daily-inset: rgba(213, 178, 155, .68);
+    --daily-text: #443027; --daily-muted: #70513D; --daily-edge: rgba(168, 119, 89, .48);
+    --daily-accent: #56372D; --daily-button: #7D4D38; --daily-button-text: #FFFFFF;
+    --daily-shadow: rgba(92, 52, 36, .25); --daily-overlay: rgba(65, 35, 28, .54);
+}
+body.moon-theme #glass-daily-overlay {
+    --daily-surface: rgba(37, 41, 52, .93); --daily-inset: rgba(24, 27, 36, .95);
+    --daily-text: #F5F5F7; --daily-muted: #C9CAD2; --daily-edge: rgba(133, 136, 149, .5);
+    --daily-accent: #FAFAFB; --daily-button: #E1E2E7; --daily-button-text: #242630;
+    --daily-shadow: rgba(0, 0, 0, .48); --daily-overlay: rgba(3, 5, 10, .76);
+}
+body.severna-theme #glass-daily-overlay {
+    --daily-surface: rgba(24, 44, 68, .93); --daily-inset: rgba(15, 33, 55, .95);
+    --daily-text: #F5FBFF; --daily-muted: #C3D8E0; --daily-edge: rgba(117, 157, 169, .53);
+    --daily-accent: #F2FBFF; --daily-button: #8AE3E4; --daily-button-text: #0A2934;
+    --daily-shadow: rgba(0, 11, 30, .47); --daily-overlay: rgba(6, 18, 40, .71);
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay {
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-left), env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom));
+    background: var(--daily-overlay) !important;
+    backdrop-filter: blur(13px) saturate(112%);
+    -webkit-backdrop-filter: blur(13px) saturate(112%);
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay::before { display: none; }
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-card {
+    background: var(--daily-surface) !important;
+    color: var(--daily-text) !important;
+    border: 1px solid var(--daily-edge) !important;
+    box-shadow: 0 24px 48px var(--daily-shadow), inset 0 1px 0 rgba(255,255,255,.3) !important;
+    backdrop-filter: blur(18px) saturate(115%);
+    -webkit-backdrop-filter: blur(18px) saturate(115%);
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-card::before {
+    background: linear-gradient(180deg, rgba(255,255,255,.11), transparent 35%) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-title,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-score-val {
+    color: var(--daily-accent) !important;
+    text-shadow: none !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-subtitle {
+    color: var(--daily-muted) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-score-lbl {
+    color: var(--daily-text) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-dice-grid,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-score-box {
+    background: var(--daily-inset) !important;
+    border: 1px solid var(--daily-edge) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 8px 18px var(--daily-shadow) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-dice-grid::before { display: none; }
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-die:not([class*="skin-"]) {
+    color: var(--daily-text) !important;
+    background: var(--daily-surface) !important;
+    border-color: var(--daily-edge) !important;
+    text-shadow: none !important;
+    box-shadow: 0 7px 15px var(--daily-shadow), inset 0 1px 0 rgba(255,255,255,.2) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-btn {
+    background: var(--daily-button) !important;
+    color: var(--daily-button-text) !important;
+    border: 1px solid var(--daily-edge) !important;
+    box-shadow: 0 8px 17px var(--daily-shadow), inset 0 1px 0 rgba(255,255,255,.24) !important;
+    text-shadow: none !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-btn-claim {
+    background: var(--daily-inset) !important;
+    color: var(--daily-text) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #glass-daily-overlay .daily-glass-die.rolling { animation: none; }
+}

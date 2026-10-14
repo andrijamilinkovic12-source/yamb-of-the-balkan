@@ -32,12 +32,13 @@
     "check:skin-roll-counter": "node scripts/check-skin-roll-counter.js",
     "check:theme-game-header": "node scripts/check-theme-game-header.js && node scripts/check-theme-game-header-contrast.js && node scripts/test-game-quick-skins.js && node scripts/test-game-theme-switch-preload.js && node scripts/test-game-header-states.js && node scripts/check-game-action-lock.js",
     "check:theme-quote": "node scripts/check-theme-quote-contrast.js",
+    "check:theme-daily-room": "node scripts/check-theme-daily-room.js",
     "check:effect-screen-lifecycle": "node scripts/check-effect-screen-lifecycle.js",
     "check:portrait-lock": "node scripts/check-portrait-lock.js",
     "check:easter-coverage": "node scripts/check-easter-asset-coverage.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:ad-consent && npm run check:ad-reward-flow && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:theme-board && npm run check:dice-skins && npm run check:skin-action-buttons && npm run check:skin-roll-counter && npm run check:theme-game-header && npm run check:theme-quote && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
+    "test": "npm run check:js && npm run check:ad-consent && npm run check:ad-reward-flow && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:theme-board && npm run check:dice-skins && npm run check:skin-action-buttons && npm run check:skin-roll-counter && npm run check:theme-game-header && npm run check:theme-quote && npm run check:theme-daily-room && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",

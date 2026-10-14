@@ -113,7 +113,7 @@ css = ["/* Generated from 48 catalog dice PNGs. Dynamic CSS pips remain in style
 for row in records:
     skin = row["id"]
     url = f'assets/dice-skins-v1/{skin}-face-v1.png'
-    css.append(f'body #game-scene #dice-container .dice.skin-{skin}, body .dice.skin-{skin}, body .dice-preview.preview-{skin} {{ background: transparent url("{url}") center / 110% 110% no-repeat !important; border-color: transparent !important; box-shadow: none !important; color: {row["pipColor"]} !important; opacity: 1 !important; text-shadow: none !important; }}')
+    css.append(f'body #game-scene #dice-container .dice.skin-{skin}, body #glass-daily-overlay .daily-glass-die.dice.skin-{skin}, body .dice.skin-{skin}, body .dice-preview.preview-{skin} {{ background: transparent url("{url}") center / 110% 110% no-repeat !important; border-color: transparent !important; box-shadow: none !important; color: {row["pipColor"]} !important; opacity: 1 !important; text-shadow: none !important; }}')
 css.append('body .dice-preview.preview-green_clay::before { content: none !important; }')
 css.append('body #game-scene #dice-container .dice[class*="skin-"].held, body .dice[class*="skin-"].held { border-color: rgba(255, 241, 212, .85) !important; box-shadow: 0 0 0 3px rgba(255, 239, 202, .23), 0 0 12px rgba(255, 242, 214, .24) !important; filter: brightness(.92) !important; }')
 css.append('body :is(.dice.skin-bronze_antique,.dice-preview.preview-bronze_antique) .dice-dot { background: radial-gradient(circle at 34% 28%, #fff5df, #e5cdab 78%) !important; box-shadow: inset 1px 2px 3px rgba(81,43,22,.31), 0 1px 1px rgba(31,14,7,.48) !important; }')

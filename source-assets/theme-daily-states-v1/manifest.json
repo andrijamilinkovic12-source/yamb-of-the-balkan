@@ -1,0 +1,525 @@
+{
+  "version": 1,
+  "roles": [
+    "task",
+    "complete",
+    "already-played"
+  ],
+  "themes": [
+    {
+      "id": "light",
+      "name": "Svetlo Zlato",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#E6BE83",
+        "surface": "#FFF1D7",
+        "raised": "#F3D6A8",
+        "inset": "#DBB47B",
+        "text": "#392817",
+        "textMuted": "#705237",
+        "heading": "#4A311B",
+        "primary": "#875024",
+        "onPrimary": "#FFFFFF",
+        "accent": "#76612B",
+        "border": "#9B754F",
+        "success": "#35613D",
+        "danger": "#9B3B3A",
+        "logoMain": "#4A311B",
+        "logoAccent": "#795127",
+        "colDown": "#216486",
+        "colUp": "#A13D4A",
+        "colMiddle": "#80502A",
+        "colManual": "#754394",
+        "colAnnounce": "#875024",
+        "colFree": "#4D5D62"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/light-task-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/daily-states/task-v1.png",
+          "sha256": "4064b45c7ddc63351a826398e33fcb7d5978a7613b1badcbb917a255bf62e514",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/light-complete-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/daily-states/complete-v1.png",
+          "sha256": "bc51830764170be699eb77c1e6868c2d2a9404eeb323ac175a354b10332f6061",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/light-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/daily-states/already-played-v1.png",
+          "sha256": "c507594e9cd1ca66e750d9b3aa8de19503d0b8a63b20ba2ab71fc8518961c9b6",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "medium",
+      "name": "Trula Višnja",
+      "direction": "clay",
+      "palette": {
+        "background": "#681D25",
+        "surface": "#431720",
+        "raised": "#60252E",
+        "inset": "#301019",
+        "text": "#FFF6F2",
+        "textMuted": "#E6C9C4",
+        "heading": "#FFEDE6",
+        "primary": "#F1C3B2",
+        "onPrimary": "#3A1424",
+        "accent": "#E39A70",
+        "border": "#AF7777",
+        "success": "#8CDEB2",
+        "danger": "#FF9DAA",
+        "logoMain": "#FFEDE6",
+        "logoAccent": "#E9AF9E",
+        "colDown": "#8AD6EF",
+        "colUp": "#FFB4B7",
+        "colMiddle": "#FFD385",
+        "colManual": "#DDB9F0",
+        "colAnnounce": "#F1C3B2",
+        "colFree": "#C4CFD5"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/medium-task-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/daily-states/task-v1.png",
+          "sha256": "59715e754ffcaaf745e63f7731d6c8aa1921edea388a54c03df03248f5fe2178",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/medium-complete-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/daily-states/complete-v1.png",
+          "sha256": "3784aa4d754d427b5899cb3a1356e5cdf4abbe54062c40b6fa145c51f1ffba03",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/medium-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/daily-states/already-played-v1.png",
+          "sha256": "ea9120dc8dc827748ab36807d9c83b2acf53bde894e7837c6239e7bffceebb22",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "winter",
+      "name": "Plavi Okean",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#0E5A9B",
+        "surface": "#FFF4E5",
+        "raised": "#DEECEB",
+        "inset": "#BBD8DE",
+        "text": "#18384B",
+        "textMuted": "#476874",
+        "heading": "#173D5B",
+        "primary": "#0B5C8C",
+        "onPrimary": "#FFFFFF",
+        "accent": "#BD684A",
+        "border": "#6D9BA8",
+        "success": "#216F5A",
+        "danger": "#A63A42",
+        "logoMain": "#FFFFFF",
+        "logoAccent": "#FFE8C4",
+        "splashWelcome": "#F7FBFF",
+        "colDown": "#1B6C8E",
+        "colUp": "#A34851",
+        "colMiddle": "#7B5C13",
+        "colManual": "#664E97",
+        "colAnnounce": "#146778",
+        "colFree": "#4E6973"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/winter-task-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/daily-states/task-v1.png",
+          "sha256": "8b028d67b803687421d492450e3d3f4ef228c44f5b5bcaa1cae6ce10a0c68471",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/winter-complete-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/daily-states/complete-v1.png",
+          "sha256": "ae9990d5d593af8eaaae05ca6caa95dfb9ef39fde0e8e7ec54094fa0deab7c77",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/winter-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/daily-states/already-played-v1.png",
+          "sha256": "26d110cb369dfecc2dcc3ae97bd7a1117deb2bd23fa3f4753e4050d0488881f3",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "neon",
+      "name": "Neon Cyber",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#080D18",
+        "surface": "#121B2B",
+        "raised": "#1A2B40",
+        "inset": "#0C1625",
+        "text": "#F4FAFF",
+        "textMuted": "#B5C7D6",
+        "heading": "#E9FFFF",
+        "primary": "#56E5D2",
+        "onPrimary": "#071923",
+        "accent": "#F08CE3",
+        "border": "#3A8A94",
+        "success": "#72DDAE",
+        "danger": "#FF97AC",
+        "logoMain": "#E9FFFF",
+        "logoAccent": "#56E5D2",
+        "colDown": "#74CBFF",
+        "colUp": "#FF96C8",
+        "colMiddle": "#FFD17B",
+        "colManual": "#C9A2FF",
+        "colAnnounce": "#56E5D2",
+        "colFree": "#B4C6D8"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/neon-task-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/daily-states/task-v1.png",
+          "sha256": "04460c915dff44eaaea8ec6c6cd18d949c0685ec3f3d7bf4167faf159068fcca",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/neon-complete-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/daily-states/complete-v1.png",
+          "sha256": "ff3dd2480b0287c7ddb82e2be41650fbc392c2b21bff71f886a78c5b21358c16",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/neon-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/daily-states/already-played-v1.png",
+          "sha256": "a204cc56ef53245916b8e71179a4d9ad1a610e87e6ec5772f3f69e539f4c6f80",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "amethyst",
+      "name": "Kraljevski Ametist",
+      "direction": "clay",
+      "palette": {
+        "background": "#5A386A",
+        "surface": "#3C284B",
+        "raised": "#563660",
+        "inset": "#2D1D3C",
+        "text": "#FBF6FF",
+        "textMuted": "#E0CDE5",
+        "heading": "#FFF2E3",
+        "primary": "#F2C879",
+        "onPrimary": "#2C183A",
+        "accent": "#D691B5",
+        "border": "#A37EAE",
+        "success": "#A3DFC2",
+        "danger": "#F2A3B4",
+        "logoMain": "#FFF5E8",
+        "logoAccent": "#FFD17D",
+        "colDown": "#98CFFF",
+        "colUp": "#F3A9B5",
+        "colMiddle": "#F4D584",
+        "colManual": "#D2A7F0",
+        "colAnnounce": "#E5C46E",
+        "colFree": "#CBD3DE"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/amethyst-task-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/daily-states/task-v1.png",
+          "sha256": "dcae75cc8767e93dd874efbfda5324bbcd083f3fc331844886a2612a2a6b0681",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/amethyst-complete-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/daily-states/complete-v1.png",
+          "sha256": "b21ff51379ad8f48b235d258f8a7702364cb97a1b8f204970b1ce53e81b8d131",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/amethyst-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/daily-states/already-played-v1.png",
+          "sha256": "37f888e64a78e5c013d6b668ec090c31fce973a047a646f9f73891e67f2f02ee",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "easter",
+      "name": "Vaskršnja",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#E5D4B9",
+        "surface": "#FFF8EA",
+        "raised": "#EEE5D3",
+        "inset": "#D3D5B7",
+        "text": "#3D4434",
+        "textMuted": "#5F654F",
+        "heading": "#3F4A35",
+        "primary": "#4D6B45",
+        "onPrimary": "#FFFFFF",
+        "accent": "#A66443",
+        "border": "#879373",
+        "success": "#3E674A",
+        "danger": "#9E4A42",
+        "logoMain": "#3F4A35",
+        "logoAccent": "#4D6B45",
+        "splashWelcome": "#303B2D",
+        "colDown": "#2F6D8D",
+        "colUp": "#A0445C",
+        "colMiddle": "#806118",
+        "colManual": "#684C9B",
+        "colAnnounce": "#456F5A",
+        "colFree": "#5D6670"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/easter-task-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/daily-states/task-v1.png",
+          "sha256": "72d074a910aec9be8d1bb9a02fa3f52e8d2699ae730433692f48cd5524725dfa",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/easter-complete-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/daily-states/complete-v1.png",
+          "sha256": "af75fc0ab90b1c2883743ddfc33b07177901e59848cccae5b05f3af4919fb844",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/easter-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/daily-states/already-played-v1.png",
+          "sha256": "2bed19f3ab0ffbca296bc6d64ff9c7a1f1413e1b8ffe0bb56bd49d89fbd6107a",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "desert",
+      "name": "Pustinjsko Staklo",
+      "direction": "clay",
+      "palette": {
+        "background": "#D79269",
+        "surface": "#FFF0DA",
+        "raised": "#F0D0AB",
+        "inset": "#D5B29B",
+        "text": "#443027",
+        "textMuted": "#70513D",
+        "heading": "#56372D",
+        "primary": "#7D4D38",
+        "onPrimary": "#FFFFFF",
+        "accent": "#396B72",
+        "border": "#A87759",
+        "success": "#32634D",
+        "danger": "#9D3D37",
+        "logoMain": "#4A2C23",
+        "logoAccent": "#396B72",
+        "colDown": "#2A687D",
+        "colUp": "#A13D3D",
+        "colMiddle": "#765919",
+        "colManual": "#754C88",
+        "colAnnounce": "#2D6B6F",
+        "colFree": "#5B655B"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/desert-task-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/daily-states/task-v1.png",
+          "sha256": "72158ef3479260494562d1bc28e270be86e7c3b8d826ad14b8802518161da436",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/desert-complete-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/daily-states/complete-v1.png",
+          "sha256": "ea90e56958e925791ae176e1697e7fdeff18f5f4523b07850f460a1ea17fb940",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/desert-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/daily-states/already-played-v1.png",
+          "sha256": "7b4db6586723d02a9cfec6d0b30b9be10debab2de6e7353c103ec7d36cf1c71b",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "moon",
+      "name": "Mesečev Sjaj",
+      "direction": "clay",
+      "palette": {
+        "background": "#08090C",
+        "surface": "#252934",
+        "raised": "#3B3F4B",
+        "inset": "#181B24",
+        "text": "#F5F5F7",
+        "textMuted": "#C9CAD2",
+        "heading": "#FAFAFB",
+        "primary": "#E1E2E7",
+        "onPrimary": "#242630",
+        "accent": "#A7A9B8",
+        "border": "#858895",
+        "success": "#A8D5BE",
+        "danger": "#F0ACB0",
+        "logoMain": "#F5F5F7",
+        "logoAccent": "#C4C5D0",
+        "colDown": "#B9CFDF",
+        "colUp": "#D9BDD2",
+        "colMiddle": "#D7D1BE",
+        "colManual": "#BFC3DF",
+        "colAnnounce": "#B8D0CB",
+        "colFree": "#D0D2D9"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/moon-task-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/daily-states/task-v1.png",
+          "sha256": "a8e00017c85e43e7e0e11f485ad040df02ad6f4b588553b1d0cadd8581ae96ab",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/moon-complete-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/daily-states/complete-v1.png",
+          "sha256": "d3766c15403f37686b771bccaa96c666d41275368ff97466b0d2c61d0bce544a",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/moon-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/daily-states/already-played-v1.png",
+          "sha256": "0f758e148b96583dbda3aa1a466bf7794a56f2cccfc2b5451a0867f292608f1d",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    },
+    {
+      "id": "severna",
+      "name": "Severna Maglina",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#0B1830",
+        "surface": "#182C44",
+        "raised": "#24445B",
+        "inset": "#0F2137",
+        "text": "#F5FBFF",
+        "textMuted": "#C3D8E0",
+        "heading": "#F2FBFF",
+        "primary": "#8AE3E4",
+        "onPrimary": "#0A2934",
+        "accent": "#C3ACEA",
+        "border": "#759DA9",
+        "success": "#A4E3C9",
+        "danger": "#FFAFB9",
+        "logoMain": "#F2FBFF",
+        "logoAccent": "#8AE3E4",
+        "colDown": "#8AD9FF",
+        "colUp": "#F7B0D2",
+        "colMiddle": "#E4D18B",
+        "colManual": "#CEB9FF",
+        "colAnnounce": "#8AE3E4",
+        "colFree": "#C6D7E0"
+      },
+      "assets": {
+        "task": {
+          "source": "source-assets/theme-daily-states-v1/masters/severna-task-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/daily-states/task-v1.png",
+          "sha256": "3955fcfe07747e48b4d938d880bd11b1abf58f77749e73957bfa187294a39263",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "complete": {
+          "source": "source-assets/theme-daily-states-v1/masters/severna-complete-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/daily-states/complete-v1.png",
+          "sha256": "27359b9eb4e1ce2aee9ac3ea159c43d55b8e16dfcc68d6194b4edd2d2a5ec6cd",
+          "size": [
+            384,
+            384
+          ]
+        },
+        "already-played": {
+          "source": "source-assets/theme-daily-states-v1/masters/severna-already-played-master-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/daily-states/already-played-v1.png",
+          "sha256": "c0fca090ca8783bcac82d200dc8db617785d5b21ce219aa42d747bffd45056c0",
+          "size": [
+            384,
+            384
+          ]
+        }
+      }
+    }
+  ]
+}
