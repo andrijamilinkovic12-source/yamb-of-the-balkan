@@ -1,0 +1,52 @@
+{
+  "dark": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/dark/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/dark/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/dark/tab-champions-master-v2.png"
+  },
+  "light": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/light/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/light/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/light/tab-champions-master-v2.png"
+  },
+  "medium": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/medium/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/medium/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/medium/tab-champions-master-v2.png"
+  },
+  "winter": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/winter/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/winter/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/winter/tab-champions-master-v2.png"
+  },
+  "neon": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/neon/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/neon/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/neon/tab-champions-master-v2.png"
+  },
+  "amethyst": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/amethyst/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/amethyst/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/amethyst/tab-champions-master-v2.png"
+  },
+  "easter": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/easter/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/easter/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/easter/tab-champions-master-v2.png"
+  },
+  "desert": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/desert/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/desert/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/desert/tab-champions-master-v2.png"
+  },
+  "moon": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/moon/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/moon/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/moon/tab-champions-master-v2.png"
+  },
+  "severna": {
+    "tab-hall-of-fame": "source-assets/theme-quarterly-league-v2/severna/tab-hall-of-fame-master-v2.png",
+    "tab-medals": "source-assets/theme-quarterly-league-v2/severna/tab-medals-master-v2.png",
+    "tab-champions": "source-assets/theme-quarterly-league-v2/severna/tab-champions-master-v2.png"
+  }
+}

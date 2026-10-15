@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kvartalna liga — novi znakovi za 10 tema</title>
+  <link rel="stylesheet" href="../www/theme-quarterly-league-room.css?v=1">
+  <style>
+    :root { font-family: Montserrat, Arial, sans-serif; color:#f2f5f5; background:#101820; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:28px; }
+    header { max-width:1120px; margin:0 auto 22px; }
+    h1 { font-size:clamp(1.35rem,3vw,2rem); margin:0 0 8px; }
+    p { color:#bfd0d8; line-height:1.45; margin:0 0 18px; }
+    .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    button { font:inherit; font-weight:700; color:#e9f3f3; background:#24404b; border:1px solid #607b80; border-radius:10px; padding:9px 14px; cursor:pointer; }
+    button[aria-pressed=true] { background:#d6eee7; color:#18312e; }
+    main { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; max-width:1120px; margin:auto; }
+    article { border:1px solid #405661; background:#192833; border-radius:18px; padding:16px; min-height:238px; display:flex; flex-direction:column; align-items:center; }
+    h2 { font-size:.88rem; margin:0; align-self:flex-start; }
+    .ql-quarter-logo { width:145px; height:145px; margin:8px auto 2px; }
+    .meta { font-size:.72rem; color:#bdd3d5; align-self:flex-start; }
+    .active-label { font-size:.68rem; color:#d9e6e5; margin:10px 0 0; }
+    .internal-assets { max-width:1120px; margin:30px auto 0; }
+    .internal-assets h2 { font-size:1.15rem; margin:24px 0 8px; }
+    .internal-assets img { display:block; width:100%; height:auto; background:#131c25; border:1px solid #405661; border-radius:14px; }
+    a { color:#a8eee2; }
+    footer { max-width:1120px; margin:20px auto; color:#bbced1; font-size:.78rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Kvartalna liga: četiri kvartala, deset tema</h1>
+    <p>Svaki znak je poseban PNG u stilu i paleti svoje teme. Izaberite kvartal da uporedite diskretno isticanje odgovarajućeg dela. U aplikaciji se kvartal bira automatski po vremenu u Beogradu.</p>
+    <div class="controls" role="group" aria-label="Kvartal">
+      <button type="button" data-quarter="1">Q1</button><button type="button" data-quarter="2">Q2</button><button type="button" data-quarter="3">Q3</button><button type="button" data-quarter="4">Q4</button>
+    </div>
+  </header>
+  <main id="gallery"></main>
+  <section class="internal-assets" aria-label="Asseti unutar sobe">
+    <h2>Navigacija sobe — 3 PNG po temi</h2>
+    <img src="theme-quarterly-league-v2-navigation-review.png" alt="Tri tematske ikone navigacije za svih deset tema">
+    <h2>Rangovi — 6 PNG po temi</h2>
+    <img src="theme-quarterly-league-v2-ranks-review.png" alt="Šest oznaka ranga za svih deset tema">
+    <h2>Medalje — zlato, srebro i bronza</h2>
+    <img src="theme-quarterly-league-v2-medals-review.png" alt="Tri medalje Kvartalne lige za svih deset tema">
+  </section>
+  <footer>Svih deset tema imaju kompletan skup: identitet, tri navigacione ikone, šest oznaka ranga i tri medalje. <a href="theme-quarterly-league-v2-navigation-review.png">Navigacija</a> · <a href="theme-quarterly-league-v2-ranks-review.png">Rangovi</a> · <a href="theme-quarterly-league-v2-medals-review.png">Medalje</a>.</footer>
+  <script>
+    const themes = [
+      ['dark','Zelena','Clay'],['light','Svetlo zlato','Mat silikon'],['medium','Trula višnja','Clay'],
+      ['winter','Plavi okean','Mat silikon'],['neon','Neon Cyber','Mat silikon'],['amethyst','Ametist','Clay'],
+      ['easter','Vaskršnja','Mat silikon'],['desert','Pustinjsko staklo','Clay'],['moon','Mesečev sjaj','Clay'],
+      ['severna','Severna maglina','Mat silikon']
+    ];
+    const diagonal = new Set(['amethyst','easter','moon']);
+    const current = Math.floor((Number(new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Belgrade',month:'numeric'}).format(new Date()))-1)/3)+1;
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = themes.map(([id,name,direction]) => {
+      const root = id === 'dark' ? '../www/assets/green-soft-clay/canonical' : `../www/assets/theme-packs/${id}/canonical`;
+      const src = `${root}/quarterly-league-room-identity/quarterly-league-room-v2.png`;
+      return `<article><h2>${name}</h2><span class="ql-quarter-logo" data-ql-quarter="${current}" data-ql-orientation="${diagonal.has(id)?'diagonal':'cross'}"><img class="ql-quarter-logo-base" src="${src}" alt=""><img class="ql-quarter-logo-active" src="${src}" alt=""></span><span class="meta">3D Soft Neomorphism · ${direction}</span><span class="active-label">Aktivan: Q<span>${current}</span></span></article>`;
+    }).join('');
+    function setQuarter(value) {
+      document.querySelectorAll('.ql-quarter-logo').forEach(node => node.dataset.qlQuarter = value);
+      document.querySelectorAll('.active-label span').forEach(node => node.textContent = value);
+      document.querySelectorAll('[data-quarter]').forEach(button => button.setAttribute('aria-pressed',button.dataset.quarter === String(value)));
+    }
+    document.querySelectorAll('[data-quarter]').forEach(button => button.addEventListener('click',() => setQuarter(button.dataset.quarter)));
+    setQuarter(current);
+  </script>
+</body>
+</html>

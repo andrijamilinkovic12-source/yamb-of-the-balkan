@@ -1,0 +1,127 @@
+/* Quarterly League V2. The existing Green room sets the layout dimensions. */
+.ql-quarter-logo {
+    position: relative;
+    display: block !important;
+    flex: none;
+    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
+    background: none !important;
+    pointer-events: none;
+}
+.ql-quarter-logo[data-ql-pending="true"] { visibility: hidden; }
+.ql-quarter-logo img {
+    position: absolute;
+    inset: 0;
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: none;
+    filter: none !important;
+}
+.ql-quarter-logo-base { opacity: .68; }
+.ql-quarter-logo img.ql-quarter-logo-active {
+    opacity: 1;
+    filter: brightness(1.14) saturate(1.06) !important;
+    transition: clip-path .42s ease, opacity .42s ease;
+}
+.ql-quarter-logo[data-ql-orientation="cross"][data-ql-quarter="1"] .ql-quarter-logo-active { clip-path: polygon(0 0, 100% 0, 50% 50%); }
+.ql-quarter-logo[data-ql-orientation="cross"][data-ql-quarter="2"] .ql-quarter-logo-active { clip-path: polygon(100% 0, 100% 100%, 50% 50%); }
+.ql-quarter-logo[data-ql-orientation="cross"][data-ql-quarter="3"] .ql-quarter-logo-active { clip-path: polygon(100% 100%, 0 100%, 50% 50%); }
+.ql-quarter-logo[data-ql-orientation="cross"][data-ql-quarter="4"] .ql-quarter-logo-active { clip-path: polygon(0 100%, 0 0, 50% 50%); }
+.ql-quarter-logo[data-ql-orientation="diagonal"][data-ql-quarter="1"] .ql-quarter-logo-active { clip-path: inset(0 50% 50% 0); }
+.ql-quarter-logo[data-ql-orientation="diagonal"][data-ql-quarter="2"] .ql-quarter-logo-active { clip-path: inset(0 0 50% 50%); }
+.ql-quarter-logo[data-ql-orientation="diagonal"][data-ql-quarter="3"] .ql-quarter-logo-active { clip-path: inset(50% 0 0 50%); }
+.ql-quarter-logo[data-ql-orientation="diagonal"][data-ql-quarter="4"] .ql-quarter-logo-active { clip-path: inset(50% 50% 0 0); }
+
+/* Remove the old CSS watermark layers for every theme, including Green. */
+body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo {
+    position: absolute !important;
+    top: 50% !important;
+    right: -5px !important;
+    z-index: 0;
+    width: 86px !important;
+    height: 86px !important;
+    transform: translateY(-50%) !important;
+    background: none !important;
+    filter: none !important;
+    opacity: .24 !important;
+}
+body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo::before,
+body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo::after {
+    content: none !important;
+    display: none !important;
+}
+body #league-intro .league-intro-mark-wrap > .ql-quarter-logo {
+    width: 100% !important;
+    height: 100% !important;
+    filter: drop-shadow(0 12px 18px rgba(0,0,0,.18));
+    animation: easterRoomIconPulse 1.8s ease-in-out infinite;
+}
+body #league-modal-overlay .league-modal-title-group > .ql-quarter-logo {
+    width: 38px !important;
+    height: 38px !important;
+    flex: 0 0 38px !important;
+}
+body #winner-modal-overlay .quarter-winner-brand > .ql-quarter-logo {
+    width: 86px !important;
+    height: 86px !important;
+}
+
+/* The four navigation/rank assets are visible in every theme; old SVG and emoji stay out. */
+body #league-modal-overlay .league-tab-soft-clay-icon,
+body #league-modal-overlay .league-hof-tab-soft-clay-icon,
+body #league-modal-overlay .league-rank-soft-clay-badge,
+body #league-modal-overlay .league-current-rank-soft-clay-badge,
+body #league-modal-overlay .ql-placement-medal,
+body #league-modal-overlay .ql-champion-soft-clay-icon,
+body #winner-modal-overlay .ql-quarter-champion-medal,
+body .ql-quarter-reward-medal .ql-placement-medal {
+    display: inline-block !important;
+    object-fit: contain;
+    filter: none !important;
+}
+body #league-modal-overlay .league-tab-icon,
+body #league-modal-overlay .league-hof-tab-fallback,
+body #league-modal-overlay .ql-medal-fallback,
+body #league-modal-overlay .ql-champion-fallback,
+body #winner-modal-overlay .ql-medal-fallback,
+body .ql-quarter-reward-medal .ql-medal-fallback { display: none !important; }
+body #rules-overlay-ui .rules-quarterly-canonical-icon { display: inline-block !important; filter: none !important; }
+body #league-modal-overlay .ql-medal-count { color: var(--theme-card-ink, inherit) !important; text-shadow: none !important; }
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .modal-box {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .modal-box > div:first-child {
+    background: color-mix(in srgb, var(--theme-card-raised) 75%, transparent) !important;
+    border-bottom: 1px solid var(--theme-card-line) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-summary-card,.league-rank-scroll,#hof-main-content > div:last-child) {
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-inset) 64%, transparent) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-current-rank,.league-rank-heading,#league-modal-title) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-summary-points,#league-summary-alltime) {
+    color: var(--theme-card-primary) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-hof-tab-button:not(.is-active) {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-hof-tab-button.is-active {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+    border: 1px solid var(--theme-card-primary) !important;
+}

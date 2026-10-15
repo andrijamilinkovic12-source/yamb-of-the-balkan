@@ -43,6 +43,7 @@ const productionFiles = [
     'turnir.js', 'vatreniniz.js', 'vracanjeupisa.js'
 ].map(file => path.join(www, file));
 const productionSource = productionFiles.map(file => fs.readFileSync(file, 'utf8')).join('\n');
+const leaderboardSource = fs.readFileSync(path.join(www, 'theme-leaderboard-room.js'), 'utf8');
 const runtimePngs = walkFiles(easterRoot)
     .filter(file => file.toLowerCase().endsWith('.png'))
     .sort();
@@ -68,6 +69,7 @@ for (const [index, file] of runtimePngs.entries()) {
     assert([4, 6].includes(info.colorType), `Vaskrs PNG nema direktan alpha kanal: ${relative}`);
     assert(isSplash || Math.max(info.width, info.height) <= 768, `Vaskrs runtime ikona je veća od 768 px: ${relative}`);
     const supersededByCanonicalPack = /^canonical\/competition-medals\/(?:gold|silver|bronze)-v1\.png$/.test(relative)
+        || /^leaderboard\/.*\.png$/.test(relative)
         || /^global-chat-(?:empty|send)-pro-v2\.png$/.test(relative)
         || /^treasury\/(?:tab-(?:trophies|skins|effects|themes)|status-(?:owned|active|locked|insufficient))-v\d+\.png$/.test(relative);
     assert(supersededByCanonicalPack || productionSource.includes(runtimePath), `Vaskrs PNG nema produkcionu vezu: ${runtimePath}`);
@@ -108,7 +110,6 @@ const themeCss = fs.readFileSync(path.join(www, 'teme.css'), 'utf8');
 assert(!/body\.easter-theme[^{}]*\{[^{}]*(?:url\([^)]*\.(?:svg|webp)|content:\s*['"][🐣🐇🥚])/su.test(themeCss), 'Vaskrs CSS vraća stari SVG/WebP ili emoji stand-in.');
 assert(themeCss.includes('@media (prefers-reduced-motion: reduce)'), 'Vaskrs nema reduced-motion zaštitu.');
 const stateBindings = [
-    ['Leaderboard empty/loading', 'assets/easter-soft-clay/leaderboard/empty-loading-v2.png', 'hs-state-soft-clay-icon'],
     ['H2H empty', 'assets/easter-soft-clay/statistics/h2h-empty-v2.png', 'h2h-empty-state'],
     ['Global Chat empty/loading', 'assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png', 'global-chat-state'],
     ['Global Chat send', 'assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png', 'theme-chat-send-icon'],
@@ -126,6 +127,10 @@ const stateBindings = [
 for (const [state, asset, hook] of stateBindings) {
     assert(productionSource.includes(asset) && productionSource.includes(hook), `Vaskrs funkcionalno stanje nije potpuno povezano: ${state}`);
 }
+assert(fs.existsSync(path.join(www, 'assets/theme-packs/easter/canonical/leaderboard-controls/empty-loading-v2.png'))
+    && productionSource.includes('hs-state-canonical-icon')
+    && leaderboardSource.includes('canonical/leaderboard-controls/${role}-'),
+    'Vaskrs Top lista mora koristiti novi kanonski PNG za prazno/ucitavanje.');
 assert(themeCss.includes('body.easter-theme #highscores-screen .hs-state-fallback {')
     && themeCss.includes('body.easter-theme #highscores-screen .hs-list-state-offline {'), 'Vaskrs Leaderboard fallback/offline stanje nije standardizovano.');
 assert(themeCss.includes('body.easter-theme #online-players-overlay .online-players-state[data-online-state="error"] {'), 'Vaskrs Online Players error stanje nema tematski kontrast.');

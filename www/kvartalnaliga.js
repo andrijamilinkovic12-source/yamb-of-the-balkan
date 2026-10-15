@@ -227,72 +227,34 @@ class KvartalnaLigaManager {
 
     getQlVisualTheme() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        // Izvor istine je sačuvana aktivna tema. Ne oslanjamo se prvo na body
-        // klasu, jer zaostala klasa tokom promene teme ne sme izabrati asset
-        // druge teme niti napraviti dupli QL logo.
-        if (activeTheme === 'severna') return 'severna';
-        if (activeTheme === 'desert') return 'desert';
-        if (activeTheme === 'easter') return 'easter';
-        if (activeTheme === 'dark') return 'green';
-        if (document.body.classList.contains('severna-theme')) return 'severna';
-        if (document.body.classList.contains('desert-theme')) return 'desert';
-        if (document.body.classList.contains('easter-theme')) return 'easter';
-        return 'default';
+        return ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(activeTheme)
+            ? activeTheme : 'dark';
     }
 
     getQlAssetRoot() {
-        const visualTheme = this.getQlVisualTheme();
-        if (visualTheme === 'severna') return 'assets/severna-soft-clay/ql';
-        if (visualTheme === 'desert') return 'assets/desert-soft-clay/ql';
-        if (visualTheme === 'green') return 'assets/green-soft-clay/ql';
-        return 'assets/easter-soft-clay/ql';
+        const theme = this.getQlVisualTheme();
+        return theme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${theme}/canonical`;
     }
 
     getQlAssetSource(assetName, retryToken = '') {
-        const visualTheme = this.getQlVisualTheme();
         if (['medal-gold', 'medal-silver', 'medal-bronze'].includes(assetName)) {
             const tier = assetName.replace('medal-', '');
             const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
             const source = getThemeMedalSource('quarterlyLeague', tier, activeTheme);
             return `${source}${retryToken ? `&retry=${encodeURIComponent(retryToken)}` : ''}`;
         }
-        const severnaVersions = {
-            'tab-league': '-v4',
-            'tab-hall-of-fame': '-v4',
-            'tab-medals': '-v4',
-            'tab-champions': '-v4',
-            'rank-amater': '-v5',
-            'rank-profi': '-v5',
-            'rank-majstor': '-v5',
-            'rank-legenda': '-v5',
-            'rank-titan': '-v5',
-            'rank-alltime': '-v5',
-            'medal-gold': '-v3',
-            'medal-silver': '-v3',
-            'medal-bronze': '-v3'
-        };
-        const easterVersions = {
-            'tab-hall-of-fame': '-v2',
-            'rank-amater': '-v4',
-            'rank-profi': '-v4',
-            'rank-majstor': '-v4',
-            'rank-legenda': '-v2',
-            'rank-titan': '-v4',
-            'rank-alltime': '-v3'
-        };
-        const fileSuffix = visualTheme === 'severna'
-            ? (severnaVersions[assetName] || '')
-            : (visualTheme === 'easter'
-                ? (easterVersions[assetName] || '')
-                : '');
         const retrySuffix = retryToken ? `&retry=${encodeURIComponent(retryToken)}` : '';
-        if (visualTheme === 'green' && ['rank-amater', 'rank-profi', 'rank-majstor', 'rank-legenda', 'rank-titan', 'rank-alltime'].includes(assetName)) {
-            return `assets/green-soft-clay/canonical/quarterly-rank-badges/${assetName}-v1.png?v=1${retrySuffix}`;
+        const root = this.getQlAssetRoot();
+        if (assetName === 'tab-league') {
+            return `${root}/quarterly-league-room-identity/quarterly-league-room-v2.png?v=2${retrySuffix}`;
         }
-        if (visualTheme === 'green' && ['tab-league', 'tab-hall-of-fame', 'tab-medals', 'tab-champions'].includes(assetName)) {
-            return `assets/green-soft-clay/canonical/quarterly-navigation/${assetName}-v1.png?v=1${retrySuffix}`;
+        if (assetName.startsWith('tab-')) {
+            return `${root}/quarterly-navigation/${assetName}-v2.png?v=2${retrySuffix}`;
         }
-        return `${this.getQlAssetRoot()}/${assetName}${fileSuffix}.png?v=1${retrySuffix}`;
+        if (assetName.startsWith('rank-')) {
+            return `${root}/quarterly-rank-badges/${assetName}-v2.png?v=2${retrySuffix}`;
+        }
+        return '';
     }
 
     getRankBadgeSource(rankId, retryToken = '') {
@@ -332,7 +294,6 @@ class KvartalnaLigaManager {
 
     preloadRankBadges() {
         const visualTheme = this.getQlVisualTheme();
-        if (visualTheme !== 'easter' && visualTheme !== 'desert' && visualTheme !== 'severna' && visualTheme !== 'green') return Promise.resolve([]);
         if (this.rankBadgePreloadTheme !== visualTheme) {
             this.rankBadgePreloadPromise = null;
             this.rankBadgeImageCache.clear();
@@ -465,32 +426,10 @@ class KvartalnaLigaManager {
     }
 
     getMainTabIcon(icon) {
-        const visualTheme = this.getQlVisualTheme();
         const softClaySource = icon === 'hof'
             ? this.getQlAssetSource('tab-hall-of-fame')
-            : (visualTheme === 'easter'
-                ? 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2'
-                : (visualTheme === 'desert'
-                    ? 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2'
-                    : this.getQlAssetSource('tab-league')));
-        const softClayIcon = `<img class="league-tab-soft-clay-icon" src="${softClaySource}" alt="" aria-hidden="true" decoding="async">`;
-        if (icon === 'hof') {
-            return `${softClayIcon}
-                <svg class="league-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M4 9.3L12 4.8L20 9.3H4Z" fill="currentColor" opacity="0.22"/>
-                    <path d="M4 9.3L12 4.8L20 9.3M6 19H18M7.5 16.7H16.5M8 10.5V16.5M12 10.5V16.5M16 10.5V16.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 6.7L12.8 8.2L14.5 8.45L13.25 9.62L13.55 11.28L12 10.48L10.45 11.28L10.75 9.62L9.5 8.45L11.2 8.2L12 6.7Z" fill="currentColor"/>
-                </svg>
-            `;
-        }
-
-        return `${softClayIcon}
-            <svg class="league-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6.5 18.5V12.5H10V18.5H6.5ZM10.7 18.5V8.5H14.3V18.5H10.7ZM15 18.5V10.8H18.5V18.5H15Z" fill="currentColor" opacity="0.22"/>
-                <path d="M5 19H19M8.2 18.5V12.5M12.5 18.5V8.5M16.8 18.5V10.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                <path d="M8.6 7.4L10.8 8.15L12.5 6L14.2 8.15L16.4 7.4L15.65 11.25H9.35L8.6 7.4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-            </svg>
-        `;
+            : this.getQlAssetSource('tab-league');
+        return `<img class="league-tab-soft-clay-icon" src="${softClaySource}" alt="" aria-hidden="true" decoding="async">`;
     }
 
     showModal() {
@@ -535,11 +474,7 @@ class KvartalnaLigaManager {
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.3); flex-shrink: 0;">
                     <div class="league-modal-title-group">
-                        <img class="league-modal-header-icon league-modal-header-icon-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-easter" data-theme-src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-desert" data-theme-src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-nebula" data-theme-src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        ${window.ThemeQuarterlyLeagueRoom.markup('room')}
                         <h2 id="league-modal-title" style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     </div>
                     <button type="button" class="global-chat-close league-close-standard" onclick="window.kvartalnaLiga.closeModal()" aria-label="${this.escapeAttr(gt('aria_close_league', 'Zatvori kvartalnu ligu'))}">×</button>
@@ -577,8 +512,8 @@ class KvartalnaLigaManager {
 
                 <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px; min-height: 0;">
                     <div role="group" aria-label="${this.escapeAttr(gt('aria_hof_sections', 'Sekcije Dvorane slavnih'))}" style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
-                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-pressed="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="${medalsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
-                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-pressed="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
+                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-pressed="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="${medalsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span></button>
+                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-pressed="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span></button>
                     </div>
                     
                     <div style="flex: 1; min-height: 0; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
@@ -753,9 +688,9 @@ class KvartalnaLigaManager {
                 <div style="flex: 1;">
                     <div style="color: #fff; font-weight: bold; font-size: 0.85rem;">${m.playerName}</div>
                     <div style="display: flex; gap: 10px; margin-top: 4px; font-size: 0.8rem; font-weight: bold;">
-                        <span class="ql-medal-count ql-medal-count--gold" style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);"><img class="ql-placement-medal" src="${medalGoldIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥇</span> ${m.gold}</span>
-                        <span class="ql-medal-count ql-medal-count--silver" style="color: #C0C0C0;"><img class="ql-placement-medal" src="${medalSilverIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥈</span> ${m.silver}</span>
-                        <span class="ql-medal-count ql-medal-count--bronze" style="color: #CD7F32;"><img class="ql-placement-medal" src="${medalBronzeIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥉</span> ${m.bronze}</span>
+                        <span class="ql-medal-count ql-medal-count--gold"><img class="ql-placement-medal" src="${medalGoldIcon}" alt="" aria-hidden="true" decoding="async"> ${m.gold}</span>
+                        <span class="ql-medal-count ql-medal-count--silver"><img class="ql-placement-medal" src="${medalSilverIcon}" alt="" aria-hidden="true" decoding="async"> ${m.silver}</span>
+                        <span class="ql-medal-count ql-medal-count--bronze"><img class="ql-placement-medal" src="${medalBronzeIcon}" alt="" aria-hidden="true" decoding="async"> ${m.bronze}</span>
                     </div>
                 </div>
             </li>`;
@@ -784,7 +719,7 @@ class KvartalnaLigaManager {
             <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
                 <div style="position: relative; margin-right: 15px;">
                     <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
-                    <div class="ql-champion-marker" style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;"><img class="ql-champion-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-champion-fallback" aria-hidden="true">👑</span></div>
+                    <div class="ql-champion-marker" style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;"><img class="ql-champion-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"></div>
                 </div>
                 <div style="flex: 1;">
                     <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}</div>
@@ -1156,7 +1091,7 @@ class KvartalnaLigaManager {
             let isMe = myUid ? scoreUid === myUid : pName === myName;
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = placementIndex < 3
-                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="${this.getQlAssetSource(`medal-${['gold', 'silver', 'bronze'][placementIndex]}`)}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${['🥇', '🥈', '🥉'][placementIndex]}</span>`
+                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="${this.getQlAssetSource(`medal-${['gold', 'silver', 'bronze'][placementIndex]}`)}" alt="" aria-hidden="true" decoding="async">`
                 : `${position}.`;
             const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
             let photo = this.safeImageUrl(s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : '', fallbackPhoto);

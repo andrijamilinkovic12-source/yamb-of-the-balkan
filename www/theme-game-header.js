@@ -14,7 +14,10 @@
         if (!roles.has(role)) throw new Error(`Unknown game header role: ${role}`);
         if (!themes.includes(theme)) theme = 'dark';
         const root = base(theme);
-        if (role === 'undo') return `${root}/canonical/undo-token/undo-token-inline-v1.png?v=1`;
+        if (role === 'undo') {
+            const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+            return `${root}/canonical/undo-token/undo-token-inline-v${version}.png?v=${version}`;
+        }
         if (role === 'theme' || role === 'skin') return `${root}/canonical/treasury-controls/tab-${role === 'theme' ? 'themes' : 'skins'}-v1.png?v=1`;
         if (role === 'lock') return `${root}/canonical/treasury-controls/status-locked-v1.png?v=1`;
         if (role === 'close') return `${root}/canonical/room-controls/close-v1.png?v=1`;

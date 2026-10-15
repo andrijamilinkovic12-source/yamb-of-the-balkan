@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "style": "3D Soft Neomorphism; individual theme Clay or Smooth Rubber / Matte Plastic direction",
+  "generationMethod": "Nine separate imagegen edits, each referencing only its own theme's canonical Global podium PNG",
+  "technicalDerivatives": "alpha-speck cleanup, alpha crop and resize from each theme's original master; no cross-theme recoloring",
+  "themes": [
+    {
+      "id": "light",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/light-master-v2.png",
+      "masterSha256": "32fb04dc45afc63a53c844320e94a1426f08b960aa64e335ad0365b5fe8b4c7a",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/light/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "ee6019be4467eb44e8583182a87d1b8ff926611b3b0ede09162f5e4ac4313d61",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/light/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "13af90537ec4d68fe0c5c88fc6664d6a91d0b77d170ca4b693cdae8cdf6017de",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medium",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/medium-master-v2.png",
+      "masterSha256": "bee59003d33e7c74b35c44357abf5a5c05676d9bf975117c4c5ffb65c06a04ef",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/medium/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "431ad1004ebd3641a009c70e478b3aad7dede875d57d1510effec94fcdb0f2ab",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/medium/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "b15b96de21b6ab3d7291cd67a7dc38f8af1241fe256adaeea7fd2004ac057be8",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/winter-master-v2.png",
+      "masterSha256": "9602aef06b706467d140afcbfba570ba1cca930621160dd18daa03d2ef752ebb",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/winter/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "da12d2279b1bd72ac77b2f86e137306f5079c264dba3b1ff101d6631a7b15d38",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/winter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "9483760f4556178e1aa7bb1fedcb6326d1145432697f563d32b1a5b15b85e3cc",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neon",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/neon-master-v2.png",
+      "masterSha256": "9e2c90c70edff8bf65104b137b209614e58d196821c765e44920a9c0990497d7",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "7cdd84e9ee2b851ee6f2ab1ce91e17077cb7677c3969da693dfe827019ab5fa8",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "e2e58a9d3544532db8df91a930b710875fa3b18463d3b817c0643acfd0251b74",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "amethyst",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/amethyst-master-v2.png",
+      "masterSha256": "a02fd45036a7ad4a167d8634e1abd8de96fcdad8e016a0aaf205b756c54fe523",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/amethyst/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "78380a9adff5b3838531d31755ff12be167c9889a5a1d5fd828fa8f9ece36462",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/amethyst/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "6d27e5a2f16b4808efd3b024d8f7061f6359c51de8a219998fc5b04ea10b002e",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "easter",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/easter-master-v2.png",
+      "masterSha256": "0d8bc6cc14a9b23f488450ab69cbb7884ae916d08ad505479a23539dcc4d6ad0",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "8f976bf0be8fdfe304e74136fae81c9e6193e22b85add69790bd6156462eed60",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "f86c4490dbe7801ac913d683e6bec7a73bea5838ed1ce0a6047e46bb4ec0e06b",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desert",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/desert-master-v2.png",
+      "masterSha256": "8f16faac901e0409959232c7b9e43768ba0bd01a1eb6f3b2cd6f9b83f204bbc8",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/desert/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "64bbb9abe4166428e9fda7c3c6fc0c1db962029ac02c78c2959eb82ba948bc89",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/desert/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "76a1785389d1e079c25f8f5e85408df27f837d599f45fcfba070a16632d49b9d",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moon",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/moon-master-v2.png",
+      "masterSha256": "b0171e803fd65bffef0ec0a48321621ec86fbb5e192d6ce602865c5f9962a812",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/moon/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "5cfcc37e412eab008c7e9db602bece7679a40d230700081c197dea034e28467e",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/moon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "1930735d91ee1c7abb7324c0ec95af2626eedb00a36fd4de36d0b9e9d628b9c7",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "severna",
+      "master": "source-assets/theme-leaderboard-room-identity-v2/masters/severna-master-v2.png",
+      "masterSha256": "72d39cade8eccc280fa26eae931c120bbb8f442df1edb642e896df73687732ad",
+      "assets": [
+        {
+          "role": "room",
+          "production": "www/assets/theme-packs/severna/canonical/leaderboard-room-identity/leaderboard-room-v2.png",
+          "productionSha256": "09d7e0b5eab38a2a99ee82fcaff22c1ddfa0394e17cac5d9ca5dc21221731d11",
+          "size": [
+            512,
+            512
+          ]
+        },
+        {
+          "role": "menu",
+          "production": "www/assets/theme-packs/severna/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+          "productionSha256": "21187fad24828db417a51264151d963197493267d0f001543e68d60af3c8dcbe",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    }
+  ]
+}

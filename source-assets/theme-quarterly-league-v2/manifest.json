@@ -1,0 +1,2087 @@
+{
+  "schemaVersion": 2,
+  "generatedOn": "2026-10-15",
+  "method": "individual image generation; technical resize only",
+  "themes": [
+    {
+      "id": "dark",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/dark/quarterly-league-room-master-v2.png",
+          "masterSha256": "b862e87135efdea00107826fd2e45bd60a50316991e2e961d4c254e12ba94880",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "a68b5553a113a7a5937430ef143ea819b0818806f4e368e566d61a28bd0038a2",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "149602475136b4efdb17c3281f9f9679927875fb8426ca022a75491c5a69efce",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/dark/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "6689ca6f335fb69728d19659ca0cd02601b852b2fb5f812eb40ecad099bf1a0d",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "0dcd9b9a184b7e5efc5545bd1052e56ee890741c79f7d8aa82827d8282d87c0c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/dark/tab-medals-master-v2.png",
+          "masterSha256": "e9a44128bb58c99d25ee10c8c8d3bffdfe90dfb53f2bf444072829e09e22a51b",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "65f58295c451644bf53c25e70015f59ba3c1ae229cbc664a565341c515acbd2a",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/dark/tab-champions-master-v2.png",
+          "masterSha256": "e92fc32ca273ed1ea97fe0f6732465bfa7949c2141e4ada6c06b8b1374b417fa",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "4880f84f1e1595f33230dcf3defb0606f0b5c39707f1f3e60342a519acf088aa",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-amater-master-v2.png",
+          "masterSha256": "c1a64176ade36418b1d25f7b2a0f96e8c9621dbe61c54dd568b30d5390b22493",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "80e0769853f1c30e5b47fdedafbc26582b3059b928c0343aa125bfb7dd1cc448",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-profi-master-v2.png",
+          "masterSha256": "0517ee45af1771f6e5560bb3caf0158f496c88fa32a10e2cc3ad951a9d937490",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "02cb56e84c0d799c4e1ff2607188eb57de803b54bb92fcb0c791bce934746a8e",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-majstor-master-v2.png",
+          "masterSha256": "e7042c037a31000c25aa2961e424d7a45adfd12cc23e390953182bff85344c0c",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "f69ee4ee6832893fe5972d86889919269170c458ee26cff23afef83195d74110",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-legenda-master-v2.png",
+          "masterSha256": "a7def917138fd623991f7387e13731b933c4a353a31670f84aeff2c68804ff65",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "e028230310226e94ef5b0e40c4c31d52c728e95fa4110e28b085714539f09431",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-titan-master-v2.png",
+          "masterSha256": "f925dc366538d43f310b1828960c5a392028d7b79d06208093acb37a16a58edc",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "e2b04938c081c2ea9a72e4bceefb5502c281ffa3f78f2ce51c96ab2c26f11574",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-alltime-master-v2.png",
+          "masterSha256": "b4c7b378dcdb5c862961a0fdaeb87e7de1c8ed645d739a9136f47d608825ab7a",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "e9f3da1f4e186af16c49a072d5d4edc598091b7f3380e6f53e3728cd3e580644",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/dark/medal-gold-master-v2.png",
+          "masterSha256": "6cd30019c62b8f8b8e0b91f8b268bd33a768cf6d189288256cbaed0a4bd6d8ac",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "29abf210f63f3261db368bbd09785106cabae8efb66a7ff1977375f7fec57610",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/dark/medal-silver-master-v2.png",
+          "masterSha256": "0e47588e04c6f4773dc38e5fbee5539a7f15fe4b267ec26e02f5af0a52a53587",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "28b4594f7d75e326b4c7afd7a07352c7fda4164a5c6c4caaf8cfb261fc034d91",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/dark/medal-bronze-master-v2.png",
+          "masterSha256": "bdf98adb33aea11ab5a71129549ad5973f44052eabc2933548fd27efb645143d",
+          "production": [
+            {
+              "file": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "77c55d01579903668e855e55e7a4f4f17ac686396655724832414a58717e7024",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/light/quarterly-league-room-master-v2.png",
+          "masterSha256": "10c95b55850f187464bcc208102118aa1af9389352af466c4dd4ba8b84184cbf",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "1e222ebe1aa0136d69e9887b5e2e2c6ee87e2e2d5b7a5d1fb5a441eb0f805431",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "c97f5a53b2794605571c25752dc68a1cfc6c247bf6fb632f590036062225d890",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/light/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "54b272725b97c1106b55baa0560c7b997c82e010e542738dbeb5d6ebf77cdc10",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "18c35d5b7967e8927065122295cc4a9910da6b317f9610d3bbcd4dd8976b0324",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/light/tab-medals-master-v2.png",
+          "masterSha256": "9f5fdcbcd2716222a295b0fadf1bc9573505dbb0a9b3a04b1f60870cee588e21",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "227731150969d2514f5022c69892830c0d7bb53a5a5f3d9c7533b99b5c4c85c9",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/light/tab-champions-master-v2.png",
+          "masterSha256": "08dc2a71f5420aa026b95bf7ab8303af0810fcd353f005c72b1d25b518cf7045",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "59eff32e28ba77344a45580ebe8299434cdf9d4d7c9f113ad6da93a78ad50227",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-amater-master-v2.png",
+          "masterSha256": "7a9232d3b7c186bdce8c46d0e99bd7d082f563ea38ff391bbe7d40e20d7fa9f5",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "bd3d4eef75e7febd2f7b3d2dfc4d6a4fa9b28dd0dbbaf8e283de3560dc013f6a",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-profi-master-v2.png",
+          "masterSha256": "1fbe228f79d59e69686176effd968164b0ea74b39f1dfb24456b553a8593b9f6",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "b743564805fe8efe0dac8b60ee5ccfdf822ddbcbd8a17debbdb23b28941136b7",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-majstor-master-v2.png",
+          "masterSha256": "2ac36972b454d02d5221f89c63579714cd9f615a7a8a6a0620ea8a0ea4202106",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "9388826071c67a574b34d9b21f8826d1b98a6be6379c713796e172b0dcda4ce7",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-legenda-master-v2.png",
+          "masterSha256": "93316696d4b2a7b5bafd4cd3627bfca6a5d73181f8e35d2ab0a8c5f19ac67fcb",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "1ff22b0f42db94e27014d7420136e868cf8cd64e07c64951f518c03f00bbbf9f",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-titan-master-v2.png",
+          "masterSha256": "7c68f5d8a254359b0f8a6e9126498d07a946324537ddb4f53a519d4d777aaaed",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "fe9e99330a98ac4cdc8dc6c570cbdd8a4ab1712df91e8345c04c5635cbf22c1a",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-alltime-master-v2.png",
+          "masterSha256": "a7a72e932e896db190750acf3fc860a60c82dca43badfe422a9ac16cb60a7012",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "a4bbb8c79f6a534b5df2686d039ca50cdb97e89fb1f0cc0a01fff441dd729ad4",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/light/medal-gold-master-v2.png",
+          "masterSha256": "d8b093c05596ebf9bc3acf556943a8538adc5cad617e0df62f9e2d03992917db",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "3650b3462dec14923a6daeaef67482593efa58a909423e423b914ae1689b2331",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/light/medal-silver-master-v2.png",
+          "masterSha256": "ea60cbfa47156fbd46ffd2b827375923135e7eec7315f2a4a8e1156bcec2f566",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "cd2fbdf5e72b854b4d34e48e81170eff0c08ee576884e98e78ddf9702aba1662",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/light/medal-bronze-master-v2.png",
+          "masterSha256": "ba8ace768cdab3c96fb531ded53390cc40a7bfe7ce2814528832a8acb2c340f6",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "4266b03ef852c62b7384dd4fdccb9c6b1d95ff4977f40dffe362a91e313ae686",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medium",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/medium/quarterly-league-room-master-v2.png",
+          "masterSha256": "3f0c4b68be4cab26509daeebc6d53a5c3853aacab63c84baac6192b431aee654",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "27cf486fe016f62c8826580b4b7371ec2c119f2c8119acea465ee2bab136398d",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "5b784a8ad0d053ad70fce0aaa5f5b0f1fd6e5a03310bd1f6e7c3dc791ccd8d00",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/medium/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "b93db6c9fdefb2b5dc7c3a1537d89350ab34ee7a7b3498c5b972e5f382529653",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "a0d4b02d498f7d5446d6feada4d776a1a8e6fe6c5070ddb58b1468554548c356",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/medium/tab-medals-master-v2.png",
+          "masterSha256": "f44baf3546bf92f2752041d773e422921d270d92cc9602232c4d04bce165ca70",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "d142747434d18813954a5faa04f491aef584eb1a7e768e6d92b380749b57393f",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/medium/tab-champions-master-v2.png",
+          "masterSha256": "1415064964a6858e5c40372534f1834355b462bcba6786ba2c8d8695e547bbcc",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "822cd757bea4764ef6db80fd7fe398cf626d6ec3a1b31bd68a3f17c4ad7d1a8f",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-amater-master-v2.png",
+          "masterSha256": "29d9f7d729a9375dc6c03ae188f92bf2acb8476b8c1b539dc31195b7ffa51f12",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "05212f52170b1a7f58e02368eb77e978720febabf6240e76fbd4a433a4898fbe",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-profi-master-v2.png",
+          "masterSha256": "81e99e2c51a6c0107b6ea57a16cbafdc2027abf58595dd7abe323ef51704e8a0",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "93b274c06b5495889490d196b84f485155595aa53f95661bc86f3e148b799a3c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-majstor-master-v2.png",
+          "masterSha256": "b2de279122148dcc4f5e0cc2329a1978fc01131d7a48f3f230af399d949cc247",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "8e93731e788c4c301e8151c3b63a7eb9ffda501778f62fb53d3371e734b31d59",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-legenda-master-v2.png",
+          "masterSha256": "795944afabafeb3d3a4b3b4907248de6e7db5740a5cf742402127a7b69b0ce0b",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "518caf909d11e8b928ac226fe3fbcf17059afae80e2d88143d22020f8fd72df9",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-titan-master-v2.png",
+          "masterSha256": "5e1ae3f0ef15d869cec990390095d3b76c46b4659cc973775df095576f690c4a",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "24621bc4245ab20508bad6512deaacb2d59a5b343c66dfc50b4dd105070ab71a",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-alltime-master-v2.png",
+          "masterSha256": "0ef0a93aada0dbba2ff2dd7c4ccab1a29976d9e3a6ec13e6bdd0a03c94a5b8fa",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "827fe5994a3b17cf75969071ed65ae04f99bfc26f7c571fdd93dc7de94b5ea86",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/medium/medal-gold-master-v2.png",
+          "masterSha256": "3acbdebc0e47664c63b502bb2f172dbf0548ddbea57eeada65abb832a218e9f2",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "89a90d9f16c44c1af69be272e86a612e74420a87184bb7209190064d480b2697",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/medium/medal-silver-master-v2.png",
+          "masterSha256": "c94766985bd01848888ab2f687fb3c16a76ff69098d5e632b70301d8cfdc61e6",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "320bf4cbc7099dee1e6b0b243cbf45dedb508973465ad753f3d7d1a711258610",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/medium/medal-bronze-master-v2.png",
+          "masterSha256": "cb9fb782b4df2d20ed95ad0ee557abece97e9f750818f923aab83edcac8cdbac",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "e48740b9f7473cfdc856b0f567c726e63e2c4939022ea89a598f961723d16407",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/winter/quarterly-league-room-master-v2.png",
+          "masterSha256": "1da5bee56c094a3e7b5b8a32343f8ed9c7adf7fbc547a6edb1b959ea235af156",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "b224f415a63be0776bdd1ded433f024bcb755a43706eec674e62c9695d74777c",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "fa8d28022c7ca71321bfc74cf3e53ca6c85bddc95772594898e90af749b60bc8",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/winter/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "e3163bd41ee3cec5cbfc383610281b094fdf6c2555b3d71599d83bf6a12092eb",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "d478ed73c885476f190565f34aff1983f3fdd5c75faf7320ffa5655efab4e954",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/winter/tab-medals-master-v2.png",
+          "masterSha256": "e1ae5307927184ef85dcd1ab47fe54db6120ed7f6963e18d93b651b9e48c48e9",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "03370b3fbb7604395081908f6ba254a7740039adef87f197426be392c5dd78ab",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/winter/tab-champions-master-v2.png",
+          "masterSha256": "4690858c16586f18d1c30e9fa9612a4d70d787e3d2a97324742f96e85466b36d",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "471404c19a97a56797d23e9fb5f321bb60e8a2b26cbcd9617ed52d81adcfc9ea",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-amater-master-v2.png",
+          "masterSha256": "0cf8c7e1c503f60726c6193badf45458e0bf91c6642a77e5db292752251e5b08",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "8e8eb60ddaeefa3d5bc1a880c41105d16028761265564046d2c0ed12338635dd",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-profi-master-v2.png",
+          "masterSha256": "01ab122ecbc1269bf1fc20374c5ed0b5429135d582ba9176fe31746bd3d2ff61",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "37fbcd3606ea7849d23d9813153af4d2dda7cb7af4a5f98e30aadc3bbd43a069",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-majstor-master-v2.png",
+          "masterSha256": "10854c1d1123c48a55b8f49a2834373ea55d8af3e9fc3f0a6a8c906944657cb7",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "edae69dc6ff522b496dd02940580ccd03210a307269438f2b144cb72b793c5f6",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-legenda-master-v2.png",
+          "masterSha256": "f4b6bd87e4d2503b4f0d9a0e0bca822a4ab802d750c2d213a042267cbada28e6",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "4e117b1362d56256575677bcd9b8b0be7134386aa7667b3ed7874bb7d0affa98",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-titan-master-v2.png",
+          "masterSha256": "5a2dd025fcc6f1e117c333e0ba878e59a8de0af1f7930628fbc07bf0291bffd4",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "69b8bb38f20fb4416c909bf85784fb9c37ee6c9dd2a24affa8979d22eca62438",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-alltime-master-v2.png",
+          "masterSha256": "fa7660f43585199e7bda2f96b6b4a295b21ec25e60da27f0f642467933ced0c1",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "ff2326f59aabaf8d5fbcef6b70c634f92d96ed822e09aac11afba839632a2410",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/winter/medal-gold-master-v2.png",
+          "masterSha256": "c015505ff34ee12b81f6ebea433cac250b969f7b1e55f1da61213f6414f2f350",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "8cd922d5b751a8dac042150f3c60925e6d4ada21967f7212fcc7ba66283f8530",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/winter/medal-silver-master-v2.png",
+          "masterSha256": "c46a8598db0d66a28aea96a4eebf608e0687b9dd92050ee5686774227cb376ab",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "13e07f5dbdbaa293e71c513fa99c088854da6b285059f27e65cbc5416d81c51e",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/winter/medal-bronze-master-v2.png",
+          "masterSha256": "2048d57b1e0c61c16b3073293d81fea6c589da6cf27763198462ef9b1e46a247",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "0c2ac9c0f22dd50503674a66bfe267033be5a5400dcfde0ffc79b17a9f835f6f",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neon",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/neon/quarterly-league-room-master-v2.png",
+          "masterSha256": "198a4cbba4433176e1ef5645ca2a1131b8c9039d8f3ed21a32c5a7b1487c3dd3",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "974dedd3af8a1ba3b096e62e463e3180232689ffe915c3374f0758f2bfc6ae52",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "c54ee82d42a77620c1ff3ff05cdc729442f43d4df355bc90560c7c502388b301",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/neon/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "2501f5df5723da0a9b435c6694d8d2d9f77610b2a25da66cba1fc7e636837e89",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "c156dceb48ee3648d68c543fb94dfa961b5235d60f6ecfdf48c6152861ce3254",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/neon/tab-medals-master-v2.png",
+          "masterSha256": "29649878b90274119e81d368f61c8b2dc8d97c9f3f0432eff978acf431870c63",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "c3b7328ef7cf30fed6eabe56adb8e1b27e56375c794fd1f8a1b244c788545578",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/neon/tab-champions-master-v2.png",
+          "masterSha256": "bf2c2cf7d47e6b724b6792453d5e93a4c307f00611a7d235cc9bc095901446c3",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "43888efd268feba01e992ffb896f2e4cbb8b306282bed7e3f3173deef51593d4",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-amater-master-v2.png",
+          "masterSha256": "f52bd2155e6a2f26ee549110d5759a3dd39c9c730d4aa4ff8aaeffaeb7cc275b",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "9e7346727d00d9c485b698b5fb6bcf0e8d9372ee444bfa241ea4e4dc485f4011",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-profi-master-v2.png",
+          "masterSha256": "8a417494a061226584572a03ce9ac2014ffcd411452709febf0ddd874b356945",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "97b4735f64b0ccf6c1919a1d93e67255c53d5a884b4e9e0ea2bb6445358b6ff6",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-majstor-master-v2.png",
+          "masterSha256": "c79358d518144ae86027bd77154c94fdf57b39797dd2aaa9a293cb51537bc670",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "42019818e835d89c1f01e8a1cc9f2f3a9608753c249bb9c45185c9fdf0ff70aa",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-legenda-master-v2.png",
+          "masterSha256": "7bfc595aff6792a056b74255dd10391bfca238268f39047c5422725270d0c856",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "28fb73d7495ed22c972691efe5e81a103a18809c88ee8dcddcccbe6a82eccc7c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-titan-master-v2.png",
+          "masterSha256": "94bfcfcdb64822873d998ebde011c7b0d68528cee4806b2c6ef89210fb33ae32",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "7202c606cc30f4cab9311ef687503d433574f6115e3bf17711e9847807148a39",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-alltime-master-v2.png",
+          "masterSha256": "0a17e2eb27d3f52596cbba60c26f05316ff066fa260f31e4067e613a7f216dc9",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "476d4616aee273f14c31efe9adfda47db04c621f07f36f2606c5a26b37911db9",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/neon/medal-gold-master-v2.png",
+          "masterSha256": "8f788b2d305cbbe5298bb54260376a627e2bbc88f9df34372b3e8140dd820207",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "aa09c4f2d8f55f7b81dc841dc86ad7822f08fb7dc8474862defe5e3cc0da0956",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/neon/medal-silver-master-v2.png",
+          "masterSha256": "b07821fac27228ef0e4da2043e6dcacf25ecc5d61a61a2d529c41213f90d2100",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "356467b25c5415d5e85e53843d000a573544f9fb01b4adf838ec86a9070b75a2",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/neon/medal-bronze-master-v2.png",
+          "masterSha256": "d1b65b2820a5fbc6230785321e67f3f36bc36782a15df76ee557b781c31945d8",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "43a59f4e8719a5028df244a90da22fd09982279c57788497c6ccfcdf3e181bf1",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "amethyst",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/quarterly-league-room-master-v2.png",
+          "masterSha256": "f791f1107011f39b8f8915e49f800e2c9c6581bd0eae2720af5ae880defd6549",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "4bb19b04e03df468840e08d938f42ace40fc0de9a54b2b6b9f347122f960f3f9",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "1b306f96cc8a9d2785d34c4501e2a0074315d515fae3b8048362ec8e1cd43191",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "51e78a63ce033bd05f089d36710d7d8070a021fcdbc2a8d7b0278b5582cda1b9",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "b298ab11d08b596c2154fa13ba37ba79f4411f1f2287cdef2f0d66c69d212193",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/tab-medals-master-v2.png",
+          "masterSha256": "73014a6f82650567dc9ee394428956e9981a405ee42e152ed0490c081ffcd627",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "c11a22227e86916696c33cd8ed009287b34f381ed5497455063400e9b0191d15",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/tab-champions-master-v2.png",
+          "masterSha256": "b456ac0a351e65cfb4b8df7331f0dd44b143d3e7427de2a77f052569c45ba699",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "4b2431d53ca0a91adb856186ac9c3d4a15c88be22cadafb09d909aa24e17b502",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-amater-master-v2.png",
+          "masterSha256": "8cdfdb4f48b3c6cdb484ee13cd7b8a8e4ca7805bc53d9c37616a8cf7d8fd00a5",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "cffd822e21a4171e96754e4ac2b3ffca676de4e7170fbc1d6bd5cb0ed02fd315",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-profi-master-v2.png",
+          "masterSha256": "a661be3abad28972db6da3ccc68fd9216a8ab7ece151256f12417ab9dda139fd",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "1a5a3d51d60fd5cf724ce91616863ebc0e19043327aade0457e608a7aa777dfd",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-majstor-master-v2.png",
+          "masterSha256": "a255ef94efba23b0eb4a87a56186739c62ff38e67cb29298dbc68fc22b63a623",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "68f7524593d9bb488fd1b7a5d699158dafcee1d652d20bd0d88559f067d29c26",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-legenda-master-v2.png",
+          "masterSha256": "ef37fa6aaefe27c16803c1387512aa50ec4c2ef935bb19879f140d39b27aee15",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "ebafcb29376004228c313f1ec78cb21380ff57052e91c2afb8c2057b048943d0",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-titan-master-v2.png",
+          "masterSha256": "92990e7d6fc30e54ead223f1d9cf422e75e3cda81945d16eddf7123bf2ace33e",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "6b64a4bcc754dd2332a0d7596a4d105bc3c480d8730c0ea98974012f26463684",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-alltime-master-v2.png",
+          "masterSha256": "ec3384e29f82314f255b4ab5e1378506efddfc1dfe8d27b58cbac76184f3d585",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "4d52cd79e9698c53488a7a448834c0f57e51ae8e0977c24fe731b236cd65070e",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/medal-gold-master-v2.png",
+          "masterSha256": "343ca8dca27cd04cc6964c347458b997ca037f14a3811905fe4be42286958e48",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "d1d013597bfe4a73bfaa8ce099bf0119f6a874ab02a33c0deb39beb9f4024bbc",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/medal-silver-master-v2.png",
+          "masterSha256": "7fe126e2d170ba91087bcd5a8a35f53a530161a81e9bba1ccedd8804cb27de65",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "6e451884e8ac97def93480624fcf230236318fa2425fc5a3448865e5f1b69c96",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/medal-bronze-master-v2.png",
+          "masterSha256": "7cd09fafa9f40144cd2536e164c24e59153507e47d52016209801f25227276a2",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "3a060da4fc4cad8f6ee3c6ad762a241719cab701c260a41980d88cc17f15bdc8",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "easter",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/easter/quarterly-league-room-master-v2.png",
+          "masterSha256": "cc38d9947fdf5353b2f8b22e028fac8c1b224387f3719e9324b7b1707d1e6e0e",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "a432eee5aa19ccee021a3c55d64e2da381fcac8cddcc9d44b75db4913e549f2f",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "a2aaebe0eeaca7dfaf8e2e8d5f8673051306c7c2ec1cb5092b4e5e09e2b6bc3e",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/easter/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "c34ca2d1b468c67c63116a07aa4dbdda70bb38fbdce8a80e1e7a0690a8d3f749",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "8b7f7d37de243208fd414b0aab3deed8a48ec20d8448fda2d53c92ccc55c7d88",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/easter/tab-medals-master-v2.png",
+          "masterSha256": "8d5da1bcc709d502a346ad648f6e028eeefbb8617377bcca81eaee32e726d01a",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "2f83fcf13d66094809e752db07532ebf641211553c9aa6ca61d8485ec8e74905",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/easter/tab-champions-master-v2.png",
+          "masterSha256": "fa567c63933235833df3d053921bf812ae916229ed0dd9cd3fab4527ac1ee2eb",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "0c4a923aaff554330e4338362898abc0c5b9014e5ebf4824435f6e8be602cf4e",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-amater-master-v2.png",
+          "masterSha256": "5a23710874c4fa74f8f959801f950481df28dde95086aa4a2b6ef706bbd0adcb",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "4171ebb7a8018baa48d2e085bb0e35de6a18d440e128acb66844cc06f7881ba3",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-profi-master-v2.png",
+          "masterSha256": "75e95841988c8d5b88bc9eccca02d94506c5bd16563ff8b5590491468c144f77",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "9fe0eade132a737666546bf213be2b94adee06d1fbe270732e2ce6e1286bca55",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-majstor-master-v2.png",
+          "masterSha256": "5416aed32cba5dd0be8541880775a4e5c1a00fc657e6ca3979ce7a88f3528d22",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "b6785a3211d6d47b68e7519f1916e5c7525df1adc29ed4d8ed71cdd19269f9ab",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-legenda-master-v2.png",
+          "masterSha256": "db2f75b86b5033e2e4ea4f6ca7ebcac52c55a474f6bb4a4a1a7c2734cb4d1337",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "cea38324f47eea8ad031e18d4d0d13f889d06914bc5c59d6dc6793d57812ca48",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-titan-master-v2.png",
+          "masterSha256": "9e65f486c51a374924fddc65f3e18d146c9b22878cd73a0247c764789717ded4",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "a9088b06e586b5b2b052c08562ccad30a657ddb75783da77ddc7f7eabe3a3797",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-alltime-master-v2.png",
+          "masterSha256": "1c3e9517209feef13f03ed71d09b7b6f6bb2ddb1e90197c7a3aa5ad8bfbfe448",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "e68eb40941bbe72ae1923df7ff8726cecb3ad1d1b5d0d065223d283847ea6b31",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/easter/medal-gold-master-v2.png",
+          "masterSha256": "ec3011c5a671bf2f792f7e5005c3885d397eea979453f7a1496012ae6d47e5e8",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "8f6edb904805c4c3a764030641de664c16df493b336e519aab039e3ecebae69c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/easter/medal-silver-master-v2.png",
+          "masterSha256": "192fa91054352853281cd6fae1cabacbdc11bff89af39356b9b5429e157105db",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "451fcfab195843a8cfca62a4bbe1a608af4361dbfd59095cc9ac5827ef3ee7e5",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/easter/medal-bronze-master-v2.png",
+          "masterSha256": "c65627cffae1f66ae2c8d7344a981ada56b17ec9d740b5cd7ccb02add50d2e6f",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "46ad2d28d04b9e7ceabbc20a7d939f6b3c03a3dfb955815970829bc85be435a6",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desert",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/desert/quarterly-league-room-master-v2.png",
+          "masterSha256": "1136effb6264d0f2decc46f6ac66d32377f576027e896c671c88a2eda53929f6",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "d9fae106cb9bb47b0aea80e4a9497a629d384b1c53a25457126b8a12e6c7e797",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "bd06cbbf0292ec88c89e6e6b5cba20453ddf2374d3d82a1355cfcf577ae8fe1b",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/desert/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "3616853a3bd78c56557d7ace5b4df56c0d75ecb182a41f5425757d21327c75bd",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "6e9f0b1e8a8045b324169b78e10de4a24218b4bc67bc03899448418f565cf4cd",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/desert/tab-medals-master-v2.png",
+          "masterSha256": "f7a9d50407c6a20888a929d8a1cf75038d2d4fd275daa4ebc40f2641ce91437a",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "040a9cb2c2be7cab5ac68d67ca9b5553328d00be59b9d1a9b0c4de209638193c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/desert/tab-champions-master-v2.png",
+          "masterSha256": "e826a0de3796efc13c6942afa62209f4008f11ad9a46f257e138eb5e149f6d9a",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "062c5f264438ec1e2d408ee7c94dd1172808176f8f81f811cc9b31c07b57dfd6",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-amater-master-v2.png",
+          "masterSha256": "5b25a165593f7347cdf4a721874afc51493156db1acaf145aa968ec8d83edc5e",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "03f5a1ac449a87acd45f950731a24b210823ea897081c6e9b68f3f5ddfa928a6",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-profi-master-v2.png",
+          "masterSha256": "eb4ccba55579780c938e4aabd0b8b633aecceb7540bac476c7df02452ec227f2",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "d6524d2de528fd8521aa974547fb7560f3604ce9e0a710d09dfa50beb492f08e",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-majstor-master-v2.png",
+          "masterSha256": "ebec7392326ce63d32ce449e28dfc3b0ac079f46137280b45438afdbed537ffc",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "0a9221ffe39610819acff5b170f9de61b418731d07c406f8bc24cf0a7cc7a818",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-legenda-master-v2.png",
+          "masterSha256": "62da4b44854468544d65632d95085fcefed3ee37611d60683e81741707b13471",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "fab6aaa4ec58522b41d7748f6d053658e2ccd3d31579e4f80ca62385841499ed",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-titan-master-v2.png",
+          "masterSha256": "415bd0e1b50fb3aa3561757c96885ce99d2e4d3367547947cb244341eba7913b",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "79d07f523a100b367ec71722cd82a9d0999f42199a1705558f78ebd68e52eeac",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-alltime-master-v2.png",
+          "masterSha256": "1bfc18b5d7b82cc634e436c57b083137e44543ad657bdcae19642097e27303eb",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "398579544f9ff7a648db5cbed2d52849e38509e363d44acf715f6948ca3d4763",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/desert/medal-gold-master-v2.png",
+          "masterSha256": "1f6b3a44a8caa4497038e79965fd5aa4434ad15ada9df8d393caaead774d7ff4",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "4733ba393c343316bb832790bbf271b6fb251393626310548eb66766617cdbe5",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/desert/medal-silver-master-v2.png",
+          "masterSha256": "a1a6e56974c34704bb4301ec8e467b1d19b0d7e78490a5bbf665f48c29bc9b51",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "18b9f28e441814bf4a417759e02b52a4aa9bebf560bee134b53ad1a6c198dae6",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/desert/medal-bronze-master-v2.png",
+          "masterSha256": "4de4d279b8f36213d2f3adb75c130746d3c0967de1ec8e70b719fecfafbc9ae1",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "303a8fa8fc6efdfef62019c3ce56fa5610689d53720dfe1861c9e652a788d428",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moon",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/moon/quarterly-league-room-master-v2.png",
+          "masterSha256": "692371b30b4d0a670285b94e7d25c188e779d6f598417d87e106e9b9bc8941e6",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "113a6bbdc9a082c63be9cf0721513f862aca68bd8612004c871105ee789d17dd",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "0160b2fd19f64bb95904e5bd153910bf70e918ef6a10eaf58d5f43395ca5275b",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/moon/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "aa59ce35a2826b92c2922fed35384af865508ef58cacd439af039f1147199a84",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "520db106f482d8947c2722292df6af6fd997a5539d600baaf71680a7e3e7762a",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/moon/tab-medals-master-v2.png",
+          "masterSha256": "9a855faaeec3227c397d3eb0a298c75fd3e18ba874f90b6727dd69a66ae62d0e",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "b7e7c98ac022298a368a734630fbbb6ef775e1beeb1bd868843979e9779170e3",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/moon/tab-champions-master-v2.png",
+          "masterSha256": "23c45486037817ffea3cc2e76be435fb6172063ffed6342943fb5198428fbf06",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "c75728b62f552928ed8dc35737c4b98a267a3905d58e00a19233c970b0badb87",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-amater-master-v2.png",
+          "masterSha256": "fae8c6c769f7c3c8e6fc5ab533b52c3c1da7904c3e769b0681bc3a13c10c20db",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "b9cf60f0d0ee94a2cf6b104a083c10e8ce6cb3b3e5d486e1533d8e5bd118aeea",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-profi-master-v2.png",
+          "masterSha256": "3204d940fbcf95a1d24a0296ce9692982e33d74bf6179973bd34487d778fb422",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "b41406f3f8b61fb2050c65bd3a1d9afd6778cda8d89452abf7ea6a814ecd73c5",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-majstor-master-v2.png",
+          "masterSha256": "a13ca696eaf9a98e065c2463c5eab539b0319bdd6b4f82d830a0ac3add3980e1",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "9a9e729632cd1a13ab8420034a0af44502adbc791a613fe18323c0464d9d282c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-legenda-master-v2.png",
+          "masterSha256": "eb289dad73fca579cd02ccff8294cc45a63f9277fda34fdd251b3979f7316d03",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "cc76191e7e64a32103c5f631f744a58ae47564ae4f7ba998c5a5d05cf3c1fa34",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-titan-master-v2.png",
+          "masterSha256": "685c2506c06e8a3ebcacb406573a3f3522577b37764cd07a64e4a210dde1776b",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "c24f9724160e90ac62ddc4f91078851bf9c3b5150638e711e6b77222b5b1b224",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-alltime-master-v2.png",
+          "masterSha256": "399a6a6479ca7959ee0aa1c33472955ed0abce2d6e2dd5cd1b8a9c6f80c7f38b",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "e352982bd94d2e70f1b2168219d6e4ef5acec90775cf27cacf798a6a1438571d",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/moon/medal-gold-master-v2.png",
+          "masterSha256": "fb3f1da513b3128221e37ed039aed82677d200725bd472beaf9f605cbe1ce386",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "78c9f05921c7daa1ac31aaa3a2ca4ec079ee1e660ed1e000bb92d78d51e5394e",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/moon/medal-silver-master-v2.png",
+          "masterSha256": "8ef1473699620018c543b47bf88472d0b03f8302a094ef8b05699f9c32ab7373",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "9f0a52d203c50d5d4829369cd2a01f0cd79545926e2021e5f353a7fad0647dd0",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/moon/medal-bronze-master-v2.png",
+          "masterSha256": "7d055d515dd66a7d1157259bae59f24e36ec46ef0a372d5dd597f52d5691074e",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "6706d9d5edc611383dcc44bca2f16efe35af13f635bd88ef30f6ff11815c081f",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "severna",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/severna/quarterly-league-room-master-v2.png",
+          "masterSha256": "1c6ef69e947848459295d6862825502853f9efe955c4c4d3dedcb65f173c00e0",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "sha256": "b90c4267b5d3c4d5a1e008b087421d4d7b50de055be7209efe5cf492d77e74b1",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "sha256": "276ead0ad9d22c5b48b12c55dc8dda426d8dd32bf96486f30c5233e3a5d6b9b8",
+              "size": [
+                384,
+                384
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/severna/tab-hall-of-fame-master-v2.png",
+          "masterSha256": "89ca172cb6971c2acbf39d36a9262fff1317fa19e4331484b3a5411f25b51a73",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "sha256": "cebbd1f15c7e6804352cab2578d168d84d472f53fa78601811cd250894f0c855",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/severna/tab-medals-master-v2.png",
+          "masterSha256": "7cf3ad819ba1b892315865d1a049e8e3e2a1847d280bfd427fac731aba31a46d",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-medals-v2.png",
+              "sha256": "b53d84b5ee920773eb42fea4a2d052228ebe1160b7afac055f5e30f9561f057b",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/severna/tab-champions-master-v2.png",
+          "masterSha256": "ec68c1ed59850fe0b1f147f3aaa613d99e0477856b883276f6c94db3353b7d80",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-champions-v2.png",
+              "sha256": "102b7332256020730cc66fce1bf1fb69ccfa4fc14f8b521534ffc6fd4f1d82c3",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-amater-master-v2.png",
+          "masterSha256": "d59505149daac8d17b3c8199c52776e93abfb44c62995195faf4afea7f9226ba",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "sha256": "65c89bc7b5e7b64dc084715ade434843720d89624eb863069730d2bac3c95efd",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-profi-master-v2.png",
+          "masterSha256": "a85b1e1c4b41049a0d8992902fdfecae89b39f7deb881fe7d88d6a2c8c752597",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "sha256": "dc7260423fa92774e1ff7e9676bcb82f13ffd6c274e4a4b3822e423a1ed777ed",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-majstor-master-v2.png",
+          "masterSha256": "cd980aecdb1704b18d768f7e250c5da716a0934139811cc23eae447434543105",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "sha256": "c8fae9b07b526a78b9a419e2332187019ffc980ea8ec18e013f87085aa518621",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-legenda-master-v2.png",
+          "masterSha256": "8a4f8e8bde2e6fecee6eb1ae41d81a8ddea5d719d1e0b731ba991fac3362b4e0",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "sha256": "cd7e4fcaf518aaf521fd6e68accbbd01bd2d50c5153f56107dc912aa2a918710",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-titan-master-v2.png",
+          "masterSha256": "018e5300bbb9050f1aace28ab07857f991d58d9a8f5c38d4f9fac16ae3d0945a",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "sha256": "1a9f5b40407f965a172dcf119d672761dde444ec28fb64237b777ac77d1d37e5",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-alltime-master-v2.png",
+          "masterSha256": "daa492c0f91a9d530897d91f236740d901932a2de834848f779bfa5e8f4df3c1",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "sha256": "948919b01a722a859387f0bb98c0ec58bb69c7661bebe72c2571640dd859739a",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/severna/medal-gold-master-v2.png",
+          "masterSha256": "f1c564e476843e1ecc908e7368d81d325b27bc1a850d07f4add3d9223e6f6a42",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "sha256": "0fa12d78ddb952aa4f1f815665ca329f42bdfdcfebf8805950420e2f057e88e1",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/severna/medal-silver-master-v2.png",
+          "masterSha256": "7ed1d6966a19c3a6556cec199c5caca80ececcd6a92b19d7d92f0dba03a6dd5c",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "sha256": "f56cb7ac6c8701187e6dcc1035cc795737ce45dda7dedab63e2eb81d39153769",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/severna/medal-bronze-master-v2.png",
+          "masterSha256": "6a725db01cb021ea05c6c4413c0cb33e8131de184bc61629ce556bc33a87e183",
+          "production": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "sha256": "850db2046debf22f92825c64c487c8d98edfb20be772c5665ea315a26846575c",
+              "size": [
+                256,
+                256
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

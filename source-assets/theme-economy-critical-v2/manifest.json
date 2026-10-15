@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 1,
+  "style": "3D Soft Neomorphism",
+  "generationMethod": "built-in imagegen, one original transparent master per theme and semantic role",
+  "technicalDerivatives": "Pillow alpha crop, resize, and a small rotation for two ducat angle views; no cross-theme recoloring",
+  "themes": [
+    {
+      "id": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "assets": [
+        {
+          "role": "ducat",
+          "master": "source-assets/theme-economy-critical-v2/masters/easter-ducat-master-v2.png",
+          "masterSha256": "ab32c49885a24aaf2842a3e0e453cbb2a9b7e321eff0677d174834369f8d56d3",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/easter/canonical/ducat/ducat-front-v2.png",
+              "sha256": "a854c2f75d8215cefd61029d1c15dd48374de1d49847137cb6ce1c06d0724437",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/ducat/ducat-angle-left-v2.png",
+              "sha256": "25ccbd1a5457b220ad130cb5a00c91759644d32a767fd6bc08bf43883cebf626",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/ducat/ducat-angle-right-v2.png",
+              "sha256": "3e0fe45b4cd703acd47bd6c7cbb088a39d6dbc4e6beb8d32095e83739b1e6c04",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png",
+              "sha256": "089974282f5f855ac508bc1f1b0b7aff41f5d37629aed63199cb32b8a64c91cc",
+              "size": [
+                192,
+                192
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/ducat/ducat-particle-v2.png",
+              "sha256": "fb204c1197a2ee94f14319346e727e733dbbc4cb31231b04375a86a02206d437",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        },
+        {
+          "role": "undo",
+          "master": "source-assets/theme-economy-critical-v2/masters/easter-undo-master-v2.png",
+          "masterSha256": "75ca2d1dad38d377f9bf7fd7e4ecf265906fda5dfab74bb595011e8ff9bfe0f6",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/easter/canonical/undo-token/undo-token-front-v2.png",
+              "sha256": "dc5ef0ca91e9e8982641aa5a3beacb40bf363631b2fc7dda8e8487667b784c3c",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png",
+              "sha256": "0d8f7a04e7f3e1ddc55eaf09f0bba89f7cfebb9aa53ed9d0774175925a446cb6",
+              "size": [
+                192,
+                192
+              ]
+            }
+          ]
+        },
+        {
+          "role": "video-active",
+          "master": "source-assets/theme-economy-critical-v2/masters/easter-video-active-master-v2.png",
+          "masterSha256": "ac7c1c071ca136f947320d2fd199ca726dd4d25f70dc1ec0778ed68c0f6b5b42",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-v2.png",
+              "sha256": "4276936046c035f3347d550c51731143079491e5c3a50188ace98eec9427e0eb",
+              "size": [
+                256,
+                256
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+              "sha256": "710a3e7c40413889413a83d65ced482da1a5acf75aa412c5927bcdb2d46f82f2",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        },
+        {
+          "role": "video-unavailable",
+          "master": "source-assets/theme-economy-critical-v2/masters/easter-video-unavailable-master-v2.png",
+          "masterSha256": "65eb33236c07921f85936194629c2ff76bfb565e2cdf20fac56c73599ba958ab",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v2.png",
+              "sha256": "20f1d84724de89738ed4e47ac4528be4f93f050e84d92ab49b0989a100604926",
+              "size": [
+                256,
+                256
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png",
+              "sha256": "068c7ea5e5734fd42914517d1bd18557b6a8fd51f5425a64b91240d2722e4d3b",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desert",
+      "direction": "clay",
+      "assets": [
+        {
+          "role": "ducat",
+          "master": "source-assets/theme-economy-critical-v2/masters/desert-ducat-master-v2.png",
+          "masterSha256": "59b252fe3acf95861b6bcd71bad64266e7c1548578145262d7cbd7c500f0d23f",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/desert/canonical/ducat/ducat-front-v2.png",
+              "sha256": "a03f67f885270f29ec1439abfbadf4a526287688e510365b3984086073061903",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/ducat/ducat-angle-left-v2.png",
+              "sha256": "dedd9f47468ec355079fb58e24f9e50cd5d34b54802aabe3cea587d6da73fd06",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/ducat/ducat-angle-right-v2.png",
+              "sha256": "c64d21a17c9ca078a34d4d8bc84f1e315473c0e574a06e92c8fe3471a78fd7d1",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/ducat/ducat-inline-v2.png",
+              "sha256": "c4bc1d4d63f4fa5438ec7bba5f4801ab58224d588a7674d348cb06707ac8f713",
+              "size": [
+                192,
+                192
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/ducat/ducat-particle-v2.png",
+              "sha256": "5b36ffb510173059e9bdb852a483ba4e0eecd88a9436c35459b3f1e4446d6b36",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        },
+        {
+          "role": "undo",
+          "master": "source-assets/theme-economy-critical-v2/masters/desert-undo-master-v2.png",
+          "masterSha256": "be34a7440c89abfa3ab862e27c812c6281ed5cc696c07e5463e63723633f70bb",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/desert/canonical/undo-token/undo-token-front-v2.png",
+              "sha256": "20ca4794c22d2b5e6d011f4fcff326ab2d70f1e3e42b1bd1bfb7e68096fae7d1",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png",
+              "sha256": "1c3f43ff7e6af84daef97debbb4de24ea5d114fc89a8b8a6bc361b339d9fe596",
+              "size": [
+                192,
+                192
+              ]
+            }
+          ]
+        },
+        {
+          "role": "video-active",
+          "master": "source-assets/theme-economy-critical-v2/masters/desert-video-active-master-v2.png",
+          "masterSha256": "83854838d7bdf79549f2dbdc8744870a03f271cfa8ef933a64eac26438f849b7",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v2.png",
+              "sha256": "ae0d9866aa117edb7df4c131d8619bb7b8be60d2bab875cbe50924ba16d8c7f4",
+              "size": [
+                256,
+                256
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+              "sha256": "c8ee20f13dff19a7b1289a1fcafcf2e288054e2062dc672bab8ce32ae0181c5a",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        },
+        {
+          "role": "video-unavailable",
+          "master": "source-assets/theme-economy-critical-v2/masters/desert-video-unavailable-master-v2.png",
+          "masterSha256": "13f46e2bda8ab0005728fd461027864b21b2ae98a23c24e4d34c7e9bb9972e5c",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v2.png",
+              "sha256": "b708b9e9039804771760ae7a3f336830af1d52d00d329af7ef6b0e10e18f4ff1",
+              "size": [
+                256,
+                256
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png",
+              "sha256": "bbb7d108f81e7d5a2cc1fe71111baed9b36ef2fea6194f8d4711092349e469e2",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "assets": [
+        {
+          "role": "ducat",
+          "master": "source-assets/theme-economy-critical-v2/masters/severna-ducat-master-v2.png",
+          "masterSha256": "b97ef733a3af58839f7118828b49ceff10aa7f85cff885ae9cc535683477fb7b",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/severna/canonical/ducat/ducat-front-v2.png",
+              "sha256": "f158ff7914836374b01b2c744b73c068e396c81fb1e7d90d992a17ea7f35c9b0",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/ducat/ducat-angle-left-v2.png",
+              "sha256": "4ec114b05cf629122cd1c26208fbe1fc84e60c1e3d0b5c43b2debf8a4bfd0317",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/ducat/ducat-angle-right-v2.png",
+              "sha256": "6a25fa1af3bf4f6ad6c1b5e1571d8bf210959bd9acd4c913d77d11ad59212e58",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png",
+              "sha256": "251c9d532b76935c64db49565a091da8bfe04a1902c7dd1ae615913cc959a489",
+              "size": [
+                192,
+                192
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/ducat/ducat-particle-v2.png",
+              "sha256": "488294a1d9b5320ab7f53accc46971f9940c5ea34576bbb33e966fe775e318a8",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        },
+        {
+          "role": "undo",
+          "master": "source-assets/theme-economy-critical-v2/masters/severna-undo-master-v2.png",
+          "masterSha256": "f03aea164aed2f60d95303d391f0f66c73df421f7cbdc9b14b65e0e142f9ce20",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/severna/canonical/undo-token/undo-token-front-v2.png",
+              "sha256": "fdc6d5c3420fea89f5b17bae7845c1315ed7dd090bc24d4bfce6c337f95af5b4",
+              "size": [
+                512,
+                512
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png",
+              "sha256": "5957be7bb0767d68af805dfac7e69526a945a673d55b7ec4d8e4d9c55a32f5eb",
+              "size": [
+                192,
+                192
+              ]
+            }
+          ]
+        },
+        {
+          "role": "video-active",
+          "master": "source-assets/theme-economy-critical-v2/masters/severna-video-active-master-v2.png",
+          "masterSha256": "94e166595cca8af088048c892ac0c12cc96c52fb2c72b1a62500c339740bafff",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-v2.png",
+              "sha256": "9cc64b50c1022f2c9122ef904c8649a70b8f86a98a832a73e52293e0ff6bbd89",
+              "size": [
+                256,
+                256
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+              "sha256": "8d1ed86fac7c58d318e0e03ba86932c4c7abbe6cf2ed9a1039187095018fa1c5",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        },
+        {
+          "role": "video-unavailable",
+          "master": "source-assets/theme-economy-critical-v2/masters/severna-video-unavailable-master-v2.png",
+          "masterSha256": "d7a0d88b891fdd33ba9c1fe31010be79851e86fe6d484289addfe5bf9edf3ce6",
+          "variants": [
+            {
+              "path": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v2.png",
+              "sha256": "e0e3b39e63b64b31c484160fadf7f024c16396a534db3cac66279d850c07f8c6",
+              "size": [
+                256,
+                256
+              ]
+            },
+            {
+              "path": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png",
+              "sha256": "655526ea494a5c35b4bf61856ae9a853034ac2ece2aafe79688f5f339376321c",
+              "size": [
+                128,
+                128
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

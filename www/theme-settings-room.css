@@ -1,0 +1,234 @@
+/* Settings shares Green geometry and uses each theme's established card tokens. */
+#settings-screen .settings-header-icon[data-settings-role="room"] {
+    display:block; width:32px; height:32px; flex:0 0 32px; object-fit:contain; filter:none;
+}
+#settings-screen .settings-section-title-with-icons,
+#settings-screen .settings-row-label-with-icon,
+#settings-screen .settings-legal-link { display:inline-flex; align-items:center; }
+#settings-screen .settings-section-title-with-icons { gap:5px; min-height:20px; }
+#settings-screen .settings-row-label-with-icon { gap:7px; min-width:0; }
+#settings-screen .settings-legal-link { gap:4px; }
+#settings-screen .settings-theme-icon { display:block; object-fit:contain; filter:none; }
+#settings-screen .settings-section-title .settings-theme-icon {
+    width:20px; height:20px; flex:0 0 20px;
+}
+#settings-screen .settings-legal-link .settings-theme-icon {
+    width:18px; height:18px; flex:0 0 18px;
+}
+#settings-screen .settings-standard-icon { display:block; width:25px; height:25px; flex:0 0 25px; object-fit:contain; }
+#settings-screen .settings-language-row,
+#settings-screen .settings-row,
+#settings-screen .settings-account-card { box-sizing:border-box; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-card-body { background:transparent !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-header-title,.settings-section-title) {
+    color:var(--theme-card-ink) !important; text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-account-name,.settings-row-label,.settings-legal-link,.settings-ad-privacy-options) {
+    color:var(--theme-card-ink) !important; text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-input,.settings-select) {
+    color:var(--theme-card-ink) !important;
+    background:var(--theme-subcard-fill) !important;
+    border:1px solid var(--theme-card-line) !important;
+    box-shadow:var(--theme-subcard-shadow) !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-input::placeholder { color:var(--theme-card-muted) !important; opacity:1; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-select option { color:var(--theme-card-ink); background:var(--theme-card-surface); }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-language-btn,.settings-logout-btn) {
+    color:var(--theme-card-ink) !important;
+    background:var(--theme-card-raised) !important;
+    border:1px solid var(--theme-card-line) !important;
+    box-shadow:var(--theme-card-shadow) !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-checkbox { accent-color:var(--theme-card-primary) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-avatar,.settings-avatar-fallback) { border-color:var(--theme-card-primary) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-legal-divider { color:var(--theme-card-muted) !important; }
+#settings-screen :is(.settings-legal-link,.settings-language-btn,.settings-logout-btn,.settings-input,.settings-select):focus-visible,
+#settings-screen .settings-checkbox:focus-visible {
+    outline:2px solid var(--theme-card-primary, var(--gold-main)); outline-offset:2px;
+}
+@media (prefers-reduced-motion: reduce) {
+    #settings-screen :is(.settings-language-btn,.settings-logout-btn) { transition:none !important; }
+}
+
+/* One Green-sized layout for every material. Older Easter/Desert/Nebula overrides
+   must not change row heights, corner radii, type scale or text contrast. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-shell {
+    color:var(--theme-card-ink) !important;
+    background:var(--theme-card-fill) !important;
+    border:1px solid var(--theme-card-line) !important;
+    box-shadow:var(--theme-card-shadow) !important;
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-card-header {
+    min-height:58px !important;
+    color:var(--theme-card-ink) !important;
+    background:var(--theme-card-raised) !important;
+    border-bottom:1px solid var(--theme-card-line) !important;
+    box-shadow:inset 0 1px 0 color-mix(in srgb,var(--theme-card-surface) 55%,transparent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-card-body { padding:14px !important; gap:12px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-section { padding-bottom:12px !important; border-bottom:1px solid var(--theme-card-line) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-section-last { padding-bottom:0 !important; border-bottom:0 !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-section-title {
+    font-family:'Montserrat',sans-serif !important; font-size:.75rem !important;
+    font-weight:900 !important; letter-spacing:0 !important; line-height:1.3 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-account-card,.settings-row) {
+    min-height:48px !important; margin-top:8px !important; padding:10px 12px !important;
+    border:1px solid var(--theme-card-line) !important; border-radius:12px !important;
+    background:var(--theme-subcard-fill) !important; box-shadow:var(--theme-subcard-shadow) !important;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-row { margin-top:6px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen :is(.settings-account-name,.settings-row-label) {
+    font-family:'Montserrat',sans-serif !important; font-size:.88rem !important;
+    font-weight:800 !important; letter-spacing:0 !important; line-height:1.2 !important;
+    color:var(--theme-card-ink) !important; text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-input {
+    box-sizing:border-box; min-height:45px !important; padding:11px 12px !important;
+    margin:8px 0 0 !important; border-radius:12px !important;
+    font-family:'Montserrat',sans-serif !important; font-size:.95rem !important;
+    font-weight:700 !important; letter-spacing:0 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-language-btn {
+    min-height:40px !important; padding:10px !important; border-radius:12px !important;
+    font-family:'Montserrat',sans-serif !important; font-size:.85rem !important;
+    font-weight:800 !important; letter-spacing:0 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-logout-btn {
+    color:var(--theme-card-ink) !important;
+    background:var(--theme-card-raised) !important;
+    border:1px solid var(--theme-card-primary) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-avatar-fallback {
+    color:var(--theme-card-ink) !important;
+    background:var(--theme-card-raised) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-legal-row { border-top-color:var(--theme-card-line) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #settings-screen .settings-ad-privacy-options { color:var(--theme-card-ink) !important; }
+#settings-screen .settings-language-btn[aria-pressed="true"] {
+    border-color:var(--theme-card-primary,var(--gold-main)) !important;
+    box-shadow:inset 0 0 0 1px var(--theme-card-primary,var(--gold-main)), 0 2px 8px rgba(0,0,0,.12) !important;
+}
+#settings-screen .settings-legal-link { font-family:'Montserrat',sans-serif; font-size:.65rem; font-weight:700; }
+#settings-screen :is(.settings-language-btn,.settings-logout-btn):active { transform:none !important; filter:brightness(.94); }
+@media (min-width:760px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+        #settings-screen .settings-card-body { padding:16px 18px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+        #settings-screen .settings-section { padding-bottom:14px !important; }
+}
+
+/* Native option popups are painted white by some Android browsers. Keep the
+   existing select for entitlement/state code and show a themed dialog instead. */
+#settings-screen select#setting-theme.settings-select {
+    position:absolute !important; width:1px !important; height:1px !important;
+    min-height:0 !important; margin:0 !important; padding:0 !important;
+    opacity:0 !important; overflow:hidden !important; pointer-events:none !important;
+    clip-path:inset(50%) !important; white-space:nowrap !important;
+}
+body { --settings-picker-surface:#31523A; --settings-picker-raised:#416B48;
+    --settings-picker-ink:#F4EEDC; --settings-picker-muted:#D5E5C4;
+    --settings-picker-line:#A7C397; --settings-picker-accent:#CBE5B6; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) {
+    --settings-picker-surface:var(--theme-card-surface);
+    --settings-picker-raised:var(--theme-card-raised);
+    --settings-picker-ink:var(--theme-card-ink);
+    --settings-picker-muted:var(--theme-card-muted);
+    --settings-picker-line:var(--theme-card-line);
+    --settings-picker-accent:var(--theme-card-primary);
+}
+#settings-screen .settings-theme-trigger {
+    box-sizing:border-box; display:flex; align-items:center; gap:11px;
+    width:100%; height:45px; min-height:45px; margin-top:8px; padding:3px 12px;
+    color:var(--settings-picker-ink); background:var(--settings-picker-raised);
+    border:1px solid var(--settings-picker-line); border-radius:12px;
+    box-shadow:inset 0 1px 0 color-mix(in srgb,var(--settings-picker-ink) 22%,transparent),0 4px 10px rgba(0,0,0,.14);
+    font-family:'Montserrat',sans-serif; text-align:left; cursor:pointer;
+    transform:none !important; backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+#settings-screen .settings-theme-trigger:active { transform:none !important; filter:brightness(.95); }
+#settings-screen .settings-theme-trigger-icon {
+    width:21px; height:35px; flex:0 0 21px; object-fit:cover;
+    border:1px solid var(--settings-picker-line); border-radius:5px;
+}
+#settings-screen .settings-theme-trigger-copy { display:flex; flex:1 1 auto; flex-direction:column; gap:1px; min-width:0; }
+#settings-screen .settings-theme-trigger-caption { color:var(--settings-picker-muted); font-size:.67rem; font-weight:700; line-height:1.1; }
+#settings-screen .settings-theme-trigger-copy strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.88rem; font-weight:800; line-height:1.25; }
+#settings-screen .settings-theme-chevron { width:9px; height:9px; margin-right:4px; flex:0 0 9px;
+    border-right:2px solid var(--settings-picker-ink); border-bottom:2px solid var(--settings-picker-ink); transform:rotate(45deg) translateY(-2px); }
+#settings-screen .settings-theme-overlay[hidden] { display:none !important; }
+#settings-screen .settings-theme-overlay {
+    position:fixed; inset:0; z-index:100010; display:flex; align-items:center; justify-content:center;
+    padding:max(16px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+    background:rgba(5,9,14,.58);
+}
+#settings-screen .settings-theme-dialog {
+    box-sizing:border-box; display:flex; flex-direction:column; width:min(520px,100%); max-height:100%;
+    padding:14px; overflow:hidden; color:var(--settings-picker-ink);
+    background:var(--settings-picker-surface); border:1px solid var(--settings-picker-line);
+    border-radius:20px; box-shadow:0 18px 38px rgba(0,0,0,.28),inset 0 1px 0 color-mix(in srgb,var(--settings-picker-ink) 20%,transparent);
+    font-family:'Montserrat',sans-serif; backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+#settings-screen .settings-theme-dialog-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 0 10px 2px; }
+#settings-screen .settings-theme-dialog-header h2 { margin:0; color:var(--settings-picker-ink); font-size:1rem; line-height:1.3; font-weight:800; }
+#settings-screen .settings-theme-dialog-close { display:grid; place-items:center; flex:0 0 34px; width:34px; height:34px;
+    padding:0; border:1px solid var(--settings-picker-line); border-radius:50%;
+    color:var(--settings-picker-ink); background:var(--settings-picker-raised); font:25px/1 Arial,sans-serif; cursor:pointer; }
+#settings-screen .settings-theme-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:2px; }
+#settings-screen .settings-theme-option {
+    box-sizing:border-box; display:flex; align-items:center; gap:8px; min-width:0; min-height:72px; padding:7px 9px;
+    border:1px solid var(--settings-picker-line); border-radius:12px;
+    color:var(--settings-picker-ink); background:var(--settings-picker-raised);
+    font-family:'Montserrat',sans-serif; text-align:left; cursor:pointer;
+    box-shadow:inset 0 1px 0 color-mix(in srgb,var(--settings-picker-ink) 14%,transparent);
+}
+#settings-screen .settings-theme-option:active { transform:none; filter:brightness(.96); }
+#settings-screen .settings-theme-option[aria-current="true"] { border:2px solid var(--settings-picker-accent); padding:6px 8px; }
+#settings-screen .settings-theme-option[aria-disabled="true"] { cursor:default; }
+#settings-screen .settings-theme-option-icon {
+    width:31px; height:54px; flex:0 0 31px; object-fit:cover;
+    border:1px solid var(--settings-picker-line); border-radius:6px;
+}
+#settings-screen .settings-theme-option-copy { display:flex; flex:1 1 auto; flex-direction:column; gap:3px; min-width:0; }
+#settings-screen .settings-theme-option-copy strong { font-size:.76rem; font-weight:800; line-height:1.2; overflow-wrap:anywhere; }
+#settings-screen .settings-theme-option-copy small { min-height:1em; color:var(--settings-picker-muted); font-size:.59rem; font-weight:700; line-height:1.2; }
+#settings-screen .settings-theme-option-lock { width:20px; height:20px; flex:0 0 20px; object-fit:contain; }
+#settings-screen :is(.settings-theme-trigger,.settings-theme-option,.settings-theme-dialog-close):focus-visible {
+    outline:2px solid var(--settings-picker-accent); outline-offset:2px;
+}
+@media (max-width:370px) { #settings-screen .settings-theme-options { grid-template-columns:1fr; } }
+@media (prefers-reduced-motion:reduce) {
+    #settings-screen :is(.settings-theme-trigger,.settings-theme-option,.settings-theme-dialog-close) { transition:none !important; }
+}

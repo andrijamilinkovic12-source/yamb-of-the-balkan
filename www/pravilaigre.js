@@ -21,6 +21,18 @@ function rulesEasterTournamentCanonicalSrc(src = '') {
     return replacements[path] || source;
 }
 
+function rulesEasterEconomyCanonicalSrc(src = '') {
+    const source = String(src);
+    const path = source.split('?')[0];
+    const replacements = {
+        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png',
+        'assets/easter-soft-clay/economy/undo-token.png': 'assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png',
+        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png',
+        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png'
+    };
+    return replacements[path] || source;
+}
+
 function rulesDesertTournamentCanonicalSrc(src = '') {
     const source = String(src);
     const path = source.split('?')[0];
@@ -78,12 +90,11 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2': 'assets/desert-soft-clay/online-add-friend-pro-v2.png?v=opt2',
         'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2',
         'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/desert-soft-clay/online-duel-pro-v2.png?v=opt2',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2',
         'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
-        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/desert-soft-clay/economy/ducat-v2.png?v=opt2',
-        'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/desert-soft-clay/economy/undo-token-v2.png?v=opt2',
-        'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2',
-        'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2': 'assets/desert-soft-clay/economy/ad-unavailable-v2.png?v=opt2',
+        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/theme-packs/desert/canonical/ducat/ducat-inline-v2.png',
+        'assets/easter-soft-clay/economy/undo-token.png': 'assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png',
+        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v2.png',
+        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png',
         'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2',
         'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/record-v2.png?v=opt2',
         'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/wins-v2.png?v=opt2',
@@ -120,10 +131,10 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1',
         'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/all-time-points-v11.png?v=1',
         'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/h2h-v10.png?v=1',
-        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/severna-soft-clay/economy/ducat-v3.png?v=1',
-        'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/severna-soft-clay/economy/undo-token-v3.png?v=1',
-        'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1',
-        'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2': 'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
+        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png',
+        'assets/easter-soft-clay/economy/undo-token.png': 'assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png',
+        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v2.png',
+        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png',
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
         'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
         'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
@@ -131,7 +142,6 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
         'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
         'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
         'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
@@ -192,7 +202,6 @@ function rulesGreenAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2': 'assets/green-soft-clay/online-add-friend-v1.png?v=opt2',
         'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/green-soft-clay/online-spectate-v1.png?v=opt2',
         'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/green-soft-clay/online-duel-v1.png?v=opt2',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1',
         'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png?v=1',
@@ -216,6 +225,15 @@ function rulesGreenAssetSrc(easterSrc = '') {
 
 function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
+    if (defaultSrc === 'assets/quarterly-league-icon.svg' || defaultSrc === 'assets/quarterly-league-watermark.png') {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const root = activeTheme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${activeTheme}/canonical`;
+        const src = `${root}/quarterly-league-room-identity/quarterly-league-room-v2.png?v=2`;
+        return `<img class="rules-inline-icon rules-asset-icon rules-quarterly-canonical-icon${suffix}" data-ql-rules-theme="${activeTheme}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
+    }
+    if (defaultSrc.startsWith('assets/green-soft-clay/canonical/leaderboard-room-identity/')) {
+        return `<img class="rules-inline-icon rules-asset-icon${suffix}" data-leaderboard-control="identity" src="${window.themeLeaderboard.asset('identity')}" alt="" aria-hidden="true" decoding="async">`;
+    }
     if (defaultSrc.startsWith('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png')) {
         const source = 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1';
         return `<img class="rules-inline-icon rules-asset-icon rules-daily-canonical-icon${suffix}" data-theme-src="${source}" src="${source}" alt="" aria-hidden="true" decoding="async">`;
@@ -226,10 +244,15 @@ function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterTournamentCanonicalSrc(easterSrc)}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterEconomyCanonicalSrc(rulesEasterTournamentCanonicalSrc(easterSrc))}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
 }
 
 function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
+    const settingsRole = String(easterSrc || '').match(/\/settings\/(profile|privacy)-v2\.png/)?.[1];
+    if (settingsRole && window.themeSettingsRoom) {
+        const suffix = extraClass ? ` ${extraClass}` : '';
+        return `<img class="rules-inline-icon rules-asset-icon${suffix}" data-settings-role="${settingsRole}" src="${window.themeSettingsRoom.asset(settingsRole)}" alt="" aria-hidden="true" decoding="async">`;
+    }
     const suffix = extraClass ? ` ${extraClass}` : '';
     const onlineRole = String(easterSrc || '').match(/\/online-(add-friend|spectate|duel)-/);
     if (onlineRole) {
@@ -246,7 +269,7 @@ function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterTournamentCanonicalSrc(easterSrc)}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterEconomyCanonicalSrc(rulesEasterTournamentCanonicalSrc(easterSrc))}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
 }
 
 function rulesTextGlyphHtml(glyph) {
@@ -331,7 +354,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Međusobni dueli (H2H)</h3>
                 <p>Za svakog prijatelja-rivala formira se H2H kartica sa istorijom okršaja: pobede, porazi, nerešeno, najveća pobeda, najteži poraz, prosečni poeni i aktuelni vatreni niz protiv tog rivala.</p>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/leaderboard-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Top liste i rangiranje</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Top liste i rangiranje</h3>
                 <ul>
                     <li><strong>Nedeljna lista:</strong> Prikazuje najbolje rezultate iz tekuće nedelje.</li>
                     <li><strong>Mesečna lista:</strong> Prikazuje najbolje rezultate iz tekućeg meseca.</li>
@@ -358,10 +381,10 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2')} Kvartalna liga</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', '')} Kvartalna liga</h3>
                 <p>Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. U svakoj regularno završenoj solo, AI, lokalnoj ili online partiji Vaš konačni rezultat se dodaje ligaškom zbiru. Kod tehničkog ishoda pobedniku se dodaje izračunata nagrada, a poraženom se isti obračunati iznos oduzima do najmanje 0 poena.</p>
                 <p>Rangovi su: Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
+                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', '', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
             `
         },
         {
@@ -495,7 +518,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Head-to-Head (H2H)</h3>
                 <p>Every friend-rival gets an H2H card with your duel history: wins, losses, draws, biggest win, worst loss, average points, and current win streak against that rival.</p>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/leaderboard-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Leaderboards</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Leaderboards</h3>
                 <ul>
                     <li><strong>Weekly:</strong> Best scores from the current week.</li>
                     <li><strong>Monthly:</strong> Best scores from the current month.</li>
@@ -522,10 +545,10 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2')} Quarterly League</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', '')} Quarterly League</h3>
                 <p>The Quarterly League lasts 3 calendar months in Belgrade time. In every regularly completed solo, AI, local, or online game, your final score is added to your league total. For a technical result, the calculated reward is added to the winner and the same calculated amount is deducted from the loser, down to a minimum of 0 points.</p>
                 <p>The ranks are: Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
+                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', '', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
             `
         },
         {

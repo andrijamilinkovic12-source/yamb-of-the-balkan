@@ -1761,7 +1761,7 @@ class EffectManager {
                 delete this.themeDucatParticleSpritePromises[theme];
                 resolve(null);
             };
-            image.src = `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v1.png`;
+            image.src = `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
         });
         return this.themeDucatParticleSpritePromises[theme];
     }

@@ -1,0 +1,325 @@
+{
+  "version": 2,
+  "style": "3D Soft Neomorphism",
+  "productionSize": [
+    256,
+    256
+  ],
+  "assets": [
+    {
+      "theme": "light",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/light/profile-master-v2.png",
+      "production": "www/assets/theme-packs/light/canonical/settings-controls/profile-v2.png",
+      "sha256": "77e80b8eb041448c7acb20071197edcba1aad5256ca43d03ff8db8769d164337"
+    },
+    {
+      "theme": "light",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/light/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/light/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "f8e82806cffcc0424d3c636f0722a79d7bf441d288bce6fff3f30861de786310"
+    },
+    {
+      "theme": "light",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/light/language-master-v2.png",
+      "production": "www/assets/theme-packs/light/canonical/settings-controls/language-v2.png",
+      "sha256": "d154b0551f59b445653cfed99082dd754da464d32dc8ebd349f2c144abb3b292"
+    },
+    {
+      "theme": "light",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/light/terms-master-v2.png",
+      "production": "www/assets/theme-packs/light/canonical/settings-controls/terms-v2.png",
+      "sha256": "29af57e96323a3d02dfe232b758f14a70fd5bf5c437fb497edf70f8fbe62d3b6"
+    },
+    {
+      "theme": "light",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/light/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/light/canonical/settings-controls/privacy-v2.png",
+      "sha256": "ae2b18b71f8a5889cc48e6ce7602014fade7693d6b4b6e9efa98260cf240d310"
+    },
+    {
+      "theme": "medium",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/medium/profile-master-v2.png",
+      "production": "www/assets/theme-packs/medium/canonical/settings-controls/profile-v2.png",
+      "sha256": "9a56486568e4dc03d5b133b8e319c91cbbdf615aa9b9bac9037b608360bd8c49"
+    },
+    {
+      "theme": "medium",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/medium/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/medium/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "182fcdecd3be60580b726521eb46ccb9ea4c4c53b5d6df6349b440735832fdc8"
+    },
+    {
+      "theme": "medium",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/medium/language-master-v2.png",
+      "production": "www/assets/theme-packs/medium/canonical/settings-controls/language-v2.png",
+      "sha256": "103dd96a0599fb9b8f7355d65b8bef48420b5e7139781f06f81ff114549a5fa5"
+    },
+    {
+      "theme": "medium",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/medium/terms-master-v2.png",
+      "production": "www/assets/theme-packs/medium/canonical/settings-controls/terms-v2.png",
+      "sha256": "11eea843aaf553381c0421431bce244dd281618275e50ce81fad65371170112c"
+    },
+    {
+      "theme": "medium",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/medium/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/medium/canonical/settings-controls/privacy-v2.png",
+      "sha256": "953c2f3015423a215e1c9d87f0e0fe555605a257e5058546b07f43553a39f8c3"
+    },
+    {
+      "theme": "winter",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/winter/profile-master-v2.png",
+      "production": "www/assets/theme-packs/winter/canonical/settings-controls/profile-v2.png",
+      "sha256": "b045263a9235e364e1f532139c8e3336b1b1fb53fe6a91b5eae52e3b14335480"
+    },
+    {
+      "theme": "winter",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/winter/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/winter/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "4785df1122170e140935209f03ef48de50b223df0fc6a575fb7673b0f86d58e1"
+    },
+    {
+      "theme": "winter",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/winter/language-master-v2.png",
+      "production": "www/assets/theme-packs/winter/canonical/settings-controls/language-v2.png",
+      "sha256": "d5689d005eb85568d9109bec440dafebeb21b9fe1256bc4b8d85607dae630043"
+    },
+    {
+      "theme": "winter",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/winter/terms-master-v2.png",
+      "production": "www/assets/theme-packs/winter/canonical/settings-controls/terms-v2.png",
+      "sha256": "bd5ddbf3d45afc28c582fbe40045441c7450bea8cb908d29638de6faf7f6a8cf"
+    },
+    {
+      "theme": "winter",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/winter/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/winter/canonical/settings-controls/privacy-v2.png",
+      "sha256": "3ba2471394020ba789a05e0d0582be94dfd1b3fda00b60b7a0508d7091beb9b4"
+    },
+    {
+      "theme": "neon",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/neon/profile-master-v2.png",
+      "production": "www/assets/theme-packs/neon/canonical/settings-controls/profile-v2.png",
+      "sha256": "3be4b6009870a1bbe8157d9b825a776851fa40c6749df160b7e1a1309178f8ff"
+    },
+    {
+      "theme": "neon",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/neon/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/neon/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "5e5de937806f238a8874250f5d6e5a4d49e82fde063004a58453ee90a75684f3"
+    },
+    {
+      "theme": "neon",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/neon/language-master-v2.png",
+      "production": "www/assets/theme-packs/neon/canonical/settings-controls/language-v2.png",
+      "sha256": "10f6264ed8bcb813d248e3cfc9ac5f5b7bfca687ad36d5a35befacb68776103e"
+    },
+    {
+      "theme": "neon",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/neon/terms-master-v2.png",
+      "production": "www/assets/theme-packs/neon/canonical/settings-controls/terms-v2.png",
+      "sha256": "6115f974184671ea42a50425dd0d861a8119104252b4609db1fc624e88bbeb02"
+    },
+    {
+      "theme": "neon",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/neon/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/neon/canonical/settings-controls/privacy-v2.png",
+      "sha256": "679b4875daceb41e1946337fcc2f3bb935dec0e0f0ed964470192a7d6fcc8788"
+    },
+    {
+      "theme": "amethyst",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/amethyst/profile-master-v2.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/settings-controls/profile-v2.png",
+      "sha256": "1e0744dee18224fd54306deab63b67cbfe03bba640dd35c8fafd6ac846185d66"
+    },
+    {
+      "theme": "amethyst",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/amethyst/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "10b9a3dcbba3dc52625673eb7d93dd4f7412ff3e3144db9a1b63b7a103b0aa09"
+    },
+    {
+      "theme": "amethyst",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/amethyst/language-master-v2.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/settings-controls/language-v2.png",
+      "sha256": "8dff020a3a77c421ca3b957789fb28d8998da01af57e840b1cd0fc360cc45469"
+    },
+    {
+      "theme": "amethyst",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/amethyst/terms-master-v2.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/settings-controls/terms-v2.png",
+      "sha256": "ee946419da505064037718a19e870dd01ab27517458ade5401ef784152865201"
+    },
+    {
+      "theme": "amethyst",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/amethyst/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/amethyst/canonical/settings-controls/privacy-v2.png",
+      "sha256": "5bfe181111b29b533a37053a9653b8027ee2d9b2c37235e216dea9c63d3a4d96"
+    },
+    {
+      "theme": "easter",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/easter/profile-master-v2.png",
+      "production": "www/assets/theme-packs/easter/canonical/settings-controls/profile-v2.png",
+      "sha256": "cbd329b79d9ab31817a3b93bf15faef6d733e766825ab05c76f387538f498961"
+    },
+    {
+      "theme": "easter",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/easter/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/easter/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "d3067705d4c48d69bd7cbb53d7551707f8ca16962de927e5bbb907202d9d50fc"
+    },
+    {
+      "theme": "easter",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/easter/language-master-v2.png",
+      "production": "www/assets/theme-packs/easter/canonical/settings-controls/language-v2.png",
+      "sha256": "6aa7bdc20d40b59ff0148373518e46d71887880811e6efc8691c0b15d9f160e8"
+    },
+    {
+      "theme": "easter",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/easter/terms-master-v2.png",
+      "production": "www/assets/theme-packs/easter/canonical/settings-controls/terms-v2.png",
+      "sha256": "a70a434c6f7d50a46c708fef7296099cc21cb77cf22608f1e87a780c2c81ae85"
+    },
+    {
+      "theme": "easter",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/easter/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/easter/canonical/settings-controls/privacy-v2.png",
+      "sha256": "07238577f83ed455bf4a53dcf047a9b578fa11618cfc1c4e2b26627de823b5ab"
+    },
+    {
+      "theme": "desert",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/desert/profile-master-v2.png",
+      "production": "www/assets/theme-packs/desert/canonical/settings-controls/profile-v2.png",
+      "sha256": "fc3f99f7913f1f21229956e21c47042fefaf0566dacfddec27440a4546c3eac7"
+    },
+    {
+      "theme": "desert",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/desert/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/desert/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "3ec67c8624898a06b296c399df98540340212af0b1f8a5f8fc07ab719952f1af"
+    },
+    {
+      "theme": "desert",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/desert/language-master-v2.png",
+      "production": "www/assets/theme-packs/desert/canonical/settings-controls/language-v2.png",
+      "sha256": "0a5e6e77dc5deb7c673e6d11917506f6965cc695655f46a4a6c19bf1fd3796ed"
+    },
+    {
+      "theme": "desert",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/desert/terms-master-v2.png",
+      "production": "www/assets/theme-packs/desert/canonical/settings-controls/terms-v2.png",
+      "sha256": "fba32a87ede5e06735d9cc959fc6de7ec3a2089549ce4030e0d4dfb65f7afd39"
+    },
+    {
+      "theme": "desert",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/desert/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/desert/canonical/settings-controls/privacy-v2.png",
+      "sha256": "8312a837e8fc86a9d07c47c700bc48ee9a5a35c9098214725f562f04095a68f0"
+    },
+    {
+      "theme": "moon",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/moon/profile-master-v2.png",
+      "production": "www/assets/theme-packs/moon/canonical/settings-controls/profile-v2.png",
+      "sha256": "313aba741aac4261b5c4e4dd592188cdd8560680de138390b517d279d3beb143"
+    },
+    {
+      "theme": "moon",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/moon/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/moon/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "14b663e7674f0deb600f044473c93b24d2a22b39c2380dc1ff95e5960a10afd2"
+    },
+    {
+      "theme": "moon",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/moon/language-master-v2.png",
+      "production": "www/assets/theme-packs/moon/canonical/settings-controls/language-v2.png",
+      "sha256": "d533290f392bd21b1a0965549dd1868a77615d4e362b603f9100c544879e6c1d"
+    },
+    {
+      "theme": "moon",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/moon/terms-master-v2.png",
+      "production": "www/assets/theme-packs/moon/canonical/settings-controls/terms-v2.png",
+      "sha256": "f16c7662051395c4302857bb80dedf23385168724af3539968355f5fabd30ff1"
+    },
+    {
+      "theme": "moon",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/moon/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png",
+      "sha256": "68e62ef576dcaf1d1fffb0387e1eccfab40021ce42ba2f168a80f2de00324eab"
+    },
+    {
+      "theme": "severna",
+      "role": "profile",
+      "master": "source-assets/theme-settings-room-v2/masters/severna/profile-master-v2.png",
+      "production": "www/assets/theme-packs/severna/canonical/settings-controls/profile-v2.png",
+      "sha256": "c4e82f37eb0bec3aa604bf0036adf0a79a5bb9573490ddffe727793cff32a66b"
+    },
+    {
+      "theme": "severna",
+      "role": "display-theme",
+      "master": "source-assets/theme-settings-room-v2/masters/severna/display-theme-master-v2.png",
+      "production": "www/assets/theme-packs/severna/canonical/settings-controls/display-theme-v2.png",
+      "sha256": "ea5c2bcddbaea647ce427589ec1e4f2f906122b8bd84207bd8ba8acf8233d371"
+    },
+    {
+      "theme": "severna",
+      "role": "language",
+      "master": "source-assets/theme-settings-room-v2/masters/severna/language-master-v2.png",
+      "production": "www/assets/theme-packs/severna/canonical/settings-controls/language-v2.png",
+      "sha256": "8477327ef63961370dae19174ec164489241d122dc2627577cd3f1882cda3f09"
+    },
+    {
+      "theme": "severna",
+      "role": "terms",
+      "master": "source-assets/theme-settings-room-v2/masters/severna/terms-master-v2.png",
+      "production": "www/assets/theme-packs/severna/canonical/settings-controls/terms-v2.png",
+      "sha256": "bf4362b848d28bc32f3e9a2198e0c047a1341fc9b63018fd48d36d993fb88ad3"
+    },
+    {
+      "theme": "severna",
+      "role": "privacy",
+      "master": "source-assets/theme-settings-room-v2/masters/severna/privacy-master-v2.png",
+      "production": "www/assets/theme-packs/severna/canonical/settings-controls/privacy-v2.png",
+      "sha256": "2224a64fd8abb8c9a1f77a36b1ba5aa93d2fd118a30a983d604441171735236e"
+    }
+  ]
+}

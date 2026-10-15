@@ -1020,7 +1020,7 @@ class DnevniIzazov {
         const theme = this.getDailyTheme();
         const src = theme === 'dark'
             ? 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1'
-            : `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v1.png`;
+            : `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
         const endClass = options.rewardEnd === true ? ' daily-ducat-icon--reward-end' : '';
         return `<img class="daily-ducat-icon${endClass}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
     }

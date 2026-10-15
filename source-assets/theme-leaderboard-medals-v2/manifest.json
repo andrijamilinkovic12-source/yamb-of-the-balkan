@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 2,
+  "generatedOn": "2026-10-15",
+  "mode": "individual image generation and reference editing; technical downsample only",
+  "size": [
+    256,
+    256
+  ],
+  "themes": [
+    {
+      "id": "dark",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/dark/gold-master-v2.png",
+          "masterSha256": "7364a76372bdd60ba063b2e1aaadb15fba689168c0ce8c4a7b1e392ba66b93b3",
+          "production": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "9b787ddc1a670399ac6df509fe2277df68c476c3129f03bdc2d599197f427b80"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/dark/silver-master-v2.png",
+          "masterSha256": "d0372e1ccc4dfe002d51c92a03693132a615eec7a05311cc59f0787bf07e7604",
+          "production": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "1bdf6e1cc7ebe84c4c17ad020419bc8bfa227804fcd5f68be2b10db3e291f59f"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/dark/bronze-master-v2.png",
+          "masterSha256": "630f125ccf1445a8358f249cf8389fe11ad7bb8544beeb5ee7edcc1a3e5f6404",
+          "production": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "6cbbede48615d29177a24bfde527f06bbc0adddbc3a7a5ac6fb4048a8cc8989a"
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/light/gold-master-v2.png",
+          "masterSha256": "e2468369560a7ce2aae4794d83e14a87c45094b01e273627d520bf3c263d796b",
+          "production": "www/assets/theme-packs/light/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "f51a97b93eb4c1a7353ecd2ad779729082b1af39fa14e4a995bc1b454392ac43"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/light/silver-master-v2.png",
+          "masterSha256": "dd0ad7f4b4283428fab818723483bb02e8ca858d3eb131f11e06d6f674c3571c",
+          "production": "www/assets/theme-packs/light/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "6919eea5c33137e6a926dcf85be62dabb5f725e5f1d183eed18b4e1c66d6e6ff"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/light/bronze-master-v2.png",
+          "masterSha256": "26536bddb499c00354b428dfddf3ebedc9f73bdde7bfbca93876be60ab191674",
+          "production": "www/assets/theme-packs/light/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "2280fdca1dfe0db1cf77b345cc6f5f15e1876eeeb00fb49602484a406cb186f2"
+        }
+      ]
+    },
+    {
+      "id": "medium",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/medium/gold-master-v2.png",
+          "masterSha256": "f28884b62f3fcaf18285213b5cdb738d72f3f9c205bace76b95d9a00f523c80b",
+          "production": "www/assets/theme-packs/medium/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "1a43ec8edc5cb550684815ed2bf8ffca058a981dca9fb228ef50208aba21d1bf"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/medium/silver-master-v2.png",
+          "masterSha256": "1aa5490378992f009332093072384308cd86d66eac2dc9f27d5bbf0f07eef870",
+          "production": "www/assets/theme-packs/medium/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "126f5e58a22190b139e04e8a624caf58c5dac31d4f2225f34a4ff26bc3e1db5c"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/medium/bronze-master-v2.png",
+          "masterSha256": "ee0568ab6c1182262f2703826579220892cc5ad7d0adadad07d4ba3338a86f27",
+          "production": "www/assets/theme-packs/medium/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "e71c2235e9ddf11200dc83614ab11fb008f6879716ff012c2f9fc6d7e2280501"
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/winter/gold-master-v2.png",
+          "masterSha256": "9700f44a4574d77df87c1ba3ebf2f0da83e594288051e2858195cc2ba698a5c3",
+          "production": "www/assets/theme-packs/winter/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "63a7646a828a4ee832417715eecc6aa7bd1d8cf85086e32259d7ae8d89e9684b"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/winter/silver-master-v2.png",
+          "masterSha256": "123dacad16aac25d92f3608822d3b3cc5716cdda4f4bef49dd44b2b11a513f8b",
+          "production": "www/assets/theme-packs/winter/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "cb16a5515db307a4ffce47a6996a7b1411e74d99facf4648642dedf36674ec12"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/winter/bronze-master-v2.png",
+          "masterSha256": "77633a3c9901f8b302926c380b21f54d8ca450ca0174b90ed2a82cf0c1e86b1a",
+          "production": "www/assets/theme-packs/winter/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "b6c1e283fc32434b44c6425579fbe6dcca1854d65b13a595d738ee56014ea071"
+        }
+      ]
+    },
+    {
+      "id": "neon",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/neon/gold-master-v2.png",
+          "masterSha256": "e5d3c4d6eae6e606d13d27142f8d65572eb9de76751aa5b7cae63751b0b37969",
+          "production": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "94ae96bd458248aceb0d3756cac31ea7771c2f2feae5028ae84da99128f17a0c"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/neon/silver-master-v2.png",
+          "masterSha256": "aa213712c749b2b71d7040355f05279024ee22c1b94a71d2918ab37c03af4592",
+          "production": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "5ebde732fffc75f1e0910052e9ed37bc762eb4ad68079efae19dfb9c806b725d"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/neon/bronze-master-v2.png",
+          "masterSha256": "5c1ce3022d2d1b561e374a8ba04449e9d724223c35fa0ae200ff35cf2b2e63cb",
+          "production": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "af75ea264f9ff44d6934f01220eef9515c389393a09fddbfb49b1e0ab5465447"
+        }
+      ]
+    },
+    {
+      "id": "amethyst",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/amethyst/gold-master-v2.png",
+          "masterSha256": "d6781fbf7738f8406ce2f836efc69ac5ae9866a68b4106a83f934b5ee014e92a",
+          "production": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "ad271c20f260563604918f9dca64cc480f9744cee5fad39ab02192b2c2c47d7b"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/amethyst/silver-master-v2.png",
+          "masterSha256": "c074e47d7b810dbbada2cfbfb7ae1b7d181005fa4a1af5631f52938e5d5291d0",
+          "production": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "ebb73f31f6875c2ffab243af89bdddc8a16252b6eebe5b333333d0795d4731f9"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/amethyst/bronze-master-v2.png",
+          "masterSha256": "67b439f45a70f8e8107d76f0fac8d1910fa3727387b3372fef7ec615b5dc7d67",
+          "production": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "452eb633d342942b47463b1571b94e706e355568bf5eb4640eef2cdb69d74499"
+        }
+      ]
+    },
+    {
+      "id": "easter",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/easter/gold-master-v2.png",
+          "masterSha256": "dbddfe72ead64c0c4fc586ae607bf5271c64d12a499997613e3e993f585b292f",
+          "production": "www/assets/theme-packs/easter/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "877ddefc1be647f594b7efbb057d492176c2026791fe06ba7265d43d34ea0d62"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/easter/silver-master-v2.png",
+          "masterSha256": "837b9f417bbeb55b4f8b344f4984b994a46c906776ad074d38f7ef49b6f7da28",
+          "production": "www/assets/theme-packs/easter/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "44b01acc8db7a09fb85a590e8e139512b89ffb26b19bdf3f2d64c5fe65b38c91"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/easter/bronze-master-v2.png",
+          "masterSha256": "b55a2959d29f08ee39d478652f11f4a0120127952c07831dc945473b210d5def",
+          "production": "www/assets/theme-packs/easter/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "5ffb9348285c66dbf304df526e91715eced1d0db6e81e0df8464e27717bac53e"
+        }
+      ]
+    },
+    {
+      "id": "desert",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/desert/gold-master-v2.png",
+          "masterSha256": "a3930e7d0c8dc4817483d4e4049c640fc8e3ddff16a1c0453ee17e0a02b9e0b4",
+          "production": "www/assets/theme-packs/desert/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "d78db502efab927deb82717a88f738e627c1ed94a564087d410b6acf056b91f6"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/desert/silver-master-v2.png",
+          "masterSha256": "5ee76fe08bd726bcaec1c6d6c79ddf56f3bfe85d83b92fbaed680fc16d154708",
+          "production": "www/assets/theme-packs/desert/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "e88a7d03ad1e09368fe9f1db6484a7ae88e7ebe13572dbb345966366285fbc60"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/desert/bronze-master-v2.png",
+          "masterSha256": "2d1f768f12f513b59d5fa83f9a35f4630e6a5d3b5017f1f5029f9691db06d52e",
+          "production": "www/assets/theme-packs/desert/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "28a5942bc643be023b6b7d5be4d00ad6adfba9b64772292453295586afe5447e"
+        }
+      ]
+    },
+    {
+      "id": "moon",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/moon/gold-master-v2.png",
+          "masterSha256": "80a2b0b1825a59cf4b7540c30c3b674f30780f9ab81a96d3f972bd58b4cb6107",
+          "production": "www/assets/theme-packs/moon/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "10068b75c6742714a22bf1f76dbd743bc9c5ed5de4aadd03975f2b54beefa7da"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/moon/silver-master-v2.png",
+          "masterSha256": "5a65cc3d6f4bba4e1b2d4513a44385c82ab235e77d2cc9d4e781467f9db80749",
+          "production": "www/assets/theme-packs/moon/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "58c4629bd45a5c162d12edbd8e8339e40356719e18e041e25b12de8d5ff8a216"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/moon/bronze-master-v2.png",
+          "masterSha256": "2cde6cf1bd4d7d2c649905b0bb7e3c47cafeb8462c5fc3fe9627e409fbea1c67",
+          "production": "www/assets/theme-packs/moon/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "db61f2711344fae9e9163227f9e8a02e8044700b33224774d90cfdaa5ab2b1b9"
+        }
+      ]
+    },
+    {
+      "id": "severna",
+      "assets": [
+        {
+          "tier": "gold",
+          "master": "source-assets/theme-leaderboard-medals-v2/severna/gold-master-v2.png",
+          "masterSha256": "8c066075f3103714282f76cd3a26d165ddf3b04539c046c0253fc42d792ee8b5",
+          "production": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-gold-v2.png",
+          "productionSha256": "18dcb109ee5c98cbe91f467bf5f20774832bcbc4b2855d5ca5dafb2f3b3096f5"
+        },
+        {
+          "tier": "silver",
+          "master": "source-assets/theme-leaderboard-medals-v2/severna/silver-master-v2.png",
+          "masterSha256": "a2a69867b458afde8eef30039446255386d2adeded57ce50e785385b71bd1cb9",
+          "production": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-silver-v2.png",
+          "productionSha256": "4889d26cc5a00f9cdcff9b2e8b0a6b21e4bfff4fc39f66a4c551ddd6b56bc32b"
+        },
+        {
+          "tier": "bronze",
+          "master": "source-assets/theme-leaderboard-medals-v2/severna/bronze-master-v2.png",
+          "masterSha256": "b9af133cfdf8e2588d85eee9d2922df6c2e57af36bac783a645b2446ce1fc81b",
+          "production": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-bronze-v2.png",
+          "productionSha256": "3407e624415de6c35b58cdce64e955a9a410ede273fde3881ba61bca295e2632"
+        }
+      ]
+    }
+  ]
+}

@@ -36,7 +36,10 @@
                 image.classList.remove('theme-rewarded-video-icon');
                 return;
             }
-            const source = themes.has(theme) ? `assets/theme-packs/${theme}/${relative}` : original;
+            const versioned = ['easter', 'desert', 'severna'].includes(theme)
+                && relative.startsWith('canonical/rewarded-video/')
+                ? relative.replace('-v1.png', '-v2.png') : relative;
+            const source = themes.has(theme) ? `assets/theme-packs/${theme}/${versioned}` : original;
             if (image.getAttribute('src') !== source) image.src = source;
             image.classList.toggle('theme-rewarded-video-icon', enabled);
             if (!enabled) return;

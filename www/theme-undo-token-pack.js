@@ -44,9 +44,10 @@
                 else anchor.after(image);
             }
             const variant = role === 'header' ? 'front' : 'inline';
+            const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
             const source = theme === 'dark'
                 ? `assets/green-soft-clay/canonical/undo-token/undo-token-${variant}-v1.png`
-                : `assets/theme-packs/${theme}/canonical/undo-token/undo-token-${variant}-v1.png`;
+                : `assets/theme-packs/${theme}/canonical/undo-token/undo-token-${variant}-v${version}.png`;
             if (image.getAttribute('src') !== source) image.src = source;
         }
     }

@@ -35,16 +35,13 @@ class TopListManager {
         return fallback[key] || key;
     }
 
-    _stateMarkup(message, state = 'empty', fallbackIcon = '📜') {
+    _stateMarkup(message, state = 'empty') {
+        const icon = window.themeLeaderboard?.asset('empty-loading') || 'assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1';
         return `
-            <div class="hs-list-state hs-list-state-${state}" role="${state === 'offline' ? 'alert' : 'status'}" aria-live="${state === 'offline' ? 'assertive' : 'polite'}">
-                <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
-                <img class="hs-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="hs-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="hs-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="hs-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <li class="hs-list-state hs-list-state-${state}" role="${state === 'offline' ? 'alert' : 'status'}" aria-live="${state === 'offline' ? 'assertive' : 'polite'}">
+                <img class="hs-state-canonical-icon" data-leaderboard-control="empty-loading" src="${icon}" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span class="hs-list-state-text">${message}</span>
-            </div>
+            </li>
         `;
     }
 
@@ -438,7 +435,7 @@ class TopListManager {
             state.hasMore = true;
             state.loading = false;
             state.requestId = ++this.globalRequestSerial;
-            listEl.innerHTML = this._stateMarkup(this._t('msg_connecting'), 'loading', '⏳');
+            listEl.innerHTML = this._stateMarkup(this._t('msg_connecting'), 'loading');
             if (this.globalScrollContainer) this.globalScrollContainer.scrollTop = 0;
         }
 
@@ -460,7 +457,7 @@ class TopListManager {
             this.app.initSocketConnection();
             setTimeout(() => {
                 if ((!this.app.socket || !this.app.socket.connected) && state.requestId === this._getGlobalPageState(period).requestId) {
-                    listEl.innerHTML = this._stateMarkup(this._t('msg_no_connection'), 'offline', '📡');
+                    listEl.innerHTML = this._stateMarkup(this._t('msg_no_connection'), 'offline');
                 }
             }, 3000);
         }
@@ -543,7 +540,7 @@ class TopListManager {
 
         // Ako nakon filtriranja nema rezultata
         if (validData.length === 0 && !append) {
-            list.innerHTML = this._stateMarkup(this._t('msg_no_results'), 'empty', '');
+            list.innerHTML = this._stateMarkup(this._t('msg_no_results'), 'empty');
             return;
         }
 

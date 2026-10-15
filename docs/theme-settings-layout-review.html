@@ -1,0 +1,115 @@
+<!doctype html><html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../www/"><title>Podešavanja — prikaz sobe</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="teme.css"><link rel="stylesheet" href="theme-card-surfaces.css">
+<link rel="stylesheet" href="theme-game-header.css"><link rel="stylesheet" href="theme-room-close-controls.css"><link rel="stylesheet" href="theme-settings-room.css?v=3">
+<style>body{margin:0;min-height:100dvh}#settings-screen{position:fixed;transform:none!important;opacity:1!important;visibility:visible!important}
+#settings-screen .settings-shell{max-width:760px}.settings-review-note{position:fixed;z-index:100020;bottom:5px;right:8px;padding:3px 6px;border-radius:6px;background:#222a;color:white;font:10px system-ui}</style></head>
+<body><script>const qaThemes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
+const qaTheme=new URLSearchParams(location.search).get('theme');
+if(qaThemes.includes(qaTheme)&&qaTheme!=='dark')document.body.classList.add(qaTheme+'-theme');
+window.app={showMainMenu(){},saveSettingAuto(type,value){if(type==='theme'){document.body.className=value==='dark'?'':value+'-theme';
+document.getElementById('setting-theme').value=value;}},getUnlockedThemeIds(){return qaThemes},
+syncThemeSelectOptions(select){for(const option of select.options)option.disabled=false;
+select.value=qaThemes.find(id=>id!=='dark'&&document.body.classList.contains(id+'-theme'))||'dark';}};
+window.setLanguage=lang=>{document.documentElement.lang=lang;window.dispatchEvent(new Event('yamb:languageChanged'))};</script>
+    <div id="settings-screen" class="screen active">
+        <div class="hs-card modal-box settings-shell">
+            <div class="chat-header global-chat-header settings-card-header">
+                <div class="global-chat-title-group">
+                    <span class="global-chat-title settings-header-title">
+                        <img class="settings-header-icon" data-settings-role="room" alt="" aria-hidden="true" decoding="async">
+                        <span data-lang="settings_title">PODEŠAVANJA</span>
+                    </span>
+                </div>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori podešavanja" data-lang-aria="aria_close_settings">×</button>
+            </div>
+
+            <div class="chat-body global-chat-body settings-card-body">
+            
+            <div class="settings-section">
+                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-theme-icon" data-settings-role="profile" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_profile_acc">Profil i Nalog</span></span>
+                
+                <input type="text" id="setting-name" class="modal-input settings-input" placeholder="Igrač" data-lang-placeholder="settings_name_placeholder" onchange="app.saveSettingAuto('name', this.value)">
+                
+                <div class="settings-account-card">
+                    <div class="settings-account-info">
+                        <img id="auth-user-photo" src="" alt="" class="settings-avatar">
+                        <span id="auth-user-photo-fallback" class="settings-avatar-fallback" aria-hidden="true"></span>
+                        <div class="settings-account-copy">
+                            <span id="auth-user-info" data-lang="settings_not_logged_in" class="settings-account-name">Niste prijavljeni</span>
+                        </div>
+                    </div>
+                    <button id="btn-google-logout" class="btn-menu btn-secondary settings-logout-btn" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <span class="settings-section-title" data-lang="settings_sound_haptics">Zvuk i Haptika</span>
+                
+                <div class="settings-row">
+                    <span class="settings-row-label settings-row-label-with-icon"><span data-lang="settings_sound">Zvučni efekti</span></span>
+                    <input type="checkbox" id="setting-sound" class="settings-checkbox" onchange="app.saveSettingAuto('sound', this.checked)">
+                </div>
+
+                <div class="settings-row">
+                    <span class="settings-row-label settings-row-label-with-icon"><span data-lang="settings_music">Muzika</span></span>
+                    <input type="checkbox" id="setting-music" class="settings-checkbox" onchange="app.saveSettingAuto('music', this.checked)">
+                </div>
+
+                <div class="settings-row">
+                    <span class="settings-row-label settings-row-label-with-icon"><span data-lang="set_vibration">Vibracija</span></span>
+                    <input type="checkbox" id="setting-vibration" class="settings-checkbox" onchange="app.saveSettingAuto('vibration', this.checked)">
+                </div>
+            </div>
+
+            <div class="settings-section settings-section-last">
+                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-theme-icon" data-settings-role="display-theme" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_display_lang">Prikaz i Jezik</span><img class="settings-theme-icon" data-settings-role="language" alt="" aria-hidden="true" decoding="async"></span>
+                
+                <select id="setting-theme" class="modal-input settings-input settings-select" tabindex="-1" aria-hidden="true" onchange="app.saveSettingAuto('theme', this.value)">
+                    <option value="dark" data-lang="theme_dark">Zelena</option>
+                    <option value="light" data-lang="theme_light">Svetlo Zlato</option>
+                    <option value="medium" data-lang="theme_medium">Trula Višnja 🍒</option>
+                    <option value="winter" data-lang="theme_winter">Plavi Okean 🌊</option>
+                    <option value="neon" data-lang="theme_neon">Neon Cyber ⚡</option>
+                    <option value="amethyst" data-lang="theme_amethyst">Kraljevski Ametist 🔮</option>
+                    <option value="easter" data-lang="theme_easter">Vaskršnja</option>
+                    <option value="desert" data-lang="theme_desert">Pustinjsko Staklo 🏜️</option>
+                    <option value="moon" data-lang="theme_moon">Mesečev Sjaj 🌕</option>
+                    <option value="severna" data-lang="theme_severna">Severna Maglina 🌌</option>
+                </select>
+                <button id="settings-theme-trigger" class="settings-theme-trigger" type="button" aria-haspopup="dialog" aria-controls="settings-theme-overlay" aria-expanded="false">
+                    <img id="settings-theme-trigger-icon" class="settings-theme-trigger-icon" alt="" aria-hidden="true" decoding="async">
+                    <span class="settings-theme-trigger-copy"><span id="settings-theme-trigger-caption" class="settings-theme-trigger-caption">Tema</span><strong id="settings-theme-trigger-name"></strong></span>
+                    <span class="settings-theme-chevron" aria-hidden="true"></span>
+                </button>
+
+                <div class="settings-language-row">
+                    <button class="btn-menu btn-secondary settings-language-btn" data-settings-lang="sr" type="button" onclick="setLanguage('sr')">🇷🇸 SRB</button>
+                    <button class="btn-menu btn-secondary settings-language-btn" data-settings-lang="en" type="button" onclick="setLanguage('en')">🇬🇧 ENG</button>
+                </div>
+            </div>
+
+            <div class="settings-legal-row">
+                <span role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link"><img class="settings-theme-icon" data-settings-role="terms" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_terms_label">Uslovi</span></span>
+                <span class="settings-legal-divider">|</span>
+                <span role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><img class="settings-theme-icon" data-settings-role="privacy" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_privacy_label">Privatnost</span></span>
+            </div>
+            <button id="ad-privacy-options" type="button" class="settings-ad-privacy-options" onclick="window.adMobGlobal?.showPrivacyOptions()" data-lang="settings_ad_privacy_options" hidden>Izbori privatnosti za oglase</button>
+            </div>
+        </div>
+        <div id="settings-theme-overlay" class="settings-theme-overlay" hidden>
+            <div class="settings-theme-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-theme-dialog-title">
+                <div class="settings-theme-dialog-header">
+                    <h2 id="settings-theme-dialog-title"></h2>
+                    <button id="settings-theme-dialog-close" class="settings-theme-dialog-close" type="button" aria-label="Zatvori izbor tema">×</button>
+                </div>
+                <div id="settings-theme-options" class="settings-theme-options"></div>
+            </div>
+        </div>
+    </div>
+
+<span class="settings-review-note">Pregled izgleda · sve teme dostupne samo u pregledu</span>
+<script src="theme-game-header.js"></script><script src="theme-settings-room.js"></script><script src="theme-settings-picker.js?v=2"></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{window.app.syncThemeSelectOptions(document.getElementById('setting-theme'));
+window.themeSettingsPicker.refresh();if(new URLSearchParams(location.search).get('open')==='1')requestAnimationFrame(()=>window.themeSettingsPicker.open());});</script>
+</body></html>

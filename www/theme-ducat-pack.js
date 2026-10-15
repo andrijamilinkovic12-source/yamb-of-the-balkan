@@ -52,9 +52,10 @@
                 else anchor.after(image);
             }
             const variant = role === 'header' || role === 'hero' ? 'front' : 'inline';
+            const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
             const source = theme === 'dark'
                 ? `assets/green-soft-clay/canonical/ducat/ducat-${variant}-v1.png`
-                : `assets/theme-packs/${theme}/canonical/ducat/ducat-${variant}-v1.png`;
+                : `assets/theme-packs/${theme}/canonical/ducat/ducat-${variant}-v${version}.png`;
             if (image.getAttribute('src') !== source) image.src = source;
         }
     }

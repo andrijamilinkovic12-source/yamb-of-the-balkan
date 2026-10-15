@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="../www/">
+    <title>Top lista — pregled deset tema</title>
+    <link rel="stylesheet" href="style.css?v=5.22">
+    <link rel="stylesheet" href="teme.css?v=6.99">
+    <link rel="stylesheet" href="theme-card-surfaces.css?v=7">
+    <link rel="stylesheet" href="theme-medals.css?v=2">
+    <link rel="stylesheet" href="theme-leaderboard-room.css?v=3">
+    <style>
+        html, body { min-height: 100%; margin: 0; }
+        body { background: #1a2330; font-family: Montserrat, system-ui, sans-serif; }
+        .review-toolbar { position: relative; z-index: 10; display: flex; gap: 9px; align-items: center; justify-content: center; flex-wrap: wrap; padding: 12px; background: #162332; color: white; }
+        .review-toolbar label { font-weight: 700; font-size: 13px; }
+        .review-toolbar select, .review-toolbar button { font: inherit; padding: 7px 10px; border-radius: 8px; border: 1px solid #839aac; }
+        .review-note { font-size: 12px; opacity: .8; }
+        #highscores-screen.screen { display: flex !important; position: relative !important; width: min(100vw, 460px); height: min(78dvh, 720px); margin: 15px auto; padding: 10px !important; box-sizing: border-box; }
+        #highscores-screen .hs-card.modal-box { width: 100% !important; height: 100% !important; max-height: 100% !important; }
+        #highscores-screen .hs-header-row, #highscores-screen .highscore-item { grid-template-columns: 40px 42px minmax(0,1fr) 90px; }
+        #highscores-screen .hs-card-body { display: flex; }
+        .review-empty { margin-top: 10px; }
+        .review-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--theme-card-raised, #68835e); display: grid; place-items: center; color: var(--theme-card-ink, white); font-weight: 900; }
+        .review-rows .highscore-item { min-height: 65px; }
+        .review-rows .hs-info { min-width: 0; }
+    </style>
+</head>
+<body class="light-theme">
+    <div class="review-toolbar">
+        <label for="theme">Tema</label>
+        <select id="theme">
+            <option value="dark">Zelena</option><option value="light" selected>Svetlo zlato</option>
+            <option value="medium">Trula višnja</option><option value="winter">Plavi okean</option>
+            <option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option>
+            <option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option>
+            <option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
+        </select>
+        <button id="state-toggle" type="button">Prazno stanje</button>
+        <a href="../docs/theme-leaderboard-room-identity-v2-review.png" style="color:#d6eefe">Devet novih glavnih ikona uz postolja</a>
+        <a href="../docs/theme-leaderboard-medals-v2-room-review.png" style="color:#d6eefe">Nove medalje: 10 tema × 3 mesta</a>
+        <span class="review-note">Pregled koristi produkcione PNG i CSS dimenzije; podaci su primeri.</span>
+    </div>
+    <div id="highscores-screen" class="screen active">
+        <div class="hs-card modal-box">
+            <div class="chat-header global-chat-header hs-card-header">
+                <div class="global-chat-title-group"><span class="global-chat-title hs-header-title">
+                    <img class="hs-header-icon hs-header-canonical-icon" data-leaderboard-control="identity" alt=""><span>TOP LISTA</span>
+                </span></div>
+                <button type="button" class="global-chat-close" aria-label="Zatvori">×</button>
+            </div>
+            <div class="hs-card-toolbar"><div class="hs-tabs">
+                <button class="hs-tab-btn active" data-hs-tab="global"><img class="hs-tab-canonical-icon" data-leaderboard-control="global" alt=""><span class="hs-tab-canonical-label">GLOBALNA</span></button>
+                <button class="hs-tab-btn" data-hs-tab="local"><img class="hs-tab-canonical-icon" data-leaderboard-control="local" alt=""><span class="hs-tab-canonical-label">LOKALNA LISTA</span></button>
+            </div></div>
+            <div class="chat-body global-chat-body hs-card-body">
+                <section class="hs-panel active" data-hs-panel="global">
+                    <h3 class="hs-panel-title"><img class="hs-panel-canonical-icon" data-leaderboard-control="global" alt=""><span class="hs-panel-canonical-label">GLOBALNA</span></h3>
+                    <div class="hs-filters"><button class="filter-btn active">NEDELJA</button><button class="filter-btn">MESEC</button><button class="filter-btn">SVE</button></div>
+                    <div class="hs-list-container"><ul class="highscore-list review-rows"></ul></div>
+                </section>
+                <section class="hs-panel" data-hs-panel="local">
+                    <h3 class="hs-panel-title"><img class="hs-panel-canonical-icon" data-leaderboard-control="local" alt=""><span class="hs-panel-canonical-label">LOKALNA LISTA</span></h3>
+                    <div class="hs-filters"><button class="filter-btn active">NEDELJA</button><button class="filter-btn">MESEC</button><button class="filter-btn">SVE</button></div>
+                    <div class="hs-list-container"><ul class="highscore-list review-rows"></ul></div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="theme-leaderboard-room.js?v=2"></script>
+    <script>
+        const themes = ['light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
+        const sample = ['Ana', 'Marko', 'Mila'];
+        let empty = false;
+        function renderRows() {
+            const theme = document.getElementById('theme').value;
+            document.querySelectorAll('.review-rows').forEach(list => {
+                list.innerHTML = empty
+                    ? `<li class="hs-list-state hs-list-state-empty review-empty"><img class="hs-state-canonical-icon" data-leaderboard-control="empty-loading" alt=""><span class="hs-list-state-text">Još uvek nema rezultata.</span></li>`
+                    : sample.map((name, index) => `<li class="highscore-item"><div class="rank-circle rank-${index+1}"><img class="hs-podium-medal" src="${theme === 'dark' ? 'assets/green-soft-clay' : 'assets/theme-packs/' + theme}/canonical/competition-medals/general-podium-${['gold','silver','bronze'][index]}-v2.png?v=2" alt=""><span class="hs-podium-rank-number">${index+1}</span></div><div class="review-avatar">${name[0]}</div><div class="hs-info"><div class="hs-name">${name}</div><div class="hs-meta">Solo · 15.10.</div></div><div class="hs-score-pill">${(1375 - index*138).toLocaleString('sr-RS')}</div></li>`).join('');
+            });
+            window.themeLeaderboard.apply();
+        }
+        document.getElementById('theme').addEventListener('change', event => {
+            document.body.className = event.target.value === 'dark' ? '' : event.target.value + '-theme';
+            renderRows();
+        });
+        document.getElementById('state-toggle').addEventListener('click', event => {
+            empty = !empty;
+            event.target.textContent = empty ? 'Primer rang liste' : 'Prazno stanje';
+            renderRows();
+        });
+        document.querySelectorAll('[data-hs-tab]').forEach(button => button.addEventListener('click', () => {
+            document.querySelectorAll('[data-hs-tab]').forEach(tab => tab.classList.toggle('active', tab === button));
+            document.querySelectorAll('[data-hs-panel]').forEach(panel => panel.classList.toggle('active', panel.dataset.hsPanel === button.dataset.hsTab));
+        }));
+        document.querySelectorAll('.hs-filters').forEach(group => group.addEventListener('click', event => {
+            if (!event.target.matches('.filter-btn')) return;
+            group.querySelectorAll('.filter-btn').forEach(button => button.classList.toggle('active', button === event.target));
+        }));
+        renderRows();
+    </script>
+</body>
+</html>

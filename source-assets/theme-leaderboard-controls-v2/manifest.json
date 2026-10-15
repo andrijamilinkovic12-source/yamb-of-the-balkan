@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "style": "3D Soft Neomorphism",
+  "generationMethod": "27 separate built-in imagegen calls, one for each theme and semantic role",
+  "technicalDerivatives": "alpha crop and resize only; no cross-theme recoloring",
+  "themes": [
+    {
+      "id": "light",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/light-global-master-v2.png",
+          "masterSha256": "65e717d33e1a80525565fc93b8244c7faf740dc8d63a5d9b20c2567f00a8fa79",
+          "production": "www/assets/theme-packs/light/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "26a6830efd737ccc6678fa5007460c1099fe387de062fd0301617556cdc45e1a",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/light-local-master-v2.png",
+          "masterSha256": "3c18b08bc33ea7c214592dcc58e0db28eef1dda83c155015f3b96609afc0b991",
+          "production": "www/assets/theme-packs/light/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "6f862b769e5a8019017a9dd208484b98bf6547687558f9f14d52b049df1bae8c",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/light-empty-loading-master-v2.png",
+          "masterSha256": "75bf2eba9b31205866f1679e54c2cc8a956697d72981a57a1aca09af5d5c6fa6",
+          "production": "www/assets/theme-packs/light/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "df81a5525e28860892712c9704620c93bdd16b1cd3d260e20671af6fbc70608b",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medium",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/medium-global-master-v2.png",
+          "masterSha256": "94a6c069143dff0b8a4fd284eb582357ceddccf1a18a5343bc31f2614507088b",
+          "production": "www/assets/theme-packs/medium/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "a696345fd8c615fcb70f248f51a2a58878b886f1027245c64c3e3d1e0555b84f",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/medium-local-master-v2.png",
+          "masterSha256": "d116f8079f1703c36cd089669fb3c6bc1b92e8386decfe1dc6ad8291a575bc84",
+          "production": "www/assets/theme-packs/medium/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "8b3ceb5cb5ac2b62a4923e7fb8e0308eefab601b5c1e457039e8d02aab451fb9",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/medium-empty-loading-master-v2.png",
+          "masterSha256": "5863cbc404918ef77f18a7c4a65a7ffff989eacf1f73ff545dd21bf7d174e50c",
+          "production": "www/assets/theme-packs/medium/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "f286d9c0d5e090bc832b203db20fdea8e68d7374daa7cd2428508fc3be1df9f6",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/winter-global-master-v2.png",
+          "masterSha256": "23038a4be1d80738e147fdfbbef1a7f57404a32b98f3a911a537dbc7e7ede650",
+          "production": "www/assets/theme-packs/winter/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "ad13d693095f75ce31fa3fb7afe7e451c203f9615ff43dd2de826f1eb5ac7c7f",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/winter-local-master-v2.png",
+          "masterSha256": "2028af8f2495636e7ce73f6a08f8fc540224792a15fb2d310218b609ea347530",
+          "production": "www/assets/theme-packs/winter/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "8dd41f2641ae213b83e80ae4daa8693f097068c683b7f4dd51f2b9b547f65f79",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/winter-empty-loading-master-v2.png",
+          "masterSha256": "e0d60fcf844f6e101d502ffc6ab739d70f03624aa9b113a5158936ace2eda8c2",
+          "production": "www/assets/theme-packs/winter/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "55f7ef2baf6169c376fbf0a59622535688e919ecaa7d9e648f3afa9cc743aec7",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neon",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/neon-global-master-v2.png",
+          "masterSha256": "30f0f3e6a22a2f3b984a7f1bd72e23bd60ba480cf3b79a9b61636cad97af4c6a",
+          "production": "www/assets/theme-packs/neon/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "bd24d84b296e1474e07d65bbe10df8b24ce6131ea6113a83d0508626212a4334",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/neon-local-master-v2.png",
+          "masterSha256": "e547e08a53f3c81178a70aebfdd20c93a1a1d0f1e6a44dddedc05680feed142d",
+          "production": "www/assets/theme-packs/neon/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "dfc6cf12a66512a744f28af878ce470fa0d36b754c92accb5eb98f139fa660ae",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/neon-empty-loading-master-v2.png",
+          "masterSha256": "320ec5603d370169fe42e245b5625c385d8e22c7b94c6d41229b0a271b577544",
+          "production": "www/assets/theme-packs/neon/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "5ce7a791b3f8a670fd9ea4a2230cd1410d18399bd01fbdaebf48cfd45e52c819",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "amethyst",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/amethyst-global-master-v2.png",
+          "masterSha256": "425503608e646e7c068179b4e8880319ae04b04a7d622faac9660fcee97790b3",
+          "production": "www/assets/theme-packs/amethyst/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "400d45ec970c4b3c888a7784faee1ab2aecb8a47902f5ea54ba8f92f929fe2ef",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/amethyst-local-master-v2.png",
+          "masterSha256": "51fa4e76051fd3852b3797aedcfe14c4ff5847a7f2c5dc991574a5024a053950",
+          "production": "www/assets/theme-packs/amethyst/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "80d5e5208b294873e5cc5e7e2eac0421640afe49261286c7b22920dd38de00d5",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/amethyst-empty-loading-master-v2.png",
+          "masterSha256": "cd924d30a8ded6b499f3a4e382f44a16bb72699cb7e29957bc8465461582018e",
+          "production": "www/assets/theme-packs/amethyst/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "8d63817fe2b62674fc9604b4b594d47bc27ebd6b0a57971e38c2c99b13d6d220",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "easter",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/easter-global-master-v2.png",
+          "masterSha256": "90e67f6d67d9f67fe5213c4a3ab3d6e5ae4106c55646d97b6289926c58fbc2c9",
+          "production": "www/assets/theme-packs/easter/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "ca931a3067f183fb5a753aacb05832b917fbc0c2535466b032c034040995553e",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/easter-local-master-v2.png",
+          "masterSha256": "947acc85f9ff2cbdd3b90ec45ae174a05070590b7369423cd1eeb922dd1809e5",
+          "production": "www/assets/theme-packs/easter/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "4feebb24c868d43e97333a1d5934409c34ef0cf928606d30c31cfaccb917914e",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/easter-empty-loading-master-v2.png",
+          "masterSha256": "18cf5b05a294c38ac2443689a4bd655af3ba5e09dd202419d05bf952d0564900",
+          "production": "www/assets/theme-packs/easter/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "85f018f583680f07a69731125c20036661a9b6dbc9b61613a7cfb60689b67ec6",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desert",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/desert-global-master-v2.png",
+          "masterSha256": "d192823e934aa1fb0c61a635baec064e49f452b131a55f1ed65c2044f37a3a20",
+          "production": "www/assets/theme-packs/desert/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "c004219480e04f4b47ce5be52698308f224f9e10143fe371d67dc4d971f45d29",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/desert-local-master-v2.png",
+          "masterSha256": "3b60b6c2c21a44848b871f98eb5fca78bbbb32480982845e1403f90ea8d551f5",
+          "production": "www/assets/theme-packs/desert/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "b5409361c915d27cc75177b10aa579158981bed2bb69a7e81a2d33ff41777c35",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/desert-empty-loading-master-v2.png",
+          "masterSha256": "e5187f213b4bae09e108258f3e0bc865039e757388e17a4ec2e11c59bae4067d",
+          "production": "www/assets/theme-packs/desert/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "6a6fd053a2c59c6a7bc01cb409e8a139a2f7c37eb4d77dc95611ae3afd7b5af5",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moon",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/moon-global-master-v2.png",
+          "masterSha256": "a83f5090c0a2b778f2aa704e7afb932d498afd139501d55f42a1c6dd8798b0b0",
+          "production": "www/assets/theme-packs/moon/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "3a1f508f43885638647c3828f606e6d4d4e2ebf3119a0f5846d7fe69b501ff2b",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/moon-local-master-v2.png",
+          "masterSha256": "90ceed489e6c7f92f8ae38f44f495caee0484cd8eee8eb4ab29a77ddb40e0336",
+          "production": "www/assets/theme-packs/moon/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "91a98ba29ecb2491111c79f7bca0e3b8d9e67f546afad902fa73b2382a41ae89",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/moon-empty-loading-master-v2.png",
+          "masterSha256": "30e2366f22c788580ece59969c37804c43be1b41ea131206349142d9c9e00178",
+          "production": "www/assets/theme-packs/moon/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "efd10b52dddd46e0cf3b0e7e7cfaa1ceb8c763e5a2317817f0e7416d0235be35",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    },
+    {
+      "id": "severna",
+      "assets": [
+        {
+          "role": "global",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/severna-global-master-v2.png",
+          "masterSha256": "e6ed3563421b24a18d74c09c323b14976a55bc83cda9845f4e7741f539fcea30",
+          "production": "www/assets/theme-packs/severna/canonical/leaderboard-controls/global-v2.png",
+          "productionSha256": "151dffd71453167dbf0717b3a4c36b800368bff875409dcec0ffb0c1af6784fa",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "local",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/severna-local-master-v2.png",
+          "masterSha256": "cfd1dac6c7b4e8584483e5ba5d3680e97c6fb300740ad930e8f5ddd071e0b01b",
+          "production": "www/assets/theme-packs/severna/canonical/leaderboard-controls/local-v2.png",
+          "productionSha256": "b7c79d5f714aec0d6dcf44ed8aa0b1675f34462cf50b4a6f745d78de532b8659",
+          "size": [
+            256,
+            256
+          ]
+        },
+        {
+          "role": "empty-loading",
+          "master": "source-assets/theme-leaderboard-controls-v2/masters/severna-empty-loading-master-v2.png",
+          "masterSha256": "fb3229879d689315d493185308943fa341a7747c5c9b0c7ff7ccf3f44fff1d88",
+          "production": "www/assets/theme-packs/severna/canonical/leaderboard-controls/empty-loading-v2.png",
+          "productionSha256": "6c2f79205629a20153697ae79ffc259bb62b5cf9d3e1bc73aea41aecf34e93a0",
+          "size": [
+            384,
+            384
+          ]
+        }
+      ]
+    }
+  ]
+}

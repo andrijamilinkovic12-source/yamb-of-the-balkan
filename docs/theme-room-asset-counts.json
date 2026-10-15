@@ -1,0 +1,428 @@
+{
+  "schemaVersion": 3,
+  "definition": "Possible active PNG roles in seven processed rooms. Shared assets repeat in each room; duplicate paths inside one room count once. File count includes technical variants. This is not a visual or runtime certification.",
+  "rooms": [
+    "tournament",
+    "treasury",
+    "global-chat",
+    "online-players",
+    "economy",
+    "daily-challenge",
+    "leaderboard"
+  ],
+  "themes": {
+    "dark": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "light": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "medium": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "winter": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "neon": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "amethyst": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "easter": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "desert": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "moon": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    },
+    "severna": {
+      "rooms": {
+        "tournament": {
+          "roles": 16,
+          "pngFiles": 16,
+          "missing": []
+        },
+        "treasury": {
+          "roles": 116,
+          "pngFiles": 180,
+          "missing": []
+        },
+        "global-chat": {
+          "roles": 4,
+          "pngFiles": 4,
+          "missing": []
+        },
+        "online-players": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "economy": {
+          "roles": 6,
+          "pngFiles": 8,
+          "missing": []
+        },
+        "daily-challenge": {
+          "roles": 6,
+          "pngFiles": 6,
+          "missing": []
+        },
+        "leaderboard": {
+          "roles": 8,
+          "pngFiles": 8,
+          "missing": []
+        }
+      },
+      "uniquePngAcrossRooms": 222
+    }
+  },
+  "crossThemeIdentical": [],
+  "legacyEconomyReferences": {
+    "occurrences": 0,
+    "distinctSources": []
+  },
+  "reviewStatus": {
+    "inventory": "checked",
+    "binaryIdentityBetweenThemes": "checked",
+    "themeDnaVisual": "pending",
+    "provenance": "pending",
+    "runtimeStates": "pending",
+    "legacyRemoval": "checked"
+  }
+}

@@ -58,7 +58,7 @@ def own_art(theme, role):
     root = pack(theme)
     mapping = {
         "collection": ("treasury", "treasury-free-v3.png"),
-        "leaderboard": ("canonical", "leaderboard-room-identity/leaderboard-room-menu-v1.png"),
+        "leaderboard": ("canonical", f"leaderboard-room-identity/leaderboard-room-menu-{'v1' if theme == 'dark' else 'v2'}.png"),
         "tournament": ("canonical", "tournament-awards/champion-trophy-v1.png"),
         "quarterly-league": ("canonical", "quarterly-league-room-identity/quarterly-league-room-menu-v1.png"),
         "power-index": ("canonical", "statistics-room-identity/statistics-room-menu-v1.png"),

@@ -70,7 +70,9 @@ async function main() {
                     .filter(img => roles.some(role => img.dataset.themeSrc.startsWith(greenPrefix + role)))
                     .map(img => ({ original: img.dataset.themeSrc.split('?')[0], source: img.getAttribute('src') }));
                 const legacy = [...document.querySelectorAll('.theme-rewarded-video-legacy')];
-                const decoded = await Promise.all(roles.map(role => new Promise(resolve => {
+                const resolvedRoles = roles.map(role => ['easter', 'desert', 'severna'].includes(theme) && role.startsWith('canonical/rewarded-video/')
+                    ? role.replace('-v1.png', '-v2.png') : role);
+                const decoded = await Promise.all(resolvedRoles.map(role => new Promise(resolve => {
                     const image = new Image();
                     image.onload = () => resolve({ role, width: image.naturalWidth, height: image.naturalHeight });
                     image.onerror = () => resolve({ role, error: true });
@@ -90,7 +92,9 @@ async function main() {
             })()`);
             for (const item of result.mapped) {
                 const role = item.original.slice('assets/green-soft-clay/'.length);
-                assert.equal(item.source, `assets/theme-packs/${theme}/${role}`, `${theme}: wrong DOM source`);
+                const expectedRole = ['easter', 'desert', 'severna'].includes(theme) && role.startsWith('canonical/rewarded-video/')
+                    ? role.replace('-v1.png', '-v2.png') : role;
+                assert.equal(item.source, `assets/theme-packs/${theme}/${expectedRole}`, `${theme}: wrong DOM source`);
             }
             assert(result.mapped.length >= 4, `${theme}: expected real rewarded-video DOM anchors`);
             assert.equal(result.visibleLegacyCount, 0, `${theme}: a legacy icon is visible ${JSON.stringify(result.legacyDetails)}`);

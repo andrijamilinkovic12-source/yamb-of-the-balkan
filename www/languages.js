@@ -1713,7 +1713,8 @@ function dukatIconHtml(extraClass = '') {
         && !document.body?.classList.contains('moon-theme')
         && !document.body?.classList.contains('severna-theme');
     if (customThemeIds.includes(theme)) {
-        return `<img class="${className} dukat-icon-inline--theme" src="assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v1.png" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+        const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+        return `<img class="${className} dukat-icon-inline--theme" src="assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${version}.png" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
     if (isGreenTheme) {
         return `<img class="${className} dukat-icon-inline--green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;

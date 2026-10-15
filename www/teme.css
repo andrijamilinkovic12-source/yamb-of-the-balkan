@@ -8521,7 +8521,7 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/easter-soft-clay/runtime/menu/quarterly-league-yotb-ql-pro-v3.png?v=1") center / contain no-repeat;
+    background: none;
     opacity: .16;
     filter: grayscale(1) sepia(.26) saturate(1.35) hue-rotate(236deg) brightness(.72) contrast(1.08);
     pointer-events: none;
@@ -9492,7 +9492,7 @@ body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/desert-soft-clay/runtime/menu/quarterly-league-yotb-ql-pro-v2.png?v=1") center / contain no-repeat;
+    background: none;
     opacity: .18;
     filter: saturate(.72) brightness(.86) contrast(1.02);
     pointer-events: none;
@@ -14980,7 +14980,7 @@ body.severna-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-ca
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1") center / contain no-repeat;
+    background: none;
     opacity: .20;
     filter: drop-shadow(0 8px 12px rgba(0,0,0,.20)) saturate(1.06);
     pointer-events: none;

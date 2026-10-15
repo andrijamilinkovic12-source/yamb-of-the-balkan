@@ -153,7 +153,8 @@ async function main() {
                 const expected = index === 0
                     ? ['ducat/ducat-front','ducat/ducat-inline','undo-token/undo-token-inline','ducat/ducat-front','rewarded-video/rewarded-video-unavailable','ducat/ducat-inline']
                     : ['undo-token/undo-token-front','ducat/ducat-inline','undo-token/undo-token-inline','undo-token/undo-token-inline','rewarded-video/rewarded-video-unavailable','undo-token/undo-token-inline'];
-                expected.forEach((suffix, position) => assert(row.images[position].src.includes(`/canonical/${suffix}-v1.png`), `${theme}/${tab}: icon position ${position} is wrong`));
+                const assetVersion = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+                expected.forEach((suffix, position) => assert(row.images[position].src.includes(`/canonical/${suffix}-v${assetVersion}.png`), `${theme}/${tab}: icon position ${position} is wrong`));
                 assert(row.rewardState.activeSource?.startsWith(prefix), `${theme}/${tab}: active video from wrong theme`);
                 assert(row.rewardState.unavailableSource?.startsWith(prefix), `${theme}/${tab}: unavailable video from wrong theme`);
                 assert.equal(row.rewardState.activeVisibleWhenReady, true, `${theme}/${tab}: ready video icon hidden`);
