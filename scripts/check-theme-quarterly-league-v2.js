@@ -59,6 +59,19 @@ for (const theme of themes) {
     }
 }
 
+const roomCss = fs.readFileSync(path.join(root, 'www/theme-quarterly-league-room.css'), 'utf8');
+for (const [selector, size] of [
+    ['league-tab-soft-clay-icon', 28],
+    ['league-rank-soft-clay-badge', 46],
+    ['league-current-rank-soft-clay-badge', 38],
+    ['ql-placement-medal', 24]
+]) {
+    assert.match(roomCss, new RegExp(`${selector}[^}]*\\{[^}]*width: ${size}px !important;[^}]*height: ${size}px !important;`, 's'),
+        `${selector} must keep Green's room dimensions`);
+}
+assert.match(roomCss, /main-league-watermark-zone\.ql-quarter-logo\s*\{[^}]*opacity: 1 !important;/s,
+    'the menu watermark must not receive a second opacity reduction');
+
 const source = fs.readFileSync(path.join(root, 'www/theme-quarterly-league-room.js'), 'utf8');
 for (const [month, expected] of [[2, 1], [5, 2], [8, 3], [11, 4]]) {
     const FixedDate = class extends Date { constructor() { super(`2026-${String(month).padStart(2, '0')}-15T12:00:00Z`); } };

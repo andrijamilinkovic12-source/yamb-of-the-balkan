@@ -46,7 +46,13 @@ body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo {
     transform: translateY(-50%) !important;
     background: none !important;
     filter: none !important;
-    opacity: .24 !important;
+    opacity: 1 !important;
+}
+body #main-menu .main-summary-row .main-league-card .main-league-watermark-zone.ql-quarter-logo > img.ql-quarter-logo-base {
+    opacity: .18 !important;
+}
+body #main-menu .main-summary-row .main-league-card .main-league-watermark-zone.ql-quarter-logo > img.ql-quarter-logo-active {
+    opacity: .18 !important;
 }
 body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo::before,
 body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo::after {
@@ -91,6 +97,80 @@ body .ql-quarter-reward-medal .ql-medal-fallback { display: none !important; }
 body #rules-overlay-ui .rules-quarterly-canonical-icon { display: inline-block !important; filter: none !important; }
 body #league-modal-overlay .ql-medal-count { color: var(--theme-card-ink, inherit) !important; text-shadow: none !important; }
 
+/* Green's asset geometry applies to every theme. The earlier visibility rule
+   must never expose an unconstrained 256px PNG inside a 38px tab. */
+body #league-modal-overlay :is(.league-tab-soft-clay-icon,.league-hof-tab-soft-clay-icon) {
+    display: block !important;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    flex: 0 0 28px !important;
+}
+body #league-modal-overlay .league-rank-soft-clay-badge {
+    width: 46px !important;
+    height: 46px !important;
+    max-width: 46px !important;
+    max-height: 46px !important;
+    flex: 0 0 46px !important;
+}
+body #league-modal-overlay .league-current-rank-soft-clay-badge {
+    width: 38px !important;
+    height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    flex: 0 0 38px !important;
+}
+body #league-modal-overlay .ql-placement-medal {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+}
+body #league-modal-overlay .ql-placement-medal--rank {
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+}
+body #league-modal-overlay .ql-champion-soft-clay-icon {
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+}
+body .ql-quarter-reward-medal .ql-placement-medal {
+    width: 34px !important;
+    height: 34px !important;
+    max-width: 34px !important;
+    max-height: 34px !important;
+}
+body #winner-modal-overlay .ql-quarter-champion-medal {
+    width: 54px !important;
+    height: 54px !important;
+    max-width: 54px !important;
+    max-height: 54px !important;
+}
+body #league-modal-overlay :is(.league-tab-button,.league-hof-tab-button) {
+    min-width: 0;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.12;
+}
+body #league-modal-overlay :is(.league-tab-button,.league-hof-tab-button) > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+body #league-modal-overlay :is(.league-rank-heading,.league-current-rank,.ql-medal-count) {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .modal-box {
     color: var(--theme-card-ink) !important;
     background: var(--theme-card-fill) !important;
@@ -124,4 +204,62 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     color: var(--theme-card-surface) !important;
     background: var(--theme-card-primary) !important;
     border: 1px solid var(--theme-card-primary) !important;
+}
+
+/* Match Green's card and text geometry while using each theme's material. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .modal-box {
+    font-family: 'Montserrat', sans-serif;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.modal-box > div:first-child,.modal-box > div:nth-child(2),#league-main-content > div:last-child) {
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-raised) 88%, transparent) !important;
+    border-color: var(--theme-card-line) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-tab-button,.league-hof-tab-button) {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-subcard-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    text-shadow: none !important;
+    transform: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-tab-button.btn-primary,.league-hof-tab-button.is-active) {
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-primary) 18%, var(--theme-card-raised)) !important;
+    border-color: var(--theme-card-primary) !important;
+    box-shadow: inset 0 0 0 1px var(--theme-card-primary), var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-summary-card,.league-rank-scroll,#hof-main-content > div:last-child) {
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-inset) 64%, transparent) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-rank-heading,.league-current-rank,#league-modal-title,.league-summary-rank,.league-summary-points) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-summary-points > div:first-child {
+    color: var(--theme-card-primary) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-summary-rank > div:first-child,.league-summary-points > div:last-child) {
+    color: var(--theme-card-muted) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list li,ul[id^="league-list-"] li) {
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-raised) 82%, transparent) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list li,ul[id^="league-list-"] li) [style*="color:"] {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list li,ul[id^="league-list-"] li)[style*="var(--gold-main)"] {
+    border-color: var(--theme-card-primary) !important;
+    box-shadow: inset 3px 0 0 var(--theme-card-primary), var(--theme-subcard-shadow) !important;
 }

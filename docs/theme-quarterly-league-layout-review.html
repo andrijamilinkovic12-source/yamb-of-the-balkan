@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kvartalna liga — provera rasporeda</title>
+  <link rel="stylesheet" href="../www/style.css">
+  <link rel="stylesheet" href="../www/teme.css">
+  <link rel="stylesheet" href="../www/theme-main-room-icons.css">
+  <link rel="stylesheet" href="../www/theme-card-surfaces.css">
+  <link rel="stylesheet" href="../www/theme-room-close-controls.css">
+  <link rel="stylesheet" href="../www/theme-medals.css">
+  <link rel="stylesheet" href="../www/theme-quarterly-league-room.css">
+  <style>
+    body { margin:0; min-height:100vh; background:#273329; font-family:Montserrat,Arial,sans-serif; }
+    .qa-controls { position:fixed; z-index:1000001; top:4px; right:8px; display:flex; gap:5px; }
+    .qa-controls select,.qa-controls button { font:600 12px Montserrat,Arial,sans-serif; padding:5px; border-radius:7px; }
+    #main-menu { min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    #main-menu .main-summary-row { width:340px; display:flex; }
+    #main-menu .main-league-card { min-height:145px; position:relative; overflow:hidden; display:flex; align-items:center; }
+    #main-menu .main-league-content { position:relative; z-index:1; }
+    #main-menu .main-league-title { font-size:.65rem; }
+    #main-menu #league-rank-name { font-size:1.2rem; }
+    #league-modal-overlay .league-slide { display:flex; flex-direction:column; height:100%; }
+    #league-modal-overlay .league-rank-heading { display:flex; align-items:center; justify-content:center; }
+    #league-modal-overlay .league-summary-card { display:flex; justify-content:space-between; align-items:center; padding:10px 15px; border-radius:12px; }
+    #league-modal-overlay .league-current-rank { display:flex; align-items:center; }
+    #league-modal-overlay .league-rank-scroll { flex:1; padding:8px; }
+    body[data-view="menu"] #league-modal-overlay { display:none !important; }
+    body[data-view="room"] #main-menu { display:none; }
+  </style>
+</head>
+<body data-view="room">
+  <div class="qa-controls"><select id="qa-theme" aria-label="Tema"></select><button id="qa-view" type="button">Meni</button></div>
+  <div id="main-menu"><div class="main-summary-row"><div class="main-league-card"><span class="main-league-watermark-zone ql-quarter-logo" data-ql-logo="menu" data-ql-quarter="4" data-ql-orientation="cross" aria-hidden="true"><img class="ql-quarter-logo-base" alt=""><img class="ql-quarter-logo-active" alt=""></span><div class="main-league-content"><span class="main-league-title">KVARTALNA LIGA</span><span id="league-rank-name">AMATER</span><div class="main-league-progress"><div id="league-progress-bar" style="width:35%"></div></div><span id="league-pts-text">1750 / 5000 PTS</span></div></div></div></div>
+  <div id="league-modal-overlay" class="modal-overlay" style="display:flex"><div class="modal-box" style="display:flex;flex-direction:column;padding:0">
+    <div style="display:flex;align-items:center;justify-content:space-between"><div class="league-modal-title-group"><span class="ql-quarter-logo" data-ql-logo="room" data-ql-quarter="4" data-ql-orientation="cross"><img class="ql-quarter-logo-base" alt=""><img class="ql-quarter-logo-active" alt=""></span><h2 id="league-modal-title">KVARTALNA LIGA</h2></div><button type="button" class="global-chat-close league-close-standard">×</button></div>
+    <div role="group" style="display:flex;gap:10px"><button id="tab-league-main" class="btn-menu btn-primary league-tab-button" style="flex:1"><img class="league-tab-soft-clay-icon" data-role="league" alt=""><span>LIGA</span></button><button id="tab-league-hof" class="btn-menu btn-secondary league-tab-button" style="flex:1"><img class="league-tab-soft-clay-icon" data-role="hall" alt=""><span>DVORANA SLAVNIH</span></button></div>
+    <div id="league-main-content" style="display:flex;flex-direction:column;flex:1;min-height:0"><div><div class="league-summary-card"><div class="league-summary-rank"><div style="font-size:.65rem">Vaš rang</div><div class="league-current-rank" style="font-size:1.2rem;font-weight:900"><img class="league-current-rank-soft-clay-badge" data-role="amater" alt=""><span>Amater</span></div></div><div class="league-summary-points"><div style="font-size:1.1rem;font-weight:800">1750 PTS</div><div id="league-summary-alltime" style="font-size:.65rem">SVA VREMENA: 4200</div></div></div></div>
+      <div id="league-carousel-container" style="flex:1;min-height:0;display:flex;flex-direction:column"><div id="league-track" style="display:flex;flex:1;min-height:0"><div class="league-slide"><h3 class="league-rank-heading"><img class="league-rank-soft-clay-badge" data-role="profi" alt=""><span>PROFI</span></h3><div class="league-rank-scroll"><ul id="league-list-profi" style="list-style:none;padding:0"><li style="display:flex;justify-content:space-between;padding:8px 10px"><span>1. Takmičar</span><strong>3200 PTS</strong></li><li style="display:flex;justify-content:space-between;padding:8px 10px"><span>2. Takmičar</span><strong>2850 PTS</strong></li></ul></div></div></div></div>
+      <div style="display:flex;justify-content:center"><div class="league-page-dot is-active"></div><div class="league-page-dot"></div><div class="league-page-dot"></div></div>
+    </div>
+  </div></div>
+  <script>
+    const themes={dark:'Zelena',light:'Svetlo zlato',medium:'Trula višnja',winter:'Plavi okean',neon:'Neon Cyber',amethyst:'Ametist',easter:'Vaskršnja',desert:'Pustinjsko staklo',moon:'Mesečev sjaj',severna:'Severna maglina'};
+    const picker=document.getElementById('qa-theme');
+    picker.innerHTML=Object.entries(themes).map(([id,name])=>`<option value="${id}">${name}</option>`).join('');
+    picker.value=new URLSearchParams(location.search).get('theme')||'dark';
+    function refresh(){
+      const theme=picker.value,root=theme==='dark'?'../www/assets/green-soft-clay/canonical':`../www/assets/theme-packs/${theme}/canonical`;
+      document.body.className=theme==='dark'?'':`${theme}-theme`;
+      document.querySelectorAll('[data-ql-logo]').forEach(node=>{const kind=node.dataset.qlLogo==='menu'?'-menu':'';node.querySelectorAll('img').forEach(img=>img.src=`${root}/quarterly-league-room-identity/quarterly-league-room${kind}-v2.png`)});
+      document.querySelector('[data-role=league]').src=`${root}/quarterly-league-room-identity/quarterly-league-room-v2.png`;
+      document.querySelector('[data-role=hall]').src=`${root}/quarterly-navigation/tab-hall-of-fame-v2.png`;
+      document.querySelector('[data-role=amater]').src=`${root}/quarterly-rank-badges/rank-amater-v2.png`;
+      document.querySelector('[data-role=profi]').src=`${root}/quarterly-rank-badges/rank-profi-v2.png`;
+    }
+    picker.addEventListener('change',refresh);refresh();
+    document.getElementById('qa-view').addEventListener('click',()=>{document.body.dataset.view=document.body.dataset.view==='room'?'menu':'room';document.getElementById('qa-view').textContent=document.body.dataset.view==='room'?'Meni':'Soba'});
+  </script>
+</body>
+</html>
