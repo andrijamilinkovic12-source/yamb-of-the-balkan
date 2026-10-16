@@ -1,0 +1,87 @@
+/* Canonical resume / new-game button plates, one separately rendered PNG per role and theme. */
+body {
+    --menu-resume-button-png: url('assets/green-soft-clay/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/green-soft-clay/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #fff8eb;
+    --menu-new-button-ink: #fff8eb;
+}
+body.light-theme {
+    --menu-resume-button-png: url('assets/theme-packs/light/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/light/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #392817;
+    --menu-new-button-ink: #392817;
+}
+body.medium-theme {
+    --menu-resume-button-png: url('assets/theme-packs/medium/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/medium/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #fff6f2;
+    --menu-new-button-ink: #3a1424;
+}
+body.winter-theme {
+    --menu-resume-button-png: url('assets/theme-packs/winter/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/winter/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #173d5b;
+    --menu-new-button-ink: #173d5b;
+}
+body.neon-theme {
+    --menu-resume-button-png: url('assets/theme-packs/neon/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/neon/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #eefefa;
+    --menu-new-button-ink: #eefefa;
+}
+body.amethyst-theme {
+    --menu-resume-button-png: url('assets/theme-packs/amethyst/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/amethyst/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #fff5ef;
+    --menu-new-button-ink: #2c183a;
+}
+body.easter-theme {
+    --menu-resume-button-png: url('assets/theme-packs/easter/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/easter/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #fff8ea;
+    --menu-new-button-ink: #3f4a35;
+}
+body.desert-theme {
+    --menu-resume-button-png: url('assets/theme-packs/desert/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/desert/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #26170e;
+    --menu-new-button-ink: #443027;
+}
+body.moon-theme {
+    --menu-resume-button-png: url('assets/theme-packs/moon/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/moon/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #f5f5f7;
+    --menu-new-button-ink: #242630;
+}
+body.severna-theme {
+    --menu-resume-button-png: url('assets/theme-packs/severna/canonical/menu-resume-buttons/resume-v1.png?v=1');
+    --menu-new-button-png: url('assets/theme-packs/severna/canonical/menu-resume-buttons/new-v1.png?v=1');
+    --menu-resume-button-ink: #f5fbff;
+    --menu-new-button-ink: #0a2934;
+}
+
+body #main-menu :is(#mode-resume-1, #mode-resume-2) .mini-btn:is(.btn-resume-inline, .btn-new-inline) {
+    border: 0 !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+    background-color: transparent !important;
+    background-position: center !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    isolation: isolate;
+}
+body #main-menu :is(#mode-resume-1, #mode-resume-2) .mini-btn.btn-resume-inline {
+    background-image: var(--menu-resume-button-png) !important;
+    color: var(--menu-resume-button-ink) !important;
+}
+body #main-menu :is(#mode-resume-1, #mode-resume-2) .mini-btn.btn-new-inline {
+    background-image: var(--menu-new-button-png) !important;
+    color: var(--menu-new-button-ink) !important;
+}
+body #main-menu :is(#mode-resume-1, #mode-resume-2) .mini-btn:is(.btn-resume-inline, .btn-new-inline):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}

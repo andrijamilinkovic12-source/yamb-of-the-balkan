@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Solo rezultat · mobilni pregled</title>
+  <link rel="stylesheet" href="../www/style.css?v=5.24">
+  <link rel="stylesheet" href="../www/teme.css?v=7.02">
+  <link rel="stylesheet" href="../www/theme-ducat-pack.css?v=2">
+  <link rel="stylesheet" href="../www/theme-rewarded-video-pack.css?v=2">
+  <link rel="stylesheet" href="../www/theme-solo-results.css?v=8">
+  <style>
+    html,body{height:100%;min-height:100%;width:100%;overflow:hidden}
+    #game-over-screen{background:linear-gradient(180deg,rgba(8,17,24,.08),rgba(8,17,24,.16)),var(--finish-bg) center/cover no-repeat!important}
+    #game-over-screen .logo-anim{animation:none!important;opacity:1!important}
+    #game-over-screen.is-solo-result .game-over-score-card{flex-shrink:0}
+    #game-over-screen.is-solo-result .theme-ducat-pack-image--game-over{display:none!important}
+  </style>
+</head>
+<body>
+  <div id="game-over-screen" class="screen active is-solo-result">
+    <div class="logo-anim" style="font-size:2rem;margin-bottom:20px">KRAJ IGRE</div>
+    <div class="modal-box" style="width:90%;max-width:400px;text-align:center">
+      <h2 id="go-title" style="color:var(--gold-main);margin-bottom:10px">MAJSTORSKA PARTIJA</h2>
+      <p id="go-msg" style="color:var(--text-main);font-size:.9rem;margin-bottom:20px">Odlična kontrola table — 2.860 poena.</p>
+      <div class="game-over-score-card" style="background:rgba(255,255,255,.05);padding:15px;border-radius:12px;margin-bottom:20px;border:var(--glass-border)">
+        <div id="solo-record-panel" class="solo-record-panel">
+          <div class="solo-record-panel-title">REKORDI PARTIJE</div>
+          <div class="solo-record-panel-grid">
+            <span data-record-role="weekly" title="Nedeljni rekord"><img data-solo-record-icon="weekly" alt=""><span class="solo-record-accessible-name">NEDELJNI REKORD</span></span>
+            <span data-record-role="monthly" title="Mesečni rekord"><img data-solo-record-icon="monthly" alt=""><span class="solo-record-accessible-name">MESEČNI REKORD</span></span>
+            <span data-record-role="all_time" title="Rekord svih vremena"><img data-solo-record-icon="all_time" alt=""><span class="solo-record-accessible-name">REKORD SVIH VREMENA</span></span>
+            <span data-record-role="personal" title="Lični rekord"><img data-solo-record-icon="personal" alt=""><span class="solo-record-accessible-name">LIČNI REKORD</span></span>
+          </div>
+          <div class="solo-record-panel-footer"><span id="solo-record-status">BEZ NOVOG REKORDA</span><span class="solo-power-index"><img id="solo-power-index-icon" alt=""><span>POWER INDEX</span> <strong id="solo-power-index-gain">+24</strong></span></div>
+        </div>
+        <div style="font-size:.8rem;color:var(--text-muted);text-transform:uppercase" data-lang="go_msg_solo">OSVOJENI POENI</div>
+        <div class="game-over-score-total" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:5px">
+          <img class="theme-solo-result-icon theme-solo-finish-score-mark" data-role="finish-score-mark" alt="">
+          <img class="green-solo-finish-score-mark" data-green-role="finish-score-mark" alt="">
+          <span id="go-score" style="font-size:2.2rem;font-weight:800;color:var(--gold-main)">2.860</span>
+        </div>
+        <div id="solo-finish-tier" class="easter-solo-finish-tier" aria-hidden="true">
+          <span class="easter-solo-finish-tier-step is-reached"></span><span class="easter-solo-finish-tier-step is-reached"></span><span class="easter-solo-finish-tier-step is-reached"></span><span class="easter-solo-finish-tier-step is-reached"></span><span class="easter-solo-finish-tier-step is-current"></span><span class="easter-solo-finish-tier-step"></span>
+        </div>
+        <div id="solo-finish-stats" class="easter-solo-finish-stats">
+          <div><span>NAJJAČA KOLONA</span><strong id="solo-finish-best-column">↓ 612</strong></div>
+          <div><span>BEZ NULE</span><strong>DA</strong></div>
+        </div>
+      </div>
+      <button id="btn-ad-double" class="btn-menu btn-ad-double" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px">
+        <img class="green-solo-finish-action-icon" id="reward-icon" alt="">
+        <span id="go-double-label">DUPLIRAJ NAGRADU (x2)</span>
+      </button>
+      <button class="btn-menu btn-secondary game-over-claim-button">
+        <img class="theme-solo-result-icon theme-solo-finish-claim-icon" data-role="finish-claim" alt="">
+        <img class="green-solo-finish-action-icon green-solo-finish-claim-icon" data-green-role="finish-claim" alt="">
+        <span id="go-claim-label">Preuzmi i izađi</span>
+      </button>
+    </div>
+  </div>
+<script src="../www/languages.js?v=5.17"></script>
+<script>
+const allowed=new Set(['light','medium','winter','neon','amethyst','easter','desert','moon','severna']);
+const params=new URLSearchParams(location.search);
+const theme=params.get('theme');const id=allowed.has(theme)?theme:'dark';
+const sampleScores={solo_rough:650,solo_more:1250,solo_progress:1750,solo_good:2250,solo_masterful:2860,solo_perfect:3300};
+const tier=Object.hasOwn(sampleScores,params.get('tier'))?params.get('tier'):'solo_masterful';
+const variant=['1','2','3'].includes(params.get('variant'))?params.get('variant'):'1';
+const messageKey=`go_msg_${tier}${variant==='1'?'':`_v${variant}`}`;
+const score=sampleScores[tier];
+const columnMarks={Nadole:'col_down',Slobodna:'col_free',Sredina:'col_middle',Nagore:'col_up','Ručno':'col_manual',Najava:'col_announce'};
+const column=Object.hasOwn(columnMarks,params.get('column'))?params.get('column'):'Nadole';
+const bestColumn=document.getElementById('solo-finish-best-column');
+bestColumn.textContent=`${TRANSLATIONS.sr[columnMarks[column]]} 612`;
+bestColumn.title=`${column}: 612`;
+bestColumn.setAttribute('aria-label',`Najjača kolona: ${column}, 612`);
+document.getElementById('go-title').textContent=TRANSLATIONS.sr[`go_title_${tier}`];
+document.getElementById('go-msg').textContent=TRANSLATIONS.sr[messageKey].replace('{0}',score.toLocaleString('sr-RS'));
+document.getElementById('go-score').textContent=score.toLocaleString('sr-RS');
+const recordOptions={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pa:['personal','all_time'],pwa:['personal','weekly','all_time'],pma:['personal','monthly','all_time'],pwma:['personal','weekly','monthly','all_time'],pending:null};
+const recordState=Object.hasOwn(recordOptions,params.get('record'))?params.get('record'):'pwma';
+const recordFlags=recordOptions[recordState];
+document.querySelectorAll('[data-record-role]').forEach(item=>item.classList.toggle('is-achieved',Array.isArray(recordFlags)&&recordFlags.includes(item.dataset.recordRole)));
+document.getElementById('solo-record-status').textContent=recordFlags===null?'PROVERA REKORDA':recordFlags.length?'POTVRĐENO':'BEZ NOVOG REKORDA';
+document.getElementById('solo-power-index-gain').textContent=recordFlags===null?'—':'+24';
+if(recordFlags!==null){
+  const bonusRates={personal:10,weekly:10,monthly:10,all_time:20};
+  const bonusPercent=recordFlags.reduce((sum,role)=>sum+bonusRates[role],0);
+  const baseReward=Math.min(8000,Math.floor(score*(100+bonusPercent)/100));
+  const adReward=Math.min(8000,baseReward*2);
+  document.getElementById('go-claim-label').textContent=`Preuzmi ${baseReward.toLocaleString('sr-RS')} i izađi`;
+  document.getElementById('go-double-label').textContent=`Dupliraj: ${adReward.toLocaleString('sr-RS')} dukata`;
+  document.getElementById('btn-ad-double').style.display=adReward<=baseReward?'none':'flex';
+}
+document.getElementById('solo-power-index-icon').src=id==='dark'
+  ?'../www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png'
+  :`../www/assets/theme-packs/${id}/canonical/statistics-overview/power-index-v1.png`;
+document.querySelectorAll('[data-solo-record-icon]').forEach(image=>{
+  image.src=id==='dark'
+    ?`../www/assets/green-soft-clay/canonical/solo-record-icons/${image.dataset.soloRecordIcon}-v1.png`
+    :`../www/assets/theme-packs/${id}/canonical/solo-record-icons/${image.dataset.soloRecordIcon}-v1.png`;
+});
+document.querySelectorAll('#solo-finish-tier .easter-solo-finish-tier-step').forEach((step,index)=>{const current=Object.keys(sampleScores).indexOf(tier);step.classList.toggle('is-reached',index<current);step.classList.toggle('is-current',index===current)});
+if(id!=='dark')document.body.classList.add(`${id}-theme`);
+const backgrounds={dark:'green-clay-balkan-diorama-v4.png',light:'theme-backgrounds/light-v9.png',medium:'theme-backgrounds/medium-v9.png',winter:'theme-backgrounds/winter-v13.png',neon:'theme-backgrounds/neon-v4.png',amethyst:'theme-backgrounds/amethyst-v6.png',easter:'theme-backgrounds/easter-v6-1.png',desert:'theme-backgrounds/desert-v8-2.png',moon:'theme-backgrounds/moon-v14.png',severna:'theme-backgrounds/severna-v4.png'};
+document.documentElement.style.setProperty('--finish-bg',`url('../www/assets/${backgrounds[id]}')`);
+if(id!=='dark')for(const image of document.querySelectorAll('[data-role]'))image.src=`../www/assets/theme-packs/${id}/canonical/solo-results/${image.dataset.role}-v1.png`;
+if(id==='dark')for(const image of document.querySelectorAll('[data-green-role]'))image.src=`../www/assets/green-soft-clay/canonical/solo-results/${image.dataset.greenRole}-v1.png`;
+document.getElementById('reward-icon').src=id==='dark'?'../www/assets/green-soft-clay/solo/finish-reward-video-v3.png':`../www/assets/theme-packs/${id}/solo/finish-reward-video-v3.png`;
+if(id!=='dark'){document.body.classList.add('theme-rewarded-video-pack-active');document.getElementById('reward-icon').classList.add('theme-rewarded-video-icon')}
+</script>
+</body>
+</html>

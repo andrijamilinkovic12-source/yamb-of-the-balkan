@@ -1,0 +1,281 @@
+{
+  "version": 1,
+  "roles": [
+    "resume",
+    "new"
+  ],
+  "themes": [
+    "dark",
+    "light",
+    "medium",
+    "winter",
+    "neon",
+    "amethyst",
+    "easter",
+    "desert",
+    "moon",
+    "severna"
+  ],
+  "items": [
+    {
+      "theme": "dark",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/dark-resume.png",
+      "sourceSha256": "1b5892b2b541411737a182c96ccb545f2cfdcd0136cdecaa868f9ee9b64d52e8",
+      "production": "www/assets/green-soft-clay/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "764e1cedc3a708ea90f4ba4aadec77ab90894ff5338da58d1c5b0dbee4b32a5b",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "dark",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/dark-new.png",
+      "sourceSha256": "edb0d5359304149196695e734d39ab8af974944814a173a2c0d2f2fb1c42905c",
+      "production": "www/assets/green-soft-clay/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "c2c9c8f1b722a5aaa2a9d70e2cc898272d01e6fd590bd4703275918d9f97323b",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "light",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/light-resume.png",
+      "sourceSha256": "afcbe5dffd29bb822d3802ba9f53e6ab433c7ee2dff19d7585fcaa27a7f74518",
+      "production": "www/assets/theme-packs/light/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "2a04c4ecc4a208cedfe945e921478454bcf60916ff3b302bdcc308f3e1a03809",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "light",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/light-new.png",
+      "sourceSha256": "d54d1ff8708377e8c541799882e6afc6533def3fdc4f2d99cf1042ed31621150",
+      "production": "www/assets/theme-packs/light/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "d764b99fcb4913c9ffa669722d3944c5a2b8b296d5e9efac4961d2ebea022b9e",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "medium",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/medium-resume.png",
+      "sourceSha256": "980e29328918dc801a1295940e4a3df78b4c981fbe48cdd5b9d75b270e9b8981",
+      "production": "www/assets/theme-packs/medium/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "7ee25abe4383828b60c317a386e9461f04193c0521cd7f198c32c1b136dc5a63",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "medium",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/medium-new.png",
+      "sourceSha256": "3f6b7b87c65b8bbb43b3c6ed3ac9dea1cc844f4f3110b5c7cecff67e986700a7",
+      "production": "www/assets/theme-packs/medium/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "3c756fa7d664912c4ff9ee2fa376fe0a4e1a6175d144f887d528cf69465a3282",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "winter",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/winter-resume.png",
+      "sourceSha256": "5e4a451bbcbd2be39491a82e3e1a80f4c8f38ca22a89070c16e770df448d97a8",
+      "production": "www/assets/theme-packs/winter/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "e0a2873944e8fa2f5aa163c923bb661abb2050381d9c5108f78f04c8350a3d89",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "winter",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/winter-new.png",
+      "sourceSha256": "89215c6fece171ef1f97feace769aa41aa79eade690b13dd648d99d747d94a60",
+      "production": "www/assets/theme-packs/winter/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "1f2ee398b040d90bca061de634e9d3517acf34e7e72a05be80047ce8fbfee0ad",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "neon",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/neon-resume.png",
+      "sourceSha256": "8b507c62424c37dd62c1082545b6e904ec0a035bf5a335e215f692de5012f0fb",
+      "production": "www/assets/theme-packs/neon/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "7f6fecbb99954afd2d3c926fa7b60b9c183722d94b8ebd4cda9bee011f85c113",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "neon",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/neon-new.png",
+      "sourceSha256": "84ac633d1136fafa51d170dca131de46518a5b0ac16e1f5d8113488e7d7791e8",
+      "production": "www/assets/theme-packs/neon/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "e5a86141bc2720612e44c8c06105610582912582b17a91360a080eb46f3c83a6",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "amethyst",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/amethyst-resume.png",
+      "sourceSha256": "290203b1e9f8243d794727ce3910063ee2e934f7b4dc7f10a8b8250a73782f3c",
+      "production": "www/assets/theme-packs/amethyst/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "0e9b6e0da25bd28187ed89d107346ee87d50d78c9f56f82edfdbc8a10f0566a9",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "amethyst",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/amethyst-new.png",
+      "sourceSha256": "489e99f9a303d3321499c8d6d1aba89f1d3a9fe6cc608c6b830123f36780ad02",
+      "production": "www/assets/theme-packs/amethyst/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "6df0429c68d467113b0852f96ea0f5488b7f0845ff548202f1e5f6252f45e512",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "easter",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/easter-resume.png",
+      "sourceSha256": "05cb623c64c12ed8f6eed6d3cedff0b874b1f6965f20482861a5eca80643ae5c",
+      "production": "www/assets/theme-packs/easter/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "0060adf6d075451b2c09321501d5323788c7c0a42981ea32f1e53f4ab1f66f08",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "easter",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/easter-new.png",
+      "sourceSha256": "b187c799ecffea565f35a631fde7c345dbb462d4afe148574acb76367f1b0137",
+      "production": "www/assets/theme-packs/easter/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "e1d30e4071d62490668ae924937baf05bfcf63546d0b0ba80f9034122f87f717",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "desert",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/desert-resume.png",
+      "sourceSha256": "c42308a98bd7e31bede87ebe445534172ce9e398f89c49bca71fa0f63e706d7e",
+      "production": "www/assets/theme-packs/desert/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "bb7acd3c427b3ef18b0db5c171f1b6d85e0c022475c6bfc333089d23547f601b",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "desert",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/desert-new.png",
+      "sourceSha256": "d0c911f6660aafa5b074de7fa60346fcc81b3d35a2a2ebafac86c9415afdf398",
+      "production": "www/assets/theme-packs/desert/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "977879dc5ee2e5bb2dcb453a7fb5808321701c3fc3335bb27e5aee78014985e7",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "moon",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/moon-resume.png",
+      "sourceSha256": "f4040523e8bd24ee8a987df44a0e5f662b392d50e9b08e78710036561199c872",
+      "production": "www/assets/theme-packs/moon/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "b207511b0cff123a24cacced3a611caa518ec81dcb163f14631eb0ace847ba28",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "moon",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/moon-new.png",
+      "sourceSha256": "d59d6ceef27beaefd2f8e240a7d4d8aaaa470d1733d6148e7263669959bc32cb",
+      "production": "www/assets/theme-packs/moon/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "b55b974788b359d244e482ff4e403235770e0841cf0c3f025ab9e3087ea6672a",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "severna",
+      "role": "resume",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/severna-resume.png",
+      "sourceSha256": "6cac4d11f11844ac7079c9e9657a52e74da3f89d3148adcef109cec82cfa210d",
+      "production": "www/assets/theme-packs/severna/canonical/menu-resume-buttons/resume-v1.png",
+      "productionSha256": "0255f306313d66b1ad7a753af282899739726cafb0e0f1d77eb43f60e564e9f8",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    },
+    {
+      "theme": "severna",
+      "role": "new",
+      "source": "source-assets/theme-menu-resume-buttons-v1/masters/severna-new.png",
+      "sourceSha256": "3b3bd9b7293d46405fc48956a3145b73f160f3f814542bfb306e7670ac2072bf",
+      "production": "www/assets/theme-packs/severna/canonical/menu-resume-buttons/new-v1.png",
+      "productionSha256": "1a6e4fe1e807ac94a284a9a50eceeb380434d03e842ea7e92ee946ee643a7ec1",
+      "size": [
+        512,
+        160
+      ],
+      "method": "individual built-in image generation, alpha trim and resize"
+    }
+  ]
+}

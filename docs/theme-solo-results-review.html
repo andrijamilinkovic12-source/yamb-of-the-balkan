@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Solo mod · rezultatski PNG asseti</title>
+  <style>
+    :root { font-family:Montserrat,system-ui,sans-serif; color:#edf2f5; background:#101723; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:24px; }
+    main { max-width:1160px; margin:auto; }
+    h1 { font-size:1.5rem; margin:0 0 8px; }
+    p { color:#bcc9d2; line-height:1.5; margin:0 0 20px; }
+    .theme-row { display:grid; grid-template-columns:170px repeat(3,minmax(0,1fr)); gap:10px; align-items:stretch; margin:10px 0; }
+    .name { display:flex; align-items:center; font-weight:750; padding:12px; border:1px solid #405267; border-radius:14px; }
+    .asset { min-height:148px; display:grid; grid-template-rows:auto 1fr auto; justify-items:center; gap:8px; padding:12px; border:1px solid #697987; border-radius:16px; color:var(--ink); background:var(--bg); }
+    .asset strong { font-size:.78rem; }
+    .asset img.large { width:82px; height:82px; object-fit:contain; }
+    .native { display:flex; align-items:center; gap:8px; font-size:.72rem; opacity:.8; }
+    .native img { object-fit:contain; }
+    .reference .name { color:#c6e3be; }
+    @media(max-width:760px) { body{padding:12px} .theme-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.name{grid-column:1/-1;min-height:38px}.asset{min-height:138px;padding:6px;text-align:center}.asset img.large{width:66px;height:66px}.asset strong{font-size:.68rem} }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Solo mod · završni PNG asseti</h1>
+  <p>Zelena je zaključana referenca. Ostalih devet tema ima po tri nova, zasebna transparentna PNG asseta. Donji primer prikazuje stvarnu UI veličinu: 30, 42 i 29 px. Video nagrada koristi postojeći tematski Rewarded Video asset.</p>
+  <div id="grid"></div>
+</main>
+<script>
+const themes = [
+  ['dark','Zelena','#36533a','#f3f7e5'], ['light','Svetlo zlato','#e6c79c','#432918'],
+  ['medium','Trula višnja','#502731','#fff1e8'], ['winter','Plavi okean','#173e64','#fff4e5'],
+  ['neon','Neon cyber','#13243e','#eefefa'], ['amethyst','Kraljevski ametist','#473356','#fff5ef'],
+  ['easter','Vaskršnja','#e1e4d2','#31492c'], ['desert','Pustinjsko staklo','#e4bb99','#553623'],
+  ['moon','Mesečev sjaj','#343945','#f5f5f8'], ['severna','Severna maglina','#1e3b53','#f5fbff']
+];
+const roles = [['personal-best','Lični rekord',30],['finish-score-mark','Konačni rezultat',42],['finish-claim','Preuzmi nagradu',29]];
+const grid = document.getElementById('grid');
+for (const [id,name,bg,ink] of themes) {
+  const row = document.createElement('section'); row.className = 'theme-row' + (id==='dark'?' reference':'');
+  const label = document.createElement('div'); label.className='name'; label.textContent=name; row.append(label);
+  for (const [role,title,size] of roles) {
+    const src = id==='dark' ? `../www/assets/green-soft-clay/canonical/solo-results/${role}-v1.png` : `../www/assets/theme-packs/${id}/canonical/solo-results/${role}-v1.png`;
+    const card=document.createElement('div'); card.className='asset'; card.style.setProperty('--bg',bg); card.style.setProperty('--ink',ink);
+    const text=document.createElement('strong'); text.textContent=title; card.append(text);
+    const large=document.createElement('img'); large.className='large'; large.src=src; large.alt=`${name}: ${title}`; card.append(large);
+    const native=document.createElement('div'); native.className='native';
+    const actual=document.createElement('img'); actual.src=src; actual.alt=''; actual.style.width=size+'px'; actual.style.height=size+'px';
+    native.append(actual,document.createTextNode(`${size} × ${size} px`)); card.append(native); row.append(card);
+  }
+  grid.append(row);
+}
+</script>
+</body>
+</html>

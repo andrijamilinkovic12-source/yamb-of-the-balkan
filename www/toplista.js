@@ -114,7 +114,7 @@ class TopListManager {
      * Upisuje skor (Prvo lokalno, pa pokušava na server)
      */
     async submitScore(name, score, mode, providedPhoto = undefined, matchId = '') {
-        if (!score || score <= 0) return;
+        if (!score || score <= 0) return { ok: false, reason: 'invalid_score' };
 
         // OBAVEZNO: Rešavanje tuđih avatara!
         let photo = '';
@@ -154,12 +154,13 @@ class TopListManager {
 
             if (result && result.ok) {
                 this._loadGlobal();
-                return;
+                return result;
             }
         }
 
         // 3. Neuspeh bez trajnog odbijanja ostaje za kasniji pokušaj.
         this.syncOfflineScores();
+        return { ok: false, reason: 'score_pending' };
     }
 
     _normalizePeriod(period, fallback = 'weekly') {

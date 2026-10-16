@@ -5686,7 +5686,6 @@ body.easter-theme #go-msg {
     text-shadow: 0 1px 0 rgba(255,255,255,0.82) !important;
 }
 
-.easter-solo-result-mark,
 .easter-hotseat-winner-mark,
 .easter-solo-personal-best {
     display: none;
@@ -5703,15 +5702,6 @@ body.easter-theme #game-over-screen .game-over-score-card {
     box-shadow:
         inset 4px 4px 10px rgba(184,148,111,0.16),
         inset -4px -4px 10px rgba(255,255,255,0.68) !important;
-}
-
-body.easter-theme #game-over-screen.is-solo-result .easter-solo-result-mark {
-    display: block;
-    width: 50px;
-    height: 50px;
-    margin: -4px auto 5px;
-    object-fit: contain;
-    filter: drop-shadow(0 5px 7px rgba(107, 44, 143, 0.16));
 }
 
 body.easter-theme #game-over-screen.is-hotseat-result.has-result-winner .easter-hotseat-winner-mark {
@@ -5767,37 +5757,7 @@ body.easter-theme #go-score {
     text-shadow: 0 1px 0 rgba(255,255,255,0.92) !important;
 }
 
-/* Vaskrs Solo Finish / Reward pack: novi asseti su vidljivi samo u ovoj temi. */
-.easter-solo-finish-score-mark,
-.easter-solo-finish-action-icon {
-    display: none;
-}
-
-body.easter-theme #game-over-screen .game-over-ducat-legacy,
 body.easter-theme #game-over-screen #go-double-label .dukat-icon-inline {
-    display: none !important;
-}
-
-body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-score-mark {
-    display: block;
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 6px rgba(107, 44, 143, 0.14));
-}
-
-body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-action-icon {
-    display: block;
-    width: 29px;
-    height: 29px;
-    flex: 0 0 29px;
-    object-fit: contain;
-}
-
-/* Solo završetak je jedna čista scena; stari znak Solo moda ne ide pored rezultata. */
-body.easter-theme #game-over-screen.is-solo-result .easter-solo-result-mark,
-body.easter-theme #game-over-screen.is-solo-result .game-over-ducat-legacy,
-body.easter-theme #game-over-screen.is-solo-result #go-double-label .dukat-icon-inline {
     display: none !important;
 }
 
@@ -8036,13 +7996,11 @@ body.desert-theme .btn-throw { background: linear-gradient(145deg, #e9904e, #a94
 body.desert-theme .btn-secondary,
 body.desert-theme #btn-najava,
 body.desert-theme .tab-btn,
-body.desert-theme .hs-tab-btn,
-body.desert-theme .mini-btn { background: linear-gradient(145deg, rgba(255,249,233,.92), rgba(232,190,129,.84)) !important; color: var(--desert-ui-ink-strong) !important; border: var(--desert-ui-border) !important; box-shadow: 4px 4px 10px rgba(127,70,32,.22), -4px -4px 10px rgba(255,250,234,.72), inset 1px 1px 1px rgba(255,255,255,.82) !important; }
+body.desert-theme .hs-tab-btn { background: linear-gradient(145deg, rgba(255,249,233,.92), rgba(232,190,129,.84)) !important; color: var(--desert-ui-ink-strong) !important; border: var(--desert-ui-border) !important; box-shadow: 4px 4px 10px rgba(127,70,32,.22), -4px -4px 10px rgba(255,250,234,.72), inset 1px 1px 1px rgba(255,255,255,.82) !important; }
 body.desert-theme .btn-secondary:active,
 body.desert-theme #btn-najava:active,
 body.desert-theme .tab-btn:active,
-body.desert-theme .hs-tab-btn:active,
-body.desert-theme .mini-btn:active { box-shadow: var(--desert-ui-inset) !important; }
+body.desert-theme .hs-tab-btn:active { box-shadow: var(--desert-ui-inset) !important; }
 body.desert-theme .tab-btn.active,
 body.desert-theme .hs-tab-btn.active { background: linear-gradient(145deg, #d9773c, #99451f) !important; color: #fff4d7 !important; border-color: rgba(255,237,202,.66) !important; }
 
@@ -10474,55 +10432,6 @@ body.easter-theme #main-menu .mode-invite .easter-invite-soft-clay-icon {
 body.easter-theme #main-menu .mode-solo > #mode-content-1[style*="display: none"],
 body.easter-theme #main-menu .mode-dual > #mode-content-2[style*="display: none"] {
     display: none !important;
-}
-
-body.easter-theme #main-menu #mode-resume-1[style*="display: flex"],
-body.easter-theme #main-menu #mode-resume-2[style*="display: flex"] {
-    display: flex !important;
-    width: 100% !important;
-    height: 100% !important;
-    box-sizing: border-box;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center !important;
-    gap: 9px !important;
-    padding: 8px 2px;
-}
-
-body.easter-theme #main-menu #mode-resume-1 .mini-btn,
-body.easter-theme #main-menu #mode-resume-2 .mini-btn {
-    width: 100% !important;
-    min-height: 40px;
-    padding: 9px 5px !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(139,69,190,.24) !important;
-    background:
-        radial-gradient(circle at 24% 16%, rgba(255,255,255,.88), transparent 42%),
-        linear-gradient(145deg, rgba(244,231,255,.96), rgba(215,241,224,.92)) !important;
-    color: var(--easter-ui-title, #6b2c8f) !important;
-    box-shadow:
-        4px 4px 9px rgba(116,76,126,.18),
-        -4px -4px 9px rgba(255,255,255,.68),
-        inset 1px 1px 2px rgba(255,255,255,.84) !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,.90) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-body.easter-theme #main-menu #mode-resume-1 .btn-new-inline,
-body.easter-theme #main-menu #mode-resume-2 .btn-new-inline {
-    border-color: rgba(184,60,101,.28) !important;
-    background:
-        radial-gradient(circle at 24% 16%, rgba(255,255,255,.88), transparent 42%),
-        linear-gradient(145deg, rgba(255,243,247,.96), rgba(247,215,227,.92)) !important;
-    color: var(--easter-ui-danger, #b83c65) !important;
-}
-
-body.easter-theme #main-menu #mode-resume-1 .mini-btn:active,
-body.easter-theme #main-menu #mode-resume-2 .mini-btn:active {
-    box-shadow:
-        inset 3px 3px 7px rgba(116,76,126,.15),
-        inset -3px -3px 7px rgba(255,255,255,.66) !important;
 }
 
 body.easter-theme #main-menu .mode-solo .mode-text,
@@ -13687,9 +13596,7 @@ body.desert-theme .tournament-final-ceremony-next:disabled {
 .desert-invite-add-icon,
 .desert-invite-send-icon,
 .desert-invite-empty-icon,
-.desert-solo-result-mark,
-.desert-hotseat-winner-mark,
-.desert-solo-personal-best-icon {
+.desert-hotseat-winner-mark {
     display: none;
 }
 
@@ -13798,41 +13705,6 @@ body.desert-theme #main-menu .mode-invite .mode-text::after {
 body.desert-theme #main-menu .mode-solo > #mode-content-1[style*="display: none"],
 body.desert-theme #main-menu .mode-dual > #mode-content-2[style*="display: none"] {
     display: none !important;
-}
-
-body.desert-theme #main-menu #mode-resume-1[style*="display: flex"],
-body.desert-theme #main-menu #mode-resume-2[style*="display: flex"] {
-    display: flex !important;
-    width: 100% !important;
-    height: 100% !important;
-    box-sizing: border-box;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center !important;
-    gap: 9px !important;
-    padding: 8px 2px;
-}
-
-body.desert-theme #main-menu #mode-resume-1 .mini-btn,
-body.desert-theme #main-menu #mode-resume-2 .mini-btn {
-    width: 100% !important;
-    min-height: 40px;
-    padding: 9px 5px !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(151,84,35,.25) !important;
-    background: linear-gradient(145deg, rgba(255,249,233,.95), rgba(232,190,129,.86)) !important;
-    color: var(--desert-ui-ink-strong) !important;
-    box-shadow: 4px 4px 9px rgba(119,67,34,.18), -4px -4px 9px rgba(255,251,237,.66), inset 1px 1px 2px rgba(255,255,255,.80) !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-body.desert-theme #main-menu #mode-resume-1 .btn-new-inline,
-body.desert-theme #main-menu #mode-resume-2 .btn-new-inline {
-    border-color: rgba(177,79,40,.31) !important;
-    background: linear-gradient(145deg, rgba(255,239,216,.96), rgba(232,164,103,.86)) !important;
-    color: #7c341b !important;
 }
 
 @keyframes desertMainModeFloat {
@@ -14471,15 +14343,6 @@ body.desert-theme #waiting-screen.is-hosting-invite .easter-friend-draw strong {
 body.desert-theme #waiting-screen.is-hosting-invite .easter-friend-loss strong { color: #9a432f; }
 
 /* Solo i Hotseat završna stanja: diskretne Desert oznake, bez novih dimenzija ekrana. */
-body.desert-theme #game-over-screen.is-solo-result .desert-solo-result-mark {
-    display: block;
-    width: 50px;
-    height: 50px;
-    margin: -4px auto 5px;
-    object-fit: contain;
-    filter: drop-shadow(0 5px 7px rgba(93,57,33,.16));
-}
-
 body.desert-theme #game-over-screen.is-hotseat-result.has-result-winner .desert-hotseat-winner-mark {
     display: block;
     width: 58px;
@@ -14513,19 +14376,6 @@ body.desert-theme #game-over-screen.is-solo-result .easter-solo-personal-best:no
 
 body.desert-theme #game-over-screen .easter-solo-personal-best[hidden] {
     display: none !important;
-}
-
-body.desert-theme #game-over-screen .easter-solo-personal-best-icon {
-    display: none !important;
-}
-
-body.desert-theme #game-over-screen .desert-solo-personal-best-icon {
-    display: block;
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
-    object-fit: contain;
-    filter: drop-shadow(0 3px 4px rgba(93,57,33,.14));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -14653,9 +14503,7 @@ body.easter-theme #main-menu .main-economy-card:active .main-economy-soft-clay-i
 #main-menu .nebula-hotseat-soft-clay-icon,
 #main-menu .nebula-opponent-soft-clay-icon,
 #main-menu .nebula-invite-soft-clay-icon,
-.severna-solo-result-mark,
-.severna-hotseat-winner-mark,
-.severna-solo-personal-best-icon {
+.severna-hotseat-winner-mark {
     display: none;
 }
 
@@ -15679,31 +15527,6 @@ body.severna-theme #main-menu .mode-invite:active .nebula-invite-soft-clay-icon 
 body.severna-theme #main-menu .mode-solo > #mode-content-1[style*="display: none"],
 body.severna-theme #main-menu .mode-dual > #mode-content-2[style*="display: none"] {
     display: none !important;
-}
-
-body.severna-theme #main-menu #mode-resume-1[style*="display: flex"],
-body.severna-theme #main-menu #mode-resume-2[style*="display: flex"] {
-    display: flex !important;
-    width: 100% !important;
-    height: 100% !important;
-    box-sizing: border-box;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center !important;
-    gap: 9px !important;
-    padding: 8px 2px;
-}
-
-body.severna-theme #main-menu #mode-resume-1 .mini-btn,
-body.severna-theme #main-menu #mode-resume-2 .mini-btn {
-    width: 100% !important;
-    min-height: 40px;
-    padding: 9px 5px !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(149,246,255,.28) !important;
-    background: var(--nebula-ui-surface-light) !important;
-    color: var(--nebula-ui-ink-strong) !important;
-    box-shadow: var(--nebula-ui-raised) !important;
 }
 
 body.severna-theme #main-menu .icon-menu-grid .btn-square {
@@ -17959,15 +17782,6 @@ body.severna-theme #game-over-screen .game-over-score-card {
         inset -3px -3px 8px rgba(134,247,255,.10) !important;
 }
 
-body.severna-theme #game-over-screen.is-solo-result .severna-solo-result-mark {
-    display: block;
-    width: 50px;
-    height: 50px;
-    margin: -4px auto 5px;
-    object-fit: contain;
-    filter: drop-shadow(0 5px 7px rgba(0,3,16,.30));
-}
-
 body.severna-theme #game-over-screen.is-hotseat-result.has-result-winner .severna-hotseat-winner-mark {
     display: block;
     width: 58px;
@@ -18004,15 +17818,6 @@ body.severna-theme #game-over-screen.is-solo-result .easter-solo-personal-best:n
 
 body.severna-theme #game-over-screen .easter-solo-personal-best[hidden] {
     display: none !important;
-}
-
-body.severna-theme #game-over-screen .severna-solo-personal-best-icon {
-    display: block;
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
-    object-fit: contain;
-    filter: drop-shadow(0 3px 4px rgba(0,3,16,.28));
 }
 
 body.severna-theme #game-over-screen #go-score {
@@ -18390,8 +18195,7 @@ body.winter-theme .daily-challenge-card {
 
 body.winter-theme .btn-menu,
 body.winter-theme .btn-secondary,
-body.winter-theme #btn-najava,
-body.winter-theme .mini-btn {
+body.winter-theme #btn-najava {
     color: var(--ocean-ink-strong) !important;
     background: var(--ocean-surface) !important;
     border: 1px solid rgba(255,255,255,.62) !important;
@@ -18415,8 +18219,7 @@ body.winter-theme .btn-menu:active,
 body.winter-theme .btn-primary:active,
 body.winter-theme .btn-secondary:active,
 body.winter-theme .btn-throw:active,
-body.winter-theme #btn-najava:active,
-body.winter-theme .mini-btn:active {
+body.winter-theme #btn-najava:active {
     transform: translateY(3px) scale(.985);
     box-shadow: var(--ocean-inset) !important;
 }
@@ -18959,8 +18762,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .btn-menu,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .mode-btn,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .btn-square,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .btn-special-square,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .mini-btn {
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .btn-special-square {
     color: var(--green-clay-ink-strong) !important;
     background: var(--green-clay-surface) !important;
     border: 1px solid rgba(213,240,220,.44) !important;
@@ -21914,8 +21716,8 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     display: block !important;
     width: 100% !important;
     min-height: 166px;
-    margin: 3px 0 10px !important;
-    padding: 20px 18px 18px !important;
+    margin: 0 !important;
+    padding: 7px 12px !important;
     border-radius: 26px !important;
     color: var(--green-clay-ink) !important;
     background:
@@ -21923,14 +21725,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
         linear-gradient(145deg, rgba(75,111,69,.96), rgba(39,76,46,.94)) !important;
     border: 1px solid rgba(213,230,186,.34) !important;
     box-shadow: var(--green-clay-inset) !important;
-}
-
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .easter-solo-result-mark,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .desert-solo-result-mark,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .severna-solo-result-mark,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .game-over-ducat-legacy,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result #go-double-label .dukat-icon-inline {
-    display: none !important;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .green-solo-finish-score-mark {
@@ -21950,7 +21744,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .game-over-score-total {
     gap: 12px !important;
-    margin-top: 10px !important;
+    margin-top: 4px !important;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result #go-score {
@@ -21987,12 +21781,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     display: none !important;
 }
 
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .easter-solo-personal-best-icon,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .desert-solo-personal-best-icon,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .severna-solo-personal-best-icon {
-    display: none !important;
-}
-
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .green-solo-personal-best-icon {
     display: block;
     width: 30px;
@@ -22007,7 +21795,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     grid-template-columns: repeat(6, 1fr);
     gap: 6px;
     width: min(236px, 82%);
-    margin: 14px auto 0;
+    margin: 7px auto 0;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .easter-solo-finish-tier-step {
@@ -22030,12 +21818,12 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 9px;
-    margin-top: 14px;
+    margin-top: 7px;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .easter-solo-finish-stats > div {
     min-height: 49px;
-    padding: 8px 9px 7px;
+    padding: 5px 9px;
     border-radius: 15px;
     background: var(--green-clay-surface-inset);
     border: 1px solid rgba(211,229,184,.20);
@@ -22071,6 +21859,8 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     background: linear-gradient(145deg, #789667, #416746) !important;
     box-shadow: var(--green-clay-raised-small) !important;
     text-shadow: 0 1px 2px rgba(7,29,15,.30) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .game-over-claim-button {
@@ -22080,10 +21870,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result #btn-ad-double {
     background: linear-gradient(145deg, #a8bf83, #66875d) !important;
     color: #17351f !important;
-}
-
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .easter-solo-finish-action-icon {
-    display: none !important;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .green-solo-finish-action-icon {
@@ -22609,7 +22395,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 }
 
 /* Green UI contract: shared type, contrast, controls and containment. */
-.green-game-over-ducat { display: none !important; }
 .green-game-over-result-icon { display: none; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) {
     --green-ui-title: clamp(1.05rem, 4.2vw, 1.22rem);
@@ -22622,8 +22407,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     --green-ui-inset-x: max(12px, env(safe-area-inset-left), env(safe-area-inset-right));
     --global-chat-height: var(--green-visible-viewport-height, 100dvh);
 }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .game-over-ducat-legacy { display: none !important; }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-technical-result .green-game-over-ducat { display: block !important; object-fit: contain; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result):not(.is-technical-result) .green-solo-finish-score-mark {
     display: block;
     width: 42px;
@@ -22902,13 +22685,13 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 
 /* Result content scrolls on short phones; flex shrinking must not stack actions over stats. */
 @media (max-width: 360px), (max-height: 740px) {
-    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen > .modal-box {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result) > .modal-box {
         justify-content: flex-start;
         overflow-y: auto;
         overscroll-behavior-y: contain;
         scroll-padding-bottom: 20px;
     }
-    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen > .modal-box > * {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result) > .modal-box > * {
         flex-shrink: 0;
     }
 }

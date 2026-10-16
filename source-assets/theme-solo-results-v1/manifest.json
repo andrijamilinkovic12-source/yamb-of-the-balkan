@@ -1,0 +1,473 @@
+{
+  "family": "solo-results",
+  "version": 1,
+  "masterSize": [
+    512,
+    512
+  ],
+  "runtimeSize": [
+    256,
+    256
+  ],
+  "assets": [
+    {
+      "theme": "light",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#E6BE83",
+        "light": "#FFF1D7",
+        "shade": "#875024",
+        "accent": "#76612B",
+        "contour": "#875024"
+      },
+      "master": "source-assets/theme-packs/light/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "9182bc999dbb2f0e72bc2cd4c6588de8a68a66987ea577293e4e5b419bdce9d6",
+      "runtimeSha256": "0edf9aaa1e9988ee2052454bbd6f55f0e20dc140d6332d72a104904e0adbd3e1"
+    },
+    {
+      "theme": "light",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#E6BE83",
+        "light": "#FFF1D7",
+        "shade": "#875024",
+        "accent": "#76612B",
+        "contour": "#875024"
+      },
+      "master": "source-assets/theme-packs/light/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "f4ae9938a8cfe1e8c3049365cfde11cac4b1d80cb68e96b838178d3a646a9f86",
+      "runtimeSha256": "ca03c5e157e2e912edf09b8f9090d5179f90f2aa060e8be5d89415b33831aa9f"
+    },
+    {
+      "theme": "light",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#E6BE83",
+        "light": "#FFF1D7",
+        "shade": "#875024",
+        "accent": "#76612B",
+        "contour": "#875024"
+      },
+      "master": "source-assets/theme-packs/light/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "de5e26da64bd2833fb11f7ea11195685ef407374371a9ac9e2867f75948f572f",
+      "runtimeSha256": "b5b03d22328d197c7d742846a47e1e654b0d15456442def45d5206e499405495"
+    },
+    {
+      "theme": "medium",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#8B3038",
+        "light": "#F1C3B2",
+        "shade": "#431720",
+        "accent": "#E39A70",
+        "contour": "#F1C3B2"
+      },
+      "master": "source-assets/theme-packs/medium/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "3ab80dc4efc3553769493809205690b7c8c9b68d71100081724d5bac9dcbb760",
+      "runtimeSha256": "92aea701d0be82c81a4ca57351b07b5493087e58280ed526b5a628ff0bd04444"
+    },
+    {
+      "theme": "medium",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#8B3038",
+        "light": "#F1C3B2",
+        "shade": "#431720",
+        "accent": "#E39A70",
+        "contour": "#F1C3B2"
+      },
+      "master": "source-assets/theme-packs/medium/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "254daead95342b43b42363948ea63106a41b6b640a3e0a15194615cd86703c7f",
+      "runtimeSha256": "3e55fb95a957ab47b9cc3a3a78bf6ca5d26f9049d7516caea3ebec942a518125"
+    },
+    {
+      "theme": "medium",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#8B3038",
+        "light": "#F1C3B2",
+        "shade": "#431720",
+        "accent": "#E39A70",
+        "contour": "#F1C3B2"
+      },
+      "master": "source-assets/theme-packs/medium/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "16825123dc927c7998cea050b2b97e73e7babaff665d84ac9fe7b7da3bd22af6",
+      "runtimeSha256": "e71fd9ec84bb508f47036e746c0d543d46d9a86b330031c0805cf78fbe60ddb1"
+    },
+    {
+      "theme": "winter",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#0E5A9B",
+        "light": "#FFF4E5",
+        "shade": "#173D5B",
+        "accent": "#BD684A",
+        "contour": "#173D5B"
+      },
+      "master": "source-assets/theme-packs/winter/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "18e01b4149a5e9dd9129c44c0ae1b6f249aeaaf0886ecac7c46bd319fcb8bb1f",
+      "runtimeSha256": "1319f22aa3df5a79a0c9b101d51f00f4ddc21a9b55d60890eeb15cbdb7faf33a"
+    },
+    {
+      "theme": "winter",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#0E5A9B",
+        "light": "#FFF4E5",
+        "shade": "#173D5B",
+        "accent": "#BD684A",
+        "contour": "#173D5B"
+      },
+      "master": "source-assets/theme-packs/winter/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "aab8329f4957b60831d0f7f67029388016658b964637d04c004abe965f9a4feb",
+      "runtimeSha256": "d84c5c2a4f69ec3d523747e89d0c074a27f36e96d9fd36ce8699ad14eb08a192"
+    },
+    {
+      "theme": "winter",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#0E5A9B",
+        "light": "#FFF4E5",
+        "shade": "#173D5B",
+        "accent": "#BD684A",
+        "contour": "#173D5B"
+      },
+      "master": "source-assets/theme-packs/winter/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "6dc62813ed24d0bae759ca48435e7596e8db3f0daae862c79f1a218f5ed6b0df",
+      "runtimeSha256": "0b42dae22f7b50daf601108915ba2d72da2d6361c45c9811a96cb46d9f17d240"
+    },
+    {
+      "theme": "neon",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#193455",
+        "light": "#56E5D2",
+        "shade": "#080D18",
+        "accent": "#F08CE3",
+        "contour": "#56E5D2"
+      },
+      "master": "source-assets/theme-packs/neon/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "7a5fa2e661134034451c3e077e65c1ad8378bcd2352ec88417df7a45888a4726",
+      "runtimeSha256": "bc2cee07d6ebcf4a7b71430e76c696394ada92538014d9b948994e55e6ead133"
+    },
+    {
+      "theme": "neon",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#193455",
+        "light": "#56E5D2",
+        "shade": "#080D18",
+        "accent": "#F08CE3",
+        "contour": "#56E5D2"
+      },
+      "master": "source-assets/theme-packs/neon/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "26a2bccb0efcea4703d2940df4d746c62b03712ddbe1719dca4689adaf1e3ecd",
+      "runtimeSha256": "9f0d64502c589b9e9e214f64ffbbcaa6f9b6cfeb9f64dfe94088ce3126e09a44"
+    },
+    {
+      "theme": "neon",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#193455",
+        "light": "#56E5D2",
+        "shade": "#080D18",
+        "accent": "#F08CE3",
+        "contour": "#56E5D2"
+      },
+      "master": "source-assets/theme-packs/neon/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "878cd8755a768a7b882b787c2ffdf245e5c303288730ddde08f49e955078bcb1",
+      "runtimeSha256": "9c6a2874d8062175be3d11f883f1e00b95943be1d2b128e70ce33e0083938e7f"
+    },
+    {
+      "theme": "amethyst",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#5A386A",
+        "light": "#E0CDE5",
+        "shade": "#2D1D3C",
+        "accent": "#F2C879",
+        "contour": "#E0CDE5"
+      },
+      "master": "source-assets/theme-packs/amethyst/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "3a63c791aaff73830eb1b111241bd2a8344b4f654b747974f866b08ad22c3331",
+      "runtimeSha256": "e4a5420f4a12ca1815e3582a8754c8018500578aac5e4eabf63e2d249ef70495"
+    },
+    {
+      "theme": "amethyst",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#5A386A",
+        "light": "#E0CDE5",
+        "shade": "#2D1D3C",
+        "accent": "#F2C879",
+        "contour": "#E0CDE5"
+      },
+      "master": "source-assets/theme-packs/amethyst/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "eaac54e6034083567cdbbab2dd32de9bcfc81581419927ca9edcf9ebd7d0e9fb",
+      "runtimeSha256": "f0438c7317223f74604c0eaefbc6e74e801d36079e3830d6ebdafe605ac2f652"
+    },
+    {
+      "theme": "amethyst",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#5A386A",
+        "light": "#E0CDE5",
+        "shade": "#2D1D3C",
+        "accent": "#F2C879",
+        "contour": "#E0CDE5"
+      },
+      "master": "source-assets/theme-packs/amethyst/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "121df8a1d74e2a8a9799ac7f41d4dd0a5405265a80b671617d3469251fcc7e28",
+      "runtimeSha256": "8f8113bc9ffafa1ae0b3f311d99fbf319ec7b564c313ad3108dae3770408c23c"
+    },
+    {
+      "theme": "easter",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#D3D5B7",
+        "light": "#FFF8EA",
+        "shade": "#4D6B45",
+        "accent": "#A66443",
+        "contour": "#4D6B45"
+      },
+      "master": "source-assets/theme-packs/easter/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "f412c15b142e001679b6205e79117b53c5df15ae9438513329ef465edd52f259",
+      "runtimeSha256": "83945f108b9b03b560afb3b09e5d36fd91b495517c302686cd5f3cbd91a70074"
+    },
+    {
+      "theme": "easter",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#D3D5B7",
+        "light": "#FFF8EA",
+        "shade": "#4D6B45",
+        "accent": "#A66443",
+        "contour": "#4D6B45"
+      },
+      "master": "source-assets/theme-packs/easter/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "4eb054c279eed6c8d852eff45cf7fab8e0e0bc291c4ceb0cdb1bfec33c2edf79",
+      "runtimeSha256": "4066bdfb0d78b737c7bf80350d0ac927ea5aa029d92aae7fc7e12d782fdd3d94"
+    },
+    {
+      "theme": "easter",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#D3D5B7",
+        "light": "#FFF8EA",
+        "shade": "#4D6B45",
+        "accent": "#A66443",
+        "contour": "#4D6B45"
+      },
+      "master": "source-assets/theme-packs/easter/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "da7bd2c021c97b53af7c00d0ea27a32b5291b4d04b2a771a3bfc104a78a6292e",
+      "runtimeSha256": "71308eaa8d6155f5c1604f8c3c829015ec97d31aeb47b23d6c91f25b649e0569"
+    },
+    {
+      "theme": "desert",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#D79269",
+        "light": "#FFF0DA",
+        "shade": "#87523C",
+        "accent": "#396B72",
+        "contour": "#87523C"
+      },
+      "master": "source-assets/theme-packs/desert/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "3c7e2a22793be9771592fbc6b8d6b8f7b769216c18174000db1767e02b8b36a5",
+      "runtimeSha256": "60a2332a0b6ee193b041204a1f3c44a194f9aaae4c4c0ebb5756bd33a10a3adf"
+    },
+    {
+      "theme": "desert",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#D79269",
+        "light": "#FFF0DA",
+        "shade": "#87523C",
+        "accent": "#396B72",
+        "contour": "#87523C"
+      },
+      "master": "source-assets/theme-packs/desert/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "7b31b5979205dcc46f9b8a0c86c82d2b19eb76f728625a7ee99795f828e05a72",
+      "runtimeSha256": "3e0bc1837e1d0b1375de64f1e82220dcd2bb9dddd62e0ce830e345a590b5faee"
+    },
+    {
+      "theme": "desert",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#D79269",
+        "light": "#FFF0DA",
+        "shade": "#87523C",
+        "accent": "#396B72",
+        "contour": "#87523C"
+      },
+      "master": "source-assets/theme-packs/desert/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "0dccf7a428883aeb9b9c982a5f8580f157297adf97af41dd41a765fb6b609d95",
+      "runtimeSha256": "0ab8f1e672cac6a2c1c3f508c24fa76f4783b1299a6ad4b83aa0495c6f7c3652"
+    },
+    {
+      "theme": "moon",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#3B3F4B",
+        "light": "#E1E2E7",
+        "shade": "#181B24",
+        "accent": "#A7A9B8",
+        "contour": "#E1E2E7"
+      },
+      "master": "source-assets/theme-packs/moon/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "9d8ed523c4747dbd48fffdaa2578e6abd9daa4cbb6cd94c5b5f68f9aaf9f8b5e",
+      "runtimeSha256": "908bb2f39579b4f3d9c217772ff2950cef7e529b491a63827f6dc3402bf25724"
+    },
+    {
+      "theme": "moon",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#3B3F4B",
+        "light": "#E1E2E7",
+        "shade": "#181B24",
+        "accent": "#A7A9B8",
+        "contour": "#E1E2E7"
+      },
+      "master": "source-assets/theme-packs/moon/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "51fb45daf7a9a79ae766d56f8aed770b71e8593281de8d9d02c0c28e2c5af60c",
+      "runtimeSha256": "5c20b618c96377c997749a3b287d7dcf3f582ebee9ba890224afa104863f9435"
+    },
+    {
+      "theme": "moon",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "body": "#3B3F4B",
+        "light": "#E1E2E7",
+        "shade": "#181B24",
+        "accent": "#A7A9B8",
+        "contour": "#E1E2E7"
+      },
+      "master": "source-assets/theme-packs/moon/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "b50f1bfefd78cc1d2f62d11b35631113a46d70a0d3d076417348b89902cbf858",
+      "runtimeSha256": "6479d6dfd7d39c19b4be5e912d3b5f622fe989dfe51bc9eb03f66cbcce13538a"
+    },
+    {
+      "theme": "severna",
+      "role": "personal-best",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#24445B",
+        "light": "#F5FBFF",
+        "shade": "#0B1830",
+        "accent": "#8AE3E4",
+        "contour": "#8AE3E4"
+      },
+      "master": "source-assets/theme-packs/severna/solo-results/personal-best-master-v1.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-results/personal-best-v1.png",
+      "masterSha256": "83a2f953191feabbbb92ec336f507d16a81fd4b5c5cd5c26a2d5ba8c1f370a00",
+      "runtimeSha256": "62ae9ef48b2c982375d72d1bc6d620916a08a5473637f9b63658696897dc9a5b"
+    },
+    {
+      "theme": "severna",
+      "role": "finish-score-mark",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#24445B",
+        "light": "#F5FBFF",
+        "shade": "#0B1830",
+        "accent": "#8AE3E4",
+        "contour": "#8AE3E4"
+      },
+      "master": "source-assets/theme-packs/severna/solo-results/finish-score-mark-master-v1.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-results/finish-score-mark-v1.png",
+      "masterSha256": "f304ba39541a3968538a38f2a75c06a6adee2c72c1d6f640d7c97c30ebd5e91b",
+      "runtimeSha256": "25ee168b24cdb6051e24eb1bb8c2edee4ff9b7e51f3e75fd49978ae528687fdc"
+    },
+    {
+      "theme": "severna",
+      "role": "finish-claim",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "body": "#24445B",
+        "light": "#F5FBFF",
+        "shade": "#0B1830",
+        "accent": "#8AE3E4",
+        "contour": "#8AE3E4"
+      },
+      "master": "source-assets/theme-packs/severna/solo-results/finish-claim-master-v1.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-results/finish-claim-v1.png",
+      "masterSha256": "2a36c8fa3e8cc49955e22ece939464ddfa67ab4e792efb7577cda5e21c1159f8",
+      "runtimeSha256": "5edaab395761b565cd370f521a75774903fdb85340543aac6c6738d66329643d"
+    }
+  ]
+}

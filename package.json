@@ -17,6 +17,7 @@
     "check:match-results": "node scripts/check-match-results.js",
     "check:league": "node scripts/check-quarterly-league.js",
     "check:theme-quarterly-league": "node scripts/check-theme-quarterly-league-v2.js",
+    "check:theme-solo-results": "node scripts/check-theme-solo-results.js",
     "check:online-reconnect": "node scripts/check-online-reconnect.js",
     "check:socket-transport": "node scripts/check-socket-transport.js",
     "check:firebase-security": "node scripts/check-firebase-security.js",

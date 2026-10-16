@@ -601,6 +601,7 @@ const ScoreSchema = new mongoose.Schema({
     score: Number,
     mode: String,
     photoUrl: { type: String, default: '' },
+    recordAchievements: { type: [String], default: [] },
     date: { type: Date, default: Date.now }
 });
 ScoreSchema.index({ playerId: 1, score: -1 });
@@ -1020,6 +1021,8 @@ const MAX_UNDO_TOKENS = 250;
 const MAX_DAILY_REWARD = 2000;
 const MAX_DAILY_BASE_REWARD = 864;
 const MAX_REWARD_PER_GAME = 8000;
+const SOLO_RECORD_BONUS_BPS = Object.freeze({ personal: 1000, weekly: 1000, monthly: 1000, all_time: 2000 });
+const SOLO_RECORD_ORDER = Object.freeze(['weekly', 'monthly', 'all_time', 'personal']);
 const MAX_TOURNEY_REWARD = 50000;
 const TOP_SCORE_SUBMIT_GRACE_MS = 15000;
 const GAME_REWARD_CLAIM_WINDOW_MS = 5 * 60 * 1000;
@@ -1419,6 +1422,42 @@ async function captureLeaderboardRecordSnapshots() {
         snapshots[period] = await getLeaderboardRecordSnapshot(period);
     }));
     return snapshots;
+}
+
+function normalizeSoloRecordAchievements(value) {
+    const selected = new Set(Array.isArray(value) ? value : []);
+    return SOLO_RECORD_ORDER.filter(role => selected.has(role));
+}
+
+function calculateSoloRecordPayout(score, achievements = []) {
+    const safeScore = Math.max(0, Math.min(MAX_SCORE, toSafeInt(score, 0)));
+    const flags = normalizeSoloRecordAchievements(achievements);
+    const bonusBps = flags.reduce((sum, role) => sum + SOLO_RECORD_BONUS_BPS[role], 0);
+    const baseReward = Math.min(MAX_REWARD_PER_GAME, Math.floor(safeScore * (10000 + bonusBps) / 10000));
+    return {
+        achievements: flags,
+        bonusBps,
+        baseReward,
+        adReward: Math.min(MAX_REWARD_PER_GAME, baseReward * 2)
+    };
+}
+
+async function getSoloRecordAchievementsBeforeInsert(uid, score, recordDate, snapshots) {
+    const flags = [];
+    const previousSolo = await Score.findOne({
+        $or: [{ playerId: uid }, { uid }],
+        mode: /^solo$/i
+    }).sort({ score: -1 }).select('score').lean();
+    if (!previousSolo || score > Math.max(0, toSafeInt(previousSolo.score, 0))) flags.push('personal');
+    for (const period of LEADERBOARD_RECORD_PERIODS) {
+        const start = getLeaderboardPeriodStart(period);
+        if (start && recordDate < start) continue;
+        // A valid all-time top score also exceeds this player's earlier Solo best.
+        if (period === 'all_time' && !flags.includes('personal')) continue;
+        const previous = snapshots?.[period];
+        if (!previous || score > Math.max(0, toSafeInt(previous.score, 0))) flags.push(period);
+    }
+    return normalizeSoloRecordAchievements(flags);
 }
 
 function formatRecordScore(score, language = 'sr') {
@@ -3924,12 +3963,16 @@ async function persistLeaderboardScoreRecord(options = {}) {
 
     const existingScore = await Score.findOne({ playerId: finalUid, matchId });
     if (existingScore) {
-        return { ok: true, duplicate: true, score: existingScore };
+        return { ok: true, duplicate: true, score: existingScore,
+            recordAchievements: normalizeSoloRecordAchievements(existingScore.recordAchievements) };
     }
 
-    const leaderboardRecordSnapshots = options.notifyRecords === false
-        ? null
-        : await captureLeaderboardRecordSnapshots();
+    const isSoloRecord = mode.toLowerCase() === 'solo';
+    const leaderboardRecordSnapshots = (isSoloRecord || options.notifyRecords !== false)
+        ? await captureLeaderboardRecordSnapshots() : null;
+    const recordAchievements = isSoloRecord
+        ? await getSoloRecordAchievementsBeforeInsert(finalUid, score, recordDate, leaderboardRecordSnapshots)
+        : [];
 
     const savedScore = await Score.findOneAndUpdate(
         { playerId: finalUid, matchId },
@@ -3942,6 +3985,7 @@ async function persistLeaderboardScoreRecord(options = {}) {
                 score,
                 mode,
                 photoUrl,
+                recordAchievements,
                 date: recordDate
             }
         },
@@ -3952,7 +3996,7 @@ async function persistLeaderboardScoreRecord(options = {}) {
         console.log(`✅ USPESAN UPIS: ${playerName} (UID: ${finalUid}) -> ${score} (${mode})`);
     }
 
-    if (leaderboardRecordSnapshots) {
+    if (leaderboardRecordSnapshots && options.notifyRecords !== false) {
         queueRecordPush(
             notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
                 uid: finalUid,
@@ -3963,7 +4007,8 @@ async function persistLeaderboardScoreRecord(options = {}) {
         );
     }
 
-    return { ok: true, duplicate: false, score: savedScore };
+    return { ok: true, duplicate: false, score: savedScore,
+        recordAchievements: normalizeSoloRecordAchievements(savedScore.recordAchievements) };
 }
 
 async function persistLeaderboardScoresForMatchResult(result, options = {}) {
@@ -11814,6 +11859,7 @@ io.on('connection', (socket) => {
                 toSafeInt(user.games, 0) >= normalized.profileGamesAfter &&
                 toSafeInt(user.totalScoreSum, 0) >= normalized.profileTotalScoreAfter &&
                 toSafeInt(user.highscore, 0) >= normalized.profileHighscoreAfter;
+            const powerIndexBefore = powerIndexCore.calculatePowerIndex(user);
 
             if (!alreadyIncludedInProfile) {
                 const score = normalized.selfParticipant.score;
@@ -11824,6 +11870,7 @@ io.on('connection', (socket) => {
 
             diagnosticStage = 'stats_application';
             await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score, { periodDate: normalized.payload.finishedAt });
+            const powerIndexAfter = powerIndexCore.calculatePowerIndex(user);
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
             await markMatchResultStatsApplied(matchId, verifiedUid);
@@ -11839,7 +11886,8 @@ io.on('connection', (socket) => {
             return replyMatchResult(true, null, false, {
                 matchId,
                 duplicate: !ledgerWrite.created || alreadyIncludedInProfile,
-                statsApplied: true
+                statsApplied: true,
+                powerIndexGain: alreadyIncludedInProfile ? null : powerIndexAfter - powerIndexBefore
             });
         } catch (err) {
             console.error('Greška pri upisu lokalnog rezultata partije:', err);
@@ -11921,6 +11969,9 @@ io.on('connection', (socket) => {
             return replyScoreSubmit(true, null, false, {
                 matchId: verifiedMatch.matchId,
                 duplicate: !!persistedScore.duplicate,
+                recordAchievements: persistedScore.recordAchievements || [],
+                soloRewardPreview: finalMode.toLowerCase() === 'solo'
+                    ? calculateSoloRecordPayout(submittedScore, persistedScore.recordAchievements) : null,
                 rewardClaimed: rewardClaimedInLedger || (profileForRecord ? hasUserClaimedGameReward(profileForRecord, verifiedMatch.matchId) : false)
             });
 
@@ -11959,7 +12010,17 @@ io.on('connection', (socket) => {
             }
 
             const multiplier = data?.doubled ? 2 : 1;
-            const reward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, rewardSession.score * multiplier));
+            const soloScoreRecord = String(rewardSession.mode || '').toLowerCase() === 'solo'
+                ? await Score.findOne({ playerId: finalUid, matchId: rewardSession.matchId })
+                    .select('recordAchievements').lean()
+                : null;
+            const payout = calculateSoloRecordPayout(
+                rewardSession.score,
+                soloScoreRecord?.recordAchievements || []
+            );
+            const reward = String(rewardSession.mode || '').toLowerCase() === 'solo'
+                ? (multiplier === 2 ? payout.adReward : payout.baseReward)
+                : Math.max(0, Math.min(MAX_REWARD_PER_GAME, rewardSession.score * multiplier));
 
             if (rewardSession.claimInProgress) {
                 return replyGameReward({ ok: false, reason: 'reward_claim_in_progress', permanent: false, retryAfterMs: 1000 });
@@ -12055,7 +12116,8 @@ io.on('connection', (socket) => {
                 ok: true,
                 reward,
                 balance: user.balance,
-                doubled: multiplier === 2
+                doubled: multiplier === 2,
+                soloRewardPreview: String(rewardSession.mode || '').toLowerCase() === 'solo' ? payout : null
             });
         } catch (err) {
             console.error("❌ claim_game_reward greška:", err);

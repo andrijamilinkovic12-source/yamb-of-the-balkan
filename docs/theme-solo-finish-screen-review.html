@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Solo mod · završni ekran</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;padding:24px;background:#111923;color:#ecf4f2;font:15px/1.5 Montserrat,system-ui,sans-serif}
+    main{max-width:1120px;margin:auto}
+    h1{font-size:1.5rem;margin:0 0 5px}
+    p{margin:0 0 16px;color:#bdcbd0}
+    .layout{display:grid;grid-template-columns:minmax(190px,1fr) 430px;gap:28px;align-items:start}
+    .themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:570px}
+    .controls{display:flex;flex-wrap:wrap;gap:12px;max-width:570px;margin:18px 0}
+    .controls label{display:grid;gap:5px;flex:1;min-width:160px;font-weight:700}
+    .controls select{width:100%;padding:10px;border:1px solid #607781;border-radius:10px;background:#24343f;color:#eef6f7;font:inherit}
+    button{padding:11px 12px;border:1px solid #607781;border-radius:11px;background:#24343f;color:#eef6f7;text-align:left;font:inherit;cursor:pointer}
+    button[aria-current="true"]{border-color:#8ddaca;background:#315c60;box-shadow:0 0 0 2px #8ddaca44}
+    .payout{max-width:570px;padding:17px 18px;border:1px solid #608581;border-radius:16px;background:#1d3439;box-shadow:0 8px 25px #0003}
+    .payout h2{margin:0 0 6px;font-size:1rem;color:#e8f7ee}
+    .payout-intro{margin:0 0 12px;color:#bdd8d2;font-size:.82rem}
+    .payout-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #ffffff20}
+    .payout-row span{color:#c4d9d7}
+    .payout-row strong{white-space:nowrap;color:#f3faf7;font-size:1.05rem}
+    .payout-row.is-ad strong{color:#f6d98f}
+    .payout-status{margin-top:10px;color:#b7d7cd;font-size:.82rem}
+    .payout-status[hidden]{display:none}
+    .notes{max-width:570px;margin-top:20px;padding:14px 16px;border:1px solid #435a65;border-radius:12px;background:#1a2933;color:#d2dfe0}
+    .phone{width:430px;padding:13px;border:1px solid #546975;border-radius:31px;background:#0a1019;box-shadow:0 20px 45px #0008}
+    iframe{display:block;width:100%;height:780px;border:0;border-radius:20px;background:#1c2b36}
+    @media(max-width:800px){body{padding:12px}.layout{display:flex;flex-direction:column}.themes{width:100%}.phone{width:min(100%,430px);align-self:center}.phone iframe{height:740px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Solo mod · završni ekran</h1>
+  <p>Pregled u mobilnoj veličini koristi postojeći raspored, stilove aplikacije i aktivne PNG assete. Rezultat je primer prikaza.</p>
+  <div class="layout">
+    <div>
+      <div id="themes" class="themes" aria-label="Izbor teme"></div>
+      <div class="controls">
+        <label>Kategorija rezultata
+          <select id="tier">
+            <option value="solo_rough">0–1000 · NIJE BIO TVOJ DAN</option>
+            <option value="solo_more">1001–1500 · IMA PROSTORA ZA VIŠE</option>
+            <option value="solo_progress">1501–2000 · LEP NAPREDAK</option>
+            <option value="solo_good">2001–2500 · DOBRA PARTIJA</option>
+            <option value="solo_masterful" selected>2501–3000 · MAJSTORSKA PARTIJA</option>
+            <option value="solo_perfect">3001+ · SAVRŠENSTVO</option>
+          </select>
+        </label>
+        <label>Poruka
+          <select id="variant"><option value="1">Poruka 1</option><option value="2">Poruka 2</option><option value="3">Poruka 3</option></select>
+        </label>
+        <label>Stanje rekorda
+          <select id="record">
+            <option value="none">Bez novog rekorda</option>
+            <option value="p">Lični</option>
+            <option value="w">Nedeljni</option>
+            <option value="m">Mesečni</option>
+            <option value="pw">Lični + nedeljni</option>
+            <option value="pm">Lični + mesečni</option>
+            <option value="wm">Nedeljni + mesečni</option>
+            <option value="pwm">Lični + nedeljni + mesečni</option>
+            <option value="pa">Lični + sva vremena</option>
+            <option value="pwa">Lični + nedeljni + sva vremena</option>
+            <option value="pma">Lični + mesečni + sva vremena</option>
+            <option value="pwma" selected>Sva četiri rekorda</option>
+            <option value="pending">Čeka potvrdu</option>
+          </select>
+        </label>
+        <label>Najjača kolona
+          <select id="column">
+            <option value="Nadole" selected>↓ Nadole</option>
+            <option value="Slobodna">S Slobodna</option>
+            <option value="Sredina">⇅ Sredina</option>
+            <option value="Nagore">↑ Nagore</option>
+            <option value="Ručno">R Ručno</option>
+            <option value="Najava">📢 Najava</option>
+          </select>
+        </label>
+      </div>
+      <section class="payout" aria-label="Obračun Solo nagrade" aria-live="polite">
+        <h2>Kako se menja nagrada</h2>
+        <p class="payout-intro">Rekordi povećavaju dukate. Poeni partije ostaju isti.</p>
+        <div class="payout-row"><span>Poeni partije</span><strong id="payout-score">—</strong></div>
+        <div class="payout-row"><span>Bonus za potvrđene rekorde</span><strong id="payout-bonus">—</strong></div>
+        <div class="payout-row"><span>Preuzmi bez reklame</span><strong id="payout-base">—</strong></div>
+        <div class="payout-row is-ad"><span>Posle reklame</span><strong id="payout-ad">—</strong></div>
+        <div id="payout-status" class="payout-status"></div>
+      </section>
+      <div class="notes">Pregled koristi tematski PNG panel i četiri zasebne PNG oznake rekorda. Samo osvojeni rekordi svetle, a raspored ostaje fiksan za sve kombinacije. Najjača kolona koristi istu oznaku kao tabla i prikazuje poene te kolone. Bonus za rekorde povećava dukate, ne poene: lični, nedeljni i mesečni daju po +10%, a rekord svih vremena +20%. Reklama zatim povećava nagradu do granice od 8.000 dukata. Dok server proverava rekorde, iznos na dugmadima se ne nagađa. Vrednost Power Indexa u pregledu je primer; igra je dobija iz potvrđenog rezultata. Kartica staje u safe zone bez skrolovanja.</div>
+    </div>
+    <div class="phone"><iframe id="screen" title="Pregled završnog ekrana solo moda"></iframe></div>
+  </div>
+</main>
+<script>
+const themes=[['dark','Zelena'],['light','Svetlo zlato'],['medium','Trula višnja'],['winter','Plavi okean'],['neon','Neon cyber'],['amethyst','Kraljevski ametist'],['easter','Vaskršnja'],['desert','Pustinjsko staklo'],['moon','Mesečev sjaj'],['severna','Severna maglina']];
+const sampleScores={solo_rough:650,solo_more:1250,solo_progress:1750,solo_good:2250,solo_masterful:2860,solo_perfect:3300};
+const recordFlags={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pa:['personal','all_time'],pwa:['personal','weekly','all_time'],pma:['personal','monthly','all_time'],pwma:['personal','weekly','monthly','all_time'],pending:null};
+const bonusRates={personal:10,weekly:10,monthly:10,all_time:20};
+const list=document.getElementById('themes'),screen=document.getElementById('screen');
+const tier=document.getElementById('tier'),variant=document.getElementById('variant'),record=document.getElementById('record'),column=document.getElementById('column');
+let activeTheme='dark';
+function render(){
+  for(const button of list.children)button.setAttribute('aria-current',String(button.dataset.theme===activeTheme));
+  const score=sampleScores[tier.value];
+  const flags=recordFlags[record.value];
+  document.getElementById('payout-score').textContent=score.toLocaleString('sr-RS');
+  const bonus=document.getElementById('payout-bonus');
+  const base=document.getElementById('payout-base');
+  const ad=document.getElementById('payout-ad');
+  const status=document.getElementById('payout-status');
+  if(flags===null){
+    bonus.textContent=base.textContent=ad.textContent='Čeka potvrdu';
+    status.textContent='Kada server potvrdi rekorde, ovde će se pojaviti oba iznosa.';
+  }else{
+    const bonusPercent=flags.reduce((sum,role)=>sum+bonusRates[role],0);
+    const baseReward=Math.min(8000,Math.floor(score*(100+bonusPercent)/100));
+    const adReward=Math.min(8000,baseReward*2);
+    bonus.textContent=`+${bonusPercent}%`;
+    base.textContent=`${baseReward.toLocaleString('sr-RS')} dukata`;
+    ad.textContent=`${adReward.toLocaleString('sr-RS')} dukata`;
+    status.textContent=baseReward*2>8000?'Primenjena je granica od 8.000 dukata.':'Oglas povećava iznos nakon bonusa za rekorde.';
+  }
+  screen.src=`theme-solo-finish-screen-mobile.html?theme=${encodeURIComponent(activeTheme)}&tier=${encodeURIComponent(tier.value)}&variant=${encodeURIComponent(variant.value)}&record=${encodeURIComponent(record.value)}&column=${encodeURIComponent(column.value)}`;
+}
+for(const [id,name] of themes){const button=document.createElement('button');button.type='button';button.dataset.theme=id;button.textContent=name;button.onclick=()=>{activeTheme=id;render()};list.append(button)}
+tier.addEventListener('change',render);variant.addEventListener('change',render);record.addEventListener('change',render);column.addEventListener('change',render);render();
+</script>
+</body>
+</html>

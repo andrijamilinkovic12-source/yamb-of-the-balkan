@@ -1,0 +1,12 @@
+{
+  "dark": {"resume": "exec-7acfe48a-bc89-4537-82e4-5dcf5337a816.png", "new": "exec-4f8505d6-6a7b-41cd-b6ae-c4f8f59fdb7e.png"},
+  "light": {"resume": "exec-910ba8d2-bd92-4975-8131-9c363e5cd62a.png", "new": "exec-1e07618b-ed5b-4088-98ee-89db4e4cf43b.png"},
+  "medium": {"resume": "exec-64e14d84-7a7c-407f-9644-49d919d92590.png", "new": "exec-d00a5325-6f62-4eb1-b2d6-a17886a850a3.png"},
+  "winter": {"resume": "exec-6c8ffed9-fd3f-40ee-900c-0d4af3459a61.png", "new": "exec-c3088365-4a51-4fa0-94eb-f0d354186275.png"},
+  "neon": {"resume": "exec-04dd479d-a781-42f7-816f-ab656cda20d3.png", "new": "exec-5d91633f-5532-4f1d-b030-e59f50a897e7.png"},
+  "amethyst": {"resume": "exec-652cb70c-07d7-4fc2-8791-dd3ce389def9.png", "new": "exec-545f667a-4d50-4b44-a48d-29d99f285cfc.png"},
+  "easter": {"resume": "exec-29c04b81-cc04-4f6a-a2fe-ab28f2aa2ef6.png", "new": "exec-16b897cb-cd16-4a41-83ef-d30dc7a16850.png"},
+  "desert": {"resume": "exec-066e4d84-9cc9-4672-8a5f-471aa899cf3c.png", "new": "exec-6dc4db43-e1e0-497e-a290-ef1438157859.png"},
+  "moon": {"resume": "exec-bd2373eb-7622-4867-9078-d8589ff13f10.png", "new": "exec-74d361d0-c60f-4c9f-9415-a6a3b6aea353.png"},
+  "severna": {"resume": "exec-857ca1bb-a152-44ce-9f95-835fc9a3fdbc.png", "new": "exec-b14cc675-16ec-4288-9e04-c2f121a28739.png"}
+}

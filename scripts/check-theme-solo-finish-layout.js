@@ -1,0 +1,96 @@
+// Browser geometry check for the Solo finish card and its record panel.
+const { chromium } = require('playwright');
+const { pathToFileURL } = require('url');
+const path = require('path');
+
+const root = path.resolve(__dirname, '..');
+const preview = pathToFileURL(path.join(root, 'docs/theme-solo-finish-screen-mobile.html')).href;
+const review = pathToFileURL(path.join(root, 'docs/theme-solo-finish-screen-review.html')).href;
+const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const viewports = [{ width: 320, height: 568 }, { width: 360, height: 640 }, { width: 390, height: 844 }, { width: 430, height: 932 }];
+const records = ['none', 'pwma', 'pending'];
+const tiers = ['solo_rough', 'solo_more', 'solo_progress', 'solo_good', 'solo_masterful', 'solo_perfect'];
+const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
+
+(async () => {
+    const browser = await chromium.launch({
+        headless: true,
+        executablePath: process.env.CHROME_PATH || chromium.executablePath(),
+        args: ['--no-sandbox'],
+    });
+    const page = await browser.newPage({ deviceScaleFactor: 1 });
+    const failures = [];
+    let checked = 0;
+    for (const viewport of viewports) {
+        await page.setViewportSize(viewport);
+        for (const theme of themes) {
+            for (const record of records) {
+                const cases = viewport.width === 320
+                    ? tiers.flatMap((tier, index) => ['1', '2', '3'].map(variant => ({ tier, variant, column: columns[index] })))
+                    : [{ tier: 'solo_masterful', variant: '1', column: 'Najava' }];
+                for (const { tier, variant, column } of cases) {
+                await page.goto(`${preview}?theme=${theme}&record=${record}&tier=${tier}&variant=${variant}&column=${encodeURIComponent(column)}`, { waitUntil: 'load' });
+                const geometry = await page.evaluate(() => {
+                    const card = document.querySelector('#game-over-screen > .modal-box');
+                    const claim = document.querySelector('.game-over-claim-button');
+                    const ad = document.getElementById('btn-ad-double');
+                    const panel = document.getElementById('solo-record-panel');
+                    const bestColumn = document.getElementById('solo-finish-best-column');
+                    const box = card.getBoundingClientRect();
+                    return {
+                        left: box.left, right: box.right, top: box.top, bottom: box.bottom,
+                        scrollHeight: card.scrollHeight, clientHeight: card.clientHeight,
+                        adBottom: ad.getBoundingClientRect().bottom,
+                        claimBottom: claim.getBoundingClientRect().bottom,
+                        panelBottom: panel.getBoundingClientRect().bottom,
+                        bestColumnFits: bestColumn.scrollWidth <= bestColumn.clientWidth + 1,
+                        recordIconsLoaded: [...panel.querySelectorAll('img[data-solo-record-icon]')]
+                            .every(image => image.complete && image.naturalWidth === 160),
+                    };
+                });
+                checked++;
+                if (geometry.left < 11 || geometry.right > viewport.width - 11 || geometry.top < 17 || geometry.bottom > viewport.height - 17 || geometry.scrollHeight > geometry.clientHeight + 1 || geometry.claimBottom > geometry.bottom - 1 || geometry.adBottom > geometry.claimBottom || geometry.panelBottom > geometry.claimBottom || !geometry.bestColumnFits || !geometry.recordIconsLoaded) {
+                    failures.push({ viewport, theme, record, tier, variant, column, geometry });
+                }
+                }
+            }
+        }
+    }
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(review, { waitUntil: 'load' });
+    const payoutLabels = async () => page.evaluate(() => ({
+        score: document.getElementById('payout-score').textContent,
+        bonus: document.getElementById('payout-bonus').textContent,
+        base: document.getElementById('payout-base').textContent,
+        ad: document.getElementById('payout-ad').textContent
+    }));
+    const expectedLabels = [
+        { score: '2.860', bonus: '+50%', base: '4.290 dukata', ad: '8.000 dukata' },
+        { score: '2.860', bonus: '+0%', base: '2.860 dukata', ad: '5.720 dukata' },
+        { score: '2.860', bonus: 'Čeka potvrdu', base: 'Čeka potvrdu', ad: 'Čeka potvrdu' },
+        { score: '650', bonus: '+10%', base: '715 dukata', ad: '1.430 dukata' }
+    ];
+    const actualLabels = [await payoutLabels()];
+    await page.selectOption('#record', 'none');
+    actualLabels.push(await payoutLabels());
+    await page.selectOption('#record', 'pending');
+    actualLabels.push(await payoutLabels());
+    await page.selectOption('#record', 'p');
+    await page.selectOption('#tier', 'solo_rough');
+    actualLabels.push(await payoutLabels());
+    for (let index = 0; index < expectedLabels.length; index++) {
+        if (JSON.stringify(actualLabels[index]) !== JSON.stringify(expectedLabels[index])) {
+            failures.push({ reviewCase: index, expected: expectedLabels[index], actual: actualLabels[index] });
+        }
+    }
+    await browser.close();
+    if (failures.length) {
+        console.error(`${failures.length} of ${checked} Solo finish layouts failed:`, JSON.stringify(failures.slice(0, 12), null, 2));
+        process.exitCode = 1;
+    } else {
+        console.log(`${checked} Solo finish layouts fit without scrolling or safe-area overlap; four left-panel payout states correct`);
+    }
+})().catch(error => {
+    console.error(error);
+    process.exitCode = 1;
+});

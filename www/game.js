@@ -238,6 +238,10 @@ class YambApp {
         this.rewardRuntimeId = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
         this.rewardClaimed = false;
         this.rewardClaimInProgress = false;
+        this.rewardClaimMode = '';
+        this.rewardBaseClaimRequested = false;
+        this.rewardAdAttemptId = 0;
+        this.rewardAdAttemptInProgress = false;
 
         const dayEl = document.getElementById('live-day');
         const monthEl = document.getElementById('live-month');
@@ -1959,7 +1963,6 @@ class YambApp {
                     'assets/green-soft-clay/canonical/settings-controls/terms-v1.png?v=1',
                     'assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/solo-results/personal-best-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png?v=1',
                     'assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1',
                     'assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png?v=1',
@@ -2139,10 +2142,6 @@ class YambApp {
                     'assets/theme-packs/easter/canonical/daily-states/already-played-v1.png',
                     'assets/theme-packs/easter/daily/reward-video-v3.png',
                     'assets/easter-soft-clay/opponent/vs-v2.png?v=opt2',
-                    'assets/easter-soft-clay/solo/personal-best.png?v=opt2',
-                    'assets/easter-soft-clay/solo/finish-score-mark-v1.png?v=opt2',
-                    'assets/easter-soft-clay/solo/finish-reward-video-v2.png?v=opt2',
-                    'assets/easter-soft-clay/solo/finish-claim-v2.png?v=opt2',
                     'assets/easter-soft-clay/hotseat/winner.png?v=opt2',
                     'assets/easter-soft-clay/opponent/scanning.png?v=opt2',
                     'assets/easter-soft-clay/opponent/found.png?v=opt2',
@@ -2260,7 +2259,6 @@ class YambApp {
                     'assets/severna-soft-clay/invite/accepted-v2.png?v=1',
                     'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
                     'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
-                    'assets/severna-soft-clay/solo/personal-best-v2.png?v=1',
                     'assets/severna-soft-clay/hotseat/winner-v2.png?v=1',
                     'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
                     'assets/theme-packs/severna/canonical/daily-room-identity/daily-room-v1.png',
@@ -2417,6 +2415,10 @@ class YambApp {
     getThemeStartupSources(theme, pack = this.getThemeLoadingPack(theme)) {
         if (!pack) return [];
         const root = this.getThemeAssetRoot(theme);
+        const menuButtonRoot = theme === 'dark'
+            ? 'assets/green-soft-clay/canonical/menu-resume-buttons/'
+            : `assets/theme-packs/${theme}/canonical/menu-resume-buttons/`;
+        const menuButtons = ['resume', 'new'].map(role => `${menuButtonRoot}${role}-v1.png?v=1`);
         const splash = this.getThemeSplashSource(theme);
         const leagueWatermark = theme === 'dark'
             ? 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2'
@@ -2432,7 +2434,7 @@ class YambApp {
             ? this.collectThemeSourcesFromRoot(theme, menuRoot)
             : [...pack.assets, ...(pack.menuAssets || [])].filter(source => source.startsWith(root) && mainMenuAsset.test(source)
                 && !source.includes('/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png'));
-        return [...new Set([pack.background, splash, leagueWatermark, ...menuPackSources, ...menuSources].filter(Boolean))];
+        return [...new Set([pack.background, splash, leagueWatermark, ...menuButtons, ...menuPackSources, ...menuSources].filter(Boolean))];
     }
 
     getThemeRoomSources(theme, roomId) {
@@ -2489,7 +2491,23 @@ class YambApp {
             ? ['state', 'search', 'friend', 'spectate', 'duel', 'avatar']
                 .map(role => `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png?v=2`)
             : [];
-        if (!root) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        const soloResults = safeRoomId === 'solo'
+            ? theme === 'dark'
+                ? ['assets/green-soft-clay/canonical/solo-results/record-panel-v1.png?v=1']
+                : ['finish-score-mark', 'finish-claim', 'record-panel'].map(role =>
+                    `assets/theme-packs/${theme}/canonical/solo-results/${role}-v1.png?v=1`)
+            : [];
+        const soloPowerIndex = safeRoomId === 'solo'
+            ? [theme === 'dark'
+                ? 'assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1'
+                : `assets/theme-packs/${theme}/canonical/statistics-overview/power-index-v1.png?v=1`]
+            : [];
+        const soloRecordIcons = safeRoomId === 'solo'
+            ? ['weekly', 'monthly', 'all_time', 'personal'].map(role => theme === 'dark'
+                ? `assets/green-soft-clay/canonical/solo-record-icons/${role}-v1.png?v=1`
+                : `assets/theme-packs/${theme}/canonical/solo-record-icons/${role}-v1.png?v=1`)
+            : [];
+        if (!root) return [...new Set([...soloResults, ...soloPowerIndex, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
             dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
@@ -2502,14 +2520,22 @@ class YambApp {
             // Trophy cards and effect previews load only when their tab is visible.
             treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/treasury-controls/') || (theme !== 'dark' && path.includes('rewarded-video')),
             tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/') || path === 'canonical/statistics-overview/power-index-v1.png',
-            solo: path => path.startsWith('solo/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png',
+            solo: path => (path.startsWith('solo/') && !path.includes('personal-best'))
+                || (theme === 'easter' && path.startsWith('game/'))
+                || (path.startsWith('canonical/solo-results/') && !path.includes('personal-best'))
+                || path.startsWith('canonical/solo-record-icons/')
+                || path === 'canonical/solo-room-identity/solo-room-v1.png',
             hotseat: path => path.startsWith('hotseat/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
             opponent: path => path.startsWith('opponent/') || (theme === 'easter' && path.startsWith('game/')) || path === 'canonical/online-random-room-identity/online-random-room-v1.png',
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
-        if (!matcher) return [...new Set([...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
-        return [...new Set([...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))), ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        if (!matcher) return [...new Set([...soloResults, ...soloPowerIndex, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        return [...new Set([
+            ...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))),
+            ...soloResults, ...soloPowerIndex, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets,
+            ...globalChatInternal, ...onlinePlayersInternal
+        ])];
     }
 
     collectThemeSourcesFromRoot(theme, rootElement) {
@@ -5091,6 +5117,7 @@ class YambApp {
             let pending = this.readPendingMatchResults();
             let profileNotFound = false;
             const acceptedClientResultIds = [];
+            const acceptedResponses = {};
 
             for (const item of [...pending]) {
                 if (!item || item.syncRejected) continue;
@@ -5099,6 +5126,7 @@ class YambApp {
                 if (response && response.ok) {
                     pending = pending.filter(candidate => candidate.clientResultId !== item.clientResultId);
                     acceptedClientResultIds.push(item.clientResultId);
+                    acceptedResponses[item.clientResultId] = response;
                     this.writePendingMatchResults(pending);
                     continue;
                 }
@@ -5118,7 +5146,8 @@ class YambApp {
                 ok: pending.length === 0,
                 remaining: pending.filter(item => item && !item.syncRejected).length,
                 profileNotFound,
-                acceptedClientResultIds
+                acceptedClientResultIds,
+                acceptedResponses
             };
         })();
 
@@ -5159,6 +5188,7 @@ class YambApp {
             clientResultId: entry.clientResultId,
             accepted: Array.isArray(syncResult?.acceptedClientResultIds) &&
                 syncResult.acceptedClientResultIds.includes(entry.clientResultId),
+            powerIndexGain: syncResult?.acceptedResponses?.[entry.clientResultId]?.powerIndexGain,
             pending: Math.max(0, Number(syncResult?.remaining) || 0)
         };
     }
@@ -6199,10 +6229,10 @@ class YambApp {
                 label: () => gt('menu_rules') || 'PRAVILA'
             },
             solo: {
-                icon: 'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/solo-room-identity/solo-room-v1.png?v=1',
                 greenIcon: 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/solo-room-identity/solo-room-v1.png?v=1',
+                severnaIcon: 'assets/theme-packs/severna/canonical/solo-room-identity/solo-room-v1.png?v=1',
                 scale: 1,
                 label: () => gt('menu_solo') || ((localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'SOLO GAME' : 'SOLO IGRA')
             },
@@ -9045,9 +9075,10 @@ class YambApp {
 
     getSoloFinishSummary(pIdx) {
         const sheet = this.allScores && this.allScores[pIdx];
-        if (!sheet) return { bestColumn: 0, hasNoZero: false };
+        if (!sheet) return { bestColumn: 0, bestColumnKey: null, hasNoZero: false };
 
         let bestColumn = 0;
+        let bestColumnKey = null;
         let hasNoZero = true;
         KOLONE.forEach(col => {
             const valueAt = row => Math.max(0, Number(sheet[col] && sheet[col][row]) || 0);
@@ -9057,14 +9088,33 @@ class YambApp {
             const middle = this.calculateMiddleSectionScore(sheet, col);
             let lower = 0;
             ["Triling", "Kenta", "Ful", "Poker", "Yamb"].forEach(row => { lower += valueAt(row); });
-            bestColumn = Math.max(bestColumn, upper + middle + lower);
+            const columnTotal = upper + middle + lower;
+            if (columnTotal > bestColumn) {
+                bestColumn = columnTotal;
+                bestColumnKey = col;
+            }
 
             REDOVI_IGRA.forEach(row => {
                 if (valueAt(row) === 0) hasNoZero = false;
             });
         });
 
-        return { bestColumn, hasNoZero };
+        return { bestColumn, bestColumnKey, hasNoZero };
+    }
+
+    getSoloFinishMessageKey(tier) {
+        const storageKey = `yamb_solo_finish_last_${tier}`;
+        const variants = [`go_msg_${tier}`, `go_msg_${tier}_v2`, `go_msg_${tier}_v3`];
+        let lastIndex = this.soloFinishLastMessage?.[tier];
+        if (!Number.isInteger(lastIndex)) {
+            try { lastIndex = parseInt(localStorage.getItem(storageKey), 10); } catch (_) { lastIndex = -1; }
+        }
+        const choices = [0, 1, 2].filter(index => index !== lastIndex);
+        const nextIndex = choices[Math.floor(Math.random() * choices.length)];
+        if (!this.soloFinishLastMessage) this.soloFinishLastMessage = {};
+        this.soloFinishLastMessage[tier] = nextIndex;
+        try { localStorage.setItem(storageKey, String(nextIndex)); } catch (_) {}
+        return variants[nextIndex];
     }
 
     calculateTotalScore(pIdx) {
@@ -9654,6 +9704,9 @@ class YambApp {
         this.rewardClaimed = false;
         this.rewardClaimInProgress = false;
         this.lastGameType = 'technical';
+        this.rewardClaimMode = '';
+        this.rewardBaseClaimRequested = false;
+        ++this.rewardAdAttemptId;
 
         const title = iAmWinner ? (gt('go_win') || 'POBEDA!') : (gt('go_loss') || 'PORAZ');
         const fallbackMsg = iAmWinner
@@ -9666,8 +9719,8 @@ class YambApp {
             gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');
             gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);
         }
-        const personalBestBadge = document.getElementById('solo-personal-best-badge');
-        if (personalBestBadge) personalBestBadge.hidden = true;
+        const soloRecordPanel = document.getElementById('solo-record-panel');
+        if (soloRecordPanel) soloRecordPanel.hidden = true;
 
         const titleEl = document.getElementById('go-title');
         const msgEl = document.getElementById('go-msg');
@@ -9775,8 +9828,9 @@ class YambApp {
         let saveMode = detectedMode;
         let matchResultRef = this.onlineMode ? String(onlineResult?.matchId || '') : '';
         this.refreshLocalStats();
-        const soloHighscoreBeforeGame = Math.max(0, Number(this.stats && this.stats.highscore) || 0);
-        let isNewSoloPersonalBest = false;
+        let soloRecordAchievements = this.players.length === 1 && Number(myScoreEntry?.score) <= 0 ? [] : null;
+        let soloPowerIndexGain = null;
+        this.soloRewardPreview = null;
 
         if (this.onlineMode) {
             const duelType = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType });
@@ -9819,11 +9873,11 @@ class YambApp {
              }
              
               this.pendingScore = myScoreEntry.score;
-              if (window.adMobGlobal && myScoreEntry.score > 0) {
-                  window.adMobGlobal.prepareReward({ context: 'game_double', amount: myScoreEntry.score * 2 });
-              }
               this.rewardClaimed = false;
              this.rewardClaimInProgress = false;
+             this.rewardClaimMode = '';
+             this.rewardBaseClaimRequested = false;
+             ++this.rewardAdAttemptId;
              this.lastGameType = 'normal';
              let resultType = 'solo';
              if (this.players.length > 1) {
@@ -9857,8 +9911,6 @@ class YambApp {
                  Array.isArray(onlineResult.serverStatsAppliedUids) &&
                  onlineResult.serverStatsAppliedUids.includes(myUid)
              );
-             isNewSoloPersonalBest = this.players.length === 1
-                 && Number(myScoreEntry.score) > soloHighscoreBeforeGame;
              let localResultAccepted = false;
              if (!this.onlineMode) {
                  const queuedResult = await this.queueCompletedLocalMatchResult({
@@ -9868,6 +9920,9 @@ class YambApp {
                  });
                  matchResultRef = queuedResult?.clientResultId || '';
                  localResultAccepted = queuedResult?.accepted === true;
+                 if (this.players.length === 1 && Number.isFinite(queuedResult?.powerIndexGain)) {
+                     soloPowerIndexGain = queuedResult.powerIndexGain;
+                 }
                  if (this.socket && this.socket.connected) {
                      this.emitPlayerData(false).catch(err => {
                          console.warn("Nije moguće odmah sinhronizovati završenu lokalnu partiju:", err);
@@ -9907,12 +9962,23 @@ class YambApp {
         try {
             if (myScoreEntry && myScoreEntry.score > 0) {
                 const myPhoto = localStorage.getItem('yamb_player_photo') || '';
-                await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef, {
+                const scoreResult = await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef, {
                     serverVerified: this.onlineMode || localResultAccepted
                 });
+                if (this.players.length === 1 && scoreResult?.ok) {
+                    soloRecordAchievements = Array.isArray(scoreResult.recordAchievements)
+                        ? scoreResult.recordAchievements : null;
+                    this.soloRewardPreview = scoreResult.soloRewardPreview || null;
+                }
             }
         } catch (err) {
             console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
+        }
+        if (window.adMobGlobal && myScoreEntry?.score > 0) {
+            window.adMobGlobal.prepareReward({
+                context: 'game_double',
+                amount: this.soloRewardPreview?.adReward ?? Math.min(8000, myScoreEntry.score * 2)
+            });
         }
 
         this.soundMgr.win();
@@ -9920,9 +9986,8 @@ class YambApp {
         let scoreLabel = gt('go_msg_solo') || "OSVOJENI POENI";
         let resultOutcome = '';
         const activeSoloFinishTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const isEnhancedSoloFinishTheme = activeSoloFinishTheme === 'dark'
-            || activeSoloFinishTheme === 'easter'
-            || (document.body && document.body.classList.contains('easter-theme'));
+        // Every theme uses the Green Solo summary structure and score tiers.
+        const isEnhancedSoloFinishTheme = true;
 
         if (this.players.length === 1) {
             const myScore = Math.max(0, Number(myScoreEntry ? myScoreEntry.score : 0) || 0);
@@ -9935,8 +10000,10 @@ class YambApp {
                 else if (myScore > 1000) soloFinishKey = 'solo_more';
 
                 title = gt(`go_title_${soloFinishKey}`) || gt('go_title_good') || 'DOBRA PARTIJA';
-                message = (gt(`go_msg_${soloFinishKey}`) || 'Završio si partiju sa {0} poena.').replace('{0}', myScore);
-                if (myScore > 2500 && this.effectMgr) this.effectMgr.celebrateWin();
+                message = (gt(this.getSoloFinishMessageKey(soloFinishKey)) || 'Završio si partiju sa {0} poena.').replace('{0}', myScore);
+                const celebrationThresholdReached = ['dark', 'easter'].includes(activeSoloFinishTheme)
+                    ? myScore > 2500 : myScore >= 1000;
+                if (celebrationThresholdReached && this.effectMgr) this.effectMgr.celebrateWin();
             } else if (myScore >= 1000) {
                 this.effectMgr.celebrateWin();
                 title = gt('go_title_great');
@@ -9984,6 +10051,25 @@ class YambApp {
             gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);
             if (resultOutcome) gameOverScreen.classList.add(`result-${resultOutcome}`);
         }
+        const soloRecordPanel = document.getElementById('solo-record-panel');
+        if (soloRecordPanel) {
+            soloRecordPanel.hidden = this.players.length !== 1;
+            const achieved = new Set(soloRecordAchievements || []);
+            soloRecordPanel.querySelectorAll('[data-record-role]').forEach(item => {
+                item.classList.toggle('is-achieved', achieved.has(item.dataset.recordRole));
+            });
+            const status = document.getElementById('solo-record-status');
+            if (status) {
+                const key = soloRecordAchievements === null ? 'go_record_pending'
+                    : achieved.size === 0 ? 'go_record_none' : 'go_record_confirmed';
+                status.dataset.lang = key;
+                status.textContent = gt(key);
+            }
+            const piGain = document.getElementById('solo-power-index-gain');
+            if (piGain) piGain.textContent = Number.isFinite(soloPowerIndexGain)
+                ? `${soloPowerIndexGain > 0 ? '+' : ''}${soloPowerIndexGain}` : '—';
+        }
+        if (this.players.length === 1) window.themeSoloResults?.sync(true);
         const isEnhancedSoloFinish = this.players.length === 1 && isEnhancedSoloFinishTheme;
         const soloFinishTier = document.getElementById('solo-finish-tier');
         const soloFinishStats = document.getElementById('solo-finish-stats');
@@ -10001,26 +10087,46 @@ class YambApp {
             if (soloFinishStats) soloFinishStats.hidden = false;
             const bestColumnEl = document.getElementById('solo-finish-best-column');
             const noZeroEl = document.getElementById('solo-finish-no-zero');
-            if (bestColumnEl) bestColumnEl.innerText = summary.bestColumn.toLocaleString('sr-RS');
+            if (bestColumnEl) {
+                const columnMarks = {
+                    Nadole: 'col_down', Slobodna: 'col_free', Sredina: 'col_middle',
+                    Nagore: 'col_up', 'Ručno': 'col_manual', Najava: 'col_announce'
+                };
+                const columnNames = {
+                    Nadole: 'go_column_down', Slobodna: 'go_column_free', Sredina: 'go_column_middle',
+                    Nagore: 'go_column_up', 'Ručno': 'go_column_manual', Najava: 'go_column_announce'
+                };
+                const col = summary.bestColumnKey;
+                const score = summary.bestColumn.toLocaleString('sr-RS');
+                bestColumnEl.textContent = col ? `${gt(columnMarks[col])} ${score}` : '—';
+                bestColumnEl.title = col ? `${gt(columnNames[col])}: ${score}` : '';
+                bestColumnEl.setAttribute('aria-label', col ? `${gt('go_best_column')}: ${gt(columnNames[col])}, ${score}` : gt('go_best_column'));
+            }
             if (noZeroEl) noZeroEl.innerText = summary.hasNoZero ? (gt('go_yes') || 'DA') : (gt('go_no') || 'NE');
         } else {
             if (soloFinishTier) soloFinishTier.hidden = true;
             if (soloFinishStats) soloFinishStats.hidden = true;
         }
-        const personalBestBadge = document.getElementById('solo-personal-best-badge');
-        if (personalBestBadge) personalBestBadge.hidden = !isNewSoloPersonalBest;
         const goScoreLabel = document.querySelector('#game-over-screen [data-lang="go_msg_solo"]');
         if (goScoreLabel) goScoreLabel.innerText = scoreLabel;
         
         const btnAd = document.getElementById('btn-ad-double');
-        if ((myScoreEntry && myScoreEntry.score <= 0)) { if(btnAd) btnAd.style.display = 'none'; } else { if(btnAd) btnAd.style.display = 'flex'; }
+        if (btnAd) {
+            const noAdGain = this.players.length === 1 && this.soloRewardPreview
+                && this.soloRewardPreview.adReward <= this.soloRewardPreview.baseReward;
+            btnAd.style.display = (myScoreEntry && myScoreEntry.score <= 0) || noAdGain ? 'none' : 'flex';
+        }
         
         const claimLabel = document.getElementById('go-claim-label');
-        if (claimLabel) claimLabel.innerText = gt('go_claim');
+        const rewardNumberLocale = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
+        if (claimLabel) claimLabel.innerText = this.players.length === 1 && this.soloRewardPreview
+            ? (gt('go_claim_amount') || 'Preuzmi {0} i izađi').replace('{0}', this.soloRewardPreview.baseReward.toLocaleString(rewardNumberLocale))
+            : gt('go_claim');
         const btnDouble = document.getElementById('go-double-label');
         if (btnDouble) {
-            const isEasterGameOver = document.body && document.body.classList.contains('easter-theme');
-            if (isEasterGameOver) btnDouble.innerText = gt('go_double_easter') || 'DUPLIRAJ NAGRADU (x2)';
+            if (this.players.length === 1) btnDouble.textContent = this.soloRewardPreview
+                ? (gt('go_double_amount') || 'Dupliraj: {0} dukata').replace('{0}', this.soloRewardPreview.adReward.toLocaleString(rewardNumberLocale))
+                : gt('go_double_easter') || 'DUPLIRAJ NAGRADU (x2)';
             else btnDouble.innerHTML = gt('go_double');
         }
 
@@ -10073,11 +10179,12 @@ class YambApp {
             let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
             if (options.serverVerified === true) this.recordSubmittedScoreAsHighscore(finalScore);
             if(this.topListManager) {
-                await this.topListManager.submitScore(name, finalScore, mode, photoUrl, matchId);
+                return await this.topListManager.submitScore(name, finalScore, mode, photoUrl, matchId);
             }
         } catch(e) {
             console.warn("Nije moguće poslati rezultat u ovom trenutku:", e);
         }
+        return { ok: false, reason: 'score_pending' };
     }
 
     getPendingGameRewardsKey() {
@@ -10255,26 +10362,43 @@ class YambApp {
     }
 
     async watchAdForDouble() {
-        let success = false;
-        
-        if (this.adMob && this.adMob.showRewardVideo) {
-            success = await this.adMob.showRewardVideo({
-                context: 'game_double',
-                amount: (parseInt(this.pendingScore) || 0) * 2
-            });
-        }
-        
-        if (success) { 
+        if (this.rewardClaimed || this.rewardClaimInProgress || this.rewardAdAttemptInProgress) return;
+        const attemptId = ++this.rewardAdAttemptId;
+        this.rewardAdAttemptInProgress = true;
+        try {
+            const success = !!(this.adMob && this.adMob.showRewardVideo &&
+                await this.adMob.showRewardVideo({
+                    context: 'game_double',
+                    amount: this.lastGameType === 'normal' && this.players?.length === 1 && this.soloRewardPreview
+                        ? this.soloRewardPreview.adReward
+                        : Math.min(8000, (parseInt(this.pendingScore, 10) || 0) * 2)
+                }));
+            // A base claim made while the ad was loading takes precedence over a late ad callback.
+            if (!success || attemptId !== this.rewardAdAttemptId || this.rewardClaimed || this.rewardClaimInProgress) return;
             this.pendingRewardSsvNonce = typeof this.adMob.consumeLastRewardSsvNonce === 'function'
                 ? this.adMob.consumeLastRewardSsvNonce()
                 : '';
-            this.claimReward(true); 
-        } 
+            await this.claimReward(true);
+        } catch (err) {
+            console.warn('Dupliranje nagrade nije uspelo; osnovna nagrada ostaje dostupna.', err);
+        } finally {
+            this.rewardAdAttemptInProgress = false;
+        }
     }
     
     async claimReward(doubled) {
+        if (!doubled) {
+            ++this.rewardAdAttemptId;
+            if (this.rewardClaimInProgress && this.rewardClaimMode === 'double') {
+                this.rewardBaseClaimRequested = true;
+                return;
+            }
+        }
         if (this.rewardClaimed || this.rewardClaimInProgress) return;
         this.rewardClaimInProgress = true;
+        this.rewardClaimMode = doubled ? 'double' : 'base';
+        this.rewardBaseClaimRequested = false;
+        try {
         const finishRewardClaim = () => {
             this.forgetPendingGameReward(this.pendingRewardMatchId);
             this.rewardClaimed = true;
@@ -10303,30 +10427,28 @@ class YambApp {
         };
         const claimNormalGameReward = async (baseScore, wasDoubled) => {
             const pendingMatchSync = await this.syncPendingMatchResults();
-            if (pendingMatchSync && pendingMatchSync.remaining > 0) return false;
+            if (pendingMatchSync && pendingMatchSync.remaining > 0) return { ok: false };
             if (this.topListManager && typeof this.topListManager.syncOfflineScores === 'function') {
-                await this.topListManager.syncOfflineScores();
+                // Leaderboard synchronization must not hold the reward claim button hostage.
+                Promise.resolve().then(() => this.topListManager.syncOfflineScores())
+                    .catch(err => console.warn('Sinhronizacija top liste će biti ponovljena:', err));
             }
 
             const ssvNonce = wasDoubled ? (this.pendingRewardSsvNonce || '') : '';
             const result = wasDoubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
                 ? await window.adMobGlobal.claimRewardWithSsvRetry(
                     () => this.claimServerGameReward(baseScore, wasDoubled, ssvNonce),
-                    { nonce: ssvNonce, context: 'game_double' }
+                    { nonce: ssvNonce, context: 'game_double', shouldCancel: () => this.rewardBaseClaimRequested }
                 )
                 : await this.claimServerGameReward(baseScore, wasDoubled, ssvNonce);
             if (result && result.ok && typeof result.balance === 'number') {
                 this.applyAuthoritativeGameRewardBalance(result.balance);
                 this.pendingRewardSsvNonce = '';
-                return true;
+                return { ok: true, reward: Math.max(0, Number(result.reward) || 0) };
             }
 
-            if (result && (result.localFallback || !result.permanent)) {
-                await syncRewardBalance();
-            } else {
-                console.warn(`Server nije potvrdio nagradu partije: ${result?.reason || 'unknown_error'}`);
-            }
-            return false;
+            console.warn(`Server nije potvrdio nagradu partije: ${result?.reason || 'unknown_error'}`);
+            return { ok: false };
         };
 
         let finalAmount = this.pendingScore;
@@ -10365,16 +10487,19 @@ class YambApp {
             }
         }
         
+        let confirmed;
         if (doubled) {
-            const confirmed = await claimNormalGameReward(this.pendingScore, true);
-            if (!confirmed) {
+            confirmed = await claimNormalGameReward(this.pendingScore, true);
+            if (!confirmed.ok) {
                 this.rewardClaimInProgress = false;
-                this.modal.alert(gt('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.", gt('modal_title_info') || "INFO");
+                if (!this.rewardBaseClaimRequested) {
+                    this.modal.alert(gt('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.", gt('modal_title_info') || "INFO");
+                }
                 return;
             }
         } else {
-            const confirmed = await claimNormalGameReward(this.pendingScore, false);
-            if (!confirmed) {
+            confirmed = await claimNormalGameReward(this.pendingScore, false);
+            if (!confirmed.ok) {
                 this.rewardClaimInProgress = false;
                 this.modal.alert(
                     gt('reward_claim_retry'),
@@ -10390,12 +10515,31 @@ class YambApp {
 
         finishRewardClaim();
         if (doubled) {
-            this.modal.alert(`${gt('msg_reward_doubled')} ${dukatIconHtml()} ${finalAmount}`, gt('modal_title_reward')).then(() => {
+            const paidAmount = confirmed.reward;
+            this.modal.alert(`${gt('msg_reward_doubled')} ${dukatIconHtml()} ${paidAmount}`, gt('modal_title_reward')).then(() => {
                 this.effectMgr.stop(); 
                 this.showMainMenu(); 
             }); 
         } else { 
             this.showMainMenu(); 
+        }
+        } catch (err) {
+            console.warn('Preuzimanje nagrade nije uspelo:', err);
+            if (!doubled || !this.rewardBaseClaimRequested) {
+                this.modal.alert(
+                    gt(doubled ? 'ad_confirmation_retry' : 'reward_claim_retry'),
+                    gt('modal_title_info') || 'OBAVEŠTENJE'
+                );
+            }
+        } finally {
+            this.rewardClaimInProgress = false;
+            this.rewardClaimMode = '';
+            if (this.rewardBaseClaimRequested && !this.rewardClaimed) {
+                this.rewardBaseClaimRequested = false;
+                await this.claimReward(false);
+            } else {
+                this.rewardBaseClaimRequested = false;
+            }
         }
     }
 

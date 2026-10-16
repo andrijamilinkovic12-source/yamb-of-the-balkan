@@ -154,6 +154,19 @@ async function main() {
     assert.equal(await controller.showInterstitial(), true, 'Posle pauze novi oglas može da se prikaže');
     assert.equal(interstitialShows, 3);
 
+    let baseSelected = false;
+    let doubledAttempts = 0;
+    const cancelledDouble = await controller.claimRewardWithSsvRetry(
+        async () => {
+            doubledAttempts++;
+            baseSelected = true;
+            return { ok: false, reason: 'ad_verification_pending', permanent: false };
+        },
+        { nonce: 'pending-ssv', context: 'game_double', shouldCancel: () => baseSelected }
+    );
+    assert.equal(cancelledDouble.reason, 'base_reward_selected', 'Izbor osnovne nagrade mora prekinuti SSV ponavljanje');
+    assert.equal(doubledAttempts, 1, 'SSV zahtev se ponavlja i posle izbora osnovne nagrade');
+
     controller.canRequestAds = false;
     controller.updateUI(false);
     assert.equal(button.disabled, true, 'Bez saglasnosti dugme mora biti onemogućeno');

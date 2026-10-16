@@ -16,4 +16,6 @@ body.theme-ducat-pack-active .theme-ducat-pack-image--stats { width: 1.35rem; he
 body.theme-ducat-pack-active .theme-ducat-pack-image--balance,
 body.theme-ducat-pack-active .theme-ducat-pack-image--ad { width: 1.25em; height: 1.25em; }
 body.theme-ducat-pack-active .theme-ducat-pack-image--game-over { width: 2rem; height: 2rem; }
+body.theme-ducat-pack-active #game-over-screen.is-solo-result .theme-ducat-pack-image--game-over { display: none !important; }
+body #game-over-screen .game-over-ducat-anchor { display: none !important; }
 body.theme-ducat-pack-active img.dukat-icon-inline--theme { object-fit: contain; }

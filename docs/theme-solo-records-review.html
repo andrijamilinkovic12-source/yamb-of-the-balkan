@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Solo rekord · paneli za 10 tema</title>
+  <link rel="stylesheet" href="../www/theme-solo-results.css?v=8">
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:24px;background:#17232b;color:#f1f5f2;font:14px/1.4 system-ui,sans-serif}main{max-width:1000px;margin:auto}h1{margin:0 0 7px;font-size:1.5rem}p{color:#d6e4e2}button{padding:8px 12px;border:1px solid #749a99;border-radius:9px;background:#23444b;color:white;cursor:pointer}.controls{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}.preview{padding:12px;border:1px solid #49616b;border-radius:19px;background:#20363e}.preview h2{margin:0 0 8px;font-size:.92rem}.preview #game-over-screen{background:transparent}.preview .solo-record-panel{margin:0!important}.preview button[aria-pressed=true]{border-color:#9be5d8;background:#31606a}@media(max-width:640px){body{padding:12px}}
+    .preview.light-theme #game-over-screen{--solo-record-top:#fff1dc;--solo-record-bottom:#e6c18b;--solo-record-ink:#4d301c;--solo-record-line:rgba(100,60,27,.31);--solo-record-accent:#875024;--solo-record-shadow:rgba(91,53,26,.20)}
+    .preview.medium-theme #game-over-screen{--solo-record-top:#70343f;--solo-record-bottom:#48212e;--solo-record-ink:#fff1e8;--solo-record-line:rgba(241,195,178,.36);--solo-record-accent:#e39a70;--solo-record-shadow:rgba(33,9,16,.38)}
+    .preview.winter-theme #game-over-screen{--solo-record-top:#225f8f;--solo-record-bottom:#173f65;--solo-record-ink:#fff4e5;--solo-record-line:rgba(255,244,229,.36);--solo-record-accent:#b7e7f3;--solo-record-shadow:rgba(9,37,58,.39)}
+    .preview.neon-theme #game-over-screen{--solo-record-top:#1b3655;--solo-record-bottom:#102038;--solo-record-ink:#eefefa;--solo-record-line:rgba(86,229,210,.35);--solo-record-accent:#56e5d2;--solo-record-shadow:rgba(3,9,21,.47)}
+    .preview.amethyst-theme #game-over-screen{--solo-record-top:#654272;--solo-record-bottom:#3d2a50;--solo-record-ink:#fff5ef;--solo-record-line:rgba(224,205,229,.36);--solo-record-accent:#f2c879;--solo-record-shadow:rgba(26,12,39,.42)}
+    .preview.easter-theme #game-over-screen{--solo-record-top:#fff8ea;--solo-record-bottom:#e0e4cb;--solo-record-ink:#31492c;--solo-record-line:rgba(77,107,69,.29);--solo-record-accent:#4d6b45;--solo-record-shadow:rgba(72,93,59,.20)}
+    .preview.desert-theme #game-over-screen{--solo-record-top:#fff0da;--solo-record-bottom:#e4b48f;--solo-record-ink:#553623;--solo-record-line:rgba(111,64,42,.30);--solo-record-accent:#396b72;--solo-record-shadow:rgba(112,65,41,.23)}
+    .preview.moon-theme #game-over-screen{--solo-record-top:#484d5c;--solo-record-bottom:#292d39;--solo-record-ink:#f5f5f8;--solo-record-line:rgba(225,226,231,.34);--solo-record-accent:#e1e2e7;--solo-record-shadow:rgba(10,12,20,.48)}
+    .preview.severna-theme #game-over-screen{--solo-record-top:#305168;--solo-record-bottom:#172f49;--solo-record-ink:#f5fbff;--solo-record-line:rgba(138,227,228,.35);--solo-record-accent:#8ae3e4;--solo-record-shadow:rgba(5,17,37,.46)}
+    .controls label{display:grid;gap:5px;min-width:min(100%,380px);font-weight:700}.controls select{width:100%;padding:10px;border:1px solid #749a99;border-radius:9px;background:#23444b;color:#fff;font:inherit}.case-info{margin:0 0 16px;color:#d6e4e2}
+  </style>
+</head>
+<body><main>
+  <h1>Solo rekord · deset tematskih panela</h1>
+  <p>Svaka tema ima svoj PNG panel i četiri posebno nacrtane PNG oznake. Samo potvrđeni rekordi diskretno svetle; njihov naziv je dostupan čitačima ekrana. Status i iznos Power Indexa ostaju živi podaci. Nedelja može preći granicu meseca, a kasno potvrđena partija važi samo za periode koje njen datum obuhvata. Rekord svih vremena podrazumeva i lični rekord.</p>
+  <div class="controls" id="controls">
+    <label for="case-select">Stanje rekorda
+      <select id="case-select">
+        <optgroup label="U tekućoj nedelji i mesecu">
+          <option value="none">Bez rekorda</option>
+          <option value="p">Lični</option>
+          <option value="w">Nedeljni</option>
+          <option value="m">Mesečni</option>
+          <option value="pw">Lični + nedeljni</option>
+          <option value="pm">Lični + mesečni</option>
+          <option value="wm">Nedeljni + mesečni</option>
+          <option value="pwm">Lični + nedeljni + mesečni</option>
+          <option value="pwma">Sva četiri rekorda</option>
+        </optgroup>
+        <optgroup label="Kasna potvrda preko granice perioda">
+          <option value="pa">Lični + sva vremena</option>
+          <option value="pwa">Lični + nedeljni + sva vremena</option>
+          <option value="pma">Lični + mesečni + sva vremena</option>
+        </optgroup>
+        <option value="pending">Čeka potvrdu</option>
+      </select>
+    </label>
+  </div>
+  <p id="case-info" class="case-info"></p>
+  <div id="cards" class="cards"></div>
+</main><script>
+const themes=[['dark','Zelena'],['light','Svetlo zlato'],['medium','Trula višnja'],['winter','Plavi okean'],['neon','Neon cyber'],['amethyst','Kraljevski ametist'],['easter','Vaskršnja'],['desert','Pustinjsko staklo'],['moon','Mesečev sjaj'],['severna','Severna maglina']];
+const labels=[['weekly','NEDELJNI REKORD'],['monthly','MESEČNI REKORD'],['all_time','REKORD SVIH VREMENA'],['personal','LIČNI REKORD']];
+const states={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pa:['personal','all_time'],pwa:['personal','weekly','all_time'],pma:['personal','monthly','all_time'],pwma:labels.map(([role])=>role),pending:null};
+const grid=document.getElementById('cards');
+for(const [theme,name] of themes){
+  const card=document.createElement('article');card.className=`preview ${theme}-theme`;
+  const icon=theme==='dark'?'../www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png':`../www/assets/theme-packs/${theme}/canonical/statistics-overview/power-index-v1.png`;
+  const root=theme==='dark'?'../www/assets/green-soft-clay':'../www/assets/theme-packs/'+theme;
+  card.innerHTML=`<h2>${name}</h2><div id="game-over-screen" class="is-solo-result"><div class="solo-record-panel"><div class="solo-record-panel-title">REKORDI PARTIJE</div><div class="solo-record-panel-grid">${labels.map(([role,label])=>`<span data-record-role="${role}" title="${label}"><img src="${root}/canonical/solo-record-icons/${role}-v1.png" alt=""><span class="solo-record-accessible-name">${label}</span></span>`).join('')}</div><div class="solo-record-panel-footer"><span class="status">BEZ NOVOG REKORDA</span><span class="solo-power-index"><img id="solo-power-index-icon" src="${icon}" alt=""><span>POWER INDEX</span> <strong id="solo-power-index-gain">—</strong></span></div></div></div>`;
+  const panel=theme==='dark'?'../www/assets/green-soft-clay/canonical/solo-results/record-panel-v1.png':'../www/assets/theme-packs/'+theme+'/canonical/solo-results/record-panel-v1.png';
+  card.querySelector('#game-over-screen').style.setProperty('--solo-record-panel-image',`url('${panel}')`);
+  card.querySelector('#game-over-screen').style.setProperty('--solo-record-cell-ink',({dark:'#1e3523',light:'#392817',medium:'#2a0e16',winter:'#0b2a3d',neon:'#f4faff',amethyst:'#0e0814',easter:'#27351f',desert:'#3b251b',moon:'#08090c',severna:'#f5fbff'})[theme]);
+  grid.append(card);
+}
+function show(which){const flags=states[which];for(const card of grid.children){card.querySelectorAll('[data-record-role]').forEach(item=>item.classList.toggle('is-achieved',Array.isArray(flags)&&flags.includes(item.dataset.recordRole)));card.querySelector('.status').textContent=flags===null?'PROVERA REKORDA':flags.length?'POTVRĐENO':'BEZ NOVOG REKORDA';card.querySelector('#solo-power-index-gain').textContent=flags===null?'—':'+24'}const bonus=flags===null?null:flags.reduce((sum,role)=>sum+(role==='all_time'?20:10),0);document.getElementById('case-info').textContent=flags===null?'Dok server ne potvrdi rezultat, nijedno polje ne svetli.':`${flags.length} potvrđenih rekorda · bonus na osnovnu nagradu +${bonus}% (pre ograničenja od 8.000 dukata).`}
+document.getElementById('case-select').addEventListener('change',event=>show(event.target.value));show('none');
+</script></body></html>

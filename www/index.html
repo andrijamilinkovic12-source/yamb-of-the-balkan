@@ -101,17 +101,19 @@
             background: var(--theme-boot-color);
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700;800;900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.22">
-    <link rel="stylesheet" href="teme.css?v=6.99">
+    <link rel="stylesheet" href="style.css?v=5.24">
+    <link rel="stylesheet" href="teme.css?v=7.02">
     <link rel="stylesheet" href="theme-main-room-icons.css?v=24">
     <link rel="stylesheet" href="theme-main-menu-typography.css?v=1">
     <link rel="stylesheet" href="theme-game-board.css?v=7">
     <link rel="stylesheet" href="theme-game-logos.css?v=5">
-    <link rel="stylesheet" href="theme-ducat-pack.css?v=1">
+    <link rel="stylesheet" href="theme-ducat-pack.css?v=2">
     <link rel="stylesheet" href="theme-undo-token-pack.css?v=1">
     <link rel="stylesheet" href="theme-rewarded-video-pack.css?v=2">
+    <link rel="stylesheet" href="theme-solo-results.css?v=8">
+    <link rel="stylesheet" href="theme-menu-resume-buttons.css?v=2">
     <link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
     <link rel="stylesheet" href="kockice.css?v=1.10">
     <link rel="stylesheet" href="dice-skin-png.css?v=5">
@@ -135,7 +137,7 @@
     <link rel="stylesheet" href="theme-settings-room.css?v=3">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=6">
     
-    <script src="languages.js?v=5.14"></script>
+    <script src="languages.js?v=5.17"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -582,8 +584,8 @@
                     <span class="mode-text" data-lang="menu_solo">Solo igra</span>
                 </div>
                 <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
-                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)" data-lang="menu_resume_inline">▶ NASTAVI</button>
-                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 1)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
+                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)" data-lang="menu_resume_inline">NASTAVI</button>
+                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 1)" data-lang="menu_new_game">NOVA IGRA</button>
                 </div>
             </div>
             
@@ -595,8 +597,8 @@
                     <span class="mode-text" data-lang="menu_dual">Dva igrača (Hotseat)</span>
                 </div>
                 <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
-                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)" data-lang="menu_resume_inline">▶ NASTAVI</button>
-                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 2)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
+                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)" data-lang="menu_resume_inline">NASTAVI</button>
+                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 2)" data-lang="menu_new_game">NOVA IGRA</button>
                 </div>
             </div>
             
@@ -1229,35 +1231,37 @@
             <h2 id="go-title" style="color: var(--gold-main); margin-bottom: 10px;">POBEDA!</h2>
             <p id="go-msg" style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 20px;">Tekst poruke...</p>
             <div class="game-over-score-card" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: var(--glass-border);">
-                <img class="easter-solo-result-mark" data-theme-src="assets/easter-soft-clay/mode-solo-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="easter-hotseat-winner-mark" data-theme-src="assets/easter-soft-clay/hotseat/winner.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-solo-result-mark" data-theme-src="assets/desert-soft-clay/mode-solo-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-hotseat-winner-mark" data-theme-src="assets/desert-soft-clay/hotseat/winner.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="severna-solo-result-mark" data-theme-src="assets/severna-soft-clay/mode-solo-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="severna-hotseat-winner-mark" data-theme-src="assets/severna-soft-clay/hotseat/winner-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-hotseat-winner-mark" data-theme-src="assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-game-over-result-icon green-game-over-result-icon--win" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/wins-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-game-over-result-icon green-game-over-result-icon--loss" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/losses-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-game-over-result-icon green-game-over-result-icon--draw" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/draws-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <div id="solo-personal-best-badge" class="easter-solo-personal-best" hidden>
-                    <img class="easter-solo-personal-best-icon" data-theme-src="assets/easter-soft-clay/solo/personal-best.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="desert-solo-personal-best-icon" data-theme-src="assets/desert-soft-clay/solo/personal-best.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="severna-solo-personal-best-icon" data-theme-src="assets/severna-soft-clay/solo/personal-best-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="green-solo-personal-best-icon" data-theme-src="assets/green-soft-clay/canonical/solo-results/personal-best-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <span data-lang="go_personal_best">LIČNI REKORD</span>
+                <div id="solo-record-panel" class="solo-record-panel" hidden aria-live="polite">
+                    <div class="solo-record-panel-title" data-lang="go_records_title">REKORDI PARTIJE</div>
+                    <div class="solo-record-panel-grid">
+                        <span data-record-role="weekly" title="Nedeljni rekord"><img data-solo-record-icon="weekly" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_weekly">NEDELJNI</span></span>
+                        <span data-record-role="monthly" title="Mesečni rekord"><img data-solo-record-icon="monthly" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_monthly">MESEČNI</span></span>
+                        <span data-record-role="all_time" title="Rekord svih vremena"><img data-solo-record-icon="all_time" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_all_time">SVA VREMENA</span></span>
+                        <span data-record-role="personal" title="Lični rekord"><img data-solo-record-icon="personal" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_personal">LIČNI</span></span>
+                    </div>
+                    <div class="solo-record-panel-footer">
+                        <span id="solo-record-status" data-lang="go_record_none">BEZ NOVOG REKORDA</span>
+                        <span class="solo-power-index"><img id="solo-power-index-icon" alt="" aria-hidden="true" decoding="async"><span data-lang="go_power_index_change">POWER INDEX</span> <strong id="solo-power-index-gain">—</strong></span>
+                    </div>
                 </div>
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
                 <div class="game-over-score-total" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
-                    <svg class="dukat-icon-inline dukat-icon-large game-over-ducat-legacy" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
-                    <img class="dukat-icon-inline dukat-icon-large green-game-over-ducat" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="easter-solo-finish-score-mark" data-theme-src="assets/easter-soft-clay/solo/finish-score-mark-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <span class="game-over-ducat-anchor" aria-hidden="true"></span>
+                    <img class="theme-solo-result-icon theme-solo-finish-score-mark" data-solo-results-role="finish-score-mark" alt="" aria-hidden="true" decoding="async">
                     <img class="green-solo-finish-score-mark" data-theme-src="assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <span id="go-score" style="font-size: 2.2rem; font-weight: 800; color: var(--gold-main);">0</span>
                 </div>
                 <div id="solo-finish-tier" class="easter-solo-finish-tier" aria-hidden="true">
                     <span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span>
                 </div>
-                <div id="solo-finish-stats" class="easter-solo-finish-stats" aria-hidden="true">
+                <div id="solo-finish-stats" class="easter-solo-finish-stats">
                     <div><span data-lang="go_best_column">NAJJAČA KOLONA</span><strong id="solo-finish-best-column">—</strong></div>
                     <div><span data-lang="go_no_zero">BEZ NULE</span><strong id="solo-finish-no-zero">—</strong></div>
                 </div>
@@ -1268,12 +1272,11 @@
             </button>
 
             <button id="btn-ad-double" class="btn-menu btn-ad-double" style="background: linear-gradient(45deg, #FFD700, #FFA000); color: #000; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.watchAdForDouble()">
-                <img class="easter-solo-finish-action-icon" data-theme-src="assets/easter-soft-clay/solo/finish-reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-solo-finish-action-icon" data-theme-src="assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span id="go-double-label" data-lang="go_double">DUPLIRAJ NAGRADU (x2)</span>
             </button>
             <button class="btn-menu btn-secondary game-over-claim-button" onclick="app.claimReward(false)">
-                <img class="easter-solo-finish-action-icon easter-solo-finish-claim-icon" data-theme-src="assets/easter-soft-clay/solo/finish-claim-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="theme-solo-result-icon theme-solo-finish-claim-icon" data-solo-results-role="finish-claim" alt="" aria-hidden="true" decoding="async">
                 <img class="green-solo-finish-action-icon green-solo-finish-claim-icon" data-theme-src="assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span id="go-claim-label" data-lang="go_claim">Preuzmi i Izađi</span>
             </button>
@@ -1740,7 +1743,7 @@
     </script>
 
     <script src="config.js?v=5.26"></script>
-    <script src="managers.js?v=5.51"></script>
+    <script src="managers.js?v=5.52"></script>
     <script src="dnevniizazov.js?v=3.1"></script>
     <script src="riznica.js?v=1.21"></script>
     <script src="trophyManager.js?v=4.13"></script>
@@ -1755,7 +1758,7 @@
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.93"></script>
+    <script src="game.js?v=5.98"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
@@ -1765,9 +1768,10 @@
     <script src="theme-settings-picker.js?v=2"></script>
     <script src="theme-main-room-icons.js?v=19"></script>
     <script src="theme-online-players-room.js?v=4"></script>
-    <script src="theme-ducat-pack.js?v=1"></script>
+    <script src="theme-ducat-pack.js?v=2"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>
     <script src="theme-rewarded-video-pack.js?v=1"></script>
+    <script src="theme-solo-results.js?v=4"></script>
     <script src="theme-quarterly-league-room.js?v=2"></script>
     <script src="kvartalnaliga.js?v=1031"></script>
     <script src="onlinenumber.js?v=1015"></script>

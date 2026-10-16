@@ -1,0 +1,124 @@
+{
+  "family": "solo-record-panels",
+  "version": 1,
+  "style": "3D Soft Neomorphism",
+  "masterOrigin": "Ten distinct built-in imagegen calls; no recoloring or copied cross-theme panel",
+  "runtimeSize": [
+    768,
+    320
+  ],
+  "textAndState": "PNG is material only; localized labels, record status, Power Index and confirmation glow remain live UI",
+  "promptSet": "source-assets/theme-solo-record-panels-v1/PROMPTS.md",
+  "assets": [
+    {
+      "theme": "dark",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/dark-master.png",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "ed0f97a0691aba2894bb6cd1a14644f860e09820680df9014b8dc48db378d970",
+      "runtimeSha256": "f9972cf9e16ccff182a68ac5ee304c790a2500dd3bba909d16a5e264aeb2b098",
+      "runtimeBytes": 267679,
+      "cellInk": "#1e3523",
+      "minimumCellContrast": 5.25
+    },
+    {
+      "theme": "light",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/light-master.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "76baa2aac745c6baf5810162df934f3fc05f6ca7d012037305473b8bff4957a8",
+      "runtimeSha256": "2499153efc3c22a5997acd0c7db144fc9ac8b2398095e2ede638a59771ba55c7",
+      "runtimeBytes": 181976,
+      "cellInk": "#392817",
+      "minimumCellContrast": 9.62
+    },
+    {
+      "theme": "medium",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/medium-master.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "e3ae40ad095b8071c28310f3fe1194b90ce31eb4476be82f6630c58a031e342b",
+      "runtimeSha256": "6adafa71e8e83343eab480534a5e540d26f63b3c39e0a6835c133037d01c7208",
+      "runtimeBytes": 270792,
+      "cellInk": "#2a0e16",
+      "minimumCellContrast": 7.95
+    },
+    {
+      "theme": "winter",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/winter-master.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "84be10575af056b0e04a82494a69a51085a406ae510d12d4eec5e0b3b926b5aa",
+      "runtimeSha256": "fe1ab317fdde65c9213197cdda4dbdeee85677951203037b39a8ec3393e10fd0",
+      "runtimeBytes": 219479,
+      "cellInk": "#0b2a3d",
+      "minimumCellContrast": 11.55
+    },
+    {
+      "theme": "neon",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/neon-master.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "251a77d57552ec15bcee7abc24d1b729e4d4bfd47f182738d8898b8b96f7b163",
+      "runtimeSha256": "e5b2e27533e6dd796086371a895e156290d8425b0a0f224d67594e1841e2ae9d",
+      "runtimeBytes": 219441,
+      "cellInk": "#f4faff",
+      "minimumCellContrast": 11.43
+    },
+    {
+      "theme": "amethyst",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/amethyst-master.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "a201cfee7dfe6c8e1206248d8c7ac54087699beee3e83db3996701a2bd72e7b0",
+      "runtimeSha256": "be11b48ba5998b9e1a901d53d89d5467c092008d57629fb4b3bd04cd7bfe2b76",
+      "runtimeBytes": 224214,
+      "cellInk": "#0e0814",
+      "minimumCellContrast": 4.54
+    },
+    {
+      "theme": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/easter-master.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "cad0a57685f3d4f848256d54edc4830789ef7614ef1b64569ac1a0be4ee14128",
+      "runtimeSha256": "cae8123f90835a603cae6406252feccd0a9bc602c9d2ed49e71d080471b1768b",
+      "runtimeBytes": 210346,
+      "cellInk": "#27351f",
+      "minimumCellContrast": 9.76
+    },
+    {
+      "theme": "desert",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/desert-master.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "41b4143c8ab5eef4d4453de2fbd60588b0dd74a19e67af38b3b774b691de80b2",
+      "runtimeSha256": "3d6961af7e0f0abac1d3ebcffb570c7cdf1bf4c8c670a079a9c7a97127fe09a7",
+      "runtimeBytes": 260555,
+      "cellInk": "#3b251b",
+      "minimumCellContrast": 6.96
+    },
+    {
+      "theme": "moon",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/moon-master.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "ab96550784b862ebdb9c091c416792e2e9f4a4f777fb7262ff224865f11b09ce",
+      "runtimeSha256": "e5707f1024880568ebaee904e868fc30efe4cd21b6b6cb1ee76749b79c962fd1",
+      "runtimeBytes": 206104,
+      "cellInk": "#08090c",
+      "minimumCellContrast": 4.62
+    },
+    {
+      "theme": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v1/masters/severna-master.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-results/record-panel-v1.png",
+      "masterSha256": "c3bb420a325aadaf5ff5253e500cd66ce4c97134d1862a4bf19b1b69785b2969",
+      "runtimeSha256": "a7e4cdc5eac86a304239c0adddc160b6733c03d6b799fe844c85b28b803adff5",
+      "runtimeBytes": 183296,
+      "cellInk": "#f5fbff",
+      "minimumCellContrast": 9.17
+    }
+  ]
+}

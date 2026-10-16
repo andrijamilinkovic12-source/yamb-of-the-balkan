@@ -5003,6 +5003,7 @@ class AdMobController {
 
         const nonce = typeof options.nonce === 'string' ? options.nonce : '';
         const context = options.context || '';
+        const shouldCancel = typeof options.shouldCancel === 'function' ? options.shouldCancel : () => false;
         const maxWaitMs = Math.max(2000, parseInt(options.maxWaitMs) || this.rewardClaimRetryTimeoutMs);
         const deadline = Date.now() + maxWaitMs;
         let result = null;
@@ -5017,7 +5018,11 @@ class AdMobController {
         };
 
         do {
+            if (shouldCancel()) return { ok: false, reason: 'base_reward_selected', permanent: false };
             result = await claimOnce();
+            if (shouldCancel()) return result && result.ok
+                ? result
+                : { ok: false, reason: 'base_reward_selected', permanent: false };
             if (!this.isRewardClaimRetryable(result, nonce)) return result;
 
             const remaining = deadline - Date.now();

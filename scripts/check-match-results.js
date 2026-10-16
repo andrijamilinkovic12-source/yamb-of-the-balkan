@@ -147,9 +147,10 @@ function checkMatchResultWiring() {
     assert(claimRewardStart !== -1 && claimRewardEnd > claimRewardStart, 'Missing game reward claim method');
     const claimReward = gameSource.slice(claimRewardStart, claimRewardEnd);
     assert(claimReward.includes('const pendingMatchSync = await this.syncPendingMatchResults();'), 'Reward claim does not retry the durable result first');
-    assert(claimReward.includes('await this.topListManager.syncOfflineScores();'), 'Reward claim does not restore the verified score session');
-    assert(claimReward.includes('const confirmed = await claimNormalGameReward(this.pendingScore, false);'), 'Base reward does not require server confirmation');
-    const baseClaimStart = claimReward.indexOf('const confirmed = await claimNormalGameReward(this.pendingScore, false);');
+    assert(claimReward.includes('this.topListManager.syncOfflineScores()'), 'Reward claim does not schedule leaderboard synchronization');
+    assert(!claimReward.includes('await this.topListManager.syncOfflineScores();'), 'Leaderboard synchronization blocks the reward claim');
+    assert(claimReward.includes('confirmed = await claimNormalGameReward(this.pendingScore, false);'), 'Base reward does not require server confirmation');
+    const baseClaimStart = claimReward.indexOf('confirmed = await claimNormalGameReward(this.pendingScore, false);');
     const claimFinish = claimReward.indexOf('finishRewardClaim();', baseClaimStart);
     assert(baseClaimStart !== -1 && claimFinish > baseClaimStart, 'Base reward confirmation guard is incomplete');
     assert(!claimReward.slice(baseClaimStart, claimFinish).includes('currentDukati += finalAmount'), 'Base reward still mutates balance before server confirmation');
@@ -681,6 +682,120 @@ async function checkBaseRewardConfirmationBehavior() {
     assert.strictEqual(menuVisits, 1, 'Confirmed base reward did not return to the menu');
 }
 
+async function checkGameOverAdFallbackBehavior() {
+    const storage = new Map([['yamb_dukati', '10000']]);
+    const context = {
+        parseInt,
+        Promise,
+        console: { warn() {} },
+        window: {
+            statsManager: { stats: { balance: 10000 }, saveStats() {} },
+            kvartalnaLiga: { syncWithServer() {} },
+            adMobGlobal: { claimRewardWithSsvRetry: claim => claim() }
+        },
+        localStorage: {
+            getItem(key) { return storage.get(key) || null; },
+            setItem(key, value) { storage.set(key, String(value)); }
+        },
+        gt(key) { return key; },
+        dukatIconHtml() { return ''; }
+    };
+    vm.createContext(context);
+    vm.runInContext(extractClassMethod(gameSource, 'watchAdForDouble'), context);
+    vm.runInContext(extractClassMethod(gameSource, 'claimReward'), context);
+
+    const createApp = () => {
+        let menuVisits = 0;
+        const claims = [];
+        const app = {
+            rewardClaimed: false,
+            rewardClaimInProgress: false,
+            rewardClaimMode: '',
+            rewardBaseClaimRequested: false,
+            rewardAdAttemptId: 0,
+            rewardAdAttemptInProgress: false,
+            pendingScore: 275,
+            pendingRewardMatchId: 'result-1',
+            pendingRewardSsvNonce: '',
+            lastGameType: 'normal',
+            socket: { connected: true },
+            async syncPendingMatchResults() { return { remaining: 0 }; },
+            async claimServerGameReward(score, doubled) {
+                claims.push({ score, doubled });
+                return { ok: true, balance: 10000 + score * (doubled ? 2 : 1) };
+            },
+            applyAuthoritativeGameRewardBalance(balance) { storage.set('yamb_dukati', String(balance)); },
+            forgetPendingGameReward() {},
+            modal: { alert() { return Promise.resolve(); } },
+            showMainMenu() { menuVisits++; },
+            soundMgr: { win() {} },
+            effectMgr: { trigger() {}, stop() {} }
+        };
+        app.claimReward = doubled => context.claimReward.call(app, doubled);
+        app.watchAdForDouble = () => context.watchAdForDouble.call(app);
+        return { app, claims, get menuVisits() { return menuVisits; } };
+    };
+
+    for (const adOutcome of [false, 'throw']) {
+        const scenario = createApp();
+        scenario.app.adMob = {
+            async showRewardVideo() {
+                if (adOutcome === 'throw') throw new Error('ad failed');
+                return false;
+            }
+        };
+        await scenario.app.watchAdForDouble();
+        await scenario.app.claimReward(false);
+        assert.deepStrictEqual(scenario.claims, [{ score: 275, doubled: false }], 'Ad failure changed the base payout');
+        assert.strictEqual(scenario.menuVisits, 1, 'Ad failure trapped the player on the result screen');
+        assert.strictEqual(storage.get('yamb_dukati'), '10275', 'Base payout was not credited');
+    }
+
+    const lateAd = createApp();
+    let completeAd;
+    lateAd.app.adMob = { showRewardVideo: () => new Promise(resolve => { completeAd = resolve; }) };
+    const pendingAd = lateAd.app.watchAdForDouble();
+    await lateAd.app.claimReward(false);
+    completeAd(true);
+    await pendingAd;
+    assert.deepStrictEqual(lateAd.claims, [{ score: 275, doubled: false }], 'Late ad callback doubled an already chosen base claim');
+    assert.strictEqual(lateAd.menuVisits, 1, 'Base claim did not exit while ad was loading');
+
+    const pendingDouble = createApp();
+    let completeDouble;
+    pendingDouble.app.adMob = {
+        async showRewardVideo() { return true; },
+        consumeLastRewardSsvNonce() { return 'ssv-nonce'; }
+    };
+    pendingDouble.app.claimServerGameReward = async (score, doubled) => {
+        pendingDouble.claims.push({ score, doubled });
+        if (doubled) return new Promise(resolve => { completeDouble = resolve; });
+        return { ok: true, balance: 10275 };
+    };
+    const doubleAttempt = pendingDouble.app.watchAdForDouble();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.strictEqual(typeof completeDouble, 'function', 'Double claim did not start');
+    await pendingDouble.app.claimReward(false);
+    completeDouble({ ok: false, reason: 'ad_verification_pending', permanent: false });
+    await doubleAttempt;
+    assert.deepStrictEqual(pendingDouble.claims, [
+        { score: 275, doubled: true }, { score: 275, doubled: false }
+    ], 'Base claim was lost while double verification was pending');
+    assert.strictEqual(pendingDouble.menuVisits, 1, 'Pending double claim blocked exit after failing');
+    assert.strictEqual(pendingDouble.app.rewardClaimInProgress, false, 'Claim lock remained active');
+
+    const syncError = createApp();
+    let syncAttempts = 0;
+    syncError.app.syncPendingMatchResults = async () => {
+        if (++syncAttempts === 1) throw new Error('temporary sync failure');
+        return { remaining: 0 };
+    };
+    await syncError.app.claimReward(false);
+    assert.strictEqual(syncError.app.rewardClaimInProgress, false, 'Thrown sync error permanently locked base claim');
+    await syncError.app.claimReward(false);
+    assert.strictEqual(syncError.menuVisits, 1, 'Base claim could not be retried after a sync exception');
+}
+
 async function checkRewardSessionRecoveryBehavior() {
     const pendingGameRewards = {};
     const pendingGameRewardsByUid = {};
@@ -841,6 +956,7 @@ async function main() {
     await checkSubmissionDiagnosticBehavior();
     await checkLocalSessionStartBehavior();
     await checkBaseRewardConfirmationBehavior();
+    await checkGameOverAdFallbackBehavior();
     await checkRewardSessionRecoveryBehavior();
     await checkAtomicRewardClaimBehavior();
     await checkClientRewardRecoveryBehavior();

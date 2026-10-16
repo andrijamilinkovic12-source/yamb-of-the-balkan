@@ -1,0 +1,419 @@
+{
+  "family": "solo-record-icons",
+  "version": 1,
+  "style": "3D Soft Neomorphism",
+  "roles": [
+    "weekly",
+    "monthly",
+    "all_time",
+    "personal"
+  ],
+  "runtimeSize": [
+    160,
+    160
+  ],
+  "masterOrigin": "Forty separate built-in imagegen calls; no master recoloring or copied cross-theme icon",
+  "promptSet": "source-assets/theme-solo-record-icons-v1/PROMPTS.md",
+  "assets": [
+    {
+      "theme": "dark",
+      "role": "weekly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/dark-weekly-master.png",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "af83a4649f28ab747c60466173c500bdd962fcc6d8b6a835eab08bed524ff625",
+      "runtimeSha256": "bc07cbac06fe176d399106fe27b09c5c28fac4ad847c82e15b0a51638ca0744b",
+      "runtimeBytes": 31485
+    },
+    {
+      "theme": "dark",
+      "role": "monthly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/dark-monthly-master.png",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "aa2a22e2be8cd0c9f222da659a2ff341d48982ce81159d1600e7ec220000400b",
+      "runtimeSha256": "c5ea58c1892acdc46eb98936cc607e1fe48b5e9b4afd06bc840d3ebe4ca24d58",
+      "runtimeBytes": 32404
+    },
+    {
+      "theme": "dark",
+      "role": "all_time",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/dark-all_time-master.png",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "813a5676de2b0d24210cd105c41a6091c590574ee0983b2d06847a5103a4e139",
+      "runtimeSha256": "8d3b66af2edac3a97463bc6f8693bc0127b6bb296b434f60eec67b620fd4a450",
+      "runtimeBytes": 29334
+    },
+    {
+      "theme": "dark",
+      "role": "personal",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/dark-personal-master.png",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "b65d3c73a8b70674e37f6e41323189ba08c812e2a8ae1c08e74ea5459ebf64bb",
+      "runtimeSha256": "17f680cc9736088d60dae45676fda5d96f1452234bbedfce967b7c0b20a8d62f",
+      "runtimeBytes": 33083
+    },
+    {
+      "theme": "light",
+      "role": "weekly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/light-weekly-master.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "0b93bc25b3a722d1342bef2f92875aaaa4f2eec723aead7ba881679bcfba730e",
+      "runtimeSha256": "9b20f0043dd02561c9239fc80dc044564ca57dd705f42b71dbb1f591acec2a7d",
+      "runtimeBytes": 25028
+    },
+    {
+      "theme": "light",
+      "role": "monthly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/light-monthly-master.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "652f07d6bdb1c799b2fd5affc04a3bb9018235cbc16093e474c7f389828cb095",
+      "runtimeSha256": "76045f062d60a66f685d5fae5a97f3fe129ace8ccf62ac9edf7e072cc410063f",
+      "runtimeBytes": 29360
+    },
+    {
+      "theme": "light",
+      "role": "all_time",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/light-all_time-master.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "78772c2ac588828da4cf02ddbc0f48fbab9e3080bd551c8a7bcdb1e42cc609f9",
+      "runtimeSha256": "ed38d9b3fa23d93b338be74bb6e51095561df127570760f180051d73afc5f887",
+      "runtimeBytes": 25472
+    },
+    {
+      "theme": "light",
+      "role": "personal",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/light-personal-master.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "2db46144dbe81f0951074a33498be699b5ea8e7ecb93e9908e1203753f0421a3",
+      "runtimeSha256": "b6a475033e2770d61b02013879760a785e6c4a3cf99cd685fc05f6fd21cb3e4d",
+      "runtimeBytes": 29045
+    },
+    {
+      "theme": "medium",
+      "role": "weekly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/medium-weekly-master.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "c859a7154b9d832c1e8d3baacfd743572667402eb493b56cfb1edf9a40d0763f",
+      "runtimeSha256": "f78b3b8daa09bdb33e033b916b954bd87d6d04a16afbc691009c1fd7f47c40b3",
+      "runtimeBytes": 31762
+    },
+    {
+      "theme": "medium",
+      "role": "monthly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/medium-monthly-master.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "89f2e0a6a9f155cb45e69cf3e9a0c163801f9793a0fe297916f524938d40e879",
+      "runtimeSha256": "f676b34e2127fd9c0ffe32228459fbda6b627a6d1c5491be87e319c4b07f6077",
+      "runtimeBytes": 32217
+    },
+    {
+      "theme": "medium",
+      "role": "all_time",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/medium-all_time-master.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "bf36f899fe46b36b7decc52a9ff8dcf3340e868309059f0eb760c2c5359f1dc4",
+      "runtimeSha256": "5928be3a61760a3091e0e7dd5c849582915c234bb8a27f53366dc905d5122179",
+      "runtimeBytes": 27408
+    },
+    {
+      "theme": "medium",
+      "role": "personal",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/medium-personal-master.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "d5c66c27f347e141ed90227f5c2afb95e96f8e16f9f6985e78f5540b74ee31fb",
+      "runtimeSha256": "d86bb374e69b525f7dccba18471e635f70bd2c86da74079e7285dc19ad450caa",
+      "runtimeBytes": 34645
+    },
+    {
+      "theme": "winter",
+      "role": "weekly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/winter-weekly-master.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "5320d4f9445261f53495edaf91ebccf04b92fd3e947e9a689a9c0f843724e87f",
+      "runtimeSha256": "27e1a93f1434de14a6bdec50004631254b7c0c5cde75384ae7854efed9553376",
+      "runtimeBytes": 26057
+    },
+    {
+      "theme": "winter",
+      "role": "monthly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/winter-monthly-master.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "c2973ce9efbe8b7c3de9633a998e8b5ad7342c131d33e88b0a9f78e227522ad8",
+      "runtimeSha256": "4ef8c8763305944c1606a716bdc6cee9de70463ec60632e0badd2c071007ec9d",
+      "runtimeBytes": 27358
+    },
+    {
+      "theme": "winter",
+      "role": "all_time",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/winter-all_time-master.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "193f059c6697950dd3ddc2d97f6db2d44ba80d687ecb7aa5bc22d7bd5c0438be",
+      "runtimeSha256": "f3896598ecaaec5b61c52c6f8337bbbd1b2506d9ef1b89f4be55786fe180004d",
+      "runtimeBytes": 26904
+    },
+    {
+      "theme": "winter",
+      "role": "personal",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/winter-personal-master.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "5f97f14abea99ca62f22051ad399fecec0baaf28ca4219d4b5ab3d2d629056cd",
+      "runtimeSha256": "5c75bdf5eb6d725f1b8804f5e736b78db8be621257aa40c5abbe1a224c6bd584",
+      "runtimeBytes": 27609
+    },
+    {
+      "theme": "neon",
+      "role": "weekly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/neon-weekly-master.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "b6a7934276614a413a9c9708641dfd85e2c6f9d116ec261dc971107617ff0651",
+      "runtimeSha256": "decd21a1662e4d779bef05258ad38c281df642d7d8f2369dbf6ada2d61bb3621",
+      "runtimeBytes": 24309
+    },
+    {
+      "theme": "neon",
+      "role": "monthly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/neon-monthly-master.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "6fd3ee253fa8be6d6846172e326225fce780af5da85c61f6ebe780acdb4749ae",
+      "runtimeSha256": "1ae57d03004f9da68e40812438e385802a34d5013dcd6502431f0e910924be02",
+      "runtimeBytes": 33847
+    },
+    {
+      "theme": "neon",
+      "role": "all_time",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/neon-all_time-master.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "344481ef8296be73c514ea0f4096387a889779d545892ca793023151fbe29764",
+      "runtimeSha256": "3776c37ef4dad9b48fbf8724dea3cd4e57faf27b30a4ab47342d73c123d52a8b",
+      "runtimeBytes": 28576
+    },
+    {
+      "theme": "neon",
+      "role": "personal",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/neon-personal-master.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "7e08ab360c3601b537b1e153cb819acd4ad9936abde88bc767a79038dbc71843",
+      "runtimeSha256": "30dd89e813b029c16553a9a75aedfe3b9b3d04fd3e298640d1c1cb978c2bc7eb",
+      "runtimeBytes": 32649
+    },
+    {
+      "theme": "amethyst",
+      "role": "weekly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/amethyst-weekly-master.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "33e9f26ffd81d9fc3a3a83d281d79415eeb9321f984679db55ce2560b1716b01",
+      "runtimeSha256": "6ccd5e37cf6232f2c4d04e24790e639ee50ed51d66f8b36591afe6889b58b244",
+      "runtimeBytes": 29762
+    },
+    {
+      "theme": "amethyst",
+      "role": "monthly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/amethyst-monthly-master.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "c60e4b7ce9aa625ea1c000b1b2912709de589e898570375d7b3271ff99f5c7d3",
+      "runtimeSha256": "7ce350e28a975fb00fb98d21a3691b8d7d9f9b31cdda2d0def59afab22be2479",
+      "runtimeBytes": 33662
+    },
+    {
+      "theme": "amethyst",
+      "role": "all_time",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/amethyst-all_time-master.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "5f5444660217ea880a0f1999b47ecab5b88e884e73e803e37a7f941c3a8a64fa",
+      "runtimeSha256": "32814d79502608f8c4024b7e421fe122860ae060e369c2d6ddb3052508522766",
+      "runtimeBytes": 33798
+    },
+    {
+      "theme": "amethyst",
+      "role": "personal",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/amethyst-personal-master.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "75ce1eea9eb037372bd90050a2b456033627c051f184cc64186c05e5b5a349dc",
+      "runtimeSha256": "6b060c9e33535c63723bdb005302919c180436ab86e580249f9bb9a7e24fefab",
+      "runtimeBytes": 36633
+    },
+    {
+      "theme": "easter",
+      "role": "weekly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/easter-weekly-master.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "40d12b9562327df33914818cde08b802219077e908b718ccfe1475fed50ad9ee",
+      "runtimeSha256": "2286fbb25e513faf55e9dff7b53162dc9f327d8ceee1a6470a597261b10a6ed7",
+      "runtimeBytes": 26018
+    },
+    {
+      "theme": "easter",
+      "role": "monthly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/easter-monthly-master.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "72f1bd2b18e88affe3929ec7043ca4628ef8132c574781dd2d0576fa6ea63d06",
+      "runtimeSha256": "301acb14fdbf8b3815adf8e829a372977f96957f8dc92efdd823814be9091224",
+      "runtimeBytes": 25588
+    },
+    {
+      "theme": "easter",
+      "role": "all_time",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/easter-all_time-master.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "a01d521f6b49de6be45cfddb887cfc7309e3568aa54ddef666a3dd96af50fa84",
+      "runtimeSha256": "64bf98c76d1f2a9e15f65d375351dae824a8bc277ccd6cd55cd6a6f51f9c35f8",
+      "runtimeBytes": 25550
+    },
+    {
+      "theme": "easter",
+      "role": "personal",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/easter-personal-master.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "7296b79521f0d0ec3bc767fb0cc6615a6a8ca49310dd28fb37595270c1810f81",
+      "runtimeSha256": "4eeba9578e4969dfe570f36c7924594c499b2c8e763c8ec69ccff00591a821d6",
+      "runtimeBytes": 27273
+    },
+    {
+      "theme": "desert",
+      "role": "weekly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/desert-weekly-master.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "06a09d2e6efbe47c6840a6b6966f33ab0a8c0a2cb82347acb160d781c5abfe6e",
+      "runtimeSha256": "a8eee98ae6265a3327e3aebbab6e8bf6b7239aa9874cd1dece7d73e8285c4bcc",
+      "runtimeBytes": 33661
+    },
+    {
+      "theme": "desert",
+      "role": "monthly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/desert-monthly-master.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "23ad7d2f5920d5ed42beec518858c9888355f4272675958cafa853c3f6323045",
+      "runtimeSha256": "208723b8b5553ead838a4c0451f5d3cb0d0209364bf05cb79d2fc31bec2f8da9",
+      "runtimeBytes": 35294
+    },
+    {
+      "theme": "desert",
+      "role": "all_time",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/desert-all_time-master.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "dfdc146dc71010415a09e6eb10aa5198859c8090b69e35d230f83be94279bb88",
+      "runtimeSha256": "407308788116209c648f6edc66a14b2445e3d540a345e85152b53fdda8105fe4",
+      "runtimeBytes": 31723
+    },
+    {
+      "theme": "desert",
+      "role": "personal",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/desert-personal-master.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "da249323ed96dbd2a6ac1b7a8de9ba81144a6487f8b9ea3004837613af2f5cc2",
+      "runtimeSha256": "4c5c8fdf5b919373a78b0af62023c33a77fb91aed071d1c4f7500084c868bcae",
+      "runtimeBytes": 39697
+    },
+    {
+      "theme": "moon",
+      "role": "weekly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/moon-weekly-master.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "e863d2e072b10aa88b0fb154fd63aec81c3e26c3d91cf96ab650ce34a5ede77a",
+      "runtimeSha256": "048cdfc595825f651a3797c32cf56fcd1882ae161bbedc76b295327ef1dc6b97",
+      "runtimeBytes": 33825
+    },
+    {
+      "theme": "moon",
+      "role": "monthly",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/moon-monthly-master.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "e93a5a4cc5bc527be53348be0937e60ff77d7e67b8b3c6a434c38114ecab661f",
+      "runtimeSha256": "038854ba22160c339222caf20110b6fc2b7571e2543b351098c5592b44bb1578",
+      "runtimeBytes": 33931
+    },
+    {
+      "theme": "moon",
+      "role": "all_time",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/moon-all_time-master.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "3f9c089b82c084ac271cd73d5a81c8afb62ff2531288a870cf37971ea5a1a7a1",
+      "runtimeSha256": "130dfcb9c37b30597f3a98f98ba455e50d9ec326c507304a7d9c7580decebbc3",
+      "runtimeBytes": 28127
+    },
+    {
+      "theme": "moon",
+      "role": "personal",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/moon-personal-master.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "3b48f6292e2983d62a4bce5b30d25f48629e2c03152a17d35774ffdb7c2870f5",
+      "runtimeSha256": "25445a9824412f510ce6b3726783671768dd933effb550bde345f0a4f3459615",
+      "runtimeBytes": 31589
+    },
+    {
+      "theme": "severna",
+      "role": "weekly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/severna-weekly-master.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-record-icons/weekly-v1.png",
+      "masterSha256": "891425720849801d48f0606f0c79c8781abcf661541f08850e58eb6eb44cfb6f",
+      "runtimeSha256": "3c639febca8e696df5b612217a44bddb923d56577e980cb2437157ebf5a55c89",
+      "runtimeBytes": 26727
+    },
+    {
+      "theme": "severna",
+      "role": "monthly",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/severna-monthly-master.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-record-icons/monthly-v1.png",
+      "masterSha256": "8da050049b1a95dc0c29fcc7788d81fa33c658673ec38542410457752b02516e",
+      "runtimeSha256": "56fbbb94199f69ffadf9192d5333b955091ba40e09623b5b454df54268f09531",
+      "runtimeBytes": 34372
+    },
+    {
+      "theme": "severna",
+      "role": "all_time",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/severna-all_time-master.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-record-icons/all_time-v1.png",
+      "masterSha256": "22d9464549e4ce51d363e8e1f3f8f1332922203bd9fe6fe003826fff11a77aef",
+      "runtimeSha256": "c2708a0155884f7f108f0265fdb273a93017e4678cdc7360d8a69e4c450f7d7b",
+      "runtimeBytes": 27393
+    },
+    {
+      "theme": "severna",
+      "role": "personal",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-icons-v1/masters/severna-personal-master.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-record-icons/personal-v1.png",
+      "masterSha256": "f2645331573958a07431f5e74abdc2843835e7a9b0c94ea5b671e40f95a9a114",
+      "runtimeSha256": "5e64464bae14d49b834152c65b5c20408286afceb674a74d6d31da02d6dcaa22",
+      "runtimeBytes": 28176
+    }
+  ]
+}

@@ -9,9 +9,9 @@
         ['stats', '#stat-balance', '.stats-category-legacy, .stats-grid-soft-clay-icon'],
         ['balance', '.riznica-balance-ducat-default', '[class*="riznica-balance-ducat-"]'],
         ['ad', '.riznica-ad-ducat-default', '[class*="riznica-ad-ducat-"]'],
-        ['game-over', '.game-over-ducat-legacy', '.game-over-ducat-legacy, .green-game-over-ducat']
+        ['game-over', '.game-over-ducat-anchor', '.game-over-ducat-anchor']
     ];
-    const greenEconomyRoles = new Set(['header', 'tab', 'hero', 'reward']);
+    const greenEconomyRoles = new Set(['header', 'tab', 'hero', 'reward', 'game-over']);
 
     function currentTheme() {
         return [...themes].find(id => document.body.classList.contains(`${id}-theme`))
@@ -28,6 +28,10 @@
             const anchor = document.querySelector(anchorSelector);
             if (!anchor) continue;
             const host = anchor.parentElement;
+            if (role === 'game-over' && document.getElementById('game-over-screen')?.classList.contains('is-solo-result')) {
+                host.querySelector('.theme-ducat-pack-image--game-over')?.remove();
+                continue;
+            }
             if (theme === 'dark' && !greenEconomyRoles.has(role)) {
                 host.querySelectorAll('.theme-ducat-pack-legacy').forEach(icon => icon.classList.remove('theme-ducat-pack-legacy'));
                 host.querySelector(`.theme-ducat-pack-image[data-ducat-role="${role}"]`)?.remove();
@@ -66,6 +70,10 @@
             attributes: true, attributeFilter: ['data-splash-theme']
         });
         new MutationObserver(sync).observe(document.body, {
+            attributes: true, attributeFilter: ['class']
+        });
+        const gameOverScreen = document.getElementById('game-over-screen');
+        if (gameOverScreen) new MutationObserver(sync).observe(gameOverScreen, {
             attributes: true, attributeFilter: ['class']
         });
     }
