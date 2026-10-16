@@ -70,7 +70,45 @@ for (const [selector, size] of [
         `${selector} must keep Green's room dimensions`);
 }
 assert.match(roomCss, /main-league-watermark-zone\.ql-quarter-logo\s*\{[^}]*opacity: 1 !important;/s,
-    'the menu watermark must not receive a second opacity reduction');
+    'the menu logo must not receive a second opacity reduction');
+assert.match(roomCss, /main-league-watermark-zone\.ql-quarter-logo > img\.ql-quarter-logo-base\s*\{[^}]*opacity: \.62 !important;/s,
+    'the inactive quarter segments must remain visible in theme colors');
+assert.match(roomCss, /main-league-watermark-zone\.ql-quarter-logo > img\.ql-quarter-logo-active\s*\{[^}]*opacity: 1 !important;/s,
+    'the current quarter segment must be fully visible');
+assert.match(roomCss, /main-league-card \.main-league-content\s*\{[^}]*padding-right: 70px !important;/s,
+    'menu text needs its own space beside the full-color logo');
+
+// Room text must stay readable on every solid material tone behind its cards.
+const surfaceCss = fs.readFileSync(path.join(root, 'www/theme-card-surfaces.css'), 'utf8');
+function luminance(hex) {
+    const channels = hex.slice(1).match(/../g).map(value => parseInt(value, 16) / 255);
+    const linear = channels.map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+}
+function contrast(first, second) {
+    const a = luminance(first);
+    const b = luminance(second);
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+for (const theme of themes.filter(name => name !== 'dark')) {
+    const palette = surfaceCss.match(new RegExp(`body\\.${theme}-theme\\s*\\{([^}]+)\\}`))?.[1];
+    assert.ok(palette, `${theme} card palette is missing`);
+    const token = name => palette.match(new RegExp(`--theme-card-${name}:\\s*(#[0-9a-f]{6})`, 'i'))?.[1];
+    const override = roomCss.match(new RegExp(`body\\.${theme}-theme #league-modal-overlay\\s*\\{([^}]+)\\}`))?.[1] || '';
+    const roomText = (name, fallback) => override.match(new RegExp(`--ql-${name}-text:\\s*(#[0-9a-f]{6})`, 'i'))?.[1] || token(fallback);
+    for (const [role, foreground] of [
+        ['body', token('ink')], ['muted', roomText('muted', 'muted')],
+        ['accent', roomText('accent', 'primary')]
+    ]) {
+        assert.ok(foreground, `${theme} ${role} text color is missing`);
+        for (const material of ['surface', 'raised', 'inset']) {
+            const background = token(material);
+            assert.ok(background, `${theme} ${material} material is missing`);
+            assert.ok(contrast(foreground, background) >= 4.5,
+                `${theme} ${role} text on ${material} is below 4.5:1`);
+        }
+    }
+}
 
 const source = fs.readFileSync(path.join(root, 'www/theme-quarterly-league-room.js'), 'utf8');
 for (const [month, expected] of [[2, 1], [5, 2], [8, 3], [11, 4]]) {

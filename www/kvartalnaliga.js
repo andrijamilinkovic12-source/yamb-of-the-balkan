@@ -682,11 +682,11 @@ class KvartalnaLigaManager {
             const isFirst = idx === 0;
             
             html += `
-            <li style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 10px; margin-bottom: 6px; border-radius: 8px; border-left: 4px solid ${isFirst ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'};">
-                <div style="font-weight: 900; color: ${isFirst ? 'var(--gold-main)' : '#aaa'}; width: 25px; font-size: 0.9rem; text-align: center; margin-right: 5px;">${idx+1}.</div>
-                <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isFirst ? 'var(--gold-main)' : '#666'}; margin-right: 12px; object-fit: cover;">
+            <li class="ql-hof-medal-row${isFirst ? ' is-first' : ''}" style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 10px; margin-bottom: 6px; border-radius: 8px; border-left: 4px solid ${isFirst ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'};">
+                <div class="ql-hof-place" style="font-weight: 900; color: ${isFirst ? 'var(--gold-main)' : '#aaa'}; width: 25px; font-size: 0.9rem; text-align: center; margin-right: 5px;">${idx+1}.</div>
+                <img class="ql-hof-avatar" src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isFirst ? 'var(--gold-main)' : '#666'}; margin-right: 12px; object-fit: cover;">
                 <div style="flex: 1;">
-                    <div style="color: #fff; font-weight: bold; font-size: 0.85rem;">${m.playerName}</div>
+                    <div class="ql-hof-player" style="color: #fff; font-weight: bold; font-size: 0.85rem;">${m.playerName}</div>
                     <div style="display: flex; gap: 10px; margin-top: 4px; font-size: 0.8rem; font-weight: bold;">
                         <span class="ql-medal-count ql-medal-count--gold"><img class="ql-placement-medal" src="${medalGoldIcon}" alt="" aria-hidden="true" decoding="async"> ${m.gold}</span>
                         <span class="ql-medal-count ql-medal-count--silver"><img class="ql-placement-medal" src="${medalSilverIcon}" alt="" aria-hidden="true" decoding="async"> ${m.silver}</span>
@@ -716,15 +716,15 @@ class KvartalnaLigaManager {
             const romanCycle = this.toRoman(c.cycle);
             
             html += `
-            <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
+            <li class="ql-hof-champion-row" style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
                 <div style="position: relative; margin-right: 15px;">
-                    <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
+                    <img class="ql-hof-avatar" src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
                     <div class="ql-champion-marker" style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;"><img class="ql-champion-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"></div>
                 </div>
                 <div style="flex: 1;">
-                    <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}</div>
-                    <div style="color: #fff; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">${c.playerName}</div>
-                    <div style="color: var(--text-muted); font-size: 0.75rem;">Q${c.quarter} / ${c.year} &nbsp;•&nbsp; <span style="color: #fff; font-weight: bold;">${c.score} PTS</span></div>
+                    <div class="ql-hof-champion-label" style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}</div>
+                    <div class="ql-hof-player" style="color: #fff; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">${c.playerName}</div>
+                    <div class="ql-hof-period" style="color: var(--text-muted); font-size: 0.75rem;">Q${c.quarter} / ${c.year} &nbsp;•&nbsp; <span class="ql-hof-score" style="color: #fff; font-weight: bold;">${c.score} PTS</span></div>
                 </div>
             </li>`;
         });
@@ -877,7 +877,7 @@ class KvartalnaLigaManager {
             const retryLabel = gt('btn_retry', 'Pokušaj ponovo');
             const lines = String(label).split(/<br\s*\/?>/i).map(line => line.replace(/<[^>]*>/g, ''));
             const message = lines.map((line, index) => `<span${index ? ' class="league-page-status-detail"' : ''}>${this.escapeHtml(line)}</span>`).join('<br>');
-            item.innerHTML = `${message}<br><button type="button" style="margin-top:7px; padding:6px 10px; border-radius:8px; cursor:pointer;" onclick="window.kvartalnaLiga.loadLeaguePage('${rankId}')">${this.escapeHtml(retryLabel)}</button>`;
+            item.innerHTML = `${message}<br><button class="league-page-retry" type="button" style="margin-top:7px; padding:6px 10px; border-radius:8px; cursor:pointer;" onclick="window.kvartalnaLiga.loadLeaguePage('${rankId}')">${this.escapeHtml(retryLabel)}</button>`;
         }
         listEl.appendChild(item);
     }
@@ -1099,14 +1099,15 @@ class KvartalnaLigaManager {
             const safePhoto = this.escapeAttr(photo);
 
             let li = document.createElement('li');
+            li.className = `ql-leader-row${isMe ? ' is-self' : ''}`;
             li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.85rem; ${bg}`;
             li.innerHTML = `
                 <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0;">
                     <div class="ql-list-placement ${placementIndex < 3 ? 'ql-list-placement--medal' : ''}" style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
-                    <img src="${safePhoto}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
-                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${safeName}</div>
+                    <img class="ql-leader-avatar" src="${safePhoto}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
+                    <div class="ql-leader-name" style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${safeName}</div>
                 </div>
-                <div style="font-weight: bold; color: #fff; margin-left: 8px; white-space: nowrap;">${pScore} PTS</div>
+                <div class="ql-leader-score" style="font-weight: bold; color: #fff; margin-left: 8px; white-space: nowrap;">${pScore} PTS</div>
             `;
             listEl.appendChild(li);
         });

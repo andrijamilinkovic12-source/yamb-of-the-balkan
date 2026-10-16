@@ -10,7 +10,7 @@
     "qa:green": "node scripts/serve-green-qa.js",
     "check:js": "node scripts/check-js.js",
     "check:ad-consent": "node scripts/check-ad-consent.js",
-    "check:ad-reward-flow": "node scripts/check-ad-reward-flow.js && node scripts/check-offline-undo-reward.js",
+    "check:ad-reward-flow": "node scripts/check-ad-reward-flow.js && node scripts/check-offline-undo-reward.js && node scripts/check-online-players-ad-exit.js",
     "check:game-rules": "node scripts/check-game-rules.js",
     "check:trophies": "node scripts/check-trophies.js",
     "check:profile-sync": "node scripts/check-profile-sync.js",

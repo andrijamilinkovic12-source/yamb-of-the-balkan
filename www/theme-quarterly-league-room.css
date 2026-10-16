@@ -20,10 +20,10 @@
     max-width: none;
     filter: none !important;
 }
-.ql-quarter-logo-base { opacity: .68; }
+.ql-quarter-logo-base { opacity: .58; }
 .ql-quarter-logo img.ql-quarter-logo-active {
     opacity: 1;
-    filter: brightness(1.14) saturate(1.06) !important;
+    filter: brightness(1.2) saturate(1.08) !important;
     transition: clip-path .42s ease, opacity .42s ease;
 }
 .ql-quarter-logo[data-ql-orientation="cross"][data-ql-quarter="1"] .ql-quarter-logo-active { clip-path: polygon(0 0, 100% 0, 50% 50%); }
@@ -35,24 +35,36 @@
 .ql-quarter-logo[data-ql-orientation="diagonal"][data-ql-quarter="3"] .ql-quarter-logo-active { clip-path: inset(50% 0 0 50%); }
 .ql-quarter-logo[data-ql-orientation="diagonal"][data-ql-quarter="4"] .ql-quarter-logo-active { clip-path: inset(50% 50% 0 0); }
 
-/* Remove the old CSS watermark layers for every theme, including Green. */
+/* The menu mark is a readable theme logo; only the active quarter is brighter. */
 body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo {
     position: absolute !important;
     top: 50% !important;
-    right: -5px !important;
+    right: 2px !important;
     z-index: 0;
-    width: 86px !important;
-    height: 86px !important;
+    width: 72px !important;
+    height: 72px !important;
     transform: translateY(-50%) !important;
     background: none !important;
     filter: none !important;
     opacity: 1 !important;
 }
 body #main-menu .main-summary-row .main-league-card .main-league-watermark-zone.ql-quarter-logo > img.ql-quarter-logo-base {
-    opacity: .18 !important;
+    opacity: .62 !important;
 }
 body #main-menu .main-summary-row .main-league-card .main-league-watermark-zone.ql-quarter-logo > img.ql-quarter-logo-active {
-    opacity: .18 !important;
+    opacity: 1 !important;
+}
+body #main-menu .main-summary-row .main-league-card .main-league-content {
+    padding-right: 70px !important;
+}
+@media (max-width: 430px) {
+    body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    body #main-menu .main-summary-row .main-league-card .main-league-content {
+        padding-right: 58px !important;
+    }
 }
 body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo::before,
 body #main-menu .main-league-card .main-league-watermark-zone.ql-quarter-logo::after {
@@ -69,6 +81,8 @@ body #league-modal-overlay .league-modal-title-group > .ql-quarter-logo {
     width: 38px !important;
     height: 38px !important;
     flex: 0 0 38px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
 }
 body #winner-modal-overlay .quarter-winner-brand > .ql-quarter-logo {
     width: 86px !important;
@@ -171,6 +185,18 @@ body #league-modal-overlay :is(.league-rank-heading,.league-current-rank,.ql-med
     gap: 7px;
 }
 
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay {
+    --ql-muted-text: var(--theme-card-muted);
+    --ql-accent-text: var(--theme-card-primary);
+    --carousel-dot-active: var(--theme-card-primary);
+    --carousel-dot-idle: color-mix(in srgb, var(--theme-card-primary) 75%, var(--theme-card-raised));
+    --carousel-dot-glow: color-mix(in srgb, var(--theme-card-primary) 40%, transparent);
+}
+body.light-theme #league-modal-overlay { --ql-muted-text: #5e432b; --ql-accent-text: #6d3e1a; }
+body.winter-theme #league-modal-overlay { --ql-muted-text: #365463; }
+body.easter-theme #league-modal-overlay { --ql-muted-text: #505741; --ql-accent-text: #385432; }
+body.desert-theme #league-modal-overlay { --ql-muted-text: #61432f; --ql-accent-text: #5d3525; }
+
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .modal-box {
     color: var(--theme-card-ink) !important;
     background: var(--theme-card-fill) !important;
@@ -192,7 +218,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     text-shadow: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-summary-points,#league-summary-alltime) {
-    color: var(--theme-card-primary) !important;
+    color: var(--ql-accent-text) !important;
     text-shadow: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-hof-tab-button:not(.is-active) {
@@ -242,11 +268,11 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     text-shadow: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-summary-points > div:first-child {
-    color: var(--theme-card-primary) !important;
+    color: var(--ql-accent-text) !important;
     text-shadow: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.league-summary-rank > div:first-child,.league-summary-points > div:last-child) {
-    color: var(--theme-card-muted) !important;
+    color: var(--ql-muted-text) !important;
     text-shadow: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list li,ul[id^="league-list-"] li) {
@@ -255,11 +281,54 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     border-color: var(--theme-card-line) !important;
     box-shadow: var(--theme-subcard-shadow) !important;
 }
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list li,ul[id^="league-list-"] li) [style*="color:"] {
-    color: var(--theme-card-ink) !important;
-    text-shadow: none !important;
-}
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list li,ul[id^="league-list-"] li)[style*="var(--gold-main)"] {
     border-color: var(--theme-card-primary) !important;
     box-shadow: inset 3px 0 0 var(--theme-card-primary), var(--theme-subcard-shadow) !important;
+}
+
+/* Dynamic list states keep their meaning and use the active theme's palette. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list,ul[id^="league-list-"]) li[role="status"] {
+    color: var(--ql-muted-text) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list,ul[id^="league-list-"]) li[role="alert"] {
+    color: var(--theme-card-ink) !important;
+    border-left: 3px solid var(--theme-card-primary) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-page-retry {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-subcard-fill) !important;
+    border: 1px solid var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    font: 700 .75rem 'Montserrat', sans-serif;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-page-retry:focus-visible {
+    outline: 2px solid var(--theme-card-primary);
+    outline-offset: 2px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay .league-page-dot:focus-visible {
+    outline: 2px solid var(--theme-card-primary);
+    outline-offset: 3px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(#hof-list,ul[id^="league-list-"]) > :is(li.ql-hof-medal-row.is-first,li.ql-leader-row.is-self) {
+    border-color: var(--theme-card-primary) !important;
+    box-shadow: inset 3px 0 0 var(--theme-card-primary), var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay ul[id^="league-list-"] > li.ql-leader-row.is-self {
+    background: color-mix(in srgb, var(--theme-card-primary) 13%, var(--theme-card-raised)) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.ql-hof-avatar,.ql-leader-avatar) {
+    border-color: var(--theme-card-line) !important;
+    box-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.ql-hof-medal-row.is-first,.ql-leader-row.is-self) :is(.ql-hof-avatar,.ql-leader-avatar) {
+    border-color: var(--theme-card-primary) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.ql-hof-player,.ql-hof-score,.ql-leader-name,.ql-leader-score) {
+    color: var(--theme-card-ink) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.ql-hof-medal-row.is-first .ql-hof-place,.ql-hof-champion-label,.ql-list-placement,.ql-leader-row.is-self .ql-leader-name) {
+    color: var(--ql-accent-text) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #league-modal-overlay :is(.ql-hof-medal-row:not(.is-first) .ql-hof-place,.ql-hof-period) {
+    color: var(--ql-muted-text) !important;
 }

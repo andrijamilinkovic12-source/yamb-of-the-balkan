@@ -166,6 +166,7 @@ let onlinePlayersSearchTimer = null;
 let onlinePlayersConnectionTimer = null;
 let onlinePlayersPendingConnectHandler = null;
 let onlinePlayersDisconnectHandler = null;
+let onlinePlayersOpenedAt = 0;
 
 function normalizeOnlinePlayerSearch(value) {
     return String(value || '')
@@ -263,9 +264,12 @@ function startOnlinePlayersAutoRefresh() {
 
 window.closeOnlinePlayersModal = function(options = {}) {
     const overlay = document.getElementById('online-players-overlay');
+    const wasOpen = isOnlinePlayersModalOpen();
+    const viewedLongEnough = Date.now() - onlinePlayersOpenedAt >= 8000;
     if (overlay && !options.skipOverlay) {
         overlay.style.display = 'none';
     }
+    onlinePlayersOpenedAt = 0;
 
     stopOnlinePlayersAutoRefresh();
     cleanupOnlinePlayersSocketListeners();
@@ -278,6 +282,9 @@ window.closeOnlinePlayersModal = function(options = {}) {
     if (body) body.onscroll = null;
     if (searchInput) searchInput.oninput = null;
     onlinePlayersRenderCurrent = null;
+    if (options.showAd === true && wasOpen && viewedLongEnough && window.app?.adMob?.showInterstitial) {
+        void window.app.adMob.showInterstitial();
+    }
 };
 
 window.refreshOnlinePlayersModal = function() {
@@ -298,6 +305,7 @@ window.openOnlinePlayersModal = function() {
 
     if (overlay) {
         overlay.style.display = 'flex';
+        onlinePlayersOpenedAt = Date.now();
     }
 
     const body = document.getElementById('online-players-body');

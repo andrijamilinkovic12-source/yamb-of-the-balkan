@@ -630,7 +630,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     text-align: center !important;
     white-space: nowrap !important;
 }
-/* Each league watermark uses its own theme-pack PNG, behind the text. */
+/* The league menu mark uses its own theme PNG beside the text. */
 #main-menu .main-summary-row .main-league-card .main-league-watermark-zone {
     position: absolute !important;
     top: 50% !important;
@@ -654,7 +654,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     width: 100% !important;
     height: 100% !important;
     object-fit: contain;
-    opacity: .18;
+    opacity: 1;
 }
 /* Easter's gentle icon movement applies to the current PNGs in all ten themes. */
 #main-menu .main-summary-row .main-online-icon-wrap > img[data-theme-src] {
