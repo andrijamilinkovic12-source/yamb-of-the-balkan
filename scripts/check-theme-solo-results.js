@@ -71,7 +71,12 @@ for (const [index, col] of columnKeys.entries()) {
     assert(game.includes(`${col === 'Ručno' ? "'Ručno'" : col}: '${columnMarks[index]}'`));
     assert(finishPreview.includes(`<option value="${col}"`), `${col}: missing finish preview choice`);
 }
-assert(mobilePreview.includes('bestColumn.textContent=`${TRANSLATIONS.sr[columnMarks[column]]} 612`'));
+assert(game.includes("document.querySelector(`#game-scene .player-table .col-header.${columnClasses[col]}`)"));
+assert(game.includes("getComputedStyle(boardHeader)"));
+assert(game.includes("getComputedStyle(icon).display !== 'none'"));
+assert(mobilePreview.includes("document.querySelector(`#game-scene .player-table .col-header.${columnClasses[column]}`)"));
+assert(mobilePreview.includes('assets/easter-soft-clay/game/announce-v1.png'));
+assert(mobilePreview.includes('assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png'));
 assert(mobilePreview.includes('const bonusRates={personal:10,weekly:10,monthly:10,all_time:20}'));
 assert(mobilePreview.includes('Math.min(8000,Math.floor(score*(100+bonusPercent)/100))'));
 assert(mobilePreview.includes('Math.min(8000,baseReward*2)'));

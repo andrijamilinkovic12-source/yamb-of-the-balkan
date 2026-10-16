@@ -242,6 +242,7 @@ class YambApp {
         this.rewardBaseClaimRequested = false;
         this.rewardAdAttemptId = 0;
         this.rewardAdAttemptInProgress = false;
+        this.pendingRewardRejectedReason = '';
 
         const dayEl = document.getElementById('live-day');
         const monthEl = document.getElementById('live-month');
@@ -4402,7 +4403,11 @@ class YambApp {
                     
                     if (!this.playerId) return;
 
-                    await this.authenticateSocketIdentity();
+                    const identityResult = await this.authenticateSocketIdentity();
+                    if (identityResult?.ok && this.soloFinishMatchId
+                        && document.getElementById('game-over-screen')?.classList.contains('active')) {
+                        void this.refreshSoloFinishPowerIndex(this.soloFinishMatchId);
+                    }
                     this.reportRecoveredConnectionDiagnostic();
                     const pendingMatchSync = await this.syncPendingMatchResults();
                     
@@ -5184,13 +5189,42 @@ class YambApp {
         const playerScore = entry.participants[entry.playerIndex]?.score || 0;
         if (playerScore > 0) this.rememberPendingGameReward(entry.clientResultId, playerScore);
         const syncResult = await this.syncPendingMatchResults();
+        const rejectedResult = this.readPendingMatchResults()
+            .find(item => item.clientResultId === entry.clientResultId && item.syncRejected);
         return {
             clientResultId: entry.clientResultId,
             accepted: Array.isArray(syncResult?.acceptedClientResultIds) &&
                 syncResult.acceptedClientResultIds.includes(entry.clientResultId),
             powerIndexGain: syncResult?.acceptedResponses?.[entry.clientResultId]?.powerIndexGain,
+            rejectedReason: rejectedResult?.syncRejected || '',
             pending: Math.max(0, Number(syncResult?.remaining) || 0)
         };
+    }
+
+    async refreshSoloFinishPowerIndex(matchId, attempt = 0) {
+        if (!matchId || !this.socket?.connected) return;
+        const result = await new Promise(resolve => {
+            let settled = false;
+            const finish = (response) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(response || { ok: false, pending: true });
+            };
+            const timer = setTimeout(() => finish({ ok: false, pending: true }), 5000);
+            this.socket.emit('get_match_power_index_gain', { matchId }, finish);
+        });
+        const screen = document.getElementById('game-over-screen');
+        if (this.soloFinishMatchId !== matchId || !screen?.classList.contains('active')) return;
+        if (result.ok && Number.isFinite(result.powerIndexGain)) {
+            const gain = result.powerIndexGain;
+            const label = document.getElementById('solo-power-index-gain');
+            if (label) label.textContent = `${gain > 0 ? '+' : ''}${gain}`;
+            return;
+        }
+        if (result.pending && attempt < 4) {
+            setTimeout(() => this.refreshSoloFinishPowerIndex(matchId, attempt + 1), 2000);
+        }
     }
 
     updateOnlineCounterUI() {
@@ -6395,7 +6429,7 @@ class YambApp {
         // A server-closed online room must leave the game immediately. Reward
         // claiming and saving may wait on network/ads and must not keep a dead
         // duel on screen; pending rewards remain available for a later claim.
-        if (!options.closedOnlineRoom) {
+        if (!options.closedOnlineRoom && !options.deferPendingReward) {
             const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
             if (!rewardReady) return;
         }
@@ -9877,6 +9911,7 @@ class YambApp {
              this.rewardClaimInProgress = false;
              this.rewardClaimMode = '';
              this.rewardBaseClaimRequested = false;
+             this.pendingRewardRejectedReason = '';
              ++this.rewardAdAttemptId;
              this.lastGameType = 'normal';
              let resultType = 'solo';
@@ -9920,6 +9955,7 @@ class YambApp {
                  });
                  matchResultRef = queuedResult?.clientResultId || '';
                  localResultAccepted = queuedResult?.accepted === true;
+                 this.pendingRewardRejectedReason = queuedResult?.rejectedReason || '';
                  if (this.players.length === 1 && Number.isFinite(queuedResult?.powerIndexGain)) {
                      soloPowerIndexGain = queuedResult.powerIndexGain;
                  }
@@ -10092,13 +10128,50 @@ class YambApp {
                     Nadole: 'col_down', Slobodna: 'col_free', Sredina: 'col_middle',
                     Nagore: 'col_up', 'Ručno': 'col_manual', Najava: 'col_announce'
                 };
+                const columnClasses = {
+                    Nadole: 'c-nadole', Slobodna: 'c-slobodna', Sredina: 'c-sredina',
+                    Nagore: 'c-nagore', 'Ručno': 'c-rucno', Najava: 'c-najava'
+                };
                 const columnNames = {
                     Nadole: 'go_column_down', Slobodna: 'go_column_free', Sredina: 'go_column_middle',
                     Nagore: 'go_column_up', 'Ručno': 'go_column_manual', Najava: 'go_column_announce'
                 };
                 const col = summary.bestColumnKey;
                 const score = summary.bestColumn.toLocaleString('sr-RS');
-                bestColumnEl.textContent = col ? `${gt(columnMarks[col])} ${score}` : '—';
+                const mark = bestColumnEl.querySelector('.solo-finish-column-mark');
+                const points = bestColumnEl.querySelector('.solo-finish-column-points');
+                if (mark) {
+                    mark.replaceChildren();
+                    mark.hidden = !col;
+                    if (col) {
+                        const boardHeader = document.querySelector(`#game-scene .player-table .col-header.${columnClasses[col]}`);
+                        if (boardHeader) {
+                            const headerStyle = getComputedStyle(boardHeader);
+                            mark.style.color = headerStyle.color;
+                            mark.style.fontSize = headerStyle.fontSize;
+                            mark.style.fontWeight = headerStyle.fontWeight;
+                            mark.style.fontFamily = headerStyle.fontFamily;
+                            mark.style.textShadow = headerStyle.textShadow;
+                            const boardIcon = [...boardHeader.querySelectorAll('img')]
+                                .find(icon => getComputedStyle(icon).display !== 'none');
+                            if (boardIcon) {
+                                const icon = document.createElement('img');
+                                icon.className = 'solo-finish-board-mark-image';
+                                icon.src = boardIcon.getAttribute('src') || boardIcon.dataset.themeSrc || boardIcon.dataset.neonBoardSrc || '';
+                                icon.alt = '';
+                                const iconStyle = getComputedStyle(boardIcon);
+                                icon.style.width = iconStyle.width;
+                                icon.style.height = iconStyle.height;
+                                mark.appendChild(icon);
+                            } else {
+                                mark.textContent = boardHeader.textContent.trim() || gt(columnMarks[col]);
+                            }
+                        } else {
+                            mark.textContent = gt(columnMarks[col]);
+                        }
+                    }
+                }
+                if (points) points.textContent = col ? score : '—';
                 bestColumnEl.title = col ? `${gt(columnNames[col])}: ${score}` : '';
                 bestColumnEl.setAttribute('aria-label', col ? `${gt('go_best_column')}: ${gt(columnNames[col])}, ${score}` : gt('go_best_column'));
             }
@@ -10114,7 +10187,8 @@ class YambApp {
         if (btnAd) {
             const noAdGain = this.players.length === 1 && this.soloRewardPreview
                 && this.soloRewardPreview.adReward <= this.soloRewardPreview.baseReward;
-            btnAd.style.display = (myScoreEntry && myScoreEntry.score <= 0) || noAdGain ? 'none' : 'flex';
+            btnAd.style.display = (myScoreEntry && myScoreEntry.score <= 0) || noAdGain
+                || !!this.pendingRewardRejectedReason ? 'none' : 'flex';
         }
         
         const claimLabel = document.getElementById('go-claim-label');
@@ -10172,6 +10246,10 @@ class YambApp {
         unlockedTrophiesNow = await this.confirmTrophyShowcaseEntries(unlockedTrophiesNow);
         await this.showTrophyUnlockShowcase(unlockedTrophiesNow);
         this.navigateTo('game-over-screen');
+        this.soloFinishMatchId = this.players.length === 1 ? matchResultRef : '';
+        if (this.soloFinishMatchId && !Number.isFinite(soloPowerIndexGain)) {
+            void this.refreshSoloFinishPowerIndex(this.soloFinishMatchId);
+        }
     }
 
     async safeSubmitScore(name, score, mode, photoUrl = undefined, matchId = '', options = {}) {
@@ -10223,6 +10301,37 @@ class YambApp {
         this.writePendingGameRewards(items);
     }
 
+    deferPendingGameReward(matchId) {
+        const safeMatchId = String(matchId || '').trim();
+        if (!safeMatchId) return;
+        const items = this.readPendingGameRewards();
+        const item = items.find(entry => entry.matchId === safeMatchId);
+        if (item) {
+            item.deferred = true;
+            this.writePendingGameRewards(items);
+        }
+    }
+
+    async ensurePendingRewardMatchSubmitted(matchId = this.pendingRewardMatchId) {
+        const safeMatchId = String(matchId || '').trim();
+        const pending = this.readPendingMatchResults().find(item => item.clientResultId === safeMatchId);
+        if (!pending) return { ok: true };
+        if (pending.syncRejected) return { ok: false, reason: pending.syncRejected, permanent: true };
+
+        const response = await this.submitPendingMatchResult(pending);
+        if (response?.ok) {
+            this.writePendingMatchResults(this.readPendingMatchResults()
+                .filter(item => item.clientResultId !== safeMatchId));
+            return { ok: true };
+        }
+        if (response?.permanent) {
+            this.writePendingMatchResults(this.readPendingMatchResults().map(item =>
+                item.clientResultId === safeMatchId
+                    ? { ...item, syncRejected: response.reason || 'server_rejected' } : item));
+        }
+        return { ok: false, reason: response?.reason || 'match_result_pending', permanent: !!response?.permanent };
+    }
+
     forgetPendingGameReward(matchId) {
         const safeMatchId = String(matchId || '').trim();
         if (!safeMatchId) return;
@@ -10243,9 +10352,11 @@ class YambApp {
     async recoverPendingGameRewards() {
         if (!this.socket || !this.socket.connected) return;
         const recoverable = this.readPendingGameRewards()
-            .filter(item => item.runtimeId !== this.rewardRuntimeId);
+            .filter(item => item.deferred === true || item.runtimeId !== this.rewardRuntimeId);
 
         for (const item of recoverable) {
+            const matchResult = await this.ensurePendingRewardMatchSubmitted(item.matchId);
+            if (!matchResult.ok) continue;
             const result = await this.claimServerGameReward(item.score, false, '', item.matchId);
             if (result && result.ok && typeof result.balance === 'number') {
                 this.applyAuthoritativeGameRewardBalance(result.balance);
@@ -10279,6 +10390,7 @@ class YambApp {
                 doubled: !!doubled,
                 ssvNonce,
                 clientRewarded: !!doubled,
+                verificationWaitMs: doubled ? 4000 : 0,
                 stats: this.getFullLocalStats()
             }, finish);
         });
@@ -10312,14 +10424,15 @@ class YambApp {
             };
 
             try {
-                const pendingMatchSync = await this.syncPendingMatchResults();
-                if (pendingMatchSync && pendingMatchSync.remaining > 0) {
+                const pendingMatchSync = await this.ensurePendingRewardMatchSubmitted();
+                if (!pendingMatchSync.ok) {
                     this.rewardClaimInProgress = false;
                     this.pendingBaseRewardClaimPromise = null;
                     return false;
                 }
                 if (this.topListManager && typeof this.topListManager.syncOfflineScores === 'function') {
-                    await this.topListManager.syncOfflineScores();
+                    Promise.resolve().then(() => this.topListManager.syncOfflineScores())
+                        .catch(err => console.warn('Sinhronizacija top liste će biti ponovljena:', err));
                 }
                 const result = await this.claimServerGameReward(baseScore, false);
 
@@ -10362,7 +10475,8 @@ class YambApp {
     }
 
     async watchAdForDouble() {
-        if (this.rewardClaimed || this.rewardClaimInProgress || this.rewardAdAttemptInProgress) return;
+        if (this.rewardClaimed || this.rewardClaimInProgress || this.rewardAdAttemptInProgress
+            || this.pendingRewardRejectedReason) return;
         const attemptId = ++this.rewardAdAttemptId;
         this.rewardAdAttemptInProgress = true;
         try {
@@ -10398,7 +10512,6 @@ class YambApp {
         this.rewardClaimInProgress = true;
         this.rewardClaimMode = doubled ? 'double' : 'base';
         this.rewardBaseClaimRequested = false;
-        try {
         const finishRewardClaim = () => {
             this.forgetPendingGameReward(this.pendingRewardMatchId);
             this.rewardClaimed = true;
@@ -10406,6 +10519,26 @@ class YambApp {
             this.pendingScore = 0;
             this.pendingRewardMatchId = '';
         };
+        const leaveWithPendingReward = async (result = {}) => {
+            if (this.pendingRewardMatchId) {
+                if (result.reason === 'game_too_short') this.forgetPendingGameReward(this.pendingRewardMatchId);
+                else this.deferPendingGameReward(this.pendingRewardMatchId);
+            }
+            // The durable queue owns this claim after leaving the finish screen.
+            // Do not let a stale pendingScore block navigation in a later room.
+            this.pendingScore = 0;
+            this.pendingRewardMatchId = '';
+            this.pendingRewardSsvNonce = '';
+            const messageKey = result.reason === 'game_too_short'
+                ? 'reward_claim_short_game' : 'reward_claim_deferred';
+            await this.modal.alert(gt(messageKey), gt('modal_title_info') || 'OBAVEŠTENJE');
+            await this.showMainMenu({ deferPendingReward: true });
+            if (this.socket?.connected && result.reason !== 'game_too_short') {
+                setTimeout(() => this.recoverPendingGameRewards()
+                    .catch(err => console.warn('Odloženo preuzimanje nagrade nije uspelo:', err)), 10000);
+            }
+        };
+        try {
         if (this.lastGameType === 'technical') {
             finishRewardClaim();
             this.showMainMenu();
@@ -10426,8 +10559,8 @@ class YambApp {
             }
         };
         const claimNormalGameReward = async (baseScore, wasDoubled) => {
-            const pendingMatchSync = await this.syncPendingMatchResults();
-            if (pendingMatchSync && pendingMatchSync.remaining > 0) return { ok: false };
+            const pendingMatchSync = await this.ensurePendingRewardMatchSubmitted();
+            if (!pendingMatchSync.ok) return { ok: false, reason: pendingMatchSync.reason, permanent: pendingMatchSync.permanent };
             if (this.topListManager && typeof this.topListManager.syncOfflineScores === 'function') {
                 // Leaderboard synchronization must not hold the reward claim button hostage.
                 Promise.resolve().then(() => this.topListManager.syncOfflineScores())
@@ -10438,7 +10571,8 @@ class YambApp {
             const result = wasDoubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
                 ? await window.adMobGlobal.claimRewardWithSsvRetry(
                     () => this.claimServerGameReward(baseScore, wasDoubled, ssvNonce),
-                    { nonce: ssvNonce, context: 'game_double', shouldCancel: () => this.rewardBaseClaimRequested }
+                    { nonce: ssvNonce, context: 'game_double', maxWaitMs: 22000,
+                        shouldCancel: () => this.rewardBaseClaimRequested }
                 )
                 : await this.claimServerGameReward(baseScore, wasDoubled, ssvNonce);
             if (result && result.ok && typeof result.balance === 'number') {
@@ -10448,16 +10582,15 @@ class YambApp {
             }
 
             console.warn(`Server nije potvrdio nagradu partije: ${result?.reason || 'unknown_error'}`);
-            return { ok: false };
+            return { ok: false, reason: result?.reason || 'unknown_error', permanent: !!result?.permanent };
         };
 
         let finalAmount = this.pendingScore;
         
         if (doubled) { 
-            this.soundMgr.win(); 
-            this.effectMgr.trigger('gold_rain');
-            
             if (this.lastGameType === 'daily') {
+                this.soundMgr.win();
+                this.effectMgr.trigger('gold_rain');
                 const uid = localStorage.getItem('yamb_uid') || this.playerId;
                 const today = this.getDailyChallengeDayKey();
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
@@ -10501,10 +10634,7 @@ class YambApp {
             confirmed = await claimNormalGameReward(this.pendingScore, false);
             if (!confirmed.ok) {
                 this.rewardClaimInProgress = false;
-                this.modal.alert(
-                    gt('reward_claim_retry'),
-                    gt('modal_title_info') || 'OBAVEŠTENJE'
-                );
+                await leaveWithPendingReward(confirmed);
                 return;
             }
         }
@@ -10515,6 +10645,8 @@ class YambApp {
 
         finishRewardClaim();
         if (doubled) {
+            this.soundMgr.win();
+            this.effectMgr.trigger('gold_rain');
             const paidAmount = confirmed.reward;
             this.modal.alert(`${gt('msg_reward_doubled')} ${dukatIconHtml()} ${paidAmount}`, gt('modal_title_reward')).then(() => {
                 this.effectMgr.stop(); 
@@ -10525,9 +10657,12 @@ class YambApp {
         }
         } catch (err) {
             console.warn('Preuzimanje nagrade nije uspelo:', err);
-            if (!doubled || !this.rewardBaseClaimRequested) {
+            if (!doubled) {
+                this.rewardClaimInProgress = false;
+                await leaveWithPendingReward({ reason: 'server_error' });
+            } else if (!this.rewardBaseClaimRequested) {
                 this.modal.alert(
-                    gt(doubled ? 'ad_confirmation_retry' : 'reward_claim_retry'),
+                    gt('ad_confirmation_retry'),
                     gt('modal_title_info') || 'OBAVEŠTENJE'
                 );
             }

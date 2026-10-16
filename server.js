@@ -926,6 +926,7 @@ const UserProfileSchema = new mongoose.Schema({
     h2hLedgerVersion: { type: Number, default: 0 },
     h2hLedgerMigratedAt: { type: Date, default: null },
     recentMatchResultIds: { type: [String], default: [] },
+    recentPowerIndexDeltas: { type: [{ matchId: String, gain: Number }], default: [] },
     claimedGameRewardIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
 });
@@ -3914,6 +3915,22 @@ function rememberUserAppliedMatchResult(user, matchId) {
     const ids = Array.isArray(user.recentMatchResultIds) ? user.recentMatchResultIds : [];
     user.recentMatchResultIds = [...ids.filter(id => id !== matchId), matchId].slice(-RECENT_MATCH_RESULT_MEMORY);
     user.markModified('recentMatchResultIds');
+}
+
+function getRecentPowerIndexGain(user, matchId) {
+    const entry = Array.isArray(user?.recentPowerIndexDeltas)
+        ? user.recentPowerIndexDeltas.find(item => item?.matchId === matchId) : null;
+    return entry && Number.isFinite(Number(entry.gain)) ? Number(entry.gain) : null;
+}
+
+function rememberRecentPowerIndexGain(user, matchId, gain) {
+    if (!user || !matchId || !Number.isFinite(gain)) return;
+    const entries = Array.isArray(user.recentPowerIndexDeltas) ? user.recentPowerIndexDeltas : [];
+    user.recentPowerIndexDeltas = [
+        ...entries.filter(item => item?.matchId !== matchId),
+        { matchId, gain }
+    ].slice(-RECENT_MATCH_RESULT_MEMORY);
+    user.markModified('recentPowerIndexDeltas');
 }
 
 function hasUserClaimedGameReward(user, matchId) {
@@ -9151,6 +9168,11 @@ function clearPendingGameRewardSession(uid, rewardSession) {
     if (pendingGameRewardsByUid[uid] === rewardSession) delete pendingGameRewardsByUid[uid];
 }
 
+function getGameRewardAdMinTimestamp(completedMatch, rewardSession) {
+    const finishedAtMs = new Date(completedMatch?.finishedAt || completedMatch?.createdAt).getTime();
+    return (Number.isFinite(finishedAtMs) ? finishedAtMs : rewardSession.createdAt) - 5000;
+}
+
 function openPendingGameRewardSession(uid, socketId, matchId, score, mode) {
     if (!uid || !socketId || !matchId) return null;
 
@@ -11839,8 +11861,12 @@ io.on('connection', (socket) => {
                 ? ledgerWrite.result.statsAppliedUids
                 : []);
             if (appliedUids.has(verifiedUid)) {
+                const appliedUser = await UserProfile.findOne({ firebaseUid: verifiedUid });
                 diagnosticStage = 'complete';
-                return replyMatchResult(true, null, false, { matchId, duplicate: true, statsApplied: true });
+                return replyMatchResult(true, null, false, {
+                    matchId, duplicate: true, statsApplied: true,
+                    powerIndexGain: getRecentPowerIndexGain(appliedUser, matchId)
+                });
             }
 
             diagnosticStage = 'profile_lookup';
@@ -11850,7 +11876,10 @@ io.on('connection', (socket) => {
             if (hasUserAppliedMatchResult(user, matchId)) {
                 await markMatchResultStatsApplied(matchId, verifiedUid);
                 diagnosticStage = 'complete';
-                return replyMatchResult(true, null, false, { matchId, duplicate: true, statsApplied: true });
+                return replyMatchResult(true, null, false, {
+                    matchId, duplicate: true, statsApplied: true,
+                    powerIndexGain: getRecentPowerIndexGain(user, matchId)
+                });
             }
 
             const profileMayIncludeResult = data.profileMayIncludeResult === true;
@@ -11871,14 +11900,17 @@ io.on('connection', (socket) => {
             diagnosticStage = 'stats_application';
             await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score, { periodDate: normalized.payload.finishedAt });
             const powerIndexAfter = powerIndexCore.calculatePowerIndex(user);
+            const powerIndexGain = alreadyIncludedInProfile ? null : powerIndexAfter - powerIndexBefore;
             rememberUserAppliedMatchResult(user, matchId);
+            if (powerIndexGain !== null) rememberRecentPowerIndexGain(user, matchId, powerIndexGain);
             await user.save();
             await markMatchResultStatsApplied(matchId, verifiedUid);
             emitProfileSyncToUid(verifiedUid, user, {
                 matchResult: {
                     matchId,
                     mode: normalized.payload.mode,
-                    resultType: normalized.selfParticipant.result
+                    resultType: normalized.selfParticipant.result,
+                    powerIndexGain
                 }
             });
 
@@ -11887,11 +11919,35 @@ io.on('connection', (socket) => {
                 matchId,
                 duplicate: !ledgerWrite.created || alreadyIncludedInProfile,
                 statsApplied: true,
-                powerIndexGain: alreadyIncludedInProfile ? null : powerIndexAfter - powerIndexBefore
+                powerIndexGain
             });
         } catch (err) {
             console.error('Greška pri upisu lokalnog rezultata partije:', err);
             return replyMatchResult(false, 'server_error', false);
+        }
+    });
+
+    socket.on('get_match_power_index_gain', async (data = {}, ack) => {
+        const reply = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+        };
+        const uid = socket.verifiedUid;
+        if (!uid) return reply({ ok: false, reason: 'firebase_token_required' });
+        if (!MONGO_URI) return reply({ ok: false, reason: 'db_unavailable' });
+        try {
+            const verifiedMatch = await findVerifiedMatchParticipant(uid, data?.matchId);
+            if (!verifiedMatch.ok) return reply({ ok: false, reason: verifiedMatch.reason, pending: true });
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) return reply({ ok: false, reason: 'profile_not_found', pending: true });
+            return reply({
+                ok: true,
+                matchId: verifiedMatch.matchId,
+                powerIndexGain: getRecentPowerIndexGain(user, verifiedMatch.matchId),
+                pending: !hasUserAppliedMatchResult(user, verifiedMatch.matchId)
+            });
+        } catch (err) {
+            console.warn('Power Index rezultat nije dostupan:', err);
+            return reply({ ok: false, reason: 'server_error', pending: true });
         }
     });
 
@@ -12061,11 +12117,22 @@ io.on('connection', (socket) => {
             }
 
             if (multiplier === 2) {
+                // A recovered claim session may be opened only after the ad was watched.
+                // The completed match, not this in-memory session, is the time boundary.
+                const completedMatch = await MatchResult.findOne({ matchId: rewardSession.matchId })
+                    .select('finishedAt createdAt').lean();
+                const minAdTimestamp = getGameRewardAdMinTimestamp(completedMatch, rewardSession);
                 const adVerification = await waitForVerifiedAdMobReward(
                     finalUid,
                     data?.ssvNonce,
                     ['game_double', 'generic_reward'],
-                    { claimedBy: 'game_double', minAdTimestamp: rewardSession.createdAt - 5000, clientRewarded: data?.clientRewarded === true }
+                    {
+                        claimedBy: 'game_double',
+                        minAdTimestamp,
+                        clientRewarded: data?.clientRewarded === true,
+                        timeoutMs: Math.max(1000, Math.min(ADMOB_SSV_WAIT_TIMEOUT_MS,
+                            toSafeInt(data?.verificationWaitMs, ADMOB_SSV_WAIT_TIMEOUT_MS)))
+                    }
                 );
                 if (!adVerification.ok) {
                     releaseRewardClaimLock();

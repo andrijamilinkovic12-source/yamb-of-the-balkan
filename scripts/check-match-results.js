@@ -146,7 +146,7 @@ function checkMatchResultWiring() {
     const claimRewardEnd = gameSource.indexOf('getBest5(row, dice)', claimRewardStart);
     assert(claimRewardStart !== -1 && claimRewardEnd > claimRewardStart, 'Missing game reward claim method');
     const claimReward = gameSource.slice(claimRewardStart, claimRewardEnd);
-    assert(claimReward.includes('const pendingMatchSync = await this.syncPendingMatchResults();'), 'Reward claim does not retry the durable result first');
+    assert(claimReward.includes('const pendingMatchSync = await this.ensurePendingRewardMatchSubmitted();'), 'Reward claim does not retry its own durable result first');
     assert(claimReward.includes('this.topListManager.syncOfflineScores()'), 'Reward claim does not schedule leaderboard synchronization');
     assert(!claimReward.includes('await this.topListManager.syncOfflineScores();'), 'Leaderboard synchronization blocks the reward claim');
     assert(claimReward.includes('confirmed = await claimNormalGameReward(this.pendingScore, false);'), 'Base reward does not require server confirmation');
@@ -366,8 +366,9 @@ function checkGameRewardSessionRaceGuard() {
     const rematchClaim = extractClassMethod(gameSource, 'claimPendingBaseRewardBeforeRematch');
     assert(!rematchClaim.includes('currentBalance + baseScore'), 'Rematch can still accept an optimistic local coin balance');
     assert(!rematchClaim.includes('result && result.localFallback'), 'Rematch can still discard an unconfirmed server reward');
-    assert(rematchClaim.includes('const pendingMatchSync = await this.syncPendingMatchResults();'), 'Rematch reward does not retry the durable result first');
-    assert(rematchClaim.includes('await this.topListManager.syncOfflineScores();'), 'Rematch reward does not restore its verified score record');
+    assert(rematchClaim.includes('const pendingMatchSync = await this.ensurePendingRewardMatchSubmitted();'), 'Rematch reward does not retry its own durable result first');
+    assert(rematchClaim.includes('this.topListManager.syncOfflineScores()'), 'Rematch reward does not restore its verified score record');
+    assert(!rematchClaim.includes('await this.topListManager.syncOfflineScores();'), 'Rematch waits for an unrelated leaderboard sync');
 
     assert(
         !serverSource.includes('getPendingGameRewardIncrease'),
@@ -628,6 +629,7 @@ async function checkBaseRewardConfirmationBehavior() {
     const storage = new Map([['yamb_dukati', '10000']]);
     const context = {
         parseInt,
+        setTimeout() {},
         console: { warn() {} },
         window: {
             statsManager: {
@@ -648,19 +650,23 @@ async function checkBaseRewardConfirmationBehavior() {
 
     let menuVisits = 0;
     let alerts = 0;
+    let deferred = false;
     const app = {
         rewardClaimed: false,
         rewardClaimInProgress: false,
         pendingScore: 275,
+        pendingRewardMatchId: 'result-1',
         pendingRewardSsvNonce: '',
         lastGameType: 'normal',
         socket: { connected: true },
         topListManager: { async syncOfflineScores() {} },
         async syncPendingMatchResults() { return { remaining: 0 }; },
+        async ensurePendingRewardMatchSubmitted() { return { ok: true }; },
         async claimServerGameReward() { return { ok: false, reason: 'missing_reward_session', permanent: false }; },
         async emitPlayerData() { return { synced: false }; },
         applyAuthoritativeGameRewardBalance(balance) { storage.set('yamb_dukati', String(balance)); },
         forgetPendingGameReward() {},
+        deferPendingGameReward() { deferred = true; },
         modal: { alert() { alerts++; return Promise.resolve(); } },
         showMainMenu() { menuVisits++; },
         soundMgr: { win() {} },
@@ -669,17 +675,20 @@ async function checkBaseRewardConfirmationBehavior() {
 
     await context.claimReward.call(app, false);
     assert.strictEqual(app.rewardClaimed, false, 'Rejected base reward was marked as claimed');
-    assert.strictEqual(app.pendingScore, 275, 'Rejected base reward discarded its retry state');
+    assert.strictEqual(app.pendingScore, 0, 'Deferred reward still blocks navigation outside the finish screen');
     assert.strictEqual(storage.get('yamb_dukati'), '10000', 'Rejected base reward changed the local balance');
-    assert.strictEqual(menuVisits, 0, 'Rejected base reward closed the result screen');
+    assert.strictEqual(menuVisits, 1, 'Rejected base reward trapped the player on the result screen');
+    assert.strictEqual(deferred, true, 'Unconfirmed reward was not saved for recovery');
     assert.strictEqual(alerts, 1, 'Rejected base reward did not inform the player');
 
     app.claimServerGameReward = async () => ({ ok: true, reward: 275, balance: 10275 });
+    app.pendingScore = 275;
+    app.pendingRewardMatchId = 'next-result';
     await context.claimReward.call(app, false);
     assert.strictEqual(app.rewardClaimed, true, 'Confirmed base reward was not marked as claimed');
     assert.strictEqual(app.pendingScore, 0, 'Confirmed base reward retained stale retry state');
     assert.strictEqual(storage.get('yamb_dukati'), '10275', 'Confirmed server balance was not applied');
-    assert.strictEqual(menuVisits, 1, 'Confirmed base reward did not return to the menu');
+    assert.strictEqual(menuVisits, 2, 'Confirmed base reward did not return to the menu');
 }
 
 async function checkGameOverAdFallbackBehavior() {
@@ -687,6 +696,7 @@ async function checkGameOverAdFallbackBehavior() {
     const context = {
         parseInt,
         Promise,
+        setTimeout() {},
         console: { warn() {} },
         window: {
             statsManager: { stats: { balance: 10000 }, saveStats() {} },
@@ -720,12 +730,14 @@ async function checkGameOverAdFallbackBehavior() {
             lastGameType: 'normal',
             socket: { connected: true },
             async syncPendingMatchResults() { return { remaining: 0 }; },
+            async ensurePendingRewardMatchSubmitted() { return { ok: true }; },
             async claimServerGameReward(score, doubled) {
                 claims.push({ score, doubled });
                 return { ok: true, balance: 10000 + score * (doubled ? 2 : 1) };
             },
             applyAuthoritativeGameRewardBalance(balance) { storage.set('yamb_dukati', String(balance)); },
             forgetPendingGameReward() {},
+            deferPendingGameReward() {},
             modal: { alert() { return Promise.resolve(); } },
             showMainMenu() { menuVisits++; },
             soundMgr: { win() {} },
@@ -784,16 +796,39 @@ async function checkGameOverAdFallbackBehavior() {
     assert.strictEqual(pendingDouble.menuVisits, 1, 'Pending double claim blocked exit after failing');
     assert.strictEqual(pendingDouble.app.rewardClaimInProgress, false, 'Claim lock remained active');
 
+    const testPhone = createApp();
+    testPhone.app.pendingScore = 497;
+    testPhone.app.adMob = {
+        async showRewardVideo() { return true; },
+        consumeLastRewardSsvNonce() { return 'test-phone-nonce'; }
+    };
+    testPhone.app.claimServerGameReward = async (score, doubled) => {
+        testPhone.claims.push({ score, doubled });
+        return doubled
+            ? { ok: false, reason: 'ad_verification_pending', permanent: false }
+            : { ok: true, reward: 497, balance: 10497 };
+    };
+    await testPhone.app.watchAdForDouble();
+    assert.strictEqual(testPhone.app.rewardClaimed, false, 'SDK ad callback was mistaken for a server-confirmed double payout');
+    await testPhone.app.claimReward(false);
+    assert.deepStrictEqual(testPhone.claims, [
+        { score: 497, doubled: true }, { score: 497, doubled: false }
+    ], 'A failed ad confirmation blocked the 497-point base payout');
+    assert.strictEqual(storage.get('yamb_dukati'), '10497', 'The 497-point base payout was not applied');
+    assert.strictEqual(testPhone.menuVisits, 1, 'A failed ad confirmation trapped the player after base claim');
+
     const syncError = createApp();
     let syncAttempts = 0;
-    syncError.app.syncPendingMatchResults = async () => {
+    syncError.app.ensurePendingRewardMatchSubmitted = async () => {
         if (++syncAttempts === 1) throw new Error('temporary sync failure');
         return { remaining: 0 };
     };
     await syncError.app.claimReward(false);
     assert.strictEqual(syncError.app.rewardClaimInProgress, false, 'Thrown sync error permanently locked base claim');
+    syncError.app.pendingScore = 275;
+    syncError.app.pendingRewardMatchId = 'next-result';
     await syncError.app.claimReward(false);
-    assert.strictEqual(syncError.menuVisits, 1, 'Base claim could not be retried after a sync exception');
+    assert.strictEqual(syncError.menuVisits, 2, 'Base claim could not be retried after a sync exception');
 }
 
 async function checkRewardSessionRecoveryBehavior() {
@@ -917,6 +952,7 @@ async function checkClientRewardRecoveryBehavior() {
         'readPendingGameRewards',
         'writePendingGameRewards',
         'rememberPendingGameReward',
+        'deferPendingGameReward',
         'forgetPendingGameReward',
         'applyAuthoritativeGameRewardBalance',
         'recoverPendingGameRewards'
@@ -930,8 +966,10 @@ async function checkClientRewardRecoveryBehavior() {
         readPendingGameRewards: context.readPendingGameRewards,
         writePendingGameRewards: context.writePendingGameRewards,
         rememberPendingGameReward: context.rememberPendingGameReward,
+        deferPendingGameReward: context.deferPendingGameReward,
         forgetPendingGameReward: context.forgetPendingGameReward,
         applyAuthoritativeGameRewardBalance: context.applyAuthoritativeGameRewardBalance,
+        async ensurePendingRewardMatchSubmitted() { return { ok: true }; },
         async claimServerGameReward(score, doubled, nonce, matchId) {
             assert.strictEqual(matchId, 'client-result-recovery');
             assert.strictEqual(score, 275);
@@ -944,6 +982,43 @@ async function checkClientRewardRecoveryBehavior() {
     await context.recoverPendingGameRewards.call(app);
     assert.strictEqual(app.readPendingGameRewards().length, 0, 'Recovered client reward was left in the durable retry queue');
     assert.strictEqual(storage.get('yamb_dukati'), '10275', 'Recovered client reward did not apply the authoritative balance');
+
+    app.rememberPendingGameReward('client-result-recovery', 275);
+    app.deferPendingGameReward('client-result-recovery');
+    await context.recoverPendingGameRewards.call(app);
+    assert.strictEqual(app.readPendingGameRewards().length, 0, 'Deferred reward from the same runtime was not retried');
+}
+
+async function checkCurrentMatchRewardProof() {
+    const context = { Date, Number, String };
+    vm.createContext(context);
+    vm.runInContext(extractClassMethod(gameSource, 'ensurePendingRewardMatchSubmitted'), context);
+    vm.runInContext(extractFunction(serverSource, 'getGameRewardAdMinTimestamp'), context);
+
+    let queue = [
+        { clientResultId: 'older-result', score: 300 },
+        { clientResultId: 'current-result', score: 497 }
+    ];
+    const submitted = [];
+    const app = {
+        pendingRewardMatchId: 'current-result',
+        readPendingMatchResults() { return queue; },
+        writePendingMatchResults(next) { queue = next; },
+        async submitPendingMatchResult(item) {
+            submitted.push(item.clientResultId);
+            return { ok: true };
+        }
+    };
+    const result = await context.ensurePendingRewardMatchSubmitted.call(app);
+    assert.strictEqual(result.ok, true, 'The current match was not submitted');
+    assert.deepStrictEqual(submitted, ['current-result'], 'An unrelated old result blocked the current reward');
+    assert.deepStrictEqual(queue.map(item => item.clientResultId), ['older-result'], 'Submitting the current result removed other pending results');
+
+    const finishedAt = Date.now() - 60000;
+    const recoveredSession = { createdAt: Date.now() };
+    const minAdTimestamp = context.getGameRewardAdMinTimestamp({ finishedAt: new Date(finishedAt) }, recoveredSession);
+    assert.strictEqual(minAdTimestamp, finishedAt - 5000, 'A recovered reward session rejects an ad watched after the match');
+    assert(minAdTimestamp < recoveredSession.createdAt - 5000, 'The test did not exercise delayed reward session recovery');
 }
 
 async function main() {
@@ -960,6 +1035,7 @@ async function main() {
     await checkRewardSessionRecoveryBehavior();
     await checkAtomicRewardClaimBehavior();
     await checkClientRewardRecoveryBehavior();
+    await checkCurrentMatchRewardProof();
     console.log('Match result checks passed: all modes wired, auth and local session validated, retry queued, idempotent, diagnostic, reward confirmation locked, and conflict-safe.');
 }
 

@@ -36,6 +36,12 @@ const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
                     const ad = document.getElementById('btn-ad-double');
                     const panel = document.getElementById('solo-record-panel');
                     const bestColumn = document.getElementById('solo-finish-best-column');
+                    const column = new URL(location.href).searchParams.get('column');
+                    const columnClass = { Nadole: 'c-nadole', Slobodna: 'c-slobodna', Sredina: 'c-sredina', Nagore: 'c-nagore', 'Ručno': 'c-rucno', Najava: 'c-najava' }[column];
+                    const boardHeader = document.querySelector(`#game-scene .player-table .col-header.${columnClass}`);
+                    const boardIcon = [...boardHeader.querySelectorAll('img')].find(icon => getComputedStyle(icon).display !== 'none');
+                    const mark = bestColumn.querySelector('.solo-finish-column-mark');
+                    const markIcon = mark.querySelector('img');
                     const box = card.getBoundingClientRect();
                     return {
                         left: box.left, right: box.right, top: box.top, bottom: box.bottom,
@@ -44,12 +50,18 @@ const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
                         claimBottom: claim.getBoundingClientRect().bottom,
                         panelBottom: panel.getBoundingClientRect().bottom,
                         bestColumnFits: bestColumn.scrollWidth <= bestColumn.clientWidth + 1,
+                        markColorMatches: getComputedStyle(mark).color === getComputedStyle(boardHeader).color,
+                        markSizeMatches: getComputedStyle(mark).fontSize === getComputedStyle(boardHeader).fontSize,
+                        markContentMatches: boardIcon
+                            ? !!markIcon && markIcon.src === boardIcon.src
+                                && getComputedStyle(markIcon).width === getComputedStyle(boardIcon).width
+                            : !markIcon && mark.textContent.trim() === boardHeader.textContent.trim(),
                         recordIconsLoaded: [...panel.querySelectorAll('img[data-solo-record-icon]')]
                             .every(image => image.complete && image.naturalWidth === 160),
                     };
                 });
                 checked++;
-                if (geometry.left < 11 || geometry.right > viewport.width - 11 || geometry.top < 17 || geometry.bottom > viewport.height - 17 || geometry.scrollHeight > geometry.clientHeight + 1 || geometry.claimBottom > geometry.bottom - 1 || geometry.adBottom > geometry.claimBottom || geometry.panelBottom > geometry.claimBottom || !geometry.bestColumnFits || !geometry.recordIconsLoaded) {
+                if (geometry.left < 11 || geometry.right > viewport.width - 11 || geometry.top < 17 || geometry.bottom > viewport.height - 17 || geometry.scrollHeight > geometry.clientHeight + 1 || geometry.claimBottom > geometry.bottom - 1 || geometry.adBottom > geometry.claimBottom || geometry.panelBottom > geometry.claimBottom || !geometry.bestColumnFits || !geometry.markColorMatches || !geometry.markSizeMatches || !geometry.markContentMatches || !geometry.recordIconsLoaded) {
                     failures.push({ viewport, theme, record, tier, variant, column, geometry });
                 }
                 }
