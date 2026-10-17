@@ -329,6 +329,8 @@ class TopListManager {
      */
     async syncOfflineScores() {
         if (!this.app.socket || !this.app.socket.connected) return;
+        const activeUid = String(localStorage.getItem('yamb_uid') || '').trim();
+        if (!activeUid) return;
 
         try {
             let scores = await this._readLocalScores();
@@ -336,9 +338,12 @@ class TopListManager {
             let needsUpdate = false;
 
             for (let i = 0; i < scores.length; i++) {
+                if (String(localStorage.getItem('yamb_uid') || '').trim() !== activeUid) break;
+                if (String(scores[i]?.uid || scores[i]?.playerId || '').trim() !== activeUid) continue;
                 if (!scores[i].synced && !scores[i].syncRejected) {
                     console.log(`📡 Sinhronizacija skora: ${scores[i].score}`);
                     const result = await this._submitScoreToServer(scores[i]);
+                    if (String(localStorage.getItem('yamb_uid') || '').trim() !== activeUid) break;
                     if (result && result.ok) {
                         scores[i].synced = true;
                         needsUpdate = true;

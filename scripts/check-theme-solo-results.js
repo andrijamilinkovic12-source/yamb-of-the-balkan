@@ -10,6 +10,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
 const roles = ['weekly', 'monthly', 'all_time', 'personal'];
 const html = read('www/index.html');
 const game = read('www/game.js');
+const topList = read('www/toplista.js');
 const server = read('server.js');
 const css = read('www/theme-solo-results.css');
 const languages = read('www/languages.js');
@@ -18,7 +19,7 @@ const finishPreview = read('docs/theme-solo-finish-screen-review.html');
 const mobilePreview = read('docs/theme-solo-finish-screen-mobile.html');
 const clientCode = read('www/theme-solo-results.js');
 const manifest = JSON.parse(read('source-assets/theme-solo-results-v1/manifest.json'));
-const panelManifest = JSON.parse(read('source-assets/theme-solo-record-panels-v1/manifest.json'));
+const panelManifest = JSON.parse(read('source-assets/theme-solo-record-panels-v2/manifest.json'));
 const recordIconManifest = JSON.parse(read('source-assets/theme-solo-record-icons-v1/manifest.json'));
 const contrast = (a, b) => {
     const luminance = hex => {
@@ -90,18 +91,26 @@ assert(server.includes('recordAchievements: normalizeSoloRecordAchievements(save
 assert(server.includes('soloScoreRecord?.recordAchievements || []'));
 assert(server.includes('powerIndexAfter - powerIndexBefore'));
 assert(css.includes('.solo-record-panel-grid > span.is-achieved'));
-assert(css.includes('color-mix(in srgb,var(--solo-record-accent) 13%'));
+assert(css.includes('color-mix(in srgb,var(--solo-record-accent) 14%'));
 assert(css.includes('.solo-record-panel-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr))'));
 assert(css.includes('background:var(--solo-record-panel-image) center / 100% 100% no-repeat'));
 assert.equal(panelManifest.assets.length, 10);
+assert.equal(panelManifest.version, 2);
+assert.equal(new Set(panelManifest.assets.map(item => item.runtimeSha256)).size, 10, 'all ten panels need distinct theme artwork');
 assert.equal(recordIconManifest.assets.length, 40);
 assert.equal(new Set(recordIconManifest.assets.map(item => item.masterSha256)).size, 40, 'record masters must be independent');
 assert.equal(new Set(recordIconManifest.assets.map(item => item.runtimeSha256)).size, 40, 'record PNGs must be distinct');
 assert(html.includes('data-solo-record-icon="weekly"'));
 assert(html.includes('class="solo-record-accessible-name"'));
 assert(!css.includes('overflow-y: auto !important;'));
+assert(css.includes('.solo-record-panel-title { display:block;') && css.includes('background:transparent; color:var(--solo-record-ink)'),
+    'record title must sit directly on the themed panel');
+assert(css.includes('.solo-record-panel-footer { display:flex;') && css.includes('border-top:1px solid color-mix(in srgb,var(--solo-record-ink) 24%,transparent)'),
+    'record status and Power Index must share a quiet, readable footer');
+assert(!css.includes('.solo-record-panel-footer { display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:3px; padding:1px 5px; border-radius:6px; background:var(--solo-record-top)'),
+    'old white footer strip is still active');
 assert(game.includes("['finish-score-mark', 'finish-claim', 'record-panel']"));
-assert(game.includes("assets/green-soft-clay/canonical/solo-results/record-panel-v1.png?v=1"));
+assert(game.includes("assets/green-soft-clay/canonical/solo-results/record-panel-v2.png?v=2"));
 const combinations = {
     none: [], p: ['personal'], w: ['weekly'], m: ['monthly'],
     pw: ['personal', 'weekly'], pm: ['personal', 'monthly'], wm: ['weekly', 'monthly'],
@@ -139,11 +148,11 @@ for (const theme of themes) {
     const bytes = fs.readFileSync(panelFile);
     assert.equal(bytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${theme}: invalid panel PNG`);
     assert.equal(bytes.readUInt32BE(16), 768, `${theme}: wrong panel width`);
-    assert.equal(bytes.readUInt32BE(20), 320, `${theme}: wrong panel height`);
+    assert.equal(bytes.readUInt32BE(20), 224, `${theme}: wrong panel height`);
     assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), panel.runtimeSha256, `${theme}: panel differs from manifest`);
     assert(panel.minimumCellContrast >= 4.5, `${theme}: weak PNG cell contrast`);
     assert(css.includes(`--solo-record-cell-ink:${panel.cellInk}`), `${theme}: raster/text palette mismatch`);
-    assert(css.includes(`${theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`}/canonical/solo-results/record-panel-v1.png`));
+    assert(css.includes(`${theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`}/canonical/solo-results/record-panel-v2.png`));
     const rootAsset = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
     const power = path.join(root, 'www/assets', rootAsset, 'canonical/statistics-overview/power-index-v1.png');
     assert(fs.existsSync(power), `${theme}: missing canonical Power Index PNG`);
@@ -197,12 +206,43 @@ assert.equal(payout(2860, roles).baseReward, 4290);
 assert.equal(payout(2860, roles).adReward, 8000);
 assert.equal(payout(6000, roles).baseReward, 5250, 'verified score must be clamped before payout');
 assert.equal(payout(6000, roles).adReward, 8000);
+assert.equal(payout(497, []).baseReward, 497, 'a game without records must keep its full base reward');
+assert.equal(payout(497, []).adReward, 994, 'the verified ad must double the 497-ducat reward');
+assert.equal(payout(497, ['personal', 'personal']).baseReward, 546, 'a repeated record flag must not pay twice');
+assert.equal(payout(497, ['personal', 'personal']).adReward, 1092);
 for (const [key, flags] of Object.entries(combinations)) {
     const bonusBps = flags.reduce((sum, role) => sum + (role === 'all_time' ? 2000 : 1000), 0);
     assert.equal(payout(2000, flags).bonusBps, bonusBps, `${key}: wrong bonus`);
     assert.equal(payout(2000, flags).baseReward, 2000 + bonusBps / 5, `${key}: wrong base reward`);
     assert.equal(payout(2000, flags).adReward, Math.min(8000, (2000 + bonusBps / 5) * 2), `${key}: wrong ad reward`);
+    assert.equal(payout(497, flags).adReward, Math.min(8000, payout(497, flags).baseReward * 2), `${key}: record bonus must be applied before doubling`);
 }
+const doubleButton = html.match(/<button id="btn-ad-double"[\s\S]*?<\/button>/)?.[0];
+assert(doubleButton && doubleButton.includes('solo/finish-reward-video-v3.png'), 'the double button must use the canonical PNG');
+assert(doubleButton.includes('id="go-double-ducat"') && doubleButton.includes('ducat-inline-v1.png'), 'the double button must include the canonical dukat PNG');
+assert(!/<svg\b|<use\b|finish-reward-video-v[12]\.png|\(x2\)/i.test(doubleButton), 'the double button contains a legacy icon or duplicate multiplier label');
+assert(!/"go_double_amount": "[^"]*dukata?|"go_double_amount": "[^"]*ducats?/i.test(languages), 'the visible double amount must use the PNG instead of a currency word');
+assert(game.includes('doubleDucat.hidden = !hasSoloRewardAmount'), 'the dukat image must appear only beside a Solo reward amount');
+assert(css.includes('#game-over-screen.is-solo-result #go-double-ducat'), 'the dukat image must have a fixed inline size');
+const ducatPack = read('www/theme-ducat-pack.js');
+assert(ducatPack.includes("document.getElementById('go-double-ducat')") && ducatPack.includes('ducatSource(theme)'), 'the double button must follow theme changes');
+const ducatSourceMethod = ducatPack.match(/function ducatSource\(theme, variant = 'inline'\) \{[\s\S]*?\n    \}/)?.[0];
+assert(ducatSourceMethod, 'canonical theme dukat resolver missing');
+const resolveDucat = vm.runInNewContext(`(${ducatSourceMethod})`);
+for (const theme of themes) {
+    const source = theme === 'dark'
+        ? 'www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png'
+        : `www/assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
+    assert(fs.existsSync(path.join(root, source)), `${theme}: missing canonical Solo double button dukat`);
+    assert.equal(resolveDucat(theme), source.slice(4).replaceAll('\\', '/'), `${theme}: wrong dukat mapping`);
+    assert(mobilePreview.includes('id="go-double-ducat"'), 'the mobile preview must use the canonical dukat image');
+}
+assert(languages.includes('"go_double": "DUPLIRAJ NAGRADU"'));
+assert(languages.includes('"go_double": "DOUBLE REWARD"'));
+assert(server.includes('multiplier === 2 ? payout.adReward : payout.baseReward'), 'the server must pay the record-adjusted reward');
+assert(server.indexOf('waitForVerifiedAdMobReward(', server.indexOf("socket.on('claim_game_reward'")) <
+    server.indexOf('claimVerifiedGameRewardBalance(', server.indexOf("socket.on('claim_game_reward'")),
+    'a doubled claim must be verified before the balance is credited');
 let activeTheme = 'neon';
 const image = role => ({
     dataset: { soloResultsRole: role },
@@ -282,5 +322,69 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
     const tied = { weekly: { score: 2000 }, monthly: { score: 2000 }, all_time: { score: 2000 } };
     previousPersonal = 2000;
     assert.deepEqual([...await classify('player', 2000, new Date('2026-10-16'), tied)], [], 'ties must not award records');
+    const accountScores = [
+        { playerId: 'account-a', uid: 'account-a', mode: 'Solo', score: 1500, playerName: 'Isto ime' },
+        { playerId: 'account-b', uid: 'account-b', mode: 'Solo', score: 2500, playerName: 'Isto ime' },
+        { playerId: 'account-a', uid: 'account-a', mode: 'Hotseat', score: 3000, playerName: 'Isto ime' }
+    ];
+    const classifyByAccount = vm.runInNewContext(`(${classifierMethod})`, {
+        Score: { findOne(query) {
+            assert.equal(query.mode.source, '^solo$', 'personal record must use only Solo games');
+            const accountUid = query.$or[0].playerId;
+            assert.equal(query.$or[1].uid, accountUid, 'both legacy and current score identities must use the same account');
+            const ownSolo = accountScores.filter(item =>
+                (item.playerId === accountUid || item.uid === accountUid) && query.mode.test(item.mode));
+            return { sort() { return this; }, select() { return this; }, async lean() {
+                return ownSolo.sort((a, b) => b.score - a.score)[0] || null;
+            } };
+        } },
+        getLeaderboardPeriodStart: () => new Date('2026-11-01'),
+        LEADERBOARD_RECORD_PERIODS: ['weekly', 'monthly'],
+        normalizeSoloRecordAchievements: value => roles.filter(role => value.includes(role)),
+        toSafeInt: value => Math.floor(Number(value) || 0), Math
+    });
+    assert.deepEqual([...await classifyByAccount('account-a', 2000, new Date('2026-10-16'), {})], ['personal'],
+        'another account on the same phone must not suppress this account personal record');
+    assert.deepEqual([...await classifyByAccount('account-b', 2000, new Date('2026-10-16'), {})], [],
+        'another account lower score must not create a false personal record');
+    const reconcileSource = game.match(/    async reconcileStatsHighscoreFromStoredScores\(\) \{[\s\S]*?\r?\n    \}/)?.[0];
+    assert(reconcileSource, 'local highscore reconciliation missing');
+    let currentUid = 'account-a';
+    const localScores = [
+        { uid: 'account-a', score: 1500, synced: true, playerName: 'Isto ime' },
+        { uid: 'account-b', score: 2500, synced: true, playerName: 'Isto ime' },
+        { score: 3000, synced: true, playerName: 'Isto ime' }
+    ];
+    const localStorageMock = { getItem: key => key === 'yamb_uid' ? currentUid : null };
+    const reconcile = vm.runInNewContext(`({${reconcileSource}}).reconcileStatsHighscoreFromStoredScores`, {
+        window: { localforage: { async getItem() { return localScores; } } }, localforage: { async getItem() { return localScores; } },
+        localStorage: localStorageMock, console, Array, Number, Math
+    });
+    const reconciled = [];
+    const localApp = { topListManager: { storageKey: 'yamb_ultimate_scores' }, recordSubmittedScoreAsHighscore(score) {
+        reconciled.push(score); return true;
+    } };
+    await reconcile.call(localApp);
+    currentUid = 'account-b';
+    await reconcile.call(localApp);
+    currentUid = '';
+    assert.equal(await reconcile.call(localApp), false, 'an unregistered local result must not become a personal record');
+    assert.deepEqual(reconciled, [1500, 2500], 'local highscore must ignore other accounts and legacy name-only rows');
+    const syncSource = topList.match(/    async syncOfflineScores\(\) \{[\s\S]*?\r?\n    \}/)?.[0];
+    assert(syncSource, 'offline score sync missing');
+    const sync = vm.runInNewContext(`({${syncSource}}).syncOfflineScores`, { localStorage: localStorageMock, console, String });
+    currentUid = 'account-a';
+    const pendingScores = [
+        { uid: 'account-a', score: 1700, synced: false },
+        { uid: 'account-b', score: 2700, synced: false },
+        { playerId: 'account-a', score: 1800, synced: false },
+        { score: 3100, synced: false }
+    ];
+    const submitted = [];
+    await sync.call({ app: { socket: { connected: true } }, async _readLocalScores() { return pendingScores; },
+        async _submitScoreToServer(entry) { submitted.push(entry.score); return { ok: true }; },
+        async _writeLocalScores() {} });
+    assert.deepEqual(submitted, [1700, 1800], 'offline sync must submit only the signed-in account scores');
+    assert.equal(pendingScores[1].synced, false, 'other account results must remain available for that account');
     console.log('Solo panel: 10 themes, 12 confirmed combinations plus pending, period boundaries, strict records, payout and cap OK.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

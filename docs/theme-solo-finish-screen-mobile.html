@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../www/theme-game-board.css?v=7">
   <link rel="stylesheet" href="../www/theme-ducat-pack.css?v=2">
   <link rel="stylesheet" href="../www/theme-rewarded-video-pack.css?v=2">
-  <link rel="stylesheet" href="../www/theme-solo-results.css?v=9">
+  <link rel="stylesheet" href="../www/theme-solo-results.css?v=11">
   <style>
     html,body{height:100%;min-height:100%;width:100%;overflow:hidden}
     #game-over-screen{background:linear-gradient(180deg,rgba(8,17,24,.08),rgba(8,17,24,.16)),var(--finish-bg) center/cover no-repeat!important}
@@ -57,7 +57,8 @@
       </div>
       <button id="btn-ad-double" class="btn-menu btn-ad-double" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px">
         <img class="green-solo-finish-action-icon" id="reward-icon" alt="">
-        <span id="go-double-label">DUPLIRAJ NAGRADU (x2)</span>
+        <span id="go-double-label">DUPLIRAJ NAGRADU</span>
+        <img id="go-double-ducat" class="solo-finish-double-ducat" alt="" aria-hidden="true" hidden>
       </button>
       <button class="btn-menu btn-secondary game-over-claim-button">
         <img class="theme-solo-result-icon theme-solo-finish-claim-icon" data-role="finish-claim" alt="">
@@ -116,7 +117,9 @@ if(recordFlags!==null){
   const baseReward=Math.min(8000,Math.floor(score*(100+bonusPercent)/100));
   const adReward=Math.min(8000,baseReward*2);
   document.getElementById('go-claim-label').textContent=`Preuzmi ${baseReward.toLocaleString('sr-RS')} i izađi`;
-  document.getElementById('go-double-label').textContent=`Dupliraj: ${adReward.toLocaleString('sr-RS')} dukata`;
+  document.getElementById('go-double-label').textContent=`Dupliraj: ${adReward.toLocaleString('sr-RS')}`;
+  document.getElementById('btn-ad-double').setAttribute('aria-label',`Dupliraj: ${adReward.toLocaleString('sr-RS')} dukata`);
+  document.getElementById('go-double-ducat').hidden=false;
   document.getElementById('btn-ad-double').style.display=adReward<=baseReward?'none':'flex';
 }
 document.getElementById('solo-power-index-icon').src=id==='dark'
@@ -133,6 +136,9 @@ document.documentElement.style.setProperty('--finish-bg',`url('../www/assets/${b
 if(id!=='dark')for(const image of document.querySelectorAll('[data-role]'))image.src=`../www/assets/theme-packs/${id}/canonical/solo-results/${image.dataset.role}-v1.png`;
 if(id==='dark')for(const image of document.querySelectorAll('[data-green-role]'))image.src=`../www/assets/green-soft-clay/canonical/solo-results/${image.dataset.greenRole}-v1.png`;
 document.getElementById('reward-icon').src=id==='dark'?'../www/assets/green-soft-clay/solo/finish-reward-video-v3.png':`../www/assets/theme-packs/${id}/solo/finish-reward-video-v3.png`;
+document.getElementById('go-double-ducat').src=id==='dark'
+  ?'../www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png'
+  :`../www/assets/theme-packs/${id}/canonical/ducat/ducat-inline-v${['easter','desert','severna'].includes(id)?2:1}.png`;
 if(id!=='dark'){document.body.classList.add('theme-rewarded-video-pack-active');document.getElementById('reward-icon').classList.add('theme-rewarded-video-icon')}
 </script>
 </body>

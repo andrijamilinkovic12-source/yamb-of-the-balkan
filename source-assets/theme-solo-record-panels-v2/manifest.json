@@ -1,0 +1,162 @@
+{
+  "family": "solo-record-panels",
+  "version": 2,
+  "style": "3D Soft Neomorphism",
+  "productionRole": "One restrained card surface per theme; title, record icons and footer are live UI",
+  "runtimeSize": [
+    768,
+    224
+  ],
+  "assets": [
+    {
+      "theme": "dark",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/dark-master.png",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "3970f26e767d7f735662c663c6ae55a8e876d5f883ae792409fd6a6c98e6bdaf",
+      "runtimeSha256": "ddf0636979846cc27018aad31eb9291793dd0bf0722765654711cba5a569b8b9",
+      "runtimeBytes": 1926,
+      "cellInk": "#27412c",
+      "minimumCellContrast": 6.6,
+      "geometry": {
+        "cornerRadius": 34,
+        "edgeDetail": "left"
+      }
+    },
+    {
+      "theme": "light",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/light-master.png",
+      "runtime": "www/assets/theme-packs/light/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "9ae11c818443c0d0adfe9e2df4294e144b49ccaaf8e7e318f70034e854f12f52",
+      "runtimeSha256": "db1310a8208ac73a36253152f284c141fb671cc5c5596f71f46045d67a1a965e",
+      "runtimeBytes": 1761,
+      "cellInk": "#4d301c",
+      "minimumCellContrast": 8.23,
+      "geometry": {
+        "cornerRadius": 21,
+        "edgeDetail": "top"
+      }
+    },
+    {
+      "theme": "medium",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/medium-master.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "d8c2516769cecb0b98bab5702613f1380aed277d9e8397313efdec5235bc7da2",
+      "runtimeSha256": "4b7c2db9e1712037ae5494aa344ac06e776cbbb36582d71050859bb0bba3f9a6",
+      "runtimeBytes": 1825,
+      "cellInk": "#fff1e8",
+      "minimumCellContrast": 8.11,
+      "geometry": {
+        "cornerRadius": 32,
+        "edgeDetail": "bottom"
+      }
+    },
+    {
+      "theme": "winter",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/winter-master.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "a3d471173c1dc43b1e648fef3f8b490d6c1c499e121773724dde7cba8cdfbecc",
+      "runtimeSha256": "6fe95234579f7cb79365a27a3e5d3d2226eac1f4f3e891ba82637818ea873be1",
+      "runtimeBytes": 1701,
+      "cellInk": "#fff4e5",
+      "minimumCellContrast": 6.26,
+      "geometry": {
+        "cornerRadius": 20,
+        "edgeDetail": "left"
+      }
+    },
+    {
+      "theme": "neon",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/neon-master.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "ecf96f4163967c7a3a65eb9b19fa5616eda8ff59160a5c1640cb52c0edf54ede",
+      "runtimeSha256": "eed6ae8406cbbe41830140bfa820bb6f8f05d0fc0df3137f07fda1ceb46a508c",
+      "runtimeBytes": 1638,
+      "cellInk": "#eefefa",
+      "minimumCellContrast": 12.43,
+      "geometry": {
+        "cornerRadius": 17,
+        "edgeDetail": "corner"
+      }
+    },
+    {
+      "theme": "amethyst",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/amethyst-master.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "e96fddcbfa400c6958d4659606008385790068189bf3e1ccf151f4d9c609a83d",
+      "runtimeSha256": "35e274cc7710ae6d58f8063a437be349d34223ac5415ad17efa1fdaa14f5a05c",
+      "runtimeBytes": 1845,
+      "cellInk": "#fff5ef",
+      "minimumCellContrast": 7.47,
+      "geometry": {
+        "cornerRadius": 30,
+        "edgeDetail": "top"
+      }
+    },
+    {
+      "theme": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/easter-master.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "dde35e2e611f8546fd0546c6e45d067d0dce4462348efd234353b60aec4a0a88",
+      "runtimeSha256": "a4a356891c0a8820c2307cb1aeff9ba51b8cdc041de095ff87044f57ccba70c6",
+      "runtimeBytes": 1718,
+      "cellInk": "#31492c",
+      "minimumCellContrast": 8.14,
+      "geometry": {
+        "cornerRadius": 25,
+        "edgeDetail": "left"
+      }
+    },
+    {
+      "theme": "desert",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/desert-master.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "8616c18eb47b098363c43af7417da0b97f901f0e16babbcb7d38d3b373b08ffa",
+      "runtimeSha256": "498e1bf05c3ce76795d3df844562caf4294a4ddfc5eabd1685e3f841834f2c20",
+      "runtimeBytes": 1885,
+      "cellInk": "#553623",
+      "minimumCellContrast": 6.17,
+      "geometry": {
+        "cornerRadius": 28,
+        "edgeDetail": "bottom"
+      }
+    },
+    {
+      "theme": "moon",
+      "direction": "clay",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/moon-master.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "35c6aa444e22f65ae7b5fa8a257d3ade3a02ff7cbc803e22d67e8c1193a306aa",
+      "runtimeSha256": "72184fa541887491b06ccc49d8222b3da4261fb1dc6a240d15aec9008df5a67e",
+      "runtimeBytes": 1567,
+      "cellInk": "#f5f5f8",
+      "minimumCellContrast": 9.23,
+      "geometry": {
+        "cornerRadius": 19,
+        "edgeDetail": "right"
+      }
+    },
+    {
+      "theme": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "master": "source-assets/theme-solo-record-panels-v2/masters/severna-master.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/solo-results/record-panel-v2.png",
+      "masterSha256": "1d813c6c3741ef26ffde5ee00a81780dcd3c15c0c220c818c44407b2bcf11536",
+      "runtimeSha256": "0e8dac1a3fb77cfc928003d79ac2e0ff53ef759bb28a8594611e30fa3009bac5",
+      "runtimeBytes": 1696,
+      "cellInk": "#f5fbff",
+      "minimumCellContrast": 8.11,
+      "geometry": {
+        "cornerRadius": 22,
+        "edgeDetail": "bottom"
+      }
+    }
+  ]
+}

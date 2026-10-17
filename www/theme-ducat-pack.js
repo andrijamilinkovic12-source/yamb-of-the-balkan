@@ -20,6 +20,13 @@
             || 'dark';
     }
 
+    function ducatSource(theme, variant = 'inline') {
+        const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+        return theme === 'dark'
+            ? `assets/green-soft-clay/canonical/ducat/ducat-${variant}-v1.png`
+            : `assets/theme-packs/${theme}/canonical/ducat/ducat-${variant}-v${version}.png`;
+    }
+
     function sync() {
         const theme = currentTheme();
         const enabled = themes.has(theme) || theme === 'dark';
@@ -56,11 +63,13 @@
                 else anchor.after(image);
             }
             const variant = role === 'header' || role === 'hero' ? 'front' : 'inline';
-            const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
-            const source = theme === 'dark'
-                ? `assets/green-soft-clay/canonical/ducat/ducat-${variant}-v1.png`
-                : `assets/theme-packs/${theme}/canonical/ducat/ducat-${variant}-v${version}.png`;
+            const source = ducatSource(theme, variant);
             if (image.getAttribute('src') !== source) image.src = source;
+        }
+        const doubleDucat = document.getElementById('go-double-ducat');
+        if (doubleDucat && enabled) {
+            const source = ducatSource(theme);
+            if (doubleDucat.getAttribute('src') !== source) doubleDucat.src = source;
         }
     }
 

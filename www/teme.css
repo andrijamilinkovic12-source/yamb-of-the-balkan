@@ -5757,10 +5757,6 @@ body.easter-theme #go-score {
     text-shadow: 0 1px 0 rgba(255,255,255,0.92) !important;
 }
 
-body.easter-theme #game-over-screen #go-double-label .dukat-icon-inline {
-    display: none !important;
-}
-
 body.easter-theme #game-over-screen.is-solo-result .game-over-score-card {
     min-height: 166px;
     margin: 3px 0 10px !important;

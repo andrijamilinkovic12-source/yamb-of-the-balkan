@@ -1021,6 +1021,56 @@ async function checkCurrentMatchRewardProof() {
     assert(minAdTimestamp < recoveredSession.createdAt - 5000, 'The test did not exercise delayed reward session recovery');
 }
 
+async function checkSoloPowerIndexFollowUp() {
+    const gainContext = { Array, Number, RECENT_MATCH_RESULT_MEMORY: 200 };
+    vm.createContext(gainContext);
+    vm.runInContext(extractFunction(serverSource, 'rememberRecentPowerIndexGain'), gainContext);
+    vm.runInContext(extractFunction(serverSource, 'getRecentPowerIndexGain'), gainContext);
+    const profile = { recentPowerIndexDeltas: [], markModified() {} };
+    gainContext.rememberRecentPowerIndexGain(profile, 'solo-497', 7);
+    assert.strictEqual(gainContext.getRecentPowerIndexGain(profile, 'solo-497'), 7,
+        'A duplicate match cannot retrieve its confirmed Power Index gain');
+    gainContext.rememberRecentPowerIndexGain(profile, 'solo-497', 0);
+    assert.strictEqual(gainContext.getRecentPowerIndexGain(profile, 'solo-497'), 0,
+        'A valid zero Power Index gain was mistaken for pending');
+    assert.strictEqual(profile.recentPowerIndexDeltas.length, 1,
+        'Retrying the same match duplicated its Power Index entry');
+
+    const label = { textContent: '—' };
+    const screen = { classList: { contains(name) { return name === 'active'; } } };
+    let retry = null;
+    let requests = 0;
+    const context = {
+        Number,
+        Promise,
+        document: { getElementById(id) { return id === 'game-over-screen' ? screen : label; } },
+        setTimeout(fn, delay) { if (delay === 2000) retry = fn; return 1; },
+        clearTimeout() {}
+    };
+    vm.createContext(context);
+    vm.runInContext(extractClassMethod(gameSource, 'refreshSoloFinishPowerIndex'), context);
+    const app = {
+        soloFinishMatchId: 'solo-497',
+        socket: {
+            connected: true,
+            emit(event, payload, ack) {
+                assert.strictEqual(event, 'get_match_power_index_gain');
+                assert.strictEqual(payload.matchId, 'solo-497');
+                ack(++requests === 1 ? { ok: true, pending: true, powerIndexGain: null }
+                    : { ok: true, pending: false, powerIndexGain: 0 });
+            }
+        },
+        refreshSoloFinishPowerIndex(matchId, attempt) {
+            return context.refreshSoloFinishPowerIndex.call(this, matchId, attempt);
+        }
+    };
+    await app.refreshSoloFinishPowerIndex('solo-497');
+    assert.strictEqual(label.textContent, '—', 'Pending Power Index was shown as a confirmed number');
+    assert.strictEqual(typeof retry, 'function', 'Pending Power Index did not schedule a refresh');
+    await retry();
+    assert.strictEqual(label.textContent, '0', 'The finish screen did not update when the confirmed gain arrived');
+}
+
 async function main() {
     checkMatchResultWiring();
     await checkLeaderboardSemantics();
@@ -1036,6 +1086,7 @@ async function main() {
     await checkAtomicRewardClaimBehavior();
     await checkClientRewardRecoveryBehavior();
     await checkCurrentMatchRewardProof();
+    await checkSoloPowerIndexFollowUp();
     console.log('Match result checks passed: all modes wired, auth and local session validated, retry queued, idempotent, diagnostic, reward confirmation locked, and conflict-safe.');
 }
 

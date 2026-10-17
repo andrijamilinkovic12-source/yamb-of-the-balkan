@@ -62,7 +62,10 @@ for (const theme of ['dark', ...themes]) {
   assert.equal(body.classList.contains('theme-rewarded-video-pack-active'), theme !== 'dark');
   images.forEach((image, index) => {
     const actual = image.getAttribute('src');
-    const expected = theme === 'dark' ? `assets/green-soft-clay/${roles[index]}?v=1` : `assets/theme-packs/${theme}/${roles[index]}`;
+    const versionedRole = ['easter', 'desert', 'severna'].includes(theme)
+      && roles[index].startsWith('canonical/rewarded-video/')
+      ? roles[index].replace('-v1.png', '-v2.png') : roles[index];
+    const expected = theme === 'dark' ? `assets/green-soft-clay/${roles[index]}?v=1` : `assets/theme-packs/${theme}/${versionedRole}`;
     assert.equal(actual, expected, `${theme} ${roles[index]}`);
     assert.equal(image.classList.contains('theme-rewarded-video-icon'), theme !== 'dark');
     assert.equal(image.parentElement.legacy.classList.contains('theme-rewarded-video-legacy'), theme !== 'dark');

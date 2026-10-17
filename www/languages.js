@@ -420,7 +420,8 @@ const TRANSLATIONS = {
         "go_power_index_change": "POWER INDEX",
         "go_record_none": "BEZ NOVOG REKORDA",
         "go_claim_amount": "Preuzmi {0} i izađi",
-        "go_double_amount": "Dupliraj: {0} dukata",
+        "go_double_amount": "Dupliraj: {0}",
+        "go_double_amount_accessible": "Dupliraj: {0} dukata",
         "go_label_your_score": "TVOJ REZULTAT",
         "go_best_column": "NAJJAČA KOLONA",
         "go_column_down": "Nadole",
@@ -458,8 +459,8 @@ const TRANSLATIONS = {
         "online_final_hold_countdown": "Dalje za {0}...",
         "online_final_hold_ready": "Pritisni Dalje kada završiš pregled.",
         "online_final_hold_next": "Dalje",
-        "go_double": "🎥 DUPLIRAJ {DUKAT_ICON} (x2)",
-        "go_double_easter": "DUPLIRAJ NAGRADU (x2)",
+        "go_double": "DUPLIRAJ NAGRADU",
+        "go_double_easter": "DUPLIRAJ NAGRADU",
         "go_claim": "Preuzmi i Izađi",
         "go_rematch": "🔄 REVANŠ",
         "msg_reward_doubled": "Uspešno ste duplirali nagradu!\nUkupno osvojeno:",
@@ -1295,7 +1296,8 @@ const TRANSLATIONS = {
         "go_power_index_change": "POWER INDEX",
         "go_record_none": "NO NEW RECORD",
         "go_claim_amount": "Claim {0} & Exit",
-        "go_double_amount": "Double: {0} ducats",
+        "go_double_amount": "Double: {0}",
+        "go_double_amount_accessible": "Double: {0} ducats",
         "go_label_your_score": "YOUR SCORE",
         "go_best_column": "BEST COLUMN",
         "go_column_down": "Down",
@@ -1333,8 +1335,8 @@ const TRANSLATIONS = {
         "online_final_hold_countdown": "Next in {0}...",
         "online_final_hold_ready": "Press Next when you are done reviewing.",
         "online_final_hold_next": "Next",
-        "go_double": "🎥 DOUBLE {DUKAT_ICON} (x2)",
-        "go_double_easter": "DOUBLE REWARD (x2)",
+        "go_double": "DOUBLE REWARD",
+        "go_double_easter": "DOUBLE REWARD",
         "go_claim": "Claim & Exit",
         "go_rematch": "🔄 REMATCH",
         "msg_reward_doubled": "Reward successfully doubled!\nTotal won:",
@@ -1791,7 +1793,7 @@ function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
         const value = TRANSLATIONS[lang][key];
-        if (key === 'go_rematch' || key === 'go_double' || key === 'tourney_finalist_title' || key === 'ws_power') {
+        if (key === 'go_rematch' || key === 'tourney_finalist_title' || key === 'ws_power') {
             const theme = document.documentElement?.dataset?.splashTheme
                 || localStorage.getItem('yamb_theme')
                 || 'dark';
@@ -1800,7 +1802,6 @@ function t(key) {
             }
             if (theme === 'dark') {
                 if (key === 'go_rematch') return value.replace(/^🔄\s*/u, '');
-                if (key === 'go_double') return value.replace(/^🎥\s*/u, '').replace(/\s*\{DUKAT_ICON\}\s*\(x2\)/u, '');
                 if (key === 'tourney_finalist_title') return value.replace(/\s*🥈/u, '');
                 return value.replace(/\s*⚡/u, '');
             }

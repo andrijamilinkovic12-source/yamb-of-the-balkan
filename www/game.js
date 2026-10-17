@@ -2494,21 +2494,26 @@ class YambApp {
             : [];
         const soloResults = safeRoomId === 'solo'
             ? theme === 'dark'
-                ? ['assets/green-soft-clay/canonical/solo-results/record-panel-v1.png?v=1']
+                ? ['assets/green-soft-clay/canonical/solo-results/record-panel-v2.png?v=2']
                 : ['finish-score-mark', 'finish-claim', 'record-panel'].map(role =>
-                    `assets/theme-packs/${theme}/canonical/solo-results/${role}-v1.png?v=1`)
+                    `assets/theme-packs/${theme}/canonical/solo-results/${role}-${role === 'record-panel' ? 'v2.png?v=2' : 'v1.png?v=1'}`)
             : [];
         const soloPowerIndex = safeRoomId === 'solo'
             ? [theme === 'dark'
                 ? 'assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1'
                 : `assets/theme-packs/${theme}/canonical/statistics-overview/power-index-v1.png?v=1`]
             : [];
+        const soloDucat = safeRoomId === 'solo'
+            ? [theme === 'dark'
+                ? 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png'
+                : `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`]
+            : [];
         const soloRecordIcons = safeRoomId === 'solo'
             ? ['weekly', 'monthly', 'all_time', 'personal'].map(role => theme === 'dark'
                 ? `assets/green-soft-clay/canonical/solo-record-icons/${role}-v1.png?v=1`
                 : `assets/theme-packs/${theme}/canonical/solo-record-icons/${role}-v1.png?v=1`)
             : [];
-        if (!root) return [...new Set([...soloResults, ...soloPowerIndex, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        if (!root) return [...new Set([...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
             dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
@@ -2531,10 +2536,10 @@ class YambApp {
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
-        if (!matcher) return [...new Set([...soloResults, ...soloPowerIndex, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        if (!matcher) return [...new Set([...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
         return [...new Set([
             ...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))),
-            ...soloResults, ...soloPowerIndex, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets,
+            ...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets,
             ...globalChatInternal, ...onlinePlayersInternal
         ])];
     }
@@ -3008,22 +3013,14 @@ class YambApp {
 
         if (!Array.isArray(scores) || scores.length === 0) return false;
 
-        const uid = String(localStorage.getItem('yamb_uid') || this.playerId || '').trim();
-        const playerName = String(this.playerName || localStorage.getItem('yamb_player_name') || '').trim();
+        const uid = String(localStorage.getItem('yamb_uid') || '').trim();
+        if (!uid) return false;
         let bestScore = 0;
 
         scores.forEach(entry => {
             if (!entry || typeof entry !== 'object' || entry.synced !== true) return;
             const entryUid = String(entry.uid || entry.playerId || '').trim();
-            const entryName = String(entry.playerName || entry.name || '').trim();
-
-            if (uid) {
-                if (entryUid && entryUid !== uid) return;
-                if (!entryUid && !playerName) return;
-                if (!entryUid && entryName && playerName && entryName !== playerName) return;
-            } else if (playerName && entryName && entryName !== playerName) {
-                return;
-            }
+            if (entryUid !== uid) return;
 
             const score = Number(entry.score);
             if (Number.isFinite(score) && score > bestScore) {
@@ -10197,11 +10194,19 @@ class YambApp {
             ? (gt('go_claim_amount') || 'Preuzmi {0} i izađi').replace('{0}', this.soloRewardPreview.baseReward.toLocaleString(rewardNumberLocale))
             : gt('go_claim');
         const btnDouble = document.getElementById('go-double-label');
+        const doubleDucat = document.getElementById('go-double-ducat');
+        const hasSoloRewardAmount = this.players.length === 1 && !!this.soloRewardPreview;
+        if (doubleDucat) doubleDucat.hidden = !hasSoloRewardAmount;
         if (btnDouble) {
-            if (this.players.length === 1) btnDouble.textContent = this.soloRewardPreview
-                ? (gt('go_double_amount') || 'Dupliraj: {0} dukata').replace('{0}', this.soloRewardPreview.adReward.toLocaleString(rewardNumberLocale))
-                : gt('go_double_easter') || 'DUPLIRAJ NAGRADU (x2)';
-            else btnDouble.innerHTML = gt('go_double');
+            if (hasSoloRewardAmount) {
+                const amount = this.soloRewardPreview.adReward.toLocaleString(rewardNumberLocale);
+                btnDouble.textContent = (gt('go_double_amount') || 'Dupliraj: {0}').replace('{0}', amount);
+                btnAd?.setAttribute('aria-label', (gt('go_double_amount_accessible') || 'Dupliraj: {0} dukata').replace('{0}', amount));
+            } else {
+                btnDouble.textContent = this.players.length === 1
+                    ? gt('go_double_easter') || 'DUPLIRAJ NAGRADU' : gt('go_double');
+                btnAd?.removeAttribute('aria-label');
+            }
         }
 
         const btnRematch = document.getElementById('btn-rematch');
