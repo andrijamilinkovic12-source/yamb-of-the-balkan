@@ -105,7 +105,7 @@ bestColumn.setAttribute('aria-label',`Najjača kolona: ${column}, 612`);
 document.getElementById('go-title').textContent=TRANSLATIONS.sr[`go_title_${tier}`];
 document.getElementById('go-msg').textContent=TRANSLATIONS.sr[messageKey].replace('{0}',score.toLocaleString('sr-RS'));
 document.getElementById('go-score').textContent=score.toLocaleString('sr-RS');
-const recordOptions={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pa:['personal','all_time'],pwa:['personal','weekly','all_time'],pma:['personal','monthly','all_time'],pwma:['personal','weekly','monthly','all_time'],pending:null};
+const recordOptions={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pwma:['personal','weekly','monthly','all_time'],pending:null};
 const recordState=Object.hasOwn(recordOptions,params.get('record'))?params.get('record'):'pwma';
 const recordFlags=recordOptions[recordState];
 document.querySelectorAll('[data-record-role]').forEach(item=>item.classList.toggle('is-achieved',Array.isArray(recordFlags)&&recordFlags.includes(item.dataset.recordRole)));

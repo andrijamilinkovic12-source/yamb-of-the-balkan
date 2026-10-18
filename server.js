@@ -1427,6 +1427,13 @@ async function captureLeaderboardRecordSnapshots() {
 
 function normalizeSoloRecordAchievements(value) {
     const selected = new Set(Array.isArray(value) ? value : []);
+    // The all-time leaderboard contains every score in the active week and month.
+    // Its new high also exceeds this account's earlier Solo best.
+    if (selected.has('all_time')) {
+        selected.add('personal');
+        selected.add('weekly');
+        selected.add('monthly');
+    }
     return SOLO_RECORD_ORDER.filter(role => selected.has(role));
 }
 

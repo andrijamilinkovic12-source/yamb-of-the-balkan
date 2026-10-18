@@ -114,9 +114,7 @@ assert(game.includes("assets/green-soft-clay/canonical/solo-results/record-panel
 const combinations = {
     none: [], p: ['personal'], w: ['weekly'], m: ['monthly'],
     pw: ['personal', 'weekly'], pm: ['personal', 'monthly'], wm: ['weekly', 'monthly'],
-    pwm: ['personal', 'weekly', 'monthly'], pa: ['personal', 'all_time'],
-    pwa: ['personal', 'weekly', 'all_time'], pma: ['personal', 'monthly', 'all_time'],
-    pwma: roles
+    pwm: ['personal', 'weekly', 'monthly'], pwma: roles
 };
 const recordSelect = finishPreview.match(/<select id="record">([\s\S]*?)<\/select>/)?.[1];
 const panelSelect = preview.match(/<select id="case-select">([\s\S]*?)<\/select>/)?.[1];
@@ -125,17 +123,18 @@ for (const [key, flags] of Object.entries(combinations)) {
     assert(recordSelect.includes(`<option value="${key}"`), `finish preview missing ${key}`);
     assert(panelSelect.includes(`<option value="${key}"`), `panel preview missing ${key}`);
     assert(flags.every(role => roles.includes(role)), `${key}: unknown record role`);
-    assert(!flags.includes('all_time') || flags.includes('personal'), `${key}: all-time must imply personal`);
+    assert(!flags.includes('all_time') || ['personal', 'weekly', 'monthly'].every(role => flags.includes(role)),
+        `${key}: all-time must imply every smaller record`);
 }
-assert.equal([...recordSelect.matchAll(/<option value=/g)].length, 13, 'finish preview: 12 combinations plus pending');
-assert.equal([...panelSelect.matchAll(/<option value=/g)].length, 13, 'panel preview: 12 combinations plus pending');
+assert.equal([...recordSelect.matchAll(/<option value=/g)].length, 10, 'finish preview: 9 combinations plus pending');
+assert.equal([...panelSelect.matchAll(/<option value=/g)].length, 10, 'panel preview: 9 combinations plus pending');
 const previewStatesSource = preview.match(/const states=([^;]+);/)?.[1];
 const mobileStatesSource = mobilePreview.match(/const recordOptions=([^;]+);/)?.[1];
 assert(previewStatesSource && mobileStatesSource, 'review state maps missing');
 const panelStates = vm.runInNewContext(`(${previewStatesSource})`, { labels: roles.map(role => [role, role]) });
 const mobileStates = vm.runInNewContext(`(${mobileStatesSource})`);
 for (const [name, states] of [['panel', panelStates], ['finish', mobileStates]]) {
-    assert.equal(Object.keys(states).length, 13, `${name}: wrong number of states`);
+    assert.equal(Object.keys(states).length, 10, `${name}: wrong number of states`);
     assert.equal(states.pending, null, `${name}: pending must remain separate`);
     for (const [key, flags] of Object.entries(combinations)) {
         assert.deepEqual([...states[key]].sort(), [...flags].sort(), `${name}: wrong flags for ${key}`);
@@ -189,12 +188,19 @@ for (const key of ['go_records_title', 'go_record_personal', 'go_record_weekly',
 }
 const method = server.match(/^function calculateSoloRecordPayout\(score, achievements = \[\]\) \{[\s\S]*?^\}/m)?.[0];
 assert(method, 'server payout helper missing');
+const normalizationMethod = server.match(/^function normalizeSoloRecordAchievements\(value\) \{[\s\S]*?^\}/m)?.[0];
+assert(normalizationMethod, 'server record normalization missing');
+const normalizeRecords = vm.runInNewContext(`(${normalizationMethod})`, { SOLO_RECORD_ORDER: roles });
+assert.deepEqual([...normalizeRecords(['all_time'])], roles, 'all-time record must include weekly, monthly and personal');
+assert.deepEqual([...normalizeRecords(['personal', 'all_time'])], roles, 'incomplete old all-time flags must be repaired');
+assert.deepEqual([...normalizeRecords(['weekly'])], ['weekly'], 'weekly does not imply monthly or personal');
+assert.deepEqual([...normalizeRecords(['monthly'])], ['monthly'], 'monthly does not imply weekly or personal');
 const maxScore = Number(server.match(/const MAX_SCORE = (\d+);/)?.[1]);
 assert.equal(maxScore, 3500, 'unexpected maximum verified score');
 const payout = vm.runInNewContext(`(${method})`, {
     MAX_SCORE: maxScore, MAX_REWARD_PER_GAME: 8000,
     toSafeInt: value => Math.floor(Number(value) || 0),
-    normalizeSoloRecordAchievements: value => roles.filter(role => value.includes(role)),
+    normalizeSoloRecordAchievements: normalizeRecords,
     SOLO_RECORD_BONUS_BPS: { personal: 1000, weekly: 1000, monthly: 1000, all_time: 2000 },
     Math
 });
@@ -202,6 +208,7 @@ assert.equal(payout(2000, []).baseReward, 2000);
 assert.equal(payout(2000, ['personal', 'weekly']).baseReward, 2400);
 assert.equal(payout(2000, roles).baseReward, 3000);
 assert.equal(payout(2000, roles).adReward, 6000);
+assert.equal(payout(2000, ['all_time']).baseReward, 3000, 'all-time payout must include the other three record bonuses');
 assert.equal(payout(2860, roles).baseReward, 4290);
 assert.equal(payout(2860, roles).adReward, 8000);
 assert.equal(payout(6000, roles).baseReward, 5250, 'verified score must be clamped before payout');
@@ -291,7 +298,7 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
     Score: { findOne() { return { sort() { return this; }, select() { return this; }, async lean() { return previousPersonal === null ? null : { score: previousPersonal }; } }; } },
     getLeaderboardPeriodStart: period => period === 'weekly' ? weeklyStart : period === 'monthly' ? monthlyStart : null,
     LEADERBOARD_RECORD_PERIODS: ['weekly', 'monthly', 'all_time'],
-    normalizeSoloRecordAchievements: value => roles.filter(role => value.includes(role)),
+    normalizeSoloRecordAchievements: normalizeRecords,
     toSafeInt: value => Math.floor(Number(value) || 0),
     Math
 });
@@ -301,13 +308,11 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
         weeklyStart = new Date('2026-10-12T00:00:00Z');
         monthlyStart = new Date('2026-10-01T00:00:00Z');
         let recordDate = new Date('2026-10-16T12:00:00Z');
-        if (key === 'm' || key === 'pm' || key === 'pa' || key === 'pwa') {
+        if (key === 'm' || key === 'pm') {
             // In the first days of a month, the active week can start in the prior month.
             weeklyStart = new Date('2026-09-28T00:00:00Z');
-            recordDate = key === 'pwa' ? new Date('2026-09-30T12:00:00Z') : new Date('2026-10-02T12:00:00Z');
+            recordDate = new Date('2026-10-02T12:00:00Z');
         }
-        if (key === 'pma') recordDate = new Date('2026-10-05T12:00:00Z');
-        if (key === 'pa') recordDate = new Date('2026-09-20T12:00:00Z');
         const snapshots = {
             weekly: { score: flags.includes('weekly') ? 1500 : 2500 },
             monthly: { score: flags.includes('monthly') ? 1500 : 2500 },
@@ -316,6 +321,10 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
         const actual = [...await classify('player', 2000, recordDate, snapshots)];
         assert.deepEqual(actual, roles.filter(role => flags.includes(role)), `${key}: wrong server record combination`);
     }
+    previousPersonal = 1000;
+    const staggeredSnapshots = { weekly: { score: 2500 }, monthly: { score: 2500 }, all_time: { score: 1700 } };
+    assert.deepEqual([...await classify('player', 2000, new Date('2026-10-16T12:00:00Z'), staggeredSnapshots)], roles,
+        'an all-time marker must not reach the result screen without the other three records');
     previousPersonal = 2500;
     const inconsistent = { weekly: { score: 2500 }, monthly: { score: 2500 }, all_time: { score: 1700 } };
     assert.deepEqual([...await classify('player', 2000, new Date('2026-09-20'), inconsistent)], [], 'all-time cannot be granted without personal');
@@ -340,7 +349,7 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
         } },
         getLeaderboardPeriodStart: () => new Date('2026-11-01'),
         LEADERBOARD_RECORD_PERIODS: ['weekly', 'monthly'],
-        normalizeSoloRecordAchievements: value => roles.filter(role => value.includes(role)),
+        normalizeSoloRecordAchievements: normalizeRecords,
         toSafeInt: value => Math.floor(Number(value) || 0), Math
     });
     assert.deepEqual([...await classifyByAccount('account-a', 2000, new Date('2026-10-16'), {})], ['personal'],
@@ -386,5 +395,5 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
         async _writeLocalScores() {} });
     assert.deepEqual(submitted, [1700, 1800], 'offline sync must submit only the signed-in account scores');
     assert.equal(pendingScores[1].synced, false, 'other account results must remain available for that account');
-    console.log('Solo panel: 10 themes, 12 confirmed combinations plus pending, period boundaries, strict records, payout and cap OK.');
+    console.log('Solo panel: 10 themes, 9 valid record combinations plus pending, period boundaries, strict records, payout and cap OK.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

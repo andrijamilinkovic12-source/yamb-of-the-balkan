@@ -36,11 +36,6 @@
           <option value="pwm">Lični + nedeljni + mesečni</option>
           <option value="pwma">Sva četiri rekorda</option>
         </optgroup>
-        <optgroup label="Kasna potvrda preko granice perioda">
-          <option value="pa">Lični + sva vremena</option>
-          <option value="pwa">Lični + nedeljni + sva vremena</option>
-          <option value="pma">Lični + mesečni + sva vremena</option>
-        </optgroup>
         <option value="pending">Čeka potvrdu</option>
       </select>
     </label>
@@ -50,7 +45,7 @@
 </main><script>
 const themes=[['dark','Zelena'],['light','Svetlo zlato'],['medium','Trula višnja'],['winter','Plavi okean'],['neon','Neon cyber'],['amethyst','Kraljevski ametist'],['easter','Vaskršnja'],['desert','Pustinjsko staklo'],['moon','Mesečev sjaj'],['severna','Severna maglina']];
 const labels=[['weekly','NEDELJNI REKORD'],['monthly','MESEČNI REKORD'],['all_time','REKORD SVIH VREMENA'],['personal','LIČNI REKORD']];
-const states={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pa:['personal','all_time'],pwa:['personal','weekly','all_time'],pma:['personal','monthly','all_time'],pwma:labels.map(([role])=>role),pending:null};
+const states={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pwma:labels.map(([role])=>role),pending:null};
 const grid=document.getElementById('cards');
 for(const [theme,name] of themes){
   const card=document.createElement('article');card.className=`preview ${theme}-theme`;

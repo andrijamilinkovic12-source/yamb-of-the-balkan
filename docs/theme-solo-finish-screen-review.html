@@ -63,9 +63,6 @@
             <option value="pm">Lični + mesečni</option>
             <option value="wm">Nedeljni + mesečni</option>
             <option value="pwm">Lični + nedeljni + mesečni</option>
-            <option value="pa">Lični + sva vremena</option>
-            <option value="pwa">Lični + nedeljni + sva vremena</option>
-            <option value="pma">Lični + mesečni + sva vremena</option>
             <option value="pwma" selected>Sva četiri rekorda</option>
             <option value="pending">Čeka potvrdu</option>
           </select>
@@ -98,7 +95,7 @@
 <script>
 const themes=[['dark','Zelena'],['light','Svetlo zlato'],['medium','Trula višnja'],['winter','Plavi okean'],['neon','Neon cyber'],['amethyst','Kraljevski ametist'],['easter','Vaskršnja'],['desert','Pustinjsko staklo'],['moon','Mesečev sjaj'],['severna','Severna maglina']];
 const sampleScores={solo_rough:650,solo_more:1250,solo_progress:1750,solo_good:2250,solo_masterful:2860,solo_perfect:3300};
-const recordFlags={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pa:['personal','all_time'],pwa:['personal','weekly','all_time'],pma:['personal','monthly','all_time'],pwma:['personal','weekly','monthly','all_time'],pending:null};
+const recordFlags={none:[],p:['personal'],w:['weekly'],m:['monthly'],pw:['personal','weekly'],pm:['personal','monthly'],wm:['weekly','monthly'],pwm:['personal','weekly','monthly'],pwma:['personal','weekly','monthly','all_time'],pending:null};
 const bonusRates={personal:10,weekly:10,monthly:10,all_time:20};
 const list=document.getElementById('themes'),screen=document.getElementById('screen');
 const tier=document.getElementById('tier'),variant=document.getElementById('variant'),record=document.getElementById('record'),column=document.getElementById('column');
