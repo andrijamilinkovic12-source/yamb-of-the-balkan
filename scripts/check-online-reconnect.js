@@ -109,6 +109,8 @@ const sceneClasses = new Set();
 const timerClasses = new Set();
 const timerDisplay = {
     style: {}, innerHTML: '',
+    replaceChildren() { this.innerHTML = ''; },
+    appendChild(child) { this.innerHTML += child.textContent || ''; },
     classList: {
         add: (...names) => names.forEach(name => timerClasses.add(name)),
         remove: (...names) => names.forEach(name => timerClasses.delete(name))
@@ -123,7 +125,9 @@ const sandbox = {
     Number,
     Math,
     gt: () => '',
+    localStorage: { getItem() { return 'dark'; } },
     document: {
+        createElement() { return { textContent: '', setAttribute() {} }; },
         getElementById(id) {
             if (id === 'game-scene') {
                 return {
@@ -298,7 +302,7 @@ async function run() {
     const menuElement = { classList: { remove() {}, add() {} }, style: {} };
     const menuSandbox = {
         localStorage: { removeItem(key) { menuEvents.push(`remove:${key}`); } },
-        document: { title: 'QA', getElementById() { return menuElement; } },
+        document: { title: 'QA', querySelector() { return null; }, getElementById() { return menuElement; } },
         window: { location: { pathname: '/' }, history: { pushState() {} } }
     };
     vm.createContext(menuSandbox);

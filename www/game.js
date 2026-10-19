@@ -859,7 +859,13 @@ class YambApp {
         const currPlayerName = this.players[this.currentPlayerIdx];
         if (!currPlayerName) return;
 
-        let src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currPlayerName)}&background=333&color=E0C995`;
+        const isHotseat = this.modeTag === 'Hotseat' && !this.onlineMode;
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const avatarTheme = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(activeTheme)
+            ? activeTheme : 'dark';
+        let src = isHotseat
+            ? `assets/theme-packs/${avatarTheme}/canonical/online-players-internal/avatar-v1.png?v=2`
+            : `https://ui-avatars.com/api/?name=${encodeURIComponent(currPlayerName)}&background=333&color=E0C995`;
         
         if (currPlayerName === this.playerName) {
             const myPhoto = localStorage.getItem('yamb_player_photo');
@@ -869,6 +875,7 @@ class YambApp {
         }
         
         avatarEl.src = src;
+        avatarEl.title = currPlayerName;
         avatarEl.style.display = 'block';
     }
 
@@ -2106,7 +2113,7 @@ class YambApp {
                     'assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png',
                     'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-v2.png',
                     'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
-                    'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
+                    'assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1',
                     'assets/easter-soft-clay/game/exit-v1.png?v=1',
                     'assets/easter-soft-clay/game/announce-v1.png?v=1',
@@ -2142,12 +2149,7 @@ class YambApp {
                     'assets/theme-packs/easter/canonical/daily-states/complete-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/already-played-v1.png',
                     'assets/theme-packs/easter/daily/reward-video-v3.png',
-                    'assets/easter-soft-clay/opponent/vs-v2.png?v=opt2',
                     'assets/easter-soft-clay/hotseat/winner.png?v=opt2',
-                    'assets/easter-soft-clay/opponent/scanning.png?v=opt2',
-                    'assets/easter-soft-clay/opponent/found.png?v=opt2',
-                    'assets/easter-soft-clay/opponent/disconnected.png?v=opt2',
-                    'assets/easter-soft-clay/opponent/reconnected.png?v=opt2',
                     'assets/easter-soft-clay/invite/send.png?v=opt2',
                     'assets/easter-soft-clay/invite/empty.png?v=opt2',
                     'assets/easter-soft-clay/invite/sent.png?v=opt2',
@@ -2164,7 +2166,7 @@ class YambApp {
                     'assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
                     'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
-                    'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
+                    'assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/desert-soft-clay/mode-invite-pro.png?v=1',
                     'assets/theme-packs/desert/canonical/daily-room-identity/daily-room-v1.png',
                     'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
@@ -2178,7 +2180,6 @@ class YambApp {
                     'assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png',
                     'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v2.png',
                     'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
-                    'assets/desert-soft-clay/opponent/vs-v2.png?v=opt2',
                     'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2',
                     'assets/desert-soft-clay/statistics/record-v2.png?v=opt2',
                     'assets/desert-soft-clay/statistics/games-v2.png?v=opt2',
@@ -2193,7 +2194,6 @@ class YambApp {
                     'assets/desert-soft-clay/statistics/h2h-v2.png?v=opt2',
                     'assets/desert-soft-clay/invite/sent.png?v=opt2',
                     'assets/desert-soft-clay/invite/accepted.png?v=opt2',
-                    'assets/desert-soft-clay/opponent/reconnected.png?v=opt2',
                     'assets/desert-soft-clay/statistics/h2h-empty-v3.png?v=opt2',
                     'assets/desert-soft-clay/statistics/h2h-detail/highest-score-v2.png?v=1',
                     'assets/desert-soft-clay/statistics/h2h-detail/max-margin-v2.png?v=1',
@@ -2249,17 +2249,12 @@ class YambApp {
                     'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
                     'assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png?v=2',
                     'assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png?v=2',
-                    'assets/severna-soft-clay/opponent/scanning-v3.png?v=1',
-                    'assets/severna-soft-clay/opponent/found-v3.png?v=1',
-                    'assets/severna-soft-clay/opponent/vs-v3.png?v=1',
-                    'assets/severna-soft-clay/opponent/disconnected-v3.png?v=1',
-                    'assets/severna-soft-clay/opponent/reconnected-v3.png?v=1',
                     'assets/severna-soft-clay/invite/send-v2.png?v=1',
                     'assets/severna-soft-clay/invite/empty-v2.png?v=1',
                     'assets/severna-soft-clay/invite/sent-v2.png?v=1',
                     'assets/severna-soft-clay/invite/accepted-v2.png?v=1',
                     'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
-                    'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
+                    'assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/severna-soft-clay/hotseat/winner-v2.png?v=1',
                     'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
                     'assets/theme-packs/severna/canonical/daily-room-identity/daily-room-v1.png',
@@ -2339,6 +2334,54 @@ class YambApp {
         return `assets/theme-packs/${theme}/canonical/${role}-room-identity/${role}-room${variant === 'menu' ? '-menu' : ''}-v1.png`;
     }
 
+    getOnlineRandomStateSource(theme, role) {
+        const green = {
+            header: 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
+            scanning: 'assets/green-soft-clay/opponent/scanning-v1.png?v=opt2',
+            found: 'assets/green-soft-clay/opponent/found-v1.png?v=opt2',
+            vs: 'assets/green-soft-clay/opponent/vs-v1.png?v=opt2',
+            disconnected: 'assets/green-soft-clay/opponent/disconnected-v1.png?v=opt2',
+            reconnected: 'assets/green-soft-clay/opponent/reconnected-v1.png?v=opt2'
+        };
+        if (!Object.prototype.hasOwnProperty.call(green, role)) return '';
+        if (theme === 'dark') return green[role];
+        if (!['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)) return '';
+        return role === 'header'
+            ? this.getMainRoomPackSource(theme, 'opponent')
+            : `assets/theme-packs/${theme}/canonical/online-random-states/${role}-v1.png?v=1`;
+    }
+
+    getOnlineRematchSource(theme, role) {
+        if (!['icon', 'button'].includes(role)) return '';
+        const root = theme === 'dark'
+            ? 'assets/green-soft-clay/canonical/online-random-rematch/'
+            : `assets/theme-packs/${theme}/canonical/online-random-rematch/`;
+        return `${root}rematch-${role}-v1.png?v=1`;
+    }
+
+    syncOnlineRematchAssets(theme) {
+        const icon = document.getElementById('go-rematch-icon');
+        if (icon) {
+            const source = this.getOnlineRematchSource(theme, 'icon');
+            if (icon.getAttribute('src') !== source) icon.src = source;
+        }
+        const button = document.getElementById('btn-rematch');
+        if (button) button.style.setProperty('--online-rematch-button-image',
+            `url("${this.getOnlineRematchSource(theme, 'button')}")`);
+    }
+
+    syncOnlineRandomStateImages(theme, { hydrate = false } = {}) {
+        document.querySelectorAll('#waiting-screen img[data-online-random-role]').forEach(image => {
+            const source = this.getOnlineRandomStateSource(theme, image.dataset.onlineRandomRole);
+            if (!source) return;
+            image.dataset.themeSrc = source;
+            if (image.getAttribute('src') !== source) {
+                image.removeAttribute('src');
+                if (hydrate) image.src = source;
+            }
+        });
+    }
+
     getMainMenuIconSources(theme) {
         if (theme === 'dark') {
             const menu = document.getElementById('main-menu');
@@ -2368,7 +2411,8 @@ class YambApp {
             treasury: ['treasury/reward-video-v3.png'],
             solo: ['solo/finish-reward-video-v3.png']
         };
-        const role = roomId === 'daily' ? 'dailyChallenge' : roomId === 'riznica' ? 'treasury' : roomId;
+        const role = roomId === 'daily' ? 'dailyChallenge' : roomId === 'riznica' ? 'treasury'
+            : roomId === 'hotseat' ? 'solo' : roomId;
         const critical = ['easter', 'desert', 'severna'].includes(theme);
         return (files[role] || []).map(path => root + (critical && path.startsWith('canonical/rewarded-video/')
             ? path.replace('-v1.png', '-v2.png') : path));
@@ -2450,6 +2494,32 @@ class YambApp {
             onlineRandom: 'opponent'
         };
         const safeRoomId = aliases[roomId] || roomId;
+        const onlineFinishSources = () => {
+            const canonical = theme === 'dark' ? 'assets/green-soft-clay/canonical/'
+                : `assets/theme-packs/${theme}/canonical/`;
+            return [
+                this.getOnlineRematchSource(theme, 'icon'), this.getOnlineRematchSource(theme, 'button'),
+                ...['finish-score-mark-v1.png?v=1', 'finish-claim-v1.png?v=1', 'record-panel-v2.png?v=2']
+                    .map(file => `${canonical}solo-results/${file}`),
+                ...['weekly', 'monthly', 'all_time', 'personal']
+                    .map(role => `${canonical}solo-record-icons/${role}-v1.png?v=1`),
+                `${canonical}statistics-overview/power-index-v1.png?v=1`,
+                `${canonical}ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`,
+                ...(theme === 'dark' ? ['assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1']
+                    : this.getRewardedVideoPackSources(theme, 'solo'))
+            ];
+        };
+        if (safeRoomId === 'gameOver' && this.onlineMode) {
+            return [...new Set(onlineFinishSources().filter(Boolean))];
+        }
+        if (safeRoomId === 'opponent') {
+            const stateSources = ['header', 'scanning', 'found', 'vs', 'disconnected', 'reconnected']
+                .map(role => this.getOnlineRandomStateSource(theme, role));
+            const podiumSources = ['gold', 'silver', 'bronze']
+                .map(tier => getThemeMedalSource('leaderboard', tier, theme));
+            const emptySource = window.themeLeaderboard?.asset('empty-loading', theme);
+            return [...new Set([...stateSources, ...podiumSources, emptySource, ...onlineFinishSources()].filter(Boolean))];
+        }
         const medalContexts = {
             leaderboard: ['leaderboard'],
             statistics: ['powerIndex', 'fireStreak'],
@@ -2492,28 +2562,34 @@ class YambApp {
             ? ['state', 'search', 'friend', 'spectate', 'duel', 'avatar']
                 .map(role => `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png?v=2`)
             : [];
-        const soloResults = safeRoomId === 'solo'
+        const localFinishRoom = safeRoomId === 'solo' || safeRoomId === 'hotseat';
+        const soloResults = localFinishRoom
             ? theme === 'dark'
-                ? ['assets/green-soft-clay/canonical/solo-results/record-panel-v2.png?v=2']
+                ? [...['finish-score-mark-v1.png?v=1', 'finish-claim-v1.png?v=1', 'record-panel-v2.png?v=2']
+                    .map(file => `assets/green-soft-clay/canonical/solo-results/${file}`),
+                    'assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1']
                 : ['finish-score-mark', 'finish-claim', 'record-panel'].map(role =>
                     `assets/theme-packs/${theme}/canonical/solo-results/${role}-${role === 'record-panel' ? 'v2.png?v=2' : 'v1.png?v=1'}`)
             : [];
-        const soloPowerIndex = safeRoomId === 'solo'
+        const soloPowerIndex = localFinishRoom
             ? [theme === 'dark'
                 ? 'assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1'
                 : `assets/theme-packs/${theme}/canonical/statistics-overview/power-index-v1.png?v=1`]
             : [];
-        const soloDucat = safeRoomId === 'solo'
+        const soloDucat = localFinishRoom
             ? [theme === 'dark'
                 ? 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png'
                 : `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`]
             : [];
-        const soloRecordIcons = safeRoomId === 'solo'
+        const soloRecordIcons = localFinishRoom
             ? ['weekly', 'monthly', 'all_time', 'personal'].map(role => theme === 'dark'
                 ? `assets/green-soft-clay/canonical/solo-record-icons/${role}-v1.png?v=1`
                 : `assets/theme-packs/${theme}/canonical/solo-record-icons/${role}-v1.png?v=1`)
             : [];
-        if (!root) return [...new Set([...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        const hotseatAvatar = safeRoomId === 'hotseat'
+            ? [`assets/theme-packs/${theme}/canonical/online-players-internal/avatar-v1.png?v=2`]
+            : [];
+        if (!root) return [...new Set([...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...hotseatAvatar, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
             dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
@@ -2536,10 +2612,10 @@ class YambApp {
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
-        if (!matcher) return [...new Set([...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
+        if (!matcher) return [...new Set([...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...hotseatAvatar, ...medalSources, ...treasuryControls, ...tournamentRoomAssets, ...globalChatInternal, ...onlinePlayersInternal])];
         return [...new Set([
             ...pack.assets.filter(source => source.startsWith(root) && matcher(relativePath(source))),
-            ...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...medalSources, ...treasuryControls, ...tournamentRoomAssets,
+            ...soloResults, ...soloPowerIndex, ...soloDucat, ...soloRecordIcons, ...hotseatAvatar, ...medalSources, ...treasuryControls, ...tournamentRoomAssets,
             ...globalChatInternal, ...onlinePlayersInternal
         ])];
     }
@@ -2587,6 +2663,10 @@ class YambApp {
         const themeRoot = this.getThemeAssetRoot(theme);
         const roomIcon = this.getMainRoomPackSource(theme, roomId);
         if (!themeRoot && !roomIcon) return Promise.resolve();
+
+        if (roomId === 'opponent' || roomId === 'onlineRandom') {
+            this.syncOnlineRandomStateImages(theme, { hydrate: true });
+        }
 
         const roomRoot = root || this.getThemeRoomRoot(roomId);
         const sources = [...new Set([
@@ -2848,6 +2928,9 @@ class YambApp {
             image.src = getThemeTreasuryControlSource(image.dataset.treasuryControl, safeTheme);
         });
         document.documentElement.dataset.splashTheme = safeTheme;
+        this.syncOnlineRandomStateImages(safeTheme, {
+            hydrate: !!document.getElementById('waiting-screen')?.classList.contains('active')
+        });
         if (typeof syncGreenRecordLabels === 'function') syncGreenRecordLabels();
         this.configureThemeSplashImage(safeTheme);
         const loadingPack = this.getThemeLoadingPack(safeTheme);
@@ -4061,7 +4144,7 @@ class YambApp {
             monthly: gt('ws_hof_top3_monthly') || '🏆 Top 3 This Month',
             all_time: gt('ws_hof_top3_all_time') || '🏆 Top 3 All Time'
         };
-        titleEl.innerText = titles[period] || titles.weekly;
+        titleEl.innerText = String(titles[period] || titles.weekly).replace(/^[^\p{L}\p{N}]+/u, '').trim();
     }
 
     refreshWaitingOpponentSearchText() {
@@ -4106,7 +4189,7 @@ class YambApp {
 
         if (!data || data.length === 0) {
             listEl.innerHTML = `
-                <div class="waiting-hof-empty-state" style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
+                <div class="waiting-hof-empty-state">
                     <img class="waiting-hof-state-canonical-icon" data-leaderboard-control="empty-loading" src="${window.themeLeaderboard.asset('empty-loading')}" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</span>
                 </div>
@@ -4116,12 +4199,10 @@ class YambApp {
         }
 
         let html = '';
-        const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
         const sec = window.YambSecurity;
 
         data.sort((a, b) => b.score - a.score).slice(0, 3).forEach((p, index) => {
             const medalAsset = ['gold', 'silver', 'bronze'][index] || '';
-            const color = colors[index] || '#fff';
             const displayName = String(p.name || p.playerName || getFallbackPlayerName());
             const avatar = p.photoUrl && p.photoUrl.length > 5 
                 ? p.photoUrl 
@@ -4134,18 +4215,16 @@ class YambApp {
             const podiumSrc = getThemeMedalSource('leaderboard', medalAsset, activeTheme);
 
             html += `
-                <div class="waiting-hof-entry" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span class="waiting-podium-mark" style="font-size: 1.2rem; font-weight: 900; width: 25px; text-align: center;">
+                <div class="waiting-hof-entry waiting-hof-entry--${medalAsset}">
+                    <div class="waiting-hof-person">
+                        <span class="waiting-podium-mark">
                             <img class="waiting-podium-medal" src="${podiumSrc}" alt="" aria-hidden="true" decoding="async">
                             <span class="waiting-podium-rank-number">${index + 1}</span>
                         </span>
-                        <img src="${safeAvatar}" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid ${color}; object-fit: cover;">
-                        <span style="color: var(--text-main); font-weight: 800; font-size: 0.85rem; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeName}</span>
+                        <img class="waiting-hof-avatar" src="${safeAvatar}" alt="" aria-hidden="true" decoding="async">
+                        <span class="waiting-hof-name">${safeName}</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="color: ${color}; font-weight: 900; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${safeScore}</span>
-                    </div>
+                    <strong class="waiting-hof-score">${safeScore}</strong>
                 </div>
             `;
         });
@@ -5863,28 +5942,47 @@ class YambApp {
     }
     
     async requestRematch() {
-        if (!this.socket || this.isSpectator || !this.onlineMode) return;
+        if (!this.socket?.connected || this.isSpectator || !this.onlineMode) return;
+
+        const tournamentMatch = this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType });
+        if (tournamentMatch && this.lastOnlineGameResult?.isDraw !== true) return;
+        const readyLabel = tournamentMatch ? 'go_tourney_replay' : 'go_rematch';
+        const waitingLabel = tournamentMatch ? 'go_tourney_replay_waiting' : 'go_rematch_waiting';
+        const unavailableLabel = tournamentMatch ? 'go_tourney_replay_unavailable' : 'go_rematch_unavailable';
 
         const btnRematch = document.getElementById('btn-rematch');
+        const rematchLabel = document.getElementById('go-rematch-label');
         if (btnRematch) {
             btnRematch.disabled = true;
-            btnRematch.innerHTML = `<span>⏳ ${gt('hs_loading')}</span>`;
-            btnRematch.style.background = 'linear-gradient(45deg, #FF9800, #F57C00)';
-            btnRematch.style.boxShadow = 'none';
+            btnRematch.dataset.state = 'waiting';
         }
+        if (rematchLabel) rematchLabel.textContent = gt(waitingLabel) || 'ČEKA SE PROTIVNIK';
 
         this.soundMgr.click();
         const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
         if (!rewardReady) {
             if (btnRematch) {
                 btnRematch.disabled = false;
-                btnRematch.innerHTML = `<span data-lang="go_rematch">${gt('go_rematch')}</span>`;
-                btnRematch.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
+                btnRematch.dataset.state = 'ready';
             }
+            if (rematchLabel) rematchLabel.textContent = gt(readyLabel);
             this.modal.alert(gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.", gt('modal_title_info') || "INFO");
             return;
         }
-        this.socket.emit('request_rematch');
+        const result = await this.emitSocketAck('request_rematch', {}, 8000);
+        if (!result?.ok) {
+            if (btnRematch) { btnRematch.disabled = false; btnRematch.dataset.state = 'ready'; }
+            if (rematchLabel) rematchLabel.textContent = gt(readyLabel);
+            this.modal.alert(gt(unavailableLabel) || 'Ponavljanje meča trenutno nije dostupno.', gt('modal_title_info') || 'INFO');
+            return;
+        }
+        const requestToken = this.rematchRequestToken = (this.rematchRequestToken || 0) + 1;
+        setTimeout(() => {
+            if (this.rematchRequestToken !== requestToken || btnRematch?.dataset.state !== 'waiting') return;
+            btnRematch.disabled = false;
+            btnRematch.dataset.state = 'ready';
+            if (rematchLabel) rematchLabel.textContent = gt(readyLabel);
+        }, 120000);
     }
 
     showSettings(options = {}) {
@@ -6268,20 +6366,20 @@ class YambApp {
                 label: () => gt('menu_solo') || ((localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'SOLO GAME' : 'SOLO IGRA')
             },
             hotseat: {
-                icon: 'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-v1.png',
                 greenIcon: 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-v1.png',
+                severnaIcon: 'assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-v1.png',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'TWO PLAYERS HOTSEAT'
                     : 'DVA IGRAČA HOTSEAT'
             },
             opponent: {
-                icon: 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
+                icon: 'assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-v1.png',
                 greenIcon: 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-v1.png',
+                severnaIcon: 'assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-v1.png',
                 scale: 1.2,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'FIND OPPONENT'
@@ -6872,6 +6970,7 @@ class YambApp {
 
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
+        if (mode === 'random') this.prepareThemeRoomAssets('opponent');
 
         if (mode === 'random' && !options.skipRoomIntro && this.shouldPlayThemedRoomIntro('opponent')) {
             this.playEasterRoomIntro('opponent', () => this.setupOnline('random', { skipRoomIntro: true }));
@@ -7038,7 +7137,21 @@ class YambApp {
 
             timerDisplay.style.display = 'flex';
             timerDisplay.classList.add('timer-turn--disconnected');
-            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" data-theme-src="assets/easter-soft-clay/opponent/disconnected.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" data-theme-src="assets/desert-soft-clay/opponent/disconnected.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" data-theme-src="assets/severna-soft-clay/opponent/disconnected-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="green-opponent-connection-icon" data-theme-src="assets/green-soft-clay/opponent/disconnected-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            const theme = localStorage.getItem('yamb_theme') || 'dark';
+            const isRandom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
+            const icon = isRandom ? this.getOnlineRandomStateSource(theme, 'disconnected') : '';
+            timerDisplay.replaceChildren();
+            if (icon) {
+                const image = document.createElement('img');
+                image.className = 'online-random-connection-icon';
+                image.src = icon;
+                image.alt = '';
+                image.setAttribute('aria-hidden', 'true');
+                timerDisplay.appendChild(image);
+            }
+            const label = document.createElement('span');
+            label.textContent = text;
+            timerDisplay.appendChild(label);
             timerDisplay.style.animation = 'pulse 1s infinite';
 
             if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
@@ -7248,11 +7361,7 @@ class YambApp {
                     gt('opp_reconnected') || "Protivnik se vratio u igru!",
                     isRandomOpponentRoom
                         ? {
-                            icon: (localStorage.getItem('yamb_theme') || 'dark') === 'dark'
-                                ? 'assets/green-soft-clay/opponent/reconnected-v1.png?v=opt2'
-                                : ((localStorage.getItem('yamb_theme') || 'dark') === 'severna'
-                                    ? 'assets/severna-soft-clay/opponent/reconnected-v3.png?v=1'
-                                    : this.getSoftClayThemeAsset('opponent/reconnected.png?v=2')),
+                            icon: this.getOnlineRandomStateSource(localStorage.getItem('yamb_theme') || 'dark', 'reconnected'),
                             className: 'opponent-reconnected-toast'
                         }
                         : {}
@@ -7869,24 +7978,41 @@ class YambApp {
 
         this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage(gt('chat_opponent'), data.msg, "msg-incoming"); }); 
         
-        this.socket.on('rematch_requested', async () => {
-            if(this.isSpectator) return;
-            const accepted = await this.modal.confirm(gt('rematch_ask'));
+        this.socket.on('rematch_requested', async (data = {}) => {
+            if(this.isSpectator || !this.onlineMode || (data.roomId && data.roomId !== this.roomId)) return;
+            const tournamentDraw = this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType });
+            const accepted = await this.modal.confirm(gt(tournamentDraw ? 'go_tourney_replay_ask' : 'rematch_ask'));
             if (accepted) {
                 const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
                 if (rewardReady) {
-                    this.socket.emit('accept_rematch');
+                    const response = await this.emitSocketAck('accept_rematch', {}, 8000);
+                    if (!response?.ok) this.modal.alert(gt(tournamentDraw ? 'go_tourney_replay_unavailable' : 'go_rematch_unavailable')
+                        || 'Ponavljanje meča trenutno nije dostupno.', gt('modal_title_info') || 'INFO');
                 } else {
                     this.modal.alert(gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.", gt('modal_title_info') || "INFO");
-                    this.socket.emit('chat_msg', { roomId: this.roomId, msg: gt('rematch_declined') });
+                    this.socket.emit('decline_rematch');
                 }
             } else {
-                this.socket.emit('chat_msg', { roomId: this.roomId, msg: gt('rematch_declined') });
+                this.socket.emit('decline_rematch');
             }
         });
 
+        this.socket.off('rematch_declined');
+        this.socket.on('rematch_declined', () => {
+            this.rematchRequestToken = (this.rematchRequestToken || 0) + 1;
+            const button = document.getElementById('btn-rematch');
+            const label = document.getElementById('go-rematch-label');
+            if (button) { button.disabled = false; button.dataset.state = 'ready'; }
+            if (label) label.textContent = gt(this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })
+                ? 'go_tourney_replay' : 'go_rematch');
+            this.modal.alert(gt(this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })
+                ? 'go_tourney_replay_declined' : 'rematch_declined'), gt('modal_title_info') || 'INFO');
+        });
+
         this.socket.on('rematch_started', async () => {
+            this.rematchRequestToken = (this.rematchRequestToken || 0) + 1;
             if(this.isSpectator) {
+                this.lastOnlineGameResult = null;
                 this.initScores();
                 this.currentPlayerIdx = 0;
                 this.updateTableVisuals();
@@ -7898,9 +8024,15 @@ class YambApp {
                 this.modal.alert(gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.", gt('modal_title_info') || "INFO");
                 return;
             }
-            this.modal.alert(gt('rematch_accepted'), gt('rematch_title')).then(() => {
+            this.lastOnlineGameResult = null;
+            this.soloFinishMatchId = '';
+            this.soloRewardPreview = null;
+            const tournamentReplay = this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType });
+            this.modal.alert(gt(tournamentReplay ? 'go_tourney_replay_started' : 'rematch_accepted'),
+                gt(tournamentReplay ? 'tourney_match_title' : 'rematch_title')).then(() => {
                 this.initScores();
                 this.currentPlayerIdx = 0;
+                if (this.roomId) localStorage.setItem('yamb_active_online_room', this.roomId);
                 this.startGame();
             });
         });
@@ -7926,11 +8058,12 @@ class YambApp {
                 console.log("ℹ️ Protivnik je napustio sobu nakon završene partije.");
                 const btnRematch = document.getElementById('btn-rematch');
                 if (btnRematch) {
+                    this.rematchRequestToken = (this.rematchRequestToken || 0) + 1;
                     btnRematch.disabled = true;
-                    btnRematch.innerHTML = `<span>❌ ${gt('msg_opponent_left') || "Protivnik otišao"}</span>`;
-                    btnRematch.style.background = 'gray';
-                    btnRematch.style.boxShadow = 'none';
+                    btnRematch.dataset.state = 'unavailable';
                 }
+                const rematchLabel = document.getElementById('go-rematch-label');
+                if (rematchLabel) rematchLabel.textContent = gt('msg_opponent_left') || 'Protivnik je otišao';
                 return;
             }
 
@@ -8381,7 +8514,7 @@ class YambApp {
         this.allScores = [];
         this.dualBoardLastFollowedPlayerIdx = null;
         const gameScene = document.getElementById('game-scene');
-        if (gameScene) gameScene.classList.remove('theme-dual-board-view', 'theme-spectator-view', 'easter-spectator-view', 'online-duel-room', 'random-online-duel-room', 'opponent-reconnecting');
+        if (gameScene) gameScene.classList.remove('theme-dual-board-view', 'hotseat-dual-board-view', 'theme-spectator-view', 'easter-spectator-view', 'online-duel-room', 'random-online-duel-room', 'opponent-reconnecting');
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
@@ -8532,6 +8665,7 @@ class YambApp {
             const nameDiv = document.createElement('div'); 
             nameDiv.className = 'player-name'; 
             nameDiv.innerText = player; 
+            nameDiv.title = player;
             tableDiv.appendChild(nameDiv); 
             
             const grid = document.createElement('div'); 
@@ -8658,8 +8792,20 @@ class YambApp {
     }
 
     highlightCurrentPlayer() {
+        const isHotseatTwoPlayerGame = this.modeTag === 'Hotseat' && !this.onlineMode && this.players.length === 2;
         const playerTables = document.querySelectorAll('.player-table');
-        playerTables.forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; });
+        playerTables.forEach(el => {
+            el.classList.remove('hotseat-table-active');
+            if (isHotseatTwoPlayerGame) {
+                el.style.removeProperty('border');
+                el.style.removeProperty('box-shadow');
+                el.style.opacity = '1';
+            } else {
+                el.style.border = "var(--glass-border)";
+                el.style.boxShadow = "none";
+                el.style.opacity = "0.7";
+            }
+        });
         const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
         const gameScene = document.getElementById('game-scene');
         const isEasterTwoPlayerGame = document.body.classList.contains('easter-theme') && this.players.length === 2;
@@ -8670,7 +8816,7 @@ class YambApp {
             && !document.body.classList.contains('desert-theme')
             && !document.body.classList.contains('severna-theme')
             && this.players.length === 2;
-        const usesTwoPlayerThemePager = isEasterTwoPlayerGame || isSevernaTwoPlayerGame || isGreenTwoPlayerGame;
+        const usesTwoPlayerThemePager = isEasterTwoPlayerGame || isSevernaTwoPlayerGame || isGreenTwoPlayerGame || isHotseatTwoPlayerGame;
         const isThemeOnlineDuel = usesTwoPlayerThemePager && this.onlineMode;
         const isThemeRandomDuel = isThemeOnlineDuel
             && this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
@@ -8678,6 +8824,7 @@ class YambApp {
         // Neuphorism teme koriste isti slobodan vertikalni pager za svaki režim sa dva igrača.
         if (gameScene) {
             gameScene.classList.toggle('theme-dual-board-view', usesTwoPlayerThemePager);
+            gameScene.classList.toggle('hotseat-dual-board-view', isHotseatTwoPlayerGame);
             gameScene.classList.toggle('online-duel-room', isThemeOnlineDuel);
             gameScene.classList.toggle('random-online-duel-room', isThemeRandomDuel);
             gameScene.classList.toggle('theme-spectator-view', isDesertSpectatorDuel);
@@ -8685,9 +8832,13 @@ class YambApp {
         playerTables.forEach(el => el.classList.remove('theme-spectator-active'));
 
         if(activeTbl) {
-            activeTbl.style.border = "2px solid var(--gold-main)";
-            activeTbl.style.boxShadow = "var(--theme-active-table-shadow, 0 0 15px rgba(224, 201, 149, 0.2))";
-            activeTbl.style.opacity = "1";
+            if (isHotseatTwoPlayerGame) {
+                activeTbl.classList.add('hotseat-table-active');
+            } else {
+                activeTbl.style.border = "2px solid var(--gold-main)";
+                activeTbl.style.boxShadow = "var(--theme-active-table-shadow, 0 0 15px rgba(224, 201, 149, 0.2))";
+                activeTbl.style.opacity = "1";
+            }
             const usesThemedDualPager = usesTwoPlayerThemePager || isDesertSpectatorDuel;
             const shouldFollowActiveTable = this.players.length > 1 &&
                 (!usesThemedDualPager || this.dualBoardLastFollowedPlayerIdx !== this.currentPlayerIdx);
@@ -8720,6 +8871,7 @@ class YambApp {
             } else {
                 lblTurn.innerText = this.players[this.currentPlayerIdx] + " " + gt('game_turn_msg'); 
             }
+            lblTurn.title = lblTurn.innerText;
         }
         this.updateHeaderAvatar();
     }
@@ -9146,6 +9298,29 @@ class YambApp {
         this.soloFinishLastMessage[tier] = nextIndex;
         try { localStorage.setItem(storageKey, String(nextIndex)); } catch (_) {}
         return variants[nextIndex];
+    }
+
+    getHotseatFinishMarginBand(difference) {
+        if (difference === 0) return 'draw';
+        if (difference <= 50) return 'close';
+        if (difference <= 100) return 'narrow';
+        if (difference <= 200) return 'clear';
+        if (difference <= 300) return 'strong';
+        return 'decisive';
+    }
+
+    getHotseatFinishCommentKey(band) {
+        const storageKey = `yamb_hotseat_comment_last_${band}`;
+        let lastIndex = this.hotseatFinishLastComment?.[band];
+        if (!Number.isInteger(lastIndex)) {
+            try { lastIndex = Number.parseInt(localStorage.getItem(storageKey), 10); } catch (_) { lastIndex = -1; }
+        }
+        const choices = [0, 1, 2].filter(index => index !== lastIndex);
+        const nextIndex = choices[Math.floor(Math.random() * choices.length)];
+        if (!this.hotseatFinishLastComment) this.hotseatFinishLastComment = {};
+        this.hotseatFinishLastComment[band] = nextIndex;
+        try { localStorage.setItem(storageKey, String(nextIndex)); } catch (_) {}
+        return `go_hotseat_comment_${band}${nextIndex ? `_v${nextIndex + 1}` : ''}`;
     }
 
     calculateTotalScore(pIdx) {
@@ -9747,11 +9922,17 @@ class YambApp {
 
         const gameOverScreen = document.getElementById('game-over-screen');
         if (gameOverScreen) {
-            gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');
+            gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'is-online-random-result', 'is-online-duel-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');
             gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);
         }
         const soloRecordPanel = document.getElementById('solo-record-panel');
         if (soloRecordPanel) soloRecordPanel.hidden = true;
+        const hotseatScores = document.getElementById('hotseat-result-scores');
+        if (hotseatScores) hotseatScores.hidden = true;
+        const hotseatComment = document.getElementById('hotseat-result-comment');
+        if (hotseatComment) { hotseatComment.hidden = true; hotseatComment.textContent = ''; }
+        const tierTitle = document.getElementById('go-tier-title');
+        if (tierTitle) tierTitle.hidden = true;
 
         const titleEl = document.getElementById('go-title');
         const msgEl = document.getElementById('go-msg');
@@ -9766,7 +9947,7 @@ class YambApp {
         if (btnAd) btnAd.style.display = 'none';
 
         const btnRematch = document.getElementById('btn-rematch');
-        if (btnRematch) btnRematch.style.display = 'none';
+        if (btnRematch) { btnRematch.hidden = true; btnRematch.style.display = 'none'; }
 
         const claimLabel = document.getElementById('go-claim-label');
         if (claimLabel) claimLabel.innerText = gt('go_claim') || 'Preuzmi i Izađi';
@@ -9852,14 +10033,20 @@ class YambApp {
         let detectedMode = this.aiMode ? "AI" : "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (!this.aiMode && this.players.length > 1) detectedMode = "Hotseat";
 
-        let myScoreEntry = finalResults.find(r => r.name === this.playerName)
-            || (this.onlineMode && finalResults[this.myOnlineIndex])
-            || finalResults[0];
+        // A Hotseat guest can have the same visible name as the signed-in player.
+        // Player zero is the account owner; names must never decide ownership.
+        const accountPlayerIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
+            ? this.myOnlineIndex : 0;
+        let myScoreEntry = finalResults[accountPlayerIndex] || finalResults[0];
         let unlockedTrophiesNow = [];
         let saveMode = detectedMode;
         let matchResultRef = this.onlineMode ? String(onlineResult?.matchId || '') : '';
         this.refreshLocalStats();
-        let soloRecordAchievements = this.players.length === 1 && Number(myScoreEntry?.score) <= 0 ? [] : null;
+        const isLocalFinish = !this.onlineMode && !this.aiMode && (this.players.length === 1 || detectedMode === 'Hotseat');
+        const isOnlineDuelFinish = this.onlineMode && !this.isSpectator;
+        const isSharedFinish = isLocalFinish || isOnlineDuelFinish;
+        const isHeadToHeadFinish = detectedMode === 'Hotseat' || isOnlineDuelFinish;
+        let soloRecordAchievements = isSharedFinish && Number(myScoreEntry?.score) <= 0 ? [] : null;
         let soloPowerIndexGain = null;
         this.soloRewardPreview = null;
 
@@ -9872,9 +10059,7 @@ class YambApp {
         }
 
         if (myScoreEntry) {
-             const myIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
-                 ? this.myOnlineIndex
-                 : this.players.findIndex(p => p === myScoreEntry.name);
+             const myIndex = accountPlayerIndex;
              if (myIndex !== -1 && this.allScores[myIndex]) {
                  try {
                      if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
@@ -9918,7 +10103,7 @@ class YambApp {
                      resultType = 'draw';
                  } else if (this.onlineMode && serverWinnerIndex >= 0) {
                      resultType = serverWinnerIndex === this.myOnlineIndex ? 'win' : 'loss';
-                 } else if (winner.name === myScoreEntry.name) {
+                 } else if (finalResults[myIndex]?.score === winnerScore) {
                      resultType = 'win';
                  } else {
                      resultType = 'loss';
@@ -9927,11 +10112,9 @@ class YambApp {
              
              let finalOppScore = 0;
              if (this.players.length === 2) {
-                 const oppIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
-                     ? (this.myOnlineIndex === 0 ? 1 : 0)
-                     : this.players.findIndex(p => p !== myScoreEntry.name);
+                 const oppIndex = myIndex === 0 ? 1 : 0;
                  if (oppIndex !== -1) {
-                     let oppScoreEntry = finalResults[oppIndex] || finalResults.find(r => r.name !== myScoreEntry.name);
+                     let oppScoreEntry = finalResults[oppIndex];
                      finalOppScore = oppScoreEntry ? oppScoreEntry.score : 0;
                  }
              }
@@ -9953,7 +10136,7 @@ class YambApp {
                  matchResultRef = queuedResult?.clientResultId || '';
                  localResultAccepted = queuedResult?.accepted === true;
                  this.pendingRewardRejectedReason = queuedResult?.rejectedReason || '';
-                 if (this.players.length === 1 && Number.isFinite(queuedResult?.powerIndexGain)) {
+                 if (isLocalFinish && Number.isFinite(queuedResult?.powerIndexGain)) {
                      soloPowerIndexGain = queuedResult.powerIndexGain;
                  }
                  if (this.socket && this.socket.connected) {
@@ -9998,7 +10181,7 @@ class YambApp {
                 const scoreResult = await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef, {
                     serverVerified: this.onlineMode || localResultAccepted
                 });
-                if (this.players.length === 1 && scoreResult?.ok) {
+                if (isSharedFinish && scoreResult?.ok) {
                     soloRecordAchievements = Array.isArray(scoreResult.recordAchievements)
                         ? scoreResult.recordAchievements : null;
                     this.soloRewardPreview = scoreResult.soloRewardPreview || null;
@@ -10045,10 +10228,27 @@ class YambApp {
                 title = gt('go_title_good');
                 message = (gt('go_msg_solo_good') || "Završio si partiju sa {0} poena. Sledeća može bolje.").replace('{0}', myScore);
             }
+        } else if (isHeadToHeadFinish) {
+            const myScore = Math.max(0, Number(myScoreEntry?.score) || 0);
+            const soloFinishKey = myScore > 3000 ? 'solo_perfect'
+                : myScore > 2500 ? 'solo_masterful'
+                : myScore > 2000 ? 'solo_good'
+                : myScore > 1500 ? 'solo_progress'
+                : myScore > 1000 ? 'solo_more' : 'solo_rough';
+            resultOutcome = isDraw ? 'draw' : this.onlineMode && serverWinnerIndex >= 0
+                ? (serverWinnerIndex === accountPlayerIndex ? 'win' : 'loss')
+                : myScore === winnerScore ? 'win' : 'loss';
+            title = gt(resultOutcome === 'draw' ? 'go_draw' : resultOutcome === 'win' ? 'go_win' : 'go_loss');
+            message = (gt(this.getSoloFinishMessageKey(soloFinishKey)) || '{0} poena.').replace('{0}', myScore);
+            if (isDraw && this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) {
+                message += ` ${gt('tourney_draw_replay') || 'Turnirski meč se ponavlja dok neko ne pobedi.'}`;
+            }
+            scoreLabel = gt('go_label_your_score') || 'TVOJ REZULTAT';
+            if (resultOutcome === 'win' && this.effectMgr) this.effectMgr.celebrateWin();
         } else {
             const amIWinner = !!myScoreEntry && (this.onlineMode && serverWinnerIndex >= 0
                 ? serverWinnerIndex === this.myOnlineIndex
-                : winner.name === myScoreEntry.name);
+                : myScoreEntry.score === winnerScore);
             scoreLabel = gt('go_label_your_score') || "TVOJ REZULTAT";
 
             if (isDraw) {
@@ -10075,18 +10275,77 @@ class YambApp {
         document.getElementById('go-title').innerText = title;
         document.getElementById('go-msg').innerText = message;
         document.getElementById('go-score').innerText = myScoreEntry ? myScoreEntry.score : winner.score;
+        const hotseatScores = document.getElementById('hotseat-result-scores');
+        const tierTitle = document.getElementById('go-tier-title');
+        if (hotseatScores) {
+            hotseatScores.hidden = !isHeadToHeadFinish;
+            if (isHeadToHeadFinish) {
+                hotseatScores.querySelectorAll('[data-hotseat-player]').forEach((row, index) => {
+                    const resultIndex = isOnlineDuelFinish
+                        ? (index === 0 ? accountPlayerIndex : (accountPlayerIndex === 0 ? 1 : 0)) : index;
+                    const result = finalResults[resultIndex];
+                    if (!result) return;
+                    const role = row.querySelector('.hotseat-result-role');
+                    if (role) {
+                        const roleKey = isOnlineDuelFinish
+                            ? (index === 0 ? 'go_online_you' : 'go_online_opponent')
+                            : (index === 0 ? 'go_hotseat_account' : 'go_hotseat_guest');
+                        role.dataset.lang = roleKey;
+                        role.textContent = gt(roleKey);
+                    }
+                    row.querySelector('.hotseat-result-name').textContent = result.name;
+                    row.querySelector('.hotseat-result-points').textContent = Number(result.score).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
+                    row.classList.toggle('is-winner', !isDraw && result.score === winnerScore);
+                    row.classList.toggle('is-account', index === 0);
+                    const winnerLabel = row.querySelector('.hotseat-result-winner');
+                    if (winnerLabel) winnerLabel.hidden = isDraw || result.score !== winnerScore;
+                });
+            }
+        }
+        const hotseatComment = document.getElementById('hotseat-result-comment');
+        if (hotseatComment) {
+            hotseatComment.hidden = true;
+            hotseatComment.textContent = '';
+            if (isHeadToHeadFinish && finalResults.length === 2) {
+                const [first, second] = finalResults;
+                const difference = Math.abs(Number(first.score) - Number(second.score));
+                const band = this.getHotseatFinishMarginBand(difference);
+                const template = gt(this.getHotseatFinishCommentKey(band));
+                if (template) {
+                    const winner = Number(first.score) > Number(second.score) ? first : second;
+                    const loser = winner === first ? second : first;
+                    hotseatComment.textContent = template
+                        .replaceAll('{winner}', winner.name)
+                        .replaceAll('{loser}', loser.name)
+                        .replaceAll('{player1}', first.name)
+                        .replaceAll('{player2}', second.name);
+                    hotseatComment.hidden = false;
+                }
+            }
+        }
+        if (tierTitle) {
+            tierTitle.hidden = !isHeadToHeadFinish;
+            if (isHeadToHeadFinish) {
+                const score = Math.max(0, Number(myScoreEntry?.score) || 0);
+                const tier = score > 3000 ? 'solo_perfect' : score > 2500 ? 'solo_masterful'
+                    : score > 2000 ? 'solo_good' : score > 1500 ? 'solo_progress'
+                    : score > 1000 ? 'solo_more' : 'solo_rough';
+                tierTitle.textContent = gt(`go_title_${tier}`);
+            }
+        }
         const gameOverScreen = document.getElementById('game-over-screen');
         if (gameOverScreen) {
-            const isHotseatResult = detectedMode === 'Hotseat';
             gameOverScreen.classList.remove('is-technical-result', 'result-win', 'result-loss', 'result-draw');
-            gameOverScreen.classList.toggle('is-solo-result', this.players.length === 1);
-            gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);
-            gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);
+            gameOverScreen.classList.toggle('is-solo-result', isSharedFinish);
+            gameOverScreen.classList.toggle('is-hotseat-result', isHeadToHeadFinish);
+            gameOverScreen.classList.remove('is-online-random-result');
+            gameOverScreen.classList.toggle('is-online-duel-result', isOnlineDuelFinish);
+            gameOverScreen.classList.toggle('has-result-winner', isHeadToHeadFinish && !isDraw);
             if (resultOutcome) gameOverScreen.classList.add(`result-${resultOutcome}`);
         }
         const soloRecordPanel = document.getElementById('solo-record-panel');
         if (soloRecordPanel) {
-            soloRecordPanel.hidden = this.players.length !== 1;
+            soloRecordPanel.hidden = !isSharedFinish;
             const achieved = new Set(soloRecordAchievements || []);
             soloRecordPanel.querySelectorAll('[data-record-role]').forEach(item => {
                 item.classList.toggle('is-achieved', achieved.has(item.dataset.recordRole));
@@ -10102,14 +10361,14 @@ class YambApp {
             if (piGain) piGain.textContent = Number.isFinite(soloPowerIndexGain)
                 ? `${soloPowerIndexGain > 0 ? '+' : ''}${soloPowerIndexGain}` : '—';
         }
-        if (this.players.length === 1) window.themeSoloResults?.sync(true);
-        const isEnhancedSoloFinish = this.players.length === 1 && isEnhancedSoloFinishTheme;
+        if (isSharedFinish) window.themeSoloResults?.sync(true);
+        const isEnhancedSoloFinish = isSharedFinish && isEnhancedSoloFinishTheme;
         const soloFinishTier = document.getElementById('solo-finish-tier');
         const soloFinishStats = document.getElementById('solo-finish-stats');
         if (isEnhancedSoloFinish && myScoreEntry) {
             const myScore = Math.max(0, Number(myScoreEntry.score) || 0);
             const tierIndex = myScore > 3000 ? 5 : myScore > 2500 ? 4 : myScore > 2000 ? 3 : myScore > 1500 ? 2 : myScore > 1000 ? 1 : 0;
-            const summary = this.getSoloFinishSummary(0);
+            const summary = this.getSoloFinishSummary(accountPlayerIndex);
             if (soloFinishTier) {
                 soloFinishTier.hidden = false;
                 soloFinishTier.querySelectorAll('.easter-solo-finish-tier-step').forEach((step, index) => {
@@ -10182,7 +10441,7 @@ class YambApp {
         
         const btnAd = document.getElementById('btn-ad-double');
         if (btnAd) {
-            const noAdGain = this.players.length === 1 && this.soloRewardPreview
+            const noAdGain = isSharedFinish && this.soloRewardPreview
                 && this.soloRewardPreview.adReward <= this.soloRewardPreview.baseReward;
             btnAd.style.display = (myScoreEntry && myScoreEntry.score <= 0) || noAdGain
                 || !!this.pendingRewardRejectedReason ? 'none' : 'flex';
@@ -10190,12 +10449,17 @@ class YambApp {
         
         const claimLabel = document.getElementById('go-claim-label');
         const rewardNumberLocale = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
-        if (claimLabel) claimLabel.innerText = this.players.length === 1 && this.soloRewardPreview
-            ? (gt('go_claim_amount') || 'Preuzmi {0} i izađi').replace('{0}', this.soloRewardPreview.baseReward.toLocaleString(rewardNumberLocale))
-            : gt('go_claim');
+        if (claimLabel) {
+            const noReward = Math.max(0, Number(myScoreEntry?.score) || 0) === 0;
+            claimLabel.dataset.lang = noReward ? 'go_exit_after_claim' : 'go_claim';
+            claimLabel.innerText = noReward ? (gt('go_exit_after_claim') || 'Izađi')
+                : isSharedFinish && this.soloRewardPreview
+                    ? (gt('go_claim_amount') || 'Preuzmi {0} i izađi').replace('{0}', this.soloRewardPreview.baseReward.toLocaleString(rewardNumberLocale))
+                    : gt('go_claim');
+        }
         const btnDouble = document.getElementById('go-double-label');
         const doubleDucat = document.getElementById('go-double-ducat');
-        const hasSoloRewardAmount = this.players.length === 1 && !!this.soloRewardPreview;
+        const hasSoloRewardAmount = isSharedFinish && !!this.soloRewardPreview;
         if (doubleDucat) doubleDucat.hidden = !hasSoloRewardAmount;
         if (btnDouble) {
             if (hasSoloRewardAmount) {
@@ -10212,13 +10476,17 @@ class YambApp {
         const btnRematch = document.getElementById('btn-rematch');
         if (this.onlineMode) {
             const isTournament = this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType });
+            const showRematch = !isTournament || isDraw;
 
             if (btnRematch) {
-                btnRematch.style.display = isTournament ? 'none' : 'flex';
+                btnRematch.hidden = !showRematch;
+                btnRematch.style.display = showRematch ? 'flex' : 'none';
                 btnRematch.disabled = false;
-                btnRematch.innerHTML = `<span data-lang="go_rematch">${gt('go_rematch')}</span>`;
-                btnRematch.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
+                btnRematch.dataset.state = 'ready';
             }
+            const rematchLabel = document.getElementById('go-rematch-label');
+            if (rematchLabel) rematchLabel.textContent = gt(isTournament ? 'go_tourney_replay' : 'go_rematch');
+            if (showRematch) this.syncOnlineRematchAssets(activeSoloFinishTheme);
             
             if (this.socket) {
                 this.socket.emit('game_over');
@@ -10245,13 +10513,13 @@ class YambApp {
             }
         } else {
             if (this.socket) this.socket.emit('game_over');
-            if (btnRematch) btnRematch.style.display = 'none';
+            if (btnRematch) { btnRematch.hidden = true; btnRematch.style.display = 'none'; }
         }
 
         unlockedTrophiesNow = await this.confirmTrophyShowcaseEntries(unlockedTrophiesNow);
         await this.showTrophyUnlockShowcase(unlockedTrophiesNow);
         this.navigateTo('game-over-screen');
-        this.soloFinishMatchId = this.players.length === 1 ? matchResultRef : '';
+        this.soloFinishMatchId = isSharedFinish ? matchResultRef : '';
         if (this.soloFinishMatchId && !Number.isFinite(soloPowerIndexGain)) {
             void this.refreshSoloFinishPowerIndex(this.soloFinishMatchId);
         }
@@ -10426,6 +10694,16 @@ class YambApp {
                 this.pendingScore = 0;
                 this.pendingRewardMatchId = '';
                 this.pendingBaseRewardClaimPromise = null;
+                if (this.onlineMode && document.getElementById('game-over-screen')
+                    ?.classList.contains('is-online-duel-result')) {
+                    const adButton = document.getElementById('btn-ad-double');
+                    if (adButton) adButton.style.display = 'none';
+                    const claimLabel = document.getElementById('go-claim-label');
+                    if (claimLabel) {
+                        claimLabel.dataset.lang = 'go_exit_after_claim';
+                        claimLabel.textContent = gt('go_exit_after_claim') || 'Izađi';
+                    }
+                }
             };
 
             try {
@@ -10488,7 +10766,7 @@ class YambApp {
             const success = !!(this.adMob && this.adMob.showRewardVideo &&
                 await this.adMob.showRewardVideo({
                     context: 'game_double',
-                    amount: this.lastGameType === 'normal' && this.players?.length === 1 && this.soloRewardPreview
+                    amount: this.lastGameType === 'normal' && this.soloRewardPreview
                         ? this.soloRewardPreview.adReward
                         : Math.min(8000, (parseInt(this.pendingScore, 10) || 0) * 2)
                 }));
@@ -10506,6 +10784,20 @@ class YambApp {
     }
     
     async claimReward(doubled) {
+        const onlineDuelFinish = this.onlineMode
+            && document.getElementById('game-over-screen')?.classList.contains('is-online-duel-result');
+        if (this.rewardClaimed && !doubled && onlineDuelFinish) {
+            this.showMainMenu();
+            return;
+        }
+        if (!doubled && this.lastGameType === 'normal' && !this.rewardClaimed
+            && Math.max(0, parseInt(this.pendingScore, 10) || 0) === 0) {
+            this.forgetPendingGameReward(this.pendingRewardMatchId);
+            this.rewardClaimed = true;
+            this.pendingRewardMatchId = '';
+            this.showMainMenu();
+            return;
+        }
         if (!doubled) {
             ++this.rewardAdAttemptId;
             if (this.rewardClaimInProgress && this.rewardClaimMode === 'double') {
@@ -10653,9 +10945,18 @@ class YambApp {
             this.soundMgr.win();
             this.effectMgr.trigger('gold_rain');
             const paidAmount = confirmed.reward;
+            if (onlineDuelFinish) {
+                const adButton = document.getElementById('btn-ad-double');
+                if (adButton) adButton.style.display = 'none';
+                const claimLabel = document.getElementById('go-claim-label');
+                if (claimLabel) {
+                    claimLabel.dataset.lang = 'go_exit_after_claim';
+                    claimLabel.textContent = gt('go_exit_after_claim') || 'Izađi';
+                }
+            }
             this.modal.alert(`${gt('msg_reward_doubled')} ${dukatIconHtml()} ${paidAmount}`, gt('modal_title_reward')).then(() => {
-                this.effectMgr.stop(); 
-                this.showMainMenu(); 
+                this.effectMgr.stop();
+                if (!onlineDuelFinish) this.showMainMenu();
             }); 
         } else { 
             this.showMainMenu(); 

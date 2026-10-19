@@ -235,6 +235,17 @@ function checkLocalResultValidation() {
     assert.strictEqual(first.payload.participants[0].uid, 'firebase-user-1234567890', 'Verified UID was not assigned to the local player');
     assert.strictEqual(first.payload.participants[1].uid, '', 'Client supplied identity leaked to a local guest');
 
+    const sameNames = context.buildClientReportedMatchResult('firebase-user-1234567890', 'Player', {
+        ...input,
+        clientResultId: 'local_same_name_12345',
+        participants: [{ name: 'Player', score: 2400 }, { name: 'Player', score: 2500 }],
+        scoreSheets: [2400, 2500]
+    });
+    assert.strictEqual(sameNames.ok, true, 'Same-name Hotseat players should remain valid');
+    assert.strictEqual(sameNames.payload.participants[0].result, 'loss', 'Guest win was attributed to the account by name');
+    assert.strictEqual(sameNames.payload.participants[0].uid, 'firebase-user-1234567890', 'Account identity moved to the guest');
+    assert.strictEqual(sameNames.payload.participants[1].uid, '', 'Guest received an account reward identity');
+
     const invalid = context.buildClientReportedMatchResult('firebase-user-1234567890', 'Player', {
         ...input,
         participants: [{ name: 'Player', score: 10001 }, { name: 'Guest', score: 0 }]

@@ -618,8 +618,9 @@ body.easter-theme .player-table > * {
     z-index: 1;
 }
 
-/* Vaskr: isti vertikalni pager za svaki duel sa dva igrača (online, spectator i Hotseat).
+/* Isti vertikalni pager za Hotseat u svih deset tema i postojeće tematske duele.
    Dimenzije tabela ostaju iste; sprečava se flex sabijanje i spoj dve polovine u kadru. */
+#game-scene.hotseat-dual-board-view .tables-wrapper,
 body.easter-theme #game-scene.theme-dual-board-view .tables-wrapper,
 body.severna-theme #game-scene.theme-dual-board-view .tables-wrapper,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-scene.theme-dual-board-view .tables-wrapper,
@@ -640,6 +641,7 @@ body.desert-theme #game-scene.theme-spectator-view .tables-wrapper {
     scroll-padding-block: 4px;
 }
 
+#game-scene.hotseat-dual-board-view .player-table,
 body.easter-theme #game-scene.theme-dual-board-view .player-table,
 body.severna-theme #game-scene.theme-dual-board-view .player-table,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-scene.theme-dual-board-view .player-table,
@@ -649,6 +651,29 @@ body.desert-theme #game-scene.theme-spectator-view .player-table {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
 }
+
+/* Hotseat keeps both boards readable; the active state uses outline, not a thicker border. */
+#game-scene.hotseat-dual-board-view .player-table {
+    opacity: 1 !important;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+    transition: outline-color .2s ease;
+}
+#game-scene.hotseat-dual-board-view .player-table.hotseat-table-active {
+    outline-color: var(--gh-accent);
+}
+#game-scene.hotseat-dual-board-view .player-table.hotseat-table-active .player-name {
+    background: var(--board-announce) !important;
+    color: var(--board-announce-ink) !important;
+}
+#game-scene.hotseat-dual-board-view .player-table .player-name,
+#game-scene.hotseat-dual-board-view #lbl-turn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+#game-scene.hotseat-dual-board-view #lbl-turn { min-width: 0; }
 
 /* Polja - meka udubljenja i citljiv kontrast */
 body.easter-theme .grid-cell { 
@@ -7145,6 +7170,13 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     background:
         linear-gradient(180deg, rgba(191,218,166,.08), rgba(18,48,28,.32)),
         var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat;
+}
+
+/* The shared Hotseat/room intro must use the selected theme's approved scene. */
+#easter-room-intro:is(.theme-light, .theme-medium, .theme-winter, .theme-neon, .theme-amethyst, .theme-moon) {
+    background:
+        linear-gradient(180deg, rgba(11, 16, 27, .06), rgba(11, 16, 27, .16)),
+        var(--approved-theme-bg-image) center / cover no-repeat;
 }
 
 .easter-room-intro.theme-dark .easter-room-intro-mark-wrap {

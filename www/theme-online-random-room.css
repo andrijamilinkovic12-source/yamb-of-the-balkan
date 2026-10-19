@@ -1,0 +1,263 @@
+/* Online Random shares Green geometry; each of the other nine themes supplies its own PNG states. */
+#waiting-screen .online-random-state-icon { display: none; }
+#waiting-screen.is-random-online .online-random-header-icon,
+#waiting-screen.is-random-online .online-random-scan-icon,
+#waiting-screen.is-random-online .online-random-found-icon,
+#waiting-screen.is-random-online .online-random-vs-icon { object-fit: contain; }
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .online-random-header-icon {
+    display: block !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .opponent-scan,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-glass-vs > span { display: none !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .online-random-scan-icon {
+    display: block !important;
+    width: 54px !important;
+    height: 54px !important;
+    flex: 0 0 54px;
+    animation: onlineRandomScan 1.65s ease-in-out infinite;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online #waiting-opp-found {
+    position: relative;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .online-random-found-icon {
+    display: block !important;
+    position: absolute;
+    top: -8px;
+    right: 1px;
+    z-index: 2;
+    width: 36px !important;
+    height: 36px !important;
+    pointer-events: none;
+    animation: onlineRandomFound .55s cubic-bezier(.34,1.56,.64,1) both;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-glass-vs {
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .online-random-vs-icon {
+    display: block !important;
+    width: 42px !important;
+    height: 42px !important;
+}
+
+/* Green is the geometry reference; the other themes keep their own material and palette. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .waiting-header { border-radius: 0 0 26px 26px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .waiting-status-panel {
+    box-sizing: border-box;
+    max-width: 500px;
+    padding: 14px 15px !important;
+    border-radius: 26px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-vs-area-horizontal { max-width: 500px; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-glass-card {
+    box-sizing: border-box;
+    height: 192px !important;
+    padding: 12px 8px 10px !important;
+    border-radius: 20px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-glass-avatar { width: 54px !important; height: 54px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online #waiting-opp-searching { gap: 5px; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-glass-name {
+    min-height: 1.2em !important;
+    max-height: 2.4em !important;
+    margin: 0 !important;
+    flex: 0 0 auto;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .waiting-start-msg { display: none !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online :is(.ws-glass-card > .ws-glass-stats, #waiting-opp-found > .ws-glass-stats) {
+    margin-top: 5px !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 5px 9px 6px !important;
+    border-radius: 11px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-glass-stats > .ws-g-stat:first-child {
+    margin-bottom: 5px;
+    padding-bottom: 4px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .ws-random-records { gap: 2px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .waiting-podium-mark {
+    position: relative;
+    display: inline-flex !important;
+    flex: 0 0 25px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .waiting-podium-medal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 35px !important;
+    height: 35px !important;
+    max-width: none;
+    transform: translate(-50%, -50%);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen.is-random-online .waiting-podium-rank-number {
+    position: absolute;
+    right: -7px;
+    bottom: -4px;
+    z-index: 2;
+    display: flex;
+    width: 14px;
+    height: 14px;
+    align-items: center;
+    justify-content: center;
+}
+#game-scene.random-online-duel-room.opponent-reconnecting .online-random-connection-icon {
+    display: block;
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    object-fit: contain;
+}
+.custom-toast.opponent-reconnected-toast .custom-toast-soft-clay-icon {
+    display: block;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    object-fit: contain;
+}
+
+/* The repeated room ID deliberately beats older theme rules without changing other rooms. */
+/* Online Random uses one layout with ten theme-specific contrast/material token sets. */
+#waiting-screen#waiting-screen.is-random-online {
+    --online-room-ink: var(--green-clay-ink-strong);
+    --online-room-muted: var(--green-clay-muted);
+    --online-room-accent: var(--green-clay-ink-strong);
+    --online-room-card: var(--green-clay-surface-soft);
+    --online-room-subcard: var(--green-clay-surface-inset);
+    --online-room-line: var(--green-clay-line);
+    --online-room-shadow: var(--green-clay-raised-small);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online {
+    --online-room-ink: var(--theme-card-ink);
+    --online-room-muted: var(--theme-card-muted);
+    --online-room-accent: var(--theme-card-primary);
+    --online-room-card: var(--theme-card-fill);
+    --online-room-subcard: var(--theme-subcard-fill);
+    --online-room-line: var(--theme-card-line);
+    --online-room-shadow: var(--theme-subcard-shadow);
+}
+#waiting-screen#waiting-screen.is-random-online .waiting-header #waiting-title {
+    min-width: 0;
+    font-size: clamp(1.05rem, 4.2vw, 1.22rem) !important;
+    line-height: 1.2;
+    color: var(--online-room-ink) !important;
+    text-shadow: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online .waiting-status-panel,
+#waiting-screen#waiting-screen.is-random-online .ws-glass-card,
+#waiting-screen#waiting-screen.is-random-online .ws-glass-card.opp-card,
+#waiting-screen#waiting-screen.is-random-online .waiting-hof {
+    box-sizing: border-box;
+    color: var(--online-room-ink) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online :is(.waiting-header,.waiting-status-panel) {
+    background: var(--online-room-card) !important;
+    border: 1px solid var(--online-room-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online :is(.ws-glass-card,.ws-glass-card.opp-card,.waiting-hof) {
+    background: var(--online-room-subcard) !important;
+    border: 1px solid var(--online-room-line) !important;
+    box-shadow: var(--online-room-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online .waiting-status-panel > div {
+    color: var(--online-room-accent) !important;
+    background: var(--online-room-card) !important;
+    border: 1px solid var(--online-room-line) !important;
+    box-shadow: var(--online-room-shadow) !important;
+    font-size: .75rem !important;
+    line-height: 1.3;
+    text-shadow: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online #wait-msg,
+#waiting-screen#waiting-screen.is-random-online .waiting-opp-searching-text {
+    color: var(--online-room-muted) !important;
+    text-shadow: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online :is(.ws-glass-name,.ws-g-stat .val,.waiting-hof-name,.waiting-hof-score,.waiting-hof-empty-state) {
+    color: var(--online-room-ink) !important;
+    text-shadow: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online .ws-g-stat .lbl { color: var(--online-room-muted) !important; text-shadow: none !important; }
+#waiting-screen#waiting-screen.is-random-online .ws-glass-stats,
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-entry {
+    color: var(--online-room-ink) !important;
+    background: var(--online-room-card) !important;
+    border: 1px solid var(--online-room-line) !important;
+    box-shadow: var(--online-room-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online .ws-glass-stats .ws-g-stat {
+    font-size: clamp(.66rem, 2.85vw, .74rem) !important;
+    line-height: 1.08 !important;
+    column-gap: 7px !important;
+}
+#waiting-screen#waiting-screen.is-random-online .ws-glass-stats .lbl { font-weight: 850 !important; letter-spacing: .28px; }
+#waiting-screen#waiting-screen.is-random-online .ws-glass-stats .val { font-weight: 950 !important; letter-spacing: .12px; }
+#waiting-screen#waiting-screen.is-random-online .ws-glass-avatar { border-color: var(--online-room-line) !important; }
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-title {
+    color: var(--online-room-accent) !important;
+    border-bottom-color: var(--online-room-line) !important;
+    text-shadow: none !important;
+}
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    min-height: 39px;
+    padding: 4px 9px;
+    border-radius: 12px;
+}
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-person { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; }
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-avatar { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--online-room-line); }
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .85rem; font-weight: 700; }
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-score { flex: 0 0 auto; font-size: .95rem; font-weight: 900; }
+#waiting-screen#waiting-screen.is-random-online .waiting-hof-empty-state { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; font-size: .82rem; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online .waiting-podium-rank-number {
+    color: var(--online-room-ink) !important;
+    background: var(--theme-card-surface) !important;
+    border: 1px solid var(--online-room-line) !important;
+    border-radius: 50%;
+    font-size: .52rem;
+    font-weight: 900;
+    line-height: 1;
+}
+@media (max-width: 359px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online .ws-glass-card { height: 186px !important; padding: 12px 6px 10px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online .ws-glass-avatar { width: 52px !important; height: 52px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online .ws-glass-vs,
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-random-online .online-random-vs-icon { width: 36px !important; height: 36px !important; flex-basis: 36px !important; }
+    #waiting-screen#waiting-screen.is-random-online .waiting-header #waiting-title { font-size: .78rem !important; }
+}
+@keyframes onlineRandomScan { 0%,100% { transform: scale(.96); } 50% { transform: scale(1.04); } }
+@keyframes onlineRandomFound { from { opacity: 0; transform: scale(.75); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+    #waiting-screen#waiting-screen.is-random-online .online-random-scan-icon,
+    #waiting-screen#waiting-screen.is-random-online .online-random-found-icon { animation: none !important; }
+}

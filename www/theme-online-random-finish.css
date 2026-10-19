@@ -1,0 +1,50 @@
+/* Every regular online duel shares the Hotseat/Solo result composition. */
+#game-over-screen #btn-rematch[hidden] { display: none !important; }
+#game-over-screen.is-online-duel-result #btn-rematch:not([hidden]) {
+    display: flex !important;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    margin: 0 !important;
+    padding: 5px 16px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    color: var(--solo-ink, #f2f6e8) !important;
+    background-color: var(--solo-action, #476941) !important;
+    background-image: var(--online-rematch-button-image) !important;
+    background-position: center !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font: 800 clamp(.7rem, 1.8vh, .95rem)/1.2 Montserrat, sans-serif;
+    letter-spacing: .035em;
+    transition: filter .16s ease, transform .16s ease;
+}
+#game-over-screen.is-online-duel-result #btn-rematch:not([hidden]):active:not(:disabled) { transform: scale(.985); }
+#game-over-screen.is-online-duel-result #btn-rematch:disabled { filter: saturate(.55); opacity: .8; cursor: default; }
+#game-over-screen.is-online-duel-result #go-rematch-icon {
+    display: block;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    object-fit: contain;
+}
+#game-over-screen.is-online-duel-result #go-rematch-label { white-space: nowrap; }
+#game-over-screen.is-online-duel-result #hotseat-result-comment:not([hidden]) { margin-top: 6px; }
+#game-over-screen.is-online-duel-result.screen.active > .modal-box {
+    box-sizing: border-box !important;
+    width: min(440px, calc(100vw - max(12px, var(--safe-left, 0px), env(safe-area-inset-left, 0px)) - max(12px, var(--safe-right, 0px), env(safe-area-inset-right, 0px)))) !important;
+    gap: 6px !important;
+}
+@media (max-height: 610px) {
+    #game-over-screen.is-online-duel-result.screen.active > .modal-box { gap: 3px !important; }
+    #game-over-screen.is-online-duel-result #go-msg { font-size: .75rem !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #game-over-screen.is-online-duel-result #btn-rematch { transition: none !important; }
+}

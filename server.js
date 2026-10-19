@@ -1450,17 +1450,19 @@ function calculateSoloRecordPayout(score, achievements = []) {
     };
 }
 
-async function getSoloRecordAchievementsBeforeInsert(uid, score, recordDate, snapshots) {
+async function getSoloRecordAchievementsBeforeInsert(uid, score, recordDate, snapshots, mode = 'Solo') {
     const flags = [];
+    const personalModes = ['random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(String(mode).toLowerCase())
+        ? /^(random|online|friend_invite|challenge|tournament|duel|prijatelj|turnir)$/i : /^(solo|hotseat)$/i;
     const previousSolo = await Score.findOne({
         $or: [{ playerId: uid }, { uid }],
-        mode: /^solo$/i
+        mode: personalModes
     }).sort({ score: -1 }).select('score').lean();
     if (!previousSolo || score > Math.max(0, toSafeInt(previousSolo.score, 0))) flags.push('personal');
     for (const period of LEADERBOARD_RECORD_PERIODS) {
         const start = getLeaderboardPeriodStart(period);
         if (start && recordDate < start) continue;
-        // A valid all-time top score also exceeds this player's earlier Solo best.
+        // A valid all-time top score also exceeds this account's earlier local best.
         if (period === 'all_time' && !flags.includes('personal')) continue;
         const previous = snapshots?.[period];
         if (!previous || score > Math.max(0, toSafeInt(previous.score, 0))) flags.push(period);
@@ -3944,7 +3946,7 @@ function hasUserClaimedGameReward(user, matchId) {
     return !!user && !!matchId && Array.isArray(user.claimedGameRewardIds) && user.claimedGameRewardIds.includes(matchId);
 }
 
-async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore = null) {
+async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore = null, options = {}) {
     const matchRef = String(submittedMatchId || '').trim().substring(0, 128);
     if (!uid || !matchRef) return { ok: false, reason: 'match_result_required' };
 
@@ -3959,7 +3961,9 @@ async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore
 
     const participant = (result.participants || []).find(item => String(item?.uid || '').trim() === uid);
     const score = Math.max(0, Math.min(MAX_SCORE, toSafeInt(participant?.score, 0)));
-    if (!participant || score <= 0) return { ok: false, reason: 'match_result_not_found' };
+    if (!participant || (score <= 0 && options.allowZeroScore !== true)) {
+        return { ok: false, reason: 'match_result_not_found' };
+    }
     if (expectedScore !== null && score !== expectedScore) return { ok: false, reason: 'score_mismatch' };
 
     return { ok: true, result, participant, score, matchId: result.matchId };
@@ -3991,11 +3995,13 @@ async function persistLeaderboardScoreRecord(options = {}) {
             recordAchievements: normalizeSoloRecordAchievements(existingScore.recordAchievements) };
     }
 
-    const isSoloRecord = mode.toLowerCase() === 'solo';
-    const leaderboardRecordSnapshots = (isSoloRecord || options.notifyRecords !== false)
+    const isLocalRecord = ['solo', 'hotseat'].includes(mode.toLowerCase());
+    const isOnlineDuelRecord = ['random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(mode.toLowerCase());
+    const isRecordReward = isLocalRecord || isOnlineDuelRecord;
+    const leaderboardRecordSnapshots = (isRecordReward || options.notifyRecords !== false)
         ? await captureLeaderboardRecordSnapshots() : null;
-    const recordAchievements = isSoloRecord
-        ? await getSoloRecordAchievementsBeforeInsert(finalUid, score, recordDate, leaderboardRecordSnapshots)
+    const recordAchievements = isRecordReward
+        ? await getSoloRecordAchievementsBeforeInsert(finalUid, score, recordDate, leaderboardRecordSnapshots, mode)
         : [];
 
     const savedScore = await Score.findOneAndUpdate(
@@ -4458,9 +4464,12 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
                 continue;
             }
 
+            const powerIndexBefore = powerIndexCore.calculatePowerIndex(user);
             applyCompletedDuelProfileStats(user, resultType, player.score);
             applyCompletedDuelH2H(user, opponent, resultType, player.score, opponent.score);
             await applyTechnicalLeagueDelta(user, player.score, { periodDate: ledgerWrite.result?.finishedAt || Date.now() });
+            const powerIndexGain = powerIndexCore.calculatePowerIndex(user) - powerIndexBefore;
+            rememberRecentPowerIndexGain(user, matchId, powerIndexGain);
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
             await markMatchResultStatsApplied(matchId, player.uid);
@@ -4817,7 +4826,8 @@ function createTournamentMatch(p1 = null, p2 = null) {
         drawCount: 0,
         lastDrawScoreLabel: '',
         lastDrawAt: null,
-        lastDrawRoomId: ''
+        lastDrawRoomId: '',
+        lastDrawMatchId: ''
     };
 }
 
@@ -5609,7 +5619,8 @@ async function recordTournamentDrawReplay(roomId) {
     const regularScores = getTournamentRoomMatchScores(roomId, match);
     if (!regularScores || regularScores.p1Score !== regularScores.p2Score) return false;
 
-    if (match.lastDrawRoomId === roomId) return false;
+    const drawMatchId = String(roomState[roomId]?.matchId || '');
+    if (!drawMatchId || match.lastDrawMatchId === drawMatchId) return false;
 
     const scoreLabel = `${regularScores.p1Score}-${regularScores.p2Score}`;
     match.rematchRequired = true;
@@ -5617,10 +5628,21 @@ async function recordTournamentDrawReplay(roomId) {
     match.lastDrawScoreLabel = scoreLabel;
     match.lastDrawAt = Date.now();
     match.lastDrawRoomId = roomId;
+    match.lastDrawMatchId = drawMatchId;
 
     await saveTournamentToDb();
     io.emit('tourney_state_update', tournamentState);
     return true;
+}
+
+function isTournamentDrawRematchAllowed(roomId, state) {
+    if (tournamentState.status !== 'active' || !state?.gameFinished) return false;
+    const roomInfo = parseTournamentRoomId(roomId);
+    const match = roomInfo && getTournamentMatch(roomInfo.round, roomInfo.index)?.match;
+    if (!match || match.winnerId || match.rematchRequired !== true || match.lastDrawRoomId !== roomId) return false;
+    if (match.lastDrawMatchId && match.lastDrawMatchId !== state.matchId) return false;
+    const scores = getTournamentRoomMatchScores(roomId, match);
+    return !!scores && scores.p1Score === scores.p2Score;
 }
 
 async function recordTournamentNetworkReplay(roomId) {
@@ -11942,7 +11964,7 @@ io.on('connection', (socket) => {
         if (!uid) return reply({ ok: false, reason: 'firebase_token_required' });
         if (!MONGO_URI) return reply({ ok: false, reason: 'db_unavailable' });
         try {
-            const verifiedMatch = await findVerifiedMatchParticipant(uid, data?.matchId);
+            const verifiedMatch = await findVerifiedMatchParticipant(uid, data?.matchId, null, { allowZeroScore: true });
             if (!verifiedMatch.ok) return reply({ ok: false, reason: verifiedMatch.reason, pending: true });
             const user = await UserProfile.findOne({ firebaseUid: uid });
             if (!user) return reply({ ok: false, reason: 'profile_not_found', pending: true });
@@ -12033,7 +12055,7 @@ io.on('connection', (socket) => {
                 matchId: verifiedMatch.matchId,
                 duplicate: !!persistedScore.duplicate,
                 recordAchievements: persistedScore.recordAchievements || [],
-                soloRewardPreview: finalMode.toLowerCase() === 'solo'
+                soloRewardPreview: ['solo', 'hotseat', 'random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(finalMode.toLowerCase())
                     ? calculateSoloRecordPayout(submittedScore, persistedScore.recordAchievements) : null,
                 rewardClaimed: rewardClaimedInLedger || (profileForRecord ? hasUserClaimedGameReward(profileForRecord, verifiedMatch.matchId) : false)
             });
@@ -12073,7 +12095,8 @@ io.on('connection', (socket) => {
             }
 
             const multiplier = data?.doubled ? 2 : 1;
-            const soloScoreRecord = String(rewardSession.mode || '').toLowerCase() === 'solo'
+            const localRecordReward = ['solo', 'hotseat', 'random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(String(rewardSession.mode || '').toLowerCase());
+            const soloScoreRecord = localRecordReward
                 ? await Score.findOne({ playerId: finalUid, matchId: rewardSession.matchId })
                     .select('recordAchievements').lean()
                 : null;
@@ -12081,7 +12104,7 @@ io.on('connection', (socket) => {
                 rewardSession.score,
                 soloScoreRecord?.recordAchievements || []
             );
-            const reward = String(rewardSession.mode || '').toLowerCase() === 'solo'
+            const reward = localRecordReward
                 ? (multiplier === 2 ? payout.adReward : payout.baseReward)
                 : Math.max(0, Math.min(MAX_REWARD_PER_GAME, rewardSession.score * multiplier));
 
@@ -12191,7 +12214,7 @@ io.on('connection', (socket) => {
                 reward,
                 balance: user.balance,
                 doubled: multiplier === 2,
-                soloRewardPreview: String(rewardSession.mode || '').toLowerCase() === 'solo' ? payout : null
+                soloRewardPreview: localRecordReward ? payout : null
             });
         } catch (err) {
             console.error("❌ claim_game_reward greška:", err);
@@ -14257,26 +14280,55 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('request_rematch', () => { relayEvent('rematch_requested', {}); });
-
-    socket.on('accept_rematch', () => {
+    socket.on('request_rematch', (data = {}, ack) => {
         const roomId = playerRooms[socket.id];
-        if(roomId) {
-            io.in(roomId).emit('rematch_started'); 
-            const clients = io.sockets.adapter.rooms.get(roomId);
-            let playersArr = [];
-            if(clients) {
-                for (const clientId of clients) {
-                    gameStartTimes[clientId] = Date.now();
-                    playersArr.push(clientId);
-                }
-            }
-            
-            if (playersArr.length === 2) {
-                const p1 = io.sockets.sockets.get(playersArr[0]);
-                const p2 = io.sockets.sockets.get(playersArr[1]);
-                
-                roomState[roomId] = {
+        const state = roomId && roomState[roomId];
+        const players = Array.isArray(state?.players) ? state.players : [];
+        const tournamentRoom = getOnlineDuelType(roomId) === 'tournament';
+        const ready = state?.gameFinished === true && players.length === 2
+            && (!tournamentRoom || isTournamentDrawRematchAllowed(roomId, state))
+            && players.includes(socket.id)
+            && players.every(id => io.sockets.sockets.get(id)?.rooms.has(roomId));
+        if (!ready) {
+            if (typeof ack === 'function') ack({ ok: false, reason: 'rematch_unavailable' });
+            return;
+        }
+        state.rematchRequestedBy = socket.id;
+        state.rematchRequestedAt = Date.now();
+        if (typeof ack === 'function') ack({ ok: true });
+        socket.to(roomId).emit('rematch_requested', { roomId });
+    });
+
+    socket.on('decline_rematch', () => {
+        const roomId = playerRooms[socket.id];
+        const state = roomId && roomState[roomId];
+        if (!state || !state.players?.includes(socket.id) || state.rematchRequestedBy === socket.id) return;
+        const requester = state.rematchRequestedBy;
+        state.rematchRequestedBy = null;
+        state.rematchRequestedAt = null;
+        if (requester) io.to(requester).emit('rematch_declined');
+    });
+
+    socket.on('accept_rematch', (data = {}, ack) => {
+        const roomId = playerRooms[socket.id];
+        const state = roomId && roomState[roomId];
+        const playersArr = Array.isArray(state?.players) ? [...state.players] : [];
+        const tournamentRoom = getOnlineDuelType(roomId) === 'tournament';
+        const ready = state?.gameFinished === true && playersArr.length === 2
+            && (!tournamentRoom || isTournamentDrawRematchAllowed(roomId, state))
+            && playersArr.includes(socket.id)
+            && state.rematchRequestedBy && state.rematchRequestedBy !== socket.id
+            && Date.now() - Number(state.rematchRequestedAt || 0) < 120000
+            && playersArr.every(id => io.sockets.sockets.get(id)?.rooms.has(roomId));
+        if (!ready) {
+            if (typeof ack === 'function') ack({ ok: false, reason: 'rematch_unavailable' });
+            return;
+        }
+        for (const clientId of playersArr) gameStartTimes[clientId] = Date.now();
+        const p1 = io.sockets.sockets.get(playersArr[0]);
+        const p2 = io.sockets.sockets.get(playersArr[1]);
+        clearFinishedRoomCleanup(roomId);
+        roomState[roomId] = {
                     matchId: createServerMatchId(),
                     matchStartedAt: Date.now(),
                     players: playersArr,
@@ -14290,13 +14342,12 @@ io.on('connection', (socket) => {
                     brojBacanja: 0,
                     najavaAktivna: false,
                     najavljenoPolje: null
-                };
-                startTurnTimer(roomId); 
-                notifyOnlinePlayersStatusChanged();
-            }
-
-            console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
-        }
+        };
+        startTurnTimer(roomId);
+        notifyOnlinePlayersStatusChanged();
+        if (typeof ack === 'function') ack({ ok: true });
+        io.in(roomId).emit('rematch_started');
+        console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
     });
 
     socket.on('tourney_reset', async () => {

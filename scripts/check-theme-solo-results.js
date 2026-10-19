@@ -33,6 +33,22 @@ const contrast = (a, b) => {
 
 assert.equal(manifest.assets.length, 27);
 assert(html.includes('id="solo-record-panel"') && !html.includes('id="solo-record-icon"'));
+assert(html.includes('id="hotseat-result-scores"') && html.includes('id="go-tier-title"'));
+assert(css.includes('#game-over-screen.is-hotseat-result .hotseat-result-scores')
+    && css.includes('.green-hotseat-winner-mark,.green-game-over-result-icon)')
+    && html.includes('data-lang="go_hotseat_account"') && html.includes('data-lang="go_hotseat_guest"'),
+    'Hotseat must show both players within the Solo panel without the obsolete winner mark');
+assert(game.includes("const accountPlayerIndex = this.onlineMode") && game.includes('let myScoreEntry = finalResults[accountPlayerIndex]'),
+    'Hotseat reward ownership must follow the account player index, even when names match');
+assert(game.includes("gameOverScreen.classList.toggle('is-solo-result', isSharedFinish)"),
+    'Hotseat must reuse the Solo finish composition');
+assert(game.includes("const localFinishRoom = safeRoomId === 'solo' || safeRoomId === 'hotseat'"),
+    'Hotseat must preload the same result PNG assets as Solo');
+assert(game.includes("roomId === 'hotseat' ? 'solo' : roomId"),
+    'Hotseat must preload the theme-specific rewarded video button PNG');
+assert(server.includes("const isLocalRecord = ['solo', 'hotseat'].includes(mode.toLowerCase())")
+    && server.includes("const localRecordReward = ['solo', 'hotseat', 'random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(String(rewardSession.mode || '').toLowerCase())"),
+    'Hotseat records and verified rewards must follow the Solo payout rule');
 for (const role of roles) {
     assert(html.includes(`data-record-role="${role}"`));
     assert(game.includes(`achieved.has(item.dataset.recordRole)`));
@@ -110,7 +126,7 @@ assert(css.includes('.solo-record-panel-footer { display:flex;') && css.includes
 assert(!css.includes('.solo-record-panel-footer { display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:3px; padding:1px 5px; border-radius:6px; background:var(--solo-record-top)'),
     'old white footer strip is still active');
 assert(game.includes("['finish-score-mark', 'finish-claim', 'record-panel']"));
-assert(game.includes("assets/green-soft-clay/canonical/solo-results/record-panel-v2.png?v=2"));
+assert(game.includes("record-panel-v2.png?v=2") && game.includes('assets/green-soft-clay/canonical/solo-results/${file}'));
 const combinations = {
     none: [], p: ['personal'], w: ['weekly'], m: ['monthly'],
     pw: ['personal', 'weekly'], pm: ['personal', 'monthly'], wm: ['weekly', 'monthly'],
@@ -289,7 +305,7 @@ for (const item of recordImages) assert(!item.src, 'old theme record PNG must cl
 window.themeSoloResults.sync(true);
 assert(powerIcon.src.includes('/green-soft-clay/canonical/statistics-overview/power-index-v1.png'));
 for (const item of recordImages) assert(item.src.includes(`/green-soft-clay/canonical/solo-record-icons/${item.dataset.soloRecordIcon}-v1.png`));
-const classifierMethod = server.match(/^async function getSoloRecordAchievementsBeforeInsert\(uid, score, recordDate, snapshots\) \{[\s\S]*?^\}/m)?.[0];
+const classifierMethod = server.match(/^async function getSoloRecordAchievementsBeforeInsert\(uid, score, recordDate, snapshots, mode = 'Solo'\) \{[\s\S]*?^\}/m)?.[0];
 assert(classifierMethod, 'server record classifier missing');
 let previousPersonal = null;
 let weeklyStart = new Date('2026-10-12T00:00:00Z');
@@ -334,17 +350,17 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
     const accountScores = [
         { playerId: 'account-a', uid: 'account-a', mode: 'Solo', score: 1500, playerName: 'Isto ime' },
         { playerId: 'account-b', uid: 'account-b', mode: 'Solo', score: 2500, playerName: 'Isto ime' },
-        { playerId: 'account-a', uid: 'account-a', mode: 'Hotseat', score: 3000, playerName: 'Isto ime' }
+        { playerId: 'account-a', uid: 'account-a', mode: 'Hotseat', score: 1800, playerName: 'Isto ime' }
     ];
     const classifyByAccount = vm.runInNewContext(`(${classifierMethod})`, {
         Score: { findOne(query) {
-            assert.equal(query.mode.source, '^solo$', 'personal record must use only Solo games');
+            assert.equal(query.mode.source, '^(solo|hotseat)$', 'personal record must include this account local games');
             const accountUid = query.$or[0].playerId;
             assert.equal(query.$or[1].uid, accountUid, 'both legacy and current score identities must use the same account');
-            const ownSolo = accountScores.filter(item =>
+            const ownLocal = accountScores.filter(item =>
                 (item.playerId === accountUid || item.uid === accountUid) && query.mode.test(item.mode));
             return { sort() { return this; }, select() { return this; }, async lean() {
-                return ownSolo.sort((a, b) => b.score - a.score)[0] || null;
+                return ownLocal.sort((a, b) => b.score - a.score)[0] || null;
             } };
         } },
         getLeaderboardPeriodStart: () => new Date('2026-11-01'),
@@ -354,6 +370,8 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
     });
     assert.deepEqual([...await classifyByAccount('account-a', 2000, new Date('2026-10-16'), {})], ['personal'],
         'another account on the same phone must not suppress this account personal record');
+    assert.deepEqual([...await classifyByAccount('account-a', 1700, new Date('2026-10-16'), {})], [],
+        'an earlier Hotseat score on this account must count toward its personal best');
     assert.deepEqual([...await classifyByAccount('account-b', 2000, new Date('2026-10-16'), {})], [],
         'another account lower score must not create a false personal record');
     const reconcileSource = game.match(/    async reconcileStatsHighscoreFromStoredScores\(\) \{[\s\S]*?\r?\n    \}/)?.[0];

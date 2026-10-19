@@ -983,6 +983,11 @@ async function checkServerDuelIdempotency() {
             if (!result.statsAppliedUids.includes(uid)) result.statsAppliedUids.push(uid);
             return true;
         },
+        async persistLeaderboardScoreRecord() { return { ok: true }; },
+        powerIndexCore: { calculatePowerIndex(user) { return user.leagueDelta || 0; } },
+        rememberRecentPowerIndexGain(user, matchId, gain) {
+            user.recentPowerIndexDeltas = [{ matchId, gain }];
+        },
         hasUserAppliedMatchResult(user, matchId) {
             return Array.isArray(user.recentMatchResultIds) && user.recentMatchResultIds.includes(matchId);
         },

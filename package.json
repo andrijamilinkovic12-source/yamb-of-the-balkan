@@ -15,6 +15,7 @@
     "check:trophies": "node scripts/check-trophies.js",
     "check:profile-sync": "node scripts/check-profile-sync.js",
     "check:match-results": "node scripts/check-match-results.js",
+    "check:online-duel-finish": "node scripts/check-theme-online-random-finish.js",
     "check:league": "node scripts/check-quarterly-league.js",
     "check:theme-quarterly-league": "node scripts/check-theme-quarterly-league-v2.js",
     "check:theme-solo-results": "node scripts/check-theme-solo-results.js",
@@ -44,7 +45,7 @@
     "check:easter-coverage": "node scripts/check-easter-asset-coverage.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:ad-consent && npm run check:ad-reward-flow && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:theme-board && npm run check:dice-skins && npm run check:skin-action-buttons && npm run check:skin-roll-counter && npm run check:theme-game-header && npm run check:theme-settings-room && npm run check:theme-quote && npm run check:theme-daily-room && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
+    "test": "npm run check:js && npm run check:ad-consent && npm run check:ad-reward-flow && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:online-duel-finish && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:theme-board && npm run check:dice-skins && npm run check:skin-action-buttons && npm run check:skin-roll-counter && npm run check:theme-game-header && npm run check:theme-settings-room && npm run check:theme-quote && npm run check:theme-daily-room && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",

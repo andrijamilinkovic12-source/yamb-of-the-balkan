@@ -1,0 +1,373 @@
+{
+  "version": 1,
+  "style": "3D Soft Neomorphism",
+  "roles": [
+    "scanning",
+    "found",
+    "vs",
+    "disconnected",
+    "reconnected"
+  ],
+  "assets": [
+    {
+      "theme": "light",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/light/scanning-master-v1.png",
+      "masterSha256": "85953358dcfd76d3dc24644081fe52456939c844d87060b8e81f67be65db1fe3",
+      "runtime": "www/assets/theme-packs/light/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "2cac0038e8aa7f8ac52d0bd48e72fb42130d959ab1c9f5378333a43ac552fda0"
+    },
+    {
+      "theme": "light",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/light/found-master-v1.png",
+      "masterSha256": "dd93647366b8999aea5e76b51df30a7f82f3674cd92a73e3de5b06497956460d",
+      "runtime": "www/assets/theme-packs/light/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "009bbb4df24be8f7e665ca2ac667b904960703c911bb0e36a4f6b1b6d4911abd"
+    },
+    {
+      "theme": "light",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/light/vs-master-v1.png",
+      "masterSha256": "6f630b95fc3413ecadb5a872f10653c89b33ec20c7e07d336e7cc5aa69dbc19c",
+      "runtime": "www/assets/theme-packs/light/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "9773fe49e182440cfc60b77d038cf1f9dd09dc7d6b68c54a0874ee72bc09b85d"
+    },
+    {
+      "theme": "light",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/light/disconnected-master-v1.png",
+      "masterSha256": "fffcfe008827f238c80eea696756ceb74b7584876c73e94956657a8c872b9668",
+      "runtime": "www/assets/theme-packs/light/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "0326d24e6fa915a9a40bf8d45e03310d137ea1ce25235544453d33af82f9783c"
+    },
+    {
+      "theme": "light",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/light/reconnected-master-v1.png",
+      "masterSha256": "5fc508c13e295aac98a9162fcea3334d3182fba613d395f32393bac8a1e47d64",
+      "runtime": "www/assets/theme-packs/light/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "e1e1dd92a7e0c71c4c5f7c6b3cd8ba5105bb06d0c9e1724ed2eef5792da4cf6d"
+    },
+    {
+      "theme": "medium",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/medium/scanning-master-v1.png",
+      "masterSha256": "8b87dc5ff2e32bf83919dc9727c9cd47d843e6cf5dda7508869a5ddebf1f857b",
+      "runtime": "www/assets/theme-packs/medium/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "aaf40192cc510c2fdd96231e582aa26c064912b7b73132bf1f213e794df6643f"
+    },
+    {
+      "theme": "medium",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/medium/found-master-v1.png",
+      "masterSha256": "aa35b7a2801445359f339b4db65f18a7ac465d4c61a458475f72d0b4f6e15344",
+      "runtime": "www/assets/theme-packs/medium/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "b230f32638ca12013c3fbb7ce412cc7f81d1d169363f9855cf55074cc23e3e34"
+    },
+    {
+      "theme": "medium",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/medium/vs-master-v1.png",
+      "masterSha256": "365468fd39890ffd2a8bac8ebd54fd8e454c81236d4c45eb2e7851d9f98eb4f8",
+      "runtime": "www/assets/theme-packs/medium/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "8cd8ac4c72f9c62f65906cce432e0172c2bfdf37743d2971fc3018178f779efa"
+    },
+    {
+      "theme": "medium",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/medium/disconnected-master-v1.png",
+      "masterSha256": "a2e74b3bd2044923adcec21a215f4c499865f3d9ed8f4e82a0ed8978d7f9ac80",
+      "runtime": "www/assets/theme-packs/medium/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "b8c115d64cd4ba9cb99e0caa0afa882f1818c77a045af4ec0146e08adff8e7e1"
+    },
+    {
+      "theme": "medium",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/medium/reconnected-master-v1.png",
+      "masterSha256": "39d23d1a6191ebddfb074de4d0b8aac13e5bfe5aa4e64634177e5503e64fe006",
+      "runtime": "www/assets/theme-packs/medium/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "ee021005f466d88eeea7efbbfdb3747559ed05cde31c410b29d0aa8b882f9852"
+    },
+    {
+      "theme": "winter",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/winter/scanning-master-v1.png",
+      "masterSha256": "1dc32c776f1f90c36bb3352b8b9ae52539768bff10e7e0ec9c9cfecc92d503f2",
+      "runtime": "www/assets/theme-packs/winter/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "543c1fa00158c2fd1667f9dcebe3f10ea7f73b38bd753337eb008c7d84f44774"
+    },
+    {
+      "theme": "winter",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/winter/found-master-v1.png",
+      "masterSha256": "8fa1cf04034fc393f5464c674609d08f55c5538be36d8ad1c6391c4a158723b5",
+      "runtime": "www/assets/theme-packs/winter/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "5729c87b7554a9d7de12966003137ef4796b8161219cbb1e19b28f5f5f5b34e9"
+    },
+    {
+      "theme": "winter",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/winter/vs-master-v1.png",
+      "masterSha256": "1e962dac1128b5e4ada4584280d7682ccdc8ba7f1d6b18e62699b2bf6d652f44",
+      "runtime": "www/assets/theme-packs/winter/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "c3eb5416e2f6dc57806b1898536f2472acbb73467e093f2c3dbe7eb76c383346"
+    },
+    {
+      "theme": "winter",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/winter/disconnected-master-v1.png",
+      "masterSha256": "1027bb7c9ec6d12897da7ce88417e45f5f3475ba1859211f3d63671a5786227a",
+      "runtime": "www/assets/theme-packs/winter/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "892647cd2e8087ef78e2c223cbe2f53e8b3309b804730bf35aae794dec129c7b"
+    },
+    {
+      "theme": "winter",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/winter/reconnected-master-v1.png",
+      "masterSha256": "3a97c873310ceb42c0cf31d17292a82cb3e5bc0b82c1f720143af847dd7773e7",
+      "runtime": "www/assets/theme-packs/winter/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "bb33567b9590048928266435161108052b393b803dfb4a0d8eb7eb5b1ab706d3"
+    },
+    {
+      "theme": "neon",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/neon/scanning-master-v1.png",
+      "masterSha256": "2dfaad2026c8282615269398f6b3030dc1cd84c365d7cdab1a9d5fe7cda18c42",
+      "runtime": "www/assets/theme-packs/neon/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "68f788601f9f3e0877ca74ed351fb5cdff1c02fb0ca3e7b137ae56a0a690bffa"
+    },
+    {
+      "theme": "neon",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/neon/found-master-v1.png",
+      "masterSha256": "aa5e6102352d65c8c88317c935594c7d994b3121750cc3aace93fc307373cb63",
+      "runtime": "www/assets/theme-packs/neon/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "6d49d089688c58b6e67b9dd1b66c5b82f6af9d0779bcb261cb91d529ab689c3c"
+    },
+    {
+      "theme": "neon",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/neon/vs-master-v1.png",
+      "masterSha256": "1e3351d7b74735e7ee31241799436c59fe703d17b69aceeb44c76aacb704b617",
+      "runtime": "www/assets/theme-packs/neon/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "2303d339b209ae46df9ba52b0a98a46f8848cb24ecf83e6918865e38638492cf"
+    },
+    {
+      "theme": "neon",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/neon/disconnected-master-v1.png",
+      "masterSha256": "bcea09f00a1f1ddd3dd86368730078a264757fb0b2b07e2c50ae679777efde0c",
+      "runtime": "www/assets/theme-packs/neon/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "12143f6416a5c025a7931178b513941c281228b011f520479234c27229e575f4"
+    },
+    {
+      "theme": "neon",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/neon/reconnected-master-v1.png",
+      "masterSha256": "dafe168d4349af197499a0bf6715446551150835e68ad7ebac5186c21a705692",
+      "runtime": "www/assets/theme-packs/neon/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "6530f9fa1763869f62d4afec7d3b3a05e3c33fa1f6bcbf82e5cb0d01f82c73e9"
+    },
+    {
+      "theme": "amethyst",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/amethyst/scanning-master-v1.png",
+      "masterSha256": "ee8c1da05a8c509c65dd2bf9d2fde7459de13e4958689266b5c4865a2b442063",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "f0b3013c6ab7a8951188317fcca04b50af336bb59c39f93f80243c80ed6dd13b"
+    },
+    {
+      "theme": "amethyst",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/amethyst/found-master-v1.png",
+      "masterSha256": "165256bcfa469d59c096d78451e226e5696dd1b9fb22bca970a41760902a63b0",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "341c7bd8e498a0bf07e1506dfef1abaf46f661122ff72279ab523ed31da6cf7d"
+    },
+    {
+      "theme": "amethyst",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/amethyst/vs-master-v1.png",
+      "masterSha256": "5d7c4f234de0a37d5c1b65cbf0d856412107f69f0d3f9f20c60eae457125eea8",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "15f81abe067695b1ee9693ac011d17eac5a8b2fa0e3ba9ad42b6f24eb49554ba"
+    },
+    {
+      "theme": "amethyst",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/amethyst/disconnected-master-v1.png",
+      "masterSha256": "a1157a147f185a478dd6fd944cd7f62a502e98933008658b3bdd2bec9fe33941",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "3fb52e20f8dfda1960c71ffe302092c92057f8b5267de40fde4fa0d81fd1e89d"
+    },
+    {
+      "theme": "amethyst",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/amethyst/reconnected-master-v1.png",
+      "masterSha256": "1365939dc33bc6baaba2be92272cfed9a74c28fc4ec5421814dea0543406b1ba",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "d1c10860d6c8f324c4e5c1a64135b8d4e657f3ed40a987ca5cc3496c6d9ae0e7"
+    },
+    {
+      "theme": "easter",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/easter/scanning-master-v1.png",
+      "masterSha256": "c3b76fcce5f94bae23d7c1c361358e1a8b5a3c00f3cd96c2bbc2fbcce7ea168c",
+      "runtime": "www/assets/theme-packs/easter/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "af09b8dba100479631870d5c5032a11719ea13a3fbbad9ba4e6f633a37487b98"
+    },
+    {
+      "theme": "easter",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/easter/found-master-v1.png",
+      "masterSha256": "2521f709795fb73d5b61dcbbd38419f42f59f5906cf4d57fcb7df723ca9a476a",
+      "runtime": "www/assets/theme-packs/easter/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "8e459d5f889bddaead1bfc84309dec1805b9ad656f7e0acd0408660b684ca957"
+    },
+    {
+      "theme": "easter",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/easter/vs-master-v1.png",
+      "masterSha256": "4be86021efe538daff48992f79593171bc010240dde109329b49a486f8c4ad1c",
+      "runtime": "www/assets/theme-packs/easter/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "b32af1c40806c89b8e09c1505c6000dbc477ef90263b4a0a870cab8af17fce4f"
+    },
+    {
+      "theme": "easter",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/easter/disconnected-master-v1.png",
+      "masterSha256": "61738eacfebfcb05674be2dd6fff8f32fc92c141e62d48013743ba1bd74029ce",
+      "runtime": "www/assets/theme-packs/easter/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "6cc33b901a7f8baa591e129aa1009c23f2f9f5512a9067418c891589775537c7"
+    },
+    {
+      "theme": "easter",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/easter/reconnected-master-v1.png",
+      "masterSha256": "03ca02c2ec2e792f282162fe50f58dcc07cc2a5b8aea683d9fffd8cdd655a840",
+      "runtime": "www/assets/theme-packs/easter/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "cad5bd0bf45e88b0767223764fa1c57b96c90857eb3cd9d332c33b4ddd65175a"
+    },
+    {
+      "theme": "desert",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/desert/scanning-master-v1.png",
+      "masterSha256": "ad7580112da08892caa711cb91543c915af746035dcd8b6c895ae1e8534c20eb",
+      "runtime": "www/assets/theme-packs/desert/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "a2fa3b52c206676899e27987a6d7159bcc79927d034cfd1e6b9efdd71877b0d1"
+    },
+    {
+      "theme": "desert",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/desert/found-master-v1.png",
+      "masterSha256": "6efbe40964421186eee25338b747d1be9a3017945db9649d73d88d16de8d19c5",
+      "runtime": "www/assets/theme-packs/desert/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "2c28e789a2e808b8c131a8b749c371536cd4b40153910c06555b1b9c6d35a090"
+    },
+    {
+      "theme": "desert",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/desert/vs-master-v1.png",
+      "masterSha256": "54f95788991fe5580aa4dc0639a33997466d29e8965da6a4cf361455a77fa41e",
+      "runtime": "www/assets/theme-packs/desert/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "adc9e9fdef0d7a550f837887783e5a5407b4562f46057bb49895e77200e3ad15"
+    },
+    {
+      "theme": "desert",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/desert/disconnected-master-v1.png",
+      "masterSha256": "68f2f52754c1db653280fb51a34a7463a8159586f3df800fd3ff97b3f322073d",
+      "runtime": "www/assets/theme-packs/desert/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "191993e0fe86d7ad878a8d7c40c4ee7d5371fd285ccb7e1079715f4d93bc6fa3"
+    },
+    {
+      "theme": "desert",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/desert/reconnected-master-v1.png",
+      "masterSha256": "e132e55b6abc2a4ecc12752d05f98222c019f085fb3d9a289a0eae020c35c7f8",
+      "runtime": "www/assets/theme-packs/desert/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "0359db7bb3d0e41196c56ef99130c2096d114cbbd8c720f45de837585fdfdb0f"
+    },
+    {
+      "theme": "moon",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/moon/scanning-master-v1.png",
+      "masterSha256": "50f83bb8a33e36f514202b130696eb7582f43cf2f7b060926e749874c8a03d71",
+      "runtime": "www/assets/theme-packs/moon/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "c0ea031ee144c0872fe2f61c1bbd3fea1f67fe1a7b1dcd63a73798fd799154c2"
+    },
+    {
+      "theme": "moon",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/moon/found-master-v1.png",
+      "masterSha256": "b515597d758c83dd7694545824fba3c085a251a32fb2ecf7441c40d31a4305cb",
+      "runtime": "www/assets/theme-packs/moon/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "254db1840b7756a5c06a29792fb1c097d61d804f6e0a271b4f01eecff868e174"
+    },
+    {
+      "theme": "moon",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/moon/vs-master-v1.png",
+      "masterSha256": "6c248ab29b84fa83ef5c6edde271ff645d2d475c5c46d8b0a980bbd0e5dcac56",
+      "runtime": "www/assets/theme-packs/moon/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "4dfd080a137fcad5182d469aed5aea5ce409228f064c7b88ab10e1579857b370"
+    },
+    {
+      "theme": "moon",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/moon/disconnected-master-v1.png",
+      "masterSha256": "2b5384ebae0880ada2291c29949d7fb999f592b6a6431f4fbce46f1dc3413ea6",
+      "runtime": "www/assets/theme-packs/moon/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "63883562e90ecb3a186b3219679596c56aa35fbea9386ea24bde19eb200b210b"
+    },
+    {
+      "theme": "moon",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/moon/reconnected-master-v1.png",
+      "masterSha256": "b0db450835a6af166de400be031fa36a29cc30b467d2c81466626806c982841d",
+      "runtime": "www/assets/theme-packs/moon/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "5faf6b01b8a8221d01dacfd2ffb640330120cbf883290e66619d4cc586a9f093"
+    },
+    {
+      "theme": "severna",
+      "role": "scanning",
+      "master": "source-assets/theme-online-random-states-v1/severna/scanning-master-v1.png",
+      "masterSha256": "b032339bf0efada90df605e5607710f0f2a896ff8861ff7056ee3da80f1487c3",
+      "runtime": "www/assets/theme-packs/severna/canonical/online-random-states/scanning-v1.png",
+      "runtimeSha256": "d2f06cefe65ae51c4238265c93faee1aaed773e965566c19f29dd623214be730"
+    },
+    {
+      "theme": "severna",
+      "role": "found",
+      "master": "source-assets/theme-online-random-states-v1/severna/found-master-v1.png",
+      "masterSha256": "4012f6d279f01d624f7937a584194a7a967fdb99eb7af00e5889aba3677bc3bc",
+      "runtime": "www/assets/theme-packs/severna/canonical/online-random-states/found-v1.png",
+      "runtimeSha256": "083618064bda02d092d92b463284a8634ad81334788f536284aec7b15e6b045e"
+    },
+    {
+      "theme": "severna",
+      "role": "vs",
+      "master": "source-assets/theme-online-random-states-v1/severna/vs-master-v1.png",
+      "masterSha256": "5461e5d99db958f18be212c198ad00e3bde12e7cab65f4f08eb8222768d99612",
+      "runtime": "www/assets/theme-packs/severna/canonical/online-random-states/vs-v1.png",
+      "runtimeSha256": "33d0f44ab7af97b358cad7ebc4d521c77afbae02c01fe5066eb7309bedac33f7"
+    },
+    {
+      "theme": "severna",
+      "role": "disconnected",
+      "master": "source-assets/theme-online-random-states-v1/severna/disconnected-master-v1.png",
+      "masterSha256": "9d7bc23d123b739080d4df363610b9a5ddea1563276d4ad6fcb6c0e90e23047d",
+      "runtime": "www/assets/theme-packs/severna/canonical/online-random-states/disconnected-v1.png",
+      "runtimeSha256": "56be31b090b04841350fe8884d1fb7e322c6bf100fdfdd7e89edc191281ede20"
+    },
+    {
+      "theme": "severna",
+      "role": "reconnected",
+      "master": "source-assets/theme-online-random-states-v1/severna/reconnected-master-v1.png",
+      "masterSha256": "2347945b57118e4ed4aa0d1e05e6525cd814ae92bae47b59a6f0e74db9a5b026",
+      "runtime": "www/assets/theme-packs/severna/canonical/online-random-states/reconnected-v1.png",
+      "runtimeSha256": "501f3ac30df41a56bd5b3dd22f3a33e616ceaa87fb76b261dd79cd6293f0f70c"
+    }
+  ]
+}

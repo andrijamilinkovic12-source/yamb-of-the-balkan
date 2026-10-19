@@ -112,7 +112,7 @@
     <link rel="stylesheet" href="theme-ducat-pack.css?v=2">
     <link rel="stylesheet" href="theme-undo-token-pack.css?v=1">
     <link rel="stylesheet" href="theme-rewarded-video-pack.css?v=2">
-    <link rel="stylesheet" href="theme-solo-results.css?v=11">
+    <link rel="stylesheet" href="theme-solo-results.css?v=13">
     <link rel="stylesheet" href="theme-menu-resume-buttons.css?v=2">
     <link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
     <link rel="stylesheet" href="kockice.css?v=1.10">
@@ -136,8 +136,10 @@
     <link rel="stylesheet" href="theme-daily-room.css?v=2">
     <link rel="stylesheet" href="theme-settings-room.css?v=3">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=6">
+    <link rel="stylesheet" href="theme-online-random-room.css?v=2">
+    <link rel="stylesheet" href="theme-online-random-finish.css?v=2">
     
-    <script src="languages.js?v=5.18"></script>
+    <script src="languages.js?v=5.22"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -1229,8 +1231,13 @@
         <div class="logo-anim" style="font-size: 2rem; margin-bottom: 20px;" data-lang="game_over">KRAJ IGRE</div>
         <div class="modal-box" style="width: 90%; max-width: 400px; text-align: center;">
             <h2 id="go-title" style="color: var(--gold-main); margin-bottom: 10px;">POBEDA!</h2>
+            <div id="go-tier-title" class="game-over-tier-title" hidden></div>
             <p id="go-msg" style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 20px;">Tekst poruke...</p>
             <div class="game-over-score-card" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: var(--glass-border);">
+                <div id="hotseat-result-scores" class="hotseat-result-scores" hidden aria-live="polite">
+                    <div class="hotseat-result-player" data-hotseat-player="0"><span class="hotseat-result-role" data-lang="go_hotseat_account">NALOG</span><span class="hotseat-result-name"></span><strong class="hotseat-result-points"></strong><span class="hotseat-result-winner" data-lang="go_hotseat_winner" hidden>POBEDNIK</span></div>
+                    <div class="hotseat-result-player" data-hotseat-player="1"><span class="hotseat-result-role" data-lang="go_hotseat_guest">GOST</span><span class="hotseat-result-name"></span><strong class="hotseat-result-points"></strong><span class="hotseat-result-winner" data-lang="go_hotseat_winner" hidden>POBEDNIK</span></div>
+                </div>
                 <img class="easter-hotseat-winner-mark" data-theme-src="assets/easter-soft-clay/hotseat/winner.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-hotseat-winner-mark" data-theme-src="assets/desert-soft-clay/hotseat/winner.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="severna-hotseat-winner-mark" data-theme-src="assets/severna-soft-clay/hotseat/winner-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1265,12 +1272,9 @@
                     <div><span data-lang="go_best_column">NAJJAČA KOLONA</span><strong id="solo-finish-best-column"><span class="solo-finish-column-mark" aria-hidden="true" hidden></span><span class="solo-finish-column-points">—</span></strong></div>
                     <div><span data-lang="go_no_zero">BEZ NULE</span><strong id="solo-finish-no-zero">—</strong></div>
                 </div>
+                <p id="hotseat-result-comment" class="hotseat-result-comment" hidden aria-live="polite"></p>
             </div>
             
-            <button id="btn-rematch" class="btn-menu" style="background: linear-gradient(45deg, #4CAF50, #2E7D32); color: white; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(76, 175, 80, 0.4); display: none; align-items: center; justify-content: center; gap: 10px;" onclick="app.requestRematch()">
-                <span data-lang="go_rematch">🔄 REVANŠ</span>
-            </button>
-
             <button id="btn-ad-double" class="btn-menu btn-ad-double" style="background: linear-gradient(45deg, #FFD700, #FFA000); color: #000; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.watchAdForDouble()">
                 <img class="green-solo-finish-action-icon" data-theme-src="assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span id="go-double-label" data-lang="go_double">DUPLIRAJ NAGRADU</span>
@@ -1281,6 +1285,10 @@
                 <img class="green-solo-finish-action-icon green-solo-finish-claim-icon" data-theme-src="assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span id="go-claim-label" data-lang="go_claim">Preuzmi i Izađi</span>
             </button>
+            <button id="btn-rematch" class="btn-menu" type="button" hidden onclick="app.requestRematch()">
+                <img id="go-rematch-icon" alt="" aria-hidden="true" decoding="async">
+                <span id="go-rematch-label" data-lang="go_rematch">REVANŠ</span>
+            </button>
         </div>
     </div>
 
@@ -1288,7 +1296,7 @@
         
         <div class="chat-header global-chat-header waiting-header">
             <div class="global-chat-title-group">
-                <img class="green-opponent-header-icon" data-theme-src="assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-opponent-header-icon online-random-state-icon online-random-header-icon" data-online-random-role="header" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-invite-header-icon" data-theme-src="assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span id="waiting-title" class="global-chat-title" data-lang="ws_searching">TRAŽENJE PROTIVNIKA...</span>
             </div>
@@ -1331,15 +1339,12 @@
                 </div>
             </div>
 
-            <div id="waiting-vs-badge" class="ws-glass-vs"><span>VS</span><img class="easter-opponent-vs-icon" data-theme-src="assets/easter-soft-clay/opponent/vs-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-vs-icon" data-theme-src="assets/desert-soft-clay/opponent/vs-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-vs-icon" data-theme-src="assets/severna-soft-clay/opponent/vs-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="green-opponent-vs-icon" data-theme-src="assets/green-soft-clay/opponent/vs-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
+            <div id="waiting-vs-badge" class="ws-glass-vs"><span>VS</span><img class="green-opponent-vs-icon online-random-state-icon online-random-vs-icon" data-online-random-role="vs" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
 
             <div id="waiting-opp-box" class="ws-glass-card opp-card is-searching">
                 
                 <div id="waiting-opp-searching" class="waiting-opp-searching" style="display: flex;">
-                    <img class="easter-opponent-scan-icon" data-theme-src="assets/easter-soft-clay/opponent/scanning.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="desert-opponent-scan-icon" data-theme-src="assets/desert-soft-clay/opponent/scanning.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="severna-opponent-scan-icon" data-theme-src="assets/severna-soft-clay/opponent/scanning-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="green-opponent-scan-icon" data-theme-src="assets/green-soft-clay/opponent/scanning-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="green-opponent-scan-icon online-random-state-icon online-random-scan-icon" data-online-random-role="scanning" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <div class="opponent-scan" aria-hidden="true">
                         <span></span><span></span><span></span>
                     </div>
@@ -1347,10 +1352,7 @@
                 </div>
 
                 <div id="waiting-opp-found" style="display: none; flex-direction: column; align-items: center; width: 100%;">
-                    <img class="easter-opponent-found-icon" data-theme-src="assets/easter-soft-clay/opponent/found.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="desert-opponent-found-icon" data-theme-src="assets/desert-soft-clay/opponent/found.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="severna-opponent-found-icon" data-theme-src="assets/severna-soft-clay/opponent/found-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="green-opponent-found-icon" data-theme-src="assets/green-soft-clay/opponent/found-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="green-opponent-found-icon online-random-state-icon online-random-found-icon" data-online-random-role="found" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img id="waiting-opp-img" src="https://ui-avatars.com/api/?name=?&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--danger);">
                     <span id="waiting-opp-name" class="ws-glass-name" data-lang="player_opponent">Protivnik</span>
                     <span id="waiting-start-msg" class="waiting-start-msg" data-lang="ws_game_starting">Protivnik je tu. Partija počinje...</span>
@@ -1375,7 +1377,7 @@
 
         <div id="ws-hall-of-fame" class="hidden waiting-hof" style="width: 100%; max-width: 500px; margin-top: 15px; padding: 0 15px; display: flex; flex-direction: column; animation: fadeIn 0.5s forwards;">
             <h3 class="waiting-hof-title" style="color: var(--gold-main); font-size: 0.85rem; text-align: center; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 5px; flex-shrink: 0; text-transform: uppercase;">
-                <span id="ws-hof-title">🏆 Top 3 Ove Nedelje</span>
+                <span id="ws-hof-title">Top 3 Ove Nedelje</span>
             </h3>
             <div id="ws-hof-list" class="waiting-hof-list" style="display: flex; flex-direction: column; gap: 6px;">
                 <img class="waiting-hof-state-canonical-icon" data-leaderboard-control="empty-loading" alt="" aria-hidden="true" decoding="async">
@@ -1759,7 +1761,7 @@
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=6.00"></script>
+    <script src="game.js?v=6.07"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
