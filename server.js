@@ -5232,10 +5232,159 @@ const TOURNAMENT_REMINDER_WINDOWS = [
     { key: 'reminder5', beforeMs: 5 * 60 * 1000, minDiffMs: -2 * 60 * 1000, minutes: 5 }
 ];
 
-async function checkTournamentMatchReminders() {
+const TOURNAMENT_ATTENTION_REMINDER_SLOTS = [
+    { key: 'morning', hour: 10, minute: 0 },
+    { key: 'evening', hour: 19, minute: 0 }
+];
+const TOURNAMENT_OVERDUE_MATCH_MS = 24 * 60 * 60 * 1000;
+
+function getTournamentAttentionReminderSlot(now = new Date()) {
+    const parts = getTimeZoneParts(now, LEADERBOARD_TIME_ZONE);
+    const currentMinutes = (Number(parts.hour) * 60) + Number(parts.minute);
+    const activeSlot = TOURNAMENT_ATTENTION_REMINDER_SLOTS
+        .filter(slot => currentMinutes >= ((slot.hour * 60) + slot.minute))
+        .pop();
+
+    if (!activeSlot) return null;
+
+    const dateKey = `${parts.year}-${padDatePart(parts.month)}-${padDatePart(parts.day)}`;
+    return {
+        ...activeSlot,
+        dateKey,
+        reminderKey: `attention_${dateKey}_${activeSlot.key}`
+    };
+}
+
+function getTournamentAttentionReminderState(match, now) {
+    if (!match || match.winnerId || !match.p1?.id || !match.p2?.id) return null;
+
+    const scheduledAt = match.timeAccepted ? parseTournamentTimeMs(match.time) : NaN;
+    if (Number.isFinite(scheduledAt)) {
+        if (now - scheduledAt < TOURNAMENT_OVERDUE_MATCH_MS) return null;
+        return { kind: 'overdue', scheduledTime: match.time };
+    }
+
+    return {
+        kind: match.proposedTime ? 'proposal_pending' : 'unscheduled',
+        proposedTime: match.proposedTime || ''
+    };
+}
+
+function buildTournamentAttentionReminderPayload(round, index, slot, attentionState) {
+    const roundSr = getTournamentRoundLabel(round);
+    const roundEn = getTournamentRoundLabel(round, 'en');
+
+    if (attentionState.kind === 'overdue') {
+        const timeSr = formatTournamentPushTime(attentionState.scheduledTime);
+        const timeEn = formatTournamentPushTime(attentionState.scheduledTime, 'en');
+        return {
+            category: 'tournament',
+            scope: 'tournament',
+            type: 'tournament_match_overdue_reminder',
+            tag: `tournament_attention_${round}_${index}_${slot.dateKey}_${slot.key}`,
+            ...buildLocalizedPushContent(
+                'Zakazan turnirski meč čeka odigravanje',
+                `${roundSr} je zakazan za ${timeSr}. Prošlo je više od 24 sata - odigrajte meč ili dogovorite novi termin.`,
+                'Scheduled tournament match needs to be played',
+                `Your ${roundEn.toLowerCase()} was scheduled for ${timeEn}. More than 24 hours have passed - play the match or agree on a new time.`
+            ),
+            data: {
+                round,
+                index,
+                matchIndex: index,
+                reminder: slot.key,
+                attention: attentionState.kind,
+                time: attentionState.scheduledTime || ''
+            }
+        };
+    }
+
+    const pendingProposal = attentionState.kind === 'proposal_pending';
+    return {
+        category: 'tournament',
+        scope: 'tournament',
+        type: 'tournament_schedule_reminder',
+        tag: `tournament_attention_${round}_${index}_${slot.dateKey}_${slot.key}`,
+        ...buildLocalizedPushContent(
+            pendingProposal ? 'Turnirski meč čeka potvrdu termina' : 'Turnirski meč čeka zakazivanje',
+            pendingProposal
+                ? `${roundSr} ima predložen termin. Otvorite turnir i prihvatite predlog ili zakažite novi termin.`
+                : `${roundSr} nema potvrđen termin. Otvorite turnir i dogovorite termin sa protivnikom.`,
+            pendingProposal ? 'Tournament match time needs confirmation' : 'Tournament match needs scheduling',
+            pendingProposal
+                ? `Your ${roundEn.toLowerCase()} has a proposed time. Open the tournament and accept it or schedule a new time.`
+                : `Your ${roundEn.toLowerCase()} has no confirmed time. Open the tournament and agree on a time with your opponent.`
+        ),
+        data: {
+            round,
+            index,
+            matchIndex: index,
+            reminder: slot.key,
+            attention: attentionState.kind,
+            proposedTime: attentionState.proposedTime || ''
+        }
+    };
+}
+
+async function sendTournamentAttentionReminder(match, round, index, slot, now) {
+    const attentionState = getTournamentAttentionReminderState(match, now);
+    if (!attentionState) return;
+
+    const participantUids = Array.from(new Set(getTournamentMatchParticipantUids(match)));
+    if (participantUids.length !== 2) return;
+
+    const existingDeliveries = match.pushRemindersSent?.[slot.reminderKey];
+    const deliveredByUid = existingDeliveries && typeof existingDeliveries === 'object' && !Array.isArray(existingDeliveries)
+        ? existingDeliveries
+        : {};
+    const pendingUids = participantUids.filter(uid => !deliveredByUid[uid]);
+    if (pendingUids.length === 0) return;
+
+    const activeTokenDocs = await getPushTokenDocsForUids(pendingUids, 'tournament');
+    const recipientUids = Array.from(new Set(activeTokenDocs.map(token => String(token.uid || '').trim()).filter(Boolean)));
+    if (recipientUids.length === 0) return;
+
+    if (!match.pushRemindersSent || typeof match.pushRemindersSent !== 'object') {
+        match.pushRemindersSent = {};
+    }
+    match.pushRemindersSent[slot.reminderKey] = deliveredByUid;
+
+    // Persist reservations first so a restart cannot create a duplicate notification for the same player and slot.
+    const reservationAt = Date.now();
+    recipientUids.forEach(uid => {
+        deliveredByUid[uid] = reservationAt;
+    });
+    await saveTournamentToDb();
+
+    const payload = buildTournamentAttentionReminderPayload(round, index, slot, attentionState);
+    const results = await Promise.all(recipientUids.map(async uid => {
+        try {
+            return { uid, result: await sendPushToUids([uid], payload) };
+        } catch (error) {
+            return { uid, result: { ok: false, reason: error?.message || 'push_send_failed' } };
+        }
+    }));
+
+    let changed = false;
+    results.forEach(({ uid, result }) => {
+        const sent = Math.max(0, toSafeInt(result?.sent, 0));
+        if (result?.ok && sent > 0) return;
+
+        if (deliveredByUid[uid] === reservationAt) {
+            delete deliveredByUid[uid];
+            changed = true;
+        }
+        if (!result?.ok) {
+            console.warn(`⚠️ Dnevni turnirski podsetnik nije poslat (${round}/${index}/${slot.key}/${uid}): ${result?.reason || 'push_send_failed'}`);
+        }
+    });
+
+    if (changed) await saveTournamentToDb();
+}
+
+async function checkUpcomingTournamentMatchReminders(now) {
     if (tournamentState.status !== 'active' || !tournamentState.bracket) return;
 
-    const now = Date.now();
     const jobs = [];
 
     ['qf', 'sf', 'f'].forEach(round => {
@@ -5307,7 +5456,42 @@ async function checkTournamentMatchReminders() {
         );
     });
 
-    if (changed) saveTournamentToDb();
+    if (changed) await saveTournamentToDb();
+}
+
+async function checkTournamentAttentionReminders(now, slot) {
+    if (!slot || tournamentState.status !== 'active' || !tournamentState.bracket) return;
+
+    for (const round of ['qf', 'sf', 'f']) {
+        const matches = tournamentState.bracket[round];
+        if (!Array.isArray(matches)) continue;
+
+        for (let index = 0; index < matches.length; index += 1) {
+            try {
+                await sendTournamentAttentionReminder(matches[index], round, index, slot, now);
+            } catch (error) {
+                console.error(`Greška pri dnevnom turnirskom podsetniku (${round}/${index}/${slot.key}):`, error);
+            }
+        }
+    }
+}
+
+let tournamentReminderCheckInProgress = false;
+async function checkTournamentMatchReminders() {
+    if (tournamentReminderCheckInProgress) return;
+    tournamentReminderCheckInProgress = true;
+
+    try {
+        if (tournamentState.status !== 'active' || !tournamentState.bracket) return;
+
+        const now = Date.now();
+        await checkUpcomingTournamentMatchReminders(now);
+
+        const slot = getTournamentAttentionReminderSlot(new Date(now));
+        if (slot) await checkTournamentAttentionReminders(now, slot);
+    } finally {
+        tournamentReminderCheckInProgress = false;
+    }
 }
 
 const tournamentReminderInterval = setInterval(() => {
