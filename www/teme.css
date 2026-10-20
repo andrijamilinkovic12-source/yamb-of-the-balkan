@@ -21897,7 +21897,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result #btn-ad-double {
     background: linear-gradient(145deg, #a8bf83, #66875d) !important;
-    color: #17351f !important;
+    color: #061409 !important;
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .green-solo-finish-action-icon {

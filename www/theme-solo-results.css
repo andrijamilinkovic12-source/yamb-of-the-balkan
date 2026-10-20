@@ -200,8 +200,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 /* Hotseat shares the Solo finish geometry and ten theme materials. */
 #game-over-screen .game-over-tier-title[hidden],
 #game-over-screen .hotseat-result-scores[hidden],
-#game-over-screen .hotseat-result-comment[hidden],
-#game-over-screen .hotseat-result-winner[hidden] { display: none !important; }
+#game-over-screen .hotseat-result-comment[hidden] { display: none !important; }
 #game-over-screen.is-hotseat-result .hotseat-result-comment:not([hidden]) {
     margin: 8px 3px 0;
     color: var(--solo-ink, var(--green-clay-ink-strong));
@@ -241,27 +240,27 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--solo-accent, #9bbd74) 42%, transparent);
 }
 #game-over-screen.is-hotseat-result .hotseat-result-role {
-    grid-column: 1 / -1;
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
     color: var(--solo-muted, var(--green-clay-muted));
-    font: 800 .62rem/1.1 Montserrat, sans-serif;
+    font: 800 .6rem/1.1 Montserrat, sans-serif;
     letter-spacing: .07em;
 }
 #game-over-screen.is-hotseat-result .hotseat-result-name {
+    grid-column: 1 / -1;
+    grid-row: 2;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font: 800 .76rem/1.1 Montserrat, sans-serif;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font: 800 .72rem/1.15 Montserrat, sans-serif;
 }
 #game-over-screen.is-hotseat-result .hotseat-result-points {
-    font: 900 .84rem/1.1 Montserrat, sans-serif;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    font: 900 .8rem/1.1 Montserrat, sans-serif;
     white-space: nowrap;
-}
-#game-over-screen.is-hotseat-result .hotseat-result-winner {
-    grid-column: 1 / -1;
-    color: var(--solo-ink, var(--green-clay-ink-strong));
-    font: 900 .6rem/1 Montserrat, sans-serif;
-    letter-spacing: .07em;
 }
 #game-over-screen.is-hotseat-result :is(.easter-hotseat-winner-mark,.desert-hotseat-winner-mark,.severna-hotseat-winner-mark,.green-hotseat-winner-mark,.green-game-over-result-icon) {
     display: none !important;
@@ -270,4 +269,9 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #game-over-screen.is-hotseat-result .hotseat-result-player { min-height: 40px; padding: 3px 6px; }
     #game-over-screen.is-hotseat-result .hotseat-result-scores { margin-bottom: 3px; }
     #game-over-screen.is-hotseat-result .hotseat-result-comment:not([hidden]) { margin-top: 4px; font-size: .69rem; line-height: 1.2; }
+}
+@media (max-width: 380px) {
+    #game-over-screen.is-hotseat-result .hotseat-result-player { padding-inline: 5px; }
+    #game-over-screen.is-hotseat-result .hotseat-result-name { font-size: .69rem; }
+    #game-over-screen.is-hotseat-result .hotseat-result-points { font-size: .76rem; }
 }

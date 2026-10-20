@@ -10297,8 +10297,6 @@ class YambApp {
                     row.querySelector('.hotseat-result-points').textContent = Number(result.score).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
                     row.classList.toggle('is-winner', !isDraw && result.score === winnerScore);
                     row.classList.toggle('is-account', index === 0);
-                    const winnerLabel = row.querySelector('.hotseat-result-winner');
-                    if (winnerLabel) winnerLabel.hidden = isDraw || result.score !== winnerScore;
                 });
             }
         }

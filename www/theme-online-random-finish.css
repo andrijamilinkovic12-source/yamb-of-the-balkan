@@ -41,6 +41,60 @@
     width: min(440px, calc(100vw - max(12px, var(--safe-left, 0px), env(safe-area-inset-left, 0px)) - max(12px, var(--safe-right, 0px), env(safe-area-inset-right, 0px)))) !important;
     gap: 6px !important;
 }
+@media (max-height: 700px) {
+    body #game-over-screen.is-solo-result.is-online-duel-result.screen.active > .modal-box {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3px !important;
+        padding: 7px 8px !important;
+    }
+    #game-over-screen.is-online-duel-result > .modal-box > :is(#go-title,#go-tier-title,#go-msg,.game-over-score-card,#btn-ad-double) { grid-column: 1 / -1; }
+    #game-over-screen.is-online-duel-result #go-title { font-size: 1.05rem !important; line-height: 1.1 !important; }
+    #game-over-screen.is-online-duel-result #go-tier-title { font-size: .62rem; line-height: 1.1; }
+    #game-over-screen.is-online-duel-result #go-msg { font-size: .69rem !important; line-height: 1.12 !important; }
+    body #game-over-screen.is-solo-result.is-online-duel-result .game-over-score-card {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2px 5px;
+        align-items: start;
+        padding: 4px 5px !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result.is-online-duel-result .game-over-score-card {
+        display: grid !important;
+        padding: 4px 5px !important;
+    }
+    #game-over-screen.is-online-duel-result .hotseat-result-scores { grid-column: 1 / -1; grid-row: 1; margin-bottom: 0 !important; }
+    #game-over-screen.is-online-duel-result .solo-record-panel:not([hidden]) { grid-column: 1; grid-row: 2 / span 4; align-self: stretch; margin: 0 !important; padding: 4px 5px !important; }
+    #game-over-screen.is-online-duel-result .solo-record-panel-title { font-size: .57rem; margin-bottom: 2px; }
+    #game-over-screen.is-online-duel-result .solo-record-panel-grid { gap: 2px; }
+    #game-over-screen.is-online-duel-result .solo-record-panel-grid > span { height: 22px; min-height: 22px; padding: 0; }
+    #game-over-screen.is-online-duel-result .solo-record-panel-grid img { width: 20px; height: 20px; }
+    #game-over-screen.is-online-duel-result .solo-record-panel-footer { flex-direction: column; align-items: flex-start; gap: 2px; margin-top: 2px; padding-top: 2px; font-size: .53rem; line-height: 1.1; }
+    #game-over-screen.is-online-duel-result .solo-power-index { gap: 2px; }
+    #game-over-screen.is-online-duel-result #solo-power-index-icon { width: 14px; height: 14px; }
+    #game-over-screen.is-online-duel-result .game-over-score-card [data-lang="go_msg_solo"] { grid-column: 2; grid-row: 2; font-size: .59rem !important; letter-spacing: .03em !important; white-space: nowrap; }
+    #game-over-screen.is-online-duel-result .game-over-score-total { grid-column: 2; grid-row: 3; gap: 3px !important; margin: 0 !important; }
+    #game-over-screen.is-online-duel-result .theme-solo-finish-score-mark { width: 28px !important; height: 28px !important; flex-basis: 28px !important; }
+    #game-over-screen.is-online-duel-result #go-score { font-size: 1.65rem !important; }
+    #game-over-screen.is-online-duel-result .easter-solo-finish-tier:not([hidden]) { grid-column: 2; grid-row: 4; width: 100%; margin: 0 !important; gap: 3px; }
+    body #game-over-screen.is-solo-result.is-online-duel-result .easter-solo-finish-stats:not([hidden]) { grid-column: 2; grid-row: 5; grid-template-columns: minmax(0, 1fr) !important; gap: 2px !important; margin: 0 !important; }
+    body #game-over-screen.is-solo-result.is-online-duel-result .easter-solo-finish-stats > div { display: flex; align-items: center; justify-content: space-between; gap: 3px; min-height: 21px; padding: 2px 4px; border-radius: 8px; }
+    body #game-over-screen.is-solo-result.is-online-duel-result .easter-solo-finish-stats span { font-size: .49rem; letter-spacing: 0; }
+    body #game-over-screen.is-solo-result.is-online-duel-result .easter-solo-finish-stats strong { margin: 0; font-size: .74rem; }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result.is-online-duel-result .easter-solo-finish-stats:not([hidden]) {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 2px !important;
+        margin: 0 !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result.is-online-duel-result .easter-solo-finish-stats > div {
+        display: flex; align-items: center; justify-content: space-between; gap: 3px; min-height: 21px; padding: 2px 4px; border-radius: 8px;
+    }
+    #game-over-screen.is-online-duel-result #hotseat-result-comment:not([hidden]) { grid-column: 1 / -1; grid-row: 6; margin: 2px 0 0; font-size: .65rem; line-height: 1.15; }
+    #game-over-screen.is-online-duel-result .game-over-claim-button { grid-column: 1; padding-inline: 5px !important; font-size: .65rem !important; gap: 3px !important; }
+    #game-over-screen.is-online-duel-result .theme-solo-finish-claim-icon { width: 20px !important; height: 20px !important; flex-basis: 20px !important; }
+    #game-over-screen.is-online-duel-result #btn-rematch:not([hidden]) { grid-column: 2; padding-inline: 5px !important; gap: 3px; }
+    #game-over-screen.is-online-duel-result #go-rematch-icon { width: 22px; height: 22px; flex-basis: 22px; }
+}
 @media (max-height: 610px) {
     #game-over-screen.is-online-duel-result.screen.active > .modal-box { gap: 3px !important; }
     #game-over-screen.is-online-duel-result #go-msg { font-size: .75rem !important; }
