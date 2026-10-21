@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "purpose": "Ten independently generated theme bubble PNG sprites",
+  "themes": {
+    "dark": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/dark.png",
+      "sourceSha256": "f1965d6ea520b9b683032a3956663af52d79103d82c924074e7ed8bb59459e9f",
+      "sprite": "www/assets/green-soft-clay/canonical/effects/bubble-v1.png",
+      "spriteSha256": "3566adfa61aa9649663f8e15cfc13450a99d1800e9ee5d9cab5b4340e484fd09",
+      "treasuryPreview": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "light": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/light.png",
+      "sourceSha256": "49c92cc52e25cec58881a4eecd46266d2bd54e23c08ef167761113e42285c0e5",
+      "sprite": "www/assets/theme-packs/light/canonical/effects/bubble-v1.png",
+      "spriteSha256": "de3217537b8d5082e01cd336d8ad9bc003ffe96f4631150b90df136746a991a9",
+      "treasuryPreview": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "medium": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/medium.png",
+      "sourceSha256": "2b3507bb455c311655650520955768e498a856042a8bee3b3eacdb3523e3162f",
+      "sprite": "www/assets/theme-packs/medium/canonical/effects/bubble-v1.png",
+      "spriteSha256": "011a45ce22e93bb04b53576da0b3ac3f7e632a290139902c5ebd4519830bb0f6",
+      "treasuryPreview": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "winter": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/winter.png",
+      "sourceSha256": "b5377b6099ddc20093acc53610c693fcd4cc20cfcbc8b51f96f5b37bd05f8ec9",
+      "sprite": "www/assets/theme-packs/winter/canonical/effects/bubble-v1.png",
+      "spriteSha256": "f1f5c7621849dae66207e9e4f52547a242504a2758a522adf04d2130b62ec7a2",
+      "treasuryPreview": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "neon": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/neon.png",
+      "sourceSha256": "2228afba86c5688595c935dcd658771a323f8fcca0466e9e7a689b4abf413191",
+      "sprite": "www/assets/theme-packs/neon/canonical/effects/bubble-v1.png",
+      "spriteSha256": "8c9c4fa60ae8eee4fb9f990825e4538910904cd6a710c659a69c54adf74d38d4",
+      "treasuryPreview": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "amethyst": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/amethyst.png",
+      "sourceSha256": "a94fcaac3490525a47064f0b645af38f9c207f6d6019c3e2cd9e75be650553b7",
+      "sprite": "www/assets/theme-packs/amethyst/canonical/effects/bubble-v1.png",
+      "spriteSha256": "c00c8ca172f2a1b14329d637e3b3d476bc67076927b6dd979ce07ca1e44a0563",
+      "treasuryPreview": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "easter": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/easter.png",
+      "sourceSha256": "7894e8791782b85ec8063c2e66d2b49b0d4f1dadfc7c0b7465f356817805d235",
+      "sprite": "www/assets/theme-packs/easter/canonical/effects/bubble-v1.png",
+      "spriteSha256": "5e33c70777f358e6f520e5ba811ddcec88d2d51ef7f15518becdb4a28e6d1b2c",
+      "treasuryPreview": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "desert": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/desert.png",
+      "sourceSha256": "35c4f0192b61d045a98527faec1412739f6a6001495535e5fe8c415a258ecaec",
+      "sprite": "www/assets/theme-packs/desert/canonical/effects/bubble-v1.png",
+      "spriteSha256": "cc3f08c10009c5d9d808c0d11229f3d523e2d6fcfde5ed5819ca6e30ffaf4dbf",
+      "treasuryPreview": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "moon": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/moon.png",
+      "sourceSha256": "04a6f1ee06b2beb6b0b2f5ec987e5df2618d46aec74063cedc40ce14e7b21f38",
+      "sprite": "www/assets/theme-packs/moon/canonical/effects/bubble-v1.png",
+      "spriteSha256": "a397e68d2cb0f2df71d7af629d2ddcd85a4ac1b566ac96304d56de8f34841221",
+      "treasuryPreview": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "severna": {
+      "source": "source-assets/theme-live-bubbles-v1/masters/severna.png",
+      "sourceSha256": "db1b1d802b2bbd7d744192dccc9bd8cb839a5bbdb8cb8ce8a4abc52ca8270805",
+      "sprite": "www/assets/theme-packs/severna/canonical/effects/bubble-v1.png",
+      "spriteSha256": "57df9af5aac90a7d56afb7835d868d2187c90b6ebf7a1c189c4bce49960f8eda",
+      "treasuryPreview": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-bubbles-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    }
+  }
+}

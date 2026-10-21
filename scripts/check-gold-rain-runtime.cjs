@@ -9,7 +9,7 @@ const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.in
 const effectClass = source.slice(source.indexOf('class EffectManager {'), source.indexOf('class SoundManager {'));
 assert(prelude.includes('GOLD_RAIN_THEME_PROFILES') && effectClass.includes('spawnGoldRain()'));
 
-function harness(reducedMotion = false, { failParticle = false, failAll = false } = {}) {
+function harness(reducedMotion = false, { failParticle = false, failAll = false, width = 390 } = {}) {
     const nodes = [];
     const classes = new Set();
     const raf = new Map();
@@ -32,7 +32,7 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false 
             tag,
             className: '',
             children: [],
-            style: { setProperty() {} },
+            style: { properties: {}, setProperty(name, value) { this.properties[name] = value; } },
             setAttribute() {},
             appendChild(child) { child.parentNode = node; node.children.push(child); },
             classList: { add(name) { node.className += ` ${name}`; } },
@@ -46,7 +46,7 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false 
     };
     const document = {
         body,
-        documentElement: { dataset: { splashTheme: 'dark' }, classList: { remove() {} }, clientWidth: 390, clientHeight: 844 },
+        documentElement: { dataset: { splashTheme: 'dark' }, classList: { remove() {} }, clientWidth: width, clientHeight: 844 },
         createElement: makeNode,
         getElementById() { return null; },
         querySelectorAll(selector) {
@@ -55,7 +55,7 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false 
         }
     };
     const window = {
-        innerWidth: 390,
+        innerWidth: width,
         innerHeight: 844,
         devicePixelRatio: 3,
         matchMedia() { return { matches: reducedMotion }; },
@@ -110,8 +110,12 @@ async function main() {
         assert(app.classes.has('fx-gold-rain'), `${theme}: effect did not start`);
         const layers = app.nodes.filter(node => node.className === 'gold-rain-particles');
         assert.equal(layers.length, 1, `${theme}: duplicate coin layer`);
-        assert.equal(layers[0].children.length, 32, `${theme}: missing visible PNG coins`);
+        assert.equal(layers[0].children.length, 46, `${theme}: missing visible PNG coins`);
         assert(layers[0].children.every(node => node.tag === 'img' && node.src === app.imagePaths.at(-1)));
+        const delays = layers[0].children.map(node => parseInt(node.style.properties['--fall-delay'], 10));
+        assert(Math.min(...delays) < 490 && Math.max(...delays) >= 860, `${theme}: coins must arrive in staggered waves`);
+        assert(layers[0].children.every(node => node.style.properties['--fall-quarter-drift'] !== undefined
+            && node.style.properties['--fall-late-drift'] !== undefined), `${theme}: coins need a complete swaying fall`);
         assert(app.imagePaths.at(-1).includes(theme === 'dark' ? 'green-soft-clay/canonical/ducat' : `theme-packs/${theme}/canonical/ducat`));
         assert(app.nodes.some(node => node.className.includes('gold-rain-atmosphere--clear')), `${theme}: lighting obscures the canonical coins`);
         app.frame((index + 1) * 3000);
@@ -120,6 +124,12 @@ async function main() {
     assert(!app.classes.has('fx-gold-rain'));
     assert.equal(app.nodes.filter(node => node.className.startsWith('gold-rain')).length, 0);
     assert.equal(app.raf.size, 0);
+
+    const wide = harness(false, { width: 900 });
+    await wide.effect.spawnGoldRain();
+    assert.equal(wide.nodes.find(node => node.className === 'gold-rain-particles')?.children.length, 68,
+        'Wide screens must use the same three-wave layout with 68 canonical ducats');
+    wide.effect.stop();
 
     const reduced = harness(true);
     await reduced.effect.spawnGoldRain();

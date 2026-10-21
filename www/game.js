@@ -1998,11 +1998,11 @@ class YambApp {
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v2.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v2.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png?v=1',
@@ -2715,7 +2715,7 @@ class YambApp {
         });
     }
 
-    preloadThemeSources(sources, { concurrency = 4, priority = 'auto' } = {}) {
+    preloadThemeSources(sources, { concurrency = 4, priority = 'auto', timeoutMs = 2200 } = {}) {
         const uniqueSources = [...new Set((sources || []).filter(Boolean))];
         if (uniqueSources.length === 0) return Promise.resolve();
 
@@ -2723,7 +2723,7 @@ class YambApp {
         const worker = async () => {
             while (nextIndex < uniqueSources.length) {
                 const source = uniqueSources[nextIndex++];
-                await this.preloadThemeImage(source, 2200, priority);
+                await this.preloadThemeImage(source, timeoutMs, priority);
             }
         };
         return Promise.all(Array.from({ length: Math.min(concurrency, uniqueSources.length) }, worker));
@@ -2739,12 +2739,28 @@ class YambApp {
         // Startup paket sadrži samo pozadinu, aktivni splash i ikone glavnog
         // menija. Asseti soba se pripremaju tek kada korisnik izabere sobu.
         const criticalSources = this.getThemeStartupSources(theme, pack);
-        const critical = this.preloadThemeSources(criticalSources, { concurrency: 3, priority: 'high' });
+        const critical = this.preloadThemeSources(criticalSources, { concurrency: 6, priority: 'high', timeoutMs: 6000 });
         const all = critical;
 
         const warmup = { critical, all };
         this.themeWarmups.set(theme, warmup);
         return warmup;
+    }
+
+    scheduleNextMenuThemeWarmup() {
+        clearTimeout(this.nextMenuThemeWarmupTimer);
+        const unlocked = this.getUnlockedThemeIds();
+        const current = localStorage.getItem('yamb_theme') || 'dark';
+        const index = unlocked.indexOf(current);
+        const next = unlocked[(Math.max(index, 0) + 1) % unlocked.length];
+        if (!next || next === current) return;
+        this.nextMenuThemeWarmupTimer = setTimeout(() => {
+            if (!document.getElementById('main-menu')?.classList.contains('active')) return;
+            // Prepare only the next likely selection after the current menu is ready.
+            Promise.resolve(this.warmThemePack(current).critical).then(() => {
+                if (document.getElementById('main-menu')?.classList.contains('active')) this.warmThemePack(next);
+            });
+        }, 1200);
     }
 
     hydrateThemeImageSources(theme, { sources = null } = {}) {
@@ -5783,6 +5799,7 @@ class YambApp {
             }
         }
         if(screenId === 'main-menu' && !this.inviteDetected) this.checkSavedGame();
+        if (screenId === 'main-menu') this.scheduleNextMenuThemeWarmup();
         if (screenId === 'highscores-screen') { this.switchHsTab('global'); }
     }
 
@@ -6051,17 +6068,21 @@ class YambApp {
             if (themeSelect) themeSelect.blur();
             const token = (this.themeSwitchRequestToken || 0) + 1;
             this.themeSwitchRequestToken = token;
-            const pack = this.getThemeLoadingPack(nextTheme);
-            const sources = [pack?.background, ...this.getMainMenuIconSources(nextTheme),
-                ...(window.themeSettingsRoom?.sources?.(nextTheme) || [])].filter(Boolean);
-            // Decode the visible menu set before changing colors, so old icons never sit on the new theme.
-            this.preloadThemeSources(sources, { concurrency: 16, priority: 'high' }).then(() => {
+            // Reuse the menu pack already warmed while the previous theme was visible.
+            // Settings icons join the barrier only when the Settings screen is visible.
+            const warmup = this.warmThemePack(nextTheme);
+            const settingsSources = document.getElementById('settings-screen')?.classList.contains('active')
+                ? (window.themeSettingsRoom?.sources?.(nextTheme) || []) : [];
+            const settingsReady = this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
+            this.prepareThemeLoadingGate(nextTheme, { manualSwitch: true });
+            Promise.all([warmup.critical, settingsReady]).then(() => {
                 if (token !== this.themeSwitchRequestToken) return;
                 this.themeManualSwitchUntil = Date.now() + 2500;
                 localStorage.setItem('yamb_theme', nextTheme);
                 this.applyTheme(nextTheme);
                 if (themeSelect) themeSelect.value = nextTheme;
                 if (this.socket && this.socket.connected) this.emitPlayerData();
+                if (document.getElementById('main-menu')?.classList.contains('active')) this.scheduleNextMenuThemeWarmup();
             });
             return;
         }

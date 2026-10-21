@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Deset tema — pregled živih efekata</title>
-  <link rel="stylesheet" href="efekti.css?v=2.0">
+  <link rel="stylesheet" href="efekti.css?v=2.5">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -31,6 +31,8 @@
     </select>
     <button type="button" data-effect="confetti">Konfete</button>
     <button type="button" data-effect="gold_rain">Kiša dukata</button>
+    <button type="button" data-effect="fireflies">Magični svici</button>
+    <button type="button" data-effect="bubbles">Magični mehurići</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
   <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
@@ -63,6 +65,12 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
     moon:     { glow: '167, 169, 184', glint: '245, 245, 247', drift: 0.43, spin: 0.42 },
     severna:  { glow: '138, 227, 228', glint: '195, 172, 234', drift: 0.72, spin: 0.52 }
 });
+const FIREFLY_THEME_GLOW = Object.freeze({
+    dark: '211, 244, 110', light: '255, 207, 111', medium: '255, 172, 121',
+    winter: '129, 229, 219', neon: '86, 229, 210', amethyst: '242, 200, 121',
+    easter: '255, 211, 132', desert: '113, 217, 196', moon: '225, 226, 231',
+    severna: '138, 227, 228'
+});
 
   class EffectManager {
     constructor() {
@@ -73,6 +81,12 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
         this.goldRainThemeObserver = null;
         this.greenDucatParticleSpritePromise = null;
         this.goldRainRunId = 0;
+        this.fireflyRunId = 0;
+        this.fireflySpritePromises = {};
+        this.fireflyThemeObserver = null;
+        this.bubbleRunId = 0;
+        this.bubbleSpritePromises = {};
+        this.bubbleThemeObserver = null;
         this.royalYambRunId = 0;
         this.royalCanvasCleanup = null;
         this.supernovaCanvasCleanup = null;
@@ -1631,18 +1645,26 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
         if (reducedMotion) {
             [34, 42, 34].forEach(addCoin);
         } else {
-            const coinCount = isCompact ? 32 : 52;
+            const coinCount = isCompact ? 46 : 68;
             for (let index = 0; index < coinCount; index++) {
                 const size = Math.round(rand(isCompact ? 27 : 32, isCompact ? 43 : 52));
                 const coin = addCoin(size);
                 const drift = rand(isCompact ? -54 : -100, isCompact ? 54 : 100) * profile.drift;
                 const tilt = rand(-18, 18) * profile.spin;
-                coin.style.left = `${rand(2, 94)}vw`;
-                coin.style.setProperty('--fall-delay', `${Math.round(index < 7 ? rand(0, 280) : rand(150, 1900))}ms`);
-                coin.style.setProperty('--fall-duration', `${Math.round(rand(2500, 3700))}ms`);
-                coin.style.setProperty('--fall-mid-drift', `${Math.round(drift * 0.48)}px`);
+                const wave = index % 3;
+                const lane = Math.floor(index / 3);
+                const lanesInWave = Math.ceil((coinCount - wave) / 3);
+                coin.style.left = `${(2 + ((lane + rand(0.15, 0.85)) / lanesInWave) * 92).toFixed(1)}vw`;
+                coin.style.setProperty('--fall-delay', `${Math.round(wave * 430 + rand(0, 490))}ms`);
+                coin.style.setProperty('--fall-duration', `${Math.round(rand(3000, 4200))}ms`);
+                coin.style.setProperty('--fall-start-tilt', `${Math.round(-tilt * 0.5)}deg`);
+                coin.style.setProperty('--fall-quarter-drift', `${Math.round(drift * 0.45)}px`);
+                coin.style.setProperty('--fall-mid-drift', `${Math.round(drift * 0.12)}px`);
+                coin.style.setProperty('--fall-late-drift', `${Math.round(drift * 0.76)}px`);
                 coin.style.setProperty('--fall-end-drift', `${Math.round(drift)}px`);
-                coin.style.setProperty('--fall-mid-tilt', `${Math.round(-tilt * 0.45)}deg`);
+                coin.style.setProperty('--fall-quarter-tilt', `${Math.round(tilt * 0.38)}deg`);
+                coin.style.setProperty('--fall-mid-tilt', `${Math.round(-tilt * 0.55)}deg`);
+                coin.style.setProperty('--fall-late-tilt', `${Math.round(tilt * 0.7)}deg`);
                 coin.style.setProperty('--fall-end-tilt', `${Math.round(tilt)}deg`);
             }
         }
@@ -1747,61 +1769,170 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
         return luminance > 0.36 ? 'light' : 'dark';
     }
 
-    spawnFireflies(count = 52, group = 'fireflies') {
+    loadThemeFireflySprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        if (this.fireflySpritePromises[theme]) return this.fireflySpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        this.fireflySpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.fireflySpritePromises[theme];
+                resolve(null);
+            };
+            image.src = `${root}/canonical/effects/firefly-v1.png`;
+        });
+        return this.fireflySpritePromises[theme];
+    }
+
+    async spawnFireflies(count = 52, group = 'fireflies') {
+        const runId = ++this.fireflyRunId;
+        const themeId = this.getGoldRainThemeId();
+        this.clearEffectTimeouts(group);
+        this.fireflyThemeObserver?.disconnect();
+        this.fireflyThemeObserver = null;
         document.querySelectorAll('.firefly-field').forEach(field => field.remove());
 
+        const sprite = await this.loadThemeFireflySprite(themeId);
+        if (runId !== this.fireflyRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const particleCount = reducedMotion ? Math.min(count, 24) : (compact ? Math.min(count, 38) : count);
+        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 20) : Math.min(count, 28));
         const tone = this.getEffectSurfaceTone();
         const field = document.createElement('div');
-        field.className = `firefly-field firefly-field--${tone}`;
+        field.className = `firefly-field firefly-field--${tone}${reducedMotion ? ' firefly-field--reduced' : ''}`;
+        field.style.setProperty('--ff-glow', FIREFLY_THEME_GLOW[themeId]);
         field.setAttribute('aria-hidden', 'true');
 
         const fragment = document.createDocumentFragment();
+        const routes = [[-1, -1], [1, -1], [-1, 1], [1, 1], [1, 0], [-1, 0], [0, 1], [0, -1]];
         for (let i = 0; i < particleCount; i++) {
             const fly = document.createElement('span');
-            fly.className = `magic-firefly magic-firefly--${i % 3}`;
-            fly.style.setProperty('--ff-x', (3 + Math.random() * 94).toFixed(2) + 'vw');
-            fly.style.setProperty('--ff-y', (10 + Math.random() * 86).toFixed(2) + 'vh');
-            fly.style.setProperty('--ff-dx-a', (-75 + Math.random() * 150).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-a', (-45 - Math.random() * 105).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dx-b', (-110 + Math.random() * 220).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-b', (-120 - Math.random() * 190).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-size', (compact ? 5 + Math.random() * 5 : 6 + Math.random() * 7).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-delay', (i < 12 ? Math.random() * 0.25 : Math.random() * 1.35).toFixed(2) + 's');
-            fly.style.setProperty('--ff-duration', (reducedMotion ? 5.6 : 4.8 + Math.random() * 2.2).toFixed(2) + 's');
-            fly.style.setProperty('--ff-pulse', (0.72 + Math.random() * 0.75).toFixed(2) + 's');
-            fly.innerHTML = '<span class="magic-firefly__trail"></span><span class="magic-firefly__light"></span>';
+            fly.className = 'magic-firefly';
+            const [horizontal, vertical] = routes[i % routes.length];
+            const stepX = horizontal * (62 + Math.random() * 85);
+            const stepY = vertical * (52 + Math.random() * 88);
+            fly.style.setProperty('--ff-x', (6 + ((i + Math.random() * 0.6) / particleCount) * 86).toFixed(2) + 'vw');
+            fly.style.setProperty('--ff-y', (22 + Math.random() * 60).toFixed(2) + 'vh');
+            fly.style.setProperty('--ff-dx-a', (stepX * 0.52).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-a', (stepY * 0.35).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dx-b', (stepX * 0.18 - vertical * 22).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-b', (stepY * 0.82).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dx-c', (stepX * 1.12).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-c', (stepY * 1.22).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-size', (compact ? 32 + Math.random() * 13 : 36 + Math.random() * 16).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-delay', (i < 6 ? Math.random() * 0.3 : 0.2 + Math.random() * 1.2).toFixed(2) + 's');
+            fly.style.setProperty('--ff-duration', (5.2 + Math.random() * 1.25).toFixed(2) + 's');
+            fly.style.setProperty('--ff-flap', (0.17 + Math.random() * 0.08).toFixed(2) + 's');
+            const halo = document.createElement('span');
+            halo.className = 'magic-firefly__halo';
+            const image = document.createElement('img');
+            image.className = 'magic-firefly__sprite';
+            image.src = sprite.src;
+            image.alt = '';
+            image.decoding = 'async';
+            image.draggable = false;
+            fly.append(halo, image);
             fragment.appendChild(fly);
         }
 
         field.appendChild(fragment);
         document.body.appendChild(field);
-        this.scheduleEffectTimeout(() => field.remove(), reducedMotion ? 6500 : 7800, group);
+        let observer = null;
+        const cleanup = () => {
+            if (runId !== this.fireflyRunId) return;
+            observer?.disconnect();
+            if (this.fireflyThemeObserver === observer) this.fireflyThemeObserver = null;
+            field.remove();
+        };
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (themeId !== this.getGoldRainThemeId()) cleanup();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+            this.fireflyThemeObserver = observer;
+        }
+        this.scheduleEffectTimeout(cleanup, reducedMotion ? 5200 : 8000, group);
     }
 
-    spawnBubbles(count, group = 'bubbles') {
-        const emojis = ['🫧', '🫧', '⚪']; 
-        const greenBubbles = this.isGreenThemeActive();
-        for (let i = 0; i < count; i++) {
-            this.scheduleEffectTimeout(() => {
-                const el = document.createElement('div');
-                if (!greenBubbles) el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                el.className = greenBubbles ? 'magic-bubble magic-bubble--green' : 'magic-bubble';
-                el.style.left = Math.random() * 100 + 'vw';
-                el.style.setProperty('--rnd-x', (Math.random() * 150 - 75) + 'px'); 
-                
-                el.style.animationDuration = (Math.random() * 1.5 + 3.5) + 's';
-                
-                const size = Math.random() * 1.5 + 1; 
-                el.style.fontSize = size + 'rem';
+    loadThemeBubbleSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        if (this.bubbleSpritePromises[theme]) return this.bubbleSpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        this.bubbleSpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.bubbleSpritePromises[theme];
+                resolve(null);
+            };
+            image.src = `${root}/canonical/effects/bubble-v1.png`;
+        });
+        return this.bubbleSpritePromises[theme];
+    }
 
-                document.body.appendChild(el);
-                
-                this.scheduleEffectTimeout(() => el.remove(), 5500, group);
-            }, Math.random() * 2000, group);
+    async spawnBubbles(count = 35, group = 'bubbles') {
+        const runId = ++this.bubbleRunId;
+        const themeId = this.getGoldRainThemeId();
+        this.clearEffectTimeouts(group);
+        this.bubbleThemeObserver?.disconnect();
+        this.bubbleThemeObserver = null;
+        document.querySelectorAll('.bubble-field').forEach(field => field.remove());
+
+        const sprite = await this.loadThemeBubbleSprite(themeId);
+        if (runId !== this.bubbleRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const compact = window.matchMedia?.('(max-width: 760px)').matches;
+        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 24) : Math.min(count, 35));
+        const field = document.createElement('div');
+        field.className = `bubble-field${reducedMotion ? ' bubble-field--reduced' : ''}`;
+        field.setAttribute('aria-hidden', 'true');
+        const fragment = document.createDocumentFragment();
+        const sizeRanges = compact ? [[20, 30], [34, 48], [56, 72]] : [[24, 34], [42, 58], [68, 88]];
+        for (let i = 0; i < particleCount; i++) {
+            const bubble = document.createElement('img');
+            bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][i % 3]}`;
+            bubble.src = sprite.src;
+            bubble.alt = '';
+            bubble.decoding = 'async';
+            bubble.draggable = false;
+            const [minSize, maxSize] = sizeRanges[i % 3];
+            const size = Math.round(minSize + Math.random() * (maxSize - minSize));
+            const drift = (Math.random() - .5) * (compact ? 110 : 180);
+            bubble.style.setProperty('--bubble-size', `${size}px`);
+            bubble.style.setProperty('--bubble-x', (4 + ((Math.floor(i / 3) + Math.random() * .8) / Math.ceil(particleCount / 3)) * 88).toFixed(1) + 'vw');
+            bubble.style.setProperty('--bubble-drift-a', `${Math.round(drift * .55)}px`);
+            bubble.style.setProperty('--bubble-drift-b', `${Math.round(-drift * .3)}px`);
+            bubble.style.setProperty('--bubble-drift-c', `${Math.round(drift)}px`);
+            bubble.style.setProperty('--bubble-delay', `${(i < 6 ? Math.random() * .25 : .2 + Math.random() * 1.4).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-duration', `${(4.8 + Math.random() * 1.7 + (i % 3) * .18).toFixed(2)}s`);
+            if (reducedMotion) {
+                bubble.style.setProperty('--bubble-x', `${18 + i * 30}vw`);
+                bubble.style.setProperty('--bubble-static-y', `${30 + i * 20}vh`);
+            }
+            fragment.appendChild(bubble);
         }
+        field.appendChild(fragment);
+        document.body.appendChild(field);
+        let observer = null;
+        const cleanup = () => {
+            if (runId !== this.bubbleRunId) return;
+            observer?.disconnect();
+            if (this.bubbleThemeObserver === observer) this.bubbleThemeObserver = null;
+            field.remove();
+        };
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (themeId !== this.getGoldRainThemeId()) cleanup();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+            this.bubbleThemeObserver = observer;
+        }
+        this.scheduleEffectTimeout(cleanup, reducedMotion ? 4600 : 8000, group);
     }
     
     spawnExplosion() {
@@ -1931,23 +2062,22 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         };
         resize();
-        const count = width < 640 ? 54 : 78;
-        const origins = [0.08, 0.5, 0.92];
+        const count = width < 640 ? 132 : 180;
         const particles = Array.from({ length: count }, (_, index) => {
-            const origin = origins[index % origins.length];
+            const spread = (index / (count - 1)) * 2 - 1;
             return {
                 image: sprites[index % sprites.length],
-                x: width * origin + rand(-25, 25),
-                y: height * rand(0.72, 0.84),
-                vx: (0.5 - origin) * rand(55, 155) + rand(-65, 65),
-                vy: -rand(155, 290),
-                gravity: rand(170, 235),
+                x: width * 0.5 + rand(-width * 0.06, width * 0.06),
+                y: height * rand(0.75, 0.82),
+                vx: spread * width * rand(0.72, 1.08) + rand(-30, 30),
+                vy: -height * rand(1.08, 1.78),
+                gravity: height * rand(1.35, 1.82),
                 wobble: rand(0, Math.PI * 2),
                 rotation: rand(-0.45, 0.45),
-                spin: rand(-1.8, 1.8),
-                size: rand(16, 27),
-                age: -rand(0, 0.35),
-                ttl: rand(2.7, 3.5)
+                spin: rand(-2.8, 2.8),
+                size: rand(14, 24),
+                age: -rand(0, 0.12),
+                ttl: rand(2.35, 2.95)
             };
         });
         let lastFrame = 0;
@@ -1972,7 +2102,11 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
                 particle.vy += particle.gravity * delta;
                 particle.rotation += particle.spin * delta;
                 particle.wobble += delta * 5;
-                const fade = Math.min(1, (particle.ttl - particle.age) / 0.65);
+                if (particle.y > height + particle.size || particle.x < -particle.size || particle.x > width + particle.size) {
+                    particle.age = particle.ttl;
+                    continue;
+                }
+                const fade = Math.min(1, (particle.ttl - particle.age) / 0.42);
                 const side = particle.size * (0.87 + Math.sin(particle.wobble) * 0.13);
                 ctx.save();
                 ctx.globalAlpha = fade;
@@ -2149,7 +2283,13 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
     stop() {
         this.confettiRunId++;
         this.goldRainRunId++;
+        this.fireflyRunId++;
+        this.bubbleRunId++;
         this.royalYambRunId++;
+        this.fireflyThemeObserver?.disconnect();
+        this.fireflyThemeObserver = null;
+        this.bubbleThemeObserver?.disconnect();
+        this.bubbleThemeObserver = null;
         if (this.royalCanvasCleanup) this.royalCanvasCleanup();
         if (this.supernovaCanvasCleanup) this.supernovaCanvasCleanup();
         this.clearEffectTimeouts();
@@ -2171,7 +2311,7 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
             if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
         
-        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .bubble-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));
@@ -2209,10 +2349,14 @@ const GOLD_RAIN_THEME_PROFILES = Object.freeze({
     theme: document.documentElement.dataset.splashTheme,
     coinCount: document.querySelectorAll('.gold-rain-particle').length,
     coinSources: [...new Set([...document.querySelectorAll('.gold-rain-particle')].map(node => node.getAttribute('src')))],
-    confettiActive: Boolean(fx.confettiAnimationId)
+    confettiActive: Boolean(fx.confettiAnimationId),
+    fireflyCount: document.querySelectorAll('.magic-firefly__sprite').length,
+    fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
+    bubbleCount: document.querySelectorAll('.magic-bubble').length,
+    bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))]
   }; } };
   const effect = params.get('effect');
-  if (effect === 'confetti' || effect === 'gold_rain') fx.trigger(effect);
+  if (effect === 'confetti' || effect === 'gold_rain' || effect === 'fireflies' || effect === 'bubbles') fx.trigger(effect);
   </script>
 </body>
 </html>

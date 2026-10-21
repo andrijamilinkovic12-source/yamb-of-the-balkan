@@ -55,6 +55,14 @@
         if (root.matches?.('img[data-theme-src]')) candidates.push(root);
         root.querySelectorAll?.('img[data-theme-src]').forEach(image => candidates.push(image));
         candidates.forEach(image => {
+            const screen = image.closest('.screen');
+            if (screen && screen.id !== 'main-menu' && screen.id !== 'splash-screen'
+                && !screen.classList.contains('active')) {
+                // Hidden rooms keep their artwork dormant until opened. This avoids
+                // downloading and decoding every room icon during app startup or a theme switch.
+                guardImageSwap(image);
+                return;
+            }
             const original = image.dataset.themeSrc || '';
             const chatInternal = original.match(chatInternalPattern);
             if (chatInternal && image.closest('#global-chat-overlay')) {
@@ -67,6 +75,7 @@
                     image.src = nextSource;
                     if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
                 }
+                if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
                 return;
             }
             if (tournamentPowerPattern.test(original) && image.closest('#tournament-screen')) {
@@ -78,6 +87,7 @@
                     image.src = nextSource;
                     if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
                 }
+                if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
                 return;
             }
             const tournamentRoom = original.match(tournamentRoomPattern);
@@ -92,6 +102,7 @@
                     image.src = nextSource;
                     if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
                 }
+                if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
                 image.classList.toggle('theme-tournament-room-icon', hasTournamentPack);
                 image.parentElement?.classList.toggle('theme-tournament-room-icon-host', hasTournamentPack);
                 return;
@@ -111,6 +122,7 @@
                 image.src = nextSource;
                 if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
             }
+            if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
             image.classList.toggle('theme-main-room-icon', themes.has(theme));
             image.parentElement?.classList.toggle('theme-main-room-icon-host', themes.has(theme));
             if (themes.has(theme)) {
@@ -124,17 +136,21 @@
         const observer = new MutationObserver(records => {
             records.forEach(record => {
                 if (record.type === 'attributes') {
-                    syncIcons();
+                    if (record.target === document.documentElement || record.target === document.body) syncIcons();
+                    else if (record.target.matches?.('.screen.active')) syncIcons(record.target);
                     return;
                 }
                 record.addedNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE) syncIcons(node);
+                    if (node.nodeType !== Node.ELEMENT_NODE) return;
+                    if (node.matches?.('.screen')) observer.observe(node, { attributes: true, attributeFilter: ['class'] });
+                    node.querySelectorAll?.('.screen').forEach(screen => observer.observe(screen, { attributes: true, attributeFilter: ['class'] }));
+                    syncIcons(node);
                 });
             });
         });
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
-        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         observer.observe(document.body, { childList: true, subtree: true });
+        document.querySelectorAll('.screen').forEach(screen => observer.observe(screen, { attributes: true, attributeFilter: ['class'] }));
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });

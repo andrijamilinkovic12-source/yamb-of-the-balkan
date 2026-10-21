@@ -11,7 +11,7 @@ if (!prelude.includes('GOLD_RAIN_THEME_PROFILES') || !effectClass.includes('spaw
 
 let html = fs.readFileSync(path.join(root, 'www/qa/theme-live-effects-review.html'), 'utf8');
 html = html.replace('<head>', '<head>\n  <base href="../www/">')
-    .replace('href="/efekti.css?v=2.0"', 'href="efekti.css?v=2.0"')
+    .replace('href="/efekti.css?v=2.5"', 'href="efekti.css?v=2.5"')
     .replaceAll("url('/assets/", "url('assets/");
 const boot = `
   <script>
@@ -39,10 +39,14 @@ const boot = `
     theme: document.documentElement.dataset.splashTheme,
     coinCount: document.querySelectorAll('.gold-rain-particle').length,
     coinSources: [...new Set([...document.querySelectorAll('.gold-rain-particle')].map(node => node.getAttribute('src')))],
-    confettiActive: Boolean(fx.confettiAnimationId)
+    confettiActive: Boolean(fx.confettiAnimationId),
+    fireflyCount: document.querySelectorAll('.magic-firefly__sprite').length,
+    fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
+    bubbleCount: document.querySelectorAll('.magic-bubble').length,
+    bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))]
   }; } };
   const effect = params.get('effect');
-  if (effect === 'confetti' || effect === 'gold_rain') fx.trigger(effect);
+  if (effect === 'confetti' || effect === 'gold_rain' || effect === 'fireflies' || effect === 'bubbles') fx.trigger(effect);
   </script>
 </body>`;
 html = html.replace(/  <script>[\s\S]*?  <\/script>\s*<\/body>/, boot);

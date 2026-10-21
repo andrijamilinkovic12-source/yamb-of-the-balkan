@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "purpose": "Ten original theme firefly PNG sprites",
+  "themes": {
+    "dark": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/dark.png",
+      "sourceSha256": "f32421e0b4a6c4b95b2c4b5758b1736101eb8a997fc6d1fe556238aef25c68a6",
+      "sprite": "www/assets/green-soft-clay/canonical/effects/firefly-v1.png",
+      "spriteSha256": "f6db95b0d5227753b383c48258c254a96aa59967cfdcc617a32f83e37fdef690",
+      "treasuryPreview": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "light": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/light.png",
+      "sourceSha256": "9975438615ede188aedde59011c2a8506842933eff19ddb5ccc3173d1345c084",
+      "sprite": "www/assets/theme-packs/light/canonical/effects/firefly-v1.png",
+      "spriteSha256": "7b2757b7c7c1de3dac268bea4bdf0ab992884a43d4030ce42619a56768810c5b",
+      "treasuryPreview": "www/assets/theme-packs/light/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "medium": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/medium.png",
+      "sourceSha256": "c7bcd2e77dffa740b44c9fd418f8cb77de91a231527e1c9b1a86ace23e0ea749",
+      "sprite": "www/assets/theme-packs/medium/canonical/effects/firefly-v1.png",
+      "spriteSha256": "55f9ddfd330d91c7afcb017ca5cb29a94b4cde15542206db515d063e7f2d8102",
+      "treasuryPreview": "www/assets/theme-packs/medium/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "winter": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/winter.png",
+      "sourceSha256": "34bbc799cbf1fd9f5b6b9d13d8fb641a6a2feaa2561d141feb868ebab7eb676e",
+      "sprite": "www/assets/theme-packs/winter/canonical/effects/firefly-v1.png",
+      "spriteSha256": "c83bd5df23e22abb6355004fcf275044e9d587d376cc94ed4fd72654add283ac",
+      "treasuryPreview": "www/assets/theme-packs/winter/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "neon": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/neon.png",
+      "sourceSha256": "84522274e48767bcbb53e583061e7be5aff7f55be6163447a78c35ce0036c99a",
+      "sprite": "www/assets/theme-packs/neon/canonical/effects/firefly-v1.png",
+      "spriteSha256": "97bb0fe95f06f7b0b51e2a83652fea02fed1a15221e557cdbf559f6865202d2e",
+      "treasuryPreview": "www/assets/theme-packs/neon/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "amethyst": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/amethyst.png",
+      "sourceSha256": "d79b7ebaf55f0bceae083626cbb8d5559ed1c1745c22c427fe3c9960c73ce9c2",
+      "sprite": "www/assets/theme-packs/amethyst/canonical/effects/firefly-v1.png",
+      "spriteSha256": "7bcb3cf40e76204b14a0304f3c73bfaf4cb8e0a01dac3e84828410ce21c40a59",
+      "treasuryPreview": "www/assets/theme-packs/amethyst/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "easter": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/easter.png",
+      "sourceSha256": "6e9a9f19d598136c44163c5a1a083e37798eae0cbead6d28b9d31ae07ef7ad69",
+      "sprite": "www/assets/theme-packs/easter/canonical/effects/firefly-v1.png",
+      "spriteSha256": "2b662b15f6d295ce6d476cf9111e8485e02f0e892660904c7cbab496bcb63e9f",
+      "treasuryPreview": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "desert": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/desert.png",
+      "sourceSha256": "afecc4847d9be37c75ed72b48b9422ffd9f24708b4f0fde5a33fe3bde5221180",
+      "sprite": "www/assets/theme-packs/desert/canonical/effects/firefly-v1.png",
+      "spriteSha256": "6c9fe2be1635a8443312ff0c9789c83650774911e6d5b254cd623f9d918e1620",
+      "treasuryPreview": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "moon": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/moon.png",
+      "sourceSha256": "476ba0835a742e1826502996f560f650b0c2c042681950ba74247a7cae86497d",
+      "sprite": "www/assets/theme-packs/moon/canonical/effects/firefly-v1.png",
+      "spriteSha256": "338d784713a4ba68e34c7db941c62d0caec1e4768e15878c41ac83f74a48c06d",
+      "treasuryPreview": "www/assets/theme-packs/moon/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    },
+    "severna": {
+      "source": "source-assets/theme-live-fireflies-v1/masters/severna.png",
+      "sourceSha256": "9a7049ce9510e01c71c63853e4edcdf99a716b6a9d52b317286349dac04ba020",
+      "sprite": "www/assets/theme-packs/severna/canonical/effects/firefly-v1.png",
+      "spriteSha256": "ac27a55600d149492ab9503429bd137b20f44bb4d55bcbd56660f141d2c04466",
+      "treasuryPreview": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-fireflies-v2.png",
+      "treasuryThumbnail": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+      "size": [
+        256,
+        256
+      ]
+    }
+  }
+}

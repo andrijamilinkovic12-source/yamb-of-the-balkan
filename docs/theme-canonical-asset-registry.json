@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "updatedOn": "2026-10-21",
-  "definitionSchemaVersion": 55,
+  "definitionSchemaVersion": 59,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
@@ -20,17 +20,21 @@
     "leaderboardMedalsRefresh": "source-assets/theme-leaderboard-medals-v2/manifest.json",
     "quarterlyLeagueRefresh": "source-assets/theme-quarterly-league-v2/manifest.json",
     "goldRainRefresh": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
+    "liveFirefliesRefresh": "source-assets/theme-live-fireflies-v1/manifest.json",
+    "liveBubblesRefresh": "source-assets/theme-live-bubbles-v1/manifest.json",
     "supplementaryPacks": 17
   },
   "sourceSha256": {
-    "themeDefinitions": "2074b2d81f2a63a1c5bf99fde48569cf4d0c6154df989729560e735970d95043",
+    "themeDefinitions": "6603bd2e81dbd850c4496fe879168bf12146a75dfab8d4e786396ac4310e861e",
     "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
     "greenRegistry": "3d7d965c793de49cb9305148c290347980b663c8f86dbae8c3e35676c8062bde",
     "criticalEconomyRefresh": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9",
     "leaderboardMedalsRefresh": "eff44f19559e8bd032b312291f753fd0f6476fbca934ea69877a3658e90ce7f1",
     "quarterlyLeagueRefresh": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd",
-    "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab"
+    "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab",
+    "liveFirefliesRefresh": "d91a9e280964801230d2ee8fb17174d7f190ad714e6d12b4e7e0c73cef00262d",
+    "liveBubblesRefresh": "54897a7fadfccef436576b3af25fca8633ca6878a35b7b47e984effadc4048aa"
   },
   "baseline": {
     "themes": 10,

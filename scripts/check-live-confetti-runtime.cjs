@@ -35,10 +35,11 @@ assert.equal(hashes.size, 30, 'Every themed particle must have its own PNG artwo
 function harness(reducedMotion = false) {
     const frames = new Map();
     const draws = [];
+    const positions = [];
     let nextId = 1;
     const ctx = {
         setTransform() {}, clearRect() {}, save() {}, restore() {},
-        translate() {}, rotate() {},
+        translate(x, y) { positions.push({ x, y }); }, rotate() {},
         drawImage(image) { draws.push(image.src); }
     };
     const canvas = { width: 0, height: 0, getContext() { return ctx; } };
@@ -70,7 +71,7 @@ function harness(reducedMotion = false) {
     vm.runInContext(`${prelude}\n${effectClass}\nthis.EffectManager = EffectManager;`, context);
     const fx = new context.EffectManager();
     return {
-        fx, document, frames, draws, canvas,
+        fx, document, frames, draws, positions, canvas,
         frame(now) {
             const callbacks = [...frames.values()];
             frames.clear();
@@ -87,8 +88,12 @@ async function main() {
         await new Promise(resolve => setImmediate(resolve));
         assert(qa.frames.size > 0, `${theme}: effect must begin after its PNG sprites load`);
         qa.draws.length = 0;
+        qa.positions.length = 0;
         for (let frame = 1; frame <= 55; frame++) qa.frame(themeIndex * 1000 + frame * 16);
-        assert(qa.draws.length > 0, `${theme}: confetti must draw visible PNG particles`);
+        assert(qa.draws.length > 2000, `${theme}: burst must be dense rather than a sparse spray`);
+        assert(qa.positions.some(point => point.x < 390 * 0.12), `${theme}: burst does not reach the left edge`);
+        assert(qa.positions.some(point => point.x > 390 * 0.88), `${theme}: burst does not reach the right edge`);
+        assert(qa.positions.some(point => point.y < 844 * 0.2), `${theme}: burst does not reach the top of the screen`);
         const prefix = theme === 'dark' ? 'assets/green-soft-clay/' : `assets/theme-packs/${theme}/`;
         assert(qa.draws.every(src => src.startsWith(`${prefix}canonical/confetti-particles/`)), `${theme}: wrong theme artwork`);
         if (themeIndex < themes.length - 1) {

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Deset tema — pregled živih efekata</title>
-  <link rel="stylesheet" href="/efekti.css?v=2.0">
+  <link rel="stylesheet" href="/efekti.css?v=2.5">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -30,6 +30,8 @@
     </select>
     <button type="button" data-effect="confetti">Konfete</button>
     <button type="button" data-effect="gold_rain">Kiša dukata</button>
+    <button type="button" data-effect="fireflies">Magični svici</button>
+    <button type="button" data-effect="bubbles">Magični mehurići</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
   <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
@@ -76,10 +78,14 @@
           coinCount: document.querySelectorAll('.gold-rain-particle').length,
           coinSources: [...new Set([...document.querySelectorAll('.gold-rain-particle')].map(node => node.getAttribute('src')))],
           confettiActive: Boolean(fx.confettiAnimationId),
+          fireflyCount: document.querySelectorAll('.magic-firefly__sprite').length,
+          fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
+          bubbleCount: document.querySelectorAll('.magic-bubble').length,
+          bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
           sprites: Object.keys(fx.confettiSpritePromises)
         }; } };
         const effect = params.get('effect');
-        if (effect === 'confetti' || effect === 'gold_rain') fx.trigger(effect);
+        if (effect === 'confetti' || effect === 'gold_rain' || effect === 'fireflies' || effect === 'bubbles') fx.trigger(effect);
       } catch (error) {
         const node = document.getElementById('qa-error');
         node.hidden = false;
