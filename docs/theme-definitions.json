@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 55,
+  "schemaVersion": 57,
   "updatedOn": "2026-10-21",
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
@@ -14,9 +14,16 @@
   "goldRainEffectRule": {
     "scope": "Zlatna Kisa u Riznici, izazovu i zavrsnim ekranima u svih deset tema.",
     "canonicalCoin": "Animacija prikazuje samo aktivni kanonski dukat te teme; promena njegovog mastera zahteva proveru cestice, pregleda i male slicice. Nema generickog novcica, dragulja, krune ili preslikavanja druge teme.",
-    "motion": "Sve teme koriste zasebne vidljive PNG dukate u jednom DOM sloju i jednako trajanje od 5.8 sekundi. Najvise 44 dukata na mobilnom, odnosno 72 na sirim ekranima, padaju uz diskretno lelujanje. Svetlosni sloj je blag i ne zamenjuje dukate. DNK teme utice na nijansu ambijenta i malu razliku u kretanju, bez kica i zatrpavanja igre.",
+    "motion": "Sve teme koriste zasebne vidljive PNG dukate u jednom DOM sloju i jednako trajanje od 5.8 sekundi. Miran maksimum u svih deset tema je 32 dukata na mobilnom, odnosno 52 na sirim ekranima. Svetlosni sloj je blag i ne zamenjuje dukate; nema reflektora ni sjajnih crta preko dukata. DNK teme utice na nijansu ambijenta i malu razliku u kretanju, bez kica i zatrpavanja igre.",
+    "loadingFallback": "Pre pocetka ucitati tematski kanonski ducat-particle PNG. Ako ne uspe, pokusati kanonski ducat-front PNG iste teme. Ako oba izostanu, ne prikazivati praznu svetlost ili genericki SVG umesto dukata.",
     "performanceAndAccess": "Kretanje dukata se izvodi CSS transformacijama bez canvas iscrtavanja. Promena teme, novo pokretanje ili izlazak prekida prethodnu animaciju i uklanja slojeve. Pri ukljucenom smanjenom pokretu prikazuju se tri nepokretna tematska dukata tokom 2.7 sekundi, bez pada i iskri.",
     "qualityGate": "Pregledati u stvarnoj igri, posebno pri kupovini/aktiviranju efekta, na telefonu srednje sirine: kanonski dukat, citljivost, prirodan tok i gladak prikaz bez zastajkivanja."
+  },
+  "liveConfettiEffectRule": {
+    "scope": "Zive tematske konfete u svih deset tema, ukljucujuci Zelenu.",
+    "assets": "Svaka tema ima tri zasebno generisana transparentna PNG: ribbon, chip i lozenge, ukupno 30 razlicitih cestica. Svaka prati sopstveni DNK, Clay ili Smooth Rubber / Matte Plastic pravac i paletu teme. Nema kopiranja i pukog prebojavanja. Izvori i reproduktibilna tehnicka optimizacija: source-assets/theme-live-confetti-v1/ i scripts/build-live-confetti-sprites.ps1.",
+    "motion": "Canvas iscrtava vec ucitane tematske PNG cestice, najvise 54 na uskom telefonu ili 78 na sirem ekranu, u jednom kratkom naletu sa blagim padom i bledenjem. Nema emodzija, zvezda, zaslepljujuceg sjaja ni ometanja kontrola. Promena teme i stop prekidaju animaciju; smanjeni pokret je iskljucuje.",
+    "qualityGate": "Pregledati svih deset tema u uskom zavrsnom ekranu, proveriti vidljive PNG cestice, kanonske dukate, glatko kretanje, pristupacnost i ciscenje efekta. Sam pregled PNG ili staticki test nije potvrda prikaza na Samsung S25."
   },
   "inviteFriendRoomRules": {
     "scope": "Soba Pozovi prijatelja i njena cekaonica u svih deset tema. Zajednicki online zavrsni ekran ostaje vec postojeci i nije poseban zavrsni ekran ove sobe.",

@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "status": "all-ten-themes-live",
+  "style": "3D Soft Neomorphism",
+  "roles": [
+    "ribbon",
+    "chip",
+    "lozenge"
+  ],
+  "assets": [
+    {
+      "theme": "dark",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/dark/ribbon-master-v1.png",
+      "sourceSha256": "a6bdf955878103630a45ceeb919acde089559abc399daf04c07d6655c72eeb88",
+      "production": "www/assets/green-soft-clay/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "a8b142b1b41ee5ab478e8b462bbf276573b1d2970c30a5948c9b5ab4dd4a10ce",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "dark",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/dark/chip-master-v1.png",
+      "sourceSha256": "9c1f95a746567c0216a14672632594d99b55fd97feddf3e1e4c56dd39d5228e8",
+      "production": "www/assets/green-soft-clay/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "31bb1a4bd15cd01581d1dcccb682d91a5216bc4b71197886eda557482d5f9377",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "dark",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/dark/lozenge-master-v1.png",
+      "sourceSha256": "b0892bbf1c55cffba5f3f0addb172067530ca233188c8fde263d684e046b9f46",
+      "production": "www/assets/green-soft-clay/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "cb06e2bb6c90e104269bcda31c5ebb41e3444a6609f5ddd8f22425efa88df8ba",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "neon",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/neon/ribbon-master-v1.png",
+      "sourceSha256": "63c1f5e42615563001ffef7e279c65ac56ae6fb4512e8859dad1072d769d9a33",
+      "production": "www/assets/theme-packs/neon/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "1dae2ed478f10e4bb7b6f34a4bced1badce9b8bf54f25ddae3da5a5466ddb66a",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "neon",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/neon/chip-master-v1.png",
+      "sourceSha256": "f0a0b1e0c0f83a03263cf73ae3be4341ccc4334b8de23ace87a50d2d4847d526",
+      "production": "www/assets/theme-packs/neon/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "e22c34b0582d9e2a45c8b63baf47a0bf599d5590ccc1e1bf6f63ece16710d35b",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "neon",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/neon/lozenge-master-v1.png",
+      "sourceSha256": "56e2caa2d0684ad4a90a2b8f23d700dee015b291d3837aa4a9837919d016c0fe",
+      "production": "www/assets/theme-packs/neon/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "2c182877d99e87213e551b79305afa1053ea9f67d3142ae432d76c5d6bb55324",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "light",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/light/ribbon-master-v1.png",
+      "sourceSha256": "00ecfba79b117bd5bdb7832eea86f05cfeb418316be7a0c89aa305fa4a24d4c2",
+      "production": "www/assets/theme-packs/light/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "35d23f36f50968698e61deaffaa60fd902323a4750b10833ac654b2eff88960a",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "light",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/light/chip-master-v1.png",
+      "sourceSha256": "c35ff222d0037f49afa75bc7670a63653cd1ed4d91ac87a54a74011851efe6ca",
+      "production": "www/assets/theme-packs/light/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "8d22a3ec95bb04dab600f8038a9d8d3facf9a3153e118474de897704650c8d80",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "light",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/light/lozenge-master-v1.png",
+      "sourceSha256": "5da85e2b85847273bacc721f4366ef041c451f01aeac4890454faf24e5bb0054",
+      "production": "www/assets/theme-packs/light/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "aa388476e6900f718795d51866ee3d661bf9bdff9825672e0a352ec430c909f7",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "medium",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/medium/ribbon-master-v1.png",
+      "sourceSha256": "7f615fd555640b1a1486e0a3aeaa3558e084118006d25ee1ee2ee81600ece79a",
+      "production": "www/assets/theme-packs/medium/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "2dba4b4d78cfc6e7072d11026bfd51b166278ee1d88afb88cb3fec1fc841d444",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "medium",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/medium/chip-master-v1.png",
+      "sourceSha256": "a5a12aeff14f71a032a2c51643535f921a8b502cbfc936e683142da09e85082d",
+      "production": "www/assets/theme-packs/medium/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "d33148f0d0bdbc266147a329d879f9303d0dbc1965751e4e21a7367db5b60f93",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "medium",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/medium/lozenge-master-v1.png",
+      "sourceSha256": "c1ce5e7836db392f33e4f3bad1778660761ab2ed6cecfb054ac05a098b68f3b7",
+      "production": "www/assets/theme-packs/medium/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "bf3a5a2416413efa40b99e5230f8a01a00a3ecc57a72620e094f603a8b74c72d",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "winter",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/winter/ribbon-master-v1.png",
+      "sourceSha256": "bb4bd0bf5b4b123775fb4ef12fa7b16f6b7b673475edda01e8f8675befe80fd1",
+      "production": "www/assets/theme-packs/winter/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "ba96ceadf9e7ae3268ce68834873eb40014d85c7a43f4c8e49d4f122290728e5",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "winter",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/winter/chip-master-v1.png",
+      "sourceSha256": "58072726029aa3cc1fe98d56fd907d806d72b943008ccca9580cbef80ca27799",
+      "production": "www/assets/theme-packs/winter/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "582616f2eeeef5190d75b6dc9c0756efad622c7e6326fe4c90da9cb5fb81a892",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "winter",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/winter/lozenge-master-v1.png",
+      "sourceSha256": "38f9cf265c49e0329760f815ac2d4a562b053aeee6a5e9164f6f9dbf79130ad1",
+      "production": "www/assets/theme-packs/winter/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "3fa31a76636d31eea4cb463c82a10adbe249ef4aa9134b21398fdb676f3fe088",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "amethyst",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/amethyst/ribbon-master-v1.png",
+      "sourceSha256": "2dad07b3ebfaf8bf461cdddaa58e009ff730401478a359c5bc3cf43adf0af1d5",
+      "production": "www/assets/theme-packs/amethyst/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "e81d1ea60c82fe8f96f829368ef0c837520b2485e9a46f50199aad68260adaf4",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "amethyst",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/amethyst/chip-master-v1.png",
+      "sourceSha256": "da968eeaa7a6d998eb7ab0a8eee98036573576e9b937f651f17fe9b77ab4dceb",
+      "production": "www/assets/theme-packs/amethyst/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "5dde57c268a141fa2e64349a8b4c92fa17d3bbbf7f4744836bd0df19a5b7e5d5",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "amethyst",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/amethyst/lozenge-master-v1.png",
+      "sourceSha256": "2c3cf28bbcde45c051a2bcfef175221830f06ad6c690f122fb6fb966fbae495d",
+      "production": "www/assets/theme-packs/amethyst/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "ef1812b931df507ba331363f886e3366e8080929282f0012d92bb9e33301e118",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "easter",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/easter/ribbon-master-v1.png",
+      "sourceSha256": "1e757a0e78f890c9efd09010265decd19ccd3406e2e0f606733dc3362d245135",
+      "production": "www/assets/theme-packs/easter/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "c3b67e63be3198e46f889d13e32268d1e44663ca284bb11c74f67a2f195aaf5b",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "easter",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/easter/chip-master-v1.png",
+      "sourceSha256": "ced21fdabe5e83a707e596f1a3cc974b5ce9f1bfedb8f8a9778773b6e60c2faf",
+      "production": "www/assets/theme-packs/easter/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "fa63c0dd684f27099d6f911fdca9c843cbb67f5d024b48ae54f2429442b62c9b",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "easter",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/easter/lozenge-master-v1.png",
+      "sourceSha256": "dbb82c09a6f03f9d0bb13d5eb86580505f421c267e8a3a3ee90e47be89bad077",
+      "production": "www/assets/theme-packs/easter/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "2e9012c80ef6c69333278bc5bbdfd271cac63a3ae2e77c66903d7ef9c5380b58",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "desert",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/desert/ribbon-master-v1.png",
+      "sourceSha256": "8224a04f2b4825d6addaeb25116dd7b48057da30b6241b9ee3757e2cfee53eb1",
+      "production": "www/assets/theme-packs/desert/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "ffea736d1c1665e02e96ceeef97121893c81fe0b34b8881c0477e05200965526",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "desert",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/desert/chip-master-v1.png",
+      "sourceSha256": "e95751547e560c6f090f2994107d970477ed1352471d74d5ee5ff8d4440e9cc6",
+      "production": "www/assets/theme-packs/desert/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "0154e576a29e0bccc917efac322cc1a02cf22bd86b6563b7932dc3a55b262cd0",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "desert",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/desert/lozenge-master-v1.png",
+      "sourceSha256": "592d29b3922db28f5fc0c8dea7f6c08c88a9f25e5aeeb0fe9b15801294ab3811",
+      "production": "www/assets/theme-packs/desert/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "51f8d1a6c62d70888bd031ddeb0a39c8cd76fdce8b3a4b32f5801f64b8479fa0",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "moon",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/moon/ribbon-master-v1.png",
+      "sourceSha256": "cb02aa7ae284ae3524d3b012acb389b5d3cb73b5602857a8bb1d41f59c363be3",
+      "production": "www/assets/theme-packs/moon/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "5de13fef874a5d8191512214fdc01ff385c86885ac02bf530491ef3c8c8f1ff4",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "moon",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/moon/chip-master-v1.png",
+      "sourceSha256": "77eb213466449421aad964a6c6c71172c76d73ee08e0bf2e7a049c701bce9e16",
+      "production": "www/assets/theme-packs/moon/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "4e0d6c4f8cccf58ec2a9404bbb282ac23f391850c4cb0152551acff282224368",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "moon",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/moon/lozenge-master-v1.png",
+      "sourceSha256": "f8636f0b364afeadd2575d265d8275cee51c928bc2bae8670ae38194bfe8ea2b",
+      "production": "www/assets/theme-packs/moon/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "c17eb3822158cf3c67f2d2f1eb9cb87ef6721d8cb368bf561a3ad110d27773af",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "severna",
+      "role": "ribbon",
+      "source": "source-assets/theme-live-confetti-v1/severna/ribbon-master-v1.png",
+      "sourceSha256": "265675811012689d9e01f6c27a6aea9892b84ce9f273307294fd4026582c253d",
+      "production": "www/assets/theme-packs/severna/canonical/confetti-particles/ribbon-v1.png",
+      "productionSha256": "6f8a1028201497e2d142c56da0c08dbe53a0c6f90cce05e18d91096fd8bbf58a",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "severna",
+      "role": "chip",
+      "source": "source-assets/theme-live-confetti-v1/severna/chip-master-v1.png",
+      "sourceSha256": "eaa8685b5f49dc17c53d549f6fe6756a22a015c784dce8c5315446314a2551e8",
+      "production": "www/assets/theme-packs/severna/canonical/confetti-particles/chip-v1.png",
+      "productionSha256": "2a55d396a87d47793cd62314ebb417807165e26f8557c34b6d08ebde213f1c94",
+      "dimensions": "256x256"
+    },
+    {
+      "theme": "severna",
+      "role": "lozenge",
+      "source": "source-assets/theme-live-confetti-v1/severna/lozenge-master-v1.png",
+      "sourceSha256": "f09c26ca25fa437013a753d44cc796ef2b220e5b95333e7ed437ede136074eb8",
+      "production": "www/assets/theme-packs/severna/canonical/confetti-particles/lozenge-v1.png",
+      "productionSha256": "21fec85b83a3af3ed03918f993450728da7437ee92df61cea4c2ddb9541c4fc2",
+      "dimensions": "256x256"
+    }
+  ]
+}

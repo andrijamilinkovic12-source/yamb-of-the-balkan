@@ -9257,13 +9257,13 @@
         "ducats-undo-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/ducats-undo-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v2.png",
           "consumerRefs": [
             "www/game.js:playEasterRoomIntro(economy)",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 232563
+          "sizeBytes": 207774
         },
         "global-chat-empty-v1": {
           "stage": "verified",
@@ -9390,13 +9390,13 @@
         "runtime/menu/ducats-undo-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v2.png",
           "consumerRefs": [
             "www/index.html:#main-menu .main-economy-card",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 135412
+          "sizeBytes": 119962
         },
         "runtime/menu/treasury-free-v3": {
           "stage": "linked",

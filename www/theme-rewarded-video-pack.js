@@ -32,7 +32,8 @@
             const relative = original.slice(greenPrefix.length).split('?')[0];
             if (!paths.has(relative)) return;
             if (theme === 'dark') {
-                if (image.closest?.('#undo-menu-overlay') && image.getAttribute('src') !== original) image.src = original;
+                // Restore Green everywhere, including the shared finish screen, after a theme switch.
+                if (image.getAttribute('src') !== original) image.src = original;
                 image.classList.remove('theme-rewarded-video-icon');
                 return;
             }

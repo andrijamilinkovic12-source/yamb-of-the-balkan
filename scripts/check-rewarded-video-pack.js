@@ -44,7 +44,7 @@ for (const theme of ['dark', ...themes]) {
     const image = {
       dataset: { themeSrc: `assets/green-soft-clay/${relative}?v=1` },
       classList: new Classes(), attributes: {},
-      closest: selector => selector === '#undo-menu-overlay' ? {} : null,
+      closest: () => null,
       getAttribute(name) { return this.attributes[name] || null; },
       set src(value) { this.attributes.src = value; }
     };
@@ -73,5 +73,36 @@ for (const theme of ['dark', ...themes]) {
     assert(fs.existsSync(filename), `Missing ${filename}`);
     assert.deepEqual(pngSize(filename), [expectedSizes[index], expectedSizes[index]]);
   });
+}
+
+// A finish icon must not keep the previous theme's image when Green is selected.
+{
+  const original = `assets/green-soft-clay/${roles[6]}?v=1`;
+  const image = {
+    dataset: { themeSrc: original }, classList: new Classes(), attributes: {},
+    getAttribute(name) { return this.attributes[name] || null; },
+    set src(value) { this.attributes.src = value; },
+    parentElement: { querySelectorAll: () => [] }
+  };
+  const body = { classList: new Classes(['light-theme']) };
+  const observers = [];
+  const document = {
+    readyState: 'complete', body, documentElement: { dataset: { splashTheme: 'light' } },
+    querySelectorAll: selector => selector === 'img[data-theme-src]' ? [image] : []
+  };
+  vm.runInNewContext(code, { document, localStorage: { getItem: () => 'light' },
+    MutationObserver: class { constructor(callback) { observers.push(callback); } observe() {} },
+    Node: { ELEMENT_NODE: 1 } });
+  assert.equal(image.getAttribute('src'), `assets/theme-packs/light/${roles[6]}`);
+  body.classList.remove('light-theme');
+  body.classList.add('dark-theme');
+  document.documentElement.dataset.splashTheme = 'dark';
+  observers.forEach(callback => callback([{ type: 'attributes' }]));
+  assert.equal(image.getAttribute('src'), original, 'Green finish icon must replace the previous theme icon');
+  body.classList.remove('dark-theme');
+  body.classList.add('neon-theme');
+  document.documentElement.dataset.splashTheme = 'neon';
+  observers.forEach(callback => callback([{ type: 'attributes' }]));
+  assert.equal(image.getAttribute('src'), `assets/theme-packs/neon/${roles[6]}`);
 }
 console.log('PASS: 10 themes × 7 mapped rewarded-video roles, correct PNG paths, RGBA and sizes.');

@@ -1,0 +1,29 @@
+{
+  "theme": "neon",
+  "role": "economy-room-identity",
+  "date": "2026-10-21",
+  "generator": "built-in ImageGen edit with three local image references",
+  "references": [
+    "www/assets/theme-packs/neon/ducats-undo-free-v3.png (previous composite)",
+    "www/assets/theme-packs/neon/canonical/ducat/ducat-front-v1.png",
+    "www/assets/theme-packs/neon/canonical/undo-token/undo-token-front-v1.png"
+  ],
+  "prompt": "Edit the Neon Cyber room icon so the foreground ducat has the canonical soft-square five-pip silhouette and the background undo mark follows the canonical dark-navy square token with turquoise left-bending arrow. Preserve the 3D soft matte material and transparent background; no ornament or generic round coin.",
+  "master": {
+    "path": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v2.png",
+    "sha256": "d36ad862664befbb3a31c22a8319952435a103e65ec0e896c84bc48751daf168"
+  },
+  "outputs": [
+    {
+      "path": "www/assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
+      "size": [384, 384],
+      "sha256": "0c25ada894d0bafa598346ead29671e74d16394ab8514033744ee2b6c299c3a3"
+    },
+    {
+      "path": "www/assets/theme-packs/neon/ducats-undo-free-v3.png",
+      "size": [512, 512],
+      "sha256": "3176db0a4a2991c3110bf840aaf8ae34c9820e429320d7b70a17f6ccdac8a89f"
+    }
+  ],
+  "exportScript": "scripts/build-neon-economy-canonical-composite.ps1"
+}

@@ -2317,7 +2317,7 @@ class YambApp {
         const roles = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily', 'global-chat',
             'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings', 'statistics'];
         if (role === 'treasury') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
-        if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v3.png`;
+        if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v3.png${theme === 'neon' ? '?v=2' : ''}`;
         if (role === 'tournament') return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`;
         if (role === 'leaderboard') return `assets/theme-packs/${theme}/canonical/leaderboard-room-identity/leaderboard-room${variant === 'menu' ? '-menu' : ''}-v2.png`;
         if (role === 'quarterly-league') return `assets/theme-packs/${theme}/canonical/quarterly-league-room-identity/quarterly-league-room${variant === 'menu' ? '-menu' : ''}-v2.png?v=2`;

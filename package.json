@@ -43,6 +43,7 @@
     "check:theme-economy-critical": "node scripts/check-theme-economy-critical-v2.js",
     "check:effect-screen-lifecycle": "node scripts/check-effect-screen-lifecycle.js",
     "check:gold-rain": "node scripts/check-gold-rain-runtime.cjs",
+    "check:live-confetti": "node scripts/check-live-confetti-runtime.cjs",
     "check:portrait-lock": "node scripts/check-portrait-lock.js",
     "check:easter-coverage": "node scripts/check-easter-asset-coverage.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",

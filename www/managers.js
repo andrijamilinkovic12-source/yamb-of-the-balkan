@@ -278,6 +278,8 @@ class EffectManager {
     constructor() {
         this.activeEffects = [];
         this.confettiAnimationId = null;
+        this.confettiRunId = 0;
+        this.confettiSpritePromises = {};
         this.goldRainThemeObserver = null;
         this.greenDucatParticleSpritePromise = null;
         this.goldRainRunId = 0;
@@ -1790,13 +1792,24 @@ class EffectManager {
         document.querySelectorAll('.gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin, .falling-coin.gold-rain-coin').forEach(el => el.remove());
         document.body.classList.remove('fx-gold-rain');
 
-        const ducatSprite = themeId === 'dark'
+        let ducatSprite = themeId === 'dark'
             ? await this.loadGreenDucatParticleSprite()
             : await this.loadThemeDucatParticleSprite(themeId);
         if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId()) return;
+        if (!ducatSprite) {
+            const root = themeId === 'dark' ? 'assets/green-soft-clay/' : `assets/theme-packs/${themeId}/`;
+            const version = ['easter', 'desert', 'severna'].includes(themeId) ? 2 : 1;
+            ducatSprite = await new Promise(resolve => {
+                const fallback = new Image();
+                fallback.onload = () => resolve(fallback);
+                fallback.onerror = () => resolve(null);
+                fallback.src = `${root}canonical/ducat/ducat-front-v${version}.png`;
+            });
+        }
+        if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId() || !ducatSprite) return;
 
         const atmosphere = document.createElement('div');
-        atmosphere.className = 'gold-rain-atmosphere';
+        atmosphere.className = 'gold-rain-atmosphere gold-rain-atmosphere--clear';
         atmosphere.style.setProperty('--gold-rain-glow', profile.glow);
         atmosphere.style.setProperty('--gold-rain-glint', profile.glint);
         atmosphere.innerHTML = `
@@ -1814,15 +1827,11 @@ class EffectManager {
         document.body.classList.add('fx-gold-rain');
 
         const addCoin = (size) => {
-            const coin = document.createElement(ducatSprite ? 'img' : 'span');
+            const coin = document.createElement('img');
             coin.className = reducedMotion ? 'gold-rain-static-particle' : 'gold-rain-particle';
-            if (ducatSprite) {
-                coin.src = ducatSprite.src;
-                coin.alt = '';
-                coin.decoding = 'async';
-            } else {
-                coin.innerHTML = dukatIconHtml();
-            }
+            coin.src = ducatSprite.src;
+            coin.alt = '';
+            coin.decoding = 'async';
             coin.style.width = `${size}px`;
             coin.style.height = `${size}px`;
             layer.appendChild(coin);
@@ -1832,7 +1841,7 @@ class EffectManager {
         if (reducedMotion) {
             [34, 42, 34].forEach(addCoin);
         } else {
-            const coinCount = isCompact ? 44 : 72;
+            const coinCount = isCompact ? 32 : 52;
             for (let index = 0; index < coinCount; index++) {
                 const size = Math.round(rand(isCompact ? 27 : 32, isCompact ? 43 : 52));
                 const coin = addCoin(size);
@@ -2018,6 +2027,11 @@ class EffectManager {
     }
     
     spawnConfetti() {
+        const theme = this.getGoldRainThemeId();
+        if (YAMB_THEME_IDS.includes(theme)) {
+            void this.spawnThemedConfetti(theme);
+            return;
+        }
         const colors = ['#FFD166', '#F7B801', '#EF476F', '#06D6A0', '#4CC9F0', '#FFFFFF'];
 
         if (window.confetti) { 
@@ -2086,6 +2100,104 @@ class EffectManager {
         }
 
         this.spawnCanvasConfetti(colors);
+    }
+
+    loadConfettiSprites(theme) {
+        if (this.confettiSpritePromises[theme]) return this.confettiSpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay/' : `assets/theme-packs/${theme}/`;
+        const roles = ['ribbon', 'chip', 'lozenge'];
+        this.confettiSpritePromises[theme] = Promise.all(roles.map(role => new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => resolve(null);
+            image.src = `${root}canonical/confetti-particles/${role}-v1.png`;
+        }))).then(images => images.filter(Boolean));
+        return this.confettiSpritePromises[theme];
+    }
+
+    async spawnThemedConfetti(theme) {
+        const runId = ++this.confettiRunId;
+        if (this.confettiAnimationId) {
+            cancelAnimationFrame(this.confettiAnimationId);
+            this.confettiAnimationId = null;
+        }
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas?.getContext('2d');
+        if (!ctx) return;
+        const sprites = await this.loadConfettiSprites(theme);
+        if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId() || !sprites.length) return;
+
+        const rand = (min, max) => min + Math.random() * (max - min);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let width = 0;
+        let height = 0;
+        const resize = () => {
+            width = window.innerWidth || document.documentElement.clientWidth || 1;
+            height = window.innerHeight || document.documentElement.clientHeight || 1;
+            canvas.width = Math.ceil(width * dpr);
+            canvas.height = Math.ceil(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        const count = width < 640 ? 54 : 78;
+        const origins = [0.08, 0.5, 0.92];
+        const particles = Array.from({ length: count }, (_, index) => {
+            const origin = origins[index % origins.length];
+            return {
+                image: sprites[index % sprites.length],
+                x: width * origin + rand(-25, 25),
+                y: height * rand(0.72, 0.84),
+                vx: (0.5 - origin) * rand(55, 155) + rand(-65, 65),
+                vy: -rand(155, 290),
+                gravity: rand(170, 235),
+                wobble: rand(0, Math.PI * 2),
+                rotation: rand(-0.45, 0.45),
+                spin: rand(-1.8, 1.8),
+                size: rand(16, 27),
+                age: -rand(0, 0.35),
+                ttl: rand(2.7, 3.5)
+            };
+        });
+        let lastFrame = 0;
+        const animate = now => {
+            if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId()) {
+                ctx.clearRect(0, 0, width, height);
+                this.confettiAnimationId = null;
+                return;
+            }
+            if (window.innerWidth !== width || window.innerHeight !== height) resize();
+            const delta = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0;
+            lastFrame = now;
+            ctx.clearRect(0, 0, width, height);
+            let remaining = 0;
+            for (const particle of particles) {
+                particle.age += delta;
+                if (particle.age >= particle.ttl) continue;
+                remaining++;
+                if (particle.age < 0) continue;
+                particle.x += particle.vx * delta;
+                particle.y += particle.vy * delta;
+                particle.vy += particle.gravity * delta;
+                particle.rotation += particle.spin * delta;
+                particle.wobble += delta * 5;
+                const fade = Math.min(1, (particle.ttl - particle.age) / 0.65);
+                const side = particle.size * (0.87 + Math.sin(particle.wobble) * 0.13);
+                ctx.save();
+                ctx.globalAlpha = fade;
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation);
+                ctx.drawImage(particle.image, -side / 2, -side / 2, side, side);
+                ctx.restore();
+            }
+            if (remaining) this.confettiAnimationId = requestAnimationFrame(animate);
+            else {
+                ctx.clearRect(0, 0, width, height);
+                this.confettiAnimationId = null;
+            }
+        };
+        this.confettiAnimationId = requestAnimationFrame(animate);
     }
 
     spawnCanvasConfetti(colors) {
@@ -2245,6 +2357,7 @@ class EffectManager {
     }
     
     stop() {
+        this.confettiRunId++;
         this.goldRainRunId++;
         this.royalYambRunId++;
         if (this.royalCanvasCleanup) this.royalCanvasCleanup();
@@ -2260,6 +2373,7 @@ class EffectManager {
             cancelAnimationFrame(this.confettiAnimationId);
             this.confettiAnimationId = null;
         }
+        window.confetti?.reset?.();
 
         const confettiCanvas = document.getElementById('confetti-canvas');
         if (confettiCanvas) {

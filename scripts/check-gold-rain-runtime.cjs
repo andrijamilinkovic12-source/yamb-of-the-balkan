@@ -9,7 +9,7 @@ const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.in
 const effectClass = source.slice(source.indexOf('class EffectManager {'), source.indexOf('class SoundManager {'));
 assert(prelude.includes('GOLD_RAIN_THEME_PROFILES') && effectClass.includes('spawnGoldRain()'));
 
-function harness(reducedMotion = false) {
+function harness(reducedMotion = false, { failParticle = false, failAll = false } = {}) {
     const nodes = [];
     const classes = new Set();
     const raf = new Map();
@@ -66,7 +66,10 @@ function harness(reducedMotion = false) {
             this._src = value;
             imagePaths.push(value);
             assert(fs.existsSync(path.join(root, 'www', value.split('?')[0])), `Missing canonical coin ${value}`);
-            queueMicrotask(() => this.onload());
+            queueMicrotask(() => {
+                if (failAll || (failParticle && value.includes('ducat-particle'))) this.onerror();
+                else this.onload();
+            });
         }
         get src() { return this._src; }
     }
@@ -107,9 +110,10 @@ async function main() {
         assert(app.classes.has('fx-gold-rain'), `${theme}: effect did not start`);
         const layers = app.nodes.filter(node => node.className === 'gold-rain-particles');
         assert.equal(layers.length, 1, `${theme}: duplicate coin layer`);
-        assert.equal(layers[0].children.length, 44, `${theme}: missing visible PNG coins`);
+        assert.equal(layers[0].children.length, 32, `${theme}: missing visible PNG coins`);
         assert(layers[0].children.every(node => node.tag === 'img' && node.src === app.imagePaths.at(-1)));
         assert(app.imagePaths.at(-1).includes(theme === 'dark' ? 'green-soft-clay/canonical/ducat' : `theme-packs/${theme}/canonical/ducat`));
+        assert(app.nodes.some(node => node.className.includes('gold-rain-atmosphere--clear')), `${theme}: lighting obscures the canonical coins`);
         app.frame((index + 1) * 3000);
     }
     app.effect.stop();
@@ -129,6 +133,14 @@ async function main() {
     switcher.observers.filter(observer => observer.active).forEach(observer => observer.callback());
     assert(!switcher.classes.has('fx-gold-rain'), 'Switching theme must remove the old effect');
     assert.equal(switcher.nodes.filter(node => node.className.startsWith('gold-rain')).length, 0);
+    const fallback = harness(false, { failParticle: true });
+    await fallback.effect.spawnGoldRain();
+    assert(fallback.nodes.find(node => node.className === 'gold-rain-particles')?.children.every(node => node.src.includes('ducat-front-v1.png')),
+        'A failed particle sprite must fall back to the same theme canonical front');
+    const absent = harness(false, { failAll: true });
+    await absent.effect.spawnGoldRain();
+    assert(!absent.classes.has('fx-gold-rain') && !absent.nodes.some(node => node.className.startsWith('gold-rain-atmosphere')),
+        'Missing canonical PNGs must not leave a light-only effect');
     console.log('Gold Rain runtime passed: ten canonical PNG sets, visible DOM coin layers, cleanup, theme switch and reduced motion.');
 }
 

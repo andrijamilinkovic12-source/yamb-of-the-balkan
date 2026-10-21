@@ -1705,6 +1705,9 @@ body.fx-ice-age #game-scene::after {
 
 /* --- Miscellaneous Animations (Coins, Trumpets) --- */
 .gold-rain-atmosphere { position: fixed; inset: 0; z-index: 99970; pointer-events: none; overflow: hidden; contain: strict; will-change: opacity; background: radial-gradient(circle at 50% 8%, rgba(var(--gold-rain-glow, 163, 200, 145), 0.19), transparent 32%), radial-gradient(circle at 18% 18%, rgba(var(--gold-rain-glint, 246, 245, 217), 0.1), transparent 34%); animation: goldRainAtmosphere 5.8s ease-out forwards; }
+.gold-rain-atmosphere--clear { background: radial-gradient(circle at 50% 8%, rgba(var(--gold-rain-glow, 163, 200, 145), 0.10), transparent 34%); }
+.gold-rain-atmosphere--clear .gold-rain-spotlight,
+.gold-rain-atmosphere--clear .gold-rain-glint { display: none; }
 .gold-rain-atmosphere.closing { animation: goldRainAtmosphereClose 0.65s ease-in forwards; }
 .gold-rain-particles { position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; pointer-events: none; }
 .gold-rain-particle { position: absolute; top: -70px; display: block; object-fit: contain; opacity: 0; will-change: transform, opacity; animation: goldRainCoinFall var(--fall-duration, 3200ms) linear var(--fall-delay, 0ms) both; }

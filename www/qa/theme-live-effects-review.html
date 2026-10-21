@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Deset tema — pregled živih efekata</title>
+  <link rel="stylesheet" href="/efekti.css?v=2.0">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
+    body { background: linear-gradient(rgba(6, 15, 24, .34), rgba(6, 15, 24, .48)), var(--theme-background, url('/assets/green-clay-balkan-diorama-v4.png')) center / cover; color: #f8f3de; }
+    .controls { position: fixed; z-index: 2147483010; top: max(8px, env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+    .controls button, .controls select { border: 1px solid rgba(255,255,255,.65); background: rgba(12, 24, 34, .9); color: #fff; border-radius: 10px; padding: 7px 8px; font: 600 12px Arial, sans-serif; }
+    .card { position: absolute; z-index: 2; left: 50%; top: 51%; transform: translate(-50%,-50%); width: min(94vw, 440px); max-height: calc(100dvh - 115px - env(safe-area-inset-bottom)); padding: 19px 18px 16px; border-radius: 22px; background: var(--card-background, rgba(44, 83, 54, .83)); border: 2px solid var(--card-border, rgba(242, 239, 199, .65)); box-shadow: 0 12px 35px rgba(0,0,0,.35); text-align: center; }
+    .eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; opacity: .8; }
+    h1 { margin: 7px 0 2px; font-size: clamp(23px, 6vw, 30px); line-height: 1.05; }
+    .score { font-size: 66px; font-weight: 900; line-height: 1; margin: 20px 0 2px; }
+    .sub { font-size: 13px; margin: 0 0 18px; }
+    .row { border-radius: 13px; background: rgba(248,252,230,.13); padding: 11px; margin: 8px 0; font-size: 12px; text-align: left; }
+    .action { width: 100%; border: 0; border-radius: 14px; background: var(--action-background, #adca8d); color: var(--action-text, #17331c); padding: 13px; margin-top: 12px; font-weight: 800; }
+    .note { position: fixed; z-index: 2; bottom: max(8px, env(safe-area-inset-bottom)); left: 12px; right: 12px; font: 11px Arial, sans-serif; text-align: center; text-shadow: 0 1px 4px #000; }
+    #qa-error { position: fixed; z-index: 2147483011; bottom: 10px; left: 10px; right: 10px; background: #891e22; color: white; padding: 9px; font: 12px Arial, sans-serif; }
+    #confetti-canvas { position: fixed; z-index: 2147483001; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <select id="theme-choice" aria-label="Tema">
+      <option value="dark">Zelena</option><option value="light">Svetlo zlato</option><option value="medium">Trula višnja</option><option value="winter">Plavi okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option><option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
+    </select>
+    <button type="button" data-effect="confetti">Konfete</button>
+    <button type="button" data-effect="gold_rain">Kiša dukata</button>
+    <button type="button" data-effect="stop">Zaustavi</button>
+  </div>
+  <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
+    <div class="eyebrow">Vizuelni QA · simulirana završna kartica</div>
+    <h1>Odlična partija</h1>
+    <div class="score">1.847</div>
+    <p class="sub">OSVOJENI POENI</p>
+    <div class="row">Rekordi partije · nedeljni · lični</div>
+    <div class="row">Najjača kolona · Najava 472</div>
+    <button class="action" type="button">Preuzmi i izađi</button>
+  </main>
+  <div class="note">Pregled pokreće stvarni EffectManager, bez naloga, kupovine i promene rezultata.</div>
+  <canvas id="confetti-canvas"></canvas>
+  <div id="qa-error" hidden></div>
+  <script>
+    (async () => {
+      try {
+        const response = await fetch('/managers.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`managers.js HTTP ${response.status}`);
+        const source = await response.text();
+        const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.indexOf('const filterYambThemeIds'));
+        const effectClass = source.slice(source.indexOf('class EffectManager {'), source.indexOf('// --- 5. SOUND MANAGER'));
+        const EffectManager = new Function('dukatIconHtml', `${prelude}\n${effectClass}\nreturn EffectManager;`)(() => '');
+        const fx = new EffectManager();
+        const params = new URLSearchParams(location.search);
+        const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+        const backgrounds = { dark: 'green-clay-balkan-diorama-v4.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
+        const theme = themes.includes(params.get('theme')) ? params.get('theme') : 'dark';
+        const setTheme = id => {
+          fx.stop();
+          themes.slice(1).forEach(themeId => document.body.classList.toggle(`${themeId}-theme`, id === themeId));
+          document.documentElement.dataset.splashTheme = id;
+          document.getElementById('theme-choice').value = id;
+          document.body.style.setProperty('--theme-background', `url('/assets/${backgrounds[id]}')`);
+        };
+        setTheme(theme);
+        document.getElementById('theme-choice').addEventListener('change', event => setTheme(event.target.value));
+        document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
+          if (button.dataset.effect === 'stop') fx.stop();
+          else { fx.stop(); fx.trigger(button.dataset.effect); }
+        }));
+        window.qaFx = { fx, setTheme, run(id) { fx.stop(); fx.trigger(id); }, state() { return {
+          theme: document.documentElement.dataset.splashTheme,
+          coinCount: document.querySelectorAll('.gold-rain-particle').length,
+          coinSources: [...new Set([...document.querySelectorAll('.gold-rain-particle')].map(node => node.getAttribute('src')))],
+          confettiActive: Boolean(fx.confettiAnimationId),
+          sprites: Object.keys(fx.confettiSpritePromises)
+        }; } };
+        const effect = params.get('effect');
+        if (effect === 'confetti' || effect === 'gold_rain') fx.trigger(effect);
+      } catch (error) {
+        const node = document.getElementById('qa-error');
+        node.hidden = false;
+        node.textContent = error.stack || String(error);
+      }
+    })();
+  </script>
+</body>
+</html>
