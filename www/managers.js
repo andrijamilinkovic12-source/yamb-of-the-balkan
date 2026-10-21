@@ -278,9 +278,7 @@ class EffectManager {
     constructor() {
         this.activeEffects = [];
         this.confettiAnimationId = null;
-        this.goldRainAnimationId = null;
-        this.goldRainResizeHandler = null;
-        this.goldRainSparkSprites = new Map();
+        this.goldRainThemeObserver = null;
         this.greenDucatParticleSpritePromise = null;
         this.goldRainRunId = 0;
         this.royalYambRunId = 0;
@@ -1711,14 +1709,8 @@ class EffectManager {
 
         this.effectTimeouts.forEach(entry => clearTimeout(typeof entry === 'object' ? entry.id : entry));
         this.effectTimeouts = [];
-        if (this.goldRainAnimationId) {
-            cancelAnimationFrame(this.goldRainAnimationId);
-            this.goldRainAnimationId = null;
-        }
-        if (this.goldRainResizeHandler) {
-            window.removeEventListener('resize', this.goldRainResizeHandler);
-            this.goldRainResizeHandler = null;
-        }
+        this.goldRainThemeObserver?.disconnect();
+        this.goldRainThemeObserver = null;
     }
 
     isGreenThemeActive() {
@@ -1783,53 +1775,25 @@ class EffectManager {
         return this.themeDucatParticleSpritePromises[theme];
     }
 
-    getGoldRainSparkSprite(themeId, profile) {
-        if (this.goldRainSparkSprites.has(themeId)) return this.goldRainSparkSprites.get(themeId);
-        const canvas = document.createElement('canvas');
-        canvas.width = 48;
-        canvas.height = 48;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            const glow = ctx.createRadialGradient(24, 24, 0, 24, 24, 23);
-            glow.addColorStop(0, `rgba(${profile.glint}, 0.88)`);
-            glow.addColorStop(0.23, `rgba(${profile.glint}, 0.58)`);
-            glow.addColorStop(0.6, `rgba(${profile.glow}, 0.18)`);
-            glow.addColorStop(1, `rgba(${profile.glow}, 0)`);
-            ctx.fillStyle = glow;
-            ctx.fillRect(0, 0, 48, 48);
-        }
-        this.goldRainSparkSprites.set(themeId, canvas);
-        return canvas;
-    }
-
     async spawnGoldRain() {
         const runId = ++this.goldRainRunId;
-        const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const themeId = this.getGoldRainThemeId();
         const profile = GOLD_RAIN_THEME_PROFILES[themeId];
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const isCompact = window.innerWidth < 640;
         const totalDuration = reducedMotion ? 2700 : 5800;
-        const emitDuration = 3900;
-        const coinCount = isCompact ? 44 : 72;
-        const sparkCount = isCompact ? 12 : 24;
         const rand = (min, max) => min + Math.random() * (max - min);
+
         this.clearEffectTimeouts('gold_rain');
-        if (this.goldRainAnimationId) {
-            cancelAnimationFrame(this.goldRainAnimationId);
-            this.goldRainAnimationId = null;
-        }
-        if (this.goldRainResizeHandler) {
-            window.removeEventListener('resize', this.goldRainResizeHandler);
-            this.goldRainResizeHandler = null;
-        }
-        document.querySelectorAll('.gold-rain-atmosphere, .gold-rain-canvas, .falling-coin.gold-rain-coin, .gold-rain-static-coin').forEach(el => el.remove());
+        this.goldRainThemeObserver?.disconnect();
+        this.goldRainThemeObserver = null;
+        document.querySelectorAll('.gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin, .falling-coin.gold-rain-coin').forEach(el => el.remove());
         document.body.classList.remove('fx-gold-rain');
+
         const ducatSprite = themeId === 'dark'
             ? await this.loadGreenDucatParticleSprite()
             : await this.loadThemeDucatParticleSprite(themeId);
         if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId()) return;
-
-        document.body.classList.add('fx-gold-rain');
 
         const atmosphere = document.createElement('div');
         atmosphere.className = 'gold-rain-atmosphere';
@@ -1843,186 +1807,72 @@ class EffectManager {
         `;
         document.body.appendChild(atmosphere);
 
-        const canvas = document.createElement('canvas');
-        canvas.className = 'gold-rain-canvas';
-        document.body.appendChild(canvas);
+        const layer = document.createElement('div');
+        layer.className = reducedMotion ? 'gold-rain-static-coin' : 'gold-rain-particles';
+        layer.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(layer);
+        document.body.classList.add('fx-gold-rain');
 
-        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
-        if (!ctx || !ducatSprite) {
-            if (reducedMotion) {
-                const fallback = document.createElement('div');
-                fallback.className = 'gold-rain-static-coin';
-                fallback.innerHTML = Array.from({ length: 3 }, () => `<span>${dukatIconHtml()}</span>`).join('');
-                document.body.appendChild(fallback);
+        const addCoin = (size) => {
+            const coin = document.createElement(ducatSprite ? 'img' : 'span');
+            coin.className = reducedMotion ? 'gold-rain-static-particle' : 'gold-rain-particle';
+            if (ducatSprite) {
+                coin.src = ducatSprite.src;
+                coin.alt = '';
+                coin.decoding = 'async';
             } else {
-                this.spawnEmojiRain(['dukat-icon'], 18, 'gold_rain');
+                coin.innerHTML = dukatIconHtml();
             }
-            this.scheduleEffectTimeout(() => {
-                if (runId !== this.goldRainRunId) return;
-                document.body.classList.remove('fx-gold-rain');
-                document.querySelectorAll('.falling-coin.gold-rain-coin, .gold-rain-static-coin').forEach(el => el.remove());
-                if (atmosphere.parentNode) atmosphere.remove();
-                if (canvas.parentNode) canvas.remove();
-            }, totalDuration, 'gold_rain');
-            return;
-        }
-        const sprites = {
-            coin: ducatSprite,
-            spark: this.getGoldRainSparkSprite(themeId, profile)
-        };
-
-        let width = 0;
-        let height = 0;
-        let renderScale = 1;
-        const drawReducedMotionCoins = () => {
-            [
-                { x: 0.31, y: 0.46, size: 34 },
-                { x: 0.5, y: 0.39, size: 42 },
-                { x: 0.69, y: 0.46, size: 34 }
-            ].forEach(({ x, y, size }) => {
-                ctx.globalAlpha = 0.9;
-                ctx.drawImage(ducatSprite, width * x - size / 2, height * y - size / 2, size, size);
-            });
-            ctx.globalAlpha = 1;
-        };
-        const resizeCanvas = () => {
-            width = Math.max(window.innerWidth || document.documentElement.clientWidth || 1, 1);
-            height = Math.max(window.innerHeight || document.documentElement.clientHeight || 1, 1);
-            const dpr = window.devicePixelRatio || 1;
-            renderScale = reducedMotion ? 1 : Math.min(dpr, isCompact ? 1.25 : 1.5);
-            canvas.width = Math.ceil(width * renderScale);
-            canvas.height = Math.ceil(height * renderScale);
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
-            ctx.setTransform(renderScale, 0, 0, renderScale, 0, 0);
-            if (reducedMotion) drawReducedMotionCoins();
-        };
-
-        resizeCanvas();
-        this.goldRainResizeHandler = resizeCanvas;
-        window.addEventListener('resize', this.goldRainResizeHandler, { passive: true });
-        const cleanup = () => {
-            if (runId !== this.goldRainRunId) return;
-            document.body.classList.remove('fx-gold-rain');
-            if (atmosphere.parentNode) atmosphere.remove();
-            if (canvas.parentNode) canvas.remove();
-            if (this.goldRainResizeHandler === resizeCanvas) {
-                window.removeEventListener('resize', resizeCanvas);
-                this.goldRainResizeHandler = null;
-            }
-            if (this.goldRainAnimationId) {
-                cancelAnimationFrame(this.goldRainAnimationId);
-                this.goldRainAnimationId = null;
-            }
+            coin.style.width = `${size}px`;
+            coin.style.height = `${size}px`;
+            layer.appendChild(coin);
+            return coin;
         };
 
         if (reducedMotion) {
-            this.scheduleEffectTimeout(cleanup, totalDuration, 'gold_rain');
-            return;
+            [34, 42, 34].forEach(addCoin);
+        } else {
+            const coinCount = isCompact ? 44 : 72;
+            for (let index = 0; index < coinCount; index++) {
+                const size = Math.round(rand(isCompact ? 27 : 32, isCompact ? 43 : 52));
+                const coin = addCoin(size);
+                const drift = rand(isCompact ? -54 : -100, isCompact ? 54 : 100) * profile.drift;
+                const tilt = rand(-18, 18) * profile.spin;
+                coin.style.left = `${rand(2, 94)}vw`;
+                coin.style.setProperty('--fall-delay', `${Math.round(index < 7 ? rand(0, 280) : rand(150, 1900))}ms`);
+                coin.style.setProperty('--fall-duration', `${Math.round(rand(2500, 3700))}ms`);
+                coin.style.setProperty('--fall-mid-drift', `${Math.round(drift * 0.48)}px`);
+                coin.style.setProperty('--fall-end-drift', `${Math.round(drift)}px`);
+                coin.style.setProperty('--fall-mid-tilt', `${Math.round(-tilt * 0.45)}deg`);
+                coin.style.setProperty('--fall-end-tilt', `${Math.round(tilt)}deg`);
+            }
         }
 
-        const makeCoinParticle = () => {
-            const delay = rand(0, emitDuration);
-            const preferredFallDuration = rand(2500, 4100);
-            const remainingFallWindow = Math.max(1300, totalDuration - delay + 160);
-            return {
-                kind: 'coin',
-                delay,
-                duration: Math.min(preferredFallDuration, remainingFallWindow),
-                x: rand(-width * 0.04, width * 1.02),
-                drift: rand(isCompact ? -60 : -125, isCompact ? 60 : 125) * profile.drift,
-                wobble: rand(isCompact ? 6 : 10, isCompact ? 18 : 28) * profile.drift,
-                phase: rand(0, Math.PI * 2),
-                size: rand(isCompact ? 24 : 28, isCompact ? 38 : 49),
-                rotate: rand(-0.7, 0.7),
-                rotateSpeed: rand(-1.35, 1.35) * profile.spin,
-                spinSpeed: rand(3.1, 6.4) * profile.spin,
-                scale: rand(0.82, 1.18)
-            };
-        };
-
-        const makeSparkParticle = () => {
-            const delay = rand(120, emitDuration + 500);
-            const preferredFallDuration = rand(1800, 3800);
-            const remainingFallWindow = Math.max(1200, totalDuration - delay + 120);
-            return {
-                kind: 'spark',
-                delay,
-                duration: Math.min(preferredFallDuration, remainingFallWindow),
-                x: rand(0, width),
-                drift: rand(isCompact ? -45 : -95, isCompact ? 45 : 95),
-                wobble: rand(4, 18),
-                phase: rand(0, Math.PI * 2),
-                size: rand(3, isCompact ? 7 : 9),
-                rotate: rand(0, Math.PI),
-                rotateSpeed: rand(-1.1, 1.1),
-                spinSpeed: 0,
-                scale: 1
-            };
-        };
-
-        const particles = [
-            ...Array.from({ length: coinCount }, makeCoinParticle),
-            ...Array.from({ length: sparkCount }, makeSparkParticle)
-        ];
-
-        const drawSprite = (sprite, particle, progress, elapsed) => {
-            const fadeIn = Math.min(1, progress / 0.1);
-            const fadeOut = Math.min(1, (1 - progress) / 0.14);
-            const alpha = Math.max(0, Math.min(fadeIn, fadeOut));
-            if (alpha <= 0) return;
-
-            const y = -particle.size * 2 + (height + particle.size * 4) * progress;
-            const x = particle.x
-                + particle.drift * progress
-                + particle.wobble * Math.sin(progress * Math.PI * 2 + particle.phase);
-            const rotation = particle.rotate + particle.rotateSpeed * progress;
-            const spin = elapsed * particle.spinSpeed * 0.001 + particle.phase;
-            const flip = particle.kind === 'coin' ? 0.55 + Math.abs(Math.cos(spin)) * 0.45 : 1;
-            const size = particle.size * particle.scale;
-
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.translate(x, y);
-            ctx.rotate(rotation);
-            ctx.scale(flip, 1);
-            ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
-            ctx.restore();
-        };
-
-        const startedAt = performance.now();
-        const render = (now) => {
+        let observer = null;
+        const cleanup = () => {
             if (runId !== this.goldRainRunId) return;
-            if (themeId !== this.getGoldRainThemeId()) {
-                cleanup();
-                return;
-            }
-            const elapsed = now - startedAt;
-            ctx.clearRect(0, 0, width, height);
-
-            particles.forEach(particle => {
-                const progress = (elapsed - particle.delay) / particle.duration;
-                if (progress < 0 || progress > 1) return;
-                const sprite = sprites[particle.kind] || sprites.coin;
-                drawSprite(sprite, particle, progress, elapsed);
-            });
-
-            if (elapsed <= totalDuration + 620) {
-                this.goldRainAnimationId = requestAnimationFrame(render);
-            } else {
-                this.goldRainAnimationId = null;
-            }
-        };
-
-        this.goldRainAnimationId = requestAnimationFrame(render);
-
-        this.scheduleEffectTimeout(() => {
-            if (runId !== this.goldRainRunId) return;
-            if (atmosphere.parentNode) atmosphere.classList.add('closing');
+            observer?.disconnect();
+            if (this.goldRainThemeObserver === observer) this.goldRainThemeObserver = null;
             document.body.classList.remove('fx-gold-rain');
-        }, totalDuration - 650, 'gold_rain');
+            layer.remove();
+            atmosphere.remove();
+        };
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (themeId !== this.getGoldRainThemeId()) cleanup();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+            this.goldRainThemeObserver = observer;
+        }
 
-        this.scheduleEffectTimeout(cleanup, totalDuration + 650, 'gold_rain');
+        if (!reducedMotion) {
+            this.scheduleEffectTimeout(() => {
+                if (runId !== this.goldRainRunId) return;
+                atmosphere.classList.add('closing');
+            }, totalDuration - 650, 'gold_rain');
+        }
+        this.scheduleEffectTimeout(cleanup, totalDuration + (reducedMotion ? 0 : 650), 'gold_rain');
     }
     
     spawnEmojiRain(emojis, count, group = 'emoji_rain') {
@@ -2411,22 +2261,13 @@ class EffectManager {
             this.confettiAnimationId = null;
         }
 
-        if (this.goldRainAnimationId) {
-            cancelAnimationFrame(this.goldRainAnimationId);
-            this.goldRainAnimationId = null;
-        }
-        if (this.goldRainResizeHandler) {
-            window.removeEventListener('resize', this.goldRainResizeHandler);
-            this.goldRainResizeHandler = null;
-        }
-
         const confettiCanvas = document.getElementById('confetti-canvas');
         if (confettiCanvas) {
             const confettiCtx = confettiCanvas.getContext('2d');
             if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
         
-        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-static-coin').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));

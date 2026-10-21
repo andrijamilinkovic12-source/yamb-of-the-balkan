@@ -14,8 +14,8 @@
   "goldRainEffectRule": {
     "scope": "Zlatna Kisa u Riznici, izazovu i zavrsnim ekranima u svih deset tema.",
     "canonicalCoin": "Animacija prikazuje samo aktivni kanonski dukat te teme; promena njegovog mastera zahteva proveru cestice, pregleda i male slicice. Nema generickog novcica, dragulja, krune ili preslikavanja druge teme.",
-    "motion": "Sve teme koriste jedan canvas tok i jednako trajanje od 5.8 sekundi. Maksimum je 44 dukata i 12 diskretnih svetlosnih cestica na mobilnom, odnosno 72 dukata i 24 cestice na sirim ekranima. DNK teme utice samo na nijansu ambijenta i blagu razliku u lelujanju i okretanju, bez kica i zatrpavanja igre.",
-    "performanceAndAccess": "Gustina pikselâ je ogranicena na 1.25 na mobilnom i 1.5 na sirim ekranima. Promena teme, novo pokretanje ili izlazak prekida prethodnu animaciju i uklanja slojeve. Pri ukljucenom smanjenom pokretu prikazuju se tri nepokretna tematska dukata tokom 2.7 sekundi, bez pada i iskri.",
+    "motion": "Sve teme koriste zasebne vidljive PNG dukate u jednom DOM sloju i jednako trajanje od 5.8 sekundi. Najvise 44 dukata na mobilnom, odnosno 72 na sirim ekranima, padaju uz diskretno lelujanje. Svetlosni sloj je blag i ne zamenjuje dukate. DNK teme utice na nijansu ambijenta i malu razliku u kretanju, bez kica i zatrpavanja igre.",
+    "performanceAndAccess": "Kretanje dukata se izvodi CSS transformacijama bez canvas iscrtavanja. Promena teme, novo pokretanje ili izlazak prekida prethodnu animaciju i uklanja slojeve. Pri ukljucenom smanjenom pokretu prikazuju se tri nepokretna tematska dukata tokom 2.7 sekundi, bez pada i iskri.",
     "qualityGate": "Pregledati u stvarnoj igri, posebno pri kupovini/aktiviranju efekta, na telefonu srednje sirine: kanonski dukat, citljivost, prirodan tok i gladak prikaz bez zastajkivanja."
   },
   "inviteFriendRoomRules": {
