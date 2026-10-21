@@ -1,0 +1,803 @@
+/* Green supplies the geometry; theme card tokens supply the other nine materials. */
+#waiting-screen .invite-power-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+    white-space: nowrap;
+}
+#waiting-screen.is-hosting-invite .invite-power-label {
+    text-transform: uppercase;
+}
+#waiting-screen .invite-power-icon {
+    display: block;
+    width: 13px;
+    height: 13px;
+    flex: 0 0 13px;
+    object-fit: contain;
+}
+#waiting-screen.is-hosting-invite :is(.ws-g-stat, .easter-invite-rival-stat, .easter-friend-record-row) {
+    box-sizing: border-box;
+    min-width: 0;
+}
+@media (max-width: 360px), (max-height: 700px) {
+    #waiting-screen.is-hosting-invite .invite-power-icon {
+        width: 10px;
+        height: 10px;
+        flex-basis: 10px;
+    }
+}
+
+#waiting-screen.is-hosting-invite {
+    --invite-ink: var(--theme-card-ink, #edf4df);
+    --invite-muted: var(--theme-card-muted, #d4e5c6);
+    --invite-primary: var(--theme-card-primary, #bddd8d);
+    --invite-surface: var(--theme-card-fill, linear-gradient(145deg, #486b48, #284b32));
+    --invite-inset: var(--theme-subcard-fill, linear-gradient(145deg, #31543b, #244430));
+    --invite-line: var(--theme-card-line, rgba(211, 229, 184, .35));
+    --invite-shadow: var(--theme-card-shadow, 0 7px 17px rgba(7, 29, 15, .3));
+    box-sizing: border-box;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    padding-bottom: calc(var(--safe-bottom, 0px) + 20px) !important;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen:is(.is-friend-invite,.is-hosting-invite) .green-invite-header-icon {
+    display: block !important;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #waiting-title {
+    font-size: 1.05rem !important;
+    font-weight: 850 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .025em !important;
+}
+
+#waiting-screen#waiting-screen.is-hosting-invite .ws-share-area { display: none !important; }
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-header {
+    border-radius: 0 0 26px 26px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+    box-sizing: border-box;
+    padding: 14px 15px !important;
+    border-radius: 26px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel > div {
+    box-sizing: border-box;
+    padding: 5px 12px !important;
+    border-width: 1px !important;
+    color: var(--invite-primary) !important;
+    background: var(--invite-inset) !important;
+    border-color: var(--invite-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+    flex-shrink: 0 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite :is(#wait-msg,.ws-glass-name,.friend-card-name,#friends-list-container > h3,.easter-invite-rival-name) {
+    color: var(--invite-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-glass-card,.friend-card,.easter-invite-rival-card) {
+    color: var(--invite-ink) !important;
+    background: var(--invite-surface) !important;
+    border: 1px solid var(--invite-line) !important;
+    box-shadow: var(--invite-shadow) !important;
+    backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+    position: relative;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 54px minmax(0, 1fr);
+    gap: 6px 8px;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0;
+    padding: 10px 10px 9px !important;
+    align-items: stretch !important;
+    isolation: isolate;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card)::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 10px;
+    bottom: 9px;
+    left: 10px;
+    width: calc(50% - 14px);
+    background: var(--invite-inset);
+    border: 1px solid var(--invite-line);
+    border-radius: 11px;
+    pointer-events: none;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-avatar {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    width: 48px !important;
+    height: 48px !important;
+    margin: 0 0 0 7px !important;
+    align-self: center;
+    justify-self: start;
+    border-color: var(--invite-line) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-name {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    width: calc(100% - 66px) !important;
+    min-height: 1.2em !important;
+    max-height: 2.4em !important;
+    margin: 0 3px 0 63px !important;
+    align-self: center;
+    text-align: left !important;
+    font-size: clamp(.78rem,3.1vw,.92rem) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-stats {
+    grid-column: 1;
+    grid-row: 2;
+    z-index: 1;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 5px 9px 6px !important;
+    gap: 2px !important;
+    justify-content: flex-start;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-glass-stats .ws-g-stat {
+    font-size: clamp(.64rem, 2.65vw, .72rem) !important;
+    line-height: 1.08 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-glass-stats .lbl {
+    font-weight: 850 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-glass-stats .val {
+    font-weight: 950 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: grid !important;
+    grid-template-rows: 54px minmax(0, 1fr) auto;
+    gap: 6px;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 7px 5px;
+    overflow: hidden;
+    border-radius: 11px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-title {
+    align-self: end;
+    padding-top: 4px;
+    border-top: 1px solid var(--invite-line);
+    color: var(--invite-primary) !important;
+    font-size: clamp(.58rem, 2.4vw, .66rem) !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    letter-spacing: .45px;
+    text-align: center;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-body {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    min-height: 0;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-img {
+    width: 48px !important;
+    height: 48px !important;
+    object-fit: contain;
+    border: 1px solid var(--invite-line);
+    border-radius: 50%;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card.is-empty .easter-invite-rival-img {
+    border-radius: 12px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-name {
+    width: 100%;
+    max-height: 2.4em;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: clamp(.68rem, 2.8vw, .82rem) !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    text-align: left;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    min-height: 0;
+    justify-content: flex-start;
+    padding: 5px 9px 6px !important;
+    color: var(--invite-muted) !important;
+    background: var(--invite-inset) !important;
+    border: 1px solid var(--invite-line) !important;
+    border-radius: 9px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite :is(.easter-invite-rival-stat,.easter-friend-record-row,.ws-glass-stats .lbl) {
+    color: var(--invite-muted) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite :is(.easter-invite-rival-stat strong,.easter-friend-record-row strong,.ws-glass-stats .val) {
+    color: var(--invite-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-stat {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 7px;
+    width: 100%;
+    min-width: 0;
+    font-size: clamp(.64rem, 2.65vw, .72rem) !important;
+    font-weight: 850 !important;
+    line-height: 1.08 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-stat strong {
+    min-width: 22px;
+    text-align: right;
+    font-size: 1em;
+    font-weight: 950 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-record-summary,.friend-card-power,.friend-card-wl) { display: none !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-random-records,.easter-friend-records) {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1px;
+    width: 100%;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+    box-sizing: border-box;
+    flex: 0 0 auto !important;
+    max-width: 500px;
+    margin-top: 10px !important;
+    padding: 0 15px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #friends-list {
+    flex: 0 0 auto;
+    align-items: flex-start;
+    padding-bottom: 0 !important;
+    transform: translateY(-1.5mm);
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card {
+    box-sizing: border-box;
+    flex: 0 0 150px !important;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    height: 230px;
+    padding: 8px 9px !important;
+    gap: 3px;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card.add-new {
+    justify-content: space-between;
+    cursor: default;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card.add-new:active {
+    transform: none;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-add-action {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    color: var(--invite-ink);
+    background: transparent;
+    font: 900 .72rem/1.15 Montserrat, sans-serif;
+    text-align: center;
+    cursor: pointer;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-add-action:focus-visible,
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-submit:focus-visible {
+    outline: 2px solid var(--invite-primary);
+    outline-offset: 1px;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-form {
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    flex: 0 0 32px;
+    width: 100%;
+    height: 32px;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--invite-line);
+    border-radius: 8px;
+    background: var(--invite-inset);
+    box-shadow: inset 1px 2px 4px rgba(0,0,0,.12);
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-form:focus-within {
+    border-color: var(--invite-primary);
+    box-shadow: 0 0 0 1px var(--invite-primary);
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-input {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0 2px 0 7px;
+    border: 0;
+    outline: 0;
+    color: var(--invite-ink);
+    background: transparent;
+    font: 750 .61rem/1.1 Montserrat, sans-serif;
+    caret-color: var(--invite-primary);
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-input::placeholder {
+    color: var(--invite-muted);
+    opacity: 1;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-submit {
+    box-sizing: border-box;
+    display: grid;
+    flex: 0 0 26px;
+    place-items: center;
+    width: 26px;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    color: var(--invite-ink);
+    background: transparent;
+    cursor: pointer;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-icon {
+    display: block;
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    pointer-events: none;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card-img {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    flex: 0 0 44px;
+    border-color: var(--invite-line) !important;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card-name {
+    height: 2.4em;
+    flex: 0 0 2.4em;
+    margin: 0 0 4px;
+    font-size: .74rem;
+    line-height: 1.2;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card-stats {
+    box-sizing: border-box;
+    min-height: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+    padding: 4px 7px;
+    justify-content: center;
+    background: var(--invite-inset) !important;
+    border: 1px solid var(--invite-line) !important;
+    border-radius: 10px;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .easter-friend-record-row {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    align-items: center;
+    gap: 4px;
+    min-height: 15px;
+    padding: 0 3px;
+    font-size: clamp(.64rem, 2.65vw, .72rem) !important;
+    font-weight: 850 !important;
+    line-height: 1.08 !important;
+    text-align: left;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .easter-friend-record-row strong {
+    min-width: 22px;
+    text-align: right;
+    font-weight: 950 !important;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .theme-invite-add-icon {
+    display: block !important;
+    width: 52px !important;
+    height: 52px !important;
+    object-fit: contain;
+    margin: 0 auto 4px;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .theme-invite-empty-icon {
+    display: block !important;
+    width: 64px !important;
+    height: 64px !important;
+    object-fit: contain;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card-btn {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 0 0 32px;
+    min-height: 32px;
+    height: 32px;
+    margin: auto 0 0 !important;
+    padding: 2px 6px !important;
+    color: var(--invite-ink) !important;
+    background: var(--invite-inset) !important;
+    border: 1px solid var(--invite-line) !important;
+    box-shadow: var(--invite-shadow) !important;
+    font-size: .7rem;
+    line-height: 1;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-card-btn:disabled {
+    opacity: .62;
+    filter: saturate(.5);
+    cursor: not-allowed;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .theme-invite-send-icon {
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    flex: 0 0 18px;
+    object-fit: contain;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-request-card {
+    border-style: dashed !important;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-request-label {
+    color: var(--invite-muted);
+    font-size: .7rem;
+    font-weight: 800;
+    text-align: center;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-request-actions {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    margin-top: auto;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-request-actions button {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 32px;
+    padding: 2px 4px;
+    color: var(--invite-ink);
+    background: var(--invite-inset);
+    border: 1px solid var(--invite-line);
+    border-radius: 8px;
+    font: 800 .64rem/1.1 Montserrat, sans-serif;
+    cursor: pointer;
+}
+#waiting-screen#waiting-screen.is-hosting-invite .friend-request-accept { border-color: var(--invite-primary); }
+#waiting-screen#waiting-screen.is-hosting-invite .friend-request-decline { opacity: .85; }
+
+body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+    padding-top: 13px !important;
+    padding-bottom: 13px !important;
+}
+
+@media (max-width: 360px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #waiting-title {
+        min-width: 0;
+        white-space: normal;
+        font-size: .78rem !important;
+        line-height: 1.12 !important;
+        overflow-wrap: normal;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 230px !important;
+        grid-template-rows: 82px minmax(0, 1fr) !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-avatar,
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-img {
+        width: 40px !important;
+        height: 40px !important;
+        max-width: 40px;
+        max-height: 40px;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-name {
+        width: calc(100% - 54px) !important;
+        margin-left: 51px !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        font-size: .64rem !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-body {
+        grid-template-columns: 44px minmax(0, 1fr);
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 82px minmax(0, 1fr) auto;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-name {
+        max-height: none;
+        font-size: .64rem !important;
+    }
+}
+@media (max-height: 760px) and (min-height: 650px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-header {
+        margin-bottom: 8px;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        margin-bottom: 6px !important;
+        padding-top: 9px !important;
+        padding-bottom: 9px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+        margin-top: 4px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: clamp(160px, calc(100dvh - 530px), 190px) !important;
+        grid-template-rows: 52px minmax(0, 1fr) !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 52px minmax(0, 1fr) auto !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+        margin-top: 4px !important;
+    }
+}
+@media (max-height: 699px) and (min-height: 650px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-header {
+        margin-bottom: 2px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        margin-bottom: 3px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #wait-msg {
+        margin-top: 8px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+        margin-top: 0 !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: clamp(165px, calc(100dvh - 530px), 169px) !important;
+        grid-template-rows: 48px minmax(0, 1fr) !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 48px minmax(0, 1fr) auto !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+        margin-top: 0 !important;
+    }
+}
+@media (min-height: 761px) and (max-height: 799px) and (max-width: 599px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: clamp(190px, calc(100dvh - 560px), 230px) !important;
+        grid-template-rows: 52px minmax(0, 1fr) !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 52px minmax(0, 1fr) auto !important;
+    }
+}
+
+@media (max-height: 760px) and (min-height: 650px) {
+    body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+}
+@media (max-height: 699px) and (min-height: 650px) {
+    body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+}
+
+@media (max-width: 370px) {
+    #waiting-screen#waiting-screen.is-hosting-invite .ws-share-row { grid-template-columns: minmax(0,1fr) 100px; }
+    #waiting-screen#waiting-screen.is-hosting-invite .ws-share-row button { white-space: normal; }
+}
+
+/* Keep the entire invite room above phone navigation; only the friend strip scrolls. */
+#waiting-screen#waiting-screen#waiting-screen.is-hosting-invite {
+    overflow-y: hidden !important;
+    padding-bottom: calc(var(--safe-bottom, 0px) + 8px) !important;
+}
+@media (max-height: 820px) and (max-width: 599px) {
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-form {
+        flex-basis: 29px;
+        height: 29px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+        margin-top: 5px !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container > h3 {
+        margin-bottom: 6px !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card {
+        padding: 6px 8px !important;
+        gap: 2px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-img {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
+        min-height: 62px;
+        height: 62px;
+        flex-basis: 62px;
+    }
+}
+@media (min-height: 761px) and (max-height: 820px) and (max-width: 599px) {
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 170px !important;
+        grid-template-rows: 48px minmax(0, 1fr) !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 48px minmax(0, 1fr) auto !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 200px !important; }
+}
+@media (min-height: 821px) and (max-height: 860px) and (max-width: 375px) {
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 170px !important;
+        grid-template-rows: 48px minmax(0, 1fr) !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 48px minmax(0, 1fr) auto !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 200px !important; }
+}
+@media (min-height: 700px) and (max-height: 760px) and (max-width: 599px) {
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 150px !important;
+        grid-template-rows: 44px minmax(0, 1fr) !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 44px minmax(0, 1fr) auto !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 190px !important; }
+}
+@media (min-height: 650px) and (max-height: 699px) and (max-width: 599px) {
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 140px !important;
+        grid-template-rows: 42px minmax(0, 1fr) !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 42px minmax(0, 1fr) auto !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 180px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-img {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
+        min-height: 58px;
+        height: 58px;
+        flex-basis: 58px;
+    }
+}
+@media (max-height: 649px) and (max-width: 599px) {
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-add-action {
+        font-size: .62rem;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-form {
+        flex-basis: 24px;
+        height: 24px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-input {
+        font-size: .56rem;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .invite-friend-search-icon {
+        width: 12px;
+        height: 12px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .waiting-header {
+        box-sizing: border-box;
+        height: 54px !important;
+        min-height: 54px !important;
+        margin-bottom: 4px !important;
+        padding: 6px 10px !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        padding: 4px 8px !important;
+        margin-bottom: 3px !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel > div {
+        padding: 3px 8px !important;
+        font-size: .66rem !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #wait-msg {
+        margin-top: 4px !important;
+        font-size: .74rem !important;
+        line-height: 1.15 !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal { margin-top: 0 !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: clamp(120px, calc(100dvh - 428px), 140px) !important;
+        grid-template-rows: 38px minmax(0, 1fr) !important;
+        padding: 6px !important;
+        gap: 3px 5px !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card)::before {
+        top: 6px;
+        bottom: 6px;
+        left: 6px;
+        width: calc(50% - 9px);
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-avatar,
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-name {
+        width: calc(100% - 47px) !important;
+        margin-left: 42px !important;
+        font-size: .64rem !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-stats {
+        padding: 2px 4px !important;
+        gap: 0 !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 38px minmax(0, 1fr) auto !important;
+        gap: 2px;
+        padding: 0 4px 3px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-body { grid-template-columns: 35px minmax(0,1fr); gap: 2px; margin: 0; padding: 0; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-stats { padding: 1px 3px; gap: 0; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-title { padding-top: 1px; font-size: .52rem !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container { margin-top: 3px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container > h3 { margin-bottom: 4px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card {
+        height: 132px !important;
+        padding: 5px 6px !important;
+        gap: 2px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-img {
+        width: 28px;
+        height: 28px;
+        flex-basis: 28px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-name {
+        height: 2em;
+        flex-basis: 2em;
+        margin-bottom: 0;
+        font-size: .65rem;
+        line-height: 1;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
+        min-height: 46px;
+        height: 46px;
+        flex-basis: 46px;
+        padding: 1px 4px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-friend-record-row {
+        min-height: 10px;
+        font-size: .57rem !important;
+        line-height: 1 !important;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-btn {
+        flex-basis: 24px;
+        min-height: 24px;
+        height: 24px;
+    }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-request-actions button { min-height: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #waiting-screen#waiting-screen.is-hosting-invite .theme-invite-add-icon { animation: none !important; }
+}

@@ -57,7 +57,7 @@ function expectedPath(theme, anchor) {
   const room = !anchor.inMenu;
   const canonical = green.match(/canonical\/([a-z-]+)-room-identity\//);
   if (canonical) return `assets/theme-packs/${theme}/canonical/${canonical[1]}-room-identity/${canonical[1]}-room${room ? '' : '-menu'}-v1.png`;
-  if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png?v=2`;
+  if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
   if (green.includes('ducats-undo-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}ducats-undo-free-v3.png`;
   if (green.includes('champion-trophy-v1')) return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${room ? '-room' : ''}-v1.png`;
   throw new Error(`Unexpected anchor ${green}`);

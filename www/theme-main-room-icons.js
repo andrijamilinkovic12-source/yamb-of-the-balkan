@@ -13,7 +13,7 @@
         'canonical/tournament-awards/champion-trophy-v1.png': ['tournament', 'auto']
     };
     const sourceFor = (theme, role, variant) =>
-        role === 'treasury' ? `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=2`
+        role === 'treasury' ? `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`
         : role === 'economy' ? `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v3.png`
         : role === 'tournament' ? `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`
         : role === 'leaderboard' ? `assets/theme-packs/${theme}/canonical/leaderboard-room-identity/leaderboard-room${variant === 'menu' ? '-menu' : ''}-v2.png`

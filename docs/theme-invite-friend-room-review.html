@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pozovi prijatelja · pregled tema</title>
+  <style>
+    :root { font: 16px/1.5 system-ui, sans-serif; color: #e8edf4; background: #141922; }
+    body { max-width: 1100px; margin: 0 auto; padding: 24px 16px 50px; }
+    h1 { margin: 0 0 5px; font-size: 1.5rem; }
+    p { margin: 0 0 18px; color: #adb9ca; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0; }
+    .views { display: flex; flex-wrap: wrap; gap: 7px; margin: -7px 0 18px; }
+    button { padding: 8px 11px; border: 1px solid #47556a; border-radius: 9px; color: #e8edf4; background: #263246; font: inherit; cursor: pointer; }
+    button[aria-selected="true"], button[aria-pressed="true"] { color: #101923; background: #b7dbd2; border-color: #b7dbd2; }
+    button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .preview { display: grid; grid-template-columns: minmax(0, 390px) minmax(0, 1fr); gap: 24px; align-items: start; }
+    .phone { width: 100%; border: 1px solid #4b596b; border-radius: 16px; }
+    .assets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .asset { padding: 12px; border: 1px solid #364458; border-radius: 12px; text-align: center; background: #222d3d; }
+    .asset img { display: block; width: min(100%, 180px); height: 180px; margin: auto; object-fit: contain; }
+    .asset strong { display: block; margin-top: 6px; }
+    .note { margin-top: 18px; font-size: .9rem; }
+    @media (max-width: 700px) { .preview { grid-template-columns: 1fr; } .phone { max-width: 390px; } }
+  </style>
+</head>
+<body>
+  <h1>Pozovi prijatelja · svih 10 tema</h1>
+  <p>Vizuelni prikaz sa simuliranim stanjem liste prijatelja. Prva kartica zadržava „Dodaj prijatelja“ i ima pretragu po imenu pri dnu. Lupa je postojeći PNG iz sobe Online igrači iste teme. Moć koristi postojeći Power Index PNG; slanje poziva i prazno stanje imaju zasebne oznake. Polje i dugme za deljenje linka namerno nisu prikazani. Snimci nisu potvrda mrežnog duela. Kompaktni prikaz ima donju bezbednu zonu od 32 px.</p>
+  <div class="tabs" role="tablist" aria-label="Teme"></div>
+  <div class="views" role="group" aria-label="Veličina ekrana">
+    <button type="button" data-view="compact">Uži ekran · 360 × 780</button>
+    <button type="button" data-view="standard">Standardni · 390 × 844</button>
+  </div>
+  <div class="preview">
+    <img class="phone" alt="Prikaz sobe Pozovi prijatelja">
+    <div>
+      <h2 class="theme-name"></h2>
+      <div class="assets">
+        <div class="asset"><img class="send" alt="PNG za slanje poziva"><strong>Slanje poziva</strong></div>
+        <div class="asset"><img class="empty" alt="PNG za prazno stanje"><strong>Prazno stanje</strong></div>
+        <div class="asset"><img class="power" alt="Postojeći PNG za Power Index"><strong>Moć · zajednički assets</strong></div>
+        <div class="asset"><img class="search" alt="Postojeći PNG za pretragu"><strong>Pretraga · Online igrači</strong></div>
+      </div>
+      <p class="note">Na kartici za dodavanje prijatelja koristi se već postojeća ikona iste teme iz sobe Online igrači. Glavna ikona i intro koriste kanonsku ikonu sobe te teme.</p>
+    </div>
+  </div>
+  <script>
+    const themes = [
+      ['dark','Zelena'], ['light','Svetlo zlato'], ['medium','Trula višnja'],
+      ['winter','Kraljevski'], ['neon','Neon Cyber'], ['amethyst','Ametist'],
+      ['easter','Vaskršnja'], ['desert','Pustinjsko staklo'],
+      ['moon','Mesečev sjaj'], ['severna','Severna maglina']
+    ];
+    const tabs = document.querySelector('.tabs');
+    let selectedTheme = 'dark';
+    let selectedView = 'compact';
+    function select(theme) {
+      const [id, name] = themes.find(item => item[0] === theme) || themes[0];
+      selectedTheme = id;
+      document.querySelector('.theme-name').textContent = name;
+      const phone = document.querySelector('.phone');
+      phone.src = `theme-invite-friend-${id}${selectedView === 'compact' ? '-compact' : ''}-review.png?v=hidden-link-1`;
+      phone.style.maxWidth = selectedView === 'compact' ? '360px' : '390px';
+      phone.alt = `Soba Pozovi prijatelja · ${name} · ${selectedView === 'compact' ? 'uži' : 'standardni'} ekran`;
+      for (const role of ['send', 'empty']) {
+        document.querySelector(`.asset .${role}`).src = `../www/assets/theme-packs/${id}/canonical/invite-friend-internal/${role}-v1.png`;
+      }
+      document.querySelector('.asset .power').src = id === 'dark'
+        ? '../www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png'
+        : `../www/assets/theme-packs/${id}/canonical/statistics-overview/power-index-v1.png`;
+      document.querySelector('.asset .search').src = `../www/assets/theme-packs/${id}/canonical/online-players-internal/search-v1.png`;
+      tabs.querySelectorAll('button').forEach(button => button.setAttribute('aria-selected', String(button.dataset.theme === id)));
+      document.querySelectorAll('.views button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === selectedView)));
+      history.replaceState(null, '', `#${id}`);
+    }
+    for (const [id, name] of themes) {
+      const button = document.createElement('button');
+      button.textContent = name;
+      button.dataset.theme = id;
+      button.setAttribute('role', 'tab');
+      button.addEventListener('click', () => select(id));
+      tabs.append(button);
+    }
+    document.querySelectorAll('.views button').forEach(button => button.addEventListener('click', () => {
+      selectedView = button.dataset.view;
+      select(selectedTheme);
+    }));
+    select(location.hash.slice(1));
+  </script>
+</body>
+</html>

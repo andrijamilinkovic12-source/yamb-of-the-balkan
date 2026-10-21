@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "roles": [
+    "send",
+    "empty"
+  ],
+  "themes": [
+    "dark",
+    "light",
+    "medium",
+    "winter",
+    "neon",
+    "amethyst",
+    "easter",
+    "desert",
+    "moon",
+    "severna"
+  ],
+  "items": [
+    {
+      "theme": "dark",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/dark-send.png",
+      "sourceSha256": "3351b85efda3f2b421fd91bcd17d5edc12bb17e450217e7f8314765a03b7c6ce",
+      "production": "www/assets/theme-packs/dark/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "aec1575768d7134131b2c669c368b1d0fdc4a053407622e026da4ac75cd0a92b",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "dark",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/dark-empty.png",
+      "sourceSha256": "3ba973c82a4986875d6780c84bb68990c23c7776f91a9160799b73b6da4ad0bb",
+      "production": "www/assets/theme-packs/dark/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "f3416fd625205321ff840912db8a5b3f6c10358ecdb347c88d85c318effef637",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "light",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/light-send.png",
+      "sourceSha256": "fc64a2fe026b299b11bdff35c2f1f02531991c29e269660ba0e8f9ff8704a5cc",
+      "production": "www/assets/theme-packs/light/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "d185bc73d0c77ccabd58dbf5c81f2ffb01f884fceaba75c2b6b9bd2a1daeebae",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "light",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/light-empty.png",
+      "sourceSha256": "f32c372cfb30e2594220a12fd70efb8590776011818db8b1a5a233344c8a5246",
+      "production": "www/assets/theme-packs/light/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "4fa5679c0a4c22124f2f597a367631434396a83106c8989442f22854f79c35ee",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "medium",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/medium-send.png",
+      "sourceSha256": "df01a99ec791fce9a5ceb93744f5b03e1f8faab89460bbf42d39c377ceae1c94",
+      "production": "www/assets/theme-packs/medium/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "c4aba2eb861430ce227d0a7e3b412829c627ffa19ae44372539cec5d9a16f622",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "medium",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/medium-empty.png",
+      "sourceSha256": "4967acaf8ee9903106c7f686eb37ab5b2e6f4f63ed8010a57f7003b59f109d0c",
+      "production": "www/assets/theme-packs/medium/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "16feaa355314f4f63583974e05b0fe6de784ff8c34f80c4a597fbd72134fa8f6",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "winter",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/winter-send.png",
+      "sourceSha256": "036c55f23f3598e62edb915fda113a5c2d1142b42d7964080dcb9c9f2e360643",
+      "production": "www/assets/theme-packs/winter/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "487dca76dcc15d06e2f60b19602a024eab4e21d085e3bd05b7724c534e08bf6a",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "winter",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/winter-empty.png",
+      "sourceSha256": "48fd123d23b65beb77dfebf7432c3e6805bc7c3f2b8f8f4278fdb6af6b39ab1c",
+      "production": "www/assets/theme-packs/winter/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "cc77646cd4fddb710a8ca1c10e4e42866057649e56b6fecf98d148447fd8c127",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "neon",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/neon-send.png",
+      "sourceSha256": "27acd003a9c16c28519d773a16c5083b9381a6c9ab2bd3f4f2453be5d891e563",
+      "production": "www/assets/theme-packs/neon/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "2e8934231632280c700d018d9fa19d29c46fef1c925bc9aa5c7ea5e31a80fb8a",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "neon",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/neon-empty.png",
+      "sourceSha256": "abb2e377a17a0bc726c85fadd0b3beb657b21f3e593d8682b3fa2796889546ed",
+      "production": "www/assets/theme-packs/neon/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "c25d23e1ce9bedf2eb08dce3caec07ef7c06bd1d74ca9b2e19fafe03297baf31",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/amethyst-send.png",
+      "sourceSha256": "cf95563106c0f9fb6aa9b025fc91a76d5803a00f7e00267e630ff824672607ae",
+      "production": "www/assets/theme-packs/amethyst/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "d6cac7e9522ec1782f0015c62cc3ca0b8b951ff59ddd8edb6b4b45e52495cad0",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/amethyst-empty.png",
+      "sourceSha256": "04b46aa30b49590c41b8653e04254a8dc9d1d9e399e584ec1a971c570fa5a971",
+      "production": "www/assets/theme-packs/amethyst/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "c4a4372f5b37c830825a0bebf9573951c5b92319057ae9ec3c3c6a9fc2a23da2",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "easter",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/easter-send.png",
+      "sourceSha256": "be70b0d18a3904a7b357bd5b924d86ed6bdbc10a3b07c4e1dcf0efe671e55810",
+      "production": "www/assets/theme-packs/easter/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "08b971986e4c63a036c705c5884eec0a6d6595b3af4368f108ff39a652e3f83a",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "easter",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/easter-empty.png",
+      "sourceSha256": "c3517cc8315374df1cdfb62a8388eabd4ba94ecec1f18e326defc60470138230",
+      "production": "www/assets/theme-packs/easter/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "78690cbcfb9e4bfc727d23c890a56627ab36a1b3c5f2274ca0893cb3c26ded2f",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "desert",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/desert-send.png",
+      "sourceSha256": "3089f6b6e443f17600986ed07ec28ae0a115e6ef96ec46aeefc7e35c745691b3",
+      "production": "www/assets/theme-packs/desert/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "bd7985228ba32ffc79b09973d842a2540d03b5fced81cecd73629a60d803bbd8",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "desert",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/desert-empty.png",
+      "sourceSha256": "b9afd677803da61df7bce08998329064cd976485c782466a70da1b37694d60e7",
+      "production": "www/assets/theme-packs/desert/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "eb6b77b45f10bbeb687b9b92a244027395fb8e264639fa4785253e309473fa56",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "moon",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/moon-send.png",
+      "sourceSha256": "632def379447a1eb2b673b7ec3a318488f4d74c9ebce4a561f7b149cec140828",
+      "production": "www/assets/theme-packs/moon/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "5b034c4cb9b8d652ad184c3ab29c288a67832a89e53a15983be133ccc9bbce67",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "moon",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/moon-empty.png",
+      "sourceSha256": "2e1ee5b693886e6ea2165604836e582ccadd7e8daa490866e9a861b29e63dc9c",
+      "production": "www/assets/theme-packs/moon/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "837ab5b28510850a9062ae496e39f09ecc9a8cb16e2c3b81f8565cc228b84413",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "severna",
+      "role": "send",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/severna-send.png",
+      "sourceSha256": "50c7b41d9731454c8180d6ed88bd6157bb5ac60b7747c80fe380480471c29fc6",
+      "production": "www/assets/theme-packs/severna/canonical/invite-friend-internal/send-v1.png",
+      "productionSha256": "deb150e9775840e78e50b2b4a34a00032c44f88476e15cdcbec21bae7086e8f6",
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "theme": "severna",
+      "role": "empty",
+      "source": "source-assets/theme-invite-friend-internal-v1/masters/severna-empty.png",
+      "sourceSha256": "f9a1461c31e64e325a1f28b569dbc0e3aac74e24dc76d354cc0454ebe757ec96",
+      "production": "www/assets/theme-packs/severna/canonical/invite-friend-internal/empty-v1.png",
+      "productionSha256": "e82dd8ed618d21796195eb5743d8ed34a7eb92fd502433d8a5a8a74c84d86664",
+      "size": [
+        256,
+        256
+      ]
+    }
+  ]
+}

@@ -17,6 +17,7 @@ function makeHarness(rewardReady) {
     const events = [];
     const elements = new Map();
     const document = {
+        querySelector() { return null; },
         getElementById(id) {
             if (!elements.has(id)) elements.set(id, {
                 classList: { add() {}, remove() {} },

@@ -103,7 +103,7 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700;800;900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.24">
+    <link rel="stylesheet" href="style.css?v=5.25">
     <link rel="stylesheet" href="teme.css?v=7.03">
     <link rel="stylesheet" href="theme-main-room-icons.css?v=24">
     <link rel="stylesheet" href="theme-main-menu-typography.css?v=1">
@@ -117,11 +117,11 @@
     <link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
     <link rel="stylesheet" href="kockice.css?v=1.10">
     <link rel="stylesheet" href="dice-skin-png.css?v=5">
-    <link rel="stylesheet" href="efekti.css?v=1.7">
+    <link rel="stylesheet" href="efekti.css?v=1.8">
     <link rel="stylesheet" href="theme-card-surfaces.css?v=7">
     <link rel="stylesheet" href="theme-medals.css?v=2">
     <link rel="stylesheet" href="theme-treasury-controls.css?v=4">
-    <link rel="stylesheet" href="theme-effect-previews.css?v=8">
+    <link rel="stylesheet" href="theme-effect-previews.css?v=9">
     <link rel="stylesheet" href="theme-treasury-room.css?v=5">
     <link rel="stylesheet" href="theme-room-close-controls.css?v=3">
     <link rel="stylesheet" href="theme-neon-board-png-trial.css?v=1">
@@ -138,9 +138,10 @@
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=7">
     <link rel="stylesheet" href="theme-online-random-room.css?v=2">
     <link rel="stylesheet" href="theme-online-random-finish.css?v=5">
+    <link rel="stylesheet" href="theme-invite-friend-room.css?v=4">
     <link rel="stylesheet" href="theme-finish-compact.css?v=2">
     
-    <script src="languages.js?v=5.23"></script>
+    <script src="languages.js?v=5.25"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -1317,7 +1318,7 @@
                 <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--gold-main);">
                 <span id="waiting-my-name" class="ws-glass-name" data-lang="player_label">Igrač</span>
                 <div class="ws-glass-stats">
-                    <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
+                    <div class="ws-g-stat"><span class="lbl invite-power-label"><img class="invite-power-icon" data-invite-role="power" alt="" aria-hidden="true" decoding="async"><span data-lang="ws_power_plain">Moć</span></span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
                     <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-my-wl" class="val">0 / 0 / 0</span></div>
                     <div class="ws-random-records" aria-label="Online rekord">
                         <div class="ws-g-stat"><span class="lbl" data-green-record="win">POB</span><span id="waiting-my-wins" class="val">0</span></div>
@@ -1331,7 +1332,7 @@
                         <span id="easter-invite-rival-name" class="easter-invite-rival-name" data-lang="stat_none">Nema</span>
                     </div>
                     <div id="easter-invite-rival-record" class="easter-invite-rival-stats" aria-label="Podaci najvećeg rivala">
-                        <div class="easter-invite-rival-stat easter-invite-rival-power"><span data-lang="ws_power">Moć ⚡</span><strong id="easter-invite-rival-power">—</strong></div>
+                        <div class="easter-invite-rival-stat easter-invite-rival-power"><span class="invite-power-label"><img class="invite-power-icon" data-invite-role="power" alt="" aria-hidden="true" decoding="async"><span data-lang="ws_power_plain">Moć</span></span><strong id="easter-invite-rival-power">—</strong></div>
                         <div class="easter-invite-rival-stat"><span data-green-record="win">POB</span><strong id="easter-invite-rival-wins">0</strong></div>
                         <div class="easter-invite-rival-stat"><span data-green-record="draw">NER</span><strong id="easter-invite-rival-draws">0</strong></div>
                         <div class="easter-invite-rival-stat"><span data-green-record="loss">POR</span><strong id="easter-invite-rival-losses">0</strong></div>
@@ -1358,7 +1359,7 @@
                     <span id="waiting-opp-name" class="ws-glass-name" data-lang="player_opponent">Protivnik</span>
                     <span id="waiting-start-msg" class="waiting-start-msg" data-lang="ws_game_starting">Protivnik je tu. Partija počinje...</span>
                     <div class="ws-glass-stats">
-                        <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
+                        <div class="ws-g-stat"><span class="lbl invite-power-label"><img class="invite-power-icon" data-invite-role="power" alt="" aria-hidden="true" decoding="async"><span data-lang="ws_power_plain">Moć</span></span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
                         <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-opp-wl" class="val">0 / 0 / 0</span></div>
                         <div class="ws-random-records" aria-label="Online rekord">
                             <div class="ws-g-stat"><span class="lbl" data-green-record="win">POB</span><span id="waiting-opp-wins" class="val">0</span></div>
@@ -1369,6 +1370,17 @@
                 </div>
             </div>
 
+        </div>
+
+        <div id="share-area" class="ws-share-area hidden">
+            <label for="invite-link" data-lang="invite_text">Pošalji ovaj link prijatelju:</label>
+            <div class="ws-share-row">
+                <input id="invite-link" type="text" readonly aria-label="Link za poziv u partiju">
+                <button type="button" onclick="app.shareInvite()">
+                    <img class="invite-share-icon" data-invite-role="send" alt="" aria-hidden="true" decoding="async">
+                    <span data-lang="invite_btn">PODELI LINK</span>
+                </button>
+            </div>
         </div>
 
         <div id="friends-list-container" class="hidden" style="width: 100%; max-width: 500px; margin-top: 15px; padding: 0 15px; display: flex; flex-direction: column;">
@@ -1747,7 +1759,7 @@
     </script>
 
     <script src="config.js?v=5.26"></script>
-    <script src="managers.js?v=5.52"></script>
+    <script src="managers.js?v=5.54"></script>
     <script src="dnevniizazov.js?v=3.1"></script>
     <script src="riznica.js?v=1.21"></script>
     <script src="trophyManager.js?v=4.13"></script>
@@ -1762,7 +1774,8 @@
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=6.08"></script>
+    <script src="theme-invite-friend-room.js?v=3"></script>
+    <script src="game.js?v=6.13"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
@@ -1770,7 +1783,7 @@
     <script src="theme-game-header.js?v=4"></script>
     <script src="theme-settings-room.js?v=1"></script>
     <script src="theme-settings-picker.js?v=2"></script>
-    <script src="theme-main-room-icons.js?v=19"></script>
+    <script src="theme-main-room-icons.js?v=20"></script>
     <script src="theme-online-players-room.js?v=4"></script>
     <script src="theme-ducat-pack.js?v=3"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>

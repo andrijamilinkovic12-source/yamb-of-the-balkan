@@ -14121,13 +14121,13 @@
         "runtime/menu/treasury-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/treasury-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/treasury-master-v3.png",
           "consumerRefs": [
             "www/index.html:#main-menu .spec-riznica",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 88052
+          "sizeBytes": 129344
         },
         "solo/finish-reward-video-v3": {
           "stage": "linked",
@@ -14154,13 +14154,13 @@
         "treasury-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/easter/treasury-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/treasury-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/treasury-master-v3.png",
           "consumerRefs": [
             "www/index.html:#riznica-screen, #riznica-intro",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 148689
+          "sizeBytes": 220790
         },
         "treasury/reward-video-v3": {
           "stage": "linked",
@@ -16481,13 +16481,13 @@
         "runtime/menu/treasury-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/runtime/menu/treasury-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/treasury-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/treasury-master-v3.png",
           "consumerRefs": [
             "www/index.html:#main-menu .spec-riznica",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 168522
+          "sizeBytes": 171627
         },
         "solo/finish-reward-video-v3": {
           "stage": "linked",
@@ -16514,13 +16514,13 @@
         "treasury-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/desert/treasury-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/treasury-master-v2.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/treasury-master-v3.png",
           "consumerRefs": [
             "www/index.html:#riznica-screen, #riznica-intro",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 288920
+          "sizeBytes": 293830
         },
         "treasury/reward-video-v3": {
           "stage": "linked",
@@ -21201,13 +21201,13 @@
         "runtime/menu/treasury-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/treasury-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/treasury-master-v3.png",
           "consumerRefs": [
             "www/index.html:#main-menu .spec-riznica",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 132255
+          "sizeBytes": 146323
         },
         "solo/finish-reward-video-v3": {
           "stage": "linked",
@@ -21234,13 +21234,13 @@
         "treasury-free-v3": {
           "stage": "linked",
           "productionPath": "www/assets/theme-packs/severna/treasury-free-v3.png",
-          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/treasury-master-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/treasury-master-v3.png",
           "consumerRefs": [
             "www/index.html:#riznica-screen, #riznica-intro",
             "www/theme-main-room-icons.js:syncIcons"
           ],
           "opticalBoundsPx": null,
-          "sizeBytes": 226690
+          "sizeBytes": 250887
         },
         "treasury/reward-video-v3": {
           "stage": "linked",

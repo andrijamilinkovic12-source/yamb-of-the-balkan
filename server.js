@@ -13280,6 +13280,10 @@ io.on('connection', (socket) => {
             replyInvite({ ok: false, reason: 'err_invalid_room' });
             return;
         }
+        if (privateRooms[roomId]?.p1?.id !== socket.id) {
+            replyInvite({ ok: false, reason: 'err_invalid_room' });
+            return;
+        }
 
         if (requestedTargetUid && onlinePlayers[requestedTargetUid] && onlinePlayers[requestedTargetUid] !== socket.id) {
             const currentTargetSocket = io.sockets.sockets.get(onlinePlayers[requestedTargetUid]);
@@ -13335,7 +13339,8 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('room_invite_response', (data = {}) => {
+    socket.on('room_invite_response', (data = {}, ack) => {
+        const reply = payload => { if (typeof ack === 'function') ack(payload); };
         const hostSocketId = data.hostSocketId || data.hostId || '';
         const roomId = data.roomId || '';
         const inviteId = data.inviteId || '';
@@ -13343,15 +13348,22 @@ io.on('connection', (socket) => {
         const isBusy = data.busy === true;
         const pending = findPendingRoomInviteForResponse(hostSocketId, socket.id, roomId, inviteId);
         const invite = pending ? clearPendingRoomInvite(pending.key) : null;
-        if (!invite) return;
+        if (!invite) {
+            reply({ ok: false, reason: 'room_invite_expired_self' });
+            return;
+        }
 
         const hostSocket = io.sockets.sockets.get(invite.hostId);
         const targetName = invite?.targetName || sanitizeTournamentName(socket.playerName || 'Igrač');
 
-        if (!hostSocket) return;
+        if (!hostSocket || privateRooms[invite.roomId]?.p1?.id !== invite.hostId) {
+            reply({ ok: false, reason: 'room_invite_expired_self' });
+            return;
+        }
 
         if (isBusy) {
             hostSocket.emit('room_invite_busy', { roomId, targetName });
+            reply({ ok: true });
             return;
         }
 
@@ -13359,6 +13371,7 @@ io.on('connection', (socket) => {
             roomId,
             targetName
         });
+        reply({ ok: true });
     });
 
     socket.on('find_game', (data) => {

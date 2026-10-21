@@ -1,0 +1,51 @@
+{
+    "schemaVersion":  1,
+    "method":  "Deterministic composition using each theme canonical ducat-front-v2 PNG; technical resize only",
+    "masterSize":  [
+                       768,
+                       512
+                   ],
+    "previewSize":  [
+                        384,
+                        256
+                    ],
+    "thumbnailSize":  [
+                          192,
+                          128
+                      ],
+    "themes":  [
+                   {
+                       "id":  "easter",
+                       "canonicalCoin":  "www/assets/theme-packs/easter/canonical/ducat/ducat-front-v2.png",
+                       "canonicalCoinSha256":  "a854c2f75d8215cefd61029d1c15dd48374de1d49847137cb6ce1c06d0724437",
+                       "master":  "source-assets/theme-gold-rain-canonical-v2/easter/preview-gold-rain-master-v2.png",
+                       "masterSha256":  "01735859717c79fcad6c9e4a76441537fac2f77749c5aa395999c54c89b4a251",
+                       "preview":  "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-gold-rain-v2.png",
+                       "thumbnail":  "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-gold-rain-v2.png",
+                       "previewSha256":  "837acad4cbdf05f53ca041b1e2ee9d46668a5229557ff9930b3c45a3ffc78b84",
+                       "thumbnailSha256":  "f42be2e82247fdc25885899a3cd6f01f1d90de8d5ff43d71987431e785270740"
+                   },
+                   {
+                       "id":  "desert",
+                       "canonicalCoin":  "www/assets/theme-packs/desert/canonical/ducat/ducat-front-v2.png",
+                       "canonicalCoinSha256":  "a03f67f885270f29ec1439abfbadf4a526287688e510365b3984086073061903",
+                       "master":  "source-assets/theme-gold-rain-canonical-v2/desert/preview-gold-rain-master-v2.png",
+                       "masterSha256":  "23af28794853b96d529580d4f03009569df494112c1ba10591892c51986b5b7a",
+                       "preview":  "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-gold-rain-v2.png",
+                       "thumbnail":  "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-gold-rain-v2.png",
+                       "previewSha256":  "bf005ae4d201e493700d230dfa6e5f2cfbec05d9e361af0ed969e5c4708979ef",
+                       "thumbnailSha256":  "967f18ccf7459b818d73bae2be31b42dab76ac4e479abc300b5bb0234dc84396"
+                   },
+                   {
+                       "id":  "severna",
+                       "canonicalCoin":  "www/assets/theme-packs/severna/canonical/ducat/ducat-front-v2.png",
+                       "canonicalCoinSha256":  "f158ff7914836374b01b2c744b73c068e396c81fb1e7d90d992a17ea7f35c9b0",
+                       "master":  "source-assets/theme-gold-rain-canonical-v2/severna/preview-gold-rain-master-v2.png",
+                       "masterSha256":  "6ff4d5bddc5319612ccafeb3107e22e9728956eebcffda7ad6b4681928b0fe85",
+                       "preview":  "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-gold-rain-v2.png",
+                       "thumbnail":  "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-gold-rain-v2.png",
+                       "previewSha256":  "db889a90397bec6d87f19f9253ea4bbe3a03404476c64b57179b2e457f559f59",
+                       "thumbnailSha256":  "3a8af39ffb812286890818d2909cc319650d8109bace853595da9e3e1c71c3c8"
+                   }
+               ]
+}
