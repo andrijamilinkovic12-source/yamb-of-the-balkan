@@ -6,7 +6,6 @@
         ['tab', '#economy-tab-ducats svg', 'svg, img'],
         ['hero', '.economy-hero-ducat-icon-default', '[class*="economy-hero-ducat-icon-"]'],
         ['reward', '.economy-reward-ducat-icon-default', '[class*="economy-reward-ducat-icon-"]'],
-        ['stats', '#stat-balance', '.stats-category-legacy, .stats-grid-soft-clay-icon'],
         ['balance', '.riznica-balance-ducat-default', '[class*="riznica-balance-ducat-"]'],
         ['ad', '.riznica-ad-ducat-default', '[class*="riznica-ad-ducat-"]'],
         ['game-over', '.game-over-ducat-anchor', '.game-over-ducat-anchor']

@@ -61,7 +61,7 @@ const contract = {
     owner: 'Svaka tema poseduje svoj originalni vizuelni identitet za istu semanticku ulogu.',
     reuse: 'Unutar teme isti motiv koristi isti kanonski PNG ili tehnicku izvedenicu istog mastera; ne crta se ponovo za drugu sobu.',
     composite: 'Ako je motiv ugradjen u slozeni PNG, kompozicija mora verno pratiti trenutno aktivan kanonski master i verziju.',
-    crossTheme: 'Razlicite teme nikada ne dele isti vizuelni master uz puko prebojavanje.',
+    crossTheme: 'Razlicite teme ne dele isti tematski vizuelni master uz puko prebojavanje. Jedinstveni zajednicki efekat Ledeno doba i univerzalni skinovi imaju sopstvene mastere van tematskog paketa.',
     validation: 'Postojanje putanje, dimenzije, SHA i kodski potrosac su tehnicka provera; vizuelnu uskladjenost kompozita treba posebno potvrditi.'
 };
 const reuseContexts = {
@@ -114,8 +114,25 @@ function activeMedalPath(themeId, slotId) {
     return null;
 }
 
+function activeStatisticsPath(themeId, slotId) {
+    if (themeId === 'dark') return null;
+    const overview = new Set(['games', 'wins', 'draws', 'losses', 'average', 'all-time-points', 'fire-streak']);
+    const h2h = new Set(['h2h-empty', 'highest-score', 'max-win-margin', 'worst-loss-margin']);
+    const overviewRole = slotId.match(/^canonical\/statistics-overview\/([a-z-]+)-v1$/)?.[1];
+    const h2hRole = slotId.match(/^canonical\/h2h-statistics\/([a-z-]+)-v1$/)?.[1];
+    let path = null;
+    if (overview.has(overviewRole)) path = `www/assets/theme-packs/${themeId}/canonical/statistics-overview/${overviewRole}-v2.png`;
+    else if (overviewRole === 'record') path = `www/assets/theme-packs/${themeId}/canonical/solo-results/personal-best-v1.png`;
+    else if (overviewRole === 'trophies') path = `www/assets/theme-packs/${themeId}/canonical/treasury-controls/tab-trophies-v1.png`;
+    else if (h2hRole === 'h2h-identity') path = `www/assets/theme-packs/${themeId}/canonical/statistics-overview/h2h-v2.png`;
+    else if (h2h.has(h2hRole)) path = `www/assets/theme-packs/${themeId}/canonical/h2h-statistics/${h2hRole}-v2.png`;
+    else if (h2hRole === 'versus') path = `www/assets/theme-packs/${themeId}/canonical/online-random-states/vs-v1.png`;
+    if (!path) return null;
+    return exists(path) ? { path, manifest: 'source-assets/theme-statistics-overview-v2/manifest.json' } : null;
+}
+
 function activeIdentity(themeId, slotId) {
-    const override = activeEconomyPath(themeId, slotId) || activeMedalPath(themeId, slotId);
+    const override = activeEconomyPath(themeId, slotId) || activeMedalPath(themeId, slotId) || activeStatisticsPath(themeId, slotId);
     const productionPath = override?.path || baselinePath(themeId, slotId);
     if (!productionPath) return { slotId, status: 'defined-without-production-path', productionPath: null };
     if (!exists(productionPath)) throw new Error(`Missing active identity: ${themeId}/${slotId}: ${productionPath}`);
@@ -124,7 +141,7 @@ function activeIdentity(themeId, slotId) {
         status: 'file-present',
         productionPath,
         sha256: sha256(productionPath),
-        ...(override ? { supersedes: baselinePath(themeId, slotId), masterPath: override.masterPath, sourceManifest: override.manifest } : {})
+        ...(override ? { supersedes: baselinePath(themeId, slotId), ...(override.masterPath ? { masterPath: override.masterPath } : {}), sourceManifest: override.manifest } : {})
     };
 }
 

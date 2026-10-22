@@ -70,19 +70,15 @@ class PowerIndexLeaderboard {
 
                 <div class="chat-header global-chat-header pi-modal-header">
                     <h2 class="pi-modal-title">
-                        <span class="power-index-title-legacy" style="font-size: 1.5rem;">⚡</span>
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt power-index-title-bolt-easter" data-theme-src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt" data-theme-src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" data-theme-src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="stats-power-index-modal-icon" data-stat-icon="power-index" src="${window.themeStatisticsRoom.asset('power-index')}" alt="" aria-hidden="true" decoding="async">
                         ${this.gt('pi_title', 'TOP IGRAČI')}
                     </h2>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="${this.gt('aria_close_power_index', 'Zatvori Power index listu')}">×</button>
                 </div>
 
                 <div class="chat-body global-chat-body pi-list-container" id="pi-list-container">
-                    <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">
-                        ${this.gt('league_loading', 'Učitavanje servera... ⏳')}
+                    <div class="pi-list-message" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">
+                        ${this.gt('league_loading', 'Učitavanje servera...')}
                     </div>
                 </div>
 
@@ -115,7 +111,7 @@ class PowerIndexLeaderboard {
         if (!window.app || !window.app.socket || !window.app.socket.connected) {
             if (container) {
                 container.innerHTML = `
-                    <div style="text-align:center; color: var(--danger); padding: 20px; font-weight: bold;">
+                    <div class="pi-list-message pi-list-message--error" style="text-align:center; color: var(--danger); padding: 20px; font-weight: bold;">
                         ${this.gt('pi_no_conn', 'Nema konekcije sa serverom. Zakačite se na mrežu.')}
                     </div>`;
             }
@@ -197,7 +193,7 @@ class PowerIndexLeaderboard {
     getAvatarUrl(playerName, photoUrl) {
         const rawPhoto = String(photoUrl || '').trim();
         if (/^https?:\/\//i.test(rawPhoto)) return this.escapeHtml(rawPhoto);
-        return `https://ui-avatars.com/api/?name=${encodeURIComponent(playerName || 'Igrac')}&background=333&color=E0C995`;
+        return window.themeStatisticsRoom.asset('avatar');
     }
 
     renderPlayerRow(p, options = {}) {
@@ -209,16 +205,17 @@ class PowerIndexLeaderboard {
 
         // Tema bira svoj versionirani Power Index podium pack.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
-        const podiumAssetSrc = podiumTone ? getThemeMedalSource('powerIndex', podiumTone) : '';
-        const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
+        const podiumAssetSrc = podiumTone ? getThemeMedalSource('powerIndex', podiumTone, window.themeStatisticsRoom.activeTheme()) : '';
+        const legacyRank = `<span>${rank}.</span>`;
         const podiumRank = podiumTone
-            ? `<img class="power-index-podium-medal" src="${podiumAssetSrc}" alt="" aria-hidden="true">`
+            ? `<img class="power-index-podium-medal" data-stat-medal-context="powerIndex" data-stat-medal-tier="${podiumTone}" src="${podiumAssetSrc}" alt="" aria-hidden="true" decoding="async">`
             : '';
         const rankTrophy = `<span class="power-index-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
         const rawName = p.playerName || this.gt('player_unknown', 'Igrač');
         const displayName = this.escapeHtml(rawName);
         const photo = this.getAvatarUrl(rawName, p.photoUrl);
+        const avatarRole = /^https?:\/\//i.test(String(p.photoUrl || '').trim()) ? '' : ' data-stat-icon="avatar"';
         const powerIndex = this.escapeHtml(p.powerIndex || 0);
 
         // Glassmorphism Card UI logika boja
@@ -261,18 +258,14 @@ class PowerIndexLeaderboard {
                     <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; padding-right: 5px;">
                         <div class="power-index-rank-mark${podiumTone ? ' has-podium' : ''}" aria-label="${rank}." style="font-size: 1.1rem; min-width: 32px; text-align: center; font-weight: 900; text-shadow: 0 0 5px rgba(255,215,0,0.5);">${rankTrophy}</div>
 
-                        <img class="power-index-player-avatar" src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid ${rank === 1 || isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; flex-shrink: 0;">
+                        <img class="power-index-player-avatar" src="${photo}"${avatarRole} alt="" decoding="async" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid ${rank === 1 || isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; flex-shrink: 0;">
 
                         <span class="power-index-player-name" style="color: ${nameColor}; font-weight: 700; ${nameStyle} white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${displayName}</span>
                     </div>
 
                     <div class="power-index-value-pill" style="display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 15px; border: 1px solid rgba(255,140,0,0.3); flex-shrink: 0;">
                         <span class="power-index-value-number" style="color: #FFD700; font-weight: 900; font-size: 1rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${powerIndex}</span>
-                        <span class="power-index-value-legacy" style="font-size: 0.8rem;">⚡</span>
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt power-index-value-bolt-easter" data-theme-src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt" data-theme-src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" data-theme-src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="stats-power-index-modal-icon stats-power-index-modal-icon--value" data-stat-icon="power-index" src="${window.themeStatisticsRoom.asset('power-index')}" alt="" aria-hidden="true" decoding="async">
                     </div>
                 </div>
             </div>`;
@@ -290,14 +283,14 @@ class PowerIndexLeaderboard {
 
         if (this.loading && this.data.length === 0) {
             container.innerHTML = `
-                <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">
-                    ${this.gt('league_loading', 'Učitavanje servera... ⏳')}
+                <div class="pi-list-message" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">
+                    ${this.gt('league_loading', 'Učitavanje servera...')}
                 </div>`;
             return;
         }
 
         if (!this.data || this.data.length === 0) {
-            container.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding: 20px;">${this.gt('pi_no_data', 'Još uvek nema dovoljno podataka na serveru.')}</div>`;
+            container.innerHTML = `<div class="pi-list-message" style="text-align:center; color: var(--text-muted); padding: 20px;">${this.gt('pi_no_data', 'Još uvek nema dovoljno podataka na serveru.')}</div>`;
             return;
         }
 
@@ -306,32 +299,19 @@ class PowerIndexLeaderboard {
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe
             || (myUid && player.uid && player.uid === myUid)
             || (!player.uid && player.playerName === myName)));
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const dockMyRank = ['easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
-
-        if (dockMyRank) {
-            myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
-            myRankDock.classList.add('is-visible');
-        }
-
-        const myRankHtml = activeTheme !== 'dark' && !dockMyRank && this.myPlayer && !isMyPlayerVisible
-            ? `<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">${this.renderPlayerRow(this.myPlayer, { pinned: true })}</div>`
-            : '';
-
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
-            .join('') + (activeTheme === 'dark' && this.myPlayer && !isMyPlayerVisible
+            .join('') + (this.myPlayer && !isMyPlayerVisible
                 ? this.renderPlayerRow(this.myPlayer, { offTop: true })
                 : '');
 
         const footerHtml = this.loading
-            ? `<div style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('pi_loading_more', 'Učitavam još igrača...')}</div>`
+            ? `<div class="pi-list-message" style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('pi_loading_more', 'Učitavam još igrača...')}</div>`
             : this.hasMore
-                ? `<button type="button" onclick="window.powerIndexLeaderboard.loadNextPage()" style="width: 100%; margin-top: 8px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(224,201,149,0.35); background: rgba(224,201,149,0.12); color: var(--gold-main); font-weight: 900; cursor: pointer;">${this.gt('pi_load_more', 'UČITAJ JOŠ')}</button>`
-                : `<div style="text-align:center; color: var(--text-muted); font-size: 0.72rem; padding: 12px;">${this.gt('pi_all_loaded', 'Prikazani su svi igrači.')}</div>`;
+                ? `<button type="button" class="pi-load-more" onclick="window.powerIndexLeaderboard.loadNextPage()" style="width: 100%; margin-top: 8px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(224,201,149,0.35); background: rgba(224,201,149,0.12); color: var(--gold-main); font-weight: 900; cursor: pointer;">${this.gt('pi_load_more', 'UČITAJ JOŠ')}</button>`
+                : `<div class="pi-list-message" style="text-align:center; color: var(--text-muted); font-size: 0.72rem; padding: 12px;">${this.gt('pi_all_loaded', 'Prikazani su svi igrači.')}</div>`;
 
         container.innerHTML = `
-            ${myRankHtml}
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 ${rowsHtml}
             </div>

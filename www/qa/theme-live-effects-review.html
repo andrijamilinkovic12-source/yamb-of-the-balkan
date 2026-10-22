@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Deset tema — pregled živih efekata</title>
-  <link rel="stylesheet" href="/efekti.css?v=2.5">
+  <link rel="stylesheet" href="/efekti.css?v=2.8">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -18,6 +18,10 @@
     .sub { font-size: 13px; margin: 0 0 18px; }
     .row { border-radius: 13px; background: rgba(248,252,230,.13); padding: 11px; margin: 8px 0; font-size: 12px; text-align: left; }
     .action { width: 100%; border: 0; border-radius: 14px; background: var(--action-background, #adca8d); color: var(--action-text, #17331c); padding: 13px; margin-top: 12px; font-weight: 800; }
+    .qa-board { position: absolute; z-index: 2; left: 50%; top: 53%; translate: -50% -50%; width: min(78vw, 360px); height: min(68dvh, 565px); padding: 8px; border: 2px solid rgba(220,244,248,.7); border-radius: 13px; background: rgba(34,61,77,.88); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+    .qa-board[hidden] { display: none; }
+    .qa-board-grid { display: grid; grid-template-columns: 1.35fr repeat(6, 1fr); grid-template-rows: repeat(12, 1fr); gap: 2px; height: 100%; }
+    .qa-board-grid span { display: grid; place-items: center; border-radius: 3px; background: rgba(218,242,246,.14); color: #f7fbfd; font: 700 12px Arial, sans-serif; }
     .note { position: fixed; z-index: 2; bottom: max(8px, env(safe-area-inset-bottom)); left: 12px; right: 12px; font: 11px Arial, sans-serif; text-align: center; text-shadow: 0 1px 4px #000; }
     #qa-error { position: fixed; z-index: 2147483011; bottom: 10px; left: 10px; right: 10px; background: #891e22; color: white; padding: 9px; font: 12px Arial, sans-serif; }
     #confetti-canvas { position: fixed; z-index: 2147483001; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -32,6 +36,7 @@
     <button type="button" data-effect="gold_rain">Kiša dukata</button>
     <button type="button" data-effect="fireflies">Magični svici</button>
     <button type="button" data-effect="bubbles">Magični mehurići</button>
+    <button type="button" data-effect="ice_age">Ledeno doba</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
   <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
@@ -43,6 +48,7 @@
     <div class="row">Najjača kolona · Najava 472</div>
     <button class="action" type="button">Preuzmi i izađi</button>
   </main>
+  <div class="qa-board player-table" hidden aria-label="Tabla za proveru ledenog efekta"><div class="qa-board-grid" id="qa-board-grid"></div></div>
   <div class="note">Pregled pokreće stvarni EffectManager, bez naloga, kupovine i promene rezultata.</div>
   <canvas id="confetti-canvas"></canvas>
   <div id="qa-error" hidden></div>
@@ -69,9 +75,13 @@
         };
         setTheme(theme);
         document.getElementById('theme-choice').addEventListener('change', event => setTheme(event.target.value));
+        const board = document.querySelector('.qa-board');
+        const card = document.querySelector('.card');
+        document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) => `<span>${index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)] : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : ''}</span>`).join('');
+        const showScene = effect => { board.hidden = effect !== 'ice_age'; card.hidden = effect === 'ice_age'; };
         document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
           if (button.dataset.effect === 'stop') fx.stop();
-          else { fx.stop(); fx.trigger(button.dataset.effect); }
+          else { fx.stop(); showScene(button.dataset.effect); fx.trigger(button.dataset.effect); }
         }));
         window.qaFx = { fx, setTheme, run(id) { fx.stop(); fx.trigger(id); }, state() { return {
           theme: document.documentElement.dataset.splashTheme,
@@ -82,10 +92,12 @@
           fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
           bubbleCount: document.querySelectorAll('.magic-bubble').length,
           bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
+          iceFrostCount: document.querySelectorAll('.ice-age-frost').length,
+          iceCrackCount: document.querySelectorAll('.ice-age-cracks').length,
           sprites: Object.keys(fx.confettiSpritePromises)
         }; } };
         const effect = params.get('effect');
-        if (effect === 'confetti' || effect === 'gold_rain' || effect === 'fireflies' || effect === 'bubbles') fx.trigger(effect);
+        if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age'].includes(effect)) { showScene(effect); fx.trigger(effect); }
       } catch (error) {
         const node = document.getElementById('qa-error');
         node.hidden = false;

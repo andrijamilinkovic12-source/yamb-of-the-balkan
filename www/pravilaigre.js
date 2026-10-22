@@ -1,299 +1,72 @@
-// pravilaigre.js - Pravila igre i mogućnosti aplikacije (Bilingual + Native Scroll Snap Carousel UI + HTML Website Content)
+// Rules use the same canonical asset for a concept wherever that concept appears.
+// Green remains the layout reference; each pack supplies its own PNGs.
+const RULES_THEMES = new Set(['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
 
-function rulesIconHtml(symbolId, extraClass = '') {
-    const className = `rules-inline-icon${extraClass ? ` ${extraClass}` : ''}`;
-    return `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#${symbolId}"></use></svg>`;
+function rulesActiveTheme() {
+    const theme = document.documentElement?.dataset?.splashTheme || localStorage.getItem('yamb_theme') || 'dark';
+    return RULES_THEMES.has(theme) ? theme : 'dark';
 }
 
-function rulesAssetIconHtml(src, extraClass = '') {
-    const className = `rules-inline-icon rules-asset-icon${extraClass ? ` ${extraClass}` : ''}`;
-    return `<img class="${className}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
-}
-
-function rulesEasterTournamentCanonicalSrc(src = '') {
-    const source = String(src);
-    const path = source.split('?')[0];
-    const replacements = {
-        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png',
-        'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/theme-packs/easter/canonical/tournament-states/state-start-v1.png',
-        'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png': 'assets/theme-packs/easter/canonical/tournament-navigation/tab-hall-of-fame-v1.png'
+function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
+    const green = theme === 'dark';
+    const root = green ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+    const canonical = `${root}/canonical`;
+    const roles = {
+        rules: 'rules-room-identity/rules-room-v1.png',
+        scoring: green ? 'rules-page-illustrations/rules-scoring-v1.png' : 'rules-room-identity/rules-room-v1.png',
+        statisticsPage: green ? 'rules-page-illustrations/stats-leaderboards-v1.png' : 'statistics-room-identity/statistics-room-v1.png',
+        competitionsPage: green ? 'rules-page-illustrations/multiplayer-competitions-v1.png' : 'tournament-awards/champion-trophy-v1.png',
+        communicationPage: green ? '../rules/pages/communication-v1.png' : 'global-chat-room-identity/global-chat-room-v1.png',
+        economyPage: green ? '../rules/pages/economy-treasury-v3.png' : 'ducat/ducat-front-v1.png',
+        accountPage: green ? 'rules-page-illustrations/account-server-v1.png' : 'settings-room-identity/settings-room-v1.png',
+        statistics: 'statistics-room-identity/statistics-room-v1.png',
+        leaderboard: green ? 'leaderboard-room-identity/leaderboard-room-v1.png' : 'leaderboard-room-identity/leaderboard-room-v2.png',
+        powerIndex: 'statistics-overview/power-index-v1.png',
+        record: green ? 'statistics-overview/record-v1.png' : 'solo-record-icons/personal-v1.png',
+        wins: green ? 'statistics-overview/wins-v1.png' : 'statistics-overview/wins-v2.png',
+        fireStreak: green ? 'statistics-overview/fire-streak-v1.png' : 'statistics-overview/fire-streak-v2.png',
+        allTimePoints: green ? 'statistics-overview/all-time-points-v1.png' : 'statistics-overview/all-time-points-v2.png',
+        h2h: green ? 'h2h-statistics/h2h-identity-v1.png' : 'statistics-overview/h2h-v2.png',
+        onlineRandom: 'online-random-room-identity/online-random-room-v1.png',
+        inviteFriend: 'invite-friend-room-identity/invite-friend-room-v1.png',
+        tournament: 'tournament-awards/champion-trophy-v1.png',
+        tournamentStart: 'tournament-states/state-start-v1.png',
+        hallOfFame: 'tournament-navigation/tab-hall-of-fame-v1.png',
+        quarterly: 'quarterly-league-room-identity/quarterly-league-room-v2.png',
+        onlinePlayers: 'online-players-room-identity/online-players-room-v1.png',
+        addFriend: green ? '../online-add-friend-v1.png' : 'online-players-internal/friend-v1.png',
+        spectate: green ? '../online-spectate-v1.png' : 'online-players-internal/spectate-v1.png',
+        duel: green ? '../online-duel-v1.png' : 'online-players-internal/duel-v1.png',
+        globalChat: 'global-chat-room-identity/global-chat-room-v1.png',
+        ducat: 'ducat/ducat-inline-v1.png',
+        daily: 'daily-room-identity/daily-room-v1.png',
+        video: 'rewarded-video/rewarded-video-active-inline-v1.png',
+        undo: 'undo-token/undo-token-inline-v1.png',
+        treasury: '../treasury-free-v3.png',
+        trophyTab: 'treasury-controls/tab-trophies-v1.png',
+        skinsTab: 'treasury-controls/tab-skins-v1.png',
+        effectsTab: 'treasury-controls/tab-effects-v1.png',
+        themesTab: 'treasury-controls/tab-themes-v1.png',
+        settings: 'settings-room-identity/settings-room-v1.png',
+        profile: green ? 'settings-controls/profile-v1.png' : 'settings-controls/profile-v2.png',
+        privacy: green ? 'settings-controls/privacy-v1.png' : 'settings-controls/privacy-v2.png',
+        reconnected: green ? '../opponent/reconnected-v1.png' : 'online-random-states/reconnected-v1.png',
+        disconnected: green ? '../opponent/disconnected-v1.png' : 'online-random-states/disconnected-v1.png',
+        solo: 'solo-room-identity/solo-room-v1.png',
+        timer: 'game-header/timer-v1.png'
     };
-    return replacements[path] || source;
+    if (!Object.hasOwn(roles, role)) throw new Error(`Unknown rules asset role: ${role}`);
+    return `${canonical}/${roles[role]}`;
 }
 
-function rulesEasterEconomyCanonicalSrc(src = '') {
-    const source = String(src);
-    const path = source.split('?')[0];
-    const replacements = {
-        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png',
-        'assets/easter-soft-clay/economy/undo-token.png': 'assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png',
-        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png',
-        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png'
-    };
-    return replacements[path] || source;
-}
-
-function rulesDesertTournamentCanonicalSrc(src = '') {
-    const source = String(src);
-    const path = source.split('?')[0];
-    const replacements = {
-        'assets/desert-soft-clay/tournament-pro.png': 'assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png',
-        'assets/desert-soft-clay/tournament/state-start.png': 'assets/theme-packs/desert/canonical/tournament-states/state-start-v1.png',
-        'assets/desert-soft-clay/tournament/tab-hall-of-fame.png': 'assets/theme-packs/desert/canonical/tournament-navigation/tab-hall-of-fame-v1.png'
-    };
-    return replacements[path] || source;
-}
-
-function rulesSevernaTournamentCanonicalSrc(src = '') {
-    const source = String(src);
-    const path = source.split('?')[0];
-    const replacements = {
-        'assets/severna-soft-clay/tournament-pro-v7.png': 'assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png',
-        'assets/severna-soft-clay/tournament/state-start-v3.png': 'assets/theme-packs/severna/canonical/tournament-states/state-start-v1.png',
-        'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png': 'assets/theme-packs/severna/canonical/tournament-navigation/tab-hall-of-fame-v1.png'
-    };
-    return replacements[path] || source;
-}
-
-function rulesDesertAssetSrc(easterSrc = '') {
-    const source = String(easterSrc || '');
-    const [path, query = ''] = source.split('?');
-    const normalizedPath = path.replace(/\\/g, '/');
-    const cacheSuffix = query ? `?${query}` : '';
-    const desertOverrides = {
-        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/desert-soft-clay/rules/pages/rules-scoring.png?v=opt2',
-        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/desert-soft-clay/rules/pages/stats-leaderboards.png?v=opt2',
-        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/desert-soft-clay/rules/pages/multiplayer-competitions.png?v=1',
-        'assets/easter-soft-clay/rules/pages/communication.png': 'assets/desert-soft-clay/rules/pages/communication.png?v=1',
-        'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/desert-soft-clay/rules/pages/economy-treasury.png?v=1',
-        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/desert-soft-clay/rules/pages/account-server.png?v=opt2',
-        'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1',
-        'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
-        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/desert-soft-clay/settings-pro-v2.png?v=1',
-        'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/desert-soft-clay/settings/profile-v2.png?v=opt2',
-        'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/desert-soft-clay/settings/privacy-v2.png?v=opt2',
-        'assets/easter-soft-clay/rules-pro-v2.png': 'assets/desert-soft-clay/rules-pro.png?v=opt2',
-        'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/desert-soft-clay/treasury-pro.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-trophies.png?v=opt2',
-        'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-skins.png?v=opt2',
-        'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-effects.png?v=opt2',
-        'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-themes.png?v=opt2',
-        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/desert-soft-clay/tournament-pro.png?v=4',
-        'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/desert-soft-clay/tournament/state-start.png?v=3',
-        'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2': 'assets/desert-soft-clay/tournament/tab-hall-of-fame.png?v=opt2',
-        'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
-        'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
-        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
-        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
-        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
-        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
-        'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2': 'assets/desert-soft-clay/online-add-friend-pro-v2.png?v=opt2',
-        'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/desert-soft-clay/online-spectate-pro-v2.png?v=opt2',
-        'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/desert-soft-clay/online-duel-pro-v2.png?v=opt2',
-        'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
-        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/theme-packs/desert/canonical/ducat/ducat-inline-v2.png',
-        'assets/easter-soft-clay/economy/undo-token.png': 'assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png',
-        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v2.png',
-        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png',
-        'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2',
-        'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/record-v2.png?v=opt2',
-        'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/wins-v2.png?v=opt2',
-        'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2',
-        'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/all-time-points-v3.png?v=opt2',
-        'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/h2h-v2.png?v=opt2'
-    };
-
-    if (desertOverrides[normalizedPath]) return desertOverrides[normalizedPath];
-    if (normalizedPath.includes('/easter-soft-clay/')) {
-        return normalizedPath.replace('/easter-soft-clay/', '/desert-soft-clay/') + cacheSuffix;
-    }
-    return '';
-}
-
-function rulesSevernaAssetSrc(easterSrc = '') {
-    const source = String(easterSrc || '');
-    const [path, query = ''] = source.split('?');
-    const normalizedPath = path.replace(/\\/g, '/');
-    const cacheSuffix = query ? `?${query}` : '';
-    const severnaOverrides = {
-        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/severna-soft-clay/rules/pages/rules-scoring-v2.png?v=1',
-        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/severna-soft-clay/rules/pages/stats-leaderboards-v2.png?v=1',
-        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/severna-soft-clay/rules/pages/multiplayer-competitions-v2.png?v=1',
-        'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
-        'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
-        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
-        'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
-        'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
-        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
-        'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/record-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/wins-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1',
-        'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/all-time-points-v11.png?v=1',
-        'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/h2h-v10.png?v=1',
-        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png',
-        'assets/easter-soft-clay/economy/undo-token.png': 'assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png',
-        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v2.png',
-        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-inline-v2.png',
-        'assets/easter-soft-clay/rules-pro-v2.png': 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
-        'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
-        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
-        'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
-        'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
-        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
-        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
-        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
-        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
-        'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
-        'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2': 'assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1',
-        'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
-        'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
-        'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/severna-soft-clay/tournament/state-start-v3.png?v=1',
-        'assets/easter-soft-clay/tournament/state-match-complete-v2.png': 'assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1',
-        'assets/easter-soft-clay/opponent/scanning.png?v=opt2': 'assets/severna-soft-clay/opponent/scanning-v3.png?v=1',
-        'assets/easter-soft-clay/opponent/found.png?v=opt2': 'assets/severna-soft-clay/opponent/found-v3.png?v=1',
-        'assets/easter-soft-clay/opponent/disconnected.png?v=opt2': 'assets/severna-soft-clay/opponent/disconnected-v3.png?v=1',
-        'assets/easter-soft-clay/opponent/reconnected.png?v=opt2': 'assets/severna-soft-clay/opponent/reconnected-v3.png?v=1',
-        'assets/easter-soft-clay/invite/send.png?v=opt2': 'assets/severna-soft-clay/invite/send-v2.png?v=1',
-        'assets/easter-soft-clay/invite/empty.png?v=opt2': 'assets/severna-soft-clay/invite/empty-v2.png?v=1',
-        'assets/easter-soft-clay/invite/sent.png?v=opt2': 'assets/severna-soft-clay/invite/sent-v2.png?v=1',
-        'assets/easter-soft-clay/invite/accepted.png?v=opt2': 'assets/severna-soft-clay/invite/accepted-v2.png?v=1',
-        'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/severna-soft-clay/settings/profile-v2.png?v=1',
-        'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/severna-soft-clay/settings/privacy-v2.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2': 'assets/severna-soft-clay/treasury/tab-trophies-v2.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2': 'assets/severna-soft-clay/treasury/tab-skins-v2.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2': 'assets/severna-soft-clay/treasury/tab-effects-v2.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2': 'assets/severna-soft-clay/treasury/tab-themes-v2.png?v=1',
-        'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2': 'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1'
-    };
-
-    if (severnaOverrides[normalizedPath]) return severnaOverrides[normalizedPath];
-    if (normalizedPath.includes('/easter-soft-clay/')) {
-        return normalizedPath.replace('/easter-soft-clay/', '/severna-soft-clay/') + cacheSuffix;
-    }
-    return '';
-}
-
-function rulesGreenAssetSrc(easterSrc = '') {
-    const source = String(easterSrc || '');
-    const normalizedSource = source.replace(/\\/g, '/');
-    const [normalizedPath] = normalizedSource.split('?');
-    const greenOverrides = {
-        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png?v=1',
-        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png?v=1',
-        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png?v=2',
-        'assets/easter-soft-clay/rules/pages/communication.png': 'assets/green-soft-clay/rules/pages/communication-v1.png?v=1',
-        'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/green-soft-clay/rules/pages/economy-treasury-v3.png?v=1',
-        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png?v=1',
-        'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
-        'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
-        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
-        'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1',
-        'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1',
-        'assets/easter-soft-clay/rules-pro-v2.png': 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1',
-        'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/green-soft-clay/treasury-free-v3.png?v=1',
-        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1',
-        'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/green-soft-clay/canonical/tournament-states/state-start-v1.png?v=1',
-        'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2': 'assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png?v=1',
-        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
-        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
-        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
-        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
-        'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2': 'assets/green-soft-clay/online-add-friend-v1.png?v=opt2',
-        'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/green-soft-clay/online-spectate-v1.png?v=opt2',
-        'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/green-soft-clay/online-duel-v1.png?v=opt2',
-        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
-        'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1',
-        'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png?v=1',
-        'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2': 'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/record-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/wins-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png?v=1',
-        'assets/easter-soft-clay/opponent/reconnected.png?v=opt2': 'assets/green-soft-clay/opponent/reconnected-v1.png?v=opt2',
-        'assets/easter-soft-clay/opponent/disconnected.png?v=opt2': 'assets/green-soft-clay/opponent/disconnected-v1.png?v=opt2',
-        'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2': 'assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2': 'assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2': 'assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=1',
-        'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2': 'assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1'
-    };
-
-    return greenOverrides[normalizedPath] || greenOverrides[normalizedSource] || '';
-}
-
-function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
-    const suffix = extraClass ? ` ${extraClass}` : '';
-    if (defaultSrc === 'assets/quarterly-league-icon.svg' || defaultSrc === 'assets/quarterly-league-watermark.png') {
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const root = activeTheme === 'dark' ? 'assets/green-soft-clay/canonical' : `assets/theme-packs/${activeTheme}/canonical`;
-        const src = `${root}/quarterly-league-room-identity/quarterly-league-room-v2.png?v=2`;
-        return `<img class="rules-inline-icon rules-asset-icon rules-quarterly-canonical-icon${suffix}" data-ql-rules-theme="${activeTheme}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
-    }
-    if (defaultSrc.startsWith('assets/green-soft-clay/canonical/leaderboard-room-identity/')) {
-        return `<img class="rules-inline-icon rules-asset-icon${suffix}" data-leaderboard-control="identity" src="${window.themeLeaderboard.asset('identity')}" alt="" aria-hidden="true" decoding="async">`;
-    }
-    if (defaultSrc.startsWith('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png')) {
-        const source = 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1';
-        return `<img class="rules-inline-icon rules-asset-icon rules-daily-canonical-icon${suffix}" data-theme-src="${source}" src="${source}" alt="" aria-hidden="true" decoding="async">`;
-    }
-    const desertSrc = rulesDesertTournamentCanonicalSrc(rulesDesertAssetSrc(easterSrc));
-    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
-    const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const greenSrc = rulesGreenAssetSrc(easterSrc);
-    const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterEconomyCanonicalSrc(rulesEasterTournamentCanonicalSrc(easterSrc))}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
-}
-
-function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
-    const settingsRole = String(easterSrc || '').match(/\/settings\/(profile|privacy)-v2\.png/)?.[1];
-    if (settingsRole && window.themeSettingsRoom) {
-        const suffix = extraClass ? ` ${extraClass}` : '';
-        return `<img class="rules-inline-icon rules-asset-icon${suffix}" data-settings-role="${settingsRole}" src="${window.themeSettingsRoom.asset(settingsRole)}" alt="" aria-hidden="true" decoding="async">`;
-    }
-    const suffix = extraClass ? ` ${extraClass}` : '';
-    const onlineRole = String(easterSrc || '').match(/\/online-(add-friend|spectate|duel)-/);
-    if (onlineRole) {
-        const role = onlineRole[1] === 'add-friend' ? 'friend' : onlineRole[1];
-        return `<img class="rules-inline-icon rules-online-canonical${suffix}" data-online-role="${role}" src="${window.themeOnlinePlayers.asset(role)}" alt="" aria-hidden="true" decoding="async">`;
-    }
-    const treasuryTab = String(easterSrc || '').match(/\/treasury\/(tab-(?:trophies|skins|effects|themes))(?:-v\d+)?\.png/);
-    if (treasuryTab) {
-        return `<img class="rules-inline-icon rules-theme-treasury-control${suffix}" src="${getThemeTreasuryControlSource(treasuryTab[1])}" alt="" aria-hidden="true" decoding="async">`;
-    }
-    const desertSrc = rulesDesertTournamentCanonicalSrc(rulesDesertAssetSrc(easterSrc));
-    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
-    const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-nebula${suffix}" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const greenSrc = rulesGreenAssetSrc(easterSrc);
-    const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${rulesEasterEconomyCanonicalSrc(rulesEasterTournamentCanonicalSrc(easterSrc))}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+function rulesCanonicalIcon(role, extraClass = '') {
+    const className = `rules-inline-icon rules-asset-icon rules-canonical-icon${extraClass ? ` ${extraClass}` : ''}`;
+    return `<img class="${className}" data-rules-role="${role}" src="${rulesCanonicalSource(role)}" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
 }
 
 function rulesTextGlyphHtml(glyph) {
-    return `<span class="rules-text-glyph-default" aria-hidden="true">${glyph}</span>`;
-}
-
-function rulesPageTitleIconHtml(defaultSrc, easterSrc) {
-    const desertSrc = rulesDesertAssetSrc(easterSrc);
-    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-desert" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
-    const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-nebula" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const greenSrc = rulesGreenAssetSrc(easterSrc);
-    const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-green" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<img class="rules-inline-icon rules-asset-icon rules-page-icon-default" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-page-icon-easter" data-theme-src="${easterSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
-}
-
-function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
-    const desertSrc = rulesDesertAssetSrc(easterSrc);
-    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-desert" data-theme-src="${desertSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const severnaSrc = rulesSevernaTournamentCanonicalSrc(rulesSevernaAssetSrc(easterSrc));
-    const severnaIcon = severnaSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-nebula" data-theme-src="${severnaSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    const greenSrc = rulesGreenAssetSrc(easterSrc);
-    const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-green" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
-    return `<span class="rules-page-glyph-default" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-page-icon-easter" data-theme-src="${easterSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+    const roles = { '🎯': 'scoring', '🎲': 'solo', '⏱️': 'timer', '⏳': 'timer' };
+    return roles[glyph] ? rulesCanonicalIcon(roles[glyph]) : '';
 }
 
 function rulesQlPodiumPackHtml() {
@@ -306,13 +79,13 @@ function rulesQlPodiumPackHtml() {
 const RulesData = {
     sr: [
         {
-            title: `${rulesPageTitleIconHtml('assets/rules-icon.svg', 'assets/easter-soft-clay/rules/pages/rules-scoring.png?v=1')} Pravila i bodovanje`,
+            title: `${rulesCanonicalIcon('scoring', 'rules-page-icon-canonical')} Pravila i bodovanje`,
             content: `
                 <h3>${rulesTextGlyphHtml('🎯')} Cilj igre</h3>
                 <p>Cilj je osvojiti što više poena bacanjem 6 kockica i upisivanjem najboljih kombinacija u tabelu. U svakom potezu imate do 3 bacanja, a posle svakog bacanja možete zadržati kockice koje želite da sačuvate.</p>
                 <p>Svako polje u tabeli može se popuniti samo jednom. Ako kombinacija ne postoji, u polje se upisuje 0.</p>
                 
-                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-stats'), 'assets/easter-soft-clay/statistics-pro-v2.png?v=1')} Kolone u igri</h3>
+                <h3>${rulesCanonicalIcon('statistics')} Kolone u igri</h3>
                 <ul>
                     <li><strong>↓ NADOLE:</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
                     <li><strong>↑ NAGORE:</strong> Popunjava se redom od Yamba do broja 1.</li>
@@ -322,7 +95,7 @@ const RulesData = {
                     <li><strong>${rulesTextGlyphHtml('📢')} NAJAVA:</strong> Posle prvog bacanja možete uključiti Najavu, izabrati tačno polje u koloni Najava i zatim morate upisati baš to polje. Najava se može otkazati dok još nije zaključana.</li>
                 </ul>
                 
-                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Bodovanje i sekcije</h3>
+                <h3>${rulesCanonicalIcon('leaderboard')} Bodovanje i sekcije</h3>
                 <h4>1. SEKCIJA (1-6)</h4>
                 <p>Sabiraju se samo odgovarajući brojevi. Ako je zbir u ovoj sekciji najmanje 60, dobijate <strong>bonus od +30 poena</strong>.</p>
                 <h4>2. SEKCIJA (MIN - MAX)</h4>
@@ -338,23 +111,23 @@ const RulesData = {
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/rules/pages/stats-leaderboards.png?v=1')} Statistika i liste`,
+            title: `${rulesCanonicalIcon('statisticsPage', 'rules-page-icon-canonical')} Statistika i liste`,
             content: `
-                <h3>${rulesThemeAssetIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/statistics-pro-v2.png?v=1')} Praćenje statistike</h3>
+                <h3>${rulesCanonicalIcon('statistics')} Praćenje statistike</h3>
                 <p>Yamb of the Balkan čuva važne rezultate i pokazatelje napretka:</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record-v2.png?v=opt2')} Rekord:</strong> Vaš najbolji lični rezultat.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🌟', 'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2')} All-Time PTS:</strong> Ukupan zbir poena kroz sve završene partije.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Rival:</strong> Prijatelj sa kojim imate najviše odigranih međusobnih duela.</li>
+                    <li><strong>${rulesCanonicalIcon('powerIndex')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
+                    <li><strong>${rulesCanonicalIcon('record')} Rekord:</strong> Vaš najbolji lični rezultat.</li>
+                    <li><strong>${rulesCanonicalIcon('wins')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
+                    <li><strong>${rulesCanonicalIcon('fireStreak')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
+                    <li><strong>${rulesCanonicalIcon('allTimePoints')} All-Time PTS:</strong> Ukupan zbir poena kroz sve završene partije.</li>
+                    <li><strong>${rulesCanonicalIcon('h2h')} Rival:</strong> Prijatelj sa kojim imate najviše odigranih međusobnih duela.</li>
                 </ul>
                 
-                <h3>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Međusobni dueli (H2H)</h3>
+                <h3>${rulesCanonicalIcon('h2h')} Međusobni dueli (H2H)</h3>
                 <p>Za svakog prijatelja-rivala formira se H2H kartica sa istorijom okršaja: pobede, porazi, nerešeno, najveća pobeda, najteži poraz, prosečni poeni i aktuelni vatreni niz protiv tog rivala.</p>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Top liste i rangiranje</h3>
+                <h3>${rulesCanonicalIcon('leaderboard')} Top liste i rangiranje</h3>
                 <ul>
                     <li><strong>Nedeljna lista:</strong> Prikazuje najbolje rezultate iz tekuće nedelje.</li>
                     <li><strong>Mesečna lista:</strong> Prikazuje najbolje rezultate iz tekućeg meseca.</li>
@@ -364,61 +137,61 @@ const RulesData = {
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png?v=1')} Multiplayer i takmičenja`,
+            title: `${rulesCanonicalIcon('competitionsPage', 'rules-page-icon-canonical')} Multiplayer i takmičenja`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Multiplayer i dueli</h3>
-                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Klasični Multiplayer</h4>
+                <h3>${rulesCanonicalIcon('onlineRandom')} Multiplayer i dueli</h3>
+                <h4>${rulesCanonicalIcon('onlineRandom')} Klasični Multiplayer</h4>
                 <p>Online igra vas spaja sa protivnikom koji je trenutno na mreži. Direktni dueli sa prijateljima čuvaju H2H istoriju i utiču na pobede, poraze i vatreni niz.</p>
-                <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Privatni dueli</h4>
+                <h4>${rulesCanonicalIcon('inviteFriend')} Privatni dueli</h4>
                 <p>Prijatelja možete dodati preko liste aktivnih igrača ili pozivnice. Kada protivnik prihvati izazov, otvara se privatni duel.</p>
 
-                <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Turniri</h3>
+                <h3>${rulesCanonicalIcon('tournament')} Turniri</h3>
                 <ul>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
+                    <li><strong>${rulesCanonicalIcon('ducat')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
+                    <li><strong>${rulesCanonicalIcon('tournamentStart')} Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesCanonicalIcon('hallOfFame')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
+                    <li><strong>${rulesCanonicalIcon('disconnected')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', '')} Kvartalna liga</h3>
+                <h3>${rulesCanonicalIcon('quarterly')} Kvartalna liga</h3>
                 <p>Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. U svakoj regularno završenoj solo, AI, lokalnoj ili online partiji Vaš konačni rezultat se dodaje ligaškom zbiru. Kod tehničkog ishoda pobedniku se dodaje izračunata nagrada, a poraženom se isti obračunati iznos oduzima do najmanje 0 poena.</p>
                 <p>Rangovi su: Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', '', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
+                <p>${rulesCanonicalIcon('quarterly', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
             `
         },
         {
-            title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Komunikacija`,
+            title: `${rulesCanonicalIcon('communicationPage', 'rules-page-icon-canonical')} Komunikacija`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v4.png?v=1')} Online igrači i interakcija</h3>
+                <h3>${rulesCanonicalIcon('onlinePlayers')} Online igrači i interakcija</h3>
                 <p>Aplikacija prikazuje broj igrača koji su trenutno na mreži i listu dostupnih igrača.</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2')} Dodaj prijatelja:</strong> Pošaljite zahtev željenom igraču u realnom vremenu.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('👁️', 'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2')} Gledaj partiju:</strong> Posmatrajte tuđe mečeve uživo kada niste učesnik tog duela.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2')} Izazov:</strong> Klikom na ikonicu možete direktno izazvati igrača na duel.</li>
+                    <li><strong>${rulesCanonicalIcon('addFriend')} Dodaj prijatelja:</strong> Pošaljite zahtev željenom igraču u realnom vremenu.</li>
+                    <li><strong>${rulesCanonicalIcon('spectate')} Gledaj partiju:</strong> Posmatrajte tuđe mečeve uživo kada niste učesnik tog duela.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Izazov:</strong> Klikom na ikonicu možete direktno izazvati igrača na duel.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('💬', 'assets/easter-soft-clay/global-chat-pro-v6.png?v=1')} Chat i komunikacija</h3>
+                <h3>${rulesCanonicalIcon('globalChat')} Chat i komunikacija</h3>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/global-chat-pro-v6.png?v=1')} Globalni chat:</strong> Povezuje igrače na serveru. Zabranjeni su uvrede po rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i vulgarnost. Kršenja pravila vode do suspenzije chata.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎮', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2')} Duel chat:</strong> Privatni chat tokom meča sa protivnikom. I ovde važe ista pravila fer i kulturnog ponašanja.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2')} Izazov iz chata:</strong> Klikom na ime igrača u globalnom chatu možete ga direktno izazvati.</li>
+                    <li><strong>${rulesCanonicalIcon('globalChat')} Globalni chat:</strong> Povezuje igrače na serveru. Zabranjeni su uvrede po rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i vulgarnost. Kršenja pravila vode do suspenzije chata.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Duel chat:</strong> Privatni chat tokom meča sa protivnikom. I ovde važe ista pravila fer i kulturnog ponašanja.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Izazov iz chata:</strong> Klikom na ime igrača u globalnom chatu možete ga direktno izazvati.</li>
                 </ul>
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/rules/pages/economy-treasury.png?v=1')} Dukati, tokeni i Riznica`,
+            title: `${rulesCanonicalIcon('economyPage', 'rules-page-icon-canonical')} Dukati, tokeni i Riznica`,
             content: `
-                <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Dukati i ekonomija</h3>
+                <h3>${rulesCanonicalIcon('ducat')} Dukati i ekonomija</h3>
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('🎲')} Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1', 'assets/theme-packs/easter/canonical/daily-room-identity/daily-room-v1.png')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
+                    <li><strong>${rulesCanonicalIcon('daily')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
+                    <li><strong>${rulesCanonicalIcon('video')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
 
-                <h3>${rulesThemeAssetIconHtml('assets/undo-token-icon.svg', 'assets/easter-soft-clay/economy/undo-token.png?v=opt2')} Vraćanje upisa</h3>
+                <h3>${rulesCanonicalIcon('undo')} Vraćanje upisa</h3>
                 <p>Dugme za ispravku postaje aktivno posle upisa u tabelu i vraća samo poslednji upis. Posle vraćanja dugme se gasi dok ne napravite novi upis.</p>
                 <ul>
                     <li><strong>Online dueli:</strong> Vraćanje upisa troši 1 token i mora se iskoristiti pre nego protivnik započne sledeći potez. Zbog toga postoji zadrška od 2.5 sekunde pre protivnikovog bacanja.</li>
@@ -426,24 +199,24 @@ const RulesData = {
                     <li><strong>Nabavka tokena:</strong> U meniju dukata kartica za tokene nudi +1 token za nagradni video.</li>
                 </ul>
 
-                <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1')} Riznica</h3>
+                <h3>${rulesCanonicalIcon('treasury')} Riznica</h3>
                 <p>Riznica je mesto za personalizaciju igre i pregled osvojenih stvari.</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2')} Trofeji:</strong> Posebni izazovi se otključavaju tokom igre i mogu doneti nagrade u dukatima.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2')} Kockice:</strong> Kupujete i birate skinove za kockice.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('✨', 'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2')} Efekti:</strong> Animacije se aktiviraju kada u partiji dobijete Yamb.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎨', 'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2')} Teme:</strong> Menjaju izgled aplikacije. Neki artikli se kupuju dukatima, a neki podržavaju reklamu ili popust od 20%.</li>
+                    <li><strong>${rulesCanonicalIcon('trophyTab')} Trofeji:</strong> Posebni izazovi se otključavaju tokom igre i mogu doneti nagrade u dukatima.</li>
+                    <li><strong>${rulesCanonicalIcon('skinsTab')} Kockice:</strong> Kupujete i birate skinove za kockice.</li>
+                    <li><strong>${rulesCanonicalIcon('effectsTab')} Efekti:</strong> Animacije se aktiviraju kada u partiji dobijete Yamb.</li>
+                    <li><strong>${rulesCanonicalIcon('themesTab')} Teme:</strong> Menjaju izgled aplikacije. Neki artikli se kupuju dukatima, a neki podržavaju reklamu ili popust od 20%.</li>
                 </ul>
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/settings-icon.svg', 'assets/easter-soft-clay/rules/pages/account-server.png?v=1')} Nalog, privatnost i server`,
+            title: `${rulesCanonicalIcon('accountPage', 'rules-page-icon-canonical')} Nalog, privatnost i server`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🔐', 'assets/easter-soft-clay/settings/profile-v2.png?v=opt2')} Google integracija i cloud čuvanje</h3>
+                <h3>${rulesCanonicalIcon('profile')} Google integracija i cloud čuvanje</h3>
                 <p>Yamb of the Balkan koristi Google prijavu da bi se napredak vezao za vaš nalog i vratio pri promeni uređaja.</p>
                 <p>Na serveru se čuvaju statistika, H2H istorija, dukati, tokeni za vraćanje upisa, trofeji, inventar Riznice, aktivna tema/skin/efekat, Dnevni izazov, Kvartalna liga i turnirski status.</p>
 
-                <h4>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2')} Koji podaci se prikupljaju i zašto?</h4>
+                <h4>${rulesCanonicalIcon('privacy')} Koji podaci se prikupljaju i zašto?</h4>
                 <p>Prilikom prijave aplikacija koristi osnovne podatke sa Google profila:</p>
                 <ul>
                     <li><strong>Ime i prezime:</strong> Koristi se za ime u igri i prikaz na listama.</li>
@@ -451,32 +224,32 @@ const RulesData = {
                     <li><strong>Profilna slika:</strong> Koristi se kao avatar u multiplayer mečevima.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('🖥️', 'assets/easter-soft-clay/settings-pro-v3.png?v=1')} Server podrška i bezbednost</h3>
+                <h3>${rulesCanonicalIcon('settings')} Server podrška i bezbednost</h3>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2')} Fer igra:</strong> Server proverava online mečeve, rezultate, ekonomiju i nagrade kako bi sprečio manipulacije.</li>
+                    <li><strong>${rulesCanonicalIcon('privacy')} Fer igra:</strong> Server proverava online mečeve, rezultate, ekonomiju i nagrade kako bi sprečio manipulacije.</li>
                     <li><strong>${rulesTextGlyphHtml('⏱️')} Anti-troll tajmer:</strong> Ako protivnik namerno odugovlači, server može dodeliti tehničku pobedu.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=opt2')} Grace period:</strong> Kod kratkog prekida veze postoji pauza od 30 sekundi za povratak u meč.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Napuštanje meča:</strong> Namerno napuštanje online duela može doneti kaznu u ligi i dukatima.</li>
+                    <li><strong>${rulesCanonicalIcon('reconnected')} Grace period:</strong> Kod kratkog prekida veze postoji pauza od 30 sekundi za povratak u meč.</li>
+                    <li><strong>${rulesCanonicalIcon('disconnected')} Napuštanje meča:</strong> Namerno napuštanje online duela može doneti kaznu u ligi i dukatima.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reklame (AdMob)</h3>
+                <h3>${rulesCanonicalIcon('video')} Reklame (AdMob)</h3>
                 <p>Reklame omogućavaju da igra ostane besplatna i da se nagrade potvrde na serveru.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('⏳')} Kratke reklame:</strong> Koriste se za pojedine akcije, povratak u meni, lokalno vraćanje upisa ili odjavu sa turnira. Ne isplaćuju direktno dukate ni tokene.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
+                    <li><strong>${rulesCanonicalIcon('video')} Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
                 </ul>
             `
         }
     ],
     en: [
         {
-            title: `${rulesPageTitleIconHtml('assets/rules-icon.svg', 'assets/easter-soft-clay/rules/pages/rules-scoring.png?v=1')} Rules & scoring`,
+            title: `${rulesCanonicalIcon('scoring', 'rules-page-icon-canonical')} Rules & scoring`,
             content: `
                 <h3>${rulesTextGlyphHtml('🎯')} Goal of the Game</h3>
                 <p>The goal is to score as many points as possible by rolling 6 dice and entering the best combinations into the table. Each turn gives you up to 3 rolls, and after every roll you may hold dice you want to keep.</p>
                 <p>Each table field can be filled only once. If the combination does not exist, the field scores 0.</p>
                 
-                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-stats'), 'assets/easter-soft-clay/statistics-pro-v2.png?v=1')} Game Columns</h3>
+                <h3>${rulesCanonicalIcon('statistics')} Game Columns</h3>
                 <ul>
                     <li><strong>↓ DOWN:</strong> Must be filled sequentially from 1 to Yamb.</li>
                     <li><strong>↑ UP:</strong> Must be filled sequentially from Yamb to 1.</li>
@@ -486,7 +259,7 @@ const RulesData = {
                     <li><strong>${rulesTextGlyphHtml('📢')} ANNOUNCE:</strong> After the first roll, you may enable Announce, select the exact field in the Announce column, and then you must fill that field. The announcement can be canceled before it is locked.</li>
                 </ul>
                 
-                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Scoring & Sections</h3>
+                <h3>${rulesCanonicalIcon('leaderboard')} Scoring & Sections</h3>
                 <h4>SECTION 1 (Rows 1 to 6)</h4>
                 <p>Only matching numbers are summed. If the section total is at least 60, you receive a <strong>+30 point bonus</strong>.</p>
                 <h4>SECTION 2 (MIN - MAX)</h4>
@@ -502,23 +275,23 @@ const RulesData = {
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/rules/pages/stats-leaderboards.png?v=1')} Stats & leaderboards`,
+            title: `${rulesCanonicalIcon('statisticsPage', 'rules-page-icon-canonical')} Stats & leaderboards`,
             content: `
-                <h3>${rulesThemeAssetIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/statistics-pro-v2.png?v=1')} Stat tracking</h3>
+                <h3>${rulesCanonicalIcon('statistics')} Stat tracking</h3>
                 <p>Yamb of the Balkan saves the most important results and progress indicators:</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record-v2.png?v=opt2')} High score:</strong> Your personal best score.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🌟', 'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2')} All-Time PTS:</strong> Total points across all finished games.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Rival:</strong> The friend you have played against the most.</li>
+                    <li><strong>${rulesCanonicalIcon('powerIndex')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
+                    <li><strong>${rulesCanonicalIcon('record')} High score:</strong> Your personal best score.</li>
+                    <li><strong>${rulesCanonicalIcon('wins')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
+                    <li><strong>${rulesCanonicalIcon('fireStreak')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
+                    <li><strong>${rulesCanonicalIcon('allTimePoints')} All-Time PTS:</strong> Total points across all finished games.</li>
+                    <li><strong>${rulesCanonicalIcon('h2h')} Rival:</strong> The friend you have played against the most.</li>
                 </ul>
                 
-                <h3>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Head-to-Head (H2H)</h3>
+                <h3>${rulesCanonicalIcon('h2h')} Head-to-Head (H2H)</h3>
                 <p>Every friend-rival gets an H2H card with your duel history: wins, losses, draws, biggest win, worst loss, average points, and current win streak against that rival.</p>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Leaderboards</h3>
+                <h3>${rulesCanonicalIcon('leaderboard')} Leaderboards</h3>
                 <ul>
                     <li><strong>Weekly:</strong> Best scores from the current week.</li>
                     <li><strong>Monthly:</strong> Best scores from the current month.</li>
@@ -528,61 +301,61 @@ const RulesData = {
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png?v=1')} Multiplayer & competitions`,
+            title: `${rulesCanonicalIcon('competitionsPage', 'rules-page-icon-canonical')} Multiplayer & competitions`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Multiplayer & Duels</h3>
-                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Classic Multiplayer</h4>
+                <h3>${rulesCanonicalIcon('onlineRandom')} Multiplayer & Duels</h3>
+                <h4>${rulesCanonicalIcon('onlineRandom')} Classic Multiplayer</h4>
                 <p>Online play matches you with an opponent who is currently online. Direct friend duels save H2H history and affect wins, losses, and win streaks.</p>
-                <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Friend Duels</h4>
+                <h4>${rulesCanonicalIcon('inviteFriend')} Friend Duels</h4>
                 <p>You can add friends from the active player list or by invite. Once the opponent accepts, a private duel opens.</p>
 
-                <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Tournaments</h3>
+                <h3>${rulesCanonicalIcon('tournament')} Tournaments</h3>
                 <ul>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
+                    <li><strong>${rulesCanonicalIcon('ducat')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
+                    <li><strong>${rulesCanonicalIcon('tournamentStart')} Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesCanonicalIcon('hallOfFame')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
+                    <li><strong>${rulesCanonicalIcon('disconnected')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', '')} Quarterly League</h3>
+                <h3>${rulesCanonicalIcon('quarterly')} Quarterly League</h3>
                 <p>The Quarterly League lasts 3 calendar months in Belgrade time. In every regularly completed solo, AI, local, or online game, your final score is added to your league total. For a technical result, the calculated reward is added to the winner and the same calculated amount is deducted from the loser, down to a minimum of 0 points.</p>
                 <p>The ranks are: Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', '', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
+                <p>${rulesCanonicalIcon('quarterly', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
             `
         },
         {
-            title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Communication`,
+            title: `${rulesCanonicalIcon('communicationPage', 'rules-page-icon-canonical')} Communication`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v4.png?v=1')} Online Players & Interaction</h3>
+                <h3>${rulesCanonicalIcon('onlinePlayers')} Online Players & Interaction</h3>
                 <p>The app shows how many players are currently online and lists available players.</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2')} Add Friend:</strong> Send a real-time friend request.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('👁️', 'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2')} Spectate:</strong> Watch other matches live when you are not a participant in that duel.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2')} Challenge:</strong> Use the challenge icon to invite a player directly to a duel.</li>
+                    <li><strong>${rulesCanonicalIcon('addFriend')} Add Friend:</strong> Send a real-time friend request.</li>
+                    <li><strong>${rulesCanonicalIcon('spectate')} Spectate:</strong> Watch other matches live when you are not a participant in that duel.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Challenge:</strong> Use the challenge icon to invite a player directly to a duel.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('💬', 'assets/easter-soft-clay/global-chat-pro-v6.png?v=1')} Chat & Communication</h3>
+                <h3>${rulesCanonicalIcon('globalChat')} Chat & Communication</h3>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/global-chat-pro-v6.png?v=1')} Global Chat:</strong> Connects players on the server. Insults based on race, religion, nationality, or gender are forbidden, as is profanity. Violations lead to chat suspension.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎮', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2')} Duel Chat:</strong> Private chat during a match with your opponent. The same fair-play rules apply.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2')} Chat challenge:</strong> Clicking a player's name in global chat can challenge that player directly.</li>
+                    <li><strong>${rulesCanonicalIcon('globalChat')} Global Chat:</strong> Connects players on the server. Insults based on race, religion, nationality, or gender are forbidden, as is profanity. Violations lead to chat suspension.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Duel Chat:</strong> Private chat during a match with your opponent. The same fair-play rules apply.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Chat challenge:</strong> Clicking a player's name in global chat can challenge that player directly.</li>
                 </ul>
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/rules/pages/economy-treasury.png?v=1')} Ducats, tokens & Treasury`,
+            title: `${rulesCanonicalIcon('economyPage', 'rules-page-icon-canonical')} Ducats, tokens & Treasury`,
             content: `
-                <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Ducats & economy</h3>
+                <h3>${rulesCanonicalIcon('ducat')} Ducats & economy</h3>
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('🎲')} Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1', 'assets/theme-packs/easter/canonical/daily-room-identity/daily-room-v1.png')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
+                    <li><strong>${rulesCanonicalIcon('daily')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
+                    <li><strong>${rulesCanonicalIcon('video')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
 
-                <h3>${rulesThemeAssetIconHtml('assets/undo-token-icon.svg', 'assets/easter-soft-clay/economy/undo-token.png?v=opt2')} Undo entry</h3>
+                <h3>${rulesCanonicalIcon('undo')} Undo entry</h3>
                 <p>The undo button becomes active after an entry in the table and only restores the last entry. After undoing, the button deactivates until you make another entry.</p>
                 <ul>
                     <li><strong>Online duels:</strong> Undoing costs 1 undo token and must be used before the opponent starts the next turn. This is why there is a 2.5-second delay before the opponent's roll.</li>
@@ -590,24 +363,24 @@ const RulesData = {
                     <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a rewarded video.</li>
                 </ul>
 
-                <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1')} Treasury</h3>
+                <h3>${rulesCanonicalIcon('treasury')} Treasury</h3>
                 <p>The Treasury is where you personalize the game and review collected items.</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2')} Trophies:</strong> Special challenges unlock during play and can reward ducats.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2')} Dice:</strong> Buy and equip dice skins.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('✨', 'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2')} Effects:</strong> Animations trigger when you score Yamb in a game.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎨', 'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2')} Themes:</strong> Change the app appearance. Some items are bought with ducats, and some support ads or a 20% discount.</li>
+                    <li><strong>${rulesCanonicalIcon('trophyTab')} Trophies:</strong> Special challenges unlock during play and can reward ducats.</li>
+                    <li><strong>${rulesCanonicalIcon('skinsTab')} Dice:</strong> Buy and equip dice skins.</li>
+                    <li><strong>${rulesCanonicalIcon('effectsTab')} Effects:</strong> Animations trigger when you score Yamb in a game.</li>
+                    <li><strong>${rulesCanonicalIcon('themesTab')} Themes:</strong> Change the app appearance. Some items are bought with ducats, and some support ads or a 20% discount.</li>
                 </ul>
             `
         },
         {
-            title: `${rulesPageTitleIconHtml('assets/settings-icon.svg', 'assets/easter-soft-clay/rules/pages/account-server.png?v=1')} Account, privacy & server`,
+            title: `${rulesCanonicalIcon('accountPage', 'rules-page-icon-canonical')} Account, privacy & server`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🔐', 'assets/easter-soft-clay/settings/profile-v2.png?v=opt2')} Google Integration & Cloud Save</h3>
+                <h3>${rulesCanonicalIcon('profile')} Google Integration & Cloud Save</h3>
                 <p>Yamb of the Balkan uses Google sign-in so your progress is tied to your account and can be restored on another device.</p>
                 <p>The server saves stats, H2H history, ducats, undo tokens, trophies, Treasury inventory, active theme/skin/effect, Daily Challenge, Quarterly League, and tournament status.</p>
 
-                <h4>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2')} What data is collected and why?</h4>
+                <h4>${rulesCanonicalIcon('privacy')} What data is collected and why?</h4>
                 <p>When you sign in, the app uses basic Google profile data:</p>
                 <ul>
                     <li><strong>First and last name:</strong> Used for your in-game name and leaderboard display.</li>
@@ -615,19 +388,19 @@ const RulesData = {
                     <li><strong>Profile picture:</strong> Used as your avatar in multiplayer matches.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('🖥️', 'assets/easter-soft-clay/settings-pro-v3.png?v=1')} Server Support & Security</h3>
+                <h3>${rulesCanonicalIcon('settings')} Server Support & Security</h3>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2')} Fair play:</strong> The server checks online matches, results, economy, and rewards to prevent manipulation.</li>
+                    <li><strong>${rulesCanonicalIcon('privacy')} Fair play:</strong> The server checks online matches, results, economy, and rewards to prevent manipulation.</li>
                     <li><strong>${rulesTextGlyphHtml('⏱️')} Anti-troll timer:</strong> If an opponent intentionally stalls, the server can award a technical win.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=opt2')} Grace period:</strong> A short connection drop gives you a 30-second pause to return to the match.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Leaving a match:</strong> Intentionally leaving an online duel can cause league and ducat penalties.</li>
+                    <li><strong>${rulesCanonicalIcon('reconnected')} Grace period:</strong> A short connection drop gives you a 30-second pause to return to the match.</li>
+                    <li><strong>${rulesCanonicalIcon('disconnected')} Leaving a match:</strong> Intentionally leaving an online duel can cause league and ducat penalties.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Ads (AdMob)</h3>
+                <h3>${rulesCanonicalIcon('video')} Ads (AdMob)</h3>
                 <p>Ads help keep the game free and allow rewards to be verified by the server.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('⏳')} Short ads:</strong> Used for some actions, returning to the menu, local undo, or tournament unregistering. They do not directly pay ducats or undo tokens.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
+                    <li><strong>${rulesCanonicalIcon('video')} Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
                 </ul>
             `
         }
@@ -660,11 +433,7 @@ class RulesUI {
                 <div class="chat-header global-chat-header rules-card-header">
                     <div class="global-chat-title-group">
                         <span id="rules-main-title" class="global-chat-title rules-header-title">
-                            <img class="rules-header-icon rules-header-icon-default" src="assets/rules-icon.svg" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-easter" data-theme-src="assets/easter-soft-clay/rules-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-desert" data-theme-src="assets/desert-soft-clay/rules-pro.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-nebula" data-theme-src="assets/severna-soft-clay/rules-pro-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="rules-header-icon rules-header-icon-canonical" data-rules-role="rules" src="${rulesCanonicalSource('rules')}" alt="" aria-hidden="true" decoding="async">
                             <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>
@@ -807,6 +576,9 @@ class RulesUI {
             this.currentLang = currentStoredLang;
             this.init(); 
         }
+        this.overlay.querySelectorAll('img[data-rules-role]').forEach(image => {
+            image.src = rulesCanonicalSource(image.dataset.rulesRole);
+        });
         this.overlay.querySelectorAll('.rules-podium-pack-canonical img[data-medal-tier]').forEach(image => {
             image.src = getThemeMedalSource('quarterlyLeague', image.dataset.medalTier);
         });

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-21",
-  "definitionSchemaVersion": 59,
+  "updatedOn": "2026-10-22",
+  "definitionSchemaVersion": 61,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
     "owner": "Svaka tema poseduje svoj originalni vizuelni identitet za istu semanticku ulogu.",
     "reuse": "Unutar teme isti motiv koristi isti kanonski PNG ili tehnicku izvedenicu istog mastera; ne crta se ponovo za drugu sobu.",
     "composite": "Ako je motiv ugradjen u slozeni PNG, kompozicija mora verno pratiti trenutno aktivan kanonski master i verziju.",
-    "crossTheme": "Razlicite teme nikada ne dele isti vizuelni master uz puko prebojavanje.",
+    "crossTheme": "Razlicite teme ne dele isti tematski vizuelni master uz puko prebojavanje. Jedinstveni zajednicki efekat Ledeno doba i univerzalni skinovi imaju sopstvene mastere van tematskog paketa.",
     "validation": "Postojanje putanje, dimenzije, SHA i kodski potrosac su tehnicka provera; vizuelnu uskladjenost kompozita treba posebno potvrditi."
   },
   "sourceOfTruth": {
@@ -20,21 +20,17 @@
     "leaderboardMedalsRefresh": "source-assets/theme-leaderboard-medals-v2/manifest.json",
     "quarterlyLeagueRefresh": "source-assets/theme-quarterly-league-v2/manifest.json",
     "goldRainRefresh": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
-    "liveFirefliesRefresh": "source-assets/theme-live-fireflies-v1/manifest.json",
-    "liveBubblesRefresh": "source-assets/theme-live-bubbles-v1/manifest.json",
-    "supplementaryPacks": 17
+    "supplementaryPacks": 21
   },
   "sourceSha256": {
-    "themeDefinitions": "6603bd2e81dbd850c4496fe879168bf12146a75dfab8d4e786396ac4310e861e",
+    "themeDefinitions": "53b3f08d091de8c5a5d07082b1060014640eadfcd3bdb2bb7e9afbb85f8126ad",
     "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
     "greenRegistry": "3d7d965c793de49cb9305148c290347980b663c8f86dbae8c3e35676c8062bde",
     "criticalEconomyRefresh": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9",
     "leaderboardMedalsRefresh": "eff44f19559e8bd032b312291f753fd0f6476fbca934ea69877a3658e90ce7f1",
     "quarterlyLeagueRefresh": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd",
-    "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab",
-    "liveFirefliesRefresh": "d91a9e280964801230d2ee8fb17174d7f190ad714e6d12b4e7e0c73cef00262d",
-    "liveBubblesRefresh": "54897a7fadfccef436576b3af25fca8633ca6878a35b7b47e984effadc4048aa"
+    "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab"
   },
   "baseline": {
     "themes": 10,
@@ -422,6 +418,18 @@
       "sha256": "e3ae1cafd14d825eea496100acf449f4efd13ac5a447b6a56b55b7a9b099339d"
     },
     {
+      "path": "source-assets/theme-live-bubbles-v1/manifest.json",
+      "sha256": "54897a7fadfccef436576b3af25fca8633ca6878a35b7b47e984effadc4048aa"
+    },
+    {
+      "path": "source-assets/theme-live-fireflies-v1/manifest.json",
+      "sha256": "d91a9e280964801230d2ee8fb17174d7f190ad714e6d12b4e7e0c73cef00262d"
+    },
+    {
+      "path": "source-assets/theme-live-ice-age-v1/manifest.json",
+      "sha256": "b6217d6a70098e7b21d324bb24a79940ca4c2ca69946c31eda11fef18b365958"
+    },
+    {
       "path": "source-assets/theme-menu-resume-buttons-v1/manifest.json",
       "sha256": "aa83f0f35dc28986d559c8c4f963b7a1f42a11cbf944d3d0826a0c092a78f081"
     },
@@ -448,6 +456,10 @@
     {
       "path": "source-assets/theme-solo-record-panels-v2/manifest.json",
       "sha256": "54d387e8ddc8f97d2656da3c8a813362f4869a85f73922a69523c73626453d8b"
+    },
+    {
+      "path": "source-assets/theme-statistics-overview-v2/manifest.json",
+      "sha256": "c8cc9799e41536fc0d80ece0341655a9ad55a8292614bfb890a46aa0cc038368"
     }
   ],
   "themes": [
@@ -886,8 +898,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "43bd40d6c5fa64a8f779e80d27dd2981e7f953e7a902e0b90d08dbbaa7fa71d9",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -1218,8 +1233,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "0a66a4adcc03940f8fe1456d4e2f27db3ab08bd1475c4dc19dbaa55f806d889a",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -1550,8 +1568,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "1155a05f3a21c4287b7a943156b253127c38c42c055cefbc2669d2fcb8681cce",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -1882,8 +1903,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "ced0527b20470f091bfb39322318addf34ac47adf7f3fcf8e2b02bf3ce879b4a",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -2214,8 +2238,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "b21af5f70adfc3587c6ad30babfc8065a0af238660d17de6655e051457a518d5",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -2579,8 +2606,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "e1548dabf888e64a159d349ff6e6e4d1def9a9b2ad3a2002d17dfa2f09a66798",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -2947,8 +2977,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "054dc888e9954fa06223872d9c98d46922f34aca0dc163ff740e77445c43919a",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -3282,8 +3315,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "ca7632f31ff466ff42002766c74d55bf72c90598a77c14a746da664ee811d658",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [
@@ -3647,8 +3683,11 @@
         "fireStreak": [
           {
             "slotId": "canonical/statistics-overview/fire-streak-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/statistics-overview/fire-streak-v2.png",
+            "sha256": "6235530ef4a3f8355c44806ddabd3d173afd4101cab6d7f1d533cbbaf3a555ed",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-statistics-overview-v2/manifest.json"
           }
         ],
         "collectionMedals": [

@@ -62,7 +62,8 @@ app.socket = { connected: false };
     assert.equal(storage.get('yamb_theme'), 'neon');
     assert.equal(app.appliedTheme, 'neon');
     assert.equal(button.busy, false);
-    assert(loaded.some(source => source.includes('board-frame-v1.png')), 'Neon board frame must warm before switching');
+    assert(loaded.some(source => source.includes('announce-megaphone-v1.png')), 'Neon board announcement mark must warm before switching');
+    assert(!loaded.some(source => source.includes('/trial/game-board-png-v1/')), 'Rejected PNG board trial must not warm');
     assert(loaded.some(source => source.includes('spectate-v1.png')), 'Spectator eye must warm before switching');
 
     // Every theme's background and shared eye must resolve to a production PNG.

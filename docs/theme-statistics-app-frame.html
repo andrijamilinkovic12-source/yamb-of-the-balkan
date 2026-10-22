@@ -1,0 +1,444 @@
+<!doctype html><html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><base href="../www/"><title>Statistika — stvarni raspored</title><link rel="stylesheet" href="style.css?v=5.25">
+<link rel="stylesheet" href="teme.css?v=7.04">
+<link rel="stylesheet" href="theme-main-room-icons.css?v=24">
+<link rel="stylesheet" href="theme-main-menu-typography.css?v=1">
+<link rel="stylesheet" href="theme-game-board.css?v=7">
+<link rel="stylesheet" href="theme-game-logos.css?v=5">
+<link rel="stylesheet" href="theme-ducat-pack.css?v=2">
+<link rel="stylesheet" href="theme-undo-token-pack.css?v=1">
+<link rel="stylesheet" href="theme-rewarded-video-pack.css?v=2">
+<link rel="stylesheet" href="theme-solo-results.css?v=15">
+<link rel="stylesheet" href="theme-menu-resume-buttons.css?v=2">
+<link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
+<link rel="stylesheet" href="kockice.css?v=1.10">
+<link rel="stylesheet" href="dice-skin-png.css?v=5">
+<link rel="stylesheet" href="efekti.css?v=2.8">
+<link rel="stylesheet" href="theme-card-surfaces.css?v=7">
+<link rel="stylesheet" href="theme-medals.css?v=2">
+<link rel="stylesheet" href="theme-treasury-controls.css?v=4">
+<link rel="stylesheet" href="theme-effect-previews.css?v=11">
+<link rel="stylesheet" href="theme-treasury-room.css?v=5">
+<link rel="stylesheet" href="theme-room-close-controls.css?v=3">
+<link rel="stylesheet" href="theme-global-chat-room.css?v=5">
+<link rel="stylesheet" href="theme-online-players-room.css?v=3">
+<link rel="stylesheet" href="theme-economy-room.css?v=1">
+<link rel="stylesheet" href="theme-leaderboard-room.css?v=3">
+<link rel="stylesheet" href="skin-action-buttons.css?v=1">
+<link rel="stylesheet" href="skin-roll-counter.css?v=1">
+<link rel="stylesheet" href="theme-game-header.css?v=6">
+<link rel="stylesheet" href="theme-quote-contrast.css?v=1">
+<link rel="stylesheet" href="theme-daily-room.css?v=2">
+<link rel="stylesheet" href="theme-settings-room.css?v=3">
+<link rel="stylesheet" href="theme-statistics-room.css?v=3">
+<link rel="stylesheet" href="theme-quarterly-league-room.css?v=7">
+<link rel="stylesheet" href="theme-online-random-room.css?v=2">
+<link rel="stylesheet" href="theme-online-random-finish.css?v=5">
+<link rel="stylesheet" href="theme-invite-friend-room.css?v=4">
+<link rel="stylesheet" href="theme-finish-compact.css?v=2">
+<link rel="stylesheet" href="theme-statistics-layout.css?v=2">
+<link rel="stylesheet" href="theme-statistics-leaderboards.css?v=1"><style>
+        html.easter-splash-boot { background: #ead8c8; }
+        html.easter-splash-boot::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 2147483646;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255,255,255,.72), transparent 34%),
+                radial-gradient(circle at 84% 78%, rgba(177,119,192,.18), transparent 36%),
+                linear-gradient(145deg, #f8ecdf 0%, #ead2bf 52%, #ddc0ad 100%);
+        }
+        html.desert-splash-boot { background: #d9a260; }
+        html.desert-splash-boot::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 2147483646;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255,249,226,.62), transparent 34%),
+                radial-gradient(circle at 84% 78%, rgba(47,127,122,.16), transparent 36%),
+                linear-gradient(145deg, #f1c784 0%, #d8944f 52%, #b45d36 100%);
+        }
+        html.green-splash-boot { background: #244b31; }
+        html.green-splash-boot::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 2147483646;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(216,232,188,.24), transparent 34%),
+                radial-gradient(circle at 84% 78%, rgba(7,29,15,.34), transparent 38%),
+                linear-gradient(145deg, #557a52 0%, #315b3b 52%, #173a25 100%);
+        }
+        html.light-splash-boot { --theme-boot-color: #e6be83; }
+        html.medium-splash-boot { --theme-boot-color: #681d25; }
+        html.winter-splash-boot { --theme-boot-color: #0e5a9b; }
+        html.neon-splash-boot { --theme-boot-color: #080d18; }
+        html.amethyst-splash-boot { --theme-boot-color: #5a386a; }
+        html.moon-splash-boot { --theme-boot-color: #08090c; }
+        html.severna-splash-boot { --theme-boot-color: #0b1830; }
+        html:is(.light-splash-boot, .medium-splash-boot, .winter-splash-boot,
+            .neon-splash-boot, .amethyst-splash-boot, .moon-splash-boot, .severna-splash-boot) {
+            background: var(--theme-boot-color);
+        }
+        html:is(.light-splash-boot, .medium-splash-boot, .winter-splash-boot,
+            .neon-splash-boot, .amethyst-splash-boot, .moon-splash-boot, .severna-splash-boot)::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 2147483646;
+            background: var(--theme-boot-color);
+        }
+    </style>
+<style>
+        /* Stil za unutrašnji skrolbar pravnih obaveštenja u modalu */
+        .pravni-tekst-container {
+            text-align: left;
+            font-size: 0.85rem;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 12px;
+            color: var(--text-main);
+            line-height: 1.6;
+            background: rgba(0,0,0,0.25);
+            border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.1);
+        }
+        .pravni-tekst-container::-webkit-scrollbar { width: 4px; }
+        .pravni-tekst-container::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
+
+        /* OPTIMIZACIJA STATISTIKE - BALANSIRANO BEZ SKROLOVANJA */
+        .compact-stat { padding: 10px 5px !important; display: flex; flex-direction: column; justify-content: center; }
+        .compact-grid-item {
+            padding: 6px 4px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px !important;
+            height: 100%; /* Da popuni red u gridu */
+            position: relative; /* DODATO ZA STRELICE U UGLU */
+        }
+        .stat-lbl-mini {
+            font-size: 0.65rem !important;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            text-align: center;
+            font-weight: 700;
+        }
+        .stat-val-mini {
+            font-size: 1.15rem !important;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+        #stats-screen .menu-title { margin-bottom: 12px !important; }
+
+        /* ANIMACIJA ZA BEDŽ TURNIRA */
+        @keyframes pulse-tourney-badge {
+            0% { transform: scale(1); box-shadow: 0 0 5px var(--success); }
+            50% { transform: scale(1.3); box-shadow: 0 0 12px var(--success); }
+            100% { transform: scale(1); box-shadow: 0 0 5px var(--success); }
+        }
+
+        .tourney-badge-pulse {
+            background: var(--success) !important;
+            animation: pulse-tourney-badge 1.5s infinite !important;
+        }
+    </style><style>html,body{width:100%;height:100%;margin:0;overflow:hidden}#stats-screen{display:flex!important}</style></head><body><script>
+const statsReviewTheme=new URLSearchParams(location.search).get('theme')||'dark';
+if(statsReviewTheme!=='dark') document.body.classList.add(statsReviewTheme+'-theme');
+document.documentElement.dataset.splashTheme=statsReviewTheme;
+try{localStorage.setItem('yamb_theme',statsReviewTheme)}catch(e){}
+const reviewAvatar='assets/theme-packs/'+statsReviewTheme+'/canonical/online-players-internal/avatar-v1.png';
+const reviewPlayers=['Ana','Milan','Jelena','Marko','Iva','Andrija'].map((name,index)=>({uid:'review-'+index,playerName:name,name,rank:index+1,powerIndex:980-index*83,maxWinStreak:18-index*2,currentWinStreak:index%2?0:5-index}));
+window.app={showMainMenu(){},socket:{connected:true,on(){},emit(event,payload){
+    const isPower=event==='get_power_index_leaderboard_page';
+    const isStreak=event==='get_streak_leaderboard_page';
+    if(!isPower&&!isStreak)return;
+    const instance=isPower?window.powerIndexLeaderboard:window.vatreniNiz;
+    setTimeout(()=>instance.handlePageData({players:reviewPlayers,offset:payload.offset,total:reviewPlayers.length,hasMore:false,myRank:12,myPlayer:{uid:'review-me',playerName:'Takmičar',name:'Takmičar',rank:12,powerIndex:418,maxWinStreak:4,currentWinStreak:2}}),0);
+}}};
+window.getThemeMedalSource=(context,tier)=>{
+    const root=statsReviewTheme==='dark'?'assets/green-soft-clay/canonical':'assets/theme-packs/'+statsReviewTheme+'/canonical';
+    const version=statsReviewTheme==='light'?3:2;
+    return root+'/competition-medals/'+(context==='powerIndex'?'power-index':'fire-streak')+'-'+tier+'-v1.png?v='+version;
+};
+window.riznicaManager={open(){}};
+</script><div id="stats-screen" class="screen active" style="justify-content: flex-start;">
+        <div class="hs-card modal-box stats-shell">
+            <div class="chat-header global-chat-header stats-card-header">
+                <div class="global-chat-title-group">
+                    <span class="global-chat-title stats-header-title">
+                        <img class="stats-header-icon" data-stat-icon="identity" alt="" aria-hidden="true" decoding="async">
+                        <span data-lang="stats_title">STATISTIKA</span>
+                    </span>
+                </div>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori statistiku" data-lang-aria="aria_close_stats">×</button>
+            </div>
+
+            <div class="chat-body global-chat-body stats-card-body">
+                <div class="stats-carousel" id="stats-carousel" onscroll="updateStatsPagination()">
+            
+            <div class="stats-page">
+                <div class="stats-page-panel stats-overview-panel">
+
+                    <div class="stats-power-card" style="background: linear-gradient(135deg, var(--gold-main) 0%, var(--text-sum) 100%); padding: 8px 15px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px var(--gold-glow); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0; width: 100%;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
+                        <img class="stats-power-icon" data-stat-icon="power-index" alt="" aria-hidden="true" decoding="async">
+
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; z-index: 1;">
+                            <div class="stats-power-label" style="font-size: 0.75rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" data-lang="stat_power_index">INDEKS MOĆI</div>
+                            <div class="stats-power-rank" style="font-size: 0.55rem; color: rgba(255,255,255,0.9); font-weight: 700; margin-top: 1px; text-transform: uppercase;" data-lang="stat_global_rank">Globalni Rang</div>
+                        </div>
+                        <div id="stat-power-index" style="font-size: 1.7rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); line-height: 1; z-index: 1; margin-right: 15px;">0</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; flex-shrink: 0;">
+                        <div class="stat-item compact-stat" style="border-color: var(--gold-main); background: rgba(224, 201, 149, 0.05);">
+                            <span class="stats-category-label" style="font-size: 0.65rem; color: var(--gold-main); letter-spacing:0.5px; font-weight:bold;"><img class="stats-category-icon" data-stat-icon="record" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_record">REKORD</span></span>
+                            <span id="stat-high" class="stat-val c-gold" style="font-size: 1.25rem !important;">0</span>
+                        </div>
+                        <div class="stat-item compact-stat">
+                            <span class="stats-category-label" style="font-size: 0.65rem; color: var(--text-muted);"><img class="stats-category-icon" data-stat-icon="games" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_total">UKUPNO PARTIJA</span></span>
+                            <span id="stat-games" class="stat-val" style="font-size: 1.25rem !important;">0</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-results-card" style="width: 100%; background: var(--glass-bg); padding: 8px 12px; border-radius: 10px; border: var(--glass-border); flex-shrink: 0;">
+                        <div style="display:flex; justify-content:space-between; gap:8px; margin-bottom:4px; font-size:0.75rem; font-weight:bold;">
+                            <span class="c-win stats-result-label"><img class="stats-result-icon" data-stat-icon="wins" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_wins">POBEDE</span>: <span id="stat-wins">0</span></span>
+                            <span class="c-gold stats-result-label"><img class="stats-result-icon" data-stat-icon="draws" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_draws">NEREŠENO</span>: <span id="stat-draws">0</span></span>
+                            <span class="c-loss stats-result-label"><img class="stats-result-icon" data-stat-icon="losses" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_losses">PORAZI</span>: <span id="stat-losses">0</span></span>
+                        </div>
+                        <div class="stats-result-track" style="width: 100%; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; display: flex;">
+                            <div id="stat-bar-win" style="width: 50%; background: var(--success); height: 100%;"></div>
+                            <div id="stat-bar-draw" style="width: 0%; background: var(--gold-main); height: 100%;"></div>
+                            <div id="stat-bar-loss" style="width: 50%; background: var(--danger); height: 100%;"></div>
+                        </div>
+                        <div class="stats-rate-line" style="text-align: center; margin-top: 4px; font-size: 0.7rem; color: var(--text-muted);">
+                            <span data-lang="stat_rate">USPEŠNOST</span>: <span id="stat-rate" style="color: var(--text-main); font-weight: bold;">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-grid" style="margin: 0 !important; flex: 1; gap: 6px !important; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr);">
+                        
+                        <div class="stat-item compact-grid-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()">
+                            <div class="stats-open-hint" aria-hidden="true" style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
+                            <img class="stats-grid-icon" data-stat-icon="fire-streak" alt="" aria-hidden="true" decoding="async">
+                            <span class="stat-lbl-mini" data-lang="stat_streak">Vatreni Niz</span>
+                            <span id="stat-streak" class="stat-val-mini" style="color: #FF5722;">0</span>
+                        </div>
+                        
+                        <div class="stat-item compact-grid-item">
+                            <img class="stats-grid-icon" data-stat-icon="average" alt="" aria-hidden="true" decoding="async">
+                            <span class="stat-lbl-mini" data-lang="stat_avg">Prosek</span>
+                            <span id="stat-avg" class="stat-val-mini">0</span>
+                        </div>
+                        
+                        <div class="stat-item compact-grid-item" onclick="riznicaManager.open()">
+                            <div class="stats-open-hint" aria-hidden="true" style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
+                            <img class="stats-grid-icon" data-stat-icon="trophies" alt="" aria-hidden="true" decoding="async">
+                            <span class="stat-lbl-mini" data-lang="stat_trophies">Trofeji</span>
+                            <span id="stat-trophies" class="stat-val-mini c-gold">0 / 26</span>
+                        </div>
+                        
+                        <div class="stat-item compact-grid-item">
+                            <img class="stats-grid-icon" data-stat-icon="ducat" alt="" aria-hidden="true" decoding="async">
+                            <span class="stat-lbl-mini" data-lang="stat_balance">Stanje</span>
+                            <span id="stat-balance" class="stat-val-mini c-gold">0</span>
+                        </div>
+                        <div class="stat-item compact-grid-item">
+                            <img class="stats-grid-icon" data-stat-icon="all-time-points" alt="" aria-hidden="true" decoding="async">
+                            <span class="stat-lbl-mini" data-lang="stat_alltime">All-Time PTS</span>
+                            <span id="stat-alltime" class="stat-val-mini c-gold">0</span>
+                        </div>
+                        <div class="stat-item compact-grid-item">
+                            <span class="stat-lbl-mini stats-rival-label" style="margin-bottom:2px;"><img class="stats-rival-icon" data-stat-icon="h2h" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_fav_opp">Rival</span></span>
+                            <img id="stat-fav-opp-img" src="" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold-main); object-fit: cover; display: none;">
+                            <span id="stat-fav-opp-name" style="font-size: 0.7rem; color: var(--text-main); font-weight: bold; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 90%; text-align: center;" data-lang="stat_none">Nema</span>
+                            <span id="stat-fav-opp-games" style="font-size: 0.6rem; color: var(--gold-main); font-weight: bold; margin-top:2px;" data-lang="stat_no_matches">0 mečeva</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-page">
+                <div class="stats-page-panel stats-h2h-panel">
+                    <h3 class="stats-h2h-title"><img class="stats-h2h-title-icon" data-stat-icon="h2h" alt="" aria-hidden="true" decoding="async"><span data-lang="stat_h2h_title">MEĐUSOBNI DUELI</span></h3>
+                    
+                    <div class="stats-h2h-desc" data-lang="stat_h2h_desc">
+                        Rivali sa najviše odigranih partija su prvi.
+                    </div>
+
+                    <div id="h2h-list-container" class="h2h-rivals-grid">
+                        </div>
+                </div>
+            </div>
+
+                </div>
+            </div>
+
+            <div class="global-chat-footer stats-card-footer">
+                <div class="stats-pagination">
+                    <button type="button" class="dot active" id="stat-dot-0" onclick="goToStatsPage(0)" aria-label="Statistika: pregled" data-lang-aria="aria_stats_overview_page" aria-current="step"></button>
+                    <button type="button" class="dot" id="stat-dot-1" onclick="goToStatsPage(1)" aria-label="Statistika: međusobni dueli" data-lang-aria="aria_stats_h2h_page"></button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function goToStatsPage(index) {
+                const carousel = document.getElementById('stats-carousel');
+                if (!carousel) return;
+                const pageCount = carousel.querySelectorAll('.stats-page').length;
+                const targetIndex = Math.max(0, Math.min(index, pageCount - 1));
+                const reduceMotion = document.documentElement.dataset.splashTheme === 'dark'
+                    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+                carousel.scrollTo({ left: carousel.clientWidth * targetIndex, behavior: reduceMotion ? 'auto' : 'smooth' });
+            }
+            function updateStatsPagination() {
+                const carousel = document.getElementById('stats-carousel');
+                if(!carousel) return;
+                const scrollLeft = carousel.scrollLeft;
+                const width = carousel.clientWidth;
+                const activeIndex = width > 0 ? Math.max(0, Math.min(1, Math.round(scrollLeft / width))) : 0;
+                
+                document.getElementById('stat-dot-0').classList.remove('active');
+                document.getElementById('stat-dot-1').classList.remove('active');
+                document.getElementById('stat-dot-0').removeAttribute('aria-current');
+                document.getElementById('stat-dot-1').removeAttribute('aria-current');
+
+                const activeDot = document.getElementById('stat-dot-' + activeIndex);
+                if(activeDot) {
+                    activeDot.classList.add('active');
+                    activeDot.setAttribute('aria-current', 'step');
+                }
+            }
+        </script>
+
+        <style>
+            #stats-screen { padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom) + 4px); }
+            #stats-screen .stats-shell { width: calc(100vw - max(10px, env(safe-area-inset-left)) - max(10px, env(safe-area-inset-right))); flex: 1 1 auto; min-height: 0; max-height: 100%; padding: 0 !important; margin: 0; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; align-items: stretch; gap: 0; background: var(--glass-panel) !important; border: var(--glass-border) !important; box-shadow: var(--glass-shadow) !important; backdrop-filter: blur(30px) saturate(135%); -webkit-backdrop-filter: blur(30px) saturate(135%); color: var(--text-main); }
+            #stats-screen .stats-card-header { min-height: 58px; background: var(--glass-bg); border-bottom: var(--glass-border); }
+            .stats-header-title { display: inline-flex; align-items: center; gap: 8px; }
+            .stats-header-icon { width: 30px; height: 30px; flex: 0 0 30px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24)); }
+            #stats-screen .stats-card-body { flex: 1 1 auto; min-height: 0; padding: 12px 0; align-items: stretch; overflow: hidden; background: transparent; }
+            #stats-screen .stats-card-footer { padding: 10px 14px 12px; align-items: center; background: var(--glass-bg); border-top: var(--glass-border); }
+            .stats-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; max-width: 100%; flex: 1 1 auto; min-height: 0; scrollbar-width: none; -ms-overflow-style: none; padding: 0; }
+            .stats-carousel::-webkit-scrollbar { display: none; }
+            .stats-page { flex: 0 0 100%; width: 100%; min-height: 0; scroll-snap-align: center; padding: 0 12px; display: flex; flex-direction: column; }
+            .stats-page-panel { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+            .stats-overview-panel { gap: 8px; padding: 0; justify-content: space-between; }
+            .stats-h2h-panel { gap: 0; padding: 0; }
+            .stats-h2h-title { color: var(--success); text-align: center; margin: 0 0 8px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1rem; line-height: 1.2; flex: 0 0 auto; }
+            .stats-h2h-desc { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; padding: 0 10px; line-height: 1.35; flex: 0 0 auto; }
+            
+            .stats-pagination { display: flex; gap: 12px; justify-content: center; align-items: center; margin: 0; min-height: 18px; }
+            .stats-pagination .dot { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); cursor: pointer; }
+            .stats-pagination .dot.active { background: var(--carousel-dot-active); transform: scale(1.4); box-shadow: 0 0 10px var(--carousel-dot-glow); }
+            @media (min-width: 760px) {
+                #stats-screen { padding-top: 22px; padding-bottom: 22px; }
+                #stats-screen .stats-shell { width: min(760px, calc(100vw - 44px)); border-radius: 22px; }
+                #stats-screen .stats-card-body { padding: 14px 0; }
+                #stats-screen .stats-card-footer { padding: 12px 18px 14px; }
+                .stats-page { padding: 0 18px; }
+            }
+            
+            /* H2H rivals grid */
+            #h2h-list-container {
+                -webkit-overflow-scrolling: touch;
+                overflow-y: auto;
+            }
+            #h2h-list-container::-webkit-scrollbar {
+                width: 4px;
+            }
+            #h2h-list-container::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 10px;
+            }
+            #h2h-list-container::-webkit-scrollbar-thumb {
+                background: var(--gold-main);
+                border-radius: 10px;
+            }
+            
+            .h2h-rivals-grid { flex: 1 1 auto; min-height: 0; width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 14px 10px; padding: 6px 8px 16px; }
+            .h2h-empty-state { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 28px 12px; }
+            .h2h-rival-tile { appearance: none; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.035); color: var(--text-main); border-radius: 14px; padding: 10px 6px 11px; min-width: 0; min-height: 144px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 18px rgba(0,0,0,0.18); transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease; }
+            .h2h-rival-tile:active { transform: scale(0.98); }
+            .h2h-rival-tile:hover, .h2h-rival-tile:focus-visible { background: rgba(255,255,255,0.075); border-color: rgba(255,214,111,0.44); outline: none; }
+            .h2h-rival-avatar-wrap { position: relative; width: clamp(58px, 18vw, 78px); height: clamp(58px, 18vw, 78px); flex: 0 0 auto; }
+            .h2h-rival-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 5px 14px rgba(0,0,0,0.45), 0 0 0 4px rgba(255,214,111,0.08); background: rgba(0,0,0,0.35); }
+            .h2h-rival-count { position: absolute; right: -3px; bottom: -2px; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--gold-main); color: #15100A; border: 2px solid rgba(15,15,15,0.95); font-size: 0.72rem; font-weight: 900; line-height: 1; box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+            .h2h-rival-name { width: 100%; color: var(--text-main); font-weight: 800; font-size: 0.78rem; line-height: 1.18; text-align: center; min-height: 2.36em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+            .h2h-rival-record { font-size: 0.73rem; font-weight: 900; line-height: 1.1; white-space: nowrap; }
+            .h2h-rival-matches { color: var(--text-muted); font-size: 0.66rem; font-weight: 800; line-height: 1.1; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .w-color { color: var(--success); }
+            .l-color { color: var(--danger); }
+
+            @media (min-width: 540px) {
+                .h2h-rivals-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 12px; padding-left: 10px; padding-right: 10px; }
+                .h2h-rival-tile { min-height: 152px; }
+            }
+
+            body.h2h-modal-open { overflow: hidden; }
+            .h2h-detail-modal { position: fixed; inset: 0; z-index: 10080; display: none; align-items: center; justify-content: center; padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
+            .h2h-detail-modal.active { display: flex; }
+            .h2h-detail-backdrop { position: absolute; inset: 0; border: 0; padding: 0; background: rgba(5,8,12,0.62); backdrop-filter: blur(9px) saturate(125%); -webkit-backdrop-filter: blur(9px) saturate(125%); cursor: pointer; }
+            .h2h-detail-card { position: relative; width: min(420px, calc(100vw - 28px)); max-height: min(680px, calc(100vh - 32px)); overflow-y: auto; border-radius: 20px; background: var(--glass-panel); border: var(--glass-border); box-shadow: var(--glass-shadow), 0 22px 55px rgba(0,0,0,0.46); backdrop-filter: blur(28px) saturate(140%); -webkit-backdrop-filter: blur(28px) saturate(140%); padding: 18px; color: var(--text-main); }
+            .h2h-detail-close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.34); color: var(--text-main); font-size: 1.35rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+            .h2h-detail-close:focus-visible, .h2h-detail-close:hover { outline: none; border-color: rgba(255,214,111,0.5); background: rgba(255,255,255,0.1); }
+            .h2h-detail-title { padding: 0 42px 14px; text-align: center; color: var(--success); font-size: 0.92rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.45); }
+            .h2h-detail-players { display: grid; grid-template-columns: 1fr 44px 1fr; align-items: start; gap: 8px; padding: 4px 2px 12px; }
+            .h2h-detail-player { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+            .h2h-detail-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 5px 16px rgba(0,0,0,0.48), 0 0 0 4px rgba(255,214,111,0.08); background: rgba(0,0,0,0.35); }
+            .h2h-detail-avatar-opp { border-color: var(--danger); box-shadow: 0 5px 16px rgba(0,0,0,0.48), 0 0 0 4px rgba(244,67,54,0.08); }
+            .h2h-detail-name { width: 100%; min-height: 2.35em; font-size: 0.82rem; line-height: 1.18; font-weight: 900; text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+            .h2h-detail-score { font-size: 1.1rem; font-weight: 900; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+            .h2h-detail-vs { align-self: center; width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.42); color: var(--gold-main); border: 1px solid rgba(255,214,111,0.52); font-size: 0.72rem; font-weight: 900; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 12px rgba(0,0,0,0.3); }
+            .h2h-detail-total { width: max-content; max-width: 100%; margin: 0 auto 12px; padding: 5px 12px; border-radius: 999px; color: var(--gold-main); background: rgba(255,214,111,0.1); border: 1px solid rgba(255,214,111,0.18); font-size: 0.72rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .h2h-stats-area { background: rgba(255,255,255,0.035); padding: 12px 14px; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; display: flex; flex-direction: column; gap: 8px; }
+            .h2h-stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+            .h2h-stat-row .lbl { color: var(--text-muted); font-weight: 600; }
+            .h2h-stat-row .val { color: var(--text-main); font-weight: 900; font-size: 0.9rem;}
+            .h2h-streak-val { color: #FF5722 !important; }
+            .h2h-streak-val span { font-size: 0.65rem; color: #aaa; margin-left: 4px; }
+
+            .h2h-bar-wrapper { padding: 12px 15px; display: flex; flex-direction: column; gap: 6px; }
+            .h2h-bar-bg { width: 100%; height: 8px; background: var(--danger); border-radius: 4px; overflow: hidden; display: flex; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
+            .h2h-bar-win { height: 100%; background: var(--success); transition: width 0.5s ease-out; }
+            .h2h-bar-draw { height: 100%; background: var(--gold-main); transition: width 0.5s ease-out; }
+            .h2h-bar-text { text-align: center; font-size: 0.7rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; }
+            .h2h-detail-bar { padding: 14px 2px 0; }
+            .h2h-share-btn { width: 100%; min-height: 44px; margin-top: 14px; border-radius: 12px; border: 1px solid rgba(224,201,149,0.42); background: linear-gradient(135deg, rgba(224,201,149,0.22), rgba(76,175,80,0.16)); color: var(--text-main); font-size: 0.82rem; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 18px rgba(0,0,0,0.22); }
+            .h2h-share-btn:active { transform: scale(0.99); }
+            .h2h-share-btn:hover, .h2h-share-btn:focus-visible { outline: none; border-color: rgba(224,201,149,0.72); background: linear-gradient(135deg, rgba(224,201,149,0.3), rgba(76,175,80,0.22)); }
+            .h2h-share-btn:disabled { opacity: 0.68; cursor: wait; transform: none; }
+        </style>
+    </div>
+
+    <script src="theme-statistics-room.js?v=2"></script><script src="powerindex.js?v=1.11"></script><script src="vatreniniz.js?v=1010"></script><script>
+window.addEventListener('DOMContentLoaded',()=>{
+    window.themeStatisticsRoom?.apply(document.getElementById('stats-screen'));
+    window.powerIndexLeaderboard.getAvatarUrl=()=>reviewAvatar;
+    window.vatreniNiz.getAvatarUrl=()=>reviewAvatar;
+    const values={'stat-power-index':'780','stat-high':'777','stat-games':'128','stat-wins':'57','stat-draws':'9','stat-losses':'23','stat-rate':'64%','stat-streak':'7','stat-avg':'521','stat-trophies':'9 / 26','stat-balance':'2 450','stat-alltime':'66 688','stat-fav-opp-name':'Milan','stat-fav-opp-games':'12 mečeva'};
+    for(const [id,value] of Object.entries(values)){const el=document.getElementById(id);if(el)el.textContent=value;}
+    for(const [id,width] of [['stat-bar-win','64%'],['stat-bar-draw','10%'],['stat-bar-loss','26%']])document.getElementById(id).style.width=width;
+    const assetRoot=statsReviewTheme==='dark'?'assets/theme-packs/dark': 'assets/theme-packs/'+statsReviewTheme;
+    const avatar=assetRoot+'/canonical/online-players-internal/avatar-v1.png';
+    const names=['Milan','Ana','Marko','Jelena'];
+    document.getElementById('h2h-list-container').innerHTML=names.map((name,index)=>'<button type="button" class="h2h-rival-tile"><span class="h2h-rival-avatar-wrap"><img class="h2h-rival-avatar" src="'+avatar+'" alt=""><span class="h2h-rival-count">'+(12-index*2)+'</span></span><span class="h2h-rival-name">'+name+'</span><span class="h2h-rival-record">7 W / 1 D / 4 L</span><span class="h2h-rival-matches">12 mečeva</span></button>').join('');
+    document.querySelectorAll('.h2h-rival-tile').forEach(button=>button.addEventListener('click',showDetail));
+    if(new URLSearchParams(location.search).get('page')==='h2h')requestAnimationFrame(()=>goToStatsPage(1));
+    const ranking=new URLSearchParams(location.search).get('ranking');
+    if(ranking==='power')requestAnimationFrame(()=>window.powerIndexLeaderboard.openModal());
+    if(ranking==='streak')requestAnimationFrame(()=>window.vatreniNiz.openModal());
+    function showDetail(){
+        let modal=document.getElementById('h2h-detail-modal');
+        if(!modal){modal=document.createElement('div');modal.id='h2h-detail-modal';modal.className='h2h-detail-modal';document.body.appendChild(modal);}
+        const icon=role=>'<img class="h2h-detail-stat-icon" data-stat-icon="'+role+'" src="'+window.themeStatisticsRoom.asset(role)+'" alt="">';
+        modal.innerHTML='<button class="h2h-detail-backdrop" aria-label="Zatvori"></button><div class="h2h-detail-card" role="dialog" aria-modal="true"><button class="h2h-detail-close" aria-label="Zatvori">×</button><div class="h2h-detail-title">MEĐUSOBNI DUELI</div><div class="h2h-detail-players"><div class="h2h-detail-player"><img class="h2h-detail-avatar" src="'+avatar+'" alt=""><div class="h2h-detail-name">Takmičar</div><div class="h2h-detail-score">7 W</div></div><div class="h2h-detail-vs"><img class="h2h-detail-vs-icon" src="'+window.themeStatisticsRoom.asset('versus')+'" alt=""></div><div class="h2h-detail-player"><img class="h2h-detail-avatar h2h-detail-avatar-opp" src="'+avatar+'" alt=""><div class="h2h-detail-name">Milan</div><div class="h2h-detail-score">4 L</div></div></div><div class="h2h-detail-total">12 mečeva</div><div class="h2h-stats-area h2h-detail-stats">'+[['highest-score','Najviše poena','777'],['max-win-margin','Najveća razlika','+130'],['worst-loss-margin','Najteži poraz','-82'],['fire-streak','Vatreni niz','3'],['draws','Nerešeno','1'],['average','Tvoj prosek','521']].map(item=>'<div class="h2h-stat-row"><span class="lbl h2h-detail-stat-label">'+icon(item[0])+'<span>'+item[1]+'</span></span><span class="val">'+item[2]+'</span></div>').join('')+'</div><div class="h2h-bar-wrapper h2h-detail-bar"><div class="h2h-bar-bg"><div class="h2h-bar-win" style="width:58%"></div><div class="h2h-bar-draw" style="width:8%"></div></div><div class="h2h-bar-text">58% POBEDA</div></div><button class="h2h-share-btn">↗ PODELI KARTICU</button></div>';
+        modal.classList.add('active');
+        modal.querySelectorAll('.h2h-detail-backdrop,.h2h-detail-close').forEach(el=>el.addEventListener('click',()=>modal.classList.remove('active')));
+    }
+});
+</script></body></html>

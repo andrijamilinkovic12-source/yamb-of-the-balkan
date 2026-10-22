@@ -738,11 +738,9 @@ class YambApp {
     getGameThemeSources(theme) {
         const background = this.getThemeLoadingPack(theme)?.background;
         const eye = window.themeOnlinePlayers?.asset('spectate', theme);
-        const special = theme === 'neon' ? [
-            'assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png?v=1',
-            ...['board-frame', 'score-cell', 'header-cell'].map(role =>
-                `assets/theme-packs/neon/trial/game-board-png-v1/${role}-v1.png`)
-        ] : theme === 'easter' ? ['assets/easter-soft-clay/game/announce-v1.png?v=1'] : [];
+        const special = theme === 'neon'
+            ? ['assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png?v=1']
+            : theme === 'easter' ? ['assets/easter-soft-clay/game/announce-v1.png?v=1'] : [];
         return [...new Set([background, eye, ...special].filter(Boolean))];
     }
 
@@ -1176,18 +1174,9 @@ class YambApp {
         ));
 
         if (rivals.length === 0) {
-            const activeStatsTheme = localStorage.getItem('yamb_theme') || 'dark';
-            const statsTheme = activeStatsTheme === 'dark'
-                ? 'green'
-                : (activeStatsTheme === 'severna' ? 'severna' : (activeStatsTheme === 'desert' ? 'desert' : 'easter'));
-            const h2hEmptyIcon = statsTheme === 'severna'
-                ? 'assets/severna-soft-clay/statistics/h2h-empty-v10.png?v=1'
-                : statsTheme === 'green'
-                    ? 'assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png?v=1'
-                : statsTheme === 'easter'
-                    ? 'assets/easter-soft-clay/statistics/h2h-empty-v2.png?v=opt2'
-                    : 'assets/desert-soft-clay/statistics/h2h-empty-v3.png?v=opt2';
-            container.innerHTML = `<div class="h2h-empty-state" role="status" aria-live="polite"><img class="h2h-empty-soft-clay-icon" src="${h2hEmptyIcon}" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
+            const h2hEmptyIcon = window.themeStatisticsRoom?.asset('h2h-empty')
+                || 'assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png';
+            container.innerHTML = `<div class="h2h-empty-state" role="status" aria-live="polite"><img class="h2h-empty-soft-clay-icon" data-stat-icon="h2h-empty" src="${h2hEmptyIcon}" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
             return;
         }
 
@@ -1343,34 +1332,22 @@ class YambApp {
         const maxShort = this.escapeHtml(gt('h2h_max_short') || 'Max');
         const shareLabel = this.escapeHtml(gt('h2h_share_btn') || 'Podeli karticu');
         const shareAria = this.escapeHtml(gt('h2h_share_aria') || gt('h2h_share_btn') || 'Podeli karticu');
-        const activeH2HTheme = document.body.classList.contains('easter-theme')
-            ? 'easter'
-            : (localStorage.getItem('yamb_theme') || 'dark');
         const detailLabel = (key, fallback) => {
             const label = String(gt(key) || fallback).trim();
-            const themedLabel = ['dark', 'easter', 'desert'].includes(activeH2HTheme)
-                ? label.replace(/^[^\p{L}\p{N}]+/u, '').trim()
-                : label;
-            return this.escapeHtml(themedLabel);
+            return this.escapeHtml(label.replace(/^[^\p{L}\p{N}]+/u, '').trim());
         };
-        const greenH2HDetailAssets = {
-            'highest-score': 'assets/green-soft-clay/canonical/h2h-statistics/highest-score-v1.png?v=1',
-            'max-margin': 'assets/green-soft-clay/canonical/h2h-statistics/max-win-margin-v1.png?v=1',
-            'worst-loss': 'assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png?v=1',
-            'win-streak': 'assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1',
-            draw: 'assets/green-soft-clay/canonical/statistics-overview/draws-v1.png?v=1',
-            average: 'assets/green-soft-clay/canonical/statistics-overview/average-v1.png?v=1'
+        const h2hDetailRoles = {
+            'highest-score': 'highest-score', 'max-margin': 'max-win-margin', 'worst-loss': 'worst-loss-margin',
+            'win-streak': 'fire-streak', draw: 'draws', average: 'average'
         };
-        const themedDetailIcons = (fileName) => `
-            <img class="h2h-detail-stat-icon h2h-detail-stat-icon-easter"
-                 data-theme-src="assets/easter-soft-clay/statistics/h2h-detail/${fileName}-v3.png?v=1" loading="lazy"
-                 alt="" aria-hidden="true" decoding="async">
-            <img class="h2h-detail-stat-icon h2h-detail-stat-icon-desert"
-                 data-theme-src="assets/desert-soft-clay/statistics/h2h-detail/${fileName}-v2.png?v=1" loading="lazy"
-                 alt="" aria-hidden="true" decoding="async">
-            <img class="h2h-detail-stat-icon h2h-detail-stat-icon-green"
-                 data-theme-src="${greenH2HDetailAssets[fileName]}" loading="lazy"
-                 alt="" aria-hidden="true" decoding="async">`;
+        const themedDetailIcons = (fileName) => {
+            const role = h2hDetailRoles[fileName];
+            const greenFamily = ['highest-score', 'max-win-margin', 'worst-loss-margin'].includes(role)
+                ? 'h2h-statistics' : 'statistics-overview';
+            const source = window.themeStatisticsRoom?.asset(role)
+                || `assets/green-soft-clay/canonical/${greenFamily}/${role}-v1.png`;
+            return `<img class="h2h-detail-stat-icon" data-stat-icon="${role}" src="${source}" alt="" aria-hidden="true" decoding="async">`;
+        };
 
         this.currentH2HShareData = {
             ...r,
@@ -1393,10 +1370,7 @@ class YambApp {
                     <div class="h2h-detail-score w-color">${r.wins} ${winShort}</div>
                 </div>
                 <div class="h2h-detail-vs">
-                    <span class="h2h-detail-vs-text">VS</span>
-                    <img class="h2h-detail-vs-icon-easter" data-theme-src="assets/easter-soft-clay/opponent/vs-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="h2h-detail-vs-icon-desert" data-theme-src="assets/desert-soft-clay/opponent/vs-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="h2h-detail-vs-icon-green" data-theme-src="assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="h2h-detail-vs-icon" data-stat-icon="versus" src="${window.themeStatisticsRoom?.asset('versus') || 'assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png'}" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <div class="h2h-detail-player">
                     <img src="${oppAvatar}" class="h2h-detail-avatar h2h-detail-avatar-opp" alt="${safeOppName}">
@@ -2123,26 +2097,7 @@ class YambApp {
                     'assets/easter-soft-clay/treasury/status-active-v2.png?v=opt2',
                     'assets/easter-soft-clay/treasury/status-locked-v3.png?v=2',
                     'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=opt2',
-                    'assets/easter-soft-clay/rules-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/statistics/record-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/games-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/draws-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/losses-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/average-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/trophies-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/ducats-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/h2h-empty-v2.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/h2h-detail/highest-score-v3.png?v=1',
-                    'assets/easter-soft-clay/statistics/h2h-detail/max-margin-v3.png?v=1',
-                    'assets/easter-soft-clay/statistics/h2h-detail/worst-loss-v3.png?v=1',
-                    'assets/easter-soft-clay/statistics/h2h-detail/win-streak-v3.png?v=1',
-                    'assets/easter-soft-clay/statistics/h2h-detail/draw-v3.png?v=1',
-                    'assets/easter-soft-clay/statistics/h2h-detail/average-v3.png?v=1',
-                    'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2',
+                    'assets/theme-packs/easter/canonical/rules-room-identity/rules-room-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/task-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/complete-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/already-played-v1.png',
@@ -2166,7 +2121,7 @@ class YambApp {
                     'assets/theme-packs/desert/canonical/daily-room-identity/daily-room-v1.png',
                     'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
                     'assets/desert-soft-clay/settings-pro-v2.png?v=1',
-                    'assets/desert-soft-clay/rules-pro.png?v=opt2',
+                    'assets/theme-packs/desert/canonical/rules-room-identity/rules-room-v1.png',
                     'assets/theme-packs/desert/canonical/daily-states/task-v1.png',
                     'assets/theme-packs/desert/canonical/daily-states/complete-v1.png',
                     'assets/theme-packs/desert/canonical/daily-states/already-played-v1.png',
@@ -2175,32 +2130,7 @@ class YambApp {
                     'assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png',
                     'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v2.png',
                     'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
-                    'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/record-v2.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/games-v2.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/wins-v2.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/draws-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/losses-v2.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/average-v2.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/trophies-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/ducats-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/all-time-points-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/h2h-v2.png?v=opt2',
                     'assets/theme-packs/desert/canonical/invite-friend-internal/send-v1.png?v=1',
-                    'assets/desert-soft-clay/statistics/h2h-empty-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/h2h-detail/highest-score-v2.png?v=1',
-                    'assets/desert-soft-clay/statistics/h2h-detail/max-margin-v2.png?v=1',
-                    'assets/desert-soft-clay/statistics/h2h-detail/worst-loss-v2.png?v=1',
-                    'assets/desert-soft-clay/statistics/h2h-detail/win-streak-v2.png?v=1',
-                    'assets/desert-soft-clay/statistics/h2h-detail/draw-v2.png?v=1',
-                    'assets/desert-soft-clay/statistics/h2h-detail/average-v2.png?v=1',
-                    'assets/desert-soft-clay/statistics/power-index/gold-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/power-index/silver-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/power-index/bronze-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/fire-streak/gold-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/fire-streak/silver-v3.png?v=opt2',
-                    'assets/desert-soft-clay/statistics/fire-streak/bronze-v3.png?v=opt2',
                     'assets/desert-soft-clay/treasury/status-owned.png?v=opt2',
                     'assets/desert-soft-clay/treasury/status-active.png?v=opt2',
                     'assets/desert-soft-clay/treasury/status-locked.png?v=opt2',
@@ -2251,23 +2181,11 @@ class YambApp {
                     'assets/theme-packs/severna/canonical/daily-room-identity/daily-room-v1.png',
                     'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
                     'assets/severna-soft-clay/settings-pro-v9.png?v=1',
-                    'assets/severna-soft-clay/rules-pro-v10.png?v=1',
-                    'assets/severna-soft-clay/rules/pages/rules-scoring-v2.png?v=1',
-                    'assets/severna-soft-clay/rules/pages/stats-leaderboards-v2.png?v=1',
-                    'assets/severna-soft-clay/rules/pages/multiplayer-competitions-v2.png?v=1',
-                    'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
-                    'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
-                    'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
+                    'assets/theme-packs/severna/canonical/rules-room-identity/rules-room-v1.png',
                     'assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png',
                     'assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png',
                     'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-v2.png',
                     'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
-                    'assets/severna-soft-clay/statistics/power-index/gold-v10.png?v=1',
-                    'assets/severna-soft-clay/statistics/power-index/silver-v10.png?v=1',
-                    'assets/severna-soft-clay/statistics/power-index/bronze-v10.png?v=1',
-                    'assets/severna-soft-clay/statistics/fire-streak/gold-v10.png?v=1',
-                    'assets/severna-soft-clay/statistics/fire-streak/silver-v10.png?v=1',
-                    'assets/severna-soft-clay/statistics/fire-streak/bronze-v10.png?v=1',
                     'assets/severna-soft-clay/treasury/status-owned.png?v=1',
                     'assets/severna-soft-clay/treasury/status-active.png?v=1',
                     'assets/severna-soft-clay/treasury/status-locked.png?v=1',
@@ -2441,6 +2359,15 @@ class YambApp {
         }
 
         image.classList.add(`${assetTheme}-splash-clay-title-png`);
+        // The login logo is large. Load it only when the login screen is visible.
+        if (!document.getElementById('splash-screen')?.classList.contains('active')) {
+            if (image.getAttribute('src') !== source) {
+                image.removeAttribute('src');
+                delete image.dataset.splashDecoded;
+                delete image.dataset.splashDecodePending;
+            }
+            return;
+        }
         if (image.getAttribute('src') !== source) {
             delete image.dataset.splashDecoded;
             delete image.dataset.splashDecodePending;
@@ -2455,7 +2382,8 @@ class YambApp {
             ? 'assets/green-soft-clay/canonical/menu-resume-buttons/'
             : `assets/theme-packs/${theme}/canonical/menu-resume-buttons/`;
         const menuButtons = ['resume', 'new'].map(role => `${menuButtonRoot}${role}-v1.png?v=1`);
-        const splash = this.getThemeSplashSource(theme);
+        const splash = document.getElementById('splash-screen')?.classList.contains('active')
+            ? this.getThemeSplashSource(theme) : '';
         const leagueWatermark = theme === 'dark'
             ? 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2'
             : this.getMainRoomPackSource(theme, 'quarterly-league', 'menu');
@@ -2466,7 +2394,10 @@ class YambApp {
             : menuRoomIds.map(roomId => this.getMainRoomPackSource(theme, roomId, 'menu'));
         const mainMenuAsset = /\/(?:daily-challenge|leaderboard-(?:pro|free)|statistics-(?:pro|free)|settings-(?:pro|free)|rules-(?:pro|free)|global-chat-(?:pro|free)|online-players-(?:pro|free)|quarterly-league|ducats-undo|mode-(?:solo|hotseat|opponent|invite)|treasury-(?:pro|free)|tournament-(?:pro|free)|canonical\/tournament-awards\/champion-trophy|canonical\/statistics-room-identity\/statistics-room-menu|canonical\/leaderboard-room-identity\/leaderboard-room-menu|canonical\/daily-room-identity\/daily-room-menu|canonical\/settings-room-identity\/settings-room-menu|canonical\/rules-room-identity\/rules-room-menu|canonical\/global-chat-room-identity\/global-chat-room-menu|canonical\/online-players-room-identity\/online-players-room-menu|canonical\/solo-room-identity\/solo-room-menu|canonical\/hotseat-room-identity\/hotseat-room-menu|canonical\/online-random-room-identity\/online-random-room-menu|canonical\/invite-friend-room-identity\/invite-friend-room-menu)[^/]*\.png(?:\?|$)/i;
         const menuRoot = document.getElementById('main-menu');
-        const menuSources = menuRoot
+        // Non-Green menus use the fifteen canonical sources above. The legacy
+        // pack list still contains retired Easter/Desert/Severna art and must
+        // never join the switch barrier (nor Green fallbacks when root is '').
+        const menuSources = theme !== 'dark' ? [] : menuRoot
             ? this.collectThemeSourcesFromRoot(theme, menuRoot)
             : [...pack.assets, ...(pack.menuAssets || [])].filter(source => source.startsWith(root) && mainMenuAsset.test(source)
                 && !source.includes('/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png'));
@@ -2717,16 +2648,19 @@ class YambApp {
 
     preloadThemeSources(sources, { concurrency = 4, priority = 'auto', timeoutMs = 2200 } = {}) {
         const uniqueSources = [...new Set((sources || []).filter(Boolean))];
-        if (uniqueSources.length === 0) return Promise.resolve();
+        if (uniqueSources.length === 0) return Promise.resolve(true);
 
         let nextIndex = 0;
         const worker = async () => {
+            let ready = true;
             while (nextIndex < uniqueSources.length) {
                 const source = uniqueSources[nextIndex++];
-                await this.preloadThemeImage(source, timeoutMs, priority);
+                if (!await this.preloadThemeImage(source, timeoutMs, priority)) ready = false;
             }
+            return ready;
         };
-        return Promise.all(Array.from({ length: Math.min(concurrency, uniqueSources.length) }, worker));
+        return Promise.all(Array.from({ length: Math.min(concurrency, uniqueSources.length) }, worker))
+            .then(results => results.every(Boolean));
     }
 
     warmThemePack(theme) {
@@ -2739,7 +2673,13 @@ class YambApp {
         // Startup paket sadrži samo pozadinu, aktivni splash i ikone glavnog
         // menija. Asseti soba se pripremaju tek kada korisnik izabere sobu.
         const criticalSources = this.getThemeStartupSources(theme, pack);
-        const critical = this.preloadThemeSources(criticalSources, { concurrency: 6, priority: 'high', timeoutMs: 6000 });
+        // Fetch the visible pack in one wave; a slow icon must not block later icons.
+        const critical = this.preloadThemeSources(criticalSources, {
+            concurrency: 24, priority: 'high', timeoutMs: 6000
+        }).then(ready => {
+            if (!ready) this.themeWarmups.delete(theme);
+            return ready;
+        });
         const all = critical;
 
         const warmup = { critical, all };
@@ -2756,11 +2696,11 @@ class YambApp {
         if (!next || next === current) return;
         this.nextMenuThemeWarmupTimer = setTimeout(() => {
             if (!document.getElementById('main-menu')?.classList.contains('active')) return;
-            // Prepare only the next likely selection after the current menu is ready.
-            Promise.resolve(this.warmThemePack(current).critical).then(() => {
-                if (document.getElementById('main-menu')?.classList.contains('active')) this.warmThemePack(next);
-            });
-        }, 1200);
+            // Keep idle network work small. The selected theme's visible icons
+            // load together at high priority when the player actually switches.
+            const background = this.getThemeLoadingPack(next)?.background;
+            if (background) void this.preloadThemeImage(background, 6000, 'low');
+        }, 2400);
     }
 
     hydrateThemeImageSources(theme, { sources = null } = {}) {
@@ -5790,7 +5730,11 @@ class YambApp {
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
         if (['quote-screen', 'waiting-screen', 'game-scene'].includes(screenId)) this.warmGameSwitchAssets();
-        if (screenId === 'splash-screen') this.restartThemedSplashLogoAnimation();
+        if (screenId === 'splash-screen') {
+            this.configureThemeSplashImage(document.documentElement.dataset.splashTheme
+                || localStorage.getItem('yamb_theme') || 'dark');
+            this.restartThemedSplashLogoAnimation();
+        }
         if (this.soundMgr) {
             if (screenId === 'splash-screen' && this.soundMgr.playIntro) {
                 this.soundMgr.playIntro();
@@ -6075,8 +6019,17 @@ class YambApp {
                 ? (window.themeSettingsRoom?.sources?.(nextTheme) || []) : [];
             const settingsReady = this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
             this.prepareThemeLoadingGate(nextTheme, { manualSwitch: true });
-            Promise.all([warmup.critical, settingsReady]).then(() => {
+            Promise.all([warmup.critical, settingsReady]).then(([menuReady, visibleSettingsReady]) => {
                 if (token !== this.themeSwitchRequestToken) return;
+                if (menuReady === false || visibleSettingsReady === false) {
+                    this.hideThemeLoadingGate({ immediate: true });
+                    const english = (localStorage.getItem('yamb_lang') || 'sr').startsWith('en');
+                    window.showNotification?.(
+                        english ? 'Theme unavailable' : 'Tema nije učitana',
+                        english ? 'Check the connection and try again.' : 'Proveri vezu i pokušaj ponovo.'
+                    );
+                    return;
+                }
                 this.themeManualSwitchUntil = Date.now() + 2500;
                 localStorage.setItem('yamb_theme', nextTheme);
                 this.applyTheme(nextTheme);
@@ -6175,6 +6128,7 @@ class YambApp {
 
     showStats(options = {}) {
         this.reportMonitorRoomVisit('statistics');
+        window.themeStatisticsRoom?.preload().catch(() => {});
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('statistics')) {
             this.playEasterRoomIntro('statistics', () => this.showStats({ skipRoomIntro: true }));
             return;
@@ -6182,6 +6136,7 @@ class YambApp {
 
         this.refreshLocalStats();
         this.navigateTo('stats-screen'); 
+        window.themeStatisticsRoom?.apply(document.getElementById('stats-screen'));
         if (document.documentElement.dataset.splashTheme === 'dark') {
             const carousel = document.getElementById('stats-carousel');
             if (carousel) carousel.scrollLeft = 0;
@@ -6375,10 +6330,10 @@ class YambApp {
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
             rules: {
-                icon: 'assets/easter-soft-clay/rules-pro-v2.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/rules-room-identity/rules-room-v1.png',
                 greenIcon: 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=opt2',
-                severnaIcon: 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/rules-room-identity/rules-room-v1.png',
+                severnaIcon: 'assets/theme-packs/severna/canonical/rules-room-identity/rules-room-v1.png',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
             },

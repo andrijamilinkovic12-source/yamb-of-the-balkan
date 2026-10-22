@@ -37,18 +37,14 @@ class VatreniNizManager {
 
                 <div class="chat-header global-chat-header streak-modal-header">
                     <span class="streak-modal-title">
-                        <span class="fire-streak-title-legacy">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
+                        <img class="stats-fire-streak-title-icon" data-stat-icon="fire-streak" src="${window.themeStatisticsRoom.asset('fire-streak')}" alt="" aria-hidden="true" decoding="async">
+                        <span>${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
                     </span>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
                 </div>
 
                 <div id="streak-body" class="chat-body global-chat-body streak-list-container">
-                    <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">${this.gt('streak_loading', 'Učitavam listu... ⏳')}</div>
+                    <div class="streak-list-message" style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">${this.gt('streak_loading', 'Učitavam listu...')}</div>
                 </div>
 
                 <div class="streak-my-rank-dock" id="streak-my-rank-dock" aria-live="polite"></div>
@@ -92,7 +88,7 @@ class VatreniNizManager {
         const body = document.getElementById('streak-body');
         if (!window.app || !window.app.socket || !window.app.socket.connected) {
             if (body) {
-                body.innerHTML = `<div style="text-align: center; font-size: 0.8rem; color: var(--danger); margin-top: 20px;">${this.gt('streak_no_conn', 'Niste povezani na server.')}</div>`;
+                body.innerHTML = `<div class="streak-list-message streak-list-message--error" style="text-align: center; font-size: 0.8rem; color: var(--danger); margin-top: 20px;">${this.gt('streak_no_conn', 'Niste povezani na server.')}</div>`;
             }
             return;
         }
@@ -201,7 +197,7 @@ class VatreniNizManager {
     getAvatarUrl(playerName, photoUrl) {
         const rawPhoto = String(photoUrl || '').trim();
         if (/^https?:\/\//i.test(rawPhoto)) return this.escapeHtml(rawPhoto);
-        return `https://ui-avatars.com/api/?name=${encodeURIComponent(playerName || 'Igrac')}&background=333&color=E0C995`;
+        return window.themeStatisticsRoom.asset('avatar');
     }
 
     renderPlayerRow(player, options = {}) {
@@ -213,15 +209,16 @@ class VatreniNizManager {
         const rawName = player.name || this.gt('player_guest', 'Gost');
         const displayName = this.escapeHtml(rawName);
         const photo = this.getAvatarUrl(rawName, player.photoUrl);
+        const avatarRole = /^https?:\/\//i.test(String(player.photoUrl || '').trim()) ? '' : ' data-stat-icon="avatar"';
         const maxWinStreak = Math.max(0, parseInt(player.maxWinStreak, 10) || 0);
         const currentWinStreak = Math.max(0, parseInt(player.currentWinStreak, 10) || 0);
 
         // Tema bira svoj versionirani Vatreni niz podium pack.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
-        const podiumAssetSrc = podiumTone ? getThemeMedalSource('fireStreak', podiumTone) : '';
-        const legacyRank = rank === 1 ? '🔥' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `${rank}.`));
+        const podiumAssetSrc = podiumTone ? getThemeMedalSource('fireStreak', podiumTone, window.themeStatisticsRoom.activeTheme()) : '';
+        const legacyRank = `${rank}.`;
         const podiumRank = podiumTone
-            ? `<img class="fire-streak-podium-medal" src="${podiumAssetSrc}" alt="" aria-hidden="true">`
+            ? `<img class="fire-streak-podium-medal" data-stat-medal-context="fireStreak" data-stat-medal-tier="${podiumTone}" src="${podiumAssetSrc}" alt="" aria-hidden="true" decoding="async">`
             : '';
         const rankTrophy = `<span class="fire-streak-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
@@ -260,17 +257,13 @@ class VatreniNizManager {
                 <div style="display: flex; align-items: center;">
                     <div class="fire-streak-rank-mark${podiumTone ? ' has-podium' : ''}" aria-label="${rank}." style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0; text-shadow: ${rank === 1 ? '0 0 10px rgba(255,87,34,0.5)' : 'none'};">${rankTrophy}</div>
 
-                    <img class="fire-streak-player-avatar" src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid ${rank === 1 || isMe ? '#FF5722' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
+                    <img class="fire-streak-player-avatar" src="${photo}"${avatarRole} alt="" decoding="async" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid ${rank === 1 || isMe ? '#FF5722' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
 
                     <div class="fire-streak-player-name" style="flex: 1; min-width: 0; overflow: hidden; font-weight: bold; color: ${nameColor}; ${nameStyle} word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${displayName}</div>
 
                     <div class="fire-streak-stats" style="text-align: right; line-height: 1.2; min-width: 80px; display: flex; flex-direction: column; align-items: flex-end;">
                         <div class="fire-streak-value" style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
-                            <span class="fire-streak-value-legacy">🔥</span>
-                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon" data-theme-src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="stats-fire-streak-value-icon" data-stat-icon="fire-streak" src="${window.themeStatisticsRoom.asset('fire-streak')}" alt="" aria-hidden="true" decoding="async">
                             <span class="fire-streak-value-number">${maxWinStreak}</span>
                         </div>
                         <div class="fire-streak-current-pill" style="font-size: 0.65rem; font-weight: bold; margin-top: 4px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">
@@ -292,12 +285,12 @@ class VatreniNizManager {
         }
 
         if (this.loading && this.data.length === 0) {
-            body.innerHTML = `<div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 20px;">${this.gt('streak_searching', 'Tražim najvatrenije igrače...')}</div>`;
+            body.innerHTML = `<div class="streak-list-message" style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 20px;">${this.gt('streak_searching', 'Tražim najvatrenije igrače...')}</div>`;
             return;
         }
 
         if (!this.data || this.data.length === 0) {
-            body.innerHTML = `<div style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 20px; font-style: italic;">${this.gt('streak_no_data', 'Još uvek nema podataka. Odigrajte partiju!')}</div>`;
+            body.innerHTML = `<div class="streak-list-message" style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 20px; font-style: italic;">${this.gt('streak_no_data', 'Još uvek nema podataka. Odigrajte partiju!')}</div>`;
             return;
         }
 
@@ -306,30 +299,18 @@ class VatreniNizManager {
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe
             || (myUid && player.uid && player.uid === myUid)
             || (!player.uid && player.name === myName)));
-        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const dockMyRank = ['easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
-
-        if (dockMyRank) {
-            myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
-            myRankDock.classList.add('is-visible');
-        }
-
-        const myRankHtml = activeTheme !== 'dark' && !dockMyRank && this.myPlayer && !isMyPlayerVisible
-            ? `<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">${this.renderPlayerRow(this.myPlayer, { pinned: true })}</div>`
-            : '';
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
-            .join('') + (activeTheme === 'dark' && this.myPlayer && !isMyPlayerVisible
+            .join('') + (this.myPlayer && !isMyPlayerVisible
                 ? this.renderPlayerRow(this.myPlayer, { offTop: true })
                 : '');
         const footerHtml = this.loading
-            ? `<div style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('streak_loading_more', 'Učitavam još igrača...')}</div>`
+            ? `<div class="streak-list-message" style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('streak_loading_more', 'Učitavam još igrača...')}</div>`
             : this.hasMore
-                ? `<button type="button" onclick="window.vatreniNiz.loadNextPage()" style="width: 100%; margin-top: 8px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,87,34,0.35); background: rgba(255,87,34,0.12); color: #FF8A50; font-weight: 900; cursor: pointer;">${this.gt('streak_load_more', 'UČITAJ JOŠ')}</button>`
-                : `<div style="text-align:center; color: var(--text-muted); font-size: 0.72rem; padding: 12px;">${this.gt('streak_all_loaded', 'Prikazani su svi igrači.')}</div>`;
+                ? `<button type="button" class="streak-load-more" onclick="window.vatreniNiz.loadNextPage()" style="width: 100%; margin-top: 8px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,87,34,0.35); background: rgba(255,87,34,0.12); color: #FF8A50; font-weight: 900; cursor: pointer;">${this.gt('streak_load_more', 'UČITAJ JOŠ')}</button>`
+                : `<div class="streak-list-message" style="text-align:center; color: var(--text-muted); font-size: 0.72rem; padding: 12px;">${this.gt('streak_all_loaded', 'Prikazani su svi igrači.')}</div>`;
 
         body.innerHTML = `
-            ${myRankHtml}
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 ${rowsHtml}
             </div>

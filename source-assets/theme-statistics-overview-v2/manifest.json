@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": 2,
+  "family": "statistics-overview",
+  "referenceTheme": "dark",
+  "generationMethod": "One built-in image_gen call per original asset; transparent background; 256px RGBA production PNG.",
+  "promptTemplate": "Create ONE original 3D Soft Neomorphism mobile statistics icon for {theme}. Subject: {role}. Direction: {direction}. Palette: {palette}. Respect the theme visual DNA. Develop a distinct silhouette and sculpting for this theme; do not recolor another theme icon. Transparent background, compact 32px readability, restrained volume, no tile, lettering, ornament or kitsch.",
+  "rolePrompts": {
+    "games": "Total games: a small stack of three sculpted score markers, no dice.",
+    "wins": "Victories: a single ascending chevron.",
+    "draws": "Draws: two balanced horizontal raised bars.",
+    "losses": "Losses: one gentle descending chevron.",
+    "average": "Average score: three bars crossed by one mean line.",
+    "all-time-points": "Lifetime points: a score orb with one clear star or ring.",
+    "fire-streak": "Win streak: one dignified, legible flame.",
+    "h2h": "Head-to-head duels: two facing abstract player profiles.",
+    "h2h-empty": "No duels yet: two separated quiet player forms.",
+    "highest-score": "Highest duel score: rising score column with a summit mark.",
+    "max-win-margin": "Largest win margin: two unequal score bars with a gap marker.",
+    "worst-loss-margin": "Largest loss margin: an opponent bar taller than my bar with a downward gap marker."
+  },
+  "canonicalReuse": [
+    "statistics-room-identity",
+    "power-index",
+    "personal-best/record",
+    "treasury tab-trophies",
+    "ducat-inline",
+    "versus"
+  ],
+  "themes": [
+    {
+      "id": "light",
+      "name": "Svetlo Zlato",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#E6BE83",
+        "surface": "#FFF1D7",
+        "raised": "#F3D6A8",
+        "inset": "#DBB47B",
+        "text": "#392817",
+        "textMuted": "#705237",
+        "heading": "#4A311B",
+        "primary": "#875024",
+        "onPrimary": "#FFFFFF",
+        "accent": "#76612B",
+        "border": "#9B754F",
+        "success": "#35613D",
+        "danger": "#9B3B3A",
+        "logoMain": "#4A311B",
+        "logoAccent": "#795127",
+        "colDown": "#216486",
+        "colUp": "#A13D4A",
+        "colMiddle": "#80502A",
+        "colManual": "#754394",
+        "colAnnounce": "#875024",
+        "colFree": "#4D5D62"
+      },
+      "iconDna": {
+        "silhouette": "Siroke, blago zaravnjene oble forme sa mirnim kosim rezom; bez tanke zlatne ornamentike.",
+        "coinFace": "Mat medeno-zlatni zetoncic sa pet utisnutih tacaka i sopstvenim glatkim rubom; bez metalnog sjaja i bez kopiranja Green modela.",
+        "colorsHex": {
+          "body": "#E6BE83",
+          "light": "#FFF1D7",
+          "shade": "#875024",
+          "accent": "#76612B",
+          "contour": "#875024"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/games-v2.png",
+          "bytes": 83083,
+          "sha256": "ba5b5920872e499126e889d7cb0a399142700378795a35c78d19bb359286ec4b"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/wins-v2.png",
+          "bytes": 70433,
+          "sha256": "73982f139a9aa86d3a234878e728244973ca705b891c5acaf4e2fc1090c903ef"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/draws-v2.png",
+          "bytes": 35326,
+          "sha256": "be998aa7fb58cc73f36201451e27714666eacf02bd7e4fd4ce7813fe067ec961"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/losses-v2.png",
+          "bytes": 40827,
+          "sha256": "6cc87ec987c20d77c540d6d88570d3564b6e3b9e5d59309718a187bdaa9eee74"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/average-v2.png",
+          "bytes": 60622,
+          "sha256": "941b94921d2de8e0a96071076c73feda740811f0f6a562afaa3609844aa06d2f"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 95560,
+          "sha256": "0ebd7ce83a91fbe17c9ac07ba68465b24d162b9179e8860bebc4bf4d51260ca3"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 56303,
+          "sha256": "43bd40d6c5fa64a8f779e80d27dd2981e7f953e7a902e0b90d08dbbaa7fa71d9"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/light/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 53195,
+          "sha256": "385450695cb46e3e7dee433971f3f5359d0aa2fca17285c5d89c47e12e4332e6"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/light/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 38062,
+          "sha256": "1f859002cb6da393603a87a593b8bd849c68daffa570ad9b686f34bc9b6de1f5"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/light/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 51494,
+          "sha256": "e8023514c2af6051f4e50483383572e4b3fa9e6fee1882adcf063cb81c8d8209"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/light/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 42862,
+          "sha256": "5f2a0fae59c05a920c1c3c66ded71d2d2fb10d7ca13aebe00e64af2c818979d0"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/light/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 52471,
+          "sha256": "2a4ec728e41aef90f578fc212a561c34fb8c929efa1a050323a0bdd46f17eeb8"
+        }
+      ]
+    },
+    {
+      "id": "medium",
+      "name": "Trula Višnja",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "background": "#681D25",
+        "surface": "#431720",
+        "raised": "#60252E",
+        "inset": "#301019",
+        "text": "#FFF6F2",
+        "textMuted": "#E6C9C4",
+        "heading": "#FFEDE6",
+        "primary": "#F1C3B2",
+        "onPrimary": "#3A1424",
+        "accent": "#E39A70",
+        "border": "#AF7777",
+        "success": "#8CDEB2",
+        "danger": "#FF9DAA",
+        "logoMain": "#FFEDE6",
+        "logoAccent": "#E9AF9E",
+        "colDown": "#8AD6EF",
+        "colUp": "#FFB4B7",
+        "colMiddle": "#FFD385",
+        "colManual": "#DDB9F0",
+        "colAnnounce": "#F1C3B2",
+        "colFree": "#C4CFD5"
+      },
+      "iconDna": {
+        "silhouette": "Malo asimetricna, rukom vajana puna glinena masa sa jednom sirokom udubinom; bez preslikavanja Green oblika.",
+        "coinFace": "Visnjin glineni novcic sa pet utisnutih tacaka i nepravilno zaobljenim rubom; topla mat dubina bez ukrasa.",
+        "colorsHex": {
+          "body": "#8B3038",
+          "light": "#F1C3B2",
+          "shade": "#431720",
+          "accent": "#E39A70",
+          "contour": "#F1C3B2"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/games-v2.png",
+          "bytes": 73144,
+          "sha256": "f6021693b6b76cd6fc5a52178229caf910c2ec5d37101050c4b964ba53c4febe"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/wins-v2.png",
+          "bytes": 68485,
+          "sha256": "c701ab1b2ecad13cfc0ebe0184ebea142385d1519f7dd1a38085e1ea3bef558d"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/draws-v2.png",
+          "bytes": 60840,
+          "sha256": "bdd10b7d5f5df899d48fe57dedcecebb1672211633ae7c467a4d9e82ab0f8a41"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/losses-v2.png",
+          "bytes": 37145,
+          "sha256": "fa6f0899b693a308e964edca2d364c5c0a3a8e25be77f6b9021913894196b295"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/average-v2.png",
+          "bytes": 63748,
+          "sha256": "e4967592f1cd76ff314de3b0d23f00c24d6a3c8edac04535dd0ce2ec51f960b9"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 94843,
+          "sha256": "e7a9e004466b8699c8dc52c1d23e2591e8b56d49d3a90d530ef33120fd5bfbe1"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 46191,
+          "sha256": "0a66a4adcc03940f8fe1456d4e2f27db3ab08bd1475c4dc19dbaa55f806d889a"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/medium/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 57135,
+          "sha256": "196c6b45e977fb369ecdec0d5f95215767c28644d1dd21fb80845b25528b5784"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/medium/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 43440,
+          "sha256": "201dd3999de544054dab3068f5c5a0521ec39c2884a5312c9f163cb4085effa9"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/medium/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 54996,
+          "sha256": "9002f73abe8c01264864808540e399ab6b3d4eca9238b806a1fd38dd8f0dc1cc"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/medium/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 38685,
+          "sha256": "97457526e02da22c8ef73869bb225cb97201a89fa30cfa8f721686337690993f"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/medium/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 51786,
+          "sha256": "74a03117ae4a7b320a24856c289415c07c325e51f4c4576ab3c17e2556d9bef7"
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "name": "Plavi Okean",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#0E5A9B",
+        "surface": "#FFF4E5",
+        "raised": "#DEECEB",
+        "inset": "#BBD8DE",
+        "text": "#18384B",
+        "textMuted": "#476874",
+        "heading": "#173D5B",
+        "primary": "#0B5C8C",
+        "onPrimary": "#FFFFFF",
+        "accent": "#BD684A",
+        "border": "#6D9BA8",
+        "success": "#216F5A",
+        "danger": "#A63A42",
+        "logoMain": "#FFFFFF",
+        "logoAccent": "#FFE8C4",
+        "splashWelcome": "#F7FBFF",
+        "colDown": "#1B6C8E",
+        "colUp": "#A34851",
+        "colMiddle": "#7B5C13",
+        "colManual": "#664E97",
+        "colAnnounce": "#146778",
+        "colFree": "#4E6973"
+      },
+      "iconDna": {
+        "silhouette": "Cist sirok luk i jedna blago suzena ivica kao ritam obale ili jedra; bez talasica i camaca dodatih na svaku ikonu.",
+        "coinFace": "Glatki egejsko-plavi zetoncic sa pet citljivih tacaka i zasecenim mat rubom; originalan obris bez kopije Green dukata.",
+        "colorsHex": {
+          "body": "#0E5A9B",
+          "light": "#FFF4E5",
+          "shade": "#173D5B",
+          "accent": "#BD684A",
+          "contour": "#173D5B"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/games-v2.png",
+          "bytes": 65807,
+          "sha256": "99cd64a30abc282b0006d308550af9a2562d523a6a0bb689d22b7a60cb9b0e1b"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/wins-v2.png",
+          "bytes": 59908,
+          "sha256": "d8678f40ccd7d5d370651739ec1846c641d2d62459f60a70dd388a145b6b2bd7"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/draws-v2.png",
+          "bytes": 67278,
+          "sha256": "66338f3278fc332dd19110b1fbc1eadc929e64147c2af2593fd4f2e54e74c3e9"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/losses-v2.png",
+          "bytes": 51874,
+          "sha256": "64434f2a2243924eb3b532f14f2bc3032f1e2f7d1a1e8fffc782a5641a583624"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/average-v2.png",
+          "bytes": 53783,
+          "sha256": "a99172f295ceacd603ce8644671f9d9c2689e08948cb510ea407e54f2e34b9e8"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 89918,
+          "sha256": "28148fc5f66e0a9043293fc44b34d12ae4a2063b9179af097842dfa420c46918"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 59845,
+          "sha256": "1155a05f3a21c4287b7a943156b253127c38c42c055cefbc2669d2fcb8681cce"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/winter/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 72652,
+          "sha256": "00d70fd751ceed7b66e39f09290ecb057742292dc6e17d1e7a80e9bc61367edd"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/winter/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 40320,
+          "sha256": "ea446467a84c39fb9b8c2df77dfcf385f6563dcfa8bbcc50f736eb0a2387f779"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/winter/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 61725,
+          "sha256": "8dcb2929fadcdb3263a2400902bf2ff12ac191ccaffb0534381954df2eeb81af"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/winter/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 45396,
+          "sha256": "452e71d70c3542a1a7566e73dc1ac1d7c5e1dc59f679069e9c3a2fda2e5c1fd5"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/winter/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 42542,
+          "sha256": "642df4014a66c5ce71f47873dc1feec65c0bf85905b56cfe2d0e83aa3b6121c0"
+        }
+      ]
+    },
+    {
+      "id": "neon",
+      "name": "Neon Cyber",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#080D18",
+        "surface": "#121B2B",
+        "raised": "#1A2B40",
+        "inset": "#0C1625",
+        "text": "#F4FAFF",
+        "textMuted": "#B5C7D6",
+        "heading": "#E9FFFF",
+        "primary": "#56E5D2",
+        "onPrimary": "#071923",
+        "accent": "#F08CE3",
+        "border": "#3A8A94",
+        "success": "#72DDAE",
+        "danger": "#FF97AC",
+        "logoMain": "#E9FFFF",
+        "logoAccent": "#56E5D2",
+        "colDown": "#74CBFF",
+        "colUp": "#FF96C8",
+        "colMiddle": "#FFD17B",
+        "colManual": "#C9A2FF",
+        "colAnnounce": "#56E5D2",
+        "colFree": "#B4C6D8"
+      },
+      "iconDna": {
+        "silhouette": "Zaobljeni pravougaoni segmenti i jedan jasan urez; cijan ivica nosi citljivost bez vise svetlecih kontura.",
+        "coinFace": "Jednostavan mat cyber zetoncic sa pet tacaka; tirkiz nosi oblik, magenta je samo mali funkcionalni naglasak.",
+        "colorsHex": {
+          "body": "#193455",
+          "light": "#56E5D2",
+          "shade": "#080D18",
+          "accent": "#F08CE3",
+          "contour": "#56E5D2"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/games-v2.png",
+          "bytes": 69494,
+          "sha256": "a04c89ba07e40daedd4846759bcb48e8e3e242c4ecbfd5b05249283073cdb9a9"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/wins-v2.png",
+          "bytes": 52198,
+          "sha256": "71a790a9cc7c77233e1a6b3f724c4ca5ccf42c2f09614f5ed956ce35004fbd70"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/draws-v2.png",
+          "bytes": 43987,
+          "sha256": "c5871f0fa536e5f49a23e956c154c0c2d3402d9fd37724dbfb13b10681fe1677"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/losses-v2.png",
+          "bytes": 42240,
+          "sha256": "fa748e649e4d4ef0564b0b3746c79750b2af8b1bdabf3593817bee691d89b63f"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/average-v2.png",
+          "bytes": 71750,
+          "sha256": "c401f7bd8dbb63f22ee87cd805fa5a25d6cfabd1cb931dda23f11baafbb9934d"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 84749,
+          "sha256": "29642f010c2458d6eb89abbed2ff42b35754c3c451381f4f70109e0fce9a3234"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 60037,
+          "sha256": "ced0527b20470f091bfb39322318addf34ac47adf7f3fcf8e2b02bf3ce879b4a"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/neon/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 63448,
+          "sha256": "36ee6b22c93c8257bedb7f9cb3e7136474e9ce6ce3556a168862d3d01f36016e"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/neon/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 39025,
+          "sha256": "827b857811e277e5680ad77527c89dac9ee0254c0fdbe346eb04b548efbbff06"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/neon/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 71589,
+          "sha256": "21e8883b7b2eee50849d81754ec78989a57bca6d3b4a30e89f564d3536991f4e"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/neon/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 62925,
+          "sha256": "ef5d455c4b724e49a3269ea9872906d9391eb8ae80617ec6ab2005c0964d4ca2"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/neon/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 69053,
+          "sha256": "3453f25e6205805d7cb1d1fb0583d4ce8b16684aa6d22b19661d002d21acc48c"
+        }
+      ]
+    },
+    {
+      "id": "amethyst",
+      "name": "Kraljevski Ametist",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "background": "#5A386A",
+        "surface": "#3C284B",
+        "raised": "#563660",
+        "inset": "#2D1D3C",
+        "text": "#FBF6FF",
+        "textMuted": "#E0CDE5",
+        "heading": "#FFF2E3",
+        "primary": "#F2C879",
+        "onPrimary": "#2C183A",
+        "accent": "#D691B5",
+        "border": "#A37EAE",
+        "success": "#A3DFC2",
+        "danger": "#F2A3B4",
+        "logoMain": "#FFF5E8",
+        "logoAccent": "#FFD17D",
+        "colDown": "#98CFFF",
+        "colUp": "#F3A9B5",
+        "colMiddle": "#F4D584",
+        "colManual": "#D2A7F0",
+        "colAnnounce": "#E5C46E",
+        "colFree": "#CBD3DE"
+      },
+      "iconDna": {
+        "silhouette": "Miran, tezak glineni luk i par sirokih faseta, bez dragulja ili krune nalepljene na svaku ikonu.",
+        "coinFace": "Pljosnati ametistni glineni zetoncic sa pet reljefnih tacaka; zlatno je malo polje, ne metalna oplata.",
+        "colorsHex": {
+          "body": "#5A386A",
+          "light": "#E0CDE5",
+          "shade": "#2D1D3C",
+          "accent": "#F2C879",
+          "contour": "#E0CDE5"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/games-v2.png",
+          "bytes": 81510,
+          "sha256": "2fbd665afe86526a68b541eabc68ee63f78d0ef9bdee892b1a47fe9488f2389f"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/wins-v2.png",
+          "bytes": 61621,
+          "sha256": "fb9866c78935948f31995e14fb663f97c1c696fb3dfa755e5df7bb9b78b81b7e"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/draws-v2.png",
+          "bytes": 65030,
+          "sha256": "b302bc7a1c669e5e3d957a2f7e932271efb726111eb3ee6d1be650c868d11d65"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/losses-v2.png",
+          "bytes": 49324,
+          "sha256": "8729f4e1e4d974447667b904aa7aded4c7e995a9aaeac2c58c51a406cfc77853"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/average-v2.png",
+          "bytes": 61139,
+          "sha256": "5d07ca1d7c4c854097420aeaf6ca83ef22cac272328408ebe0efa3d85c44332a"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 101036,
+          "sha256": "443b5f542cbf7f47c8c69a7e6844075950cd290d34f48beaef69700e8bc9234d"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 66192,
+          "sha256": "b21af5f70adfc3587c6ad30babfc8065a0af238660d17de6655e051457a518d5"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/amethyst/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 67281,
+          "sha256": "64598f00979f174d62df14434fefa0ed7330a6b39dbdd1ab9872787d2e47ce75"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/amethyst/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 56213,
+          "sha256": "9aedeb8f5261370e33443f094efe981ab7e581944049bf33183d42c78d459364"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/amethyst/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 56513,
+          "sha256": "8d4ceaf364c72cbe78fce9665a8f9bc091d8f796d6df30fc237340807eaa5886"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/amethyst/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 47598,
+          "sha256": "313695704986fece8d0da263981db9ddf584fdf740019c52700b2128060a9c4e"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/amethyst/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 59699,
+          "sha256": "a8db0db58184ff9daec8fa073f55752b4a8d8ad16581f778b3483f99c98b35a0"
+        }
+      ]
+    },
+    {
+      "id": "easter",
+      "name": "Vaskršnja",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#E5D4B9",
+        "surface": "#FFF8EA",
+        "raised": "#EEE5D3",
+        "inset": "#D3D5B7",
+        "text": "#3D4434",
+        "textMuted": "#5F654F",
+        "heading": "#3F4A35",
+        "primary": "#4D6B45",
+        "onPrimary": "#FFFFFF",
+        "accent": "#A66443",
+        "border": "#879373",
+        "success": "#3E674A",
+        "danger": "#9E4A42",
+        "logoMain": "#3F4A35",
+        "logoAccent": "#4D6B45",
+        "splashWelcome": "#303B2D",
+        "colDown": "#2F6D8D",
+        "colUp": "#A0445C",
+        "colMiddle": "#806118",
+        "colManual": "#684C9B",
+        "colAnnounce": "#456F5A",
+        "colFree": "#5D6670"
+      },
+      "iconDna": {
+        "silhouette": "Kompaktne glatke ovalne forme sa jednim listastim zasekom; bez serije jaja, cvetova ili masni na funkcionalnim ikonama.",
+        "coinFace": "Mat krem zetoncic sa pet tacaka i sopstvenim blago ovalnim rubom; ne ponavljati Green materijal i obod.",
+        "colorsHex": {
+          "body": "#D3D5B7",
+          "light": "#FFF8EA",
+          "shade": "#4D6B45",
+          "accent": "#A66443",
+          "contour": "#4D6B45"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/games-v2.png",
+          "bytes": 64311,
+          "sha256": "a2791795a543a75d8c7c2cf7b2397e9183befeee8c68330776f4902dedf59bae"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/wins-v2.png",
+          "bytes": 44970,
+          "sha256": "35c93c9aaf2520a07b1a86ef497d61d0c2c530724efb09a4b82dabecc9aa447d"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/draws-v2.png",
+          "bytes": 50699,
+          "sha256": "580ed402f09de3ee3e07af5ce3c9a74a4e5c0a9788cb067da618111eb291c47f"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/losses-v2.png",
+          "bytes": 48581,
+          "sha256": "d4e949b2b13f11c2abe2dc715fbdafd5a2bd72c4d471490b98986d41f8afae58"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/average-v2.png",
+          "bytes": 53507,
+          "sha256": "d062825f0a0cdb5c556d2610bb9beeea0a06438aab10a64cb92bc62e2f5e84f4"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 79478,
+          "sha256": "0bbfc8af7307b092a3cdd538eb36574c08e0159ce4175e0c0255b22a85df0eee"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 47605,
+          "sha256": "e1548dabf888e64a159d349ff6e6e4d1def9a9b2ad3a2002d17dfa2f09a66798"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/easter/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 50148,
+          "sha256": "0087d852f59228c3deb8554e14aa786a21c5254855f1fae23d59a47ba821261d"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/easter/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 40581,
+          "sha256": "58fc93d25abf95c9c7a9885f8a045bc61f3633be5e068413eab643f6159d557d"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/easter/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 41379,
+          "sha256": "b9cf3b6f22589f8dafa864e3e99235a3bcc8e92bdf21c31a559a3e469b0fa5cf"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/easter/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 35403,
+          "sha256": "2004afc7f21634a3084f05f610bf5302afcf9c7b9de962fcd60ac6d1e20d3c00"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/easter/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 48654,
+          "sha256": "928f7629decdae9dcd6ff35c7d35a0b13f9dcf6c9bd7d6b09ccba427314f40fa"
+        }
+      ]
+    },
+    {
+      "id": "desert",
+      "name": "Pustinjsko Staklo",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "background": "#D79269",
+        "surface": "#FFF0DA",
+        "raised": "#F0D0AB",
+        "inset": "#D5B29B",
+        "text": "#443027",
+        "textMuted": "#70513D",
+        "heading": "#56372D",
+        "primary": "#7D4D38",
+        "onPrimary": "#FFFFFF",
+        "accent": "#396B72",
+        "border": "#A87759",
+        "success": "#32634D",
+        "danger": "#9D3D37",
+        "logoMain": "#4A2C23",
+        "logoAccent": "#396B72",
+        "colDown": "#2A687D",
+        "colUp": "#A13D3D",
+        "colMiddle": "#765919",
+        "colManual": "#754C88",
+        "colAnnounce": "#2D6B6F",
+        "colFree": "#5B655B"
+      },
+      "iconDna": {
+        "silhouette": "Slojevite horizontalne glinene forme sa dva-tri siroka preloma kao pescar; bez kristala, faseta stakla i sitnih gravura.",
+        "coinFace": "Koralan pescarni glineni zetoncic sa pet tacaka i debelim nepravilnim rubom; bez kopiranja Green reljefa.",
+        "colorsHex": {
+          "body": "#D79269",
+          "light": "#FFF0DA",
+          "shade": "#87523C",
+          "accent": "#396B72",
+          "contour": "#87523C"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/games-v2.png",
+          "bytes": 59576,
+          "sha256": "c59c092d019e181f40e32a1525fd55089cae5b58b77c794a895e01e85ade5473"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/wins-v2.png",
+          "bytes": 57690,
+          "sha256": "ebdf5463a2c6b8e4cae970394931c4d53c32dbf5e3041ee5ad7cd552106d9b40"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/draws-v2.png",
+          "bytes": 66332,
+          "sha256": "827cff790be5b7883cfd654d30a6c4f3f594917fbfda00acbad231dbfeb900ac"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/losses-v2.png",
+          "bytes": 60265,
+          "sha256": "25bf55b09ca4a7eee9a4e87fa4c2b4ca9a5ce6339f1e687e58cf29c0bcb226c7"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/average-v2.png",
+          "bytes": 76099,
+          "sha256": "5e62086325f616b2c2bf57d505d4dd6c5847e6e32776431b246782ef72b78897"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 98782,
+          "sha256": "4a895ac0cc882325ed31b215b098779e03454ca6df19540897d3d09ab993ed24"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 60005,
+          "sha256": "054dc888e9954fa06223872d9c98d46922f34aca0dc163ff740e77445c43919a"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/desert/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 53957,
+          "sha256": "d23ba70c4bd7523ad230954b748d80f78c1d91d0a4f985c40a1b06d60ad61279"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/desert/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 37958,
+          "sha256": "a8400d57d75051a928557874ea8e7002da1a488fa8c3bdc0c5fa437b645ff3e0"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/desert/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 55826,
+          "sha256": "ced7b8ae78ef7a3161ccb16b767dc951af3a2cc5105eee539e21345fa8d5bf36"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/desert/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 57674,
+          "sha256": "4c594d511542d389cdf3b7ad699dd1e18e5b769fc8cd7a910e8b2d856cdebce5"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/desert/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 63522,
+          "sha256": "edf8a715beda5a00cc8cdf730ad2a62978dcea8fd037d735b8c3a31048e6de7b"
+        }
+      ]
+    },
+    {
+      "id": "moon",
+      "name": "Mesečev Sjaj",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "palette": {
+        "background": "#08090C",
+        "surface": "#252934",
+        "raised": "#3B3F4B",
+        "inset": "#181B24",
+        "text": "#F5F5F7",
+        "textMuted": "#C9CAD2",
+        "heading": "#FAFAFB",
+        "primary": "#E1E2E7",
+        "onPrimary": "#242630",
+        "accent": "#A7A9B8",
+        "border": "#858895",
+        "success": "#A8D5BE",
+        "danger": "#F0ACB0",
+        "logoMain": "#F5F5F7",
+        "logoAccent": "#C4C5D0",
+        "colDown": "#B9CFDF",
+        "colUp": "#D9BDD2",
+        "colMiddle": "#D7D1BE",
+        "colManual": "#BFC3DF",
+        "colAnnounce": "#B8D0CB",
+        "colFree": "#D0D2D9"
+      },
+      "iconDna": {
+        "silhouette": "Niski zaobljeni reljef sa jednom sirokom konkavnom ivicom; bez zvezda, plavog sjaja i kratera na svakoj ikoni.",
+        "coinFace": "Srebrnosivi glineni zetoncic sa pet tacaka i tihim tamnim obodom; mesecni reljef ostaje jednostavan i citljiv.",
+        "colorsHex": {
+          "body": "#3B3F4B",
+          "light": "#E1E2E7",
+          "shade": "#181B24",
+          "accent": "#A7A9B8",
+          "contour": "#E1E2E7"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/games-v2.png",
+          "bytes": 64888,
+          "sha256": "7ca7c8ac4b8d28c8e42bd5bf84a54f3d785d6343d59ff25c4aa28bcfacb45504"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/wins-v2.png",
+          "bytes": 77807,
+          "sha256": "b277f0a5f04eb262f163226410e1645d4dd698c20e9de50c37cd07e6787b5d04"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/draws-v2.png",
+          "bytes": 68934,
+          "sha256": "59de9f3475312b223ab3f3a341f0dd3b71ea9308f15967bf300719b420533001"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/losses-v2.png",
+          "bytes": 49660,
+          "sha256": "f1c3fbf6c16344845a692fe77cfbdd718bfdcb7cce03488fd5614cf79f2c2730"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/average-v2.png",
+          "bytes": 62187,
+          "sha256": "49f33937f815984207a1bc0f3675950b800be871eb12aa758714043ac56a0287"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 78607,
+          "sha256": "19e793c911acb06e9df6c1eefa10929e95a97202da112008dae7fe9d1143fb27"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 52917,
+          "sha256": "ca7632f31ff466ff42002766c74d55bf72c90598a77c14a746da664ee811d658"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/moon/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 51896,
+          "sha256": "6ecf58f1b5e0cbc5d1e1575e8cf2cd11bdeca48663ebf33b83bfb6559b5f8ae3"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/moon/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 44256,
+          "sha256": "2b0aab0edec7e2fcf53bb5648c1c757b84b672838459d924f2b6cd9cc4b8a542"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/moon/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 63893,
+          "sha256": "c05c7e1bab0fb9af3681f60a2275b773628cd5f61d64b84d2c92a779e023c0cc"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/moon/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 47787,
+          "sha256": "1aee2ec5c8d8694b2b783bb375c3b51d3417291a50783180387722eb47d58205"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/moon/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 44129,
+          "sha256": "4a3da438b160d6356d194cc530af1f75aacf71f47e3824516d05d20e7567d701"
+        }
+      ]
+    },
+    {
+      "id": "severna",
+      "name": "Severna Maglina",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "palette": {
+        "background": "#0B1830",
+        "surface": "#182C44",
+        "raised": "#24445B",
+        "inset": "#0F2137",
+        "text": "#F5FBFF",
+        "textMuted": "#C3D8E0",
+        "heading": "#F2FBFF",
+        "primary": "#8AE3E4",
+        "onPrimary": "#0A2934",
+        "accent": "#C3ACEA",
+        "border": "#759DA9",
+        "success": "#A4E3C9",
+        "danger": "#FFAFB9",
+        "logoMain": "#F2FBFF",
+        "logoAccent": "#8AE3E4",
+        "colDown": "#8AD9FF",
+        "colUp": "#F7B0D2",
+        "colMiddle": "#E4D18B",
+        "colManual": "#CEB9FF",
+        "colAnnounce": "#8AE3E4",
+        "colFree": "#C6D7E0"
+      },
+      "iconDna": {
+        "silhouette": "Siroke neprekinute oble krive sa jednim mekim ledenim zavrsetkom; bez cyber segmenata ili vise aurora po ikoni.",
+        "coinFace": "Mat severni zetoncic sa pet tacaka i glatkim obodom u ledeno-plavoj paleti; bez kopiranja Green oblika.",
+        "colorsHex": {
+          "body": "#24445B",
+          "light": "#F5FBFF",
+          "shade": "#0B1830",
+          "accent": "#8AE3E4",
+          "contour": "#8AE3E4"
+        }
+      },
+      "assets": [
+        {
+          "role": "games",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/games-v2.png",
+          "bytes": 61810,
+          "sha256": "4aa785b2d9461530db13c8ed35f23858629f21e155cc6869e7891732c45a6be2"
+        },
+        {
+          "role": "wins",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/wins-v2.png",
+          "bytes": 58812,
+          "sha256": "2054b88ccebc59916971ec696d4a2b65b9a942e1c5ce02ed012ccb439b6fbef5"
+        },
+        {
+          "role": "draws",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/draws-v2.png",
+          "bytes": 60123,
+          "sha256": "fec68c7f06117a34cabb26994277cdc57056f4e969c7f5b1b4ba7f7e6849ff2d"
+        },
+        {
+          "role": "losses",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/losses-v2.png",
+          "bytes": 56353,
+          "sha256": "4c0b9318730781b0384f77ecef7bf5a2bbe86bedd7fa645eb55f4110375a7bc2"
+        },
+        {
+          "role": "average",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/average-v2.png",
+          "bytes": 71676,
+          "sha256": "ef8e24a1bf093ea9ecb4b72deb4c975bf72f9d1b38fb08b7d20fe5d7095ea360"
+        },
+        {
+          "role": "all-time-points",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/all-time-points-v2.png",
+          "bytes": 109284,
+          "sha256": "62e53c32e9c064da8ddf80fb970a322052d57ba81cf286d64ed76cc81f2da8ad"
+        },
+        {
+          "role": "fire-streak",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/fire-streak-v2.png",
+          "bytes": 57779,
+          "sha256": "6235530ef4a3f8355c44806ddabd3d173afd4101cab6d7f1d533cbbaf3a555ed"
+        },
+        {
+          "role": "h2h",
+          "production": "www/assets/theme-packs/severna/canonical/statistics-overview/h2h-v2.png",
+          "bytes": 62323,
+          "sha256": "4e25df47e4ae4692a08a026e768a5c64764ddb550ae3f6dc7c4c3bc9c80dc2ae"
+        },
+        {
+          "role": "h2h-empty",
+          "production": "www/assets/theme-packs/severna/canonical/h2h-statistics/h2h-empty-v2.png",
+          "bytes": 50105,
+          "sha256": "bb37c22859a5f273f3c237793bb1df8dcc962707db2fea5807a2f43436973943"
+        },
+        {
+          "role": "highest-score",
+          "production": "www/assets/theme-packs/severna/canonical/h2h-statistics/highest-score-v2.png",
+          "bytes": 46772,
+          "sha256": "11a5aa2999ae415ef75e190b27363ef77c52e145f97ac0d99637c57b888b3f4f"
+        },
+        {
+          "role": "max-win-margin",
+          "production": "www/assets/theme-packs/severna/canonical/h2h-statistics/max-win-margin-v2.png",
+          "bytes": 74191,
+          "sha256": "546e2ecf650ba44c8a308fdc6c39034c594e143c00cddb43ad3142ec389426c9"
+        },
+        {
+          "role": "worst-loss-margin",
+          "production": "www/assets/theme-packs/severna/canonical/h2h-statistics/worst-loss-margin-v2.png",
+          "bytes": 62632,
+          "sha256": "3d70d647fd6902899d016640cee809f6a19f6723ff6f7ac4942514e7b3fd471e"
+        }
+      ]
+    }
+  ]
+}

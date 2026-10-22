@@ -11,7 +11,7 @@ if (!prelude.includes('GOLD_RAIN_THEME_PROFILES') || !effectClass.includes('spaw
 
 let html = fs.readFileSync(path.join(root, 'www/qa/theme-live-effects-review.html'), 'utf8');
 html = html.replace('<head>', '<head>\n  <base href="../www/">')
-    .replace('href="/efekti.css?v=2.5"', 'href="efekti.css?v=2.5"')
+    .replace('href="/efekti.css?v=2.8"', 'href="efekti.css?v=2.8"')
     .replaceAll("url('/assets/", "url('assets/");
 const boot = `
   <script>
@@ -31,9 +31,13 @@ const boot = `
   };
   setTheme(themes.includes(params.get('theme')) ? params.get('theme') : 'dark');
   document.getElementById('theme-choice').addEventListener('change', event => setTheme(event.target.value));
+  const board = document.querySelector('.qa-board');
+  const card = document.querySelector('.card');
+  document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) => '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)] : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
+  const showScene = effect => { board.hidden = effect !== 'ice_age'; card.hidden = effect === 'ice_age'; };
   document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
     fx.stop();
-    if (button.dataset.effect !== 'stop') fx.trigger(button.dataset.effect);
+    if (button.dataset.effect !== 'stop') { showScene(button.dataset.effect); fx.trigger(button.dataset.effect); }
   }));
   window.qaFx = { fx, setTheme, run(id) { fx.stop(); fx.trigger(id); }, state() { return {
     theme: document.documentElement.dataset.splashTheme,
@@ -43,10 +47,12 @@ const boot = `
     fireflyCount: document.querySelectorAll('.magic-firefly__sprite').length,
     fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
     bubbleCount: document.querySelectorAll('.magic-bubble').length,
-    bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))]
+    bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
+    iceFrostCount: document.querySelectorAll('.ice-age-frost').length,
+    iceCrackCount: document.querySelectorAll('.ice-age-cracks').length
   }; } };
   const effect = params.get('effect');
-  if (effect === 'confetti' || effect === 'gold_rain' || effect === 'fireflies' || effect === 'bubbles') fx.trigger(effect);
+  if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age'].includes(effect)) { showScene(effect); fx.trigger(effect); }
   </script>
 </body>`;
 html = html.replace(/  <script>[\s\S]*?  <\/script>\s*<\/body>/, boot);

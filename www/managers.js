@@ -300,11 +300,76 @@ class EffectManager {
         this.supernovaCanvasCleanup = null;
         this.effectTimeouts = [];
         this.iceAgeRunId = 0;
+        this.iceAgeAssetsPromise = null;
     }
     
     applyPermanent(type) {
         this.stop(); 
         if (!type || type === 'none') return;
+        if (type === 'ice_age') this.loadIceAgeAssets().catch(error => console.warn(error));
+    }
+
+    loadIceAgeAssets() {
+        const frostSrc = 'assets/effects/ice-age/frozen-board-v3.png';
+        const cracksSrc = 'assets/effects/ice-age/board-cracks-v3.png';
+        if (!this.iceAgeAssetsPromise) {
+            this.iceAgeAssetsPromise = Promise.all([frostSrc, cracksSrc].map(src => new Promise((resolve, reject) => {
+                const image = new Image();
+                image.onload = () => resolve(image);
+                image.onerror = () => reject(new Error(`Ice Age PNG failed: ${src}`));
+                image.src = src;
+            }))).catch(error => {
+                this.iceAgeAssetsPromise = null;
+                throw error;
+            });
+        }
+        return this.iceAgeAssetsPromise;
+    }
+
+    async spawnIceAge() {
+        const runId = ++this.iceAgeRunId;
+        try {
+            await this.loadIceAgeAssets();
+        } catch (error) {
+            console.warn(error);
+            return;
+        }
+        if (runId !== this.iceAgeRunId) return;
+
+        const tables = [...document.querySelectorAll('.player-table')];
+        const targetTable = tables.find(table => table.style.opacity === '1' || table.style.borderColor.includes('gold') || table.style.borderColor.includes('224')) || tables[0];
+        if (!targetTable) return;
+        document.querySelectorAll('.ice-overlay-container, .ice-age-atmosphere').forEach(node => node.remove());
+        const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        const rect = targetTable.getBoundingClientRect();
+        const duration = reducedMotion ? 2700 : 6500;
+        const atmosphere = document.createElement('div');
+        atmosphere.className = 'ice-age-atmosphere';
+        document.body.appendChild(atmosphere);
+
+        const overlay = document.createElement('div');
+        overlay.className = 'ice-overlay-container';
+        overlay.style.setProperty('--ice-left', `${rect.left}px`);
+        overlay.style.setProperty('--ice-top', `${rect.top}px`);
+        overlay.style.setProperty('--ice-width', `${rect.width}px`);
+        overlay.style.setProperty('--ice-height', `${rect.height}px`);
+        overlay.innerHTML = '<div class="ice-age-frost"></div><div class="ice-age-cracks"></div>';
+        document.body.appendChild(overlay);
+        document.body.classList.add('fx-ice-age');
+        window.app?.soundMgr?.iceAge?.();
+        window.app?.vibrate?.([24, 36, 72, 48, 120]);
+
+        this.scheduleEffectTimeout(() => {
+            if (runId !== this.iceAgeRunId) return;
+            overlay.classList.add('ice-melting');
+            atmosphere.classList.add('ice-melting');
+        }, duration - 950);
+        this.scheduleEffectTimeout(() => {
+            if (runId !== this.iceAgeRunId) return;
+            overlay.remove();
+            atmosphere.remove();
+            document.body.classList.remove('fx-ice-age');
+        }, duration);
     }
     
     trigger(type) {
@@ -313,99 +378,7 @@ class EffectManager {
         if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
         if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
         
-        if (type === 'ice_age') {
-            let targetTable = null;
-            const tables = document.querySelectorAll('.player-table');
-            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
-            if (!targetTable && tables.length > 0) targetTable = tables[0];
-
-            if (targetTable) {
-                this.iceAgeRunId += 1;
-                const iceAgeRunId = this.iceAgeRunId;
-                document.querySelectorAll('.ice-overlay-container, .ice-age-atmosphere').forEach(e => e.remove());
-                document.querySelectorAll('.active-ice-table, .anim-ice-age-table').forEach(tbl => tbl.classList.remove('active-ice-table', 'anim-ice-age-table'));
-
-                const rect = targetTable.getBoundingClientRect();
-                const compactIce = window.matchMedia && (
-                    window.matchMedia('(max-width: 760px)').matches ||
-                    window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
-                    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                );
-
-                document.body.classList.add('fx-ice-age');
-                targetTable.classList.add('active-ice-table', 'anim-ice-age-table');
-
-                if (window.app && window.app.soundMgr && typeof window.app.soundMgr.iceAge === 'function') {
-                    window.app.soundMgr.iceAge();
-                }
-                if (window.app && typeof window.app.vibrate === 'function') {
-                    window.app.vibrate([24, 36, 72, 48, 120]);
-                }
-
-                const atmosphere = document.createElement('div');
-                atmosphere.className = compactIce ? 'ice-age-atmosphere ice-age-atmosphere--compact' : 'ice-age-atmosphere';
-                atmosphere.style.setProperty('--ice-x', (rect.left + rect.width / 2) + 'px');
-                atmosphere.style.setProperty('--ice-y', (rect.top + rect.height / 2) + 'px');
-                atmosphere.innerHTML = `
-                    <div class="ice-age-aura"></div>
-                    <div class="ice-age-wave"></div>
-                    <div class="ice-age-fog ice-age-fog--one"></div>
-                    <div class="ice-age-fog ice-age-fog--two"></div>
-                `;
-
-                const particleFragment = document.createDocumentFragment();
-                const particleCount = compactIce ? 24 : 44;
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = document.createElement('span');
-                    particle.className = (i % 6 === 0) ? 'ice-particle ice-particle--shard' : 'ice-particle';
-                    particle.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
-                    particle.style.setProperty('--y-start', (-8 - Math.random() * 18).toFixed(1) + 'vh');
-                    particle.style.setProperty('--fall', (72 + Math.random() * 44).toFixed(1) + 'vh');
-                    particle.style.setProperty('--drift', (-48 + Math.random() * 96).toFixed(1) + 'px');
-                    particle.style.setProperty('--size', (2.5 + Math.random() * (compactIce ? 3.5 : 5.5)).toFixed(1) + 'px');
-                    particle.style.setProperty('--delay', (Math.random() * 1.15).toFixed(2) + 's');
-                    particle.style.setProperty('--dur', (3.8 + Math.random() * 2.7).toFixed(2) + 's');
-                    particle.style.setProperty('--spin', (120 + Math.random() * 520).toFixed(1) + 'deg');
-                    particleFragment.appendChild(particle);
-                }
-                atmosphere.appendChild(particleFragment);
-                document.body.appendChild(atmosphere);
-
-                const container = document.createElement('div');
-                container.className = 'ice-overlay-container';
-                container.innerHTML = `
-                    <div class="ice-freeze-wave"></div>
-                    <div class="ice-glass"></div>
-                    <div class="ice-crack ice-crack--one"></div>
-                    <div class="ice-crack ice-crack--two"></div>
-                    <div class="ice-crack ice-crack--three"></div>
-                    <div class="ice-frost-border"></div>
-                    <div class="ice-glint ice-glint--one"></div>
-                    <div class="ice-glint ice-glint--two"></div>
-                    <div class="ice-flake-center"><span>❄</span></div>
-                    <div class="ice-cold-breath"></div>
-                `;
-                targetTable.appendChild(container);
-
-                this.scheduleEffectTimeout(() => {
-                    if (iceAgeRunId !== this.iceAgeRunId) return;
-                    atmosphere.classList.add('ice-cooling-down');
-                    container.classList.add('ice-softening');
-                }, 5400);
-
-                this.scheduleEffectTimeout(() => {
-                    if (iceAgeRunId !== this.iceAgeRunId) return;
-                    container.classList.add('ice-melting');
-                    atmosphere.classList.add('ice-melting');
-                    targetTable.classList.remove('active-ice-table', 'anim-ice-age-table');
-                    this.scheduleEffectTimeout(() => {
-                        if (container.parentNode) container.remove();
-                        if (atmosphere.parentNode) atmosphere.remove();
-                        document.body.classList.remove('fx-ice-age');
-                    }, 1500);
-                }, 6800);
-            }
-        }
+        if (type === 'ice_age') this.spawnIceAge();
 
         if (type === 'black_hole') {
             let targetTable = null;
@@ -2489,6 +2462,7 @@ class EffectManager {
     }
     
     stop() {
+        this.iceAgeRunId++;
         this.confettiRunId++;
         this.goldRainRunId++;
         this.fireflyRunId++;
@@ -2521,8 +2495,6 @@ class EffectManager {
         
         document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .bubble-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin').forEach(e => e.remove());
         
-        document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
-        document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
         document.querySelectorAll('.anim-black-hole-table').forEach(tbl => tbl.classList.remove('anim-black-hole-table'));
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));

@@ -1,0 +1,194 @@
+/* Nine themes use Green's Statistics geometry; their surfaces and status colors stay thematic. */
+body.light-theme { --stats-accent-ink:#fff9ef; --stats-win:#35613d; --stats-draw:#76612b; --stats-loss:#9b3b3a; }
+body.medium-theme { --stats-accent-ink:#392129; --stats-win:#8cdeb2; --stats-draw:#e39a70; --stats-loss:#ff9daa; }
+body.winter-theme { --stats-accent-ink:#f9fcfc; --stats-win:#216f5a; --stats-draw:#bd684a; --stats-loss:#a63a42; }
+body.neon-theme { --stats-accent-ink:#102b34; --stats-win:#72ddae; --stats-draw:#f08ce3; --stats-loss:#ff97ac; }
+body.amethyst-theme { --stats-accent-ink:#35233d; --stats-win:#a3dfc2; --stats-draw:#d691b5; --stats-loss:#f2a3b4; }
+body.easter-theme { --stats-accent-ink:#fffbee; --stats-win:#3e674a; --stats-draw:#a66443; --stats-loss:#9e4a42; }
+body.desert-theme { --stats-accent-ink:#fff8ed; --stats-win:#32634d; --stats-draw:#396b72; --stats-loss:#9d3d37; }
+body.moon-theme { --stats-accent-ink:#242833; --stats-win:#a8d5be; --stats-draw:#a7a9b8; --stats-loss:#f0acb0; }
+body.severna-theme { --stats-accent-ink:#17344a; --stats-win:#a4e3c9; --stats-draw:#c3acea; --stats-loss:#ffafb9; }
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen {
+    padding-top:max(10px,env(safe-area-inset-top)) !important;
+    padding-bottom:max(16px,calc(env(safe-area-inset-bottom) + 4px)) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-shell {
+    box-sizing:border-box;
+    width:calc(100vw - max(10px,env(safe-area-inset-left)) - max(10px,env(safe-area-inset-right))) !important;
+    max-width:100% !important;
+    border-radius:20px !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-header {
+    min-height:58px !important;
+    flex:0 0 auto;
+    gap:8px;
+    box-sizing:border-box;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-header-title {
+    font-size:clamp(1.05rem,4.2vw,1.22rem) !important;
+    line-height:1.2 !important;
+    font-weight:850 !important;
+    letter-spacing:.025em !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-body {
+    min-height:0;
+    padding:12px 0 !important;
+    background:transparent !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-footer {
+    flex:0 0 auto;
+    padding:10px 14px 12px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-page {
+    min-width:0;
+    padding-inline:12px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-overview-panel {
+    gap:8px;
+    justify-content:space-between;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-h2h-title {
+    font-size:clamp(.98rem,3.6vw,1.08rem) !important;
+    line-height:1.25 !important;
+    font-weight:850 !important;
+    gap:6px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-h2h-desc {
+    font-size:.82rem !important;
+    line-height:1.4 !important;
+}
+
+/* Keep the Green card sizes; older Easter/Desert/Nebula rules enlarged or decorated them. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stat-item {
+    border-radius:8px !important;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .h2h-rival-tile {
+    border-radius:14px !important;
+    min-height:144px;
+    padding:10px 6px 11px;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .h2h-rival-tile:is(:hover,:focus-visible) {
+    border-color:var(--stats-accent) !important;
+    outline:2px solid var(--stats-accent);
+    outline-offset:-2px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-results-card {
+    border-radius:10px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-header-icon {
+    filter:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen :is(.stats-header-title,.stats-category-label,.stats-result-label,.stat-lbl-mini,.stat-val-mini,.stat-val,.h2h-rival-name,.h2h-rival-record,#stat-fav-opp-name,#stat-rate) {
+    color:var(--stats-ink) !important;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen :is(.stats-h2h-desc,.h2h-rival-matches,#stat-fav-opp-games) {
+    color:var(--stats-muted) !important;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen #stat-streak {
+    color:var(--stats-accent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen :is(.stats-rate-line,.stats-open-hint) {
+    color:var(--stats-muted) !important;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-result-track {
+    background:color-mix(in srgb,var(--stats-ink) 16%,transparent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen #stat-fav-opp-img {
+    border-color:var(--stats-accent) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen :is(#stat-bar-win,.h2h-bar-win) { background:var(--stats-win) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen #stat-bar-draw { background:var(--stats-draw) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen #stat-bar-loss { background:var(--stats-loss) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-pagination .dot {
+    background:var(--stats-muted) !important;
+    touch-action:manipulation;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-pagination .dot.active { background:var(--stats-accent) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen #h2h-list-container::-webkit-scrollbar-thumb { background:var(--stats-accent); }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .h2h-rival-avatar { border-color:var(--stats-accent) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .h2h-rival-count {
+    background:var(--stats-accent) !important;
+    border-color:var(--stats-card) !important;
+    color:var(--stats-accent-ink) !important;
+    box-shadow:0 3px 8px rgba(0,0,0,.18) !important;
+    text-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .h2h-empty-state {
+    background:var(--stats-subcard) !important;
+    border:1px solid var(--stats-line) !important;
+    border-radius:14px !important;
+    box-shadow:none !important;
+    color:var(--stats-muted) !important;
+    text-shadow:none !important;
+}
+
+/* Duel details use the same 50px VS slot, 30px rows and two-line names as Green. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-detail-card {
+    max-height:min(680px,calc(100dvh - max(14px,env(safe-area-inset-top)) - max(14px,env(safe-area-inset-bottom))));
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-detail-players { grid-template-columns:1fr 50px 1fr !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-detail-vs {
+    width:50px !important;
+    height:50px !important;
+    border:0 !important;
+    background:transparent !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-detail-name {
+    min-height:2.35em;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    font-size:.82rem;
+    line-height:1.18;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-detail-stats {
+    gap:7px;
+    padding:11px 12px;
+    box-shadow:inset 2px 2px 6px rgba(0,0,0,.08) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-stat-row { min-height:30px; gap:8px; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-detail-stat-label { display:inline-flex; align-items:center; gap:7px; min-width:0; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-share-btn {
+    min-height:44px;
+    background:var(--stats-card) !important;
+    border:1px solid var(--stats-line) !important;
+    color:var(--stats-ink) !important;
+    box-shadow:0 4px 11px rgba(0,0,0,.1) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-share-btn:focus-visible { outline:2px solid var(--stats-accent); outline-offset:2px; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-bar-win { background:var(--stats-win) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-bar-draw { background:var(--stats-draw) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-bar-bg { background:var(--stats-loss) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-streak-val { color:var(--stats-accent) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-streak-val span { color:var(--stats-muted) !important; }
+
+@media (max-width:390px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-page { padding-inline:8px; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-body { padding-block:8px !important; }
+}
+@media (min-width:540px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .h2h-rival-tile { min-height:152px; }
+}
+@media (min-width:760px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen { padding-block:22px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-shell {
+        width:min(760px,calc(100vw - 44px)) !important;
+        border-radius:22px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-body { padding-block:14px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-footer { padding:12px 18px 14px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-page { padding-inline:18px; }
+}
