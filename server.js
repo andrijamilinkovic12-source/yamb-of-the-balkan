@@ -1028,6 +1028,7 @@ const MAX_TOURNEY_REWARD = 50000;
 const TOP_SCORE_SUBMIT_GRACE_MS = 15000;
 const GAME_REWARD_CLAIM_WINDOW_MS = 5 * 60 * 1000;
 const TOURNEY_ENTRY_FEE = 5500;
+const TOURNEY_PARTICIPATION_RULES_VERSION = '2026-10-23';
 const TOURNEY_WINNER_REWARD = 44000;
 const TOURNEY_RUNNER_UP_REWARD = 5500;
 const TOURNEY_FINISHED_RESET_DELAY_MS = 24 * 60 * 60 * 1000;
@@ -6094,7 +6095,11 @@ function sanitizeTournamentHistoryPlayer(player) {
         id: sanitizeTournamentHistoryText(player.id, 160),
         name: sanitizeTournamentName(player.name || 'Igrac'),
         photoUrl: sanitizeTournamentHistoryText(player.photoUrl || '', 500),
-        pi: sanitizeTournamentHistoryText(player.pi || player.powerIndex || '', 20)
+        pi: sanitizeTournamentHistoryText(player.pi || player.powerIndex || '', 20),
+        participationRulesVersion: sanitizeTournamentHistoryText(player.participationRulesVersion || '', 40),
+        participationRulesAcceptedAt: Number.isFinite(Number(player.participationRulesAcceptedAt))
+            ? Math.max(0, Math.floor(Number(player.participationRulesAcceptedAt)))
+            : null
     };
 }
 
@@ -14592,6 +14597,14 @@ io.on('connection', (socket) => {
             return;
         }
 
+        if (
+            playerData.tournamentRulesAccepted !== true
+            || playerData.tournamentRulesVersion !== TOURNEY_PARTICIPATION_RULES_VERSION
+        ) {
+            socket.emit('tourney_register_result', { ok: false, reason: 'tourney_rules_acceptance_required' });
+            return;
+        }
+
         let debitResult = null;
 
         try {
@@ -14622,7 +14635,9 @@ io.on('connection', (socket) => {
                 id: uid,
                 name: sanitizeTournamentName(socket.playerName || playerData.name),
                 photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData.photoUrl),
-                pi: serverPi
+                pi: serverPi,
+                participationRulesVersion: TOURNEY_PARTICIPATION_RULES_VERSION,
+                participationRulesAcceptedAt: Date.now()
             };
 
             tournamentState.players.push(tournamentPlayer);

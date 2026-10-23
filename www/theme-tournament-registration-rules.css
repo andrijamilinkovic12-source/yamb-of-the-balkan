@@ -1,0 +1,152 @@
+/* Explicit rule acknowledgement before tournament registration. */
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules {
+    width: 100%;
+    display: grid;
+    gap: 12px;
+    color: var(--text-main);
+    font-family: Montserrat, sans-serif;
+    text-align: left;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules p {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__hero {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: start;
+    gap: 11px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid color-mix(in srgb, var(--gold-main) 38%, var(--text-muted));
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__trophy {
+    display: block;
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 9px color-mix(in srgb, var(--gold-main) 28%, transparent));
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__kicker {
+    color: var(--gold-main);
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__intro {
+    margin-top: 5px !important;
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.43;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__list {
+    display: grid;
+    gap: 10px;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__rule {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: start;
+    gap: 9px;
+    padding-left: 9px;
+    border-left: 3px solid color-mix(in srgb, var(--gold-main) 68%, var(--text-muted));
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__rule--technical {
+    border-left-color: var(--gold-main);
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: var(--text-main);
+    background: color-mix(in srgb, var(--gold-main) 18%, var(--glass-bg));
+    border: 1px solid color-mix(in srgb, var(--gold-main) 58%, var(--text-muted));
+    border-radius: 50%;
+    font-size: 0.69rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__rule-title {
+    color: var(--text-main);
+    font-size: 0.76rem;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__rule-copy {
+    margin-top: 3px !important;
+    color: var(--text-muted);
+    font-size: 0.73rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules__fee {
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in srgb, var(--gold-main) 32%, var(--text-muted));
+    color: var(--text-main);
+    font-size: 0.73rem;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules ~ .cm-btn-group {
+    margin-top: 2px;
+}
+
+#custom-modal-overlay.modal-context-tournament .tourney-participation-rules ~ .cm-btn-group .cm-btn {
+    min-height: 48px;
+    padding: 8px 6px;
+    font-size: 0.67rem;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+@media (max-width: 370px) {
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules {
+        gap: 10px;
+    }
+
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules__hero {
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 9px;
+        padding-bottom: 10px;
+    }
+
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules__trophy {
+        width: 46px;
+        height: 46px;
+    }
+
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules__rule {
+        padding-left: 7px;
+    }
+}
+
+@media (max-height: 620px) {
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules {
+        gap: 9px;
+    }
+
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules__hero {
+        padding-bottom: 9px;
+    }
+
+    #custom-modal-overlay.modal-context-tournament .tourney-participation-rules__list {
+        gap: 8px;
+    }
+}

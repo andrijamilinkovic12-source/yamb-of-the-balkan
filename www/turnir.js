@@ -6,6 +6,7 @@ const tt = (key) => {
 };
 
 const TOURNEY_ENTRY_FEE = 5500;
+const TOURNEY_PARTICIPATION_RULES_VERSION = '2026-10-23';
 
 const getTournamentFinalistSource = (theme = localStorage.getItem('yamb_theme') || 'dark') => {
     if (['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)) return `assets/theme-packs/${theme}/canonical/tournament-awards/finalist-silver-v1.png`;
@@ -54,6 +55,7 @@ class TournamentManager {
 
         this.activeTab = 'info';
         this.pendingRegistration = false;
+        this.registrationRulesPromptOpen = false;
         this.pendingUnregister = false;
         this.reminderInFlight = false;
         this.isIntroPlaying = false;
@@ -1550,9 +1552,62 @@ class TournamentManager {
         `;
     }
 
-    registerPlayer() {
+    buildTournamentParticipationRules(fee) {
+        const text = (key, fallback) => this.escape(this.tr(key, fallback));
+        const feeNotice = this.escape(
+            this.tr(
+                'tourney_participation_rules_fee',
+                'Prihvatanjem pravila potvrđujete prijavu i kotizaciju od {0} dukata.'
+            ).replace('{0}', String(fee))
+        );
+
+        return `
+            <section class="tourney-participation-rules" aria-label="${this.escapeAttr(this.tr('tourney_participation_rules_title', 'PRAVILA UČEŠĆA'))}">
+                <div class="tourney-participation-rules__hero">
+                    <img class="tourney-participation-rules__trophy" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <div>
+                        <p class="tourney-participation-rules__kicker">${text('tourney_participation_rules_kicker', 'OBAVEZA FER-IGRE')}</p>
+                        <p class="tourney-participation-rules__intro">${text('tourney_participation_rules_intro', 'Prijavljujte se samo ako možete da pratite obaveštenja, odgovorite protivniku i odigrate dogovoreni meč. Turnir zavisi od svih osam igrača.')}</p>
+                    </div>
+                </div>
+                <div class="tourney-participation-rules__list" role="list">
+                    <div class="tourney-participation-rules__rule" role="listitem">
+                        <span class="tourney-participation-rules__number" aria-hidden="true">1</span>
+                        <div>
+                            <p class="tourney-participation-rules__rule-title">${text('tourney_participation_rules_activity_title', 'Budite dostupni')}</p>
+                            <p class="tourney-participation-rules__rule-copy">${text('tourney_participation_rules_activity_text', 'Redovno proveravajte turnir, predložite ili prihvatite termin i odazovite se na poziv za meč.')}</p>
+                        </div>
+                    </div>
+                    <div class="tourney-participation-rules__rule tourney-participation-rules__rule--technical" role="listitem">
+                        <span class="tourney-participation-rules__number" aria-hidden="true">2</span>
+                        <div>
+                            <p class="tourney-participation-rules__rule-title">${text('tourney_participation_rules_tp_title', 'Ako meč ostane bez odgovora')}</p>
+                            <p class="tourney-participation-rules__rule-copy">${text('tourney_participation_rules_tp_text', 'Kod dugog neodgovaranja ili neodigravanja, nakon provere aktivnosti i pokušaja dogovora, tehnička pobeda može pripasti aktivnijem protivniku.')}</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="tourney-participation-rules__fee">${feeNotice}</p>
+            </section>
+        `;
+    }
+
+    async confirmTournamentParticipationRules(fee) {
+        if (!this.app?.modal || typeof this.app.modal.confirm !== 'function') return false;
+
+        return this.app.modal.confirm(
+            this.buildTournamentParticipationRules(fee),
+            {
+                title: this.tr('tourney_participation_rules_title', 'PRAVILA UČEŠĆA'),
+                okText: this.tr('tourney_participation_rules_accept', 'PRIHVATAM PRAVILA'),
+                cancelText: this.tr('tourney_participation_rules_decline', 'NE PRIHVATAM'),
+                contextClass: 'tournament'
+            }
+        );
+    }
+
+    async registerPlayer() {
         this.app.soundMgr.click();
-        if (this.pendingRegistration) return;
+        if (this.pendingRegistration || this.registrationRulesPromptOpen) return;
 
         if (this.state.status !== 'registration' || this.state.players.length >= 8) {
             this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
@@ -1571,28 +1626,48 @@ class TournamentManager {
             return;
         }
 
-        const confirmMsg = tt('tourney_confirm_fee') || `Prijava za turnir košta ${fee} ${dukatIconHtml()}.\nDa li želite da se prijavite?`;
+        this.registrationRulesPromptOpen = true;
+        let acceptedRules = false;
+        try {
+            acceptedRules = await this.confirmTournamentParticipationRules(fee);
+        } finally {
+            this.registrationRulesPromptOpen = false;
+        }
 
-        this.app.modal.confirm(confirmMsg).then(potvrda => {
-            if (potvrda) {
-                if (!this.app.socket || !this.app.socket.connected) {
-                    this.app.modal.alert(tt('sys_no_conn') || "Niste povezani na server.", tt('err_title') || "GREŠKA");
-                    return;
-                }
+        if (!acceptedRules || this.pendingRegistration) return;
 
-                this.pendingRegistration = true;
-                this.render();
+        if (this.state.status !== 'registration' || this.state.players.length >= 8) {
+            this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
+            return;
+        }
 
-                let myPi = this.calculateMyPI();
-                const playerData = {
-                    id: this.app.playerId,
-                    name: this.app.playerName,
-                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                    pi: myPi
-                };
-                this.app.socket.emit('tourney_register', playerData);
-            }
-        });
+        currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+        if (currentBalance < fee) {
+            if(this.app.soundMgr.error) this.app.soundMgr.error();
+            this.app.modal.alert(
+                tt('tourney_not_enough_money') || `Nemate dovoljno dukata za prijavu!\nCena prijave je ${fee} ${dukatIconHtml()}.`,
+                tt('warning_title') || "UPOZORENJE"
+            );
+            return;
+        }
+
+        if (!this.app.socket || !this.app.socket.connected) {
+            this.app.modal.alert(tt('sys_no_conn') || "Niste povezani na server.", tt('err_title') || "GREŠKA");
+            return;
+        }
+
+        this.pendingRegistration = true;
+        this.render();
+
+        const playerData = {
+            id: this.app.playerId,
+            name: this.app.playerName,
+            photoUrl: localStorage.getItem('yamb_player_photo') || '',
+            pi: this.calculateMyPI(),
+            tournamentRulesAccepted: true,
+            tournamentRulesVersion: TOURNEY_PARTICIPATION_RULES_VERSION
+        };
+        this.app.socket.emit('tourney_register', playerData);
     }
 
     async unregisterPlayer() {
