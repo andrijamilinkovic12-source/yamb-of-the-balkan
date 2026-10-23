@@ -52,7 +52,7 @@ const entries = (theme, room) => {
         ['state', 'search', 'friend', 'spectate', 'duel', 'avatar'].forEach(role => add(role, `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png`));
         add('close', close(theme));
     } else if (room === 'economy') {
-        add('identity', themed(theme, 'ducats-undo-free-v3.png'));
+        add('identity', themed(theme, `ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png`));
         add('ducat', ...['front', 'inline'].map(variant => themed(theme, `canonical/ducat/ducat-${variant}-v1.png`)));
         add('undo-token', ...['front', 'inline'].map(variant => themed(theme, `canonical/undo-token/undo-token-${variant}-v1.png`)));
         add('reward-video/active', themed(theme, 'canonical/rewarded-video/rewarded-video-active-v1.png'));

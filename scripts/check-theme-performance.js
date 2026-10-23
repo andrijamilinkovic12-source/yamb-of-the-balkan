@@ -317,14 +317,19 @@ for (const manifestAsset of treasuryControlCatalog) {
 for (const role of ['tab-trophies', 'tab-skins', 'tab-effects', 'tab-themes']) {
     const asset = greenTreasuryControlsRegistry.canonicalRuntime.find(candidate => candidate.role === role);
     assert(indexSource.split(asset.path).length - 1 === 1, `Green Treasury UI mora imati tačno jednu ${role} canonical vezu.`);
-    assert(rulesSource.split(asset.path).length - 1 === 1, `Green Pravila moraju imati tačno jednu ${role} canonical vezu.`);
+    assert(rulesSource.split(`treasury-controls/${role}-v1.png`).length - 1 === 1,
+        `Green Pravila moraju imati tačno jednu ${role} canonical vezu preko zajednickog resolvera.`);
 }
-const treasuryControlsBase = 'assets/green-soft-clay/canonical/treasury-controls/';
-assert(managersSource.split(treasuryControlsBase).length - 1 === 3, 'Green Treasury status helperi moraju imati tačno jednu template, lock i insufficient canonical vezu.');
+for (const role of ['status-locked', 'status-insufficient']) {
+    assert(managersSource.includes(`getThemeTreasuryControlSource('${role}')`),
+        `Treasury status helper mora koristiti zajednicki canonical resolver za ${role}.`);
+}
+assert(managersSource.includes('getThemeTreasuryControlSource(iconName)'),
+    'Treasury status template mora koristiti zajednicki canonical resolver.');
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-owned')").length - 1 === 1, 'Owned status mora imati tačno jednu shop vezu.');
-assert(managersSource.includes("const visibleBoughtLabel = isGreenTreasury ? boughtLabel.replace(/^\\s*[✔✓]\\s*/u, '') : boughtLabel;")
+assert(managersSource.includes("const visibleBoughtLabel = boughtLabel.replace(/^\\s*[✔✓]\\s*/u, '');")
     && managersSource.includes("document.body.matches('body:not(:is(.light-theme, .medium-theme"),
-    'Green status Kupljeno mora imati samo jednu kvačicu, bez promene natpisa drugih tema.');
+    'Status Kupljeno mora imati samo jednu kvačicu u svim temama.');
 assert(managersSource.includes('data-green-category=')
     && managersSource.includes('riznica-green-theme-icon')
     && themeCssSource.includes('#riznica-screen .riznica-green-theme-fallback')
@@ -674,15 +679,12 @@ assert(hotseatWinnerRegistryAsset.path === hotseatWinner.runtime.replace(/^www\/
 const hotseatWinnerPath = 'assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png';
 assert(JSON.stringify(greenHotseatWinnerRegistry.forbiddenRuntimePaths) === JSON.stringify(['assets/green-soft-clay/hotseat/winner-v1.png']), 'Green Hotseat Winner nema zaključanu staru runtime putanju.');
 assert(greenHotseatWinnerRegistry.retiredMasterReplacements?.['hotseat/winner-v1.png'] === 'canonical/hotseat-winner/hotseat-winner-v1.png', 'Green Hotseat Winner istorijska master zamena je promenjena.');
-assert(indexSource.split(hotseatWinnerPath).length - 1 === 1 && gameSource.split(hotseatWinnerPath).length - 1 === 1, 'Green Hotseat Winner canonical veze nisu kompletne.');
-assert(gameSource.includes("hotseat: path => path.startsWith('hotseat/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png'"), 'Green stvarni Hotseat room matcher ne razdvaja canonical room i Winner paket.');
-assert(gameSource.includes("gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);") && gameSource.includes("gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);"), 'Green Hotseat Winner više nije ograničen na odlučeni Hotseat rezultat.');
-assert(gameSource.includes("gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');")
-    && gameSource.includes("gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);"), 'Online/tehnički rezultat više ne čisti Hotseat Winner stanje.');
-const hotseatWinnerDisplayRule = themeCssSource.match(/#game-over-screen\.is-hotseat-result\.has-result-winner \.green-hotseat-winner-mark\s*\{([\s\S]*?)\}/)?.[1] || '';
-assert(hotseatWinnerDisplayRule.includes('display: block') && hotseatWinnerDisplayRule.includes('width: 58px') && hotseatWinnerDisplayRule.includes('height: 58px'), 'Green Hotseat Winner zaključani 58x58 prikaz je promenjen.');
-assert(themeCssSource.includes('animation: easterSoloFinishReveal .48s cubic-bezier(.22, 1, .36, 1) both;'), 'Green Hotseat Winner reveal motion je promenjen.');
-assert(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?#game-over-screen\.is-hotseat-result\.screen\.active \.green-hotseat-winner-mark\s*\{[\s\S]*?animation: none !important;/.test(themeCssSource), 'Green Hotseat Winner reduced-motion zaštita je izgubljena.');
+assert(!indexSource.includes(hotseatWinnerPath) && !gameSource.includes(hotseatWinnerPath), 'Istorijski Green Hotseat Winner ne sme se učitavati u novom završnom ekranu.');
+assert(gameSource.includes("hotseat: path => (theme === 'easter' && path.startsWith('game/')) || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png'"), 'Hotseat sobni preloader ponovo učitava staru Winner porodicu.');
+assert(gameSource.includes("gameOverScreen.classList.toggle('is-hotseat-result', isHeadToHeadFinish);"), 'Hotseat rezultat ne koristi zajednički završni ekran.');
+assert(gameSource.includes("gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'is-online-random-result', 'is-online-duel-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');")
+    && gameSource.includes("gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);"), 'Online/tehnički rezultat više ne čisti Hotseat stanje.');
+assert(!themeCssSource.includes('green-hotseat-winner-mark'), 'Stari Green Hotseat Winner CSS je ostao aktivan.');
 for (const exclusion of ['Statistics wins, draws and losses', 'Tournament champion and finalist awards', 'Quarterly League champion, rank and podium identities', 'Solo result marks and actions', 'Online, Invite and technical results', 'Tournament completed-match state', 'Invite accepted and Treasury owned states']) {
     assert(greenHotseatWinnerManifest.semanticExclusions.includes(exclusion), `Hotseat Winner manifest ne razdvaja semantički izuzetak: ${exclusion}`);
 }
@@ -1942,8 +1944,7 @@ const hotseatRoomSource = 'assets/green-soft-clay/canonical/hotseat-room-identit
 const hotseatMenuSource = 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png?v=1';
 assert(indexSource.includes(`class="green-hotseat-soft-clay-icon" data-theme-src="${hotseatMenuSource}"`) && gameSource.includes(`greenIcon: '${hotseatRoomSource}'`) && gameSource.includes(`'${hotseatRoomSource}'`), 'Green Hotseat menu, intro ili sobni katalog nisu povezani sa canonical isporukama.');
 assert(/#main-menu \.green-solo-soft-clay-icon,[^{]+\{[^}]*width:\s*68px !important;[^}]*height:\s*68px !important;/s.test(themeCssSource) && /\.easter-room-intro-mark-wrap\s*\{[^}]*width:\s*clamp\(210px, 34vmin, 290px\);[^}]*height:\s*clamp\(210px, 34vmin, 290px\);/s.test(themeCssSource) && themeCssSource.includes('animation: greenRoomIconPulse 1.8s ease-in-out infinite;'), 'Green Hotseat menu mera ili intro motion je promenjen.');
-assert(/#game-over-screen\.is-hotseat-result\.has-result-winner \.green-hotseat-winner-mark\s*\{[^}]*width:\s*58px;[^}]*height:\s*58px;/s.test(themeCssSource) && themeCssSource.includes('#game-over-screen.is-hotseat-result.screen.active .green-hotseat-winner-mark') && themeCssSource.includes('animation: easterSoloFinishReveal .48s'), 'Green Hotseat Winner prikaz ili motion je promenjen.');
-assert(gameSource.includes("gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);") && /@media \(prefers-reduced-motion: reduce\)[\s\S]*?#game-over-screen\.is-hotseat-result\.screen\.active \.green-hotseat-winner-mark\s*\{[^}]*animation:\s*none !important;/s.test(themeCssSource), 'Green Hotseat remi ili reduced-motion zaštita više nisu očuvani.');
+assert(!indexSource.includes('green-hotseat-winner-mark') && !themeCssSource.includes('green-hotseat-winner-mark'), 'Završni ekran ponovo koristi staru Winner oznaku.');
 const hotseatFallbackStartup = onlinePlayersLoadingHarness.getThemeStartupSources('dark');
 assert(hotseatFallbackStartup.filter(source => source === hotseatMenuSource).length === 1 && !hotseatFallbackStartup.includes(hotseatRoomSource), 'Green Hotseat no-DOM startup mora učitati samo 384px menu sliku.');
 const hotseatMenuFromHtml = indexSource.match(/class="green-hotseat-soft-clay-icon" data-theme-src="([^"]+)"/)?.[1];
@@ -1952,8 +1953,8 @@ const hotseatDomStartup = onlinePlayersLoadingHarness.getThemeStartupSources('da
 onlinePlayersMenuFixture = null;
 assert(hotseatDomStartup.filter(source => source === hotseatMenuSource).length === 1 && !hotseatDomStartup.includes(hotseatRoomSource), 'Green Hotseat DOM startup mora učitati samo 384px menu sliku.');
 const hotseatActualRoomSources = onlinePlayersLoadingHarness.getThemeRoomSources('dark', 'hotseat');
-const hotseatExpectedRoomSources = [hotseatRoomSource, 'assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1'];
-assert(JSON.stringify([...hotseatActualRoomSources].sort()) === JSON.stringify(hotseatExpectedRoomSources.sort()) && !hotseatActualRoomSources.includes(hotseatMenuSource), 'Green Hotseat sobni paket mora imati room znak i odvojeni Winner, bez menu slike.');
+assert(hotseatActualRoomSources.includes(hotseatRoomSource) && !hotseatActualRoomSources.includes(hotseatMenuSource)
+    && hotseatActualRoomSources.every(source => !source.includes('/hotseat-winner/')), 'Green Hotseat sobni paket mora koristiti room znak bez stare Winner slike.');
 for (const theme of ['easter', 'desert', 'severna']) assert(onlinePlayersLoadingHarness.getThemeStartupSources(theme).every(source => !source.includes('green-soft-clay')) && onlinePlayersLoadingHarness.getThemeRoomSources(theme, 'hotseat').every(source => !source.includes('green-soft-clay')), `Green Hotseat identitet curi u drugu temu: ${theme}`);
 const hotseatRoomAuditInfo = readPngInfo(path.join(root, 'docs', 'green-asset-standardization-hotseat-room-identity-audit.png'));
 assert(hotseatRoomAuditInfo.width === 1480 && hotseatRoomAuditInfo.height === 1398 && hotseatRoomAuditInfo.colorType === 6, 'Green Hotseat Room završna audit tabla nedostaje ili je nepotpuna.');
@@ -2343,7 +2344,7 @@ const roomMatchers = {
     treasury: (relative, themeDir) => relative.startsWith('treasury/') || relative.startsWith('treasury-') || relative.startsWith('economy/ducat') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/collection-medals/') || relative.startsWith('canonical/achievement-trophies/') || relative.startsWith('canonical/treasury-controls/') || relative.startsWith('canonical/treasury-effect-previews/') || (themeDir !== 'green-soft-clay' && relative.includes('rewarded-video')),
     tournament: relative => relative.startsWith('tournament/') || relative.startsWith('tournament-') || relative.startsWith('canonical/tournament-navigation/') || relative.startsWith('canonical/tournament-states/') || relative.startsWith('canonical/tournament-awards/'),
     solo: relative => relative.startsWith('solo/') || relative.startsWith('canonical/solo-results/') || relative === 'canonical/solo-room-identity/solo-room-v1.png',
-    hotseat: relative => relative.startsWith('hotseat/') || relative.startsWith('canonical/hotseat-winner/') || relative === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
+    hotseat: relative => relative === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
     opponent: relative => relative.startsWith('opponent/') || relative === 'canonical/online-random-room-identity/online-random-room-v1.png',
     invite: relative => relative.startsWith('invite/') || relative === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
 };

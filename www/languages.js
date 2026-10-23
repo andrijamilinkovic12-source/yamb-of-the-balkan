@@ -1858,24 +1858,11 @@ function dukatIconHtml(extraClass = '') {
         || 'dark';
     const customThemeIds = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
     const theme = customThemeIds.find(id => document.body?.classList.contains(`${id}-theme`)) || activeTheme;
-    const isGreenTheme = activeTheme === 'dark'
-        && !document.body?.classList.contains('light-theme')
-        && !document.body?.classList.contains('medium-theme')
-        && !document.body?.classList.contains('winter-theme')
-        && !document.body?.classList.contains('neon-theme')
-        && !document.body?.classList.contains('amethyst-theme')
-        && !document.body?.classList.contains('easter-theme')
-        && !document.body?.classList.contains('desert-theme')
-        && !document.body?.classList.contains('moon-theme')
-        && !document.body?.classList.contains('severna-theme');
     if (customThemeIds.includes(theme)) {
         const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
         return `<img class="${className} dukat-icon-inline--theme" src="assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${version}.png" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
-    if (isGreenTheme) {
-        return `<img class="${className} dukat-icon-inline--green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
-    }
-    return `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>`;
+    return `<img class="${className} dukat-icon-inline--green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
 }
 
 function formatDukatIcons(value) {

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-22",
-  "definitionSchemaVersion": 61,
+  "updatedOn": "2026-10-23",
+  "definitionSchemaVersion": 62,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
@@ -17,17 +17,19 @@
     "greenFamilies": "www/themes/green/asset-registry.json",
     "nineThemeImplementation": "docs/theme-asset-implementation-map.json",
     "criticalEconomyRefresh": "source-assets/theme-economy-critical-v2/manifest.json",
+    "economyCompositeRefresh": "source-assets/theme-economy-canonical-v4/manifest.json",
     "leaderboardMedalsRefresh": "source-assets/theme-leaderboard-medals-v2/manifest.json",
     "quarterlyLeagueRefresh": "source-assets/theme-quarterly-league-v2/manifest.json",
     "goldRainRefresh": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
-    "supplementaryPacks": 21
+    "supplementaryPacks": 23
   },
   "sourceSha256": {
-    "themeDefinitions": "53b3f08d091de8c5a5d07082b1060014640eadfcd3bdb2bb7e9afbb85f8126ad",
+    "themeDefinitions": "85774523ece293299750e6e0a2f5abcb6d0610329f07478e90bde2bf8beacc01",
     "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
-    "greenRegistry": "3d7d965c793de49cb9305148c290347980b663c8f86dbae8c3e35676c8062bde",
+    "greenRegistry": "c268f8627b5b332a49828e877d98a6219004bcc5696045f28b6b0d54ad8134f0",
     "criticalEconomyRefresh": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9",
+    "economyCompositeRefresh": "447506bd58287255c484fe7ad2dcd094ea31d9fe4c7d56c8840ce9ac07cbe5d6",
     "leaderboardMedalsRefresh": "eff44f19559e8bd032b312291f753fd0f6476fbca934ea69877a3658e90ce7f1",
     "quarterlyLeagueRefresh": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd",
     "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab"
@@ -218,6 +220,42 @@
   ],
   "crossRoomReuse": [
     {
+      "id": "achievementTrophies",
+      "slots": [
+        "canonical/achievement-trophies/achilles-v1",
+        "canonical/achievement-trophies/apprentice-v1",
+        "canonical/achievement-trophies/close_call-v1",
+        "canonical/achievement-trophies/concrete-v1",
+        "canonical/achievement-trophies/firecracker-v1",
+        "canonical/achievement-trophies/first_play-v1",
+        "canonical/achievement-trophies/godlike-v1",
+        "canonical/achievement-trophies/grandmaster-v1",
+        "canonical/achievement-trophies/hazard-v1",
+        "canonical/achievement-trophies/immortal-v1",
+        "canonical/achievement-trophies/kafana-v1",
+        "canonical/achievement-trophies/legend-v1",
+        "canonical/achievement-trophies/math-v1",
+        "canonical/achievement-trophies/miner-v1",
+        "canonical/achievement-trophies/minimal-v1",
+        "canonical/achievement-trophies/mythic-v1",
+        "canonical/achievement-trophies/night_owl-v1",
+        "canonical/achievement-trophies/perfectionist-v1",
+        "canonical/achievement-trophies/potato-v1",
+        "canonical/achievement-trophies/prophet-v1",
+        "canonical/achievement-trophies/score_1000-v1",
+        "canonical/achievement-trophies/sniper-v1",
+        "canonical/achievement-trophies/spite-v1",
+        "canonical/achievement-trophies/surgeon-v1",
+        "canonical/achievement-trophies/sveti_ilija-v1",
+        "canonical/achievement-trophies/veteran-v1"
+      ],
+      "contexts": [
+        "Riznica / Trofeji",
+        "obavestenje o osvojenom trofeju",
+        "pregled trofeja po zavrsetku partije"
+      ]
+    },
+    {
       "id": "ducat",
       "slots": [
         "canonical/ducat/ducat-front-v1",
@@ -390,6 +428,14 @@
       "sha256": "94dc477871b5f444f215bee42f2667662bbdd670cef5bd05f41fa4c1ba9e1c3f"
     },
     {
+      "path": "source-assets/theme-easter-game-megaphone-v1/manifest.json",
+      "sha256": "1b74187161eb0d71c1b5d7931fae3375efa020c4075cf43bcbb5c3d8f0a6010c"
+    },
+    {
+      "path": "source-assets/theme-economy-canonical-v4/manifest.json",
+      "sha256": "447506bd58287255c484fe7ad2dcd094ea31d9fe4c7d56c8840ce9ac07cbe5d6"
+    },
+    {
       "path": "source-assets/theme-economy-critical-v2/manifest.json",
       "sha256": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9"
     },
@@ -479,6 +525,164 @@
         "status": "green-reference; runtime verification tracked in its family registry"
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "ff094d934007c58d2528986833068b9012eb9d2b4f9a363ebefc6cc1b5376eb0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "3169902c572ef26d6819825dadd96107a422ffc2e0d087ae0158bb6ba9195584"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "93018c414ac7017249a382286e3b8cb2905e55983ba1175fa703f50d246f0aa7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "b8203b1777ee61a099e28cf866289fcf824c424f8a444d9f43d0bbf2d655d69d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "cd584001e12a9e4b26ea2cc683fdb8c200b651f1242899a15620b27fdd0337ad"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "a4513fd37e267840d152d759f9e3fc06c5d5a845128a1e1b11736c606254572e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "2f6fd6e3fc62ed42519e84eb217168bf4d90f9cc75d471a746b19313b631603b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "af0015226451ab4afc22b532b244d4593db035d636dda0e91f1605beed38c0f4"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "3f418c5d5deb914218cb644f00da74d63ca75018a83266175478ba5ca62e79cb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "88740713d5f818b3b18f43cd1d74faf110f9aad815e6ff972127d7c450f37762"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "c55cb59257eff82c396437b5a8389b518eeeb763bef2d532fbab2d9f6416ad9f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "316990c9c9400761ce5bfceaa69754b6eb68d8c41d873954d714a06e26c15125"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/math-v1.png",
+            "sha256": "6435bbfcebb947500890baa724c3d0e32cecd8cd5cf86d9fb00921b446a24658"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "eb5f480a88257661a44199459b105cba83ba5e8c69c17dc7825729727f529392"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "388876fa471acc42352124ee7492bb7d07a7d56773d29411e0344a4784a4509f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "3596cf0e6ace95ed1f53a307ba42b23bcf21c6d9164da927f908b886c20a45e2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "dc031b9e1e706dc99e49e0c9e34061a6132560cd0023aeba6e7d79d118699233"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "7911c09ec9a1786fb18336b51d86edcb7fad66066f9a608dcae6ac8ca65f9c5d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "49da6e9d5fd7881a0965b933e1aa40c29649b6c21fe778266847d6c771d3c8f7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "2e7f03e2a7dbfbcce680a5d2b635549a846a0de0d80cae2d600e5c62fa2f5069"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "85b4f001c3922aa5aa1bbd5c5daa18d52e6c49b4743d9e2fc1df60babeacb12e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "0aa9bd45cd55be5a1fddbc0b318c4cee7da7b9ae09dd3e3e18913bb5d8ceec37"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "d376135025eeebfa5396e5fea88c8ce70260e5eaaf90838934345c1ca4e1f5f0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "63f09fc627f39b34ca2108a244e89696afbeed21566f05ca20b4cdf5fe35983c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "63ecbfba3ef52e3a8ff12663dc8b43878ad0ad647bbc7b0542f5ad4824e604bd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "c84e8165651a1090ab654fb4a8b747b11989871f2c4ee8494360a287a020efc8"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -743,20 +947,26 @@
           {
             "slotId": "canonical/settings-controls/sound-v1",
             "status": "file-present",
-            "productionPath": "www/assets/green-soft-clay/canonical/settings-controls/sound-v1.png",
-            "sha256": "0b5a470fb79fc8e8805a4a627a88d4639aafc68ee631ff1d9f9ab0c8561a7ce4"
+            "productionPath": "www/assets/green-soft-clay/canonical/game-header/sound-v1.png",
+            "sha256": "a084907789b8f8838498fcc199afcb24ef900b8043fc443445add1279579b13d",
+            "supersedes": "www/assets/green-soft-clay/canonical/settings-controls/sound-v1.png",
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
             "status": "file-present",
-            "productionPath": "www/assets/green-soft-clay/canonical/settings-controls/music-v1.png",
-            "sha256": "8c81adfd83a6389ef5c5f55ab098e36610e1a11427731bbaad1edfb9468bd88f"
+            "productionPath": "www/assets/green-soft-clay/canonical/game-header/music-v1.png",
+            "sha256": "df4115fa606706cac83cdff14fd81949c2265540cd493673e22485ca6a9e410e",
+            "supersedes": "www/assets/green-soft-clay/canonical/settings-controls/music-v1.png",
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
             "status": "file-present",
-            "productionPath": "www/assets/green-soft-clay/canonical/settings-controls/vibration-v1.png",
-            "sha256": "893e80c00e4cf4432bd7fcd9cba2deeeee96807faf7ce95c7421c28ee6b871c0"
+            "productionPath": "www/assets/green-soft-clay/canonical/game-header/vibration-v1.png",
+            "sha256": "656b5176d611d669a875a33646eb7aac58959a40432af55bfcc1706c385c49a8",
+            "supersedes": "www/assets/green-soft-clay/canonical/settings-controls/vibration-v1.png",
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -789,7 +999,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -815,6 +1025,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "61fe8702d03b55a873b56df00d9e4e6fc7a0cbdb42ed7bc46253e13815ac7cd5"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "5ab0a9a9965412d9ccc822d81e00ceaf52f4b9d9ab29ae480be24b49b301c2b0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "438b033763db8558b4aeca4779d573235c1f967e316a884b5f4fef0fefde2f50"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "eb5d7bfcdba976dd444cdc219325db32492c1fddaee6fb1c7c3fcda2d3927f09"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "f6b7ef51f5d8f2ffde6cf124f29afde558664b01d503d658056a5f3cd43ca2bc"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "3a0712e4d0686748b1a8034dfe285a3886fdba4f1eb326eb4b017aa836bd1897"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "9194c415529cb7e682492d16901a26db278963e5e8a0cc8fc033df69d24ed7f9"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "1c321564b6da382d2e75373eb8073467a821ea4882816fa0424459fd733b76f7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "57f2ec386dd1aed67a6e5d324c74873aad10e157b5d738b4ec8aec309fe79805"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "4e6efb8ae048f6d0c0ad24b1e3154525a0e4552a73203d938177c595b94e098c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "47598219d1ffbe0e0ea107f550740f9164a7334dc53be3d3924e2aba9223a7ed"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "90eb3f2babab63b9355a63c2a53f799fac08bd3f55bb58f00cafeca158938bb7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/math-v1.png",
+            "sha256": "bd69277b949f88c5f3e53e44467453ff3893b445ef627c3cb657195a9a683886"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "2f72c6fdfe17520ff1c697aed100b538eb1acb9d4c057e37bc0ca12f85823783"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "02a9577aa31981c3641ffd50d7568b37f78306f157fdf62a55b79adfd5b5d30d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "893f338e4f23d55fbce31a2ba0966063bd647516a473165bac47343f608ecea4"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "e425fd741e7d7964754eea235f7fad3b2923128ead3ddcae3b38d3d32a535a76"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "44297192a16fd4169b19c760c327fc8f91c8fe816c091e9c380805f51a2e42a4"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "9c3acfd9f2f9a5c8e4df9ff0bceb4b4c266bc757572c6d4ccfdd5a62453f0c74"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "3d6c0bf7b6e026c1a6911bdd59fc568dc6ad02db44bf430fbf7d011ec9c1d285"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "c6489f83641ac237b73563650a7f506031d2e8d72fb0cfe3e50512c3118b4292"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "59b5dca14db2fd7b447e0449cb817cae059ad4038dd89dd9ff58a3b5cf5d3c64"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "a9ef116d1d2ba74334e5296a5f3d67585280341f232973a4f36bcf848729f908"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "39f148862cb2e426fbcad21e246be190be7e6c485ae214f1a824982d84e23d03"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "e2828a722308dfb51f7e79b7d465b46c747c4ae0f0d0dfb223dad9b71b12e3fd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "1592b076e7b4c1f1eb52c70ceca6929c0264d4a8211a070914fe32ffbe9ba1e0"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -1080,18 +1448,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/game-header/sound-v1.png",
+            "sha256": "8d6670abfa04757dfaa65bbc4d5e146ba39b954eb4e15ba49ce8960b30dbe004",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/game-header/music-v1.png",
+            "sha256": "70a9ed965d1aff486239e3d3860b573977b45d0a4e1d04ae7bb3d72ae17d78a5",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/light/canonical/game-header/vibration-v1.png",
+            "sha256": "e5f8c3afa489296d896078046770f0dae4567c5dc8159a6b6cafdc924c2032be",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -1124,7 +1501,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -1150,6 +1527,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "79f219fd257542520be0a6afddbd9ab64f8d7c883e7e0d39962b7b6309b8adfb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "8a2645be138d224cb8eea0c97b50283a6b647b5eea35e79a503a83e110968ded"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "08841d59913bf16c553516850d2a7913862f08f48de6f00c70df950309414915"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "683153104104db9465ee53a7b26cd0c0774457232ed6299ea27d798e48706d6d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "7e2cf90d9685993f43338cfbe3f3f855482ba4188410ea1ed2ee59791dd60c3a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "4e8a5a2f9f1e3c65edb7893d8d11dc3d8bf31d872832fcb455b788d7a5e3c4ec"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "c1cc2773285d9cc896b49b07dbce7204a0c11fe3129d8804f0a655a1f8ed8ffb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "ce483e9375820d716ab87d3b1fc5eae57f88f3c66f03a0a75684c9ae3fd94fd7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "1e5036ae09b63d85e777f8358439b8d4844891a22e37814dcae220388436227f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "b9763dd87695249d781f23e9acc6f3bb43a86c639f84884875190a024e192cd3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "e9ee7a395f08231330fbe243808d9340c13dbe206be26d4f162bd4b978f59c21"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "a10b95676d7ef4f60e4c6ec57f760d7d1f6f223e5da44e21da6e358ee63ffb23"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/math-v1.png",
+            "sha256": "b3ca2f176832bb15af57d89f655c7886a11100de6ffb9c63408f43cbac7da73a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "589cf50744a20c9b892b723a72ac2b5ea668383a3fa60fe90d0c76fd9809f122"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "4ead0394a2a6ae0f7279fd428588b3e89f7977f08e92dfb2747662a5c103ee5c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "35cffd0d591dca009cf6945c3636c69cc9542c870b24f36e2726d190c271741d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "b6b95dc3a74e76439e92b871563d563b7b516ace600910ae208197a2c43297cb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "8043c249272caae532e948ae600866ba3e85db953442602ad1009845064fedd2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "fbf5445fbf7f5246922380b399d1080631918ef1c28d818aedb6985b1911ef50"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "0b1bc9add897405be0adc3b455e491f04c0516ae3c7438c392ce44d227e7ca1f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "60f5a36842da4e954a5457037590655956f3548678c66027df91af6258ffa9e2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "03adc30210114b684fe138eb8ad0af369a81e85128e6da5c611bc0910eeff2c3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "b9d444ac2848a305345136189e8b0430a536113d814212ff70b1fda4dafc4457"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "e22caf4f8d4a6d7af38e4c7e310fb172e0f332a1a4709f9572f8ab2982f39227"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "285735087b03542eeb98bbede7068ea97312b5b57b14b43356680adb16ff27c6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "30e571884c391bdc18a2bdfc24f3212490083d139b889bb27be0a4185b0fbdb3"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -1415,18 +1950,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/game-header/sound-v1.png",
+            "sha256": "ee2d1d70f687245174564fc8609b5a897770cdba6e53c2630ebb562f050e8781",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/game-header/music-v1.png",
+            "sha256": "370e402e430da780cc18684af604daba5c26df2c8a481d743d5450eebafa66d2",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/medium/canonical/game-header/vibration-v1.png",
+            "sha256": "7ae62238a14feba7a3ef1569d4c54609c9a4c8ddbaead29a5c51f3e5bcbffdc9",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -1459,7 +2003,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -1485,6 +2029,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "ce691fadf9458673152084e4f935c914017cd3c69c662fdcf29a8539e1d314c8"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "9f1f94904158095c7aa046ded436e373c391d582cdbad5613fe702cf7708a856"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "0356a14987790e90a0d8c9217598b13cd1c204b5fb684adab25ec32f0165b224"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "49b1fef859e349fc57dc4dc514fb66afc11269f18c0657ea731e062f4cbf703e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "8150c609045687c62d51e9db7ccb7db1658c35263f4b8f1ab80cbd5eea80f935"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "e3663b70da56ebb302f0237bd04659c381e0a0471f4e0c45920631718a10babf"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "eaad56a0c3e8daba00d28aa45bf75a43d3696c56003a3236b5373ee90c74c80d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "deba49a69108aa7c07b6d4fba8c9416009b1a99076fa825c7d6355a7267578ce"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "2538dca7913e46f52da41d0fb581a02fa4633fa18a354164016ec15cb38a8e63"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "83981287dc7950c1d262eda676669173a474dfce14034d2d97345f0a6552e6fb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "8d6024bb3ee19f366a27a7aecc0db66459727175c65f2cd42de34ea0d27f258b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "2f15310cd9931f7f765c6a15ebb32717b43f50f8ea6b1810e304db206381db29"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/math-v1.png",
+            "sha256": "60d5c538c49e739451345703eec314647a3ddae4ff6dadb2ae754b466c6390f5"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "b981a6cbd8c28a61a6f834326e2cf21006853341e905ba1b6911dcb73ac8837b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "d133de07782c4b502ae938059b678291cf46f6bdc1cb2706d13e63f8d734c2e9"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "c21870a61fb0573d942d03f919d135be677986b3d74aa3fcda93a77f8b67bba8"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "f154cf2eaae04870922242d011e44e2f8c06f71089f6ddb3dd1b0678670109f8"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "797f033172eca2e5bc1f311a07d82813162fbfb096d5157dfadb3e1375399b4a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "7bc25882919725020ff2ca3949bc00d7f0e7a38ab1dff8e5bcbc438e480d758f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "6fada5179c75a5a564d50ad83861435de7015bd3f07813707183e2e37722750a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "b62aae7e31c268dc53ca3693ffedaca861b7fad3311d3937df5cc1afecfe194a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "7a0a4e9caaec98f62e410b3351e791b62be8e0c2f46a6d1cd850e4efeb55638f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "a6194a9612dbd829da2bc7a2e962829f2d2ef99f23e474fa3cb351e02bb26ff1"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "3879b0259dc50291a8f62a69bfda04ba277d02f2f895a50a87b12ae2631b4ad3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "75eb326b17af42fe8e0fe65b7cd2ae6d8d6afc0bd1cf3bd23fa24b3417dd6a23"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "783a03ed879fe1321848fc242a606a925e45c53a00d6a950de0e64775e13ccc8"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -1750,18 +2452,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/game-header/sound-v1.png",
+            "sha256": "e7447819df0b4b83fa876e3d49b752c8bf638ccb6c7b6e461937fb66eb9c0c31",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/game-header/music-v1.png",
+            "sha256": "8990f0d6ee36c03ebb022fcdc9a9e7a9aba98e592bfe7c5670de0cb3e43e148c",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/winter/canonical/game-header/vibration-v1.png",
+            "sha256": "7b47c8c60aa62012909048a46ba98fb0fe8f2dc1f2df770fa714858731ec3212",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -1778,9 +2489,14 @@
             "ducat",
             "undoToken"
           ],
-          "menuPath": "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v3.png",
-          "roomPath": "www/assets/theme-packs/winter/ducats-undo-free-v3.png",
-          "visualAudit": "pending-against-active-canonical-components"
+          "menuPath": "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png",
+          "roomPath": "www/assets/theme-packs/winter/ducats-undo-free-v4.png",
+          "masterPath": "source-assets/theme-economy-canonical-v4/winter/economy-master-v4.png",
+          "supersedes": [
+            "www/assets/theme-packs/winter/ducats-undo-free-v3.png",
+            "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v3.png"
+          ],
+          "visualAudit": "reviewed-against-active-canonical-components"
         },
         "goldRain": {
           "dependency": "ducat",
@@ -1794,7 +2510,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -1820,6 +2536,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "9617d67f27dc07c27c43c4981e562466bef3c511e7609669d9e5ba291603b670"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "34c98bfad0dafba949ebccf0ffa35dc975ed5a55cf9df22d0a5328830ba8a7ae"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "5fadb49497b90b1dd826dc688a315a34eb8cec340b976ba35631f363b869aefe"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "acd9ad70c6ffadcef4a3e046900784a0a72699bf2ad7b8ba4610cc008d05cd29"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "a2b081942407ece9d8595ff76b3795cfa8da01e7ade330a8d3fb38aba8cf3260"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "6efdb1648cd9c6c20b6552ca6d1a3bcd672db26ff72f5fa02dba45afdd61d4f0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "eef922ce82028f4bc0784cf099002bf4d74b8b03896651babc578e6d55db6223"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "dfc5d851533312916e2a1d9f870a39ba38b18275dfe3e6b1dd1925abe6426ca6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "9edc0b1c7bc9116a279c9667601aa597c783fee4cce3297869fed14291bbb4d7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "bc3016fa163af05983ed443f9b2c4d9a8aadd4694b02a55aba875057f2e4aadd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "ccb2e241a592338048160849f97836159e4081613603477bcbe2208f83838a6c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "2464947f2b3f0ebee6c19693a2ce0ea0f8c6c03fe6ba4fceb8e289f9a51a12dc"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/math-v1.png",
+            "sha256": "283e2488ce0aed1a312a23db12d36f1add953c182fce419a087900372983aef3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "941a9de55dfddf36cf35d178d432d530ce2bd22b8e169191cca0dceac9f4d024"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "286e78317324eb93f33941c1dd95b0a05f6ffecdbb5b90d2007296edb86f140e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "e97bed6f0526230c5e0be47b999fc8921702ea2b0ac7f6aeca6a9cde1d52c713"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "98b217eaa0d3b3abbe02d95f1828ce9309d336dfc17736a0eef0c49b1850d9b0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "b3c52ec6bdf4eaa5cf80ab8f32d5c61900ecbe18700f4ac589c04330a417dfe6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "787f93d153a2c71c23f9d7b1434d504f867db707cb6cfd1b7b17dc5cc74aca2d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "d9e5fd682361ffca4ceb7ff2f6034f322bd6343eb67775f3cc53e6c211aa4f09"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "106d88245025fdf51082c1352d849268f0d49606dc7b5f04bb19958442d4dbfa"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "6ecc0e7ffb7e7e5e83fe2b50cfefdbef17d531c2340fe1a1824d3b7dbf18d4b5"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "074471d7d568a06309677bec5d4a535eeddaa9121eb636924d8c2abcd96069b2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "c0722dbd19d30d5f8b8a171972e945267af64f82cc34d9b21c8b4c6884625ee5"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "335f19565b7ca25334ade8116e4babcbf6183906c87f8ec3d02781e7db815b1d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "5f3e30b2a7e1a02248b9cb792f4c0c6082416e78dbba4945f92e3d252e7c1093"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -2085,18 +2959,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/game-header/sound-v1.png",
+            "sha256": "1c51f3732815f6d32b629471cc6751931f362bcff8d439c8bd032f4e224f2335",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/game-header/music-v1.png",
+            "sha256": "4ec258276301a7a80f5f5ca62efb164a548bc172a9fc1267f111ebe653ed6f01",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/neon/canonical/game-header/vibration-v1.png",
+            "sha256": "c71cf20d65e955617398001a2c90d92b19adb499f51a3564753e01031d741adb",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -2129,7 +3012,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -2155,6 +3038,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "4369434005af58ced143b1ed03bd51d06c12ce5eca98557f0e8587f5dd4935e6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "f5d30db86a233c223f185ec9b196b0240eaa35895660ead32fc8073eca0fdad2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "61358b81aa90d7a51d9f282bd877821d0f255493c24c3c2cadc2043c4c7d01de"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "6b719720de31f10005d6668bbe4d8b163f3dbfd9b5de64df8e51877021fc238e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "9d9fb90a77043b98410fa0b8c68c168c05b85ddb5c72d1bed8e3245ec0bb32ac"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "598f94ba9135036def33ac901808c3a4bde9a1d1bf28ee3ee251c579cf8b1a93"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "80782e94ea410261d27bfc1a02bef4d01fb0b158be35d73c6701fbf1dd9ce9ff"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "86d738f7db71008a86b96bfd605fe8b92bd6c59c858e5440369830461a71d1d6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "a91851bfdc148d4a9be04f20d658100c071d7018dfdc72b896b67ed3be18ecde"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "32281d309383c2b2169919b2fe54fefc83919fc8ec5e96f4327c22cf2ae3559a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "3608f538500e85b4f080f56c3476e3e277f4e1bc7fa5f3982b65c19095eec050"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "e503f93bd60f5d72ebf30152bddcf941d89acf993bdeada250d5c4d79049333e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/math-v1.png",
+            "sha256": "c213f29709e83f9fd493d8fa896d05b89d4b420861f2c1e2204c7dbc83d9009c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "2b7f61560448c85dd1df23b4748eb17d7dee36d2a6836c29ebd635bece8ade8b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "9955dcf928182cc98837ee231613caad977ee3e7d087ef2a1f22b5054b746631"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "21f351923e9b3475f493f73a999187762ec6c5a2716ff9fbf58ff86ea1d1e256"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "4e23709d784a689c82573aa5e50145ffe599acb55d50ccf3f6d6fafde48cffad"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "221b899d1415f3d5fc59e4ba6c9c61c862e49ddd95b20f65d1d2bd10603ac82b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "bde6fe9e637de7605f2dd99e0bfb6c11d9eb09d840fbcc63945303210096561b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "08150c63d171bcb8b6520c6f52e2fd14089d375fe43346e5c97bcc2390cfd974"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "e3347c4782db5d17077e6748acd1bfb13ad7b6ff8f95e5031744872441feb9a6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "fd459d9e5cba929a46a1cd3d6278072045f41bd7987f8f6c86e95334eea7b6fd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "6ba3eb79b7f8437e3933b289d8bba419007878de8ee31837ed0e01e64a3eda53"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "e8649da874c4a065595ff860a56c63c842cbb8d0045b669e76c718124c098f60"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "ba459320d11c0a0ba26b9a8b3fcdc62badfe8742c80f3da7fc6f765a04923f81"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "d8e23db9b4cc56a1979ec21a69562ef4b032640fb1d548a299e9b800feb1ec15"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -2420,18 +3461,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/game-header/sound-v1.png",
+            "sha256": "64fa7139b92d50e69c924244b0a8e4d520ea63bbd8d6093637669e7d064c66f7",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/game-header/music-v1.png",
+            "sha256": "dc28ad7a70ed5d2f41ca7642a85633e8fe401e17918ce7a4f342c3fb5da4fbfa",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/amethyst/canonical/game-header/vibration-v1.png",
+            "sha256": "ebb69b3f26126668d09c839624f2b2b581dba2173ee8def40827362da19914ce",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -2464,7 +3514,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -2490,6 +3540,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "c1e11eecdfc0d83c661b3f8ac86c75ea1ec5d51b0edf2c38fe975bc827869779"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "5447ee08db4e2babdf014e103ffb4cdf6acd64f126b7824dd737ba1ab8642a7c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "573caf2ecb16ba3f1db3ab6272a1172d18f4d84e74fb1ddf641c804330f2089c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "d794779b9f317d725cf50882266b4f35283a6c7a21b5246328bbae92bc87cbdb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "6b00b66472b61568ad5b80d78082256701dc0c74337e6334ac8b50982c5545bd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "ec51dd71170a1232e96e370958aa608bf6d2a463b35fd66820e8f43bbf885c06"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "f878743b9519113b6f7f435fba1c7a15a4be7af5e85c62106a57c987e5444e3f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "5297e26a8c7f122f8f6e194bf1607e72884977a9cc8c63378e66c5267627971a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "e1d2e4f921eb6323e0c9706e31c760c5bccf64038fb8132dc65e53a05679dd53"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "47a5c8779081914912f1e4a882d9ea7819758091991a371c012e32d6d9e7e39e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "fd46ab764e34e971d3de94640cc104fbddba20b39aea74e2f0ca941709b0612f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "a66d3a63b9d299a9c1ac9d839e8131acfe729f229bc4c43e94b2fa2f318a06df"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/math-v1.png",
+            "sha256": "23e2815d10284749459816f1bf55fcaaab36931e6039b6c62840daa9aa8a3b08"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "9256fa854c9fc2c8769ceece0f82ef70563762967abfd81a522c82e1e15fa403"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "024e2d54e555f983b65dac8686f866cafbddd78428f1512f817b9fe7647fbb2f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "8c4fe97b39ce7383e2a7a85adcf13ed0b23efd0c365224c8456e32f96279d0e3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "d88c54a705066cdc8b525811d0f6d6ca8e38e5b7536a5e73b82be7b5c6d690dc"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "5347857a745913908a5320ff2c6a857425cc763e700447b312ccace90f324b0b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "28cea45da034a509ef137bf599b2e15ac74f39c2fcae20cd6310c41db5754c40"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "8e3610c5b92fac57990b7946f4e7e726128d3b7c327ee78fdb051479a84a6cab"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "183d0da7bdbbc501a9ab32d999252de1b6f482b368230e830ea070caaafc6f24"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "114dcea45df50b3f80c760c61e60e6d34c5fedd33716cb29a92f618e42be4a86"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "cd3c422b8ee48c50e605db49e83fe13e5c0323836e9b21c11869a1c283df03a9"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "1a6d13b1c8f206b14628daf08144a598dd549661d297bab24ec13036d1c52363"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "4e808b3ca91208b23d1df3c02289a426680e474ffe502b6a4eea49b59fb15274"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "c6e8763331bfded01be7a637bae50a3559d104458f039aed492da1219fc7f825"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -2788,18 +3996,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/game-header/sound-v1.png",
+            "sha256": "536c49c5ed3bf645b5162ddfdd1d8860b346afbf1dc80123808e22fb518d9e22",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/game-header/music-v1.png",
+            "sha256": "795868c202525f5c1fda2c48b62fa5fdf780456c122a6d670d0a41a78f89c419",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/easter/canonical/game-header/vibration-v1.png",
+            "sha256": "b73e7f761f2d99e910792f07eb177eeaae250cacbf60ec43ecf2aadca742eca2",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -2861,6 +4078,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "2cbbf5728d35341efdfdb440fdf0ee6e6e61c24039dd53b7f19647a0fcd0cc2f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "0dfd9b77bd5d1e0fa2d526b2dd97207a2ed38698b82d211f52d5a98b17142a3a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "aae6b75f900a8670ba24af86f3b46f2048d71ff638528f79ecd9920c1877e6c8"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "3aed2fa58e305774d52a06a0cff3dd10689596c7d75af666d8b079f3d459a6d6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "9ccf32c77141a23d670c7f37d1ce6c964ab5dc4be217f8315a1c3584f0ae4fcc"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "ac70c34f161af0b3cf12a6c378c68a076f6ea047714acc53d4b3a1b6a4994762"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "40912851d03d0269de528147a9f8fd6cccb2b786c8d955457a305e79f7dacf9c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "93126c07197798b0fd6b20e7839422781d077fc7cf6a6ed846782b1cbd8d2bdf"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "571c87989d23e4411bf43ba1b2e6b24509b24f8ea7e7429d51e6ff3245e3d4fd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "3bdd1cb01c3452d4d0278614795eb175f82e397157b117492ac02665ddcca1e7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "26bd956a3245b8e8400415747360e057bb9145d0d1c00e3c3d5926effc993465"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "861295de512234a12403d4393e4023ee6cce21fbd8a67de149f13c6c34c4de0f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/math-v1.png",
+            "sha256": "450f8bf4ad2342754fbbcec3db0a3a96540beba62e15e376898ffc33c0b83626"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "4908d974bfbdaa3c8dc0aa54e725aab1096a4389c552f5d42bdd193aa3927aab"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "4af83eedb1b13c2cfae62562e4852c8194a940cd8a821a6a2b6a2375c426a9a0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "f935b2207235e6989672a374d7689ae2d64ebbd9797d12c9c4f89f620237d096"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "73b50389a7d84fa28cab26c1adf78bcec1bd249271e538af4ba39132e672e60f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "7c58024e2acfb8f1e115973b7ed9a1bd5f170ffcf26b61d271a97ae89ff827ba"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "902d20e81a73dd4b57bb19f23f29d9343afc36cc51bc60f2e4441e63efae4813"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "60482d69239f2c3f68a416e61197b0691110246bbccf6b3d1b2cb421d1aafa81"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "bedb87bc549af09e30d45e64b0caf1c4b8cd173e539b2f09ad1799352a0a635d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "130cff4ba953f976a7f80168d5aab5c37efbb4838760edc91dfaa8c78c95fe19"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "e0de6069d0e292054ed157d1b4ad8afd23f324b1cead48904f61639a418d82c4"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "588da34083c3277d952025ba1ffc8593e91fbccbcbca5bc0766c05cb81751760"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "ea314c71af2d9ca5d423890fa1a18b33bfb16a4c70673b6d99a6fb4728668c97"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "08df3a98d855a794cba1bdd0d40157e75226817bb021e2d80b86008956b533e5"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -3159,18 +4534,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/game-header/sound-v1.png",
+            "sha256": "3a6feed804b8aa7e1791ddb9cb3f48a13e409669ecc25e2115dbb7ecc75aae72",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/game-header/music-v1.png",
+            "sha256": "f6295e3c32cd82824982e115469615dfa0d4cc7b20e0988678b99077bd1d5cdf",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/desert/canonical/game-header/vibration-v1.png",
+            "sha256": "adb974aebe6b7ce33d3b7be090343259b1bdc3a215397b57d5ccd966469bc705",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -3187,9 +4571,14 @@
             "ducat",
             "undoToken"
           ],
-          "menuPath": "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v3.png",
-          "roomPath": "www/assets/theme-packs/desert/ducats-undo-free-v3.png",
-          "visualAudit": "pending-against-active-canonical-components"
+          "menuPath": "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png",
+          "roomPath": "www/assets/theme-packs/desert/ducats-undo-free-v4.png",
+          "masterPath": "source-assets/theme-economy-canonical-v4/desert/economy-master-v4.png",
+          "supersedes": [
+            "www/assets/theme-packs/desert/ducats-undo-free-v3.png",
+            "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v3.png"
+          ],
+          "visualAudit": "reviewed-against-active-canonical-components"
         },
         "goldRain": {
           "dependency": "ducat",
@@ -3232,6 +4621,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "133b159222fea3e9d4b8756c78b6fd7096e3bc75428b0de2c2cc2badf8ae44ea"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "9d7e5f773a09bb5fbd10d0a6529ecfda68ff710ca31a93a542341c824905504e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "db412744237f636a3567f95a768de243c3418d0c8dc0755952a49d4df85a317f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "5c71913d5d8fb11170ce91adb3c8541de41b6aa83bfc0ea81736ca8915f3e49b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "520c370c73e30a7737308b05c22410f2c37bab3739e96f5e619d242168b95ed2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "02d14c1fa362b5f5a2dcbc8d324e8421c1d83ed458dfc5726c5d57ff02a075b4"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "69d036faa18d8355ab9c975ae457e58bdf9203dfcd60a1a57a96ec8afeec9d1a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "32bbf4fa6959895c46e059a5cdc33117bac45421f8d7330eb871b7a129c2738e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "1d3a1f6128ae7a63b8b6e46b2335e8d960ccb4d729065bce648b503ba066125a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "688eba189b53f0867f59245b244e4d596e32b2ef150a3207b6895e1e807dedb3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "b287e4f58b71ba9ebd62fae707155d0df61114cd3b0630d959604ecfbfeea74b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "ffaad4f42bd6d5b07a5afb281f7a879c2dcee89ffe1f07af515554e6d3e06e1f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/math-v1.png",
+            "sha256": "fb7b51d8fbd0fb186c0ec86b7d5e26f1dd8fbe02fe759ca26a0878e6353c67c3"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "87082609f91fa19ad02f3d8b90c5285cb4721a2a2dec9ee389fd490c0d7bee5d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "0619f03e3e100f840c3ec330a0d0c662b003ba9c4b9b8c96b9379613cac20d85"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "cac01b317f9aa2ada810e5674c650ac01cf9aebb668ba62122f8459f461798ec"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "82a3e8e1d848708ebfa0a86bbf6fb1037fec448c97599c2ffd23cc905c4362b2"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "8ee9529901338f2da3385ad0424846dbe4678547743bcd5b4334256fdd32c72c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "add7d344767a0eb69b2d14f85947c76c8519a76581d44c4956233ae4a26de1f0"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "8392ea8954b97d235c993a378db946d3ec23b0979c2bc6bdd9847f39676b69db"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "c35d2c4c1c9ea6d1a1241db6a3175d28b8238eb69f78e3566e068d96d57c11e7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "dec23ac07247986628b68b22c9d50a4fd77d38c1cdb10a0a7e331fe4caa1f1b1"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "17d090b48bad5e952be6533944de10df93c23a09b1eff2bb01f5fe59ff99a2f1"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "c6387a49a6c588419e728f4c0accdbc47c1c2e022726fc314ba127d47329de4a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "6bb5cb6c5d3071a42db3732ffb4cc915175a0923cd7cd50158f8d99f273ee48f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "c0beb52a3e087e44f14c237914dd7f17ff1dca4187d1b28332da68298ba72fa2"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -3497,18 +5044,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/game-header/sound-v1.png",
+            "sha256": "ba9593cce4e59da5b9d956dbcc10cc50e92c973602d2568dd8b8c96ce1ba316c",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/game-header/music-v1.png",
+            "sha256": "77eb738242ab12e65c928f1a6cfd8a0e3dfae8bef8acfadfa0252c3efb993e42",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/moon/canonical/game-header/vibration-v1.png",
+            "sha256": "5225b9f7f78415137bc36e01b448edb22e6af74623aa187bd5a3a4f103e882e1",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -3525,9 +5081,14 @@
             "ducat",
             "undoToken"
           ],
-          "menuPath": "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v3.png",
-          "roomPath": "www/assets/theme-packs/moon/ducats-undo-free-v3.png",
-          "visualAudit": "pending-against-active-canonical-components"
+          "menuPath": "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png",
+          "roomPath": "www/assets/theme-packs/moon/ducats-undo-free-v4.png",
+          "masterPath": "source-assets/theme-economy-canonical-v4/moon/economy-master-v4.png",
+          "supersedes": [
+            "www/assets/theme-packs/moon/ducats-undo-free-v3.png",
+            "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v3.png"
+          ],
+          "visualAudit": "reviewed-against-active-canonical-components"
         },
         "goldRain": {
           "dependency": "ducat",
@@ -3541,7 +5102,7 @@
             "turnirska nagrada",
             "zavrsni ekran nakon dupliranja"
           ],
-          "previewVisualAudit": "not-yet-compared-with-active-coin"
+          "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
         }
       }
     },
@@ -3567,6 +5128,164 @@
         "missingMasters": 0
       },
       "identities": {
+        "achievementTrophies": [
+          {
+            "slotId": "canonical/achievement-trophies/achilles-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/achilles-v1.png",
+            "sha256": "49a11386aeabd7c849e9479e8522a5b9e210d95984a73f33a658e410070a17bd"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/apprentice-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/apprentice-v1.png",
+            "sha256": "b3a8714099b534f4fd5fd3f6dd83165f91d0f2add9ecf891d5bec0232741c505"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/close_call-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/close_call-v1.png",
+            "sha256": "45d04768a8c941b102678652e89a2c498d9a091840ab96671c2c749804797a85"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/concrete-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/concrete-v1.png",
+            "sha256": "8e3a981458e27907ebaa8b0bdb1f1dceb8dd3b8243afa428d2b5b74d1169c19b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/firecracker-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/firecracker-v1.png",
+            "sha256": "7704c14141b4708d3d6e43576d5a47a70d75e669595bbaad92bed644a45e3ad8"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/first_play-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/first_play-v1.png",
+            "sha256": "beaf0cee5965e216edf19099790bc5f263183fe18da273a4a7a75e0a0d0af3e7"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/godlike-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/godlike-v1.png",
+            "sha256": "53473ce199907bc4d0cdf30fd8b68010819da12fda51ee520735a9641210a848"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/grandmaster-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/grandmaster-v1.png",
+            "sha256": "95f36adef70b44ab74ac8ff26bb1874a2ce13ec2fa03d1ea211f898b33b837a5"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/hazard-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/hazard-v1.png",
+            "sha256": "97aff7d7d9e554e4d47bc12050dff004398b7f691c168080df6b2c40a54d3723"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/immortal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/immortal-v1.png",
+            "sha256": "3149bf8fa265367498e5a57291fe8769ba6c915fbe973e51f8cf98f119f7bc07"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/kafana-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/kafana-v1.png",
+            "sha256": "9f061c63312d31c43b3530876061ab504ea6a44382cf2116a5c5a24c3b7ba989"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/legend-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/legend-v1.png",
+            "sha256": "82ef087d2204285a4525b0874fc5360acdc1e1143918ae9130d9936e11b10bfb"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/math-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/math-v1.png",
+            "sha256": "40e5ba63717aec70ac095d9506966995ad013ecf295ae839b07610bbc3b2671a"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/miner-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/miner-v1.png",
+            "sha256": "d52873ef8574c979bb0e2cda72d2d66fbdf9792bf981618cf9a91754eb05678e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/minimal-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/minimal-v1.png",
+            "sha256": "5977c2297647862a663dde1bc309513078a535c34f87227df18ac669ab0a4e3c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/mythic-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/mythic-v1.png",
+            "sha256": "c9c2a1e4442ae50e2b761454377f93972a9c71d700eaff0dedbc5212c684aa3e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/night_owl-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/night_owl-v1.png",
+            "sha256": "b5f6f0e03ed98e660d2a944ce9c5c23dde6f5bb8f1bcd3a6429d6aaadfb9d4f6"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/perfectionist-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/perfectionist-v1.png",
+            "sha256": "c64b02087d085282df696fdcaf29be2e707c4c37ef364a9951c601a02c08d6d1"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/potato-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/potato-v1.png",
+            "sha256": "aef125dea23fffd2d715e94c5769dbbdd5100c454aed463d85073e33854c046b"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/prophet-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/prophet-v1.png",
+            "sha256": "8c06a1d06c30bd8f6399a99b6b5f5aa58a8730e979d7dc9b4cfa9097e558bf4d"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/score_1000-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/score_1000-v1.png",
+            "sha256": "ca1078ff36668948483ed3ac5aa43877337fa6c41fec2ccb87c9bfbf765aeb7e"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sniper-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/sniper-v1.png",
+            "sha256": "5fd72946683f33ab448790c70089a8b1e6f450919f4e4bc989fe0ad923dfac4c"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/spite-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/spite-v1.png",
+            "sha256": "0f99fa3bbeb3b74bd013122b78ad261ac3abbbed4035a11114630f657cbdb681"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/surgeon-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/surgeon-v1.png",
+            "sha256": "84a5acd95247522e61a11480b553d3dd84f9eaa2e4babaf7f11cbd5ebec25d2f"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/sveti_ilija-v1.png",
+            "sha256": "86170309dc51ba571cca60e7b00655d432ac7c0343ecb3346028dc9e5fa40c42"
+          },
+          {
+            "slotId": "canonical/achievement-trophies/veteran-v1",
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/achievement-trophies/veteran-v1.png",
+            "sha256": "45138ba673169a99b1c9a74f584683dca2fbcac8661994f8c193a433239a0af4"
+          }
+        ],
         "ducat": [
           {
             "slotId": "canonical/ducat/ducat-front-v1",
@@ -3865,18 +5584,27 @@
         "settingsAudio": [
           {
             "slotId": "canonical/settings-controls/sound-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/game-header/sound-v1.png",
+            "sha256": "8e8485c304a4b9ebee9bccfcc1f4dd0023d3124110c13aad6c0d8470f32314c8",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/music-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/game-header/music-v1.png",
+            "sha256": "eba6df77955ce5f2391d60b53515f063825cad15e2a8db63997730c7658a7657",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           },
           {
             "slotId": "canonical/settings-controls/vibration-v1",
-            "status": "defined-without-production-path",
-            "productionPath": null
+            "status": "file-present",
+            "productionPath": "www/assets/theme-packs/severna/canonical/game-header/vibration-v1.png",
+            "sha256": "32fa82704be84aa605537dd4f29883cd6a3999b628b881dc514585b6e69520ae",
+            "supersedes": null,
+            "sourceManifest": "source-assets/theme-game-header-v1/manifest.json"
           }
         ]
       },
@@ -3893,9 +5621,14 @@
             "ducat",
             "undoToken"
           ],
-          "menuPath": "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v3.png",
-          "roomPath": "www/assets/theme-packs/severna/ducats-undo-free-v3.png",
-          "visualAudit": "pending-against-active-canonical-components"
+          "menuPath": "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png",
+          "roomPath": "www/assets/theme-packs/severna/ducats-undo-free-v4.png",
+          "masterPath": "source-assets/theme-economy-canonical-v4/severna/economy-master-v4.png",
+          "supersedes": [
+            "www/assets/theme-packs/severna/ducats-undo-free-v3.png",
+            "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v3.png"
+          ],
+          "visualAudit": "reviewed-against-active-canonical-components"
         },
         "goldRain": {
           "dependency": "ducat",
@@ -3919,7 +5652,7 @@
   ],
   "openVisualAudits": [
     "Ostali kompoziti koji prikazuju dukat (Dukati/Ispravi upis, solo nagrade, drugi efekti i pravila) zahtevaju zasebno vizuelno poredjenje sa aktivnim v2 u Vaskrsnjoj, Pustinjskom Staklu i Severnoj Maglini.",
-    "Statisticki motiv Vatrenog niza u Vaskrsnjoj, Pustinjskom Staklu i Severnoj Maglini jos koristi posebne istorijske putanje u prikazu liste; proveriti i povezati sa kanonskim motivom po temi.",
+    "Motiv Vatrenog niza u Statistici, rang listi i Pravilima sada vodi na isti kanonski PNG po temi; vizuelnu uskladjenost sa zavisnim kompozitima proveriti zasebno.",
     "Status linked u mapi nije vizuelna potvrda; samo verified znaci da je ranija provera zabelezena."
   ]
 }

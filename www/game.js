@@ -740,7 +740,7 @@ class YambApp {
         const eye = window.themeOnlinePlayers?.asset('spectate', theme);
         const special = theme === 'neon'
             ? ['assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png?v=1']
-            : theme === 'easter' ? ['assets/easter-soft-clay/game/announce-v1.png?v=1'] : [];
+            : theme === 'easter' ? ['assets/theme-packs/easter/canonical/game-board/announce-megaphone-v1.png?v=1'] : [];
         return [...new Set([background, eye, ...special].filter(Boolean))];
     }
 
@@ -1949,7 +1949,6 @@ class YambApp {
                     'assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1',
                     'assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png?v=1',
                     'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1',
                     'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
                     'assets/green-soft-clay/opponent/scanning-v1.png?v=opt2',
                     'assets/green-soft-clay/opponent/found-v1.png?v=opt2',
@@ -2065,8 +2064,6 @@ class YambApp {
                     'assets/theme-packs/winter/canonical/rules-room-identity/rules-room-v1.png'
                 ],
                 assets: [
-                    'assets/green-soft-clay/treasury-free-v3.png?v=1',
-                    'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1',
                     'assets/theme-packs/winter/canonical/ducat/ducat-inline-v1.png',
                     'assets/theme-packs/winter/canonical/undo-token/undo-token-inline-v1.png'
                 ]
@@ -2087,22 +2084,13 @@ class YambApp {
                     'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
                     'assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
-                    'assets/easter-soft-clay/game/exit-v1.png?v=1',
-                    'assets/easter-soft-clay/game/announce-v1.png?v=1',
+                    'assets/theme-packs/easter/canonical/game-board/announce-megaphone-v1.png?v=1',
                     'assets/theme-packs/easter/canonical/daily-room-identity/daily-room-v1.png',
-                    'assets/easter-soft-clay/statistics-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/settings-pro-v3.png?v=1',
-                    'assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/status-owned-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/status-active-v2.png?v=opt2',
-                    'assets/easter-soft-clay/treasury/status-locked-v3.png?v=2',
-                    'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=opt2',
                     'assets/theme-packs/easter/canonical/rules-room-identity/rules-room-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/task-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/complete-v1.png',
                     'assets/theme-packs/easter/canonical/daily-states/already-played-v1.png',
                     'assets/theme-packs/easter/daily/reward-video-v3.png',
-                    'assets/easter-soft-clay/hotseat/winner.png?v=opt2',
                     'assets/theme-packs/easter/canonical/invite-friend-internal/send-v1.png?v=1',
                 ]
             },
@@ -2115,12 +2103,10 @@ class YambApp {
                     'assets/theme-packs/desert/canonical/global-chat-internal/send-v1.png?v=2',
                     'assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
-                    'assets/theme-packs/desert/ducats-undo-free-v3.png?v=3',
+                    'assets/theme-packs/desert/ducats-undo-free-v4.png?v=4',
                     'assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
                     'assets/theme-packs/desert/canonical/daily-room-identity/daily-room-v1.png',
-                    'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
-                    'assets/desert-soft-clay/settings-pro-v2.png?v=1',
                     'assets/theme-packs/desert/canonical/rules-room-identity/rules-room-v1.png',
                     'assets/theme-packs/desert/canonical/daily-states/task-v1.png',
                     'assets/theme-packs/desert/canonical/daily-states/complete-v1.png',
@@ -2131,11 +2117,6 @@ class YambApp {
                     'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v2.png',
                     'assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
                     'assets/theme-packs/desert/canonical/invite-friend-internal/send-v1.png?v=1',
-                    'assets/desert-soft-clay/treasury/status-owned.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/status-active.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/status-locked.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/status-insufficient.png?v=opt2',
-                    'assets/desert-soft-clay/treasury/reward-video.png?v=opt2',
                     'assets/theme-packs/desert/canonical/achievement-trophies/first_play-v1.png?v=2',
                     'assets/theme-packs/desert/canonical/achievement-trophies/apprentice-v1.png?v=1',
                     'assets/theme-packs/desert/canonical/achievement-trophies/kafana-v1.png?v=1',
@@ -2174,22 +2155,15 @@ class YambApp {
                     'assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png?v=2',
                     'assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/theme-packs/severna/canonical/invite-friend-internal/send-v1.png?v=1',
-                    'assets/theme-packs/severna/ducats-undo-free-v3.png?v=3',
+                    'assets/theme-packs/severna/ducats-undo-free-v4.png?v=4',
                     'assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-v1.png',
-                    'assets/severna-soft-clay/hotseat/winner-v2.png?v=1',
                     'assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
                     'assets/theme-packs/severna/canonical/daily-room-identity/daily-room-v1.png',
-                    'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
-                    'assets/severna-soft-clay/settings-pro-v9.png?v=1',
                     'assets/theme-packs/severna/canonical/rules-room-identity/rules-room-v1.png',
                     'assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png',
                     'assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png',
                     'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-v2.png',
                     'assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v2.png',
-                    'assets/severna-soft-clay/treasury/status-owned.png?v=1',
-                    'assets/severna-soft-clay/treasury/status-active.png?v=1',
-                    'assets/severna-soft-clay/treasury/status-locked.png?v=1',
-                    'assets/severna-soft-clay/treasury/reward-video.png?v=1',
                     ...SHOP_DATA.TROPHIES.map(item => item.severnaIcon)
                 ]
             }
@@ -2235,7 +2209,7 @@ class YambApp {
         const roles = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily', 'global-chat',
             'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings', 'statistics'];
         if (role === 'treasury') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
-        if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v3.png${theme === 'neon' ? '?v=2' : ''}`;
+        if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png${theme === 'neon' ? '?v=2' : ''}`;
         if (role === 'tournament') return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`;
         if (role === 'leaderboard') return `assets/theme-packs/${theme}/canonical/leaderboard-room-identity/leaderboard-room${variant === 'menu' ? '-menu' : ''}-v2.png`;
         if (role === 'quarterly-league') return `assets/theme-packs/${theme}/canonical/quarterly-league-room-identity/quarterly-league-room${variant === 'menu' ? '-menu' : ''}-v2.png?v=2`;
@@ -2536,8 +2510,7 @@ class YambApp {
                 || (path.startsWith('canonical/solo-results/') && !path.includes('personal-best'))
                 || path.startsWith('canonical/solo-record-icons/')
                 || path === 'canonical/solo-room-identity/solo-room-v1.png',
-            hotseat: path => path.startsWith('hotseat/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
-            opponent: path => path.startsWith('opponent/') || (theme === 'easter' && path.startsWith('game/')) || path === 'canonical/online-random-room-identity/online-random-room-v1.png',
+            hotseat: path => (theme === 'easter' && path.startsWith('game/')) || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
             invite: path => path.startsWith('canonical/invite-friend-internal/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
@@ -4047,7 +4020,7 @@ class YambApp {
         if (typeof window.showNotification === 'function') {
             window.showNotification(titleText, sentText, {
                 icon: window.themeInviteFriend.asset('send'),
-                className: 'invite-sent-toast'
+                className: 'invite-room-toast'
             });
         } else {
             this.modal.alert(sentText, titleText);
@@ -6318,18 +6291,18 @@ class YambApp {
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
-                icon: 'assets/easter-soft-clay/statistics-pro-v2.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-v1.png',
                 greenIcon: 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/statistics-room-identity/statistics-room-v1.png',
+                severnaIcon: 'assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-v1.png',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
-                icon: 'assets/easter-soft-clay/settings-pro-v3.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png',
                 greenIcon: 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/settings-pro-v2.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png',
+                severnaIcon: 'assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png',
                 scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
@@ -6400,8 +6373,8 @@ class YambApp {
             economy: {
                 icon: 'assets/theme-packs/easter/ducats-undo-free-v3.png?v=3',
                 greenIcon: 'assets/green-soft-clay/ducats-undo-free-v3.png?v=1',
-                desertIcon: 'assets/theme-packs/desert/ducats-undo-free-v3.png?v=3',
-                severnaIcon: 'assets/theme-packs/severna/ducats-undo-free-v3.png?v=3',
+                desertIcon: 'assets/theme-packs/desert/ducats-undo-free-v4.png?v=4',
+                severnaIcon: 'assets/theme-packs/severna/ducats-undo-free-v4.png?v=4',
                 scale: 1,
                 lines: () => [
                     gt('menu_ducats') || 'DUKATI',
@@ -8155,18 +8128,20 @@ class YambApp {
             const text = (gt(key) || fallback).replace('{0}', safeName);
             const title = gt('alert_invite_title') || "POZIVNICA";
             if (typeof window.showNotification === 'function') {
-                window.showNotification(title, text, options);
+                const theme = localStorage.getItem('yamb_theme') || 'dark';
+                window.showNotification(title, text, {
+                    icon: this.getMainRoomPackSource(theme, 'invite')
+                        || 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
+                    className: 'invite-room-toast',
+                    ...options
+                });
             } else {
                 this.modal.alert(text, title);
             }
         };
 
         this.socket.on('room_invite_accepted', (data = {}) => {
-            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data, {
-                icon: this.getMainRoomPackSource(localStorage.getItem('yamb_theme') || 'dark', 'invite')
-                    || 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
-                className: 'invite-accepted-toast'
-            });
+            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data);
         });
 
         this.socket.on('room_invite_declined', (data = {}) => {
@@ -8694,7 +8669,7 @@ class YambApp {
                     d.appendChild(label);
                     const icon = document.createElement('img');
                     icon.className = 'easter-announce-col-icon';
-                    icon.dataset.themeSrc = 'assets/easter-soft-clay/game/announce-v1.png?v=1';
+                    icon.dataset.themeSrc = 'assets/theme-packs/easter/canonical/game-board/announce-megaphone-v1.png?v=1';
                     icon.loading = 'lazy';
                     icon.alt = '';
                     icon.setAttribute('aria-hidden', 'true');

@@ -90,7 +90,7 @@
         display: flex; align-items: center; justify-content: space-between; gap: 3px; min-height: 21px; padding: 2px 4px; border-radius: 8px;
     }
     #game-over-screen.is-online-duel-result #hotseat-result-comment:not([hidden]) { grid-column: 1 / -1; grid-row: 6; margin: 2px 0 0; font-size: .65rem; line-height: 1.15; }
-    #game-over-screen.is-online-duel-result .game-over-claim-button { grid-column: 1; padding-inline: 5px !important; font-size: .65rem !important; gap: 3px !important; }
+    body #game-over-screen.is-solo-result.is-online-duel-result .game-over-claim-button { grid-column: 1; padding-inline: 5px !important; font-size: clamp(.7rem, 1.8vh, .95rem) !important; gap: 3px !important; }
     #game-over-screen.is-online-duel-result .theme-solo-finish-claim-icon { width: 20px !important; height: 20px !important; flex-basis: 20px !important; }
     #game-over-screen.is-online-duel-result #btn-rematch:not([hidden]) { grid-column: 2; padding-inline: 5px !important; gap: 3px; }
     #game-over-screen.is-online-duel-result #go-rematch-icon { width: 22px; height: 22px; flex-basis: 22px; }

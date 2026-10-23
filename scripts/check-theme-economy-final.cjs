@@ -45,7 +45,7 @@ assert(ducatCss.includes("#economy-header-ducats-green-icon.hidden +")
 assert(!undoManager.includes("getElementById('economy-header-ducats-icon')"));
 assert(rewardedPack.includes('rewarded-video-active-v1.png')
     && rewardedPack.includes('rewarded-video-unavailable-v1.png'));
-assert(managers.includes("economyOpen ? 'economy' : treasuryOpen ? 'treasury' : ''"));
+assert(managers.includes("economyOpen ? 'economy' : treasuryOpen ? 'treasury' : tournamentOpen ? 'tournament' : ''"));
 assert(notices.includes("toast.classList.add('economy-notice')"));
 assert(roomCss.includes('modal-context-economy') && roomCss.includes('.custom-toast.economy-notice'));
 assert(roomCss.includes('grid-template-columns: minmax(0, 1fr)')
@@ -57,7 +57,7 @@ for (const theme of themes) {
     const critical = ['easter', 'desert', 'severna'].includes(theme);
     const variant = relative => critical ? relative.replace('-v1.png', '-v2.png') : relative;
     const paths = {
-        identity: `${prefix}ducats-undo-free-v3.png`,
+        identity: `${prefix}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png`,
         'ducat-front': `${prefix}${variant('canonical/ducat/ducat-front-v1.png')}`,
         'ducat-inline': `${prefix}${variant('canonical/ducat/ducat-inline-v1.png')}`,
         'undo-front': `${prefix}${variant('canonical/undo-token/undo-token-front-v1.png')}`,

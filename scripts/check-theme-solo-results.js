@@ -21,6 +21,49 @@ const clientCode = read('www/theme-solo-results.js');
 const manifest = JSON.parse(read('source-assets/theme-solo-results-v1/manifest.json'));
 const panelManifest = JSON.parse(read('source-assets/theme-solo-record-panels-v2/manifest.json'));
 const recordIconManifest = JSON.parse(read('source-assets/theme-solo-record-icons-v1/manifest.json'));
+const activeSoloPngRoles = [
+    'canonical/solo-room-identity/solo-room-menu-v1.png',
+    'canonical/solo-room-identity/solo-room-v1.png',
+    'canonical/solo-results/finish-score-mark-v1.png',
+    'canonical/solo-results/finish-claim-v1.png',
+    'canonical/solo-results/record-panel-v2.png',
+    ...roles.map(role => `canonical/solo-record-icons/${role}-v1.png`),
+    'solo/finish-reward-video-v3.png',
+    'canonical/statistics-overview/power-index-v1.png',
+    'canonical/ducat/ducat-inline-v1.png',
+];
+for (const role of activeSoloPngRoles) {
+    const hashes = new Set();
+    for (const theme of themes) {
+        const base = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
+        const file = path.join(root, 'www/assets', base, role);
+        assert(fs.existsSync(file), `${theme}: missing Solo PNG ${role}`);
+        const bytes = fs.readFileSync(file);
+        assert(bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), `${theme}: invalid PNG ${role}`);
+        hashes.add(crypto.createHash('sha256').update(bytes).digest('hex'));
+        assert(!fs.existsSync(path.join(root, 'www/assets', base, 'canonical/solo-results/record-panel-v1.png')),
+            `${theme}: obsolete Solo record panel remains in the runtime pack`);
+    }
+    assert.equal(hashes.size, themes.length, `Solo role ${role} reuses the same PNG across themes`);
+}
+assert(read('www/config.js').includes('openAtMs: 2400, durationMs: 3200')
+    && game.includes("this.playEasterRoomIntro(roomIntroId, () => this.setupGame(numPlayers))"),
+    'Solo must use the common 2.4/3.2-second room intro');
+assert(mobilePreview.includes('theme-finish-compact.css'), 'Solo mobile preview must use the production compact layout');
+const soloMenuHtml = html.slice(html.indexOf('<div class="mode-btn mode-solo"'), html.indexOf('<div class="mode-btn mode-dual"'));
+assert(soloMenuHtml.includes('solo-room-menu-v1.png') && !soloMenuHtml.includes('<svg') && !soloMenuHtml.includes('.svg'),
+    'Solo menu must use its canonical PNG without a legacy SVG');
+assert(!read('www/teme.css').includes('body.desert-theme #main-menu .mode-solo { --desert-mode-icon-mask'),
+    'obsolete Desert Solo SVG mask must not return');
+for (const legacy of [
+    'easter-soft-clay/solo/finish-claim-v2.png',
+    'easter-soft-clay/solo/finish-reward-video-v2.png',
+    'easter-soft-clay/solo/finish-score-mark-v1.png',
+    'easter-soft-clay/solo/personal-best.png',
+    'desert-soft-clay/solo/personal-best.png',
+    'severna-soft-clay/solo/personal-best-v2.png',
+    'severna-soft-clay/solo/personal-best.png',
+]) assert(!fs.existsSync(path.join(root, 'www/assets', legacy)), `obsolete Solo PNG returned: ${legacy}`);
 const contrast = (a, b) => {
     const luminance = hex => {
         const rgb = [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16) / 255)
@@ -35,7 +78,7 @@ assert.equal(manifest.assets.length, 27);
 assert(html.includes('id="solo-record-panel"') && !html.includes('id="solo-record-icon"'));
 assert(html.includes('id="hotseat-result-scores"') && html.includes('id="go-tier-title"'));
 assert(css.includes('#game-over-screen.is-hotseat-result .hotseat-result-scores')
-    && css.includes('.green-hotseat-winner-mark,.green-game-over-result-icon)')
+    && !html.includes('hotseat-winner-mark')
     && html.includes('data-lang="go_hotseat_account"') && html.includes('data-lang="go_hotseat_guest"'),
     'Hotseat must show both players within the Solo panel without the obsolete winner mark');
 assert(game.includes("const accountPlayerIndex = this.onlineMode") && game.includes('let myScoreEntry = finalResults[accountPlayerIndex]'),
@@ -413,5 +456,5 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
         async _writeLocalScores() {} });
     assert.deepEqual(submitted, [1700, 1800], 'offline sync must submit only the signed-in account scores');
     assert.equal(pendingScores[1].synced, false, 'other account results must remain available for that account');
-    console.log('Solo panel: 10 themes, 9 valid record combinations plus pending, period boundaries, strict records, payout and cap OK.');
+    console.log(`Solo panel: ${themes.length} themes × ${activeSoloPngRoles.length} unique active PNG roles, 9 valid record combinations plus pending, period boundaries, strict records, payout and cap OK.`);
 })().catch(error => { console.error(error); process.exitCode = 1; });

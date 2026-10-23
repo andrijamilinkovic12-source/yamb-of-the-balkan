@@ -18,8 +18,9 @@ const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
         executablePath: process.env.CHROME_PATH || chromium.executablePath(),
         args: ['--no-sandbox'],
     });
-    const page = await browser.newPage({ deviceScaleFactor: 1 });
+    const page = await browser.newPage({ deviceScaleFactor: 1, reducedMotion: 'reduce' });
     const failures = [];
+    const typographyByViewport = new Map();
     let checked = 0;
     for (const viewport of viewports) {
         await page.setViewportSize(viewport);
@@ -43,6 +44,7 @@ const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
                     const mark = bestColumn.querySelector('.solo-finish-column-mark');
                     const markIcon = mark.querySelector('img');
                     const box = card.getBoundingClientRect();
+                    const typeSelectors = ['#go-title', '#go-msg', '.solo-record-panel-title', '.solo-record-panel-footer', '[data-lang="go_msg_solo"]', '#go-score', '.easter-solo-finish-stats span', '.easter-solo-finish-stats strong', '#btn-ad-double', '.game-over-claim-button'];
                     return {
                         left: box.left, right: box.right, top: box.top, bottom: box.bottom,
                         scrollHeight: card.scrollHeight, clientHeight: card.clientHeight,
@@ -58,14 +60,41 @@ const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
                             : !markIcon && mark.textContent.trim() === boardHeader.textContent.trim(),
                         recordIconsLoaded: [...panel.querySelectorAll('img[data-solo-record-icon]')]
                             .every(image => image.complete && image.naturalWidth === 160),
+                        typography: Object.fromEntries(typeSelectors.map(selector => {
+                            const style = getComputedStyle(document.querySelector(selector));
+                            return [selector, `${style.fontSize}|${style.fontFamily}`];
+                        })),
                     };
                 });
                 checked++;
+                const viewportKey = `${viewport.width}x${viewport.height}`;
+                if (!typographyByViewport.has(viewportKey)) typographyByViewport.set(viewportKey, geometry.typography);
+                else if (JSON.stringify(geometry.typography) !== JSON.stringify(typographyByViewport.get(viewportKey))) {
+                    failures.push({ viewport, theme, record, tier, variant, reason: 'typography differs from Green', expected: typographyByViewport.get(viewportKey), actual: geometry.typography });
+                }
                 if (geometry.left < 11 || geometry.right > viewport.width - 11 || geometry.top < 17 || geometry.bottom > viewport.height - 17 || geometry.scrollHeight > geometry.clientHeight + 1 || geometry.claimBottom > geometry.bottom - 1 || geometry.adBottom > geometry.claimBottom || geometry.panelBottom > geometry.claimBottom || !geometry.bestColumnFits || !geometry.markColorMatches || !geometry.markSizeMatches || !geometry.markContentMatches || !geometry.recordIconsLoaded) {
                     failures.push({ viewport, theme, record, tier, variant, column, geometry });
                 }
                 }
             }
+        }
+    }
+    await page.setViewportSize({ width: 320, height: 568 });
+    for (const theme of themes) {
+        await page.goto(`${preview}?theme=${theme}&record=pwma&tier=solo_masterful&variant=1&column=Najava`, { waitUntil: 'load' });
+        const safeGeometry = await page.evaluate(() => {
+            for (const [name, value] of Object.entries({ '--safe-top': '24px', '--safe-bottom': '28px', '--safe-left': '16px', '--safe-right': '16px' })) {
+                document.documentElement.style.setProperty(name, value);
+            }
+            const card = document.querySelector('#game-over-screen > .modal-box');
+            const bounds = card.getBoundingClientRect();
+            const claim = document.querySelector('.game-over-claim-button').getBoundingClientRect();
+            return { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom,
+                scrollHeight: card.scrollHeight, clientHeight: card.clientHeight, claimBottom: claim.bottom };
+        });
+        if (safeGeometry.left < 15 || safeGeometry.right > 305 || safeGeometry.top < 23 || safeGeometry.bottom > 541
+            || safeGeometry.scrollHeight > safeGeometry.clientHeight + 1 || safeGeometry.claimBottom > safeGeometry.bottom - 1) {
+            failures.push({ viewport: { width: 320, height: 568 }, theme, reason: 'safe-area inset', geometry: safeGeometry });
         }
     }
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -97,10 +126,14 @@ const columns = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
     }
     await browser.close();
     if (failures.length) {
-        console.error(`${failures.length} of ${checked} Solo finish layouts failed:`, JSON.stringify(failures.slice(0, 12), null, 2));
+        const byViewport = Object.fromEntries(viewports.map(({ width, height }) => [
+            `${width}x${height}`,
+            failures.filter(failure => failure.viewport?.width === width && failure.viewport?.height === height).length,
+        ]));
+        console.error(`${failures.length} of ${checked} Solo finish layouts failed:`, JSON.stringify({ byViewport, examples: failures.slice(0, 6) }, null, 2));
         process.exitCode = 1;
     } else {
-        console.log(`${checked} Solo finish layouts fit without scrolling or safe-area overlap; four left-panel payout states correct`);
+        console.log(`${checked} Solo finish layouts plus 10 simulated safe-area cases fit without scrolling; typography and four payout states correct`);
     }
 })().catch(error => {
     console.error(error);

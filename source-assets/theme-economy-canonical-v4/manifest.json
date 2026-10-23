@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-23",
+  "purpose": "Osvezene slozene ikone sobe Dukati i Ispravi zadnji upis. Dukat u kompozitu prati aktivni kanonski dukat iste teme; strelica zadrzava tematski pravac.",
+  "method": "Built-in image generation: precise-object-edit sa starim kompozitom kao ciljem i aktivnim kanonskim dukatom kao referencom; zatim tehnicki PNG izvoz na 512 i 384 px uz ocuvanu providnost.",
+  "sharedPromptConstraints": "Preserve the theme-specific undo arrow from the old icon. Replace only the front ducat with the active canonical five-pip ducat, preserving its material, face, rim and raised or recessed pips. Transparent background, centered, no text, no extra decoration, no glitter, restrained 3D Soft Neomorphism.",
+  "themes": [
+    {
+      "id": "winter",
+      "specificPrompt": "Ocean-blue raised circular rim and darker inner seam; five soft ivory raised pips. Preserve the cream arrow and small terracotta accent.",
+      "canonicalDucat": "www/assets/theme-packs/winter/canonical/ducat/ducat-front-v1.png",
+      "supersedes": ["www/assets/theme-packs/winter/ducats-undo-free-v3.png", "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v3.png"],
+      "master": {"file": "source-assets/theme-economy-canonical-v4/winter/economy-master-v4.png", "sha256": "ff444cc65af58a9e6972aa9a854889138ee9594976e4b5a6eac078fd9d8ef18b"},
+      "production": [
+        {"file": "www/assets/theme-packs/winter/ducats-undo-free-v4.png", "size": 512, "sha256": "527bb2d7b127d424e6e8d3310fae69904a534957897f1460dfa8c2d6a213324b"},
+        {"file": "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png", "size": 384, "sha256": "f5ae8b887524e0007e9737d2b460119ce0e8eadeeee0d6f4253ca1a1d0001d56"}
+      ]
+    },
+    {
+      "id": "desert",
+      "specificPrompt": "Terracotta irregular beveled rim; five deep recessed circular pips. Preserve the matte teal arrow.",
+      "canonicalDucat": "www/assets/theme-packs/desert/canonical/ducat/ducat-front-v2.png",
+      "supersedes": ["www/assets/theme-packs/desert/ducats-undo-free-v3.png", "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v3.png"],
+      "master": {"file": "source-assets/theme-economy-canonical-v4/desert/economy-master-v4.png", "sha256": "4e40e7c16c007763b4dfe3ef0b949013ff0e155e2fb1e26a6cb5fe2f5fc60a6a"},
+      "production": [
+        {"file": "www/assets/theme-packs/desert/ducats-undo-free-v4.png", "size": 512, "sha256": "5ea5657a3ddc72f1b46c7228715a0ccec190a4152b9e3d9b1c2e7b854e06a0fe"},
+        {"file": "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png", "size": 384, "sha256": "632d2006e8bc6142597557d85fcf04a5e6a905c4d5f61c2ef3163dc97cadb6af"}
+      ]
+    },
+    {
+      "id": "moon",
+      "specificPrompt": "Lunar pale gray face, irregular charcoal rim with wavy top; five deep dark recessed crater pips, never raised dots. Preserve the matte dark arrow.",
+      "canonicalDucat": "www/assets/theme-packs/moon/canonical/ducat/ducat-front-v1.png",
+      "supersedes": ["www/assets/theme-packs/moon/ducats-undo-free-v3.png", "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v3.png"],
+      "master": {"file": "source-assets/theme-economy-canonical-v4/moon/economy-master-v4.png", "sha256": "a7460fc8bc104e310d7810d39f85765015039e2c3c2513b4172b23bfc607d984"},
+      "production": [
+        {"file": "www/assets/theme-packs/moon/ducats-undo-free-v4.png", "size": 512, "sha256": "ed90f729d8ff99b23a22ce339a6768a5829032e48303e3e0295b801e283caaff"},
+        {"file": "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png", "size": 384, "sha256": "52ad5e453c7f58c739093522d43360cae240868b723203a01bf3e2eb7096952e"}
+      ]
+    },
+    {
+      "id": "severna",
+      "specificPrompt": "Midnight-blue circular face, five raised icy blue-lavender glowing pips, cyan crescent on the upper-right rim. Preserve the blue arrow and its restrained cyan edge.",
+      "canonicalDucat": "www/assets/theme-packs/severna/canonical/ducat/ducat-front-v2.png",
+      "supersedes": ["www/assets/theme-packs/severna/ducats-undo-free-v3.png", "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v3.png"],
+      "master": {"file": "source-assets/theme-economy-canonical-v4/severna/economy-master-v4.png", "sha256": "f8b5947b77b1f28d258367c0fdc8367f3ad604f6a87d84c7635fdeb426f822d4"},
+      "production": [
+        {"file": "www/assets/theme-packs/severna/ducats-undo-free-v4.png", "size": 512, "sha256": "15d81d8348b93318812579ab9c368d48c6052461e14dfebdd80ad803b8831e1a"},
+        {"file": "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png", "size": 384, "sha256": "e90033963671ab6849ba08c657a95860b40195f0c605c28dcbf2cd66b83cd617"}
+      ]
+    }
+  ]
+}

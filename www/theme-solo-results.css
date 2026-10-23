@@ -7,7 +7,7 @@ body.winter-theme { --solo-card-top:#15598c; --solo-card-bottom:#153e64; --solo-
 body.neon-theme { --solo-card-top:#1c3859; --solo-card-bottom:#101f38; --solo-inset:#152943; --solo-ink:#eefefa; --solo-muted:#b6ece4; --solo-accent:#56e5d2; --solo-action:#26576a; --solo-line:rgba(86,229,210,.35); --solo-shadow:rgba(3,9,21,.47); }
 body.amethyst-theme { --solo-card-top:#654272; --solo-card-bottom:#3d2a50; --solo-inset:#523861; --solo-ink:#fff5ef; --solo-muted:#e0cde5; --solo-accent:#f2c879; --solo-action:#795582; --solo-line:rgba(224,205,229,.36); --solo-shadow:rgba(26,12,39,.42); }
 body.easter-theme { --solo-card-top:#fff8ea; --solo-card-bottom:#dfe2c9; --solo-inset:#f1f0dc; --solo-ink:#31492c; --solo-muted:#4d6b45; --solo-accent:#4d6b45; --solo-action:#cbd9b7; --solo-line:rgba(77,107,69,.29); --solo-shadow:rgba(72,93,59,.20); }
-body.desert-theme { --solo-card-top:#fff0da; --solo-card-bottom:#e4b48f; --solo-inset:#f5d6b6; --solo-ink:#553623; --solo-muted:#65402e; --solo-accent:#396b72; --solo-action:#dba07a; --solo-line:rgba(111,64,42,.30); --solo-shadow:rgba(112,65,41,.23); }
+body.desert-theme { --solo-card-top:#fff0da; --solo-card-bottom:#e4b48f; --solo-inset:#f5d6b6; --solo-ink:#553623; --solo-muted:#65402e; --solo-accent:#396b72; --solo-action:#f5d6b6; --solo-line:rgba(111,64,42,.30); --solo-shadow:rgba(112,65,41,.23); }
 body.moon-theme { --solo-card-top:#484d5c; --solo-card-bottom:#292d39; --solo-inset:#393e4b; --solo-ink:#f5f5f8; --solo-muted:#d6d7de; --solo-accent:#e1e2e7; --solo-action:#606474; --solo-line:rgba(225,226,231,.34); --solo-shadow:rgba(10,12,20,.48); }
 body.severna-theme { --solo-card-top:#305168; --solo-card-bottom:#172f49; --solo-inset:#244158; --solo-ink:#f5fbff; --solo-muted:#cfedf2; --solo-accent:#8ae3e4; --solo-action:#396575; --solo-line:rgba(138,227,228,.35); --solo-shadow:rgba(5,17,37,.46); }
 
@@ -62,7 +62,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     color: var(--solo-ink) !important;
     background: var(--solo-shell-top);
     box-shadow: 0 3px 9px var(--solo-shadow);
-    font-size: 1.35rem !important;
+    font-size: 2rem !important;
     line-height: 1.2 !important;
     letter-spacing: .08em;
     text-shadow: none !important;
@@ -82,8 +82,8 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     line-height: 1.2 !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result #go-msg {
-    font-size: .9rem !important;
-    line-height: 1.42 !important;
+    font-size: .82rem !important;
+    line-height: 1.25 !important;
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result .game-over-score-card {
@@ -158,9 +158,11 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 #game-over-screen.is-solo-result :is(#btn-ad-double,.game-over-claim-button) { min-height:44px; font-family:Montserrat,sans-serif; font-size:clamp(.7rem,1.8vh,.95rem); font-weight:800; line-height:1.2; }
 #game-over-screen #go-double-ducat[hidden], #game-over-screen:not(.is-solo-result) #go-double-ducat { display:none !important; }
 #game-over-screen.is-solo-result #go-double-ducat { display:block; width:1.45em; height:1.45em; flex:none; object-fit:contain; }
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result :is(#btn-ad-double,.game-over-claim-button) { align-items:center; justify-content:center; gap:8px; color:var(--solo-ink) !important; border:1px solid var(--solo-line) !important; border-radius:999px !important; background:var(--solo-action) !important; box-shadow:0 4px 10px var(--solo-shadow) !important; text-shadow:none !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result :is(#btn-ad-double,.game-over-claim-button) { align-items:center; justify-content:center; gap:8px; color:var(--solo-ink) !important; border:1px solid var(--solo-line) !important; border-radius:999px !important; box-shadow:0 4px 10px var(--solo-shadow) !important; text-shadow:none !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result .game-over-claim-button { display:flex !important; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result .game-over-claim-button { background:var(--solo-inset) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result #btn-ad-double.btn-menu { color:var(--solo-ink) !important; background:var(--solo-action) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result .game-over-claim-button.btn-menu { color:var(--solo-ink) !important; background:var(--solo-inset) !important; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result.screen.active :is(#go-title,#go-msg,.game-over-score-card,#btn-ad-double,.game-over-claim-button) { animation:easterSoloFinishReveal .48s cubic-bezier(.22,1,.36,1) both; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result.screen.active #go-msg { animation-delay:.06s; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result.screen.active .game-over-score-card { animation-delay:.12s; }
@@ -171,6 +173,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 /* One fixed Solo finish composition for all ten themes, inside the device safe area. */
 #game-over-screen.is-solo-result.screen.active > .modal-box {
     box-sizing: border-box;
+    justify-content: flex-start !important;
     width: min(440px, calc(100vw - max(12px, var(--safe-left, 0px), env(safe-area-inset-left, 0px)) - max(12px, var(--safe-right, 0px), env(safe-area-inset-right, 0px)))) !important;
     max-width: none !important;
     max-height: calc(100dvh - max(18px, var(--safe-top, 0px), env(safe-area-inset-top, 0px)) - max(18px, var(--safe-bottom, 0px), env(safe-area-inset-bottom, 0px))) !important;
@@ -185,10 +188,18 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 #game-over-screen.is-solo-result :is(#btn-ad-double,.game-over-claim-button) { width: 100%; min-height: 44px !important; margin: 0 !important; }
 @media (max-height: 740px) {
     #game-over-screen.is-solo-result > .logo-anim { display: none !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result.screen.active > .modal-box { gap: 5px !important; padding: 12px 12px 11px !important; }
+}
+@media (max-height: 700px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result:not(.is-online-duel-result):not(.is-hotseat-result) #go-title { font-size: 1.05rem !important; line-height: 1.1 !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result:not(.is-online-duel-result):not(.is-hotseat-result) #go-msg { font-size: .69rem !important; line-height: 1.12 !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result:not(.is-online-duel-result):not(.is-hotseat-result) .easter-solo-finish-stats > div > span { font-size: .58rem !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result:not(.is-online-duel-result):not(.is-hotseat-result) .easter-solo-finish-stats strong { font-size: 1.02rem !important; }
 }
 @media (max-height: 610px) {
-    #game-over-screen.is-solo-result.screen.active > .modal-box { gap: 4px !important; padding: 11px 12px !important; }
-    #game-over-screen.is-solo-result .game-over-score-card { padding: 6px 10px !important; }
+    #game-over-screen.is-solo-result.screen.active > .modal-box { gap: 2px !important; padding: 7px 12px !important; }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #game-over-screen.is-solo-result.screen.active > .modal-box { gap: 2px !important; padding: 7px 12px !important; }
+    #game-over-screen.is-solo-result .game-over-score-card { padding: 5px 10px !important; }
     #game-over-screen.is-solo-result .solo-record-panel:not([hidden]) { padding: 5px 9px; margin-bottom: 3px; }
     #game-over-screen.is-solo-result .solo-record-panel-title { margin-bottom: 2px; }
     #game-over-screen.is-solo-result .solo-record-panel-grid > span { box-sizing: border-box; height: 24px; min-height: 0; padding: 0; }
@@ -262,7 +273,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     font: 900 .8rem/1.1 Montserrat, sans-serif;
     white-space: nowrap;
 }
-#game-over-screen.is-hotseat-result :is(.easter-hotseat-winner-mark,.desert-hotseat-winner-mark,.severna-hotseat-winner-mark,.green-hotseat-winner-mark,.green-game-over-result-icon) {
+#game-over-screen.is-hotseat-result .green-game-over-result-icon {
     display: none !important;
 }
 @media (max-height: 610px) {

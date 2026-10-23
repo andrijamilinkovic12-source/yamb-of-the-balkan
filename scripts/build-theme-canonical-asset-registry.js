@@ -11,6 +11,8 @@ const catalog = read('docs/theme-asset-role-catalog.json');
 const implementation = read('docs/theme-asset-implementation-map.json');
 const green = read('www/themes/green/asset-registry.json');
 const economyRefresh = read('source-assets/theme-economy-critical-v2/manifest.json');
+const economyCompositeV4Path = 'source-assets/theme-economy-canonical-v4/manifest.json';
+const economyCompositeV4 = read(economyCompositeV4Path);
 const leaderboardMedals = read('source-assets/theme-leaderboard-medals-v2/manifest.json');
 const quarterlyLeague = read('source-assets/theme-quarterly-league-v2/manifest.json');
 const goldRainRefreshPath = 'source-assets/theme-gold-rain-canonical-v2/manifest.json';
@@ -24,7 +26,9 @@ if (catalog.slots.length !== 191 || implementation.requiredSlotCountPerTheme !==
 const slotById = new Map(catalog.slots.map(slot => [slot.id, slot]));
 const mapByTheme = new Map(implementation.themes.map(theme => [theme.themeId, theme]));
 const refreshByTheme = new Map(economyRefresh.themes.map(theme => [theme.id, theme]));
+const economyCompositeV4ByTheme = new Map(economyCompositeV4.themes.map(theme => [theme.id, theme]));
 const requiredIdentitySlots = {
+    achievementTrophies: catalog.slots.filter(slot => slot.id.startsWith('canonical/achievement-trophies/')).map(slot => slot.id),
     ducat: [
         'canonical/ducat/ducat-front-v1', 'canonical/ducat/ducat-inline-v1',
         'canonical/ducat/ducat-particle-v1', 'canonical/ducat/ducat-angle-left-v1',
@@ -65,6 +69,7 @@ const contract = {
     validation: 'Postojanje putanje, dimenzije, SHA i kodski potrosac su tehnicka provera; vizuelnu uskladjenost kompozita treba posebno potvrditi.'
 };
 const reuseContexts = {
+    achievementTrophies: ['Riznica / Trofeji', 'obavestenje o osvojenom trofeju', 'pregled trofeja po zavrsetku partije'],
     ducat: ['glavni meni', 'Riznica', 'Dukati', 'nagrade', 'zavrsni ekrani', 'dinamicke poruke'],
     undoToken: ['Dukati', 'vracanje upisa', 'nagrade', 'dinamicke poruke'],
     rewardedVideo: ['Dnevni izazov', 'Riznica', 'Dukati', 'zavrsni ekrani'],
@@ -131,8 +136,19 @@ function activeStatisticsPath(themeId, slotId) {
     return exists(path) ? { path, manifest: 'source-assets/theme-statistics-overview-v2/manifest.json' } : null;
 }
 
+function activeSettingsAudioPath(themeId, slotId) {
+    const role = slotId.match(/^canonical\/settings-controls\/(sound|music|vibration)-v1$/)?.[1];
+    if (!role) return null;
+    const root = themeId === 'dark' ? 'green-soft-clay' : `theme-packs/${themeId}`;
+    return {
+        path: `www/assets/${root}/canonical/game-header/${role}-v1.png`,
+        manifest: 'source-assets/theme-game-header-v1/manifest.json'
+    };
+}
+
 function activeIdentity(themeId, slotId) {
-    const override = activeEconomyPath(themeId, slotId) || activeMedalPath(themeId, slotId) || activeStatisticsPath(themeId, slotId);
+    const override = activeEconomyPath(themeId, slotId) || activeMedalPath(themeId, slotId)
+        || activeStatisticsPath(themeId, slotId) || activeSettingsAudioPath(themeId, slotId);
     const productionPath = override?.path || baselinePath(themeId, slotId);
     if (!productionPath) return { slotId, status: 'defined-without-production-path', productionPath: null };
     if (!exists(productionPath)) throw new Error(`Missing active identity: ${themeId}/${slotId}: ${productionPath}`);
@@ -193,11 +209,23 @@ const themes = definitions.themes.map(theme => {
     for (const asset of [treasury.menuPath, treasury.roomPath, treasury.masterPath]) {
         if (!exists(asset)) throw new Error(`Missing treasury dependency file: ${asset}`);
     }
+    const economyV4 = economyCompositeV4ByTheme.get(themeId);
+    if (economyV4) {
+        for (const asset of [economyV4.master, ...economyV4.production]) {
+            if (!exists(asset.file) || sha256(asset.file) !== asset.sha256) throw new Error(`Economy v4 provenance mismatch: ${asset.file}`);
+        }
+        if (economyV4.canonicalDucat !== identities.ducat.find(item => item.slotId === 'canonical/ducat/ducat-front-v1').productionPath) {
+            throw new Error(`Economy v4 ducat dependency mismatch: ${themeId}`);
+        }
+    }
     const economy = {
         dependencies: ['ducat', 'undoToken'],
-        menuPath: themeId === 'dark' ? `${packRoot}/runtime/menu/ducats-undo-free-v3.png` : slots['runtime/menu/ducats-undo-free-v3'].productionPath,
-        roomPath: themeId === 'dark' ? `${packRoot}/ducats-undo-free-v3.png` : slots['ducats-undo-free-v3'].productionPath,
-        visualAudit: 'pending-against-active-canonical-components'
+        menuPath: economyV4 ? economyV4.production.find(asset => asset.size === 384).file
+            : themeId === 'dark' ? `${packRoot}/runtime/menu/ducats-undo-free-v3.png` : slots['runtime/menu/ducats-undo-free-v3'].productionPath,
+        roomPath: economyV4 ? economyV4.production.find(asset => asset.size === 512).file
+            : themeId === 'dark' ? `${packRoot}/ducats-undo-free-v3.png` : slots['ducats-undo-free-v3'].productionPath,
+        ...(economyV4 ? { masterPath: economyV4.master.file, supersedes: economyV4.supersedes } : {}),
+        visualAudit: economyV4 ? 'reviewed-against-active-canonical-components' : 'pending-against-active-canonical-components'
     };
     for (const asset of [economy.menuPath, economy.roomPath]) {
         if (!exists(asset)) throw new Error(`Missing economy dependency file: ${asset}`);
@@ -213,7 +241,7 @@ const themes = definitions.themes.map(theme => {
         runtimeConsumers: ['Riznica', 'Dnevni izazov', 'turnirska nagrada', 'zavrsni ekran nakon dupliranja'],
         previewVisualAudit: ['easter', 'desert', 'severna'].includes(themeId)
             ? 'v2-composed-from-active-canonical-ducat-front; reviewed'
-            : 'not-yet-compared-with-active-coin',
+            : 'v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed',
         ...(goldRainRefresh.themes.find(item => item.id === themeId)
             ? { sourceManifest: goldRainRefreshPath,
                 supersedesPreview: `${packRoot}/canonical/treasury-effect-previews/preview-gold-rain-v1.png`,
@@ -279,6 +307,7 @@ const registry = {
         greenFamilies: 'www/themes/green/asset-registry.json',
         nineThemeImplementation: 'docs/theme-asset-implementation-map.json',
         criticalEconomyRefresh: 'source-assets/theme-economy-critical-v2/manifest.json',
+        economyCompositeRefresh: economyCompositeV4Path,
         leaderboardMedalsRefresh: 'source-assets/theme-leaderboard-medals-v2/manifest.json',
         quarterlyLeagueRefresh: 'source-assets/theme-quarterly-league-v2/manifest.json',
         goldRainRefresh: goldRainRefreshPath,
@@ -290,6 +319,7 @@ const registry = {
         implementationMap: sha256('docs/theme-asset-implementation-map.json'),
         greenRegistry: sha256('www/themes/green/asset-registry.json'),
         criticalEconomyRefresh: sha256('source-assets/theme-economy-critical-v2/manifest.json'),
+        economyCompositeRefresh: sha256(economyCompositeV4Path),
         leaderboardMedalsRefresh: sha256('source-assets/theme-leaderboard-medals-v2/manifest.json'),
         quarterlyLeagueRefresh: sha256('source-assets/theme-quarterly-league-v2/manifest.json'),
         goldRainRefresh: sha256(goldRainRefreshPath)
@@ -301,7 +331,7 @@ const registry = {
     themes,
     openVisualAudits: [
         'Ostali kompoziti koji prikazuju dukat (Dukati/Ispravi upis, solo nagrade, drugi efekti i pravila) zahtevaju zasebno vizuelno poredjenje sa aktivnim v2 u Vaskrsnjoj, Pustinjskom Staklu i Severnoj Maglini.',
-        'Statisticki motiv Vatrenog niza u Vaskrsnjoj, Pustinjskom Staklu i Severnoj Maglini jos koristi posebne istorijske putanje u prikazu liste; proveriti i povezati sa kanonskim motivom po temi.',
+        'Motiv Vatrenog niza u Statistici, rang listi i Pravilima sada vodi na isti kanonski PNG po temi; vizuelnu uskladjenost sa zavisnim kompozitima proveriti zasebno.',
         'Status linked u mapi nije vizuelna potvrda; samo verified znaci da je ranija provera zabelezena.'
     ]
 };

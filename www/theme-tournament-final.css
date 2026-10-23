@@ -1,4 +1,10 @@
 /* Tournament dialogs keep the room's palette; geometry remains shared with Green. */
+#tournament-screen .tourney-pagination .dot {
+    /* Leave room for the enlarged active mark inside the existing 44px target. */
+    box-sizing: border-box;
+    padding-bottom: 8px;
+}
+
 #tournament-screen#tournament-screen .tourney-header-title {
     font-size: clamp(1.05rem, 4.2vw, 1.22rem) !important;
 }

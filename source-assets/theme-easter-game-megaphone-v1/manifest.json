@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-23",
+  "theme": "easter",
+  "role": "Kolona Najava u tabli za igru",
+  "method": "Built-in image generation, precise-object-edit stare ikone; tehnicki PNG izvoz na 256 x 256 px sa providnoscu.",
+  "prompt": "Preserve the compact megaphone silhouette, orientation and handle. Replace the old purple surfaces with restrained sage green (#4D6B45, #879373), warm ivory (#FFF8EA) and one small muted terracotta (#A66443) accent. Smooth matte-plastic 3D Soft Neomorphism. Transparent square canvas, no text, eggs, flowers, ribbons, glow, glitter or extra details.",
+  "supersedes": "www/assets/easter-soft-clay/game/announce-v1.png",
+  "master": {"file": "source-assets/theme-easter-game-megaphone-v1/announce-megaphone-master-v1.png", "sha256": "930b4dea461114988b9b306cedae85f53981e64df97cc4be228d21ec7e023b93"},
+  "production": {"file": "www/assets/theme-packs/easter/canonical/game-board/announce-megaphone-v1.png", "width": 256, "height": 256, "sha256": "081f8ef18806c95900cc23a49240484f663c72a7fac8fe611f2d8b69b71f9100"}
+}

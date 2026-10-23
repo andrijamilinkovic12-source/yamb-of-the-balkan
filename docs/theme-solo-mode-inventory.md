@@ -1,5 +1,7 @@
 # Solo mod — inventar i standardizacija
 
+Ovaj inventar beleži prvu fazu sa šest osnovnih uloga. Trenutni aktivni skup, uključujući panel i oznake rekorda i deljene kanonske simbole, popisan je u [završnoj proveri Solo moda](theme-solo-final-audit.md).
+
 Datum: 16. oktobar 2026. Obuhvat: svih deset tema. Zelena je zaključana geometrijska i funkcionalna referenca.
 
 ## Kanonski PNG skup

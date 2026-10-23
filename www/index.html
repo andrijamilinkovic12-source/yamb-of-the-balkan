@@ -104,7 +104,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700;800;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.25">
-    <link rel="stylesheet" href="teme.css?v=7.05">
+    <link rel="stylesheet" href="teme.css?v=7.06">
     <link rel="stylesheet" href="theme-main-room-icons.css?v=25">
     <link rel="stylesheet" href="theme-main-menu-typography.css?v=1">
     <link rel="stylesheet" href="theme-game-board.css?v=7">
@@ -112,7 +112,7 @@
     <link rel="stylesheet" href="theme-ducat-pack.css?v=2">
     <link rel="stylesheet" href="theme-undo-token-pack.css?v=1">
     <link rel="stylesheet" href="theme-rewarded-video-pack.css?v=2">
-    <link rel="stylesheet" href="theme-solo-results.css?v=15">
+    <link rel="stylesheet" href="theme-solo-results.css?v=16">
     <link rel="stylesheet" href="theme-menu-resume-buttons.css?v=2">
     <link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
     <link rel="stylesheet" href="kockice.css?v=1.10">
@@ -136,17 +136,17 @@
     <link rel="stylesheet" href="theme-settings-room.css?v=4">
     <link rel="stylesheet" href="theme-statistics-room.css?v=4">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=7">
-    <link rel="stylesheet" href="theme-online-random-room.css?v=2">
-    <link rel="stylesheet" href="theme-online-random-finish.css?v=5">
-    <link rel="stylesheet" href="theme-invite-friend-room.css?v=4">
+    <link rel="stylesheet" href="theme-online-random-room.css?v=3">
+    <link rel="stylesheet" href="theme-online-random-finish.css?v=6">
+    <link rel="stylesheet" href="theme-invite-friend-room.css?v=5">
     <link rel="stylesheet" href="theme-finish-compact.css?v=2">
     <link rel="stylesheet" href="theme-statistics-layout.css?v=2">
     <link rel="stylesheet" href="theme-statistics-leaderboards.css?v=2">
     <link rel="stylesheet" href="theme-rules-room.css?v=3">
-    <link rel="stylesheet" href="theme-tournament-final.css?v=1">
+    <link rel="stylesheet" href="theme-tournament-final.css?v=2">
     <link rel="stylesheet" href="theme-tournament-registration-rules.css?v=1">
     
-    <script src="languages.js?v=5.26"></script>
+    <script src="languages.js?v=5.27"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -270,55 +270,7 @@
             <p id="theme-loading-status" class="theme-loading-gate__status">Tema je spremna</p>
         </div>
     </div>
-    <svg class="menu-icon-sprite" width="0" height="0" aria-hidden="true" focusable="false">
-        <defs>
-            <linearGradient id="menuIconFace" x1="24" y1="18" x2="72" y2="78" gradientUnits="userSpaceOnUse">
-                <stop stop-color="var(--menu-icon-face-light, #FFF5BA)"/>
-                <stop offset="0.45" stop-color="var(--menu-icon-face-main, #E7B95E)"/>
-                <stop offset="1" stop-color="var(--menu-icon-face-dark, #965616)"/>
-            </linearGradient>
-            <linearGradient id="menuIconWarm" x1="25" y1="20" x2="70" y2="50" gradientUnits="userSpaceOnUse">
-                <stop stop-color="var(--menu-icon-warm-light, #FFE6A3)"/>
-                <stop offset="1" stop-color="var(--menu-icon-warm-main, #FF8F3D)"/>
-            </linearGradient>
-            <linearGradient id="menuIconAccent" x1="18" y1="24" x2="78" y2="76" gradientUnits="userSpaceOnUse">
-                <stop stop-color="var(--menu-icon-accent-light, #8DFFF2)"/>
-                <stop offset="1" stop-color="var(--menu-icon-accent-main, #0D7778)"/>
-            </linearGradient>
-            <radialGradient id="menuIconGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) rotate(90) scale(40)">
-                <stop stop-color="var(--menu-icon-glow, #FFD66F)" stop-opacity="0.34"/>
-                <stop offset="0.64" stop-color="var(--menu-icon-accent-main, #0D7778)" stop-opacity="0.13"/>
-                <stop offset="1" stop-color="#061313" stop-opacity="0"/>
-            </radialGradient>
-            <filter id="menuIconShadow" x="7" y="6" width="82" height="84" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.36"/>
-                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="var(--menu-icon-glow, #FFD66F)" flood-opacity="0.2"/>
-            </filter>
-        </defs>
 
-        <symbol id="app-icon-dukat" viewBox="0 0 96 96">
-            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
-            <g filter="url(#menuIconShadow)">
-                <circle cx="48" cy="46" r="34" fill="url(#menuIconWarm)"/>
-                <circle cx="48" cy="46" r="27" fill="url(#menuIconFace)" stroke="var(--menu-icon-detail, #321B10)" stroke-opacity="0.35" stroke-width="2"/>
-                <path d="M35 36c4-7 15-10 24-5 5 3 8 8 8 15 0 8-4 14-11 17-8 4-18 2-23-5" fill="none" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round"/>
-                <path d="M36 38c5-5 13-7 20-3 4 2 6 6 6 11 0 6-3 10-8 13-6 3-14 2-18-3" fill="none" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
-                <path d="M48 24v44" stroke="var(--menu-icon-detail, #321B10)" stroke-opacity="0.32" stroke-width="3" stroke-linecap="round"/>
-                <path d="M30 43h36" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
-            </g>
-        </symbol>
-
-        <symbol id="app-icon-undo-token" viewBox="0 0 96 96">
-            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
-            <g filter="url(#menuIconShadow)">
-                <circle cx="48" cy="46" r="34" fill="url(#menuIconAccent)"/>
-                <circle cx="48" cy="46" r="27" fill="url(#menuIconFace)" stroke="var(--menu-icon-core, #132727)" stroke-opacity="0.36" stroke-width="2"/>
-                <path d="M62 35c-4-5-11-8-18-6-10 2-17 12-14 22 2 9 10 15 19 15 7 0 13-4 17-9" fill="none" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round"/>
-                <path d="M62 35l1-12 10 7" fill="none" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M58 37c-4-3-9-5-14-4-7 2-12 9-10 16 1 7 8 12 15 12 5 0 10-3 13-7" fill="none" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-            </g>
-        </symbol>
-    </svg>
 
     <canvas id="confetti-canvas"></canvas>
 
@@ -1195,10 +1147,6 @@
                     <div class="hotseat-result-player" data-hotseat-player="0"><span class="hotseat-result-role" data-lang="go_hotseat_account">NALOG</span><span class="hotseat-result-name"></span><strong class="hotseat-result-points"></strong></div>
                     <div class="hotseat-result-player" data-hotseat-player="1"><span class="hotseat-result-role" data-lang="go_hotseat_guest">GOST</span><span class="hotseat-result-name"></span><strong class="hotseat-result-points"></strong></div>
                 </div>
-                <img class="easter-hotseat-winner-mark" data-theme-src="assets/easter-soft-clay/hotseat/winner.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-hotseat-winner-mark" data-theme-src="assets/desert-soft-clay/hotseat/winner.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="severna-hotseat-winner-mark" data-theme-src="assets/severna-soft-clay/hotseat/winner-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="green-hotseat-winner-mark" data-theme-src="assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-game-over-result-icon green-game-over-result-icon--win" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/wins-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-game-over-result-icon green-game-over-result-icon--loss" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/losses-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-game-over-result-icon green-game-over-result-icon--draw" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/draws-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1723,14 +1671,14 @@
     <script src="toplista.js?v=5.0"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="turnir.js?v=1036"></script>
-    <script src="pravilaigre.js?v=1.35"></script>
+    <script src="pravilaigre.js?v=1.36"></script>
     <script src="vracanjeupisa.js?v=1.8"></script>
     <script src="globalchat.js?v=1.10"></script>
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
     <script src="theme-invite-friend-room.js?v=3"></script>
-    <script src="game.js?v=6.20"></script>
+    <script src="game.js?v=6.22"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
@@ -1739,7 +1687,7 @@
     <script src="theme-settings-room.js?v=1"></script>
     <script src="theme-statistics-room.js?v=2"></script>
     <script src="theme-settings-picker.js?v=2"></script>
-    <script src="theme-main-room-icons.js?v=23"></script>
+    <script src="theme-main-room-icons.js?v=24"></script>
     <script src="theme-online-players-room.js?v=4"></script>
     <script src="theme-ducat-pack.js?v=5"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>

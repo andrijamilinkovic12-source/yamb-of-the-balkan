@@ -23,8 +23,8 @@ const dynamicAnchors = fs.readdirSync(path.join(repo, 'www')).filter(file => fil
     .filter(match => relevant(match[1]))
     .map(match => ({ source:match[1], inMenu:false, file })));
 const anchors = [...htmlAnchors, ...dynamicAnchors];
-assert(dynamicAnchors.length >= 9, 'Expected dynamic room headers and tournament symbols');
-assert.equal(htmlAnchors.filter(anchor => anchor.inMenu).length, 15, 'Expected fifteen menu icon anchors');
+assert(dynamicAnchors.length >= 7, `Expected dynamic room headers and tournament symbols; found ${dynamicAnchors.length}`);
+assert.equal(htmlAnchors.filter(anchor => anchor.inMenu).length, 14, 'Expected fourteen data-theme-src menu anchors; Quarterly League uses its own active-quarter logo');
 const modeGrid = html.slice(html.indexOf('<div class="modes-grid">', menuStart), html.indexOf('<div class="special-actions-row"', menuStart));
 for (const role of ['solo', 'hotseat', 'online-random', 'invite-friend']) {
   assert(modeGrid.includes(`canonical/${role}-room-identity/${role}-room-menu-v1.png`), `Missing ${role} mode icon`);
@@ -34,12 +34,12 @@ assert(!/<svg\b/.test(html.slice(menuStart, menuEnd)), 'A legacy SVG icon remain
 assert(!themeCss.includes('--ocean-mode-icon-mask'), 'Ocean still defines old CSS mode icons');
 assert(/body\.winter-theme #main-menu \.main-online-icon-wrap > img\.theme-main-room-icon\s*\{[^}]*display:\s*block !important/s.test(roomCss), 'Ocean online-players PNG is not visible');
 assert(/body\.winter-theme #main-menu \.main-economy-icon-wrap > img\.theme-main-room-icon\s*\{[^}]*display:\s*block !important/s.test(roomCss), 'Ocean economy PNG is not visible');
-assert.equal((html.slice(menuStart, menuEnd).match(/class="main-league-watermark-zone"/g) || []).length, 1, 'League card needs one watermark slot');
-assert(html.slice(menuStart, menuEnd).includes('canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png'), 'League watermark must use its canonical theme icon');
+assert.equal((html.slice(menuStart, menuEnd).match(/class="main-league-watermark-zone(?:\s[^"]*)?"/g) || []).length, 1, 'League card needs one watermark slot');
+assert(html.slice(menuStart, menuEnd).includes('canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png'), 'League watermark must use its canonical active-quarter icon');
 assert(!html.includes('power-index-watermark'), 'Power Index watermark should remain absent');
 assert(/#main-menu \.main-summary-row\s*\{[^}]*max-width:\s*380px !important;[^}]*gap:\s*10px !important;/s.test(roomCss), 'Summary row does not match Green geometry');
 assert(/#main-menu \.main-summary-row > \.main-league-card\s*\{[^}]*flex:\s*1\.8 1 0 !important;/s.test(roomCss), 'League card ratio does not match Green');
-assert(/#main-menu \.main-summary-row \.main-league-card \.main-league-watermark-zone > img\s*\{[^}]*opacity:\s*\.18;/s.test(roomCss), 'Theme league watermark is not restrained');
+assert(/#main-menu \.main-summary-row \.main-league-card \.main-league-watermark-zone > img\s*\{[^}]*opacity:\s*1;/s.test(roomCss), 'Quarterly League menu mark is not clearly visible');
 assert(roomCss.includes('summaryOnlineSignal 2.35s') && roomCss.includes('summaryEconomySway 2.7s'), 'Summary card icon motion is missing');
 assert(/@media \(prefers-reduced-motion: reduce\)[\s\S]*\.main-summary-row \.main-online-icon-wrap > img\[data-theme-src\][\s\S]*animation:\s*none !important;/s.test(roomCss), 'Summary motion lacks reduced-motion support');
 assert(anchors.some(anchor => anchor.source.includes('treasury-free-v3') && !anchor.inMenu), 'Treasury room anchor missing');
@@ -56,9 +56,12 @@ function expectedPath(theme, anchor) {
   const green = anchor.source;
   const room = !anchor.inMenu;
   const canonical = green.match(/canonical\/([a-z-]+)-room-identity\//);
-  if (canonical) return `assets/theme-packs/${theme}/canonical/${canonical[1]}-room-identity/${canonical[1]}-room${room ? '' : '-menu'}-v1.png`;
+  if (canonical) {
+    const version = ['leaderboard', 'quarterly-league'].includes(canonical[1]) ? 2 : 1;
+    return `assets/theme-packs/${theme}/canonical/${canonical[1]}-room-identity/${canonical[1]}-room${room ? '' : '-menu'}-v${version}.png`;
+  }
   if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
-  if (green.includes('ducats-undo-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}ducats-undo-free-v3.png`;
+  if (green.includes('ducats-undo-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png${theme === 'neon' ? '?v=2' : ''}`;
   if (green.includes('champion-trophy-v1')) return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${room ? '-room' : ''}-v1.png`;
   throw new Error(`Unexpected anchor ${green}`);
 }

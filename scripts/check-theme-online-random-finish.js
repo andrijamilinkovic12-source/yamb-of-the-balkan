@@ -55,7 +55,7 @@ assert(css.includes('background-image: var(--online-rematch-button-image) !impor
 assert(css.includes('min-height: 44px'));
 assert(/@media \(max-height:\s*700px\)/.test(css)
     && /display:\s*grid\s*!important/.test(css)
-    && /#game-over-screen\.is-online-duel-result \.game-over-claim-button\s*\{[^}]*grid-column:\s*1/s.test(css)
+    && /#game-over-screen\.is-solo-result\.is-online-duel-result \.game-over-claim-button\s*\{[^}]*grid-column:\s*1/s.test(css)
     && /#game-over-screen\.is-online-duel-result #btn-rematch:not\(\[hidden\]\)\s*\{[^}]*grid-column:\s*2/s.test(css),
     'short online finish must fit Claim and Rematch in one row without scrolling');
 assert(!/overflow-y:\s*auto/.test(css), 'online finish must not introduce scrolling');

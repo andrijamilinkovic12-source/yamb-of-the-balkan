@@ -1007,10 +1007,6 @@ body.easter-theme #main-menu .mode-solo {
     --easter-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M32 32c7.7 0 14-6.3 14-14S39.7 4 32 4 18 10.3 18 18s6.3 14 14 14Zm0 6c-13.8 0-24 7.6-24 18v4h48v-4c0-10.4-10.2-18-24-18Z'/%3E%3C/svg%3E");
 }
 
-body.easter-theme #main-menu .mode-dual {
-    --easter-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 64'%3E%3Cpath fill='black' d='M30 31c7.5 0 13.5-6 13.5-13.5S37.5 4 30 4 16.5 10 16.5 17.5 22.5 31 30 31Zm0 6C16.8 37 7 44 7 54v6h46v-6c0-10-9.8-17-23-17Zm24-8c6.3 0 11.5-5.2 11.5-11.5S60.3 6 54 6c-3 0-5.8 1.2-7.8 3.1a19 19 0 0 1 0 16.8A11.4 11.4 0 0 0 54 29Zm0 7c-3 0-5.9.4-8.5 1.2 6.6 3.5 10.8 9.1 10.8 16.8v6H73v-5c0-11-8.5-19-19-19Z'/%3E%3C/svg%3E");
-}
-
 body.easter-theme #main-menu .mode-random {
     --easter-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='none' stroke='black' stroke-width='7'/%3E%3Cpath d='M7 32h50M32 7c9 8 9 42 0 50M32 7c-9 8-9 42 0 50' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
@@ -3438,10 +3434,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
    GREEN ROOM PACK — DVA IGRAČA HOTSEAT
    Ista geometrija kao referentne teme; menja se samo Green identitet.
    ========================================================= */
-.green-hotseat-winner-mark {
-    display: none;
-}
-
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result .game-over-score-card {
     display: block !important;
     width: 100% !important;
@@ -3454,21 +3446,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     box-shadow: var(--green-clay-inset) !important;
 }
 
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result .easter-hotseat-winner-mark,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result .desert-hotseat-winner-mark,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result .severna-hotseat-winner-mark {
-    display: none !important;
-}
-
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result.has-result-winner .green-hotseat-winner-mark {
-    display: block;
-    width: 58px;
-    height: 58px;
-    margin: -6px auto 4px;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 8px rgba(7,29,15,.28));
-}
-
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result .game-over-score-card [data-lang="go_msg_solo"] {
     color: var(--green-clay-muted) !important;
     font-weight: 900;
@@ -3478,16 +3455,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result #go-score {
     color: var(--green-clay-ink-strong) !important;
     text-shadow: 0 2px 4px rgba(7,29,15,.42) !important;
-}
-
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result.screen.active .green-hotseat-winner-mark {
-    animation: easterSoloFinishReveal .48s cubic-bezier(.22, 1, .36, 1) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-hotseat-result.screen.active .green-hotseat-winner-mark {
-        animation: none !important;
-    }
 }
 
 /* =========================================================
@@ -5711,7 +5678,6 @@ body.easter-theme #go-msg {
     text-shadow: 0 1px 0 rgba(255,255,255,0.82) !important;
 }
 
-.easter-hotseat-winner-mark,
 .easter-solo-personal-best {
     display: none;
 }
@@ -5727,15 +5693,6 @@ body.easter-theme #game-over-screen .game-over-score-card {
     box-shadow:
         inset 4px 4px 10px rgba(184,148,111,0.16),
         inset -4px -4px 10px rgba(255,255,255,0.68) !important;
-}
-
-body.easter-theme #game-over-screen.is-hotseat-result.has-result-winner .easter-hotseat-winner-mark {
-    display: block;
-    width: 58px;
-    height: 58px;
-    margin: -6px auto 4px;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 8px rgba(107, 44, 143, 0.18));
 }
 
 body.easter-theme #game-over-screen.is-solo-result .easter-solo-personal-best:not([hidden]) {
@@ -7867,8 +7824,6 @@ body.desert-theme #main-menu .mode-icon::before {
     filter: drop-shadow(0 1px 0 rgba(255,255,255,0.72)) drop-shadow(0 3px 4px rgba(96,49,20,0.24));
 }
 
-body.desert-theme #main-menu .mode-solo { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M32 32c7.7 0 14-6.3 14-14S39.7 4 32 4 18 10.3 18 18s6.3 14 14 14Zm0 6c-13.8 0-24 7.6-24 18v4h48v-4c0-10.4-10.2-18-24-18Z'/%3E%3C/svg%3E"); }
-body.desert-theme #main-menu .mode-dual { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 64'%3E%3Cpath fill='black' d='M30 31c7.5 0 13.5-6 13.5-13.5S37.5 4 30 4 16.5 10 16.5 17.5 22.5 31 30 31Zm0 6C16.8 37 7 44 7 54v6h46v-6c0-10-9.8-17-23-17Zm24-8c6.3 0 11.5-5.2 11.5-11.5S60.3 6 54 6c-3 0-5.8 1.2-7.8 3.1a19 19 0 0 1 0 16.8A11.4 11.4 0 0 0 54 29Zm0 7c-3 0-5.9.4-8.5 1.2 6.6 3.5 10.8 9.1 10.8 16.8v6H73v-5c0-11-8.5-19-19-19Z'/%3E%3C/svg%3E"); }
 body.desert-theme #main-menu .mode-random { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='none' stroke='black' stroke-width='7'/%3E%3Cpath d='M7 32h50M32 7c9 8 9 42 0 50M32 7c-9 8-9 42 0 50' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"); }
 body.desert-theme #main-menu .mode-invite { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='28' cy='27' r='11' fill='black'/%3E%3Cpath fill='black' d='M8 68c0-14 8-23 20-23s20 9 20 23H8Z'/%3E%3Cpath d='M59 34v22M48 45h22' fill='none' stroke='black' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E"); }
 
@@ -13623,8 +13578,7 @@ body.desert-theme .tournament-final-ceremony-next:disabled {
 .desert-spectating-live-icon,
 .desert-invite-add-icon,
 .desert-invite-send-icon,
-.desert-invite-empty-icon,
-.desert-hotseat-winner-mark {
+.desert-invite-empty-icon {
     display: none;
 }
 
@@ -14371,15 +14325,6 @@ body.desert-theme #waiting-screen.is-hosting-invite .easter-friend-draw strong {
 body.desert-theme #waiting-screen.is-hosting-invite .easter-friend-loss strong { color: #9a432f; }
 
 /* Solo i Hotseat završna stanja: diskretne Desert oznake, bez novih dimenzija ekrana. */
-body.desert-theme #game-over-screen.is-hotseat-result.has-result-winner .desert-hotseat-winner-mark {
-    display: block;
-    width: 58px;
-    height: 58px;
-    margin: -6px auto 4px;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 8px rgba(93,57,33,.18));
-}
-
 body.desert-theme #game-over-screen.is-solo-result .easter-solo-personal-best:not([hidden]) {
     display: flex;
     align-items: center;
@@ -14530,8 +14475,7 @@ body.easter-theme #main-menu .main-economy-card:active .main-economy-soft-clay-i
 #main-menu .nebula-solo-soft-clay-icon,
 #main-menu .nebula-hotseat-soft-clay-icon,
 #main-menu .nebula-opponent-soft-clay-icon,
-#main-menu .nebula-invite-soft-clay-icon,
-.severna-hotseat-winner-mark {
+#main-menu .nebula-invite-soft-clay-icon {
     display: none;
 }
 
@@ -17808,15 +17752,6 @@ body.severna-theme #game-over-screen .game-over-score-card {
     box-shadow:
         inset 4px 4px 10px rgba(0,3,16,.38),
         inset -3px -3px 8px rgba(134,247,255,.10) !important;
-}
-
-body.severna-theme #game-over-screen.is-hotseat-result.has-result-winner .severna-hotseat-winner-mark {
-    display: block;
-    width: 58px;
-    height: 58px;
-    margin: -6px auto 4px;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 8px rgba(0,3,16,.32));
 }
 
 body.severna-theme #game-over-screen.is-solo-result .easter-solo-personal-best:not([hidden]) {

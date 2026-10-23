@@ -261,3 +261,34 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #waiting-screen#waiting-screen.is-random-online .online-random-scan-icon,
     #waiting-screen#waiting-screen.is-random-online .online-random-found-icon { animation: none !important; }
 }
+
+/* Keep the weekly podium visible on short portrait phones in every theme. */
+@media (max-height: 700px) {
+    #waiting-screen#waiting-screen.is-random-online .waiting-header {
+        margin-bottom: 6px !important;
+    }
+    #waiting-screen#waiting-screen.is-random-online .waiting-status-panel {
+        margin-bottom: 4px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+    #waiting-screen#waiting-screen.is-random-online .ws-vs-area-horizontal {
+        margin-top: 8px !important;
+    }
+    #waiting-screen#waiting-screen.is-random-online .waiting-hof {
+        margin-top: 8px !important;
+    }
+    #waiting-screen#waiting-screen.is-random-online .waiting-hof-title {
+        margin-bottom: 4px !important;
+        padding-bottom: 2px !important;
+    }
+    #waiting-screen#waiting-screen.is-random-online .waiting-hof-list {
+        min-height: 0;
+        gap: 3px !important;
+    }
+    #waiting-screen#waiting-screen.is-random-online .waiting-hof-entry {
+        min-height: 32px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+}

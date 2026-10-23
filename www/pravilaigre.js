@@ -11,13 +11,17 @@ function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
     const green = theme === 'dark';
     const root = green ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
     const canonical = `${root}/canonical`;
+    if (green && ['addFriend', 'spectate', 'duel'].includes(role)) {
+        const sharedRole = { addFriend: 'friend', spectate: 'spectate', duel: 'duel' }[role];
+        return `assets/theme-packs/dark/canonical/online-players-internal/${sharedRole}-v1.png`;
+    }
     const roles = {
         rules: 'rules-room-identity/rules-room-v1.png',
         scoring: green ? 'rules-page-illustrations/rules-scoring-v1.png' : 'statistics-overview/average-v2.png',
         statisticsPage: green ? 'rules-page-illustrations/stats-leaderboards-v1.png' : 'leaderboard-controls/global-v2.png',
         competitionsPage: green ? 'rules-page-illustrations/multiplayer-competitions-v1.png' : 'tournament-navigation/tab-bracket-v1.png',
         communicationPage: green ? '../rules/pages/communication-v1.png' : 'online-players-internal/state-v1.png',
-        economyPage: green ? '../rules/pages/economy-treasury-v3.png' : 'ducat/ducat-front-v1.png',
+        economyPage: green ? '../rules/pages/economy-treasury-v3.png' : `ducat/ducat-front-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`,
         accountPage: green ? 'rules-page-illustrations/account-server-v1.png' : 'online-players-internal/avatar-v1.png',
         statistics: 'statistics-room-identity/statistics-room-v1.png',
         leaderboard: green ? 'leaderboard-room-identity/leaderboard-room-v1.png' : 'leaderboard-room-identity/leaderboard-room-v2.png',
@@ -34,14 +38,14 @@ function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
         hallOfFame: 'tournament-navigation/tab-hall-of-fame-v1.png',
         quarterly: 'quarterly-league-room-identity/quarterly-league-room-v2.png',
         onlinePlayers: 'online-players-room-identity/online-players-room-v1.png',
-        addFriend: green ? '../online-add-friend-v1.png' : 'online-players-internal/friend-v1.png',
-        spectate: green ? '../online-spectate-v1.png' : 'online-players-internal/spectate-v1.png',
-        duel: green ? '../online-duel-v1.png' : 'online-players-internal/duel-v1.png',
+        addFriend: 'online-players-internal/friend-v1.png',
+        spectate: 'online-players-internal/spectate-v1.png',
+        duel: 'online-players-internal/duel-v1.png',
         globalChat: 'global-chat-room-identity/global-chat-room-v1.png',
-        ducat: 'ducat/ducat-inline-v1.png',
+        ducat: `ducat/ducat-inline-v${!green && ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`,
         daily: 'daily-room-identity/daily-room-v1.png',
         video: 'rewarded-video/rewarded-video-active-inline-v1.png',
-        undo: 'undo-token/undo-token-inline-v1.png',
+        undo: `undo-token/undo-token-inline-v${!green && ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`,
         treasury: '../treasury-free-v3.png',
         trophyTab: 'treasury-controls/tab-trophies-v1.png',
         skinsTab: 'treasury-controls/tab-skins-v1.png',

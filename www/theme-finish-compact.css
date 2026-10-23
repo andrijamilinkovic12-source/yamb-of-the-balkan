@@ -1,5 +1,7 @@
 /* The shared Solo and Hotseat result stays fully visible on short portrait screens. */
 @media (max-height: 700px) {
+    body #game-over-screen.is-hotseat-result.is-solo-result #go-title { font-size: 1.05rem !important; line-height: 1.1 !important; }
+    body #game-over-screen.is-hotseat-result.is-solo-result #go-msg { font-size: .69rem !important; line-height: 1.12 !important; }
     #game-over-screen.is-solo-result:not(.is-online-duel-result).screen.active > .modal-box {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr));
