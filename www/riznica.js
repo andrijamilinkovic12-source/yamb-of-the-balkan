@@ -65,8 +65,9 @@ class RiznicaManager {
         introText.replaceChildren();
         introText.setAttribute('aria-hidden', 'true');
 
-        const openBehindOverlayAt = 3650;
-        const introDuration = 4600;
+        const openBehindOverlayAt = window.ROOM_INTRO_TIMING?.openAtMs ?? 2400;
+        const introDuration = window.ROOM_INTRO_TIMING?.durationMs ?? 3200;
+        overlay.style.setProperty('--riznica-intro-duration', `${introDuration}ms`);
         let completed = false;
 
         setTimeout(() => {
@@ -203,7 +204,7 @@ class RiznicaManager {
         window.openConfirmModal = (id, name, price) => {
             if (window.modalManager) {
                 let msg = (typeof t === 'function') ? `${t('msg_confirm_buy')} <b style="color:var(--gold-main)">${name}</b>?` : `Želite li kupiti <b>${name}</b>?`;
-                window.modalManager.confirm(msg).then(isConfirmed => {
+                window.modalManager.confirm(msg, { contextClass: 'treasury' }).then(isConfirmed => {
                     if (isConfirmed) {
                         this.shop.processTransaction(id, price);
                     }

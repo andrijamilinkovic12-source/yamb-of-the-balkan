@@ -42,19 +42,19 @@ window.handleOnlinePlayerFriendRequest = async function(button, socketId, name, 
     };
 
     if (!window.app || typeof window.app.sendFriendRequest !== 'function') {
-        showNotification(tr('info_title', 'INFO'), tr('err_feature_unavailable', 'Funkcija nije dostupna.'));
+        showNotification(tr('info_title', 'INFO'), tr('err_feature_unavailable', 'Funkcija nije dostupna.'), { className: 'online-players-notice' });
         return;
     }
 
     setOnlineActionButtonDisabled(button, true);
 
     try {
-        const sent = await window.app.sendFriendRequest(socketId, name, uid);
+        const sent = await window.app.sendFriendRequest(socketId, name, uid, { contextClass: 'online-players' });
         if (!sent) setOnlineActionButtonDisabled(button, false);
     } catch (err) {
         console.warn('Zahtev za prijateljstvo iz online liste nije uspeo:', err);
         setOnlineActionButtonDisabled(button, false);
-        showNotification(tr('err_title', 'GREŠKA'), tr('err_server_conn', 'Greška pri povezivanju sa serverom.'));
+        showNotification(tr('err_title', 'GREŠKA'), tr('err_server_conn', 'Greška pri povezivanju sa serverom.'), { className: 'online-players-notice' });
     }
 };
 
@@ -93,6 +93,15 @@ window.showNotification = function(title, message, options = {}) {
     const toast = document.createElement('div');
     const safeClassName = String(options.className || '').replace(/[^a-zA-Z0-9_-]/g, '');
     toast.className = `custom-toast ${safeClassName}`.trim();
+    if (document.getElementById('riznica-screen')?.classList.contains('active')) {
+        toast.classList.add('treasury-notice');
+    }
+    if (document.getElementById('tournament-screen')?.classList.contains('active')) {
+        toast.classList.add('tournament-notice');
+    }
+    if (document.getElementById('undo-menu-overlay')?.style.display === 'flex') {
+        toast.classList.add('economy-notice');
+    }
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', 'polite');
     const optionalIcon = options.icon
@@ -442,8 +451,8 @@ window.openOnlinePlayersModal = function() {
                     const playerBusyTitle = tr('online_tooltip_player_busy', 'Igrač trenutno igra');
                     const challengeTitleText = tr('online_tooltip_challenge', 'Izazovi na duel');
                     const addFriendHandler = sec.escapeAttr(`window.handleOnlinePlayerFriendRequest(this, ${socketIdArg}, ${nameArg}, ${uidArg})`);
-                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
-                    const challengeHandler = sec.escapeAttr(`if(window.app && window.app.challengePlayer) { window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg}) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
+                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }, { contextClass: 'online-players' }) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}, { className: 'online-players-notice' }) }`);
+                    const challengeHandler = sec.escapeAttr(`if(window.app && window.app.challengePlayer) { window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg}, { contextClass: 'online-players' }) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}, { className: 'online-players-notice' }) }`);
 
                     const actionButton = (role, title, handler, disabled) => `
                         <button type="button" class="online-player-action online-player-action--${role}${disabled ? ' is-disabled' : ''}"

@@ -36,15 +36,15 @@
 #stats-screen .stats-power-card #stat-power-index { margin-right: 0 !important; }
 #stats-screen :is(.stats-power-card,.stat-item[role="button"]):focus-visible { outline:2px solid var(--stats-accent,var(--gold-main)); outline-offset:-2px; }
 
-body.light-theme { --stats-surface:rgba(255,243,220,.94); --stats-card:rgba(255,249,238,.92); --stats-subcard:rgba(244,219,179,.62); --stats-ink:#392817; --stats-muted:#604a37; --stats-accent:#875024; --stats-line:rgba(120,78,40,.26); --stats-power:#704426; --stats-power-ink:#fff9ef; }
-body.medium-theme { --stats-surface:rgba(56,17,28,.94); --stats-card:rgba(79,29,41,.9); --stats-subcard:rgba(104,43,53,.8); --stats-ink:#fff6f2; --stats-muted:#edd3cc; --stats-accent:#f1c3b2; --stats-line:rgba(241,195,178,.28); --stats-power:#703342; --stats-power-ink:#fff6f2; }
-body.winter-theme { --stats-surface:rgba(246,249,243,.94); --stats-card:rgba(255,248,236,.91); --stats-subcard:rgba(212,232,233,.81); --stats-ink:#18384b; --stats-muted:#365c68; --stats-accent:#0b5c8c; --stats-line:rgba(11,92,140,.24); --stats-power:#125d85; --stats-power-ink:#f9fcfc; }
-body.neon-theme { --stats-surface:rgba(14,24,40,.95); --stats-card:rgba(23,40,59,.91); --stats-subcard:rgba(31,57,74,.78); --stats-ink:#f4faff; --stats-muted:#bdd9df; --stats-accent:#56e5d2; --stats-line:rgba(86,229,210,.28); --stats-power:#1b5962; --stats-power-ink:#f4faff; }
-body.amethyst-theme { --stats-surface:rgba(52,34,66,.94); --stats-card:rgba(75,45,83,.91); --stats-subcard:rgba(91,57,99,.81); --stats-ink:#fbf6ff; --stats-muted:#eadbeb; --stats-accent:#f2c879; --stats-line:rgba(242,200,121,.27); --stats-power:#67446d; --stats-power-ink:#fffaf1; }
-body.easter-theme { --stats-surface:rgba(255,250,237,.94); --stats-card:rgba(252,248,235,.92); --stats-subcard:rgba(227,231,211,.75); --stats-ink:#354131; --stats-muted:#55634b; --stats-accent:#4d6b45; --stats-line:rgba(77,107,69,.26); --stats-power:#4d6b45; --stats-power-ink:#fffbee; }
-body.desert-theme { --stats-surface:rgba(255,242,219,.94); --stats-card:rgba(255,248,234,.92); --stats-subcard:rgba(237,211,179,.76); --stats-ink:#443027; --stats-muted:#665044; --stats-accent:#35666d; --stats-line:rgba(125,77,56,.26); --stats-power:#72503d; --stats-power-ink:#fff8ed; }
-body.moon-theme { --stats-surface:rgba(34,38,49,.95); --stats-card:rgba(54,58,69,.9); --stats-subcard:rgba(70,74,85,.8); --stats-ink:#f5f5f7; --stats-muted:#d1d2dc; --stats-accent:#e1e2e7; --stats-line:rgba(225,226,231,.25); --stats-power:#555965; --stats-power-ink:#fff; }
-body.severna-theme { --stats-surface:rgba(19,39,61,.95); --stats-card:rgba(33,66,86,.91); --stats-subcard:rgba(44,82,101,.79); --stats-ink:#f5fbff; --stats-muted:#c9e2ea; --stats-accent:#8ae3e4; --stats-line:rgba(138,227,228,.26); --stats-power:#306273; --stats-power-ink:#f5fbff; }
+body.light-theme { --stats-surface:rgba(255,243,220,.94); --stats-card:rgba(255,249,238,.92); --stats-subcard:rgba(255,249,238,.96); --stats-ink:#392817; --stats-muted:#604a37; --stats-accent:#875024; --stats-line:rgba(120,78,40,.26); --stats-power:#704426; --stats-power-ink:#fff9ef; }
+body.medium-theme { --stats-surface:rgba(56,17,28,.94); --stats-card:rgba(79,29,41,.9); --stats-subcard:rgba(79,29,41,.96); --stats-ink:#fff6f2; --stats-muted:#edd3cc; --stats-accent:#f1c3b2; --stats-line:rgba(241,195,178,.28); --stats-power:#703342; --stats-power-ink:#fff6f2; }
+body.winter-theme { --stats-surface:rgba(246,249,243,.94); --stats-card:rgba(255,248,236,.91); --stats-subcard:rgba(255,248,236,.96); --stats-ink:#18384b; --stats-muted:#365c68; --stats-accent:#0b5c8c; --stats-line:rgba(11,92,140,.24); --stats-power:#125d85; --stats-power-ink:#f9fcfc; }
+body.neon-theme { --stats-surface:rgba(14,24,40,.95); --stats-card:rgba(23,40,59,.91); --stats-subcard:rgba(23,40,59,.96); --stats-ink:#f4faff; --stats-muted:#bdd9df; --stats-accent:#56e5d2; --stats-line:rgba(86,229,210,.28); --stats-power:#1b5962; --stats-power-ink:#f4faff; }
+body.amethyst-theme { --stats-surface:rgba(52,34,66,.94); --stats-card:rgba(75,45,83,.91); --stats-subcard:rgba(75,45,83,.96); --stats-ink:#fbf6ff; --stats-muted:#eadbeb; --stats-accent:#f2c879; --stats-line:rgba(242,200,121,.27); --stats-power:#67446d; --stats-power-ink:#fffaf1; }
+body.easter-theme { --stats-surface:rgba(255,250,237,.94); --stats-card:rgba(252,248,235,.92); --stats-subcard:rgba(252,248,235,.96); --stats-ink:#354131; --stats-muted:#55634b; --stats-accent:#4d6b45; --stats-line:rgba(77,107,69,.26); --stats-power:#4d6b45; --stats-power-ink:#fffbee; }
+body.desert-theme { --stats-surface:rgba(255,242,219,.94); --stats-card:rgba(255,248,234,.92); --stats-subcard:rgba(255,248,234,.96); --stats-ink:#443027; --stats-muted:#665044; --stats-accent:#35666d; --stats-line:rgba(125,77,56,.26); --stats-power:#72503d; --stats-power-ink:#fff8ed; }
+body.moon-theme { --stats-surface:rgba(34,38,49,.95); --stats-card:rgba(54,58,69,.9); --stats-subcard:rgba(54,58,69,.96); --stats-ink:#f5f5f7; --stats-muted:#d1d2dc; --stats-accent:#e1e2e7; --stats-line:rgba(225,226,231,.25); --stats-power:#555965; --stats-power-ink:#fff; }
+body.severna-theme { --stats-surface:rgba(19,39,61,.95); --stats-card:rgba(33,66,86,.91); --stats-subcard:rgba(33,66,86,.96); --stats-ink:#f5fbff; --stats-muted:#c9e2ea; --stats-accent:#8ae3e4; --stats-line:rgba(138,227,228,.26); --stats-power:#306273; --stats-power-ink:#f5fbff; }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-shell {
     background:var(--stats-surface) !important;
@@ -112,4 +112,26 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #stats-screen .stats-overview-panel { gap:6px; }
     #stats-screen .stats-result-label { gap:1px; font-size:clamp(.62rem,2.5vw,.75rem); }
     #stats-screen .stats-card-body { padding-block:8px; }
+}
+
+/* Keep Green's Clay form while its light text stays legible on every layer. */
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #stats-screen#stats-screen .stats-shell {
+    background:var(--green-clay-surface-soft) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #stats-screen#stats-screen :is(.stats-page-panel,.h2h-stats-area) {
+    background:rgba(52,89,55,.94) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #stats-screen#stats-screen .h2h-rival-tile {
+    background:linear-gradient(145deg,rgba(59,96,58,.98),rgba(40,76,46,.98)) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #h2h-detail-modal#h2h-detail-modal .h2h-detail-card {
+    background:var(--green-clay-surface-soft) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #h2h-detail-modal#h2h-detail-modal .h2h-detail-stats {
+    background:rgba(52,89,55,.94) !important;
 }

@@ -1,0 +1,12 @@
+# Kvartalna liga — završna provera deset tema
+
+Datum: 23.10.2026.
+
+1. **Intro:** koristi `ROOM_INTRO_TIMING` za sve teme: sadržaj se otvara posle 2,4 s, a sloj se uklanja posle 3,2 s. Animacija Kvartalne lige sada dobija isto trajanje. Intro prikazuje samo tematski znak sa istaknutim tekućim kvartalom.
+2. **PNG:** svaka tema ima 13 zasebnih mastera i 14 produkcionih PNG putanja: znak sobe, njegov meni format, tri navigacione ikone, šest rangova i tri medalje. Tab Liga ponavlja isti znak; nagrada i proglašenje koriste iste kanonske medalje. Aktivni HTML/JS/CSS prikaz ne koristi stari SVG ili v1 PNG. Neupotrebljeni `quarterly-league-icon.svg` i stari zeleni CSS watermark su uklonjeni. Istorijske v1 PNG datoteke ostaju na disku kao izvori starijih QA zapisa, ali nisu aktivni asseti sobe.
+3. **Geometrija:** ista struktura i skala u svim temama: tab ikona 28 px, rang bedž 46 px, bedž aktuelnog ranga 38 px, medalje u listi 24/28 px. Obaveštenje o šampionu prati zelenu širinu do 400 px, bez izlaska iz safe zone; znak, medalja, avatar, naslov, poruka i dugme imaju zajedničke mere.
+4. **Površine i kontrast:** devet dodatnih tema koriste svoje tokene za nosivu karticu, uvučene liste, tabove, okvire i senke. Tekst i sekundarni tekst provereni su prema nosivim tonovima, sa ciljem najmanje 4,5:1. Zelenoj ostaje njen Clay materijal. Oznaka tekućeg kvartala u glavnom meniju je u boji, jasno vidljiva, bez dodatne watermark providnosti.
+5. **Tipografija:** Montserrat, jedinstvene veličine za naslov sobe, tabove, rang, imena i poene; duga imena se prelamaju. Na kratkim ekranima lista unutar sobe može da se skroluje, dok se kartica šampiona ograničava visinom ekrana i safe zonom.
+6. **Završetak i obaveštenja:** ova soba nema zaseban ekran završetka partije. Ima statusne poruke rang liste i Dvorane slavnih (učitavanje, prazno, greška sa ponovnim pokušajem), prikaz kvartalne nagrade i posebno obaveštenje o šampionu. Ono koristi kanonski znak odgovarajućeg kvartala i tematsku zlatnu medalju. Tekst, dugme i podloga obaveštenja vezani su za paletu teme, a dimenzije za zelenu referencu.
+
+Automatske provere: `npm run check:theme-quarterly-league-final`. One proveravaju produkcione PNG datoteke i SHA-256 iz manifesta, putanje, kvartale, vreme intra, mere i kontrast paleta. Stvarni prikaz i dodirne zone na malom, srednjem i velikom telefonu treba dodatno potvrditi u pokrenutoj aplikaciji; HTML pregled sam po sebi to ne dokazuje.

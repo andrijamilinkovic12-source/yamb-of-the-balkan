@@ -1,5 +1,8 @@
 /* Dukati / Ispravi zadnji upis: Green geometry with each theme's own material.
    The existing font sizes, spacing, icon sizes and reward actions stay shared. */
+#undo-menu-overlay { font-family: Montserrat, sans-serif; }
+#undo-menu-overlay .economy-ad-grid { grid-template-columns: minmax(0, 1fr); }
+#undo-menu-overlay .economy-reward-card { min-width: 0; width: 100%; box-sizing: border-box; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
     #undo-menu-overlay {
     --economy-ink: var(--theme-card-ink);
@@ -100,10 +103,71 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 
 /* Green wraps the long undo title on narrow phones instead of cutting it off. */
 @media (max-width: 360px) {
+    #undo-menu-overlay .economy-reward-top { gap: 8px; }
+    #undo-menu-overlay .economy-reward-card strong { padding-left: 4px; gap: 4px; }
     body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
         #undo-menu-overlay .economy-card-header .global-chat-title {
         min-width: 0;
         white-space: normal;
         overflow-wrap: normal;
     }
+}
+
+/* Reward success, failure and unavailable-ad notices keep the current theme. */
+#custom-modal-overlay.modal-context-economy .custom-modal {
+    font-family: Montserrat, sans-serif;
+}
+#custom-modal-overlay.modal-context-economy .cm-btn { min-height: 44px; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-economy .custom-modal,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.economy-notice {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-economy :is(.cm-title,.cm-msg),
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.economy-notice :is(.toast-title,.toast-msg) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-economy .cm-btn-ok {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-economy .cm-btn-cancel {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-raised) !important;
+    border: 1px solid var(--theme-card-line) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-economy .custom-modal,
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.economy-notice {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-soft) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-economy :is(.cm-title,.cm-msg),
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.economy-notice :is(.toast-title,.toast-msg) {
+    color: var(--green-clay-ink-strong) !important;
+    text-shadow: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-economy :is(.cm-btn-ok,.cm-btn-cancel) {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-inset) !important;
+    border: 1px solid var(--green-clay-line) !important;
 }

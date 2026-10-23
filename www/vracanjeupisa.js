@@ -67,8 +67,6 @@ class UndoManager {
             titleEl.innerText = (typeof t === 'function') ? t(key) : (normalizedIndex === 0 ? 'DUKATI' : 'ISPRAVI ZADNJI UPIS');
         }
 
-        const ducatsIcon = document.getElementById('economy-header-ducats-icon');
-        const undoIcon = document.getElementById('economy-header-undo-icon');
         const ducatsSoftClayIcon = document.getElementById('economy-header-ducats-soft-clay-icon');
         const undoSoftClayIcon = document.getElementById('economy-header-undo-soft-clay-icon');
         const ducatsDesertIcon = document.getElementById('economy-header-ducats-desert-icon');
@@ -77,8 +75,6 @@ class UndoManager {
         const undoNebulaIcon = document.getElementById('economy-header-undo-nebula-icon');
         const ducatsGreenIcon = document.getElementById('economy-header-ducats-green-icon');
         const undoGreenIcon = document.getElementById('economy-header-undo-green-icon');
-        if (ducatsIcon) ducatsIcon.classList.toggle('hidden', normalizedIndex === 1);
-        if (undoIcon) undoIcon.classList.toggle('hidden', normalizedIndex === 0);
         if (ducatsSoftClayIcon) ducatsSoftClayIcon.classList.toggle('hidden', normalizedIndex === 1);
         if (undoSoftClayIcon) undoSoftClayIcon.classList.toggle('hidden', normalizedIndex === 0);
         if (ducatsDesertIcon) ducatsDesertIcon.classList.toggle('hidden', normalizedIndex === 1);

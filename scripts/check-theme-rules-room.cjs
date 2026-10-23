@@ -29,9 +29,18 @@ const roles = [...new Set(['rules', ...[...RulesData.sr, ...RulesData.en]
     .flatMap(page => [...(page.title + page.content).matchAll(/data-rules-role="([^"]+)"/g)].map(match => match[1]))])];
 const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 const hashesByRole = new Map(roles.map(role => [role, new Set()]));
+const pageSources = {
+    scoring: 'statistics-overview/average-v2.png',
+    statisticsPage: 'leaderboard-controls/global-v2.png',
+    competitionsPage: 'tournament-navigation/tab-bracket-v1.png',
+    communicationPage: 'online-players-internal/state-v1.png',
+    accountPage: 'online-players-internal/avatar-v1.png'
+};
 for (const theme of themes) {
+    const uniqueRoomSources = new Set();
     for (const role of roles) {
         const url = rulesCanonicalSource(role, theme);
+        uniqueRoomSources.add(url);
         if (!url.endsWith('.png')) failures.push(`${theme}/${role}: not PNG`);
         const file = path.resolve(root, 'www', url);
         if (!fs.existsSync(file)) {
@@ -42,17 +51,35 @@ for (const theme of themes) {
         if (!bytes.subarray(0, 8).equals(pngSignature)) failures.push(`${theme}/${role}: invalid PNG ${url}`);
         hashesByRole.get(role).add(require('node:crypto').createHash('sha256').update(bytes).digest('hex'));
     }
+    if (uniqueRoomSources.size !== roles.length)
+        failures.push(`${theme}: ${uniqueRoomSources.size} distinct room PNGs for ${roles.length} roles`);
+    if (theme !== 'dark') for (const [role, suffix] of Object.entries(pageSources)) {
+        if (!rulesCanonicalSource(role, theme).endsWith(`/canonical/${suffix}`))
+            failures.push(`${theme}/${role}: page illustration must have its own thematic canonical source`);
+    }
     for (const tier of ['gold', 'silver', 'bronze']) {
         const medalRoot = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
         const medalPath = path.resolve(root, 'www/assets', medalRoot, 'canonical/competition-medals', `quarterly-league-${tier}-v2.png`);
+        uniqueRoomSources.add(`assets/${medalRoot}/canonical/competition-medals/quarterly-league-${tier}-v2.png`);
         if (!fs.existsSync(medalPath)) failures.push(`${theme}: missing quarterly league ${tier} medal`);
         else if (!fs.readFileSync(medalPath).subarray(0, 8).equals(pngSignature)) failures.push(`${theme}: invalid quarterly league ${tier} medal`);
     }
+    const closeRoot = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
+    const closeSource = `assets/${closeRoot}/canonical/room-controls/close-v1.png`;
+    uniqueRoomSources.add(closeSource);
+    if (!fs.existsSync(path.resolve(root, 'www', closeSource))) failures.push(`${theme}: missing canonical close PNG`);
+    if (uniqueRoomSources.size !== roles.length + 4)
+        failures.push(`${theme}: expected ${roles.length + 4} distinct PNG paths with medals and close; got ${uniqueRoomSources.size}`);
 }
 for (const [role, hashes] of hashesByRole) {
     if (hashes.size !== themes.length) failures.push(`${role}: the ten themes do not have distinct PNGs`);
 }
 const gameSource = fs.readFileSync(path.join(root, 'www/game.js'), 'utf8');
+const introConfig = fs.readFileSync(path.join(root, 'www/config.js'), 'utf8');
+if (!/ROOM_INTRO_TIMING\s*=\s*Object\.freeze\(\{\s*openAtMs:\s*2400,\s*durationMs:\s*3200\s*\}\)/.test(introConfig))
+    failures.push('Rules intro does not use the shared shortened timing');
+if (!gameSource.includes("this.playEasterRoomIntro('rules'"))
+    failures.push('Rules intro does not use the shared room intro');
 for (const oldPath of [
     'assets/easter-soft-clay/rules-pro-v2.png',
     'assets/desert-soft-clay/rules-pro.png',
@@ -69,5 +96,5 @@ if (failures.length) {
     console.error(failures.join('\n'));
     process.exitCode = 1;
 } else {
-    console.log(`Rules room: ${themes.length} themes, 2 languages, 6 pages, ${roles.length - 1} inline PNG roles plus header; all paths exist.`);
+    console.log(`Rules room: ${themes.length} themes, 2 languages, 6 pages, ${roles.length + 4} distinct active PNG paths per theme; all paths exist.`);
 }

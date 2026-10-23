@@ -2,10 +2,10 @@
 (() => {
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const placements = [
-        ['header', '#economy-header-undo-icon', '[id^="economy-header-undo-"]'],
-        ['tab', '#economy-tab-undo svg', 'svg, img'],
-        ['balance', '#economy-panel-undo #undo-token-count', '.economy-inline-token-icon-default, [class^="economy-inline-token-"]'],
-        ['reward', '#economy-panel-undo .economy-reward-card strong .economy-inline-token-icon-default', '.economy-inline-token-icon-default, [class^="economy-inline-token-"]']
+        ['header', '#economy-header-undo-green-icon', '[id^="economy-header-undo-"]'],
+        ['tab', '#economy-tab-undo .economy-tab-green-soft-clay-icon', 'img'],
+        ['balance', '#economy-panel-undo #undo-token-count', '[class^="economy-inline-token-"]'],
+        ['reward', '#economy-panel-undo .economy-reward-card strong .economy-inline-token-green-soft-clay-icon', '[class^="economy-inline-token-"]']
     ];
 
     function activeTheme() {

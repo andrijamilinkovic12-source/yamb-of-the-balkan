@@ -237,3 +237,58 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
         animation: none !important;
     }
 }
+
+/* The first-entry chat rules and message-report prompts use this room's palette. */
+#custom-modal-overlay.modal-context-global-chat .custom-modal {
+    font-family: Montserrat, sans-serif;
+}
+#custom-modal-overlay.modal-context-global-chat .cm-btn {
+    min-height: 44px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-global-chat .custom-modal {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-global-chat :is(.cm-title,.cm-msg) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-global-chat .cm-btn-ok {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-global-chat .cm-btn-cancel {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-raised) !important;
+    border: 1px solid var(--theme-card-line) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-global-chat .custom-modal {
+    color: var(--green-clay-ink) !important;
+    background: var(--green-clay-surface-soft) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-global-chat :is(.cm-title,.cm-msg) {
+    color: var(--green-clay-ink-strong) !important;
+    text-shadow: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-global-chat :is(.cm-btn-ok,.cm-btn-cancel) {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-inset) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised-small) !important;
+}

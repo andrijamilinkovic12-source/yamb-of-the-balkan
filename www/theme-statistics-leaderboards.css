@@ -170,3 +170,17 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
   body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
     :is(#pi-modal-overlay#pi-modal-overlay,#streak-overlay#streak-overlay) :is(.pi-list-container,.streak-list-container) { padding:16px 18px !important; }
 }
+
+/* Green's former pale Clay rows obscured the light rank text. */
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+  :is(#pi-modal-overlay#pi-modal-overlay,#streak-overlay#streak-overlay) :is(.pi-modal-shell,.streak-modal-shell) {
+    background:var(--green-clay-surface-soft) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+  :is(#pi-modal-overlay#pi-modal-overlay,#streak-overlay#streak-overlay) :is(.power-index-player-row,.fire-streak-player-row) {
+    background:linear-gradient(145deg,rgba(59,96,58,.98),rgba(40,76,46,.98)) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+  :is(#pi-modal-overlay#pi-modal-overlay,#streak-overlay#streak-overlay) :is(.power-index-player-row,.fire-streak-player-row).is-pinned {
+    background:linear-gradient(145deg,rgba(62,99,60,.98),rgba(43,79,48,.98)) !important;
+}

@@ -1,4 +1,143 @@
 /* Treasury geometry is shared by all ten themes; only materials and colors vary. */
+#riznica-intro {
+    animation-duration: var(--riznica-intro-duration, 3200ms) !important;
+}
+
+/* The canonical thumbnail IMG is the only artwork shown in an effect card. */
+#riznica-screen#riznica-screen#riznica-screen .effect-preview-box::before,
+#riznica-screen#riznica-screen#riznica-screen .effect-preview-box::after {
+    content: none !important;
+    display: none !important;
+    background-image: none !important;
+}
+#riznica-screen .effect-preview-box .treasury-effect-image {
+    display: block !important;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+#riznica-screen :is(.riznica-balance-ducat-icon-green,.riznica-ad-ducat-icon-green) {
+    display: block !important;
+    width: 19px;
+    height: 19px;
+    flex: 0 0 19px;
+    object-fit: contain;
+}
+
+/* Same text metrics in Green and all nine other themes. Long names wrap inside a card. */
+#riznica-screen {
+    font-family: Montserrat, sans-serif;
+}
+#riznica-screen#riznica-screen .riznica-header-title {
+    font-size: 1rem !important;
+    line-height: 1.2;
+}
+#riznica-screen#riznica-screen :is(.balance-display,.btn-add-coins) {
+    font-size: .75rem !important;
+    line-height: 1.2;
+}
+#riznica-screen#riznica-screen .category-header {
+    font-size: .9rem !important;
+    line-height: 1.2;
+    letter-spacing: .04em;
+}
+#riznica-screen#riznica-screen .category-grid > .card .title {
+    font-size: .78rem !important;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+#riznica-screen#riznica-screen .category-grid > .card :is(.desc,.duration) {
+    font-size: .72rem !important;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+#riznica-screen#riznica-screen .category-grid > .card :is(.price,.status,.req-text) {
+    font-size: .75rem !important;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+#riznica-screen#riznica-screen .category-grid > .card .btn-action {
+    font-size: .75rem !important;
+    line-height: 1.2;
+}
+
+/* Purchase confirmation and reward notices belong to the room's material palette. */
+#custom-modal-overlay.modal-context-treasury .custom-modal,
+.custom-toast.treasury-notice {
+    box-sizing: border-box;
+    max-width: min(350px, calc(100vw - 24px));
+    font-family: Montserrat, sans-serif;
+}
+#custom-modal-overlay.modal-context-treasury .cm-btn {
+    min-height: 44px;
+}
+#custom-modal-overlay.modal-context-treasury .cm-title,
+.custom-toast.treasury-notice .toast-title {
+    font-size: 1rem !important;
+    line-height: 1.2;
+}
+#custom-modal-overlay.modal-context-treasury .cm-msg,
+.custom-toast.treasury-notice .toast-msg {
+    font-size: .875rem !important;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-treasury .custom-modal,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.treasury-notice {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-treasury :is(.cm-title,.cm-msg),
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.treasury-notice :is(.toast-title,.toast-msg) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-treasury .cm-btn-ok {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-treasury .cm-btn-cancel {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-raised) !important;
+    border: 1px solid var(--theme-card-line) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-treasury .custom-modal,
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.treasury-notice {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-soft) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-treasury :is(.cm-title,.cm-msg),
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.treasury-notice :is(.toast-title,.toast-msg) {
+    color: var(--green-clay-ink-strong) !important;
+    text-shadow: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-treasury :is(.cm-btn-ok,.cm-btn-cancel) {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-inset) !important;
+    border: 1px solid var(--green-clay-line) !important;
+}
 #riznica-screen .riznica-header-logo-green,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
     #riznica-screen .riznica-header-logo-green.theme-main-room-icon {
@@ -118,12 +257,15 @@ body.easter-theme #riznica-screen.screen.active .category-grid > .card {
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
-    #riznica-screen .category-header {
+    #riznica-screen#riznica-screen .category-header {
     box-sizing: border-box;
     min-height: 38px;
     margin-left: 0;
     padding: 8px 12px;
     border-radius: 12px;
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-surface) 94%, transparent) !important;
+    border: 1px solid var(--theme-card-line) !important;
 }
 
 /* The approved background PNG gives each theme card its own visual identity. */
@@ -158,6 +300,12 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 
 @media (max-width: 600px) {
+    #riznica-screen#riznica-screen .riznica-header-title {
+        font-size: .92rem !important;
+    }
+    #riznica-screen#riznica-screen :is(.balance-display,.btn-add-coins) {
+        font-size: .68rem !important;
+    }
     #riznica-screen .riznica-header-logo-green,
     body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
         #riznica-screen .riznica-header-logo-green.theme-main-room-icon {
@@ -173,4 +321,39 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
         height: 42px;
         gap: 2px;
     }
+}
+
+@media (max-width: 340px) {
+    #riznica-screen .riznica-tabs { gap: 2px; }
+    #riznica-screen .balance-display {
+        min-width: 64px;
+        max-width: 68px;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    #riznica-screen .btn-add-coins {
+        min-width: 78px;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    #riznica-screen .tab-btn {
+        width: 33px;
+        height: 38px;
+        min-width: 33px;
+    }
+    #riznica-screen .treasury-control-icon {
+        width: 29px;
+        height: 29px;
+        flex-basis: 29px;
+    }
+}
+
+@media (max-width: 300px) {
+    #riznica-screen .balance-display { min-width: 56px; max-width: 60px; }
+    #riznica-screen .btn-add-coins { min-width: 64px; }
+    #riznica-screen#riznica-screen :is(.balance-display,.btn-add-coins) { font-size: .6rem !important; }
+    #riznica-screen .tab-btn { width: 31px; min-width: 31px; }
+    #riznica-screen .treasury-control-icon { width: 27px; height: 27px; flex-basis: 27px; }
+    #riznica-screen .riznica-ad-btn .riznica-reward-video-green-soft-clay-icon { width: 18px; height: 18px; flex-basis: 18px; }
+    #riznica-screen .riznica-ad-btn .riznica-ad-ducat-icon-green { width: 15px; height: 15px; flex-basis: 15px; }
 }

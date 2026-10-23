@@ -360,7 +360,7 @@ const TRANSLATIONS = {
         "online_loading": "Učitavam igrače...",
         "online_no_conn": "Niste povezani na server.",
         "online_no_players": "Trenutno nema drugih igrača.",
-        "online_search_placeholder": "Pretraži igrača po imenu...",
+        "online_search_placeholder": "Pretraži po imenu...",
         "online_search_aria": "Pretraži online igrače",
         "online_search_empty": "Nema online igrača sa tim imenom.",
         "online_loading_more": "Učitavam još igrača...",
@@ -722,7 +722,7 @@ const TRANSLATIONS = {
         "tourney_prize_winner": "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 {DUKAT_ICON}!",
         "tourney_champion_title": "ŠAMPION TURNIRA 🏆",
         "tourney_prize_runnerup": "Kao finalisti, vraćen Vam je ulog od 5500 {DUKAT_ICON}. Više sreće sledeći put!",
-        "tourney_finalist_title": "FINALISTA 🥈",
+        "tourney_finalist_title": "FINALISTA",
         "tourney_final_ceremony_winner_title": "ŠAMPION TURNIRA",
         "tourney_final_ceremony_runnerup_title": "FINALISTA TURNIRA",
         "tourney_final_ceremony_winner_msg": "Čestitamo! Osvojili ste turnir.",
@@ -1272,7 +1272,7 @@ const TRANSLATIONS = {
         "online_loading": "Loading players...",
         "online_no_conn": "You are not connected to the server.",
         "online_no_players": "There are no other players at the moment.",
-        "online_search_placeholder": "Search players by name...",
+        "online_search_placeholder": "Search by name...",
         "online_search_aria": "Search online players",
         "online_search_empty": "No online players match that name.",
         "online_loading_more": "Loading more players...",
@@ -1634,7 +1634,7 @@ const TRANSLATIONS = {
         "tourney_prize_winner": "CONGRATULATIONS! You won the tournament and the grand prize of 44,000 {DUKAT_ICON}!",
         "tourney_champion_title": "TOURNAMENT CHAMPION 🏆",
         "tourney_prize_runnerup": "As a finalist, your entry fee of 5500 {DUKAT_ICON} has been refunded. Better luck next time!",
-        "tourney_finalist_title": "FINALIST 🥈",
+        "tourney_finalist_title": "FINALIST",
         "tourney_final_ceremony_winner_title": "TOURNAMENT CHAMPION",
         "tourney_final_ceremony_runnerup_title": "TOURNAMENT FINALIST",
         "tourney_final_ceremony_winner_msg": "Congratulations! You won the tournament.",
@@ -1865,16 +1865,12 @@ function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
         const value = TRANSLATIONS[lang][key];
-        if (key === 'go_rematch' || key === 'tourney_finalist_title' || key === 'ws_power') {
+        if (key === 'go_rematch' || key === 'ws_power') {
             const theme = document.documentElement?.dataset?.splashTheme
                 || localStorage.getItem('yamb_theme')
                 || 'dark';
-            if (key === 'tourney_finalist_title' && theme === 'easter') {
-                return value.replace(/\s*🥈/u, '');
-            }
             if (theme === 'dark') {
                 if (key === 'go_rematch') return value.replace(/^🔄\s*/u, '');
-                if (key === 'tourney_finalist_title') return value.replace(/\s*🥈/u, '');
                 return value.replace(/\s*⚡/u, '');
             }
         }

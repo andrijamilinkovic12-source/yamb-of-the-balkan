@@ -1,0 +1,172 @@
+/* Tournament dialogs keep the room's palette; geometry remains shared with Green. */
+#tournament-screen#tournament-screen .tourney-header-title {
+    font-size: clamp(1.05rem, 4.2vw, 1.22rem) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen#tournament-screen .tourney-match {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-subcard-fill) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen#tournament-screen .tourney-match--empty {
+    border-style: dashed !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen#tournament-screen .tourney-match :is(.tourney-participant-name,.tourney-participant-power) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #tournament-screen#tournament-screen .tourney-match--empty span {
+    color: var(--theme-card-muted) !important;
+    text-shadow: none !important;
+}
+#custom-modal-overlay.modal-context-tournament .custom-modal,
+.custom-toast.tournament-notice {
+    box-sizing: border-box;
+    width: min(350px, calc(100vw - 24px));
+    max-width: min(350px, calc(100vw - 24px));
+    font-family: Montserrat, sans-serif;
+}
+#custom-modal-overlay.modal-context-tournament .cm-btn { min-height: 44px; }
+#custom-modal-overlay.modal-context-tournament .cm-title,
+.custom-toast.tournament-notice .toast-title {
+    font-size: 1rem !important;
+    line-height: 1.2;
+}
+#custom-modal-overlay.modal-context-tournament .cm-msg,
+.custom-toast.tournament-notice .toast-msg {
+    font-size: .875rem !important;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+#custom-modal-overlay.modal-context-tourney-finalist .tourney-prize-result-icon-canonical {
+    display: block !important;
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 10px;
+    object-fit: contain;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-tournament {
+    --gold-main: var(--theme-card-primary);
+    --success: var(--theme-card-primary);
+    --text-main: var(--theme-card-ink);
+    --text-muted: var(--theme-card-muted);
+    --glass-bg: var(--theme-subcard-fill);
+    --glass-border: 1px solid var(--theme-card-line);
+    --tourney-warning: var(--theme-card-primary);
+    --tourney-info: var(--theme-card-primary);
+    --tourney-action-ink: var(--theme-card-surface);
+    --tourney-action-shadow: var(--theme-subcard-shadow);
+    --tourney-modal-status-fill: var(--theme-subcard-fill);
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-tournament .custom-modal,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.tournament-notice {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-tournament :is(.cm-title,.cm-msg),
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.tournament-notice :is(.toast-title,.toast-msg) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-tournament .cm-btn-ok {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-tournament .cm-btn-cancel {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-raised) !important;
+    border: 1px solid var(--theme-card-line) !important;
+}
+
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-tournament .custom-modal,
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.tournament-notice {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-soft) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-tournament :is(.cm-title,.cm-msg),
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.tournament-notice :is(.toast-title,.toast-msg) {
+    color: var(--green-clay-ink-strong) !important;
+    text-shadow: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-tournament :is(.cm-btn-ok,.cm-btn-cancel) {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-inset) !important;
+    border: 1px solid var(--green-clay-line) !important;
+}
+
+/* The ceremony shares Green geometry but takes its material and contrast from each theme. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony {
+    background: radial-gradient(circle at 50% 32%,
+        color-mix(in srgb, var(--theme-card-primary) 14%, transparent), transparent 38%),
+        color-mix(in srgb, var(--theme-card-inset) 88%, #000) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony-panel,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony.is-runnerup .tournament-final-ceremony-panel {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony-trophy-wrap {
+    background: radial-gradient(circle,
+        color-mix(in srgb, var(--theme-card-primary) 18%, transparent), transparent 70%) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony-trophy {
+    filter: drop-shadow(0 10px 17px color-mix(in srgb, var(--theme-card-inset) 38%, transparent)) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony :is(.tournament-final-ceremony-kicker,.tournament-final-ceremony-title,.tournament-final-ceremony-message,.tournament-final-ceremony-meta,.tournament-final-ceremony-meta strong) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony .tournament-final-ceremony-reward {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-raised) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony .tournament-final-ceremony-next {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony .tournament-final-ceremony-next:disabled {
+    opacity: 1 !important;
+    filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .tournament-final-ceremony-rays { opacity: .16 !important; }

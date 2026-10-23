@@ -20,7 +20,7 @@ for (const dimension of ['top', 'bottom', 'side']) {
     assert.equal(variable(cardCss, `theme-room-${dimension}`), variable(greenCss, `green-room-${dimension}`),
         `Rules room ${dimension} must match Green`);
 }
-assert(html.includes('theme-rules-room.css?v=2'), 'The updated Rules stylesheet is not loaded');
+assert(html.includes('theme-rules-room.css?v=3'), 'The updated Rules stylesheet is not loaded');
 assert.equal(definitions.sharedTypography.uiFont, 'Montserrat', 'Rules must use the shared UI font');
 assert(/font-family:\s*'Montserrat',\s*sans-serif/.test(read('www/style.css')), 'The app body does not load Montserrat');
 assert(html.includes('family=Montserrat:wght@200;400;600;700;800;900'), 'Rules typography weights are unavailable');
@@ -42,8 +42,11 @@ for (const declaration of [
 }
 assert(rulesCss.includes('.rule-dot:focus-visible'), 'Pager needs a visible keyboard focus');
 assert(rulesCss.includes('.rules-dots-container { gap: 1px; }'), 'Six pager targets must fit narrow phones');
+assert(rulesCss.includes('.rules-dots-container { padding-inline: 8px !important; }'),
+    'Rules pager must use Green compact padding on narrow phones');
 for (const viewportWidth of [320, 360, 390]) {
-    const available = viewportWidth - 2 * 10 - 2 * 14;
+    const available = viewportWidth - 2 * (viewportWidth <= 360 ? 16 : 10)
+        - 2 * (viewportWidth <= 360 ? 8 : 14);
     const pager = 6 * 44 + 5;
     assert(pager <= available, `${viewportWidth}px: pager enters the side safe area`);
 }
@@ -91,6 +94,13 @@ for (const theme of themes) {
     const match = new RegExp(`body\\.${theme}-theme\\s*\\{([^}]+)\\}`).exec(cardCss);
     assert(match, `${theme}: missing theme palette`);
     const token = name => rgb(variable(match[1], `theme-card-${name}`));
+    const definition = definitions.themes.find(item => item.id === theme);
+    assert(definition?.paletteHex, `${theme}: definition palette missing`);
+    for (const [cssName, definitionName] of [
+        ['surface', 'surface'], ['raised', 'raised'], ['inset', 'inset'], ['border', 'border'],
+        ['ink', 'text'], ['muted', 'textMuted'], ['primary', 'primary']
+    ]) assert.equal(variable(match[1], `theme-card-${cssName}`).toUpperCase(),
+        definition.paletteHex[definitionName].toUpperCase(), `${theme}: ${cssName} does not match definition`);
     const surface = token('surface');
     const raised = token('raised');
     const inset = token('inset');

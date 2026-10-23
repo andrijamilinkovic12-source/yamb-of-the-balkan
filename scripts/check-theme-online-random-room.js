@@ -79,7 +79,7 @@ assert(game.includes("if (roomId === 'opponent' || roomId === 'onlineRandom')")
     && game.includes("this.syncOnlineRandomStateImages(theme, { hydrate: true })"));
 assert(game.includes("this.getOnlineRandomStateSource(theme, 'disconnected')")
     && game.includes("this.getOnlineRandomStateSource(localStorage.getItem('yamb_theme') || 'dark', 'reconnected')"));
-assert(game.includes('}, 3650);') && game.includes('}, 4600);')
+assert(game.includes('}, window.ROOM_INTRO_TIMING?.openAtMs ?? 2400);') && game.includes('}, window.ROOM_INTRO_TIMING?.durationMs ?? 3200);')
     && game.includes("overlay.classList.toggle('easter-room-intro--icon-only', isIconOnly)"),
     'room intro must keep the Green icon-only behavior and timing');
 assert(css.includes('width: 54px !important') && css.includes('width: 36px !important')

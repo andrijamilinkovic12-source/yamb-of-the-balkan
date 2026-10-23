@@ -202,7 +202,7 @@ class GlobalChatManager {
         };
 
         if (!accepted) {
-            const isConfirmed = await this.app.modal.confirm(this.gt('chat_rules_msg'));
+            const isConfirmed = await this.app.modal.confirm(this.gt('chat_rules_msg'), { contextClass: 'global-chat' });
             if (isConfirmed) {
                 localStorage.setItem('yamb_chat_rules_accepted', 'true');
                 await pokreniChat();
@@ -257,7 +257,7 @@ class GlobalChatManager {
             return;
         }
 
-        const confirmed = await this.app.modal.confirm(this.gt('chat_report_confirm'));
+        const confirmed = await this.app.modal.confirm(this.gt('chat_report_confirm'), { contextClass: 'global-chat' });
         if (!confirmed) return;
 
         const ready = await this.ensureChatReady();

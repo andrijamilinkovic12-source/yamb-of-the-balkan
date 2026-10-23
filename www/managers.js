@@ -240,8 +240,15 @@ class ModalManager {
         [...els.overlay.classList]
             .filter(className => className.startsWith('modal-context-'))
             .forEach(className => els.overlay.classList.remove(className));
-        const contextClass = String(options.contextClass || '').replace(/[^a-zA-Z0-9_-]/g, '');
+        const economyOpen = document.getElementById('undo-menu-overlay')?.style.display === 'flex';
+        const treasuryOpen = document.getElementById('riznica-screen')?.classList.contains('active');
+        const tournamentOpen = document.getElementById('tournament-screen')?.classList.contains('active');
+        const contextClass = String(options.contextClass || (economyOpen ? 'economy' : treasuryOpen ? 'treasury' : tournamentOpen ? 'tournament' : ''))
+            .replace(/[^a-zA-Z0-9_-]/g, '');
         if (contextClass) els.overlay.classList.add(`modal-context-${contextClass}`);
+        if (contextClass === 'tourney-winner' || contextClass === 'tourney-finalist') {
+            els.overlay.classList.add('modal-context-tournament');
+        }
 
         if(els.title) els.title.innerText = title;
         if(els.msg) els.msg.innerHTML = msg; 
@@ -263,13 +270,11 @@ class ModalManager {
     open() {
         const els = this.elements;
         if (!els.overlay) return;
-        if (document.documentElement.dataset.splashTheme === 'dark') this.previousFocus = document.activeElement;
+        this.previousFocus = document.activeElement;
         els.overlay.style.display = 'flex';
-        if (document.documentElement.dataset.splashTheme === 'dark') {
-            const target = els.input && !els.input.classList.contains('hidden') ? els.input
-                : els.btnCancel && !els.btnCancel.classList.contains('hidden') ? els.btnCancel : els.btnOk;
-            target?.focus({ preventScroll: true });
-        }
+        const target = els.input && !els.input.classList.contains('hidden') ? els.input
+            : els.btnCancel && !els.btnCancel.classList.contains('hidden') ? els.btnCancel : els.btnOk;
+        target?.focus({ preventScroll: true });
     }
     close() {
         const els = this.elements;
@@ -3710,8 +3715,9 @@ class ShopManager {
             moon: item?.moonIcon,
             severna: item?.severnaIcon,
             easter: item?.easterIcon
-        }[activeTheme] || item?.easterIcon;
-        const safeSource = String(source || item?.easterIcon || '');
+        }[activeTheme];
+        const safeSource = String(source || '');
+        if (!safeSource) return '';
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }
 
@@ -3835,12 +3841,12 @@ class ShopManager {
                             priceHtml = `<div class="price riznica-reward-video-copy" style="color: var(--text-muted); font-size: 0.75rem;">${watchToUnlockText}</div>`;
                         } else {
                             let price = item.price;
-                            let displayPrice = `${price} ${_safeT('balance')}`;
+                            let displayPrice = `${price} ${dukatIconHtml()}`;
                             const activeDiscount = this.getActiveDiscount(item.id);
                             
                             if (activeDiscount) {
                                 const discounted = this.getDiscountedPrice(item, activeDiscount);
-                                displayPrice = `<span class="old-price">${price}</span> ${discounted} ${_safeT('balance')}`;
+                                displayPrice = `<span class="old-price">${price}</span> ${discounted} ${dukatIconHtml()}`;
                             }
                             priceHtml = `<div class="price">${displayPrice}</div>`;
                         }

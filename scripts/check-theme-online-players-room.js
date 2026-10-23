@@ -46,10 +46,11 @@ for (const old of ['online-add-friend-v1', 'online-duel-v1', 'online-players-sta
 assert(html.includes('theme-online-players-room.js') && html.includes('theme-online-players-room.css'));
 assert(html.includes('data-online-role="search"') && html.includes('data-online-role="state"'));
 assert(list.includes('data-online-role="${role}"') && list.includes('themeOnlinePlayers.handleAvatarError'));
-assert(game.includes('data-online-role="friend"') && game.includes('data-online-role="spectate"'));
+assert(list.includes("actionButton('friend'") && list.includes("actionButton('spectate'")
+    && list.includes("actionButton('duel'") && game.includes('data-online-role="spectate"'));
 assert(loader.includes('MutationObserver') && loader.includes("image.style.visibility = 'hidden'"));
 assert(html.includes('id="online-players-search"') && html.includes('data-lang-placeholder="online_search_placeholder"'));
-assert(languages.includes('"Pretraži igrača po imenu..."') && languages.includes('"Search players by name..."'));
+assert(languages.includes('"Pretraži po imenu..."') && languages.includes('"Search by name..."'));
 assert(css.includes('.online-players-search-wrap:focus-within') && css.includes('.online-player-action:focus-visible'));
 const hashes = new Set();
 const masterHashes = new Set();

@@ -608,8 +608,8 @@ class TournamentManager {
         overlay.setAttribute('aria-hidden', 'false');
 
         let completed = false;
-        const openBehindOverlayAt = 3650;
-        const introDuration = 4600;
+        const openBehindOverlayAt = window.ROOM_INTRO_TIMING?.openAtMs ?? 2400;
+        const introDuration = window.ROOM_INTRO_TIMING?.durationMs ?? 3200;
 
         setTimeout(() => {
             if (completed) return;
@@ -2044,7 +2044,7 @@ class TournamentManager {
             const finalistHtml = round === 'f'
                 ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
                 : '';
-            akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-green" data-theme-src="${greenResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
+            akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: var(--tourney-modal-status-fill, rgba(76, 175, 80, 0.1)); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-green" data-theme-src="${greenResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
         }
         else if (isMyMatch) {
             if (match.timeAccepted) {
@@ -2058,7 +2058,7 @@ class TournamentManager {
                 ` : '';
                 akcijeHtml = `
                     ${rematchNoticeHtml}
-                    <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--success);">
+                    <div style="background: var(--tourney-modal-status-fill, rgba(76, 175, 80, 0.1)); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--success);">
                         <p style="color: var(--success); font-weight: bold; margin-bottom: 5px;">${tt('tourney_time_agreed') || 'Vreme meča je dogovoreno!'}</p>
                         <p style="font-size: 1.1rem;">${this.formatDate(match.time)}</p>
                     </div>
@@ -2070,8 +2070,8 @@ class TournamentManager {
                 if (match.proposedById === myId) {
                     akcijeHtml = `
                         ${rematchNoticeHtml}
-                        <div style="background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ff9800;">
-                            <p style="color: #ff9800; font-weight: bold; margin-bottom: 5px;">${tt('tourney_waiting_opp_response') || 'Čeka se odgovor protivnika'}</p>
+                        <div style="background: var(--tourney-modal-status-fill, rgba(255, 152, 0, 0.1)); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--tourney-warning, #ff9800);">
+                            <p style="color: var(--tourney-warning, #ff9800); font-weight: bold; margin-bottom: 5px;">${tt('tourney_waiting_opp_response') || 'Čeka se odgovor protivnika'}</p>
                             <p style="font-size: 0.9rem; color: var(--text-main);">${tt('tourney_you_proposed') || 'Predložili ste:'} <strong>${this.formatDate(match.proposedTime)}</strong></p>
                         </div>
                         <div style="text-align: left; margin-bottom: 10px;">
@@ -2083,11 +2083,11 @@ class TournamentManager {
                 } else {
                     akcijeHtml = `
                         ${rematchNoticeHtml}
-                        <div style="background: rgba(33, 150, 243, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #2196F3;">
-                            <p style="color: #2196F3; font-weight: bold; margin-bottom: 5px;">${tt('tourney_opp_proposes_time') || 'Protivnik predlaže vreme:'}</p>
+                        <div style="background: var(--tourney-modal-status-fill, rgba(33, 150, 243, 0.1)); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--tourney-info, #2196F3);">
+                            <p style="color: var(--tourney-info, #2196F3); font-weight: bold; margin-bottom: 5px;">${tt('tourney_opp_proposes_time') || 'Protivnik predlaže vreme:'}</p>
                             <p style="font-size: 1.1rem; color: var(--text-main); font-weight: bold;">${this.formatDate(match.proposedTime)}</p>
                         </div>
-                        <button class="btn-menu" style="width: 100%; background: var(--success); color: white; border: none; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);" onclick="app.tournamentManager.acceptTime('${round}', ${index})">${tt('tourney_accept_time') || 'PRIHVATI TERMIN'}</button>
+                        <button class="btn-menu" style="width: 100%; background: var(--success); color: var(--tourney-action-ink, white); border: none; margin-bottom: 15px; padding: 15px; box-shadow: var(--tourney-action-shadow, 0 0 10px rgba(76, 175, 80, 0.4));" onclick="app.tournamentManager.acceptTime('${round}', ${index})">${tt('tourney_accept_time') || 'PRIHVATI TERMIN'}</button>
 
                         <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 15px 0;">
 

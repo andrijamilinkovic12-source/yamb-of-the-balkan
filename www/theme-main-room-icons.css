@@ -714,7 +714,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 
 /* Every room entrance uses its mapped PNG alone, with Green's size and pulse. */
 #riznica-intro {
-    animation: easterRoomIntroFade 4.6s ease forwards !important;
+    animation: easterRoomIntroFade var(--room-intro-duration, 3.2s) ease forwards !important;
 }
 
 #daily-intro .daily-intro-title,
@@ -767,6 +767,20 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     animation: greenRoomIconPulse 1.8s ease-in-out infinite !important;
 }
 
+/* Older Easter/Desert theme selectors must not restore a tile behind Daily's PNG. */
+body #daily-intro#daily-intro .daily-intro-mark-wrap {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    animation: none !important;
+}
+body #daily-intro#daily-intro .daily-intro-mark-wrap::before,
+body #daily-intro#daily-intro .daily-intro-mark-wrap::after {
+    content: none !important;
+    display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     #daily-intro .daily-intro-mark-green,
     #riznica-intro .riznica-intro-gem-green,
@@ -775,4 +789,24 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #easter-room-intro.easter-room-intro--icon-only .easter-room-intro-mark {
         animation: none !important;
     }
+}
+
+/* One duration for every room intro; the icon's independent pulse stays intact. */
+:root { --room-intro-duration: 3.2s; }
+#daily-intro,
+#league-intro,
+#tournament-intro,
+#riznica-intro,
+#easter-room-intro,
+#daily-intro::before,
+#daily-intro::after,
+#league-intro::before,
+#league-intro::after,
+#tournament-intro::before,
+#tournament-intro::after,
+#riznica-intro::before,
+#riznica-intro::after,
+#easter-room-intro::before,
+#easter-room-intro::after {
+    animation-duration: var(--room-intro-duration) !important;
 }

@@ -127,9 +127,6 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #online-players-overlay #online-players-body .online-player-name > span {
     color: var(--op-muted) !important;
 }
-body.easter-theme #online-players-overlay #online-players-body .online-player-name:not(.online-player-name--long):not(.online-player-name--very-long) {
-    font-size: min(.95rem, 17.7px);
-}
 body #online-players-overlay .theme-online-avatar {
     display: block;
     flex: 0 0 45px;
@@ -242,6 +239,67 @@ body #online-players-overlay #online-players-body .online-players-load-more { co
 @media (prefers-reduced-motion:reduce) {
     body #online-players-overlay #online-players-body .online-players-state.is-loading .theme-online-state-icon { animation:none !important; }
     body #online-players-overlay #online-players-body .online-player-action { transition:none !important; }
+}
+
+/* Requests and duel confirmations opened from this room keep the active theme. */
+#custom-modal-overlay.modal-context-online-players .custom-modal {
+    font-family: Montserrat, sans-serif;
+}
+#custom-modal-overlay.modal-context-online-players .cm-btn { min-height: 44px; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-online-players .custom-modal,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.online-players-notice {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-online-players :is(.cm-title,.cm-msg),
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    .custom-toast.online-players-notice :is(.toast-title,.toast-msg) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-online-players .cm-btn-ok {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-online-players .cm-btn-cancel {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-raised) !important;
+    border: 1px solid var(--theme-card-line) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-online-players .custom-modal,
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.online-players-notice {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-soft) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-online-players :is(.cm-title,.cm-msg),
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    .custom-toast.online-players-notice :is(.toast-title,.toast-msg) {
+    color: var(--green-clay-ink-strong) !important;
+    text-shadow: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #custom-modal-overlay.modal-context-online-players :is(.cm-btn-ok,.cm-btn-cancel) {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-inset) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised-small) !important;
 }
 
 /* One role, one PNG within each theme, including other screens that reuse it. */

@@ -365,8 +365,9 @@ class KvartalnaLigaManager {
         overlay.setAttribute('aria-hidden', 'false');
 
         let completed = false;
-        const openBehindOverlayAt = 3650;
-        const introDuration = 4600;
+        const openBehindOverlayAt = window.ROOM_INTRO_TIMING?.openAtMs ?? 2400;
+        const introDuration = window.ROOM_INTRO_TIMING?.durationMs ?? 3200;
+        overlay.style.setProperty('--league-intro-duration', `${introDuration}ms`);
 
         setTimeout(() => {
             if (completed) return;

@@ -1,5 +1,8 @@
 // config.js - PODACI I KONFIGURACIJA (COMPLETE & FIXED)
 
+// Jedan vremenski ugovor za ulazak u svaku sobu, nezavisno od teme.
+window.ROOM_INTRO_TIMING = Object.freeze({ openAtMs: 2400, durationMs: 3200 });
+
 // --- 1. GLAVNA PODEŠAVANJA ---
 const CONFIG = {
     INITIAL_BALANCE: 1000, 

@@ -19021,33 +19021,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     -webkit-backdrop-filter: blur(15px) saturate(110%);
 }
 
-/* Zelena Soft Clay — originalni YotB QL romb kao diskretan watermark. */
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-watermark-zone {
-    position: absolute;
-    top: 50%;
-    right: -5px;
-    z-index: 0;
-    width: 86px;
-    height: 86px;
-    transform: translateY(-50%);
-    border: 0;
-    border-radius: 0;
-    background: url("assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png?v=1") center / contain no-repeat;
-    opacity: .18;
-    filter: saturate(.78) brightness(.86) contrast(1.04) drop-shadow(0 5px 8px rgba(7,29,15,.18));
-    pointer-events: none;
-}
-
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-watermark-zone::before {
-    content: none;
-    display: none;
-}
-
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-content {
-    padding-right: 34px;
-    box-sizing: border-box;
-}
-
 /* Green menu: keep all three summary cards legible on narrow phones. */
 @media (max-width: 360px) {
     body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-online-card,
@@ -20507,7 +20480,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #global-chat-overlay .global-chat-status {
-    color: #ffd0c2 !important;
+    color: #fff7ef !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -7,7 +7,7 @@ body.theme-ducat-pack-active .theme-ducat-pack-image {
     pointer-events: none;
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .18));
 }
-body.theme-ducat-pack-active #economy-header-ducats-icon.hidden + .theme-ducat-pack-image--header { display: none !important; }
+body.theme-ducat-pack-active #economy-header-ducats-green-icon.hidden + .theme-ducat-pack-image--header { display: none !important; }
 body.theme-ducat-pack-active .theme-ducat-pack-image--header { width: 46px; height: 46px; }
 body.theme-ducat-pack-active .theme-ducat-pack-image--tab { width: 40px; height: 40px; }
 body.theme-ducat-pack-active .theme-ducat-pack-image--hero { width: 68px; height: 68px; }

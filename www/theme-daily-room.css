@@ -28,7 +28,12 @@
 }
 
 #glass-daily-overlay .daily-glass-title { padding-inline: 52px; }
-#glass-daily-overlay .daily-glass-card { width: min(430px, 100%); max-height: 100%; }
+#glass-daily-overlay .daily-glass-card {
+    width: min(430px, 100%);
+    max-height: 100%;
+    font-family: 'Montserrat', sans-serif;
+}
+#glass-daily-overlay .daily-glass-btn { font-family: inherit; }
 #glass-daily-overlay .daily-glass-dice-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     justify-items: center;
@@ -172,9 +177,9 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     background: var(--daily-surface) !important;
     color: var(--daily-text) !important;
     border: 1px solid var(--daily-edge) !important;
-    box-shadow: 0 24px 48px var(--daily-shadow), inset 0 1px 0 rgba(255,255,255,.3) !important;
-    backdrop-filter: blur(18px) saturate(115%);
-    -webkit-backdrop-filter: blur(18px) saturate(115%);
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-card::before {
@@ -199,7 +204,9 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-score-box {
     background: var(--daily-inset) !important;
     border: 1px solid var(--daily-edge) !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 8px 18px var(--daily-shadow) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #glass-daily-overlay .daily-glass-dice-grid::before { display: none; }
@@ -216,7 +223,9 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     background: var(--daily-button) !important;
     color: var(--daily-button-text) !important;
     border: 1px solid var(--daily-edge) !important;
-    box-shadow: 0 8px 17px var(--daily-shadow), inset 0 1px 0 rgba(255,255,255,.24) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     text-shadow: none !important;
 }
 

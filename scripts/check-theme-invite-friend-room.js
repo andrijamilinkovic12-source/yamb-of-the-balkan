@@ -97,6 +97,6 @@ assert.equal((html.match(/data-invite-role="power"/g) || []).length, 3);
 assert.match(game, /ws_msg_join_invite/);
 assert.match(game, /this\.playEasterRoomIntro\('invite'/);
 assert.match(game, /const isIconOnly = !!roomPackIcon/);
-assert.match(game, /\}, 3650\)/);
-assert.match(game, /\}, 4600\)/);
+assert.match(game, /\}, window\.ROOM_INTRO_TIMING\?\.openAtMs \?\? 2400\)/);
+assert.match(game, /\}, window\.ROOM_INTRO_TIMING\?\.durationMs \?\? 3200\)/);
 console.log('Invite Friend room: 20 unique PNG assets, 10 room identities and role mappings verified.');

@@ -2,12 +2,10 @@
 (() => {
     const themes = new Set(['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
     const placements = [
-        ['header', '#economy-header-ducats-icon', '[id^="economy-header-ducats-"]'],
-        ['tab', '#economy-tab-ducats svg', 'svg, img'],
-        ['hero', '.economy-hero-ducat-icon-default', '[class*="economy-hero-ducat-icon-"]'],
-        ['reward', '.economy-reward-ducat-icon-default', '[class*="economy-reward-ducat-icon-"]'],
-        ['balance', '.riznica-balance-ducat-default', '[class*="riznica-balance-ducat-"]'],
-        ['ad', '.riznica-ad-ducat-default', '[class*="riznica-ad-ducat-"]'],
+        ['header', '#economy-header-ducats-green-icon', '[id^="economy-header-ducats-"]'],
+        ['tab', '#economy-tab-ducats .economy-tab-green-soft-clay-icon', 'img'],
+        ['hero', '.economy-hero-ducat-icon-green', '[class*="economy-hero-ducat-icon-"]'],
+        ['reward', '.economy-reward-ducat-icon-green', '[class*="economy-reward-ducat-icon-"]'],
         ['game-over', '.game-over-ducat-anchor', '.game-over-ducat-anchor']
     ];
     const greenEconomyRoles = new Set(['header', 'tab', 'hero', 'reward', 'game-over']);
@@ -30,6 +28,12 @@
         const theme = currentTheme();
         const enabled = themes.has(theme) || theme === 'dark';
         document.body.classList.toggle('theme-ducat-pack-active', enabled);
+        for (const selector of ['.riznica-balance-ducat-icon-green', '.riznica-ad-ducat-icon-green']) {
+            const image = document.querySelector(`#riznica-screen ${selector}`);
+            if (!image) continue;
+            const source = ducatSource(theme);
+            if (image.getAttribute('src') !== source) image.src = source;
+        }
         for (const [role, anchorSelector, oldSelector] of placements) {
             const anchor = document.querySelector(anchorSelector);
             if (!anchor) continue;

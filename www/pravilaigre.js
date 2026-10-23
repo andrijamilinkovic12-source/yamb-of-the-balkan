@@ -13,12 +13,12 @@ function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
     const canonical = `${root}/canonical`;
     const roles = {
         rules: 'rules-room-identity/rules-room-v1.png',
-        scoring: green ? 'rules-page-illustrations/rules-scoring-v1.png' : 'rules-room-identity/rules-room-v1.png',
-        statisticsPage: green ? 'rules-page-illustrations/stats-leaderboards-v1.png' : 'statistics-room-identity/statistics-room-v1.png',
-        competitionsPage: green ? 'rules-page-illustrations/multiplayer-competitions-v1.png' : 'tournament-awards/champion-trophy-v1.png',
-        communicationPage: green ? '../rules/pages/communication-v1.png' : 'global-chat-room-identity/global-chat-room-v1.png',
+        scoring: green ? 'rules-page-illustrations/rules-scoring-v1.png' : 'statistics-overview/average-v2.png',
+        statisticsPage: green ? 'rules-page-illustrations/stats-leaderboards-v1.png' : 'leaderboard-controls/global-v2.png',
+        competitionsPage: green ? 'rules-page-illustrations/multiplayer-competitions-v1.png' : 'tournament-navigation/tab-bracket-v1.png',
+        communicationPage: green ? '../rules/pages/communication-v1.png' : 'online-players-internal/state-v1.png',
         economyPage: green ? '../rules/pages/economy-treasury-v3.png' : 'ducat/ducat-front-v1.png',
-        accountPage: green ? 'rules-page-illustrations/account-server-v1.png' : 'settings-room-identity/settings-room-v1.png',
+        accountPage: green ? 'rules-page-illustrations/account-server-v1.png' : 'online-players-internal/avatar-v1.png',
         statistics: 'statistics-room-identity/statistics-room-v1.png',
         leaderboard: green ? 'leaderboard-room-identity/leaderboard-room-v1.png' : 'leaderboard-room-identity/leaderboard-room-v2.png',
         powerIndex: 'statistics-overview/power-index-v1.png',
@@ -564,13 +564,12 @@ class RulesUI {
         this.currentSlide = Math.min(Math.max(index, 0), lastIndex);
         this.updateDots();
         const targetScroll = this.sliderTrack.clientWidth * this.currentSlide;
-        const reduceMotion = document.documentElement.dataset.splashTheme === 'dark'
-            && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         this.sliderTrack.scrollTo({ left: targetScroll, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
 
     open() {
-        if (document.documentElement.dataset.splashTheme === 'dark') this.previousFocus = document.activeElement;
+        this.previousFocus = document.activeElement;
         const currentStoredLang = localStorage.getItem('yamb_lang') || 'sr';
         if (this.currentLang !== currentStoredLang) {
             this.currentLang = currentStoredLang;
@@ -593,13 +592,10 @@ class RulesUI {
 
         // Ponovo uključivanje glatke animacije nakon renderovanja
         setTimeout(() => {
-            const reduceMotion = document.documentElement.dataset.splashTheme === 'dark'
-                && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
             this.sliderTrack.style.scrollBehavior = reduceMotion ? 'auto' : 'smooth';
             this.overlay.classList.add('active');
-            if (document.documentElement.dataset.splashTheme === 'dark') {
-                this.overlay.querySelector('#btn-close-rules')?.focus({ preventScroll: true });
-            }
+            this.overlay.querySelector('#btn-close-rules')?.focus({ preventScroll: true });
         }, 10);
     }
 

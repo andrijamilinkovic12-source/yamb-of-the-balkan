@@ -2033,29 +2033,29 @@
       ]
     },
     "quarterlyLeagueRoomIdentity": {
-      "semanticRole": "one Green Quarterly League rhombus identity across the main-menu watermark, intro, room header, winner popup and SR/EN Rules",
+      "semanticRole": "one Green four-quarter identity across the main-menu logo, intro, room header, winner popup and SR/EN Rules",
       "status": "locked",
-      "sourceManifest": "source-assets/green-soft-clay-canonical/quarterly-league-room-identity/manifest.json",
+      "sourceManifest": "source-assets/theme-quarterly-league-v2/manifest.json",
       "identity": {
         "material": "matte 3D Soft Clay Neumorphism",
-        "palette": "forest-green recessed Yamb scorecard, raised warm-ivory YotB and QL lettering, rounded ivory diamond rim and four terracotta clay pins",
-        "presentation": "one centered rounded rhombus logo on a transparent square canvas; its ivory diamond rim belongs to the logo, not to a generic backing tile",
+        "palette": "forest green and warm ivory with restrained terracotta accents",
+        "presentation": "four connected quarter segments on a transparent square canvas; the current quarter is brighter",
         "lighting": "soft upper-left light with controlled clay depth",
-        "mapping": "one immutable Quarterly League room identity with room and menu-watermark delivery variants",
+        "mapping": "one immutable Quarterly League room identity with room and menu delivery variants",
         "liveData": "rank, points, progress, standings, season state and medals remain separate functional UI and assets"
       },
       "canonicalRuntime": [
         {
           "role": "room",
-          "path": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
+          "path": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
           "size": 512,
-          "sha256": "87a0a07b5abf5abc9dfa58a5265665fd2d1b81f62c48e692cfa0ffe4657a7ed4"
+          "sha256": "a68b5553a113a7a5937430ef143ea819b0818806f4e368e566d61a28bd0038a2"
         },
         {
           "role": "menu",
-          "path": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+          "path": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
           "size": 384,
-          "sha256": "f21cece394a0184082aaaa7ed7fa327d3beedd360c1f01383002965bd96191bb"
+          "sha256": "149602475136b4efdb17c3281f9f9679927875fb8426ca022a75491c5a69efce"
         }
       ],
       "compositeRuntime": [],
@@ -2064,8 +2064,8 @@
         "assets/green-soft-clay/runtime/menu/quarterly-league-yotb-ql-free-v2.png"
       ],
       "retiredMasterReplacements": {
-        "quarterly-league-yotb-ql-free-v2.png": "canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
-        "runtime/menu/quarterly-league-yotb-ql-free-v2.png": "canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png"
+        "quarterly-league-yotb-ql-free-v2.png": "canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+        "runtime/menu/quarterly-league-yotb-ql-free-v2.png": "canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
       },
       "semanticExclusions": [
         "Quarterly League tab navigation and its champion marker",
@@ -2076,8 +2076,8 @@
         "other competition medals, Tournament champion trophy and unrelated room identities"
       ],
       "codeBindings": [
-        "Green Quarterly League main-menu CSS watermark and startup preload",
-        "Green Quarterly League 4.6-second icon-only intro",
+        "Green Quarterly League main-menu full-color logo and startup preload",
+        "Green Quarterly League shared 3.2-second icon-only intro",
         "Green Quarterly League modal header and winner popup",
         "Green Quarterly League SR/EN Rules references",
         "Green Quarterly League room-on-demand pack"

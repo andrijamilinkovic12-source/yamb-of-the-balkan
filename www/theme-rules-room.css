@@ -50,6 +50,9 @@
 }
 #rules-overlay-ui#rules-overlay-ui .rules-header-title > span { min-width: 0; }
 #rules-overlay-ui#rules-overlay-ui .rules-dots-container { gap: 1px; }
+@media (max-width: 360px) {
+    #rules-overlay-ui#rules-overlay-ui .rules-dots-container { padding-inline: 8px !important; }
+}
 #rules-overlay-ui#rules-overlay-ui .rule-dot {
     display: inline-grid !important;
     place-items: center;

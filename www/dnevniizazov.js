@@ -70,10 +70,12 @@ class DnevniIzazov {
         if (theme === 'dark') {
             if (role === 'room') return 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1';
             if (role === 'reward-video') return 'assets/green-soft-clay/daily/reward-video-v3.png?v=1';
+            if (role === 'ducat') return 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1';
             return `assets/green-soft-clay/canonical/daily-states/${role}-v1.png?v=1`;
         }
         if (role === 'room') return `assets/theme-packs/${theme}/canonical/daily-room-identity/daily-room-v1.png`;
         if (role === 'reward-video') return `assets/theme-packs/${theme}/daily/reward-video-v3.png`;
+        if (role === 'ducat') return `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
         return `assets/theme-packs/${theme}/canonical/daily-states/${role}-v1.png`;
     }
 
@@ -95,7 +97,7 @@ class DnevniIzazov {
     prepareDailyAssets(theme = this.getDailyTheme()) {
         this.dailyAssetLoads ||= new Map();
         if (this.dailyAssetLoads.has(theme)) return this.dailyAssetLoads.get(theme);
-        const sources = ['room', 'task', 'complete', 'already-played', 'reward-video']
+        const sources = ['room', 'task', 'complete', 'already-played', 'reward-video', 'ducat']
             .map(role => this.getDailyAsset(role, theme));
         const loading = Promise.all(sources.map(src => new Promise(resolve => {
             const img = new Image();
@@ -687,7 +689,7 @@ class DnevniIzazov {
                 return;
             }
             this.startDailyChallenge();
-        }, { openBehindOverlayAt: alreadyPlayed ? null : 3650 });
+        }, { openBehindOverlayAt: alreadyPlayed ? null : (window.ROOM_INTRO_TIMING?.openAtMs ?? 2400) });
     }
 
     playIntro(onComplete, options = {}) {
@@ -713,8 +715,8 @@ class DnevniIzazov {
         let completed = false;
         const openBehindOverlayAt = options.openBehindOverlayAt === null
             ? null
-            : (Number.isFinite(options.openBehindOverlayAt) ? options.openBehindOverlayAt : 3650);
-        const introDuration = 4600;
+            : (Number.isFinite(options.openBehindOverlayAt) ? options.openBehindOverlayAt : (window.ROOM_INTRO_TIMING?.openAtMs ?? 2400));
+        const introDuration = window.ROOM_INTRO_TIMING?.durationMs ?? 3200;
         const completeOnce = () => {
             if (completed) return;
             completed = true;
@@ -1017,12 +1019,9 @@ class DnevniIzazov {
     }
 
     getDailyRewardDukatIconHtml(options = {}) {
-        const theme = this.getDailyTheme();
-        const src = theme === 'dark'
-            ? 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1'
-            : `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
+        const src = this.getDailyAsset('ducat');
         const endClass = options.rewardEnd === true ? ' daily-ducat-icon--reward-end' : '';
-        return `<img class="daily-ducat-icon${endClass}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="daily-ducat-icon${endClass}" data-daily-role="ducat" src="${src}" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getDailyRewardMessage(key, amount) {

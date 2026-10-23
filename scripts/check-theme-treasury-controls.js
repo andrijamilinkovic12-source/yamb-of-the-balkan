@@ -87,6 +87,6 @@ assert(game.includes('getThemeTreasuryControlSource(role, theme)'));
 assert(managers.includes('getThemeTreasuryControlSource(iconName)'));
 assert(managers.includes("getThemeTreasuryControlSource('status-locked')"));
 assert(managers.includes("getThemeTreasuryControlSource('status-insufficient')"));
-assert(rules.includes('getThemeTreasuryControlSource(treasuryTab[1])'));
-assert(index.includes('theme-treasury-controls.css?v=3'));
+for (const role of roles.slice(0, 4)) assert(rules.includes(`treasury-controls/${role}-v1.png`));
+assert(/theme-treasury-controls\.css\?v=\d+/.test(index));
 console.log('PASS: 80 unique 256px RGBA Treasury controls, eight roles per theme; nine target packs linked.');

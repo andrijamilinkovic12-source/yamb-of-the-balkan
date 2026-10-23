@@ -2076,11 +2076,11 @@ class YambApp {
                 background: 'assets/theme-backgrounds/easter-v6-1.png',
                 icons: [],
                 assets: [
-                    'assets/easter-soft-clay/global-chat-pro-v6.png?v=1',
+                    'assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
                     'assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png?v=2',
                     'assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png?v=2',
-                    'assets/easter-soft-clay/online-players-pro-v4.png?v=1',
-                    'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
+                    'assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
+                    'assets/theme-packs/easter/ducats-undo-free-v3.png?v=3',
                     'assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png',
                     'assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png',
                     'assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-v2.png',
@@ -2111,11 +2111,11 @@ class YambApp {
                 background: 'assets/theme-backgrounds/desert-v8-2.png',
                 icons: [],
                 assets: [
-                    'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
+                    'assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
                     'assets/theme-packs/desert/canonical/global-chat-internal/send-v1.png?v=2',
                     'assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png?v=2',
-                    'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
-                    'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
+                    'assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
+                    'assets/theme-packs/desert/ducats-undo-free-v3.png?v=3',
                     'assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
                     'assets/theme-packs/desert/canonical/daily-room-identity/daily-room-v1.png',
@@ -2169,12 +2169,12 @@ class YambApp {
                 background: 'assets/theme-backgrounds/severna-v4.png',
                 icons: [],
                 assets: [
-                    'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
-                    'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+                    'assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
+                    'assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
                     'assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png?v=2',
                     'assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png?v=2',
                     'assets/theme-packs/severna/canonical/invite-friend-internal/send-v1.png?v=1',
-                    'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
+                    'assets/theme-packs/severna/ducats-undo-free-v3.png?v=3',
                     'assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-v1.png',
                     'assets/severna-soft-clay/hotseat/winner-v2.png?v=1',
                     'assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
@@ -2529,7 +2529,7 @@ class YambApp {
             onlinePlayers: path => path === 'canonical/online-players-room-identity/online-players-room-v1.png',
             economy: path => path.startsWith('economy/') || path.startsWith('ducats-undo') || path.startsWith('canonical/rewarded-video/'),
             // Trophy cards and effect previews load only when their tab is visible.
-            treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/treasury-controls/') || (theme !== 'dark' && path.includes('rewarded-video')),
+            treasury: path => path === 'treasury-free-v3.png' || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/treasury-controls/') || path.startsWith('canonical/rewarded-video/') || path.startsWith('canonical/ducat/') || path === 'canonical/room-controls/close-v1.png',
             tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/') || path === 'canonical/statistics-overview/power-index-v1.png',
             solo: path => (path.startsWith('solo/') && !path.includes('personal-best'))
                 || (theme === 'easter' && path.startsWith('game/'))
@@ -3805,10 +3805,10 @@ class YambApp {
         await this.handleFriendSearchResults(result.results || []);
     }
 
-    async sendFriendRequest(targetId, targetName, targetUid = null) {
+    async sendFriendRequest(targetId, targetName, targetUid = null, options = {}) {
         const result = await this.emitFriendAck('send_friend_req', { targetId, targetUid, challengerName: this.playerName });
         if (!result.ok) {
-            this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
+            this.showServerNotice(result.reason || 'err_server_conn', 'err_title', options);
             if (result.reason === 'err_friend_request_waiting_on_you') this.requestFriendsList();
             return false;
         }
@@ -3823,7 +3823,7 @@ class YambApp {
                 ? "Zahtev za prijateljstvo poslat igraču {0}."
                 : "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.");
         const msg = (gt(msgKey) || fallbackMsg).replace('{0}', safeTargetName);
-        await this.modal.alert(msg, gt('alert_sent_title') || "POSLATO");
+        await this.modal.alert(msg, gt('alert_sent_title') || "POSLATO", options);
         this.requestFriendsList();
         return true;
     }
@@ -4243,11 +4243,11 @@ class YambApp {
         sendRequest();
     }
 
-    async spectateGame(target) {
+    async spectateGame(target, options = {}) {
         if (!this.requireLogin()) return;
 
         if (this.gameActive && this.onlineMode && !this.isSpectator) {
-            this.showServerNotice('err_spectate_already_in_game');
+            this.showServerNotice('err_spectate_already_in_game', 'modal_title_info', options);
             return;
         }
 
@@ -4291,7 +4291,7 @@ class YambApp {
             const timer = setTimeout(() => {
                 if (settled) return;
                 finish();
-                this.showServerNotice('err_spectate_open_failed');
+                this.showServerNotice('err_spectate_open_failed', 'modal_title_info', options);
                 reopenOnlinePlayersList();
             }, 8000);
 
@@ -4302,7 +4302,7 @@ class YambApp {
                 if (result && result.ok === false) {
                     finish();
                     if (!spectateErrorHandled) {
-                        this.showServerNotice(result.reason || 'err_spectate_not_in_game', 'err_title');
+                        this.showServerNotice(result.reason || 'err_spectate_not_in_game', 'err_title', options);
                     }
                     reopenOnlinePlayersList();
                     console.warn(`Gledanje partije odbijeno: ${result.reason || 'unknown_error'}`);
@@ -5305,7 +5305,7 @@ class YambApp {
         }
     }
 
-    showServerNotice(msgKey, titleKey = 'modal_title_info') {
+    showServerNotice(msgKey, titleKey = 'modal_title_info', options = {}) {
         let finalMsg = msgKey;
         if (typeof t === 'function' && t(msgKey) !== msgKey) {
             finalMsg = gt(msgKey);
@@ -5313,9 +5313,10 @@ class YambApp {
 
         const title = gt(titleKey) || gt('modal_title_info') || "INFO";
         if (this.modal) {
-            this.modal.alert(finalMsg, title);
+            this.modal.alert(finalMsg, title, options);
         } else if (typeof window.showNotification === 'function') {
-            window.showNotification(title, finalMsg);
+            window.showNotification(title, finalMsg, options.contextClass === 'online-players'
+                ? { className: 'online-players-notice' } : {});
         } else {
             alert(finalMsg);
         }
@@ -5858,13 +5859,13 @@ class YambApp {
         } 
     }
 
-    async challengePlayer(targetId, targetName, targetUid = null) {
+    async challengePlayer(targetId, targetName, targetUid = null, options = {}) {
         if (!this.requireLogin()) return;
 
         const ready = await this.ensureSocketReadyForOnline(8000);
         if (!ready.ok) {
             const reason = ready.reason === 'err_friend_timeout' ? 'err_duel_timeout' : ready.reason;
-            this.showServerNotice(reason || 'sys_no_conn', 'err_title');
+            this.showServerNotice(reason || 'sys_no_conn', 'err_title', options);
             return;
         }
         const socketAtPrompt = this.socket;
@@ -5880,18 +5881,19 @@ class YambApp {
         const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName), {
             title: gt('duel_title') || "IZAZOV",
             okText: gt('online_challenge_btn') || "IZAZOVI",
-            cancelText: gt('modal_btn_cancel') || "OTKAŽI"
+            cancelText: gt('modal_btn_cancel') || "OTKAŽI",
+            contextClass: options.contextClass
         });
         if(isConfirmed) {
             if (!socketAtPrompt || socketAtPrompt !== this.socket || !socketAtPrompt.connected) {
-                this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", gt('err_title') || "GREŠKA");
+                this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", gt('err_title') || "GREŠKA", options);
                 return;
             }
 
             const result = await this.emitSocketAck('send_challenge', { targetId, targetUid, challengerName: this.playerName }, 8000);
             if (!result.ok) {
                 const reason = result.reason === 'err_friend_timeout' ? 'err_duel_timeout' : result.reason;
-                this.showServerNotice(reason || 'err_server_conn', 'err_title');
+                this.showServerNotice(reason || 'err_server_conn', 'err_title', options);
                 return;
             }
 
@@ -5899,9 +5901,10 @@ class YambApp {
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
 
             if (typeof window.showNotification === 'function') {
-                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || getFallbackPlayerName()));
+                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || getFallbackPlayerName()),
+                    options.contextClass === 'online-players' ? { className: 'online-players-notice' } : {});
             } else {
-                this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
+                this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV", options);
             }
         }
     }
@@ -6026,7 +6029,8 @@ class YambApp {
                     const english = (localStorage.getItem('yamb_lang') || 'sr').startsWith('en');
                     window.showNotification?.(
                         english ? 'Theme unavailable' : 'Tema nije učitana',
-                        english ? 'Check the connection and try again.' : 'Proveri vezu i pokušaj ponovo.'
+                        english ? 'Check the connection and try again.' : 'Proveri vezu i pokušaj ponovo.',
+                        { className: 'settings-theme-load-toast' }
                     );
                     return;
                 }
@@ -6376,28 +6380,28 @@ class YambApp {
                     : 'POZOVI PRIJATELJA'
             },
             globalChat: {
-                icon: 'assets/easter-soft-clay/global-chat-pro-v6.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
                 greenIcon: 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
+                severnaIcon: 'assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
-                icon: 'assets/easter-soft-clay/online-players-pro-v4.png?v=1',
+                icon: 'assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
                 greenIcon: 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
+                severnaIcon: 'assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'ONLINE PLAYERS'
                     : 'ONLINE IGRAČI'
             },
             economy: {
-                icon: 'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
+                icon: 'assets/theme-packs/easter/ducats-undo-free-v3.png?v=3',
                 greenIcon: 'assets/green-soft-clay/ducats-undo-free-v3.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
+                desertIcon: 'assets/theme-packs/desert/ducats-undo-free-v3.png?v=3',
+                severnaIcon: 'assets/theme-packs/severna/ducats-undo-free-v3.png?v=3',
                 scale: 1,
                 lines: () => [
                     gt('menu_ducats') || 'DUKATI',
@@ -6491,13 +6495,13 @@ class YambApp {
 
         setTimeout(() => {
             onComplete();
-        }, 3650);
+        }, window.ROOM_INTRO_TIMING?.openAtMs ?? 2400);
 
         setTimeout(() => {
             overlay.classList.add('hidden');
             overlay.setAttribute('aria-hidden', 'true');
             this.easterRoomIntroPlaying = false;
-        }, 4600);
+        }, window.ROOM_INTRO_TIMING?.durationMs ?? 3200);
     }
 
     async showMainMenu(options = {}) {
