@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 62,
-  "updatedOn": "2026-10-23",
+  "schemaVersion": 66,
+  "updatedOn": "2026-10-24",
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
   "canonicalAssetRegistryRule": {
@@ -32,10 +32,24 @@
   },
   "iceAgeEffectRule": {
     "scope": "Ledeno doba je isti zajednicki ledeni efekat za svih deset tema, ukljucujuci Zelenu. Ovo je namerni izuzetak od pravila tematski jedinstvenih cestica.",
-    "assets": "Dva univerzalna prozirna 3D Soft PNG sloja koriste se u svih deset tema: assets/effects/ice-age/frozen-board-v3.png pokriva celu tablu neravnomernim ledom, a board-cracks-v3.png dodaje pukotine. Izvori, promptovi i SHA-256 su u source-assets/theme-live-ice-age-v1/manifest.json. Stari okvir i krhotine nisu aktivni.",
-    "motion": "Cela tabla se postepeno zaledi, a zatim se na povrsini od jedne tacke sire pukotine. Led nema pravougaoni okvir ni odvojene padajuce krhotine. Kratko zatamnjenje okoline istice led, bez centralnog simbola, pahulja, preteranog sjaja ili trajnog zaklanjanja igre. Ukupno trajanje 6.5 sekundi; smanjeni pokret prikazuje oba nepokretna PNG sloja 2.7 sekundi.",
-    "performanceAndAccess": "Oba PNG fajla se ucitavaju pre pocetka animacije i ponovo koriste iz memorije; ako nedostaju, ne prikazuje se polovicni efekat. Otkrivanje leda i pukotina izvode CSS animacije bez stalnog iscrtavanja svakog frejma. Stop, promena teme i izlazak uklanjaju slojeve, a zakasnelo ucitavanje ne moze vratiti efekat.",
-    "qualityGate": "Proveriti stvarnu tablu u svih deset tema, citljivost brojeva pod ledom, jasno pucanje i ciscenje efekta na telefonu. Pregled na racunaru nije zamena za probu na Samsung S25."
+    "assets": "Jedan univerzalni prozirni 3D Soft PNG sloj assets/effects/ice-age/frost-board-v4.png koristi se u svih deset tema. Led prati tacan pravougaoni obuhvat table, sa glatkim obodom i gotovo providnom sredinom. Izvor, prompt i SHA-256 su u source-assets/theme-live-ice-age-v4/manifest.json. Raniji grubi led i pukotine nisu aktivni.",
+    "motion": "Mekani front leda prelazi od gornje do donje ivice pravougaone table, zatim se sloj kratko zadrzi i nestane. Blago zatamnjenje okoline istice led, bez centralnog simbola, pahulja, preteranog sjaja, grubih pukotina ili trajnog zaklanjanja igre. Ukupno trajanje 6.5 sekundi; smanjeni pokret prikazuje miran PNG sloj 2.7 sekundi.",
+    "performanceAndAccess": "PNG se ucitava pre pocetka animacije i ponovo koristi iz memorije; ako nedostaje, efekat se ne pokrece. Otkrivanje leda radi CSS animacija bez stalnog iscrtavanja svakog frejma. Stop, promena teme i izlazak uklanjaju sloj, a zakasnelo ucitavanje ne moze vratiti efekat.",
+    "qualityGate": "Proveriti stvarnu tablu u svih deset tema, citljivost brojeva pod ledom i ciscenje efekta na telefonu. Pregled na racunaru nije zamena za probu na Samsung S25."
+  },
+  "blackHoleEffectRule": {
+    "scope": "Crna rupa je zivi efekat u svih deset tema. Svaka tema ima sopstveno generisano 3D Soft Neomorphism jezgro u svom Clay ili Smooth Rubber / Matte Plastic pravcu i paleti.",
+    "assets": "Deset originalnih prozirnih PNG-ova u assets/effects/black-hole/{theme}-core-v1.png koristi se i u zivoj animaciji i u Riznici. Nema pukog prebojavanja zajednickog mastera, generickog cyan-zlatnog prstena, zvezdanog polja ili dodatnog ukrasa. Promptovi, putanje i SHA-256 nalaze se u source-assets/theme-live-black-hole-v1/manifest.json.",
+    "motion": "Tematski PNG daje materijal i siluetu, ali zivi efekat cine dva nezavisna svetlosna toka koji kruze oko jezgra, dva blaga talasa gravitacionog sociva i do sesnaest cestica sa zakrivljenom spiralnom putanjom. Okolina se blago zatamni. Tabla se najvise smanji na 97.5% svoje velicine i vrati bez rotacije, nestajanja, promene dimenzija polja ili podataka. Trajanje je 5.8 sekundi. Smanjeni pokret prikazuje miran PNG tokom 2.6 sekundi, bez tokova, talasa, cestica i pomeranja table.",
+    "performanceAndAccess": "PNG izabrane teme ucitava se pre pocetka; ako nedostaje, efekat se ne pokrece. Promena teme, novi efekat i izlazak uklanjaju prethodni sloj i kasno ucitana stara tema ne moze ga vratiti. Samo aktivna tema ucitava svoj PNG.",
+    "qualityGate": "Pregledati svih deset tema u stvarnoj igri i Riznici na telefonu, citljivost table, gladak rad i ciscenje pri promeni teme. Animirani HTML pregled nije zamena za probu na Samsung S25."
+  },
+  "supernovaEffectRule": {
+    "scope": "Supernova je zivi efekat u svih deset tema, ukljucujuci Zelenu. Svaka tema ima zasebno nacrtan plazmeni PNG bez cvetnih, lisnatih, skulpturalnih ili drugih ukrasnih oblika. Paleta prati DNK teme.",
+    "assets": "Deset originalnih transparentnih PNG slojeva plazme nalazi se u assets/effects/supernova/{theme}-plasma-v2.png. Isti PNG daje kratak plazmeni prasak u aktivnom efektu i pregled u Riznici; izvor, promptovi, putanje i SHA-256 su u source-assets/theme-live-supernova-v2/manifest.json. Ceo prethodni v1 set je povucen.",
+    "motion": "Tokom 5 sekundi svetla tacka se sabija, zatim kratko bljesne. Blago nepravilan sirok udarni front nadmasuje sporije sirenje plazmenog oblaka. Radijalni gasni tragovi, sjajnije cestice i mnogobrojne sitne cestice svemirske prasine lete razlicitim brzinama i postepeno gasnu. Tematski PNG se siri i rastapa tokom vise faza, nije staticka ilustracija. Tabla blago reaguje bez promene dimenzija, polja ili rezultata. Nema pravilnog ukrasnog prstena, kica ili nacrtanog cvrstog predmeta.",
+    "performanceAndAccess": "Ucitava se samo PNG aktivne teme i ponovo koristi iz memorije. Promena teme, ponovni pocetak i izlazak zaustavljaju prethodnu animaciju; zakasnelo ucitavanje stare teme ne moze ponovo pokrenuti efekat. Na mobilnom je ogranicen broj cestica i rezolucija canvasa; smanjeni pokret daje kratak mirniji prikaz.",
+    "qualityGate": "Animirani HTML pregled mora pokazati kretanje, ne samo sliku. Proveriti trajanje, pokrivenost ekrana, citljivost table, promenu teme i gladak rad u stvarnoj igri na telefonu."
   },
   "liveFirefliesEffectRule": {
     "scope": "Magični svici kao zivi efekat u svih deset tema, ukljucujuci Zelenu.",

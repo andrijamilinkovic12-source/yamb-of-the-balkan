@@ -9,11 +9,11 @@ const start = source.indexOf('    loadIceAgeAssets() {');
 const end = source.indexOf('    trigger(type) {', start);
 assert(start > 0 && end > start, 'Cannot extract the active Ice Age implementation');
 assert(source.includes("if (type === 'ice_age') this.spawnIceAge();"), 'Purchased effect must trigger the PNG runtime');
-assert(source.includes("if (type === 'ice_age') this.loadIceAgeAssets()"), 'Equipped effect should preload both PNGs');
-assert(!source.slice(start, end).includes('ice-age-chip'), 'Old falling frame chips are no longer active');
-assert(css.includes('iceAgeFreeze') && css.includes('iceAgeCrack'), 'Ice must freeze before it cracks');
+assert(source.includes("if (type === 'ice_age') this.loadIceAgeAssets()"), 'Equipped effect should preload the PNG');
+assert(!source.slice(start, end).includes('ice-age-chip') && !source.slice(start, end).includes('ice-age-cracks'), 'Old falling chips and crack layer are no longer active');
+assert(css.includes('iceAgeFreeze') && !css.includes('iceAgeCrack'), 'Smooth freezing motion must replace hard cracks');
 
-for (const name of ['frozen-board-v3.png', 'board-cracks-v3.png']) {
+for (const name of ['frost-board-v4.png']) {
     const png = fs.readFileSync(path.join(root, 'www/assets/effects/ice-age', name));
     assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${name} PNG signature`);
     assert.equal(png[25], 6, `${name} retains an alpha channel`);
@@ -65,11 +65,11 @@ async function main() {
         await manager.spawnIceAge();
         assert.equal(table.children.length, 0, 'freeze overlay stays outside boards that clip children');
         assert.equal(body.children.length, 2, 'one atmosphere and one board overlay');
-        assert(body.children[1].innerHTML.includes('ice-age-frost') && body.children[1].innerHTML.includes('ice-age-cracks'), 'frost and crack PNG layers are both present');
+        assert(body.children[1].innerHTML.includes('ice-age-frost') && !body.children[1].innerHTML.includes('ice-age-cracks'), 'only the smooth rectangular frost PNG is present');
         assert.equal(body.children[1].style['--ice-width'], '300px', 'effect tracks actual board dimensions');
         assert.equal(manager.timers.length, 2, 'only fade and cleanup timers remain');
         manager.timers[0].callback();
-        assert(body.children[1].classList.contains('ice-melting'), 'frozen board fades after cracking');
+        assert(body.children[1].classList.contains('ice-melting'), 'frozen board fades cleanly');
         manager.timers[1].callback();
         assert.equal(body.children.length, 0, 'effect cleans up');
 
@@ -87,8 +87,8 @@ async function main() {
         pending.forEach(image => image.onload());
         await load;
         assert.equal(body.children.length, 0, 'late image load cannot restart a stopped effect');
-        assert(source.includes('stop() {\n        this.iceAgeRunId++;'), 'stop invalidates pending loads');
-        console.log('Ice Age runtime passed: transparent PNGs, full-board frost and cracks, fade, cleanup, reduced motion and cancellation.');
+        assert(/stop\(\) \{\r?\n\s*this\.iceAgeRunId\+\+;/.test(source), 'stop invalidates pending loads');
+        console.log('Ice Age runtime passed: transparent PNG, rectangular full-board frost, fade, cleanup, reduced motion and cancellation.');
     } finally {
         global.document = old.document;
         global.window = old.window;

@@ -17,6 +17,10 @@ const leaderboardMedals = read('source-assets/theme-leaderboard-medals-v2/manife
 const quarterlyLeague = read('source-assets/theme-quarterly-league-v2/manifest.json');
 const goldRainRefreshPath = 'source-assets/theme-gold-rain-canonical-v2/manifest.json';
 const goldRainRefresh = read(goldRainRefreshPath);
+const blackHoleEffectPath = 'source-assets/theme-live-black-hole-v1/manifest.json';
+const blackHoleEffect = read(blackHoleEffectPath);
+const supernovaEffectPath = 'source-assets/theme-live-supernova-v2/manifest.json';
+const supernovaEffect = read(supernovaEffectPath);
 const outputPath = 'docs/theme-canonical-asset-registry.json';
 const ids = definitions.themes.map(theme => theme.id);
 const expectedIds = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
@@ -262,6 +266,30 @@ const themes = definitions.themes.map(theme => {
             if (!exists(asset) || sha256(asset) !== expected) throw new Error(`Gold Rain manifest hash mismatch: ${asset}`);
         }
     }
+    const blackHoleEntry = blackHoleEffect.assets.find(asset => asset.theme === themeId);
+    if (!blackHoleEntry || !exists(blackHoleEntry.productionPath)
+        || sha256(blackHoleEntry.productionPath) !== blackHoleEntry.sha256) {
+        throw new Error(`Black Hole themed PNG mismatch: ${themeId}`);
+    }
+    const blackHole = {
+        runtimeEffectId: 'black_hole',
+        primaryPath: blackHoleEntry.productionPath,
+        runtimeAndTreasuryUseSamePng: true,
+        sourceManifest: blackHoleEffectPath,
+        visualAudit: 'new-theme-specific-png; device-review-pending'
+    };
+    const supernovaEntry = supernovaEffect.assets.find(asset => asset.theme === themeId);
+    if (!supernovaEntry || !exists(supernovaEntry.productionPath)
+        || sha256(supernovaEntry.productionPath) !== supernovaEntry.sha256) {
+        throw new Error(`Supernova themed PNG mismatch: ${themeId}`);
+    }
+    const supernova = {
+        runtimeEffectId: 'supernova',
+        primaryPath: supernovaEntry.productionPath,
+        runtimeAndTreasuryUseSamePng: true,
+        sourceManifest: supernovaEffectPath,
+        visualAudit: 'new-theme-specific-png; device-review-pending'
+    };
     return {
         id: themeId,
         name: theme.nameSr,
@@ -278,7 +306,7 @@ const themes = definitions.themes.map(theme => {
             ...(stages ? { stages, missingMasters } : { status: 'green-reference; runtime verification tracked in its family registry' })
         },
         identities,
-        composites: { treasury, economy, goldRain }
+        composites: { treasury, economy, goldRain, blackHole, supernova }
     };
 });
 for (const [family, slotIds] of Object.entries(requiredIdentitySlots)) {
@@ -311,6 +339,8 @@ const registry = {
         leaderboardMedalsRefresh: 'source-assets/theme-leaderboard-medals-v2/manifest.json',
         quarterlyLeagueRefresh: 'source-assets/theme-quarterly-league-v2/manifest.json',
         goldRainRefresh: goldRainRefreshPath,
+        blackHoleEffect: blackHoleEffectPath,
+        supernovaEffect: supernovaEffectPath,
         supplementaryPacks: supplementalManifests.length
     },
     sourceSha256: {
@@ -322,7 +352,9 @@ const registry = {
         economyCompositeRefresh: sha256(economyCompositeV4Path),
         leaderboardMedalsRefresh: sha256('source-assets/theme-leaderboard-medals-v2/manifest.json'),
         quarterlyLeagueRefresh: sha256('source-assets/theme-quarterly-league-v2/manifest.json'),
-        goldRainRefresh: sha256(goldRainRefreshPath)
+        goldRainRefresh: sha256(goldRainRefreshPath),
+        blackHoleEffect: sha256(blackHoleEffectPath),
+        supernovaEffect: sha256(supernovaEffectPath)
     },
     baseline: { themes: 10, requiredSlotsPerTheme: 191, canonicalSlotsPerTheme: 169, canonicalFamilies: families.length, greenFamilyRecords: Object.keys(green.families).length },
     families,

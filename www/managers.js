@@ -31,6 +31,25 @@ const FIREFLY_THEME_GLOW = Object.freeze({
     easter: '255, 211, 132', desert: '113, 217, 196', moon: '225, 226, 231',
     severna: '138, 227, 228'
 });
+// Fine alignment of the moving lens with the void in each original PNG.
+const BLACK_HOLE_CORE_POSITION = Object.freeze({
+    dark: [54, 49], light: [50, 49], medium: [53, 51], winter: [52, 55],
+    neon: [49, 48], amethyst: [55, 50], easter: [49, 51], desert: [51, 50],
+    moon: [55, 56], severna: [49, 49]
+});
+// Supernova shares each theme's light language; its PNG is a brief plasma texture inside a live expanding blast.
+const SUPERNOVA_THEME_PROFILES = Object.freeze({
+    dark:     { main: '163, 200, 145', accent: '246, 245, 217', shade: '16, 37, 25' },
+    light:    { main: '243, 214, 168', accent: '255, 241, 215', shade: '68, 49, 37' },
+    medium:   { main: '227, 154, 112', accent: '241, 195, 178', shade: '60, 25, 39' },
+    winter:   { main: '109, 155, 168', accent: '255, 244, 229', shade: '18, 44, 61' },
+    neon:     { main: '86, 229, 210', accent: '240, 140, 227', shade: '8, 16, 27' },
+    amethyst: { main: '214, 145, 181', accent: '242, 200, 121', shade: '39, 24, 58' },
+    easter:   { main: '135, 147, 115', accent: '255, 248, 234', shade: '51, 42, 65' },
+    desert:   { main: '215, 146, 105', accent: '255, 240, 218', shade: '53, 37, 31' },
+    moon:     { main: '167, 169, 184', accent: '245, 245, 247', shade: '23, 26, 39' },
+    severna:  { main: '138, 227, 228', accent: '195, 172, 234', shade: '23, 36, 58' }
+});
 const filterYambThemeIds = (items = []) => Array.isArray(items)
     ? items.filter(item => YAMB_THEME_IDS.includes(item))
     : [];
@@ -303,22 +322,28 @@ class EffectManager {
         this.royalYambRunId = 0;
         this.royalCanvasCleanup = null;
         this.supernovaCanvasCleanup = null;
+        this.supernovaRunId = 0;
+        this.supernovaSpritePromises = {};
         this.effectTimeouts = [];
         this.iceAgeRunId = 0;
         this.iceAgeAssetsPromise = null;
+        this.blackHoleRunId = 0;
+        this.blackHoleSpritePromises = {};
+        this.blackHoleCleanup = null;
     }
     
     applyPermanent(type) {
         this.stop(); 
         if (!type || type === 'none') return;
         if (type === 'ice_age') this.loadIceAgeAssets().catch(error => console.warn(error));
+        if (type === 'black_hole') this.loadBlackHoleSprite(this.getGoldRainThemeId());
+        if (type === 'supernova') this.loadSupernovaSprite(this.getGoldRainThemeId());
     }
 
     loadIceAgeAssets() {
-        const frostSrc = 'assets/effects/ice-age/frozen-board-v3.png';
-        const cracksSrc = 'assets/effects/ice-age/board-cracks-v3.png';
+        const frostSrc = 'assets/effects/ice-age/frost-board-v4.png';
         if (!this.iceAgeAssetsPromise) {
-            this.iceAgeAssetsPromise = Promise.all([frostSrc, cracksSrc].map(src => new Promise((resolve, reject) => {
+            this.iceAgeAssetsPromise = Promise.all([frostSrc].map(src => new Promise((resolve, reject) => {
                 const image = new Image();
                 image.onload = () => resolve(image);
                 image.onerror = () => reject(new Error(`Ice Age PNG failed: ${src}`));
@@ -358,7 +383,7 @@ class EffectManager {
         overlay.style.setProperty('--ice-top', `${rect.top}px`);
         overlay.style.setProperty('--ice-width', `${rect.width}px`);
         overlay.style.setProperty('--ice-height', `${rect.height}px`);
-        overlay.innerHTML = '<div class="ice-age-frost"></div><div class="ice-age-cracks"></div>';
+        overlay.innerHTML = '<div class="ice-age-frost"></div>';
         document.body.appendChild(overlay);
         document.body.classList.add('fx-ice-age');
         window.app?.soundMgr?.iceAge?.();
@@ -376,492 +401,448 @@ class EffectManager {
             document.body.classList.remove('fx-ice-age');
         }, duration);
     }
-    
+
+    loadBlackHoleSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        for (const cachedTheme of Object.keys(this.blackHoleSpritePromises)) {
+            if (cachedTheme !== theme) delete this.blackHoleSpritePromises[cachedTheme];
+        }
+        if (this.blackHoleSpritePromises[theme]) return this.blackHoleSpritePromises[theme];
+        const source = `assets/effects/black-hole/${theme}-core-v1.png`;
+        this.blackHoleSpritePromises[theme] = new Promise(resolve => {
+            const sprite = new Image();
+            sprite.decoding = 'async';
+            sprite.onload = () => resolve(sprite);
+            sprite.onerror = () => {
+                delete this.blackHoleSpritePromises[theme];
+                console.warn(`Black Hole PNG failed: ${source}`);
+                resolve(null);
+            };
+            sprite.src = source;
+        });
+        return this.blackHoleSpritePromises[theme];
+    }
+
+    async spawnBlackHole() {
+        const runId = ++this.blackHoleRunId;
+        const theme = this.getGoldRainThemeId();
+        this.clearEffectTimeouts('black_hole');
+        this.blackHoleCleanup?.();
+        const sprite = await this.loadBlackHoleSprite(theme);
+        if (!sprite || runId !== this.blackHoleRunId || theme !== this.getGoldRainThemeId()) return;
+
+        const tables = [...document.querySelectorAll('.player-table')];
+        const targetTable = tables.find(table => table.style.opacity === '1' || table.style.borderColor.includes('gold') || table.style.borderColor.includes('224')) || tables[0];
+        if (!targetTable) return;
+        const rect = targetTable.getBoundingClientRect();
+        const reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        const duration = reduced ? 2600 : 5800;
+        const size = Math.max(140, Math.min(rect.width * 0.58, 230));
+        const scene = document.createElement('div');
+        scene.className = `black-hole-container${reduced ? ' black-hole-container--reduced' : ''}`;
+        scene.setAttribute('aria-hidden', 'true');
+        scene.style.setProperty('--bh-x', `${rect.left + rect.width / 2}px`);
+        scene.style.setProperty('--bh-y', `${rect.top + rect.height / 2}px`);
+        scene.style.setProperty('--bh-size', `${size}px`);
+        scene.style.setProperty('--bh-lens-width', `${size * 1.15}px`);
+        scene.style.setProperty('--bh-lens-height', `${size * 0.63}px`);
+        scene.style.setProperty('--bh-glow', GOLD_RAIN_THEME_PROFILES[theme].glow);
+        scene.style.setProperty('--bh-glint', GOLD_RAIN_THEME_PROFILES[theme].glint);
+        const [coreX, coreY] = BLACK_HOLE_CORE_POSITION[theme];
+        scene.style.setProperty('--bh-core-x', `${coreX}%`);
+        scene.style.setProperty('--bh-core-y', `${coreY}%`);
+        const atmosphere = document.createElement('div');
+        atmosphere.className = 'black-hole-atmosphere';
+        const orbit = document.createElement('div');
+        orbit.className = 'black-hole-orbit';
+        const image = document.createElement('img');
+        image.className = 'black-hole-sprite';
+        image.src = sprite.src;
+        image.alt = '';
+        image.decoding = 'async';
+        orbit.appendChild(image);
+        scene.append(atmosphere, orbit);
+
+        if (!reduced) {
+            for (const name of ['outer', 'inner']) {
+                const stream = document.createElement('span');
+                stream.className = `black-hole-stream black-hole-stream--${name}`;
+                orbit.appendChild(stream);
+            }
+            for (let i = 0; i < 2; i++) {
+                const lens = document.createElement('span');
+                lens.className = `black-hole-lens black-hole-lens--${i + 1}`;
+                scene.appendChild(lens);
+            }
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < 16; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'black-hole-particle';
+                const angle = (i * 2.39996) + 0.3;
+                const radius = size * (0.62 + (i % 4) * 0.15);
+                particle.style.setProperty('--bh-start-x', `${Math.cos(angle) * radius}px`);
+                particle.style.setProperty('--bh-start-y', `${Math.sin(angle) * radius}px`);
+                particle.style.setProperty('--bh-mid-x', `${Math.cos(angle + 1.35) * radius * 0.62}px`);
+                particle.style.setProperty('--bh-mid-y', `${Math.sin(angle + 1.35) * radius * 0.62}px`);
+                particle.style.setProperty('--bh-near-x', `${Math.cos(angle + 3.05) * radius * 0.26}px`);
+                particle.style.setProperty('--bh-near-y', `${Math.sin(angle + 3.05) * radius * 0.26}px`);
+                particle.style.setProperty('--bh-delay', `${(i % 6) * 0.27}s`);
+                particle.style.setProperty('--bh-particle-size', `${i % 3 === 0 ? 4 : 3}px`);
+                fragment.appendChild(particle);
+            }
+            scene.appendChild(fragment);
+            targetTable.classList.add('anim-black-hole-table');
+        }
+        document.body.appendChild(scene);
+
+        let observer = null;
+        const cleanup = () => {
+            observer?.disconnect();
+            scene.remove();
+            targetTable.classList.remove('anim-black-hole-table');
+            if (this.blackHoleCleanup === cleanup) this.blackHoleCleanup = null;
+        };
+        this.blackHoleCleanup = cleanup;
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (theme !== this.getGoldRainThemeId()) {
+                    ++this.blackHoleRunId;
+                    cleanup();
+                }
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+        }
+        this.scheduleEffectTimeout(() => {
+            if (runId === this.blackHoleRunId) cleanup();
+        }, duration, 'black_hole');
+    }
+
+    loadSupernovaSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        for (const cachedTheme of Object.keys(this.supernovaSpritePromises)) {
+            if (cachedTheme !== theme) delete this.supernovaSpritePromises[cachedTheme];
+        }
+        if (this.supernovaSpritePromises[theme]) return this.supernovaSpritePromises[theme];
+        const source = `assets/effects/supernova/${theme}-plasma-v2.png`;
+        this.supernovaSpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.supernovaSpritePromises[theme];
+                console.warn(`Supernova PNG failed: ${source}`);
+                resolve(null);
+            };
+            image.src = source;
+        });
+        return this.supernovaSpritePromises[theme];
+    }
+
+    async spawnSupernova() {
+        const runId = ++this.supernovaRunId;
+        this.supernovaCanvasCleanup?.();
+        const theme = this.getGoldRainThemeId();
+        const sprite = await this.loadSupernovaSprite(theme);
+        if (!sprite || runId !== this.supernovaRunId || theme !== this.getGoldRainThemeId()) return;
+
+        const table = [...document.querySelectorAll('.player-table')]
+            .find(node => node.style.opacity === '1') || document.querySelector('.player-table');
+        const reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        const mobile = window.innerWidth <= 760 || Boolean(window.matchMedia?.('(hover: none) and (pointer: coarse)').matches);
+        const duration = reduced ? 1150 : 5000;
+        const ignitionAt = reduced ? 190 : 560;
+        const profile = SUPERNOVA_THEME_PROFILES[theme];
+        const overlay = document.createElement('div');
+        overlay.className = 'supernova-container';
+        overlay.dataset.theme = theme;
+        overlay.dataset.phase = 'compression';
+        overlay.innerHTML = '<canvas class="sn-canvas"></canvas><img class="supernova-plasma" alt="" aria-hidden="true">';
+        document.body.appendChild(overlay);
+        const canvas = overlay.querySelector('canvas');
+        const plasma = overlay.querySelector('img');
+        plasma.src = sprite.src;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { overlay.remove(); return; }
+
+        const clamp = value => Math.max(0, Math.min(1, value));
+        const ease = value => 1 - Math.pow(1 - clamp(value), 3);
+        const rgba = (rgb, alpha) => `rgba(${rgb},${clamp(alpha)})`;
+        const center = { x: 0, y: 0 };
+        let width = 0;
+        let height = 0;
+        let farthest = 0;
+        let rafId = 0;
+        let lastDraw = 0;
+        const resize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            const rect = table?.getBoundingClientRect();
+            center.x = rect ? rect.left + rect.width / 2 : width / 2;
+            center.y = rect ? rect.top + rect.height / 2 : height / 2;
+            plasma.style.left = `${center.x}px`;
+            plasma.style.top = `${center.y}px`;
+            farthest = Math.hypot(Math.max(center.x, width - center.x), Math.max(center.y, height - center.y));
+            const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.2 : 1.5);
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+        if (!reduced) {
+            table?.classList.add('anim-supernova-table');
+            table?.style.setProperty('--sn-main', profile.main);
+            if (mobile) table?.classList.add('anim-supernova-table--compact');
+        }
+
+        const jitter = seed => {
+            const value = Math.sin(seed * 127.1 + 78.233) * 43758.5453;
+            return value - Math.floor(value);
+        };
+        const particleCount = reduced ? 0 : mobile ? 58 : 92;
+        const particles = Array.from({ length: particleCount }, (_, index) => ({
+            angle: index * 2.399963229728653 + (jitter(index + 3) - 0.5) * 0.37,
+            drift: (jitter(index + 57) - 0.5) * 0.17,
+            reach: 0.53 + jitter(index + 19) * 0.55,
+            delay: jitter(index + 31) * 250,
+            lifetime: 2100 + jitter(index + 77) * 2400,
+            size: index % 11 === 0 ? 3.1 : 0.9 + jitter(index + 11) * 1.7,
+            hue: index % 5 === 0 ? profile.accent : profile.main
+        }));
+        // Fine ejecta travel at different speeds and keep drifting after the bright front has passed.
+        const dustCount = reduced ? 0 : mobile ? 115 : 210;
+        const dust = Array.from({ length: dustCount }, (_, index) => ({
+            angle: index * 2.399963229728653 + jitter(index + 401) * 0.5,
+            reach: 0.16 + jitter(index + 433) * 0.93,
+            delay: jitter(index + 449) * 780,
+            lifetime: 2700 + jitter(index + 467) * 2300,
+            size: 0.45 + jitter(index + 479) * 1.25,
+            wobble: (jitter(index + 491) - 0.5) * 18,
+            tint: index % 4 === 0 ? profile.accent : profile.main
+        }));
+        const filaments = Array.from({ length: reduced ? 0 : mobile ? 15 : 23 }, (_, index) => ({
+            angle: index * 2.399963229728653 + (jitter(index + 703) - 0.5) * 0.4,
+            reach: 0.53 + jitter(index + 721) * 0.44,
+            bend: (jitter(index + 739) - 0.5) * 0.13,
+            delay: jitter(index + 757) * 150,
+            tint: index % 3 === 0 ? profile.accent : profile.main
+        }));
+        const cleanup = () => {
+            cancelAnimationFrame(rafId);
+            window.removeEventListener('resize', resize);
+            table?.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
+            table?.style.removeProperty('--sn-main');
+            overlay.remove();
+            if (this.supernovaCanvasCleanup === cleanup) this.supernovaCanvasCleanup = null;
+        };
+        this.supernovaCanvasCleanup = cleanup;
+
+        const draw = start => now => {
+            if (runId !== this.supernovaRunId || !overlay.isConnected) return;
+            if (theme !== this.getGoldRainThemeId()) { cleanup(); return; }
+            if (mobile && lastDraw && now - lastDraw < 26) {
+                rafId = requestAnimationFrame(draw(start));
+                return;
+            }
+            lastDraw = now;
+            const elapsed = Math.min(now - start, duration);
+            const blastTime = Math.max(0, elapsed - ignitionAt);
+            const fadeLength = reduced ? 260 : 900;
+            const endFade = 1 - ease((elapsed - (duration - fadeLength)) / fadeLength);
+            const compression = ease(elapsed / ignitionAt);
+            const flash = Math.sin(clamp(blastTime / (reduced ? 420 : 680)) * Math.PI);
+            overlay.dataset.phase = elapsed < ignitionAt ? 'compression'
+                : elapsed < ignitionAt + 850 ? 'blast'
+                    : elapsed < duration - fadeLength ? 'ejecta' : 'fade';
+            ctx.clearRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'source-over';
+
+            // A brief dip in ambient light makes the ignition readable without hiding scores.
+            ctx.fillStyle = rgba(profile.shade, (0.09 + 0.08 * compression) * endFade);
+            ctx.fillRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'screen';
+
+            // The pre-blast core is drawn, not a static PNG object.
+            if (elapsed < ignitionAt) {
+                const radius = 38 - compression * 27;
+                const coreGlow = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, radius * 2.6);
+                coreGlow.addColorStop(0, rgba(profile.accent, (0.5 + compression * 0.45) * endFade));
+                coreGlow.addColorStop(0.21, rgba(profile.main, 0.29 * endFade));
+                coreGlow.addColorStop(1, rgba(profile.main, 0));
+                ctx.fillStyle = coreGlow;
+                ctx.beginPath();
+                ctx.arc(center.x, center.y, radius * 2.6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            if (blastTime > 0) {
+                // The pressure front outruns the slower gas. It is broad and slightly uneven, not a drawn circle.
+                const waveLife = clamp(blastTime / (reduced ? 620 : 2200));
+                const waveRadius = 12 + ease(waveLife) * farthest * 1.09;
+                const shellWidth = Math.max(24, waveRadius * 0.19);
+                const shellAlpha = Math.pow(1 - waveLife, 0.45) * clamp(blastTime / 190) * endFade;
+                if (shellAlpha > 0) {
+                    const shell = ctx.createRadialGradient(
+                        center.x, center.y, Math.max(0, waveRadius - shellWidth * 1.55),
+                        center.x, center.y, waveRadius + shellWidth
+                    );
+                    shell.addColorStop(0, rgba(profile.main, 0));
+                    shell.addColorStop(0.32, rgba(profile.main, 0.06 * shellAlpha));
+                    shell.addColorStop(0.59, rgba(profile.main, 0.16 * shellAlpha));
+                    shell.addColorStop(0.76, rgba(profile.accent, 0.27 * shellAlpha));
+                    shell.addColorStop(0.88, rgba(profile.main, 0.08 * shellAlpha));
+                    shell.addColorStop(1, rgba(profile.main, 0));
+                    ctx.fillStyle = shell;
+                    ctx.beginPath();
+                    ctx.arc(center.x, center.y, waveRadius + shellWidth, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.save();
+                    ctx.strokeStyle = rgba(profile.accent, 0.24 * shellAlpha);
+                    ctx.lineWidth = mobile ? 2.3 : 3.2;
+                    ctx.shadowColor = rgba(profile.main, 0.4 * shellAlpha);
+                    ctx.shadowBlur = mobile ? 12 : 18;
+                    ctx.beginPath();
+                    for (let segment = 0; segment <= 84; segment++) {
+                        const angle = segment / 84 * Math.PI * 2;
+                        const uneven = 1 + 0.018 * Math.sin(angle * 7 + 0.8)
+                            + 0.013 * Math.sin(angle * 13 - 1.2);
+                        const x = center.x + Math.cos(angle) * waveRadius * uneven;
+                        const y = center.y + Math.sin(angle) * waveRadius * uneven;
+                        if (segment === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // Gas continues expanding behind the fast shock front.
+                if (!reduced) {
+                    const gasLife = clamp(blastTime / 2950);
+                    const gasRadius = 24 + ease(gasLife) * Math.min(farthest * 0.83, 670);
+                    const gas = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, gasRadius);
+                    const gasAlpha = (1 - gasLife) * 0.21 * endFade;
+                    gas.addColorStop(0, rgba(profile.accent, 0.18 * gasAlpha));
+                    gas.addColorStop(0.35, rgba(profile.main, gasAlpha));
+                    gas.addColorStop(0.68, rgba(profile.main, 0.42 * gasAlpha));
+                    gas.addColorStop(1, rgba(profile.main, 0));
+                    ctx.fillStyle = gas;
+                    ctx.beginPath();
+                    ctx.arc(center.x, center.y, gasRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // A short volumetric flash leads the shell; it is not a persistent lens.
+                if (flash > 0) {
+                    const flareRadius = 90 + flash * Math.min(farthest * 0.92, 460);
+                    const flare = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, flareRadius);
+                    flare.addColorStop(0, rgba(profile.accent, 0.62 * flash * endFade));
+                    flare.addColorStop(0.18, rgba(profile.main, 0.36 * flash * endFade));
+                    flare.addColorStop(0.55, rgba(profile.main, 0.12 * flash * endFade));
+                    flare.addColorStop(1, rgba(profile.main, 0));
+                    ctx.fillStyle = flare;
+                    ctx.beginPath();
+                    ctx.arc(center.x, center.y, flareRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Faint plasma streams stretch from the ignition point and dissolve into ejecta.
+            filaments.forEach(filament => {
+                const life = clamp((blastTime - filament.delay) / 2650);
+                if (!life || life >= 1) return;
+                const reach = (1 - Math.exp(-3.1 * life)) * farthest * filament.reach;
+                ctx.save();
+                ctx.strokeStyle = rgba(filament.tint, 0.32 * Math.pow(1 - life, 1.2) * endFade);
+                ctx.lineWidth = (mobile ? 2.2 : 3.4) * (1 - life * 0.65);
+                ctx.shadowColor = rgba(filament.tint, 0.38 * endFade);
+                ctx.shadowBlur = mobile ? 7 : 12;
+                ctx.beginPath();
+                for (let point = 0; point <= 8; point++) {
+                    const fraction = point / 8;
+                    const angle = filament.angle + filament.bend * fraction * fraction
+                        + Math.sin(fraction * 8 + filament.angle * 3) * 0.018;
+                    const radius = 7 + reach * fraction;
+                    const x = center.x + Math.cos(angle) * radius;
+                    const y = center.y + Math.sin(angle) * radius;
+                    if (point === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                ctx.restore();
+            });
+
+            // Bright fragments have independent speeds, lifetimes and curved radial drift.
+            particles.forEach(particle => {
+                const life = clamp((blastTime - particle.delay) / particle.lifetime);
+                if (!life || life >= 1) return;
+                const angle = particle.angle + particle.drift * life * life;
+                const radius = 13 + (1 - Math.exp(-3.4 * life)) * farthest * particle.reach;
+                const x = center.x + Math.cos(angle) * radius;
+                const y = center.y + Math.sin(angle) * radius;
+                const alpha = Math.pow(Math.sin(life * Math.PI), 0.65) * 0.73 * endFade;
+                const tail = 6 + (1 - life) * (particle.size > 3 ? 35 : 18);
+                ctx.strokeStyle = rgba(particle.hue, alpha);
+                ctx.lineWidth = Math.max(0.7, particle.size * (1 - life * 0.5));
+                ctx.beginPath();
+                ctx.moveTo(x - Math.cos(angle) * tail, y - Math.sin(angle) * tail);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.fillStyle = rgba(profile.accent, alpha * 0.76);
+                ctx.beginPath();
+                ctx.arc(x, y, Math.max(0.65, particle.size * (1 - life * 0.4)), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Small, dim space dust gives the blast depth instead of reading as fireworks.
+            dust.forEach(mote => {
+                const life = clamp((blastTime - mote.delay) / mote.lifetime);
+                if (!life || life >= 1) return;
+                const radius = 8 + (1 - Math.exp(-3 * life)) * farthest * mote.reach;
+                const angle = mote.angle + Math.sin(life * 4 + mote.angle) * 0.025;
+                const x = center.x + Math.cos(angle) * radius + mote.wobble * life;
+                const y = center.y + Math.sin(angle) * radius - mote.wobble * life * 0.4;
+                const alpha = Math.pow(Math.sin(life * Math.PI), 0.7) * 0.39 * endFade;
+                ctx.fillStyle = rgba(mote.tint, alpha);
+                ctx.beginPath();
+                ctx.arc(x, y, mote.size * (1 - life * 0.55), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // The PNG is a moving texture: the plasma plume grows behind the particles and dissipates.
+            const plumeLife = clamp(blastTime / (reduced ? 680 : 2950));
+            const plumeAlpha = reduced
+                ? Math.sin(plumeLife * Math.PI) * 0.42 * endFade
+                : clamp(blastTime / 280) * Math.pow(1 - plumeLife, 0.72) * 0.72 * endFade;
+            const plumeScale = 0.08 + (1 - Math.exp(-3.4 * plumeLife)) * (mobile ? 2.8 : 3.25);
+            plasma.style.transform = `translate(-50%, -50%) scale(${plumeScale}) rotate(${plumeLife * 2}deg)`;
+            plasma.style.opacity = String(clamp(plumeAlpha));
+
+            ctx.globalCompositeOperation = 'source-over';
+            if (elapsed < duration) rafId = requestAnimationFrame(draw(start));
+            else cleanup();
+        };
+        rafId = requestAnimationFrame(now => draw(now)(now));
+        this.scheduleEffectTimeout(() => {
+            if (runId === this.supernovaRunId) cleanup();
+        }, duration + 80, 'supernova');
+    }
+
     trigger(type) {
+        if (type !== 'supernova') {
+            this.supernovaRunId++;
+            this.supernovaCanvasCleanup?.();
+        }
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
         if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
         if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
-        
+
         if (type === 'ice_age') this.spawnIceAge();
 
-        if (type === 'black_hole') {
-            let targetTable = null;
-            const tables = document.querySelectorAll('.player-table');
-            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
-            if (!targetTable && tables.length > 0) targetTable = tables[0];
+        if (type === 'black_hole') void this.spawnBlackHole();
 
-            if (targetTable) {
-                const rect = targetTable.getBoundingClientRect();
-                const duration = 6400;
-                const compactBlackHole = window.matchMedia && (
-                    window.matchMedia('(max-width: 760px)').matches ||
-                    window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
-                    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                );
-                const bhContainer = document.createElement('div');
-                bhContainer.className = compactBlackHole ? 'black-hole-container black-hole-container--compact' : 'black-hole-container';
-                bhContainer.style.setProperty('--bh-x', (rect.left + rect.width / 2) + 'px');
-                bhContainer.style.setProperty('--bh-y', (rect.top + rect.height / 2) + 'px');
-                bhContainer.innerHTML = `
-                    <div class="bh-vignette"></div>
-                    <div class="bh-starfield bh-starfield--far"></div>
-                    <div class="bh-starfield bh-starfield--near"></div>
-                    <div class="bh-shockwave"></div>
-                    <div class="bh-gravity-well">
-                        <div class="bh-lensing bh-lensing--outer"></div>
-                        <div class="bh-lensing bh-lensing--inner"></div>
-                        <div class="bh-accretion bh-accretion--back"></div>
-                        <div class="bh-accretion bh-accretion--front"></div>
-                        <div class="bh-photon-ring"></div>
-                        <div class="bh-core"></div>
-                        <div class="bh-core-glow"></div>
-                    </div>
-                `;
-
-                const fragment = document.createDocumentFragment();
-                const colors = ['#67f7ff', '#9b7cff', '#ffd66f', '#ffffff'];
-                const debrisCount = compactBlackHole ? 28 : 46;
-                for (let i = 0; i < debrisCount; i++) {
-                    const particle = document.createElement('span');
-                    particle.className = (i % 5 === 0) ? 'bh-debris bh-debris--pip' : 'bh-debris';
-                    const orbit = 92 + (i % 9) * 23 + Math.random() * 38;
-                    particle.style.setProperty('--a', (i * 137.5 + Math.random() * 28).toFixed(1) + 'deg');
-                    particle.style.setProperty('--orbit', orbit.toFixed(1) + 'px');
-                    particle.style.setProperty('--orbit-mid', (orbit * (0.48 + Math.random() * 0.14)).toFixed(1) + 'px');
-                    particle.style.setProperty('--orbit-end', (12 + Math.random() * 20).toFixed(1) + 'px');
-                    const spin = 220 + Math.random() * 280;
-                    particle.style.setProperty('--spin', spin.toFixed(1) + 'deg');
-                    particle.style.setProperty('--spin-rev', (-spin).toFixed(1) + 'deg');
-                    particle.style.setProperty('--spin-end', (spin * 1.35).toFixed(1) + 'deg');
-                    particle.style.setProperty('--size', (2.4 + Math.random() * (compactBlackHole ? 2.2 : 3.6)).toFixed(1) + 'px');
-                    particle.style.setProperty('--delay', (Math.random() * 0.72).toFixed(2) + 's');
-                    particle.style.setProperty('--dur', (4.6 + Math.random() * 1.1).toFixed(2) + 's');
-                    particle.style.setProperty('--debris-color', colors[i % colors.length]);
-                    fragment.appendChild(particle);
-                }
-
-                bhContainer.appendChild(fragment);
-                document.body.appendChild(bhContainer);
-                targetTable.classList.add('anim-black-hole-table');
-                this.scheduleEffectTimeout(() => {
-                    targetTable.classList.remove('anim-black-hole-table');
-                    if (bhContainer.parentNode) bhContainer.remove();
-                }, duration);
-            }
-        }
-
-        if (type === 'supernova') {
-            if (this.supernovaCanvasCleanup) this.supernovaCanvasCleanup();
-            let targetTable = null;
-            const tables = document.querySelectorAll('.player-table');
-            tables.forEach(tbl => { 
-                if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { 
-                    targetTable = tbl; 
-                } 
-            });
-            if (!targetTable && tables.length > 0) targetTable = tables[0];
-
-            if (targetTable) {
-                const rect = targetTable.getBoundingClientRect();
-                const compactSupernova = window.matchMedia && (
-                    window.matchMedia('(max-width: 760px)').matches ||
-                    window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
-                    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                );
-                const snContainer = document.createElement('div');
-                snContainer.className = 'supernova-container';
-                if (compactSupernova) snContainer.classList.add('supernova-container--compact');
-                snContainer.style.position = 'fixed';
-                snContainer.style.inset = '0';
-                
-                snContainer.innerHTML = `
-                    <canvas class="sn-canvas"></canvas>
-                `;
-                document.body.appendChild(snContainer);
-
-                const canvas = snContainer.querySelector('.sn-canvas');
-                const ctx = canvas.getContext('2d');
-                const center = {
-                    x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2
-                };
-                const duration = 7600;
-                let rafId = 0;
-                let lastSupernovaDraw = 0;
-                const cleanup = () => {
-                    cancelAnimationFrame(rafId);
-                    targetTable.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
-                    if (snContainer.parentNode) snContainer.remove();
-                    if (this.supernovaCanvasCleanup === cleanup) this.supernovaCanvasCleanup = null;
-                };
-                this.supernovaCanvasCleanup = cleanup;
-
-                const resizeCanvas = () => {
-                    const dpr = Math.min(window.devicePixelRatio || 1, compactSupernova ? 1.15 : 1.5);
-                    canvas.width = Math.floor(window.innerWidth * dpr);
-                    canvas.height = Math.floor(window.innerHeight * dpr);
-                    canvas.style.width = '100vw';
-                    canvas.style.height = '100vh';
-                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                };
-                resizeCanvas();
-
-                const clamp01 = v => Math.max(0, Math.min(1, v));
-                const easeOutCubic = v => 1 - Math.pow(1 - clamp01(v), 3);
-                const easeInOut = v => {
-                    v = clamp01(v);
-                    return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
-                };
-
-                const supernovaColors = [
-                    'rgba(255,255,255,',
-                    'rgba(255,222,140,',
-                    'rgba(103,247,255,',
-                    'rgba(173,132,255,'
-                ];
-                const particles = Array.from({ length: compactSupernova ? 36 : 96 }, (_, i) => {
-                    const a = (i * 2.3999632297) + (i % 7) * 0.09;
-                    const lane = i % 5;
-                    return {
-                        a,
-                        r: 74 + lane * 34 + (i % 13) * 10,
-                        size: 0.75 + (i % 6) * 0.34,
-                        speed: 0.72 + (i % 11) * 0.032,
-                        drift: ((i % 9) - 4) * 0.115,
-                        delay: (i % 15) * 0.012,
-                        color: supernovaColors[i % supernovaColors.length],
-                        streak: i % 6 === 0
-                    };
-                });
-                const glassCuts = Array.from({ length: compactSupernova ? 5 : 13 }, (_, i) => ({
-                    a: (Math.PI * 2 * i) / (compactSupernova ? 5 : 13) + ((i % 4) - 1.5) * 0.055,
-                    start: 110 + (i % 4) * 22,
-                    len: 115 + (i % 6) * 22,
-                    width: 0.7 + (i % 3) * 0.28
-                }));
-
-                const drawRing = (x, y, radius, alpha, width, blur, color = 'rgba(232,244,255,0.72)', shadow = 'rgba(214,235,255,0.85)') => {
-                    if (alpha <= 0) return;
-                    ctx.save();
-                    ctx.globalAlpha = alpha;
-                    ctx.shadowColor = shadow;
-                    ctx.shadowBlur = compactSupernova ? Math.min(blur, 3) : blur;
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = width;
-                    ctx.beginPath();
-                    ctx.arc(x, y, radius, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.restore();
-                };
-
-                const renderFrame = start => now => {
-                    if (!snContainer.isConnected) return;
-                    if (compactSupernova && lastSupernovaDraw && now - lastSupernovaDraw < 32) {
-                        if (snContainer.isConnected) rafId = requestAnimationFrame(renderFrame(start));
-                        return;
-                    }
-                    lastSupernovaDraw = now;
-
-                    const elapsed = now - start;
-                    const p = clamp01(elapsed / duration);
-                    const w = window.innerWidth;
-                    const h = window.innerHeight;
-                    const maxR = Math.hypot(Math.max(center.x, w - center.x), Math.max(center.y, h - center.y));
-                    const birth = easeInOut(p / 0.18);
-                    const blast = easeOutCubic((p - 0.14) / 0.46);
-                    const fade = 1 - easeInOut((p - 0.82) / 0.18);
-                    const alive = clamp01(fade);
-                    const compression = Math.sin(clamp01(p / 0.24) * Math.PI);
-                    const ignition = easeOutCubic((p - 0.18) / 0.16);
-                    const nebula = Math.sin(clamp01((p - 0.28) / 0.54) * Math.PI) * alive;
-                    const goldPulse = Math.sin(p * Math.PI * 18) * 0.5 + 0.5;
-
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.globalCompositeOperation = 'source-over';
-
-                    const bg = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, maxR * 0.9);
-                    bg.addColorStop(0, `rgba(255,246,205,${(0.20 + compression * 0.12) * alive})`);
-                    bg.addColorStop(0.18, `rgba(103,247,255,${0.13 * alive})`);
-                    bg.addColorStop(0.42, `rgba(83,45,142,${0.13 * alive})`);
-                    bg.addColorStop(0.72, `rgba(5,14,29,${0.24 * alive})`);
-                    bg.addColorStop(1, `rgba(0,0,0,${0.38 * alive})`);
-                    ctx.fillStyle = bg;
-                    ctx.fillRect(0, 0, w, h);
-
-                    ctx.globalCompositeOperation = 'screen';
-                    const coreR = 10 + birth * 22 + blast * (compactSupernova ? 58 : 76);
-                    const core = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, coreR * 3.45);
-                    core.addColorStop(0, `rgba(255,255,255,${0.96 * alive})`);
-                    core.addColorStop(0.10, `rgba(255,232,154,${0.86 * alive})`);
-                    core.addColorStop(0.26, `rgba(103,247,255,${0.52 * alive})`);
-                    core.addColorStop(0.50, `rgba(173,132,255,${0.25 * alive})`);
-                    core.addColorStop(1, 'rgba(103,247,255,0)');
-                    ctx.fillStyle = core;
-                    ctx.beginPath();
-                    ctx.arc(center.x, center.y, coreR * 3.2, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    const flareAlpha = Math.sin(clamp01((p - 0.17) / 0.32) * Math.PI) * alive;
-                    if (flareAlpha > 0) {
-                        ctx.save();
-                        ctx.globalCompositeOperation = 'screen';
-                        const flareW = Math.min(maxR * 0.72, compactSupernova ? 320 : 520);
-                        const horizontal = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, flareW);
-                        horizontal.addColorStop(0, `rgba(255,248,220,${0.25 * flareAlpha})`);
-                        horizontal.addColorStop(0.18, `rgba(255,214,111,${0.10 * flareAlpha})`);
-                        horizontal.addColorStop(0.42, `rgba(103,247,255,${0.07 * flareAlpha})`);
-                        horizontal.addColorStop(1, 'rgba(255,255,255,0)');
-                        ctx.fillStyle = horizontal;
-                        ctx.save();
-                        ctx.translate(center.x, center.y);
-                        ctx.scale(1, compactSupernova ? 0.055 : 0.07);
-                        ctx.beginPath();
-                        ctx.arc(0, 0, flareW, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.restore();
-
-                        const vertical = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, flareW * 0.46);
-                        vertical.addColorStop(0, `rgba(255,255,255,${0.16 * flareAlpha})`);
-                        vertical.addColorStop(0.42, `rgba(103,247,255,${0.05 * flareAlpha})`);
-                        vertical.addColorStop(1, 'rgba(255,255,255,0)');
-                        ctx.fillStyle = vertical;
-                        ctx.save();
-                        ctx.translate(center.x, center.y);
-                        ctx.scale(0.075, 1);
-                        ctx.beginPath();
-                        ctx.arc(0, 0, flareW * 0.46, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.restore();
-                        ctx.restore();
-                    }
-
-                    if (p < 0.28) {
-                        for (let i = 0; i < 4; i++) {
-                            const rr = 18 + i * 16 + compression * (18 + i * 7);
-                            drawRing(
-                                center.x,
-                                center.y,
-                                rr,
-                                (0.16 - i * 0.022) * compression * alive,
-                                0.9,
-                                8,
-                                i % 2 ? 'rgba(103,247,255,0.84)' : 'rgba(255,222,140,0.86)',
-                                i % 2 ? 'rgba(103,247,255,0.78)' : 'rgba(255,222,140,0.72)'
-                            );
-                        }
-                    }
-
-                    const shockR = 42 + blast * Math.min(maxR * 0.72, 620);
-                    const sphereAlpha = Math.sin(clamp01((p - 0.16) / 0.64) * Math.PI) * alive;
-                    if (sphereAlpha > 0) {
-                        ctx.save();
-                        ctx.globalCompositeOperation = 'screen';
-                        const shell = ctx.createRadialGradient(center.x, center.y, shockR * 0.18, center.x, center.y, shockR * 0.96);
-                        shell.addColorStop(0, `rgba(255,255,255,${0.045 * sphereAlpha})`);
-                        shell.addColorStop(0.42, `rgba(103,247,255,${0.07 * sphereAlpha})`);
-                        shell.addColorStop(0.64, `rgba(255,222,140,${0.15 * sphereAlpha})`);
-                        shell.addColorStop(0.75, `rgba(232,246,255,${0.20 * sphereAlpha})`);
-                        shell.addColorStop(0.84, `rgba(173,132,255,${0.07 * sphereAlpha})`);
-                        shell.addColorStop(1, 'rgba(103,247,255,0)');
-                        ctx.fillStyle = shell;
-                        ctx.beginPath();
-                        ctx.arc(center.x, center.y, shockR * 0.98, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.restore();
-                    }
-                    drawRing(center.x, center.y, shockR, 0.56 * (1 - blast * 0.55) * alive, 1.4, 14, 'rgba(255,246,212,0.82)', 'rgba(255,222,140,0.76)');
-                    drawRing(center.x, center.y, shockR * 0.72, 0.25 * alive, 0.85, 7, 'rgba(103,247,255,0.76)', 'rgba(103,247,255,0.62)');
-                    drawRing(center.x, center.y, shockR * 1.06, 0.12 * alive, 1, 16, 'rgba(173,132,255,0.66)', 'rgba(173,132,255,0.48)');
-
-                    if (nebula > 0 && !compactSupernova) {
-                        ctx.save();
-                        ctx.globalCompositeOperation = 'screen';
-                        const nebulaColors = [
-                            [0.92, -0.36, 'rgba(103,247,255,'],
-                            [-0.62, 0.38, 'rgba(173,132,255,'],
-                            [0.18, 0.72, 'rgba(255,222,140,'],
-                            [-0.18, -0.68, 'rgba(103,247,255,']
-                        ];
-                        nebulaColors.forEach((blob, i) => {
-                            const bx = center.x + Math.cos(p * 2.4 + i) * shockR * 0.16 + blob[0] * shockR * 0.34;
-                            const by = center.y + Math.sin(p * 2.1 + i) * shockR * 0.10 + blob[1] * shockR * 0.24;
-                            const r = shockR * (0.18 + i * 0.018);
-                            const grad = ctx.createRadialGradient(bx, by, 0, bx, by, r);
-                            grad.addColorStop(0, `${blob[2]}${0.14 * nebula})`);
-                            grad.addColorStop(0.58, `${blob[2]}${0.045 * nebula})`);
-                            grad.addColorStop(1, 'rgba(0,0,0,0)');
-                            ctx.fillStyle = grad;
-                            ctx.beginPath();
-                            ctx.arc(bx, by, r, 0, Math.PI * 2);
-                            ctx.fill();
-                        });
-                        ctx.restore();
-                    }
-
-                    const rayLife = Math.sin(clamp01((p - 0.18) / 0.40) * Math.PI) * alive;
-                    if (rayLife > 0) {
-                        ctx.save();
-                        ctx.translate(center.x, center.y);
-                        ctx.rotate(-0.18 + p * 0.22);
-                        const rayCount = compactSupernova ? 7 : 16;
-                        for (let i = 0; i < rayCount; i++) {
-                            const a = (Math.PI * 2 * i) / rayCount + Math.sin(i * 1.7) * 0.05;
-                            const len = shockR * (0.42 + (i % 4) * 0.08);
-                            const inner = coreR * (0.9 + (i % 3) * 0.22);
-                            const x1 = Math.cos(a) * inner;
-                            const y1 = Math.sin(a) * inner;
-                            const x2 = Math.cos(a) * len;
-                            const y2 = Math.sin(a) * len;
-                            const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-                            grad.addColorStop(0, `rgba(255,255,255,${0.26 * rayLife})`);
-                            grad.addColorStop(0.38, i % 3 === 0 ? `rgba(255,222,140,${0.18 * rayLife})` : `rgba(103,247,255,${0.16 * rayLife})`);
-                            grad.addColorStop(1, 'rgba(255,255,255,0)');
-                            ctx.strokeStyle = grad;
-                            ctx.lineWidth = 1.1 + (i % 3) * 0.38;
-                            ctx.beginPath();
-                            ctx.moveTo(x1, y1);
-                            ctx.lineTo(x2, y2);
-                            ctx.stroke();
-                        }
-                        ctx.restore();
-                    }
-
-                    ctx.save();
-                    ctx.globalAlpha = alive;
-                    ctx.translate(center.x, center.y);
-                    ctx.rotate(p * 0.45);
-                    glassCuts.forEach(cut => {
-                        const local = easeOutCubic((p - 0.18) / 0.54);
-                        const r1 = cut.start + local * 18;
-                        const r2 = cut.start + cut.len * (0.34 + local * 0.76);
-                        const x1 = Math.cos(cut.a) * r1;
-                        const y1 = Math.sin(cut.a) * r1;
-                        const x2 = Math.cos(cut.a + cut.width * 0.012) * r2;
-                        const y2 = Math.sin(cut.a + cut.width * 0.012) * r2;
-                        const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-                        grad.addColorStop(0, 'rgba(255,255,255,0)');
-                        grad.addColorStop(0.34, 'rgba(255,239,185,0.22)');
-                        grad.addColorStop(0.58, 'rgba(103,247,255,0.18)');
-                        grad.addColorStop(1, 'rgba(173,132,255,0)');
-                        ctx.strokeStyle = grad;
-                        ctx.lineWidth = cut.width;
-                        ctx.shadowBlur = 0;
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        ctx.stroke();
-                    });
-                    ctx.restore();
-
-                    ctx.save();
-                    ctx.translate(center.x, center.y);
-                    ctx.rotate(-p * 0.28);
-                    for (let i = 0; i < (compactSupernova ? 6 : 12); i++) {
-                        const local = easeOutCubic((p - 0.2) / 0.58);
-                        const base = shockR * (0.42 + (i % 4) * 0.11) + i * 6;
-                        const start = i * 0.71 + p * 0.35;
-                        const span = 0.26 + (i % 3) * 0.08;
-                        const alpha = (0.20 + (i % 4) * 0.018) * alive * Math.sin(clamp01((p - 0.18) / 0.42) * Math.PI);
-                        ctx.globalAlpha = Math.max(0, alpha);
-                        ctx.strokeStyle = i % 3 === 0 ? 'rgba(255,222,140,0.68)' : (i % 2 ? 'rgba(103,247,255,0.66)' : 'rgba(255,255,255,0.58)');
-                        ctx.lineWidth = 1 + (i % 3) * 0.45;
-                        ctx.shadowBlur = 0;
-                        ctx.beginPath();
-                        ctx.arc(0, 0, base * (0.55 + local * 0.55), start, start + span);
-                        ctx.stroke();
-                    }
-                    ctx.restore();
-
-                    ctx.save();
-                    ctx.translate(center.x, center.y);
-                    ctx.rotate(p * 0.18);
-                    for (let i = 0; i < (compactSupernova ? 5 : 11); i++) {
-                        const local = easeOutCubic((p - 0.16 - (i % 5) * 0.012) / 0.64);
-                        if (local <= 0 || local >= 1) continue;
-                        const a = i * 0.448 + Math.sin(i) * 0.14;
-                        const r1 = 34 + local * (70 + (i % 4) * 18);
-                        const r2 = r1 + 58 + (i % 6) * 15;
-                        const cpx = Math.cos(a + 0.22) * (r1 + r2) * 0.46;
-                        const cpy = Math.sin(a - 0.18) * (r1 + r2) * 0.46;
-                        const x1 = Math.cos(a) * r1;
-                        const y1 = Math.sin(a) * r1;
-                        const x2 = Math.cos(a + 0.08) * r2;
-                        const y2 = Math.sin(a + 0.08) * r2;
-                        const alpha = Math.sin(local * Math.PI) * 0.26 * alive;
-                        const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-                        grad.addColorStop(0, 'rgba(255,255,255,0)');
-                        grad.addColorStop(0.34, `rgba(255,222,140,${alpha * 0.85})`);
-                        grad.addColorStop(0.5, `rgba(103,247,255,${alpha})`);
-                        grad.addColorStop(0.68, `rgba(173,132,255,${alpha * 0.72})`);
-                        grad.addColorStop(1, 'rgba(255,255,255,0)');
-                        ctx.strokeStyle = grad;
-                        ctx.lineWidth = 1.25;
-                        ctx.shadowBlur = 0;
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.quadraticCurveTo(cpx, cpy, x2, y2);
-                        ctx.stroke();
-                    }
-                    ctx.restore();
-
-                    particles.forEach(pt => {
-                        const life = clamp01((p - 0.17 - pt.delay) / 0.68);
-                        if (life <= 0 || life >= 1) return;
-                        const e = easeOutCubic(life);
-                        const a = pt.a + pt.drift * life;
-                        const r = (28 + pt.r * pt.speed) * e + shockR * 0.08;
-                        const x = center.x + Math.cos(a) * r;
-                        const y = center.y + Math.sin(a) * r;
-                        const alpha = Math.sin(life * Math.PI) * 0.78 * alive;
-                        if (pt.streak && !compactSupernova) {
-                            const tail = 18 + e * 32;
-                            const x2 = x - Math.cos(a) * tail;
-                            const y2 = y - Math.sin(a) * tail;
-                            const grad = ctx.createLinearGradient(x2, y2, x, y);
-                            grad.addColorStop(0, 'rgba(255,255,255,0)');
-                            grad.addColorStop(1, `${pt.color}${alpha})`);
-                            ctx.strokeStyle = grad;
-                            ctx.lineWidth = Math.max(0.9, pt.size * 0.82);
-                            ctx.beginPath();
-                            ctx.moveTo(x2, y2);
-                            ctx.lineTo(x, y);
-                            ctx.stroke();
-                        } else {
-                            ctx.fillStyle = `${pt.color}${alpha})`;
-                            ctx.beginPath();
-                            ctx.arc(x, y, pt.size * (1 + e), 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    });
-
-                    ctx.globalCompositeOperation = 'lighter';
-                    for (let i = 0; i < (compactSupernova ? 3 : 5); i++) {
-                        const rr = coreR * (1.4 + i * 0.55) + blast * i * 12;
-                        drawRing(
-                            center.x,
-                            center.y,
-                            rr,
-                            (0.16 - i * 0.022) * alive,
-                            0.7,
-                            8,
-                            i % 2 ? 'rgba(103,247,255,0.74)' : 'rgba(255,222,140,0.78)',
-                            i % 2 ? 'rgba(103,247,255,0.58)' : 'rgba(255,222,140,0.62)'
-                        );
-                    }
-
-                    if (p < 1 && snContainer.isConnected) {
-                        rafId = requestAnimationFrame(renderFrame(start));
-                    }
-                };
-
-                rafId = requestAnimationFrame(now => renderFrame(now)(now));
-                targetTable.classList.add('anim-supernova-table');
-                if (compactSupernova) targetTable.classList.add('anim-supernova-table--compact');
-                
-                this.scheduleEffectTimeout(cleanup, duration);
-            }
-        }
+        if (type === 'supernova') void this.spawnSupernova();
 
         if (type === 'neon_pulse') {
             let targetTable = null;
@@ -2468,6 +2449,8 @@ class EffectManager {
     
     stop() {
         this.iceAgeRunId++;
+        this.blackHoleRunId++;
+        this.blackHoleCleanup?.();
         this.confettiRunId++;
         this.goldRainRunId++;
         this.fireflyRunId++;
@@ -2479,6 +2462,7 @@ class EffectManager {
         this.bubbleThemeObserver = null;
         if (this.royalCanvasCleanup) this.royalCanvasCleanup();
         if (this.supernovaCanvasCleanup) this.supernovaCanvasCleanup();
+        this.supernovaRunId++;
         this.clearEffectTimeouts();
         document.documentElement.classList.remove('green-thunder-active');
         if (window.app?.soundMgr?.stopBalkanMusic) {
@@ -3731,7 +3715,14 @@ class ShopManager {
     }
 
     getTreasuryEffectPreviewSource(effectId) {
+        if (effectId === 'ice_age') return 'assets/effects/ice-age/frost-preview-v4.png';
         const theme = localStorage.getItem('yamb_theme') || 'dark';
+        if (effectId === 'black_hole' && YAMB_THEME_IDS.includes(theme)) {
+            return `assets/effects/black-hole/${theme}-core-v1.png`;
+        }
+        if (effectId === 'supernova') {
+            return `assets/effects/supernova/${this.getGoldRainThemeId()}-plasma-v2.png`;
+        }
         const roles = {
             confetti: 'confetti', gold_rain: 'gold-rain', balkan: 'wedding',
             thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles',

@@ -57,6 +57,8 @@
     "check:gold-rain": "node scripts/check-gold-rain-runtime.cjs",
     "check:live-confetti": "node scripts/check-live-confetti-runtime.cjs",
     "check:live-ice-age": "node scripts/check-live-ice-age-runtime.cjs",
+    "check:live-black-hole": "node scripts/check-live-black-hole-runtime.cjs",
+    "check:live-supernova": "node scripts/check-live-supernova-runtime.cjs",
     "check:portrait-lock": "node scripts/check-portrait-lock.js",
     "check:easter-coverage": "node scripts/check-easter-asset-coverage.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",

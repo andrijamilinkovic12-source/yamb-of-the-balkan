@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Deset tema — pregled živih efekata</title>
-  <link rel="stylesheet" href="/efekti.css?v=2.8">
+  <link rel="stylesheet" href="/efekti.css?v=3.4">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -37,6 +37,8 @@
     <button type="button" data-effect="fireflies">Magični svici</button>
     <button type="button" data-effect="bubbles">Magični mehurići</button>
     <button type="button" data-effect="ice_age">Ledeno doba</button>
+    <button type="button" data-effect="black_hole">Crna rupa</button>
+    <button type="button" data-effect="supernova">Supernova</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
   <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
@@ -74,11 +76,14 @@
           document.body.style.setProperty('--theme-background', `url('/assets/${backgrounds[id]}')`);
         };
         setTheme(theme);
-        document.getElementById('theme-choice').addEventListener('change', event => setTheme(event.target.value));
+        document.getElementById('theme-choice').addEventListener('change', event => {
+          setTheme(event.target.value);
+          if (effect) { showScene(effect); fx.trigger(effect); }
+        });
         const board = document.querySelector('.qa-board');
         const card = document.querySelector('.card');
         document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) => `<span>${index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)] : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : ''}</span>`).join('');
-        const showScene = effect => { board.hidden = effect !== 'ice_age'; card.hidden = effect === 'ice_age'; };
+        const showScene = effect => { const onBoard = effect === 'ice_age' || effect === 'black_hole' || effect === 'supernova'; board.hidden = !onBoard; card.hidden = onBoard; };
         document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
           if (button.dataset.effect === 'stop') fx.stop();
           else { fx.stop(); showScene(button.dataset.effect); fx.trigger(button.dataset.effect); }
@@ -93,11 +98,11 @@
           bubbleCount: document.querySelectorAll('.magic-bubble').length,
           bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
           iceFrostCount: document.querySelectorAll('.ice-age-frost').length,
-          iceCrackCount: document.querySelectorAll('.ice-age-cracks').length,
+          iceOverlayCount: document.querySelectorAll('.ice-overlay-container').length,
           sprites: Object.keys(fx.confettiSpritePromises)
         }; } };
         const effect = params.get('effect');
-        if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age'].includes(effect)) { showScene(effect); fx.trigger(effect); }
+        if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole', 'supernova'].includes(effect)) { showScene(effect); fx.trigger(effect); }
       } catch (error) {
         const node = document.getElementById('qa-error');
         node.hidden = false;

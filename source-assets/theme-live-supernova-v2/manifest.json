@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 2,
+  "createdOn": "2026-10-24",
+  "tool": "built-in image_gen",
+  "useCase": "stylized-concept",
+  "basePrompt": "One original transparent PNG component of a brief astrophysical supernova plasma blast per theme. White-hot point, thin irregular ionized-gas corona, theme palette and unique gaseous morphology. Smooth volumetric light, not a solid object. No leaf, cabbage, flower, petal, ring, planet, spaceship, emblem, background, text, glitter or kitsch. The image appears only briefly during a separate animated explosion.",
+  "assets": [
+    {
+      "theme": "dark",
+      "direction": "clay",
+      "motif": "forest sage and pale warm ivory with a restrained gold note; thin radial plasma ejecta without a rounded silhouette",
+      "productionPath": "www/assets/effects/supernova/dark-plasma-v2.png",
+      "sha256": "532c35a5f093421186e99d259d4cb566fd331983fe97d23a70b2cdb012067c0d",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "light",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "warm champagne and ivory; sparse ejecta and two broad soft plumes",
+      "productionPath": "www/assets/effects/supernova/light-plasma-v2.png",
+      "sha256": "4990836b9b9d57e83324168c4c38e634313643f9ea29a96af6f70395c521c14e",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "medium",
+      "direction": "clay",
+      "motif": "muted sour cherry and coral; asymmetrical turbulent cloud",
+      "productionPath": "www/assets/effects/supernova/medium-plasma-v2.png",
+      "sha256": "3755b274fed1451ba6e2975d9b42297304294b722a0a6a6f97d3ee61d198715d",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "winter",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "deep ocean blue and seafoam; one long cool gas plume",
+      "productionPath": "www/assets/effects/supernova/winter-plasma-v2.png",
+      "sha256": "b6713ccc24c4e5220a8f6483f853e41d529c0fbe199de2129adae49138148a1f",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "neon",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "teal and magenta; thin energetic filaments without hard cyber objects",
+      "productionPath": "www/assets/effects/supernova/neon-plasma-v2.png",
+      "sha256": "f7059c5a02a77421133672c6fbefb8c064407faca79081e12d03111873c29a28",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "direction": "clay",
+      "motif": "dusty amethyst and pearly mauve; broad irregular nebula",
+      "productionPath": "www/assets/effects/supernova/amethyst-plasma-v2.png",
+      "sha256": "0e5affd7e8db8cab921fe724df3ba629e24b8aa1c76a807461b442c867f9dd19",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "cream, lilac and pistachio; airy translucent cloud without Easter symbols",
+      "productionPath": "www/assets/effects/supernova/easter-plasma-v2.png",
+      "sha256": "b1aa588de885ea296a731dedfa1effc16430073d76d9df4b9fe8ccd3156e4e94",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "desert",
+      "direction": "clay",
+      "motif": "sandstone amber and muted turquoise; directional gaseous ejecta",
+      "productionPath": "www/assets/effects/supernova/desert-plasma-v2.png",
+      "sha256": "ad11cdde4e5053bc48983c6f910eda93612b52dad6faeaebe3ce2b848bac28e9",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "moon",
+      "direction": "clay",
+      "motif": "silver lilac and graphite; sparse low-density plasma",
+      "productionPath": "www/assets/effects/supernova/moon-plasma-v2.png",
+      "sha256": "f723c1aa2c33127c250961e11ebb4dd5a00eaa27fe34a207d5aebd9f57df2b90",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    },
+    {
+      "theme": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "slate blue, aurora mint and lavender; asymmetric misty plasma",
+      "productionPath": "www/assets/effects/supernova/severna-plasma-v2.png",
+      "sha256": "daa8f47ca0982954cd76eb45f0c61986dd0cb2fcd45f31607a89ef27924f6f40",
+      "dimensions": "1536x1024",
+      "alpha": "transparent",
+      "usage": [
+        "animated supernova plasma burst",
+        "treasury supernova preview"
+      ]
+    }
+  ]
+}

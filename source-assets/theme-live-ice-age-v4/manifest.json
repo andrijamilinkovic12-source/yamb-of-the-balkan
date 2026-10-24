@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "effect": "ice_age",
+  "scope": "shared by all ten themes",
+  "generator": "built-in ImageGen",
+  "promptFile": "source-assets/theme-live-ice-age-v4/prompts.md",
+  "master": "source-assets/theme-live-ice-age-v4/frost-board-master-v4.png",
+  "runtime": "www/assets/effects/ice-age/frost-board-v4.png",
+  "sha256": "cbee5584da54d1c1348233602e6e0e324c9f214977a82cf23ba2feb3f7c770a0",
+  "dimensions": [1024, 1536],
+  "alpha": true,
+  "treasuryPreview": "www/assets/effects/ice-age/frost-preview-v4.png",
+  "treasuryPreviewSha256": "2f05f13846a396f169afbbfcff4603942512fa427e6678a3e106a226dc8dc17d",
+  "treasuryPreviewDimensions": [256, 384],
+  "supersedes": [
+    "www/assets/effects/ice-age/frozen-board-v3.png",
+    "www/assets/effects/ice-age/board-cracks-v3.png"
+  ]
+}

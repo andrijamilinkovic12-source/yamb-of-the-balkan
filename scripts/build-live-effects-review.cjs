@@ -11,7 +11,7 @@ if (!prelude.includes('GOLD_RAIN_THEME_PROFILES') || !effectClass.includes('spaw
 
 let html = fs.readFileSync(path.join(root, 'www/qa/theme-live-effects-review.html'), 'utf8');
 html = html.replace('<head>', '<head>\n  <base href="../www/">')
-    .replace('href="/efekti.css?v=2.8"', 'href="efekti.css?v=2.8"')
+    .replace('href="/efekti.css?v=3.4"', 'href="efekti.css?v=3.4"')
     .replaceAll("url('/assets/", "url('assets/");
 const boot = `
   <script>
@@ -30,11 +30,14 @@ const boot = `
     document.body.style.setProperty('--theme-background', "url('assets/" + backgrounds[id] + "')");
   };
   setTheme(themes.includes(params.get('theme')) ? params.get('theme') : 'dark');
-  document.getElementById('theme-choice').addEventListener('change', event => setTheme(event.target.value));
+  document.getElementById('theme-choice').addEventListener('change', event => {
+    setTheme(event.target.value);
+    if (effect) { showScene(effect); fx.trigger(effect); }
+  });
   const board = document.querySelector('.qa-board');
   const card = document.querySelector('.card');
   document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) => '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)] : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
-  const showScene = effect => { board.hidden = effect !== 'ice_age'; card.hidden = effect === 'ice_age'; };
+  const showScene = effect => { const onBoard = effect === 'ice_age' || effect === 'black_hole' || effect === 'supernova'; board.hidden = !onBoard; card.hidden = onBoard; };
   document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
     fx.stop();
     if (button.dataset.effect !== 'stop') { showScene(button.dataset.effect); fx.trigger(button.dataset.effect); }
@@ -49,12 +52,30 @@ const boot = `
     bubbleCount: document.querySelectorAll('.magic-bubble').length,
     bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
     iceFrostCount: document.querySelectorAll('.ice-age-frost').length,
-    iceCrackCount: document.querySelectorAll('.ice-age-cracks').length
+    iceOverlayCount: document.querySelectorAll('.ice-overlay-container').length,
+    blackHoleCount: document.querySelectorAll('.black-hole-container').length,
+    blackHoleSources: [...new Set([...document.querySelectorAll('.black-hole-sprite')].map(node => node.getAttribute('src')))],
+    supernovaCount: document.querySelectorAll('.supernova-container').length,
+    supernovaSource: document.querySelector('.supernova-plasma')?.getAttribute('src') || null,
+    supernovaPhase: document.querySelector('.supernova-container')?.dataset.phase || null
   }; } };
   const effect = params.get('effect');
-  if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age'].includes(effect)) { showScene(effect); fx.trigger(effect); }
+  if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole', 'supernova'].includes(effect)) { showScene(effect); fx.trigger(effect); }
   </script>
 </body>`;
 html = html.replace(/  <script>[\s\S]*?  <\/script>\s*<\/body>/, boot);
 fs.writeFileSync(path.join(root, 'docs/theme-live-effects-review.html'), html);
+const iceAgeDemo = html
+  .replace('<title>Deset tema — pregled živih efekata</title>', '<title>Ledeno doba — animirani pregled</title>')
+  .replace("const effect = params.get('effect');", "const effect = params.get('effect') || 'ice_age';");
+fs.writeFileSync(path.join(root, 'docs/ice-age-v4-animation.html'), iceAgeDemo);
+const blackHoleDemo = html
+  .replace('<title>Deset tema — pregled živih efekata</title>', '<title>Crna rupa — animirani pregled</title>')
+  .replace("const effect = params.get('effect');", "const effect = params.get('effect') || 'black_hole';");
+fs.writeFileSync(path.join(root, 'docs/black-hole-v1-animation.html'), blackHoleDemo);
+fs.writeFileSync(path.join(root, 'docs/black-hole-v2-animation.html'), blackHoleDemo);
+const supernovaDemo = html
+  .replace('<title>Deset tema — pregled živih efekata</title>', '<title>Supernova — animirani pregled</title>')
+  .replace("const effect = params.get('effect');", "const effect = params.get('effect') || 'supernova';");
+fs.writeFileSync(path.join(root, 'docs/supernova-v2-animation.html'), supernovaDemo);
 console.log('Built docs/theme-live-effects-review.html from the active EffectManager.');

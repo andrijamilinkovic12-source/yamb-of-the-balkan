@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-24",
+  "tool": "built-in image_gen",
+  "useCase": "stylized-concept",
+  "basePrompt": "One centered transparent PNG sprite for a mobile game black-hole live effect. 3D Soft Neomorphism, original themed design distinct in silhouette from other themes. Almost-black circular singularity core, restrained asymmetric tilted orbital material, subtle lensing. True transparent background, square composition, generous clear margin, readable at 160-220 CSS px. No text, scene, board, background, stars, outside particles, rainbow, glitter, rough rock, hard chrome or kitsch.",
+  "assets": [
+    {
+      "theme": "dark",
+      "direction": "clay",
+      "motif": "organic forest-green clay ring, muted warm-gold inner crescent",
+      "productionPath": "www/assets/effects/black-hole/dark-core-v1.png",
+      "sha256": "175d880c660d34c334ae6190e9b2236968192921be888275b65ac447512449a5",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "light",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "warm ivory matte torus, champagne-gold crescent, cocoa void",
+      "productionPath": "www/assets/effects/black-hole/light-core-v1.png",
+      "sha256": "f1cf94b34d640e7b5fc96b184f2ba641ddda69228c1c90030229e691fe592519",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "medium",
+      "direction": "clay",
+      "motif": "burgundy and dark cherry clay spiral with dusty-rose edge",
+      "productionPath": "www/assets/effects/black-hole/medium-core-v1.png",
+      "sha256": "6cdca45fdcd50932af0ee0f7878748accd05a98e2a97ec2e9799f688e8b80f05",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "winter",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "blue and sea-foam matte maritime orbital ribbon with ivory glint",
+      "productionPath": "www/assets/effects/black-hole/winter-core-v1.png",
+      "sha256": "95097f95de73174cd41fe0cc04775f2eeb33e81adb70814fced149221c07f85e",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "neon",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "segmented matte charcoal ring with restrained mint and magenta lines",
+      "productionPath": "www/assets/effects/black-hole/neon-core-v1.png",
+      "sha256": "936ee707b01cd186b6cd9fd77c4416c4c9282f4f5ffa96aec35a11be549dc164",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "direction": "clay",
+      "motif": "amethyst-purple sculpted clay shell with pearl-gold inner crescent",
+      "productionPath": "www/assets/effects/black-hole/amethyst-core-v1.png",
+      "sha256": "7849765dcce1eb17bd5a5cb3416536421a7b893a59b1914728c2e2f46e55128c",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "sage-green and warm cream smooth ring with terracotta reflection",
+      "productionPath": "www/assets/effects/black-hole/easter-core-v1.png",
+      "sha256": "8d04d96b32cd0b6ecb4fca8360377aa347ac31a96309116def7d377aa54e7d28",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "desert",
+      "direction": "clay",
+      "motif": "terracotta and sand clay relief with slim muted-teal lensing arc",
+      "productionPath": "www/assets/effects/black-hole/desert-core-v1.png",
+      "sha256": "626e945b8c3a60e75b05656aec8201b4b6ce4f64b930c35feb2c71fe2772eb81",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "moon",
+      "direction": "clay",
+      "motif": "graphite and pale lunar-gray clay spiral with soft craters",
+      "productionPath": "www/assets/effects/black-hole/moon-core-v1.png",
+      "sha256": "3ae140911a755e88bbefe9bd8a2ae2457c6e44d4be24ad6337a02ed63552d2d2",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    },
+    {
+      "theme": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "motif": "midnight-blue matte ring with teal and lavender aurora-like ribbon",
+      "productionPath": "www/assets/effects/black-hole/severna-core-v1.png",
+      "sha256": "24f8fd765af0d83ea0618ab99cb48231297ea25e1ecca300c24955bb032d98f0",
+      "dimensions": "1254x1254",
+      "alpha": "transparent",
+      "usage": [
+        "live black_hole",
+        "treasury black_hole preview"
+      ]
+    }
+  ],
+  "technicalProcessing": "None; production PNG files are the original built-in generated outputs."
+}

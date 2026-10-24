@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-23",
-  "definitionSchemaVersion": 62,
+  "updatedOn": "2026-10-24",
+  "definitionSchemaVersion": 66,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
@@ -21,10 +21,12 @@
     "leaderboardMedalsRefresh": "source-assets/theme-leaderboard-medals-v2/manifest.json",
     "quarterlyLeagueRefresh": "source-assets/theme-quarterly-league-v2/manifest.json",
     "goldRainRefresh": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
-    "supplementaryPacks": 23
+    "blackHoleEffect": "source-assets/theme-live-black-hole-v1/manifest.json",
+    "supernovaEffect": "source-assets/theme-live-supernova-v2/manifest.json",
+    "supplementaryPacks": 25
   },
   "sourceSha256": {
-    "themeDefinitions": "85774523ece293299750e6e0a2f5abcb6d0610329f07478e90bde2bf8beacc01",
+    "themeDefinitions": "a9003ace4c3ca7b0a30ba30097564d559b94ecba5edcb05393ae3c5431aa5d35",
     "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
     "greenRegistry": "c268f8627b5b332a49828e877d98a6219004bcc5696045f28b6b0d54ad8134f0",
@@ -32,7 +34,9 @@
     "economyCompositeRefresh": "447506bd58287255c484fe7ad2dcd094ea31d9fe4c7d56c8840ce9ac07cbe5d6",
     "leaderboardMedalsRefresh": "eff44f19559e8bd032b312291f753fd0f6476fbca934ea69877a3658e90ce7f1",
     "quarterlyLeagueRefresh": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd",
-    "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab"
+    "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab",
+    "blackHoleEffect": "4e619bd8f43cf08b3283f2055e09ac2b33dbe67cab16d1cf1ffc647cc149d145",
+    "supernovaEffect": "ba2fcf571d6945cccaf94905b17b94bbeab2c9f60f37746daf8d193244566def"
   },
   "baseline": {
     "themes": 10,
@@ -464,6 +468,10 @@
       "sha256": "e3ae1cafd14d825eea496100acf449f4efd13ac5a447b6a56b55b7a9b099339d"
     },
     {
+      "path": "source-assets/theme-live-black-hole-v1/manifest.json",
+      "sha256": "4e619bd8f43cf08b3283f2055e09ac2b33dbe67cab16d1cf1ffc647cc149d145"
+    },
+    {
       "path": "source-assets/theme-live-bubbles-v1/manifest.json",
       "sha256": "54897a7fadfccef436576b3af25fca8633ca6878a35b7b47e984effadc4048aa"
     },
@@ -472,8 +480,12 @@
       "sha256": "d91a9e280964801230d2ee8fb17174d7f190ad714e6d12b4e7e0c73cef00262d"
     },
     {
-      "path": "source-assets/theme-live-ice-age-v1/manifest.json",
-      "sha256": "b6217d6a70098e7b21d324bb24a79940ca4c2ca69946c31eda11fef18b365958"
+      "path": "source-assets/theme-live-ice-age-v4/manifest.json",
+      "sha256": "82ac73252bd993b039d80c0a7f2fa510ea65e4cf98e9ad5f0bb74aa7067d1230"
+    },
+    {
+      "path": "source-assets/theme-live-supernova-v2/manifest.json",
+      "sha256": "ba2fcf571d6945cccaf94905b17b94bbeab2c9f60f37746daf8d193244566def"
     },
     {
       "path": "source-assets/theme-menu-resume-buttons-v1/manifest.json",
@@ -1000,6 +1012,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/dark-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/dark-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -1502,6 +1528,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/light-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/light-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -2004,6 +2044,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/medium-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/medium-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -2511,6 +2565,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/winter-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/winter-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -3013,6 +3081,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/neon-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/neon-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -3515,6 +3597,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/amethyst-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/amethyst-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -4053,6 +4149,20 @@
           "sourceManifest": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
           "supersedesPreview": "www/assets/theme-packs/easter/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
           "supersedesThumbnail": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/easter-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/easter-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -4596,6 +4706,20 @@
           "sourceManifest": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
           "supersedesPreview": "www/assets/theme-packs/desert/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
           "supersedesThumbnail": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/desert-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/desert-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -5103,6 +5227,20 @@
             "zavrsni ekran nakon dupliranja"
           ],
           "previewVisualAudit": "v1-preview-visually-compared-with-active-canonical-ducat-front; reviewed"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/moon-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/moon-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     },
@@ -5646,6 +5784,20 @@
           "sourceManifest": "source-assets/theme-gold-rain-canonical-v2/manifest.json",
           "supersedesPreview": "www/assets/theme-packs/severna/canonical/treasury-effect-previews/preview-gold-rain-v1.png",
           "supersedesThumbnail": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png"
+        },
+        "blackHole": {
+          "runtimeEffectId": "black_hole",
+          "primaryPath": "www/assets/effects/black-hole/severna-core-v1.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
+        },
+        "supernova": {
+          "runtimeEffectId": "supernova",
+          "primaryPath": "www/assets/effects/supernova/severna-plasma-v2.png",
+          "runtimeAndTreasuryUseSamePng": true,
+          "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
+          "visualAudit": "new-theme-specific-png; device-review-pending"
         }
       }
     }
