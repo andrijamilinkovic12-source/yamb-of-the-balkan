@@ -12,6 +12,23 @@ const end = config.indexOf('\n};', start) + 3;
 assert(start >= 0 && end > start, 'SHOP_DATA section missing');
 const shop = vm.runInNewContext(`${config.slice(start, end)};SHOP_DATA`, {});
 const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const managerSource = read('www/managers.js');
+const previewStart = managerSource.indexOf('    getTreasuryEffectPreviewSource(');
+const previewEnd = managerSource.indexOf('    getTreasuryRewardVideoIcon()', previewStart);
+assert(previewStart >= 0 && previewEnd > previewStart, 'Treasury effect preview method missing');
+let activeTheme = 'dark';
+const previewSource = new Function('localStorage', 'YAMB_THEME_IDS',
+    `return ({${managerSource.slice(previewStart, previewEnd)}}).getTreasuryEffectPreviewSource;`)(
+    { getItem() { return activeTheme; } }, themes
+);
+for (const theme of themes) {
+    activeTheme = theme;
+    for (const item of shop.EFFECTS) {
+        const source = previewSource.call({}, item.id);
+        assert(source && fs.existsSync(path.join(root, 'www', source)),
+            `Treasury rendering stops or preview is missing at ${theme}/${item.id}: ${source}`);
+    }
+}
 const critical = new Set(['easter', 'desert', 'severna']);
 const effectNames = {
     confetti: 'confetti', gold_rain: 'gold-rain', balkan: 'wedding',

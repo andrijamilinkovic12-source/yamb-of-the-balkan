@@ -3721,7 +3721,7 @@ class ShopManager {
             return `assets/effects/black-hole/${theme}-core-v1.png`;
         }
         if (effectId === 'supernova') {
-            return `assets/effects/supernova/${this.getGoldRainThemeId()}-plasma-v2.png`;
+            return `assets/effects/supernova/${YAMB_THEME_IDS.includes(theme) ? theme : 'dark'}-plasma-v2.png`;
         }
         const roles = {
             confetti: 'confetti', gold_rain: 'gold-rain', balkan: 'wedding',
