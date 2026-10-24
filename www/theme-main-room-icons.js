@@ -15,7 +15,7 @@
     const sourceFor = (theme, role, variant) =>
         role === 'treasury' ? `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`
         : role === 'economy' ? `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png${theme === 'neon' ? '?v=2' : ''}`
-        : role === 'tournament' ? `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`
+        : role === 'tournament' ? `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v${['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1}.png`
         : role === 'leaderboard' ? `assets/theme-packs/${theme}/canonical/leaderboard-room-identity/leaderboard-room${variant === 'menu' ? '-menu' : ''}-v2.png`
         : role === 'quarterly-league' ? `assets/theme-packs/${theme}/canonical/quarterly-league-room-identity/quarterly-league-room${variant === 'menu' ? '-menu' : ''}-v2.png?v=2`
         : `assets/theme-packs/${theme}/canonical/${role}-room-identity/${role}-room${variant === 'menu' ? '-menu' : ''}-v1.png`;
@@ -95,9 +95,10 @@
             if (tournamentRoom) {
                 const hasTournamentPack = themes.has(theme);
                 const revision = theme === 'neon' && tournamentRoom[2] === 'tab-bracket' ? '?v=2' : '';
-                const nextSource = hasTournamentPack
+                const source = hasTournamentPack
                     ? `assets/theme-packs/${theme}/canonical/tournament-${tournamentRoom[1]}/${tournamentRoom[2]}-v1.png${revision}`
                     : original;
+                const nextSource = globalThis.resolveThemeQualityAsset?.(source) || source;
                 if (image.getAttribute('src') !== nextSource) {
                     guardImageSwap(image);
                     image.src = nextSource;

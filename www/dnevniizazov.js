@@ -69,12 +69,18 @@ class DnevniIzazov {
     getDailyAsset(role, theme = this.getDailyTheme()) {
         if (theme === 'dark') {
             if (role === 'room') return 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1';
-            if (role === 'reward-video') return 'assets/green-soft-clay/daily/reward-video-v3.png?v=1';
+            if (role === 'reward-video') {
+                const source = 'assets/green-soft-clay/daily/reward-video-v3.png?v=1';
+                return globalThis.resolveThemeQualityAsset?.(source) || source;
+            }
             if (role === 'ducat') return 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1';
             return `assets/green-soft-clay/canonical/daily-states/${role}-v1.png?v=1`;
         }
         if (role === 'room') return `assets/theme-packs/${theme}/canonical/daily-room-identity/daily-room-v1.png`;
-        if (role === 'reward-video') return `assets/theme-packs/${theme}/daily/reward-video-v3.png`;
+        if (role === 'reward-video') {
+            const source = `assets/theme-packs/${theme}/daily/reward-video-v3.png`;
+            return globalThis.resolveThemeQualityAsset?.(source) || source;
+        }
         if (role === 'ducat') return `assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
         return `assets/theme-packs/${theme}/canonical/daily-states/${role}-v1.png`;
     }

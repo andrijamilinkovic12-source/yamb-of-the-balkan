@@ -831,6 +831,17 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     18%, 82% { opacity: 1; }
 }
 /* --- Supernova Active Effect --- */
+.live-stage-effect {
+    position: fixed;
+    inset: 0;
+    z-index: 99996;
+    pointer-events: none;
+    overflow: hidden;
+    contain: strict;
+}
+.live-stage-effect > canvas { display: block; width: 100%; height: 100%; }
+.live-ufo-score-muted { opacity: .12 !important; transition: opacity .22s; }
+
 .supernova-container {
     position: fixed;
     inset: 0;
@@ -903,75 +914,6 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 @keyframes ufoPreviewBeam {
     0%, 100% { opacity: 0.44; transform: translateX(-50%) scaleX(0.78); }
     50% { opacity: 0.92; transform: translateX(-50%) scaleX(1.08); }
-}
-
-/* Shared Ice Age effect: a smooth translucent frost covers the rectangular board. */
-
-body.fx-ice-age #game-scene::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 52;
-    pointer-events: none;
-    background: linear-gradient(180deg, rgba(10, 41, 67, .08), rgba(8, 32, 59, .19));
-    animation: iceAgeScene 6.5s ease-out both;
-}
-
-.ice-overlay-container {
-    position: fixed;
-    left: var(--ice-left);
-    top: var(--ice-top);
-    width: var(--ice-width);
-    height: var(--ice-height);
-    z-index: 99971;
-    pointer-events: none;
-    overflow: visible;
-    opacity: 1;
-    isolation: isolate;
-}
-.ice-overlay-container.ice-melting { animation: iceAgeLeave .95s ease-in both; }
-.ice-age-frost {
-    position: absolute;
-    inset: 0;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-image: url('assets/effects/ice-age/frost-board-v4.png');
-    animation: iceAgeFreeze 2.1s cubic-bezier(.22,.65,.27,1) both;
-}
-
-.ice-age-atmosphere {
-    position: fixed;
-    inset: 0;
-    z-index: 99972;
-    overflow: hidden;
-    pointer-events: none;
-    contain: strict;
-    background: linear-gradient(180deg, rgba(15, 50, 78, .03), rgba(6, 25, 45, .13));
-    animation: iceAgeScene 6.5s ease-out both;
-}
-.ice-age-atmosphere.ice-melting { opacity: 0; transition: opacity .95s ease-in; }
-@keyframes iceAgeScene { 0%, 100% { opacity: 0; } 17%, 78% { opacity: 1; } }
-@keyframes iceAgeLeave { from { opacity: 1; } to { opacity: 0; } }
-@keyframes iceAgeFreeze {
-    0% { opacity: 0; clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
-    38% { opacity: .72; clip-path: polygon(0 0, 100% 0, 100% 38%, 76% 43%, 35% 36%, 0 40%); }
-    72% { opacity: .89; clip-path: polygon(0 0, 100% 0, 100% 75%, 72% 81%, 32% 76%, 0 82%); }
-    100% { opacity: .92; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-}
-@keyframes icePreviewPulse {
-    0%, 100% { opacity: .72; transform: translate(-50%, -50%) scale(.92) rotate(0deg); }
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.12) rotate(28deg); }
-}
-@keyframes icePreviewShimmer {
-    0% { opacity: 0; transform: translateX(-46%) rotate(0deg); }
-    32% { opacity: .88; }
-    70%, 100% { opacity: 0; transform: translateX(46%) rotate(0deg); }
-}
-@media (prefers-reduced-motion: reduce) {
-    .ice-overlay-container, .ice-age-frost, .ice-age-atmosphere { animation: none !important; }
-    .ice-age-atmosphere { background: none; }
-    .ice-age-frost { opacity: .82; clip-path: none; }
 }
 
 /* --- Miscellaneous Animations (Coins, Trumpets) --- */

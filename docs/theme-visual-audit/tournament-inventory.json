@@ -1,0 +1,242 @@
+[
+  {
+    "theme": "dark",
+    "label": "tournament-trophy",
+    "file": "www/assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "dark",
+    "label": "gold",
+    "file": "www/assets/green-soft-clay/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "dark",
+    "label": "silver",
+    "file": "www/assets/green-soft-clay/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "dark",
+    "label": "bronze",
+    "file": "www/assets/green-soft-clay/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "light",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "light",
+    "label": "gold",
+    "file": "www/assets/theme-packs/light/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "light",
+    "label": "silver",
+    "file": "www/assets/theme-packs/light/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "light",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/light/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "medium",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "medium",
+    "label": "gold",
+    "file": "www/assets/theme-packs/medium/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "medium",
+    "label": "silver",
+    "file": "www/assets/theme-packs/medium/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "medium",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/medium/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "winter",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "winter",
+    "label": "gold",
+    "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "winter",
+    "label": "silver",
+    "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "winter",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "neon",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "neon",
+    "label": "gold",
+    "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "neon",
+    "label": "silver",
+    "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "neon",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "amethyst",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "amethyst",
+    "label": "gold",
+    "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "amethyst",
+    "label": "silver",
+    "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "amethyst",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "easter",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "easter",
+    "label": "gold",
+    "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "easter",
+    "label": "silver",
+    "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "easter",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "desert",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "desert",
+    "label": "gold",
+    "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "desert",
+    "label": "silver",
+    "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "desert",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "moon",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "moon",
+    "label": "gold",
+    "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "moon",
+    "label": "silver",
+    "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "moon",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  },
+  {
+    "theme": "severna",
+    "label": "tournament-trophy",
+    "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+    "id": "tournament-trophy"
+  },
+  {
+    "theme": "severna",
+    "label": "gold",
+    "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v1.png",
+    "id": "medal-tournament-gold"
+  },
+  {
+    "theme": "severna",
+    "label": "silver",
+    "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v1.png",
+    "id": "medal-tournament-silver"
+  },
+  {
+    "theme": "severna",
+    "label": "bronze",
+    "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v1.png",
+    "id": "medal-tournament-bronze"
+  }
+]

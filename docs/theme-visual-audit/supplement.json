@@ -1,0 +1,4167 @@
+[
+  {
+    "id": "S0001",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 30029,
+    "sha256": "1fc33455e316ab9d5b07c7e9f9148a36549f50443ae1399ee501437f802223fd",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0002",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 37612,
+    "sha256": "e08914c0278ad51e3b1253aa066293bc79efe8551b4c4835851baed0108f5a82",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0003",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 15864,
+    "sha256": "c72143815d4b1b300a75d11c0878e6bde889055ca677dd49e4b904afebc7506a",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0004",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 19204,
+    "sha256": "60c2fe46ad093525969b1ea4e62fa2dcaf734e4d8e8fdb2fc05ece365941c507",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0005",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 19715,
+    "sha256": "33157dbe7b20be1b0f8c328707bd522bc8416d09bc2c00774e507e98d4fb09fa",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0006",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 17866,
+    "sha256": "884f6eb49e4ea0e6021fb8f966f37b072cc1d0700ecfaa3ea2228c386808358e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0007",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 18553,
+    "sha256": "af8e35cec6cc8f4e9e6e58c1a853decdb98d9547a36f5bf00a73edf160253ec1",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0008",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 25319,
+    "sha256": "8c51dbaa9e0c62d05dd68a93896fe7105e0db8320227b217b428b79d3041a5b4",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0009",
+    "file": "www/assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "dark",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 21753,
+    "sha256": "0dd4c8d7f6186f2d156f23e8d590332b8073de9e7f7d4f71c3bafb0b9d0f0c4b",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0010",
+    "file": "www/assets/treasury-theme-previews/dark-v1.png",
+    "theme": "dark",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 334,
+    "bytes": 85820,
+    "sha256": "a106a693d6f3b19697dc1eb041acce7f2759c1d80cb167cfbcd4b556ec7953af",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0011",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 24662,
+    "sha256": "d6534ef87eb5ff9789b48ed3079ad7709d90b04147eacbbdad798cf6f13c5ed6",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0012",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 26073,
+    "sha256": "b7cb6a46eb7fb25bf45c9feab16608ae4b8b3cc5812c8cf0f23b6304212f1eec",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0013",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 16698,
+    "sha256": "2aedf9a7183817818a80fdbabd993b83976151d927e0e638ab12515d8ce0fe1e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0014",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 16179,
+    "sha256": "0bc408f7eb685e699e3756ec067004e88241ebc5170745a7c46b5f63fbbfbe3a",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0015",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 26396,
+    "sha256": "ee460a81e12099de86d91e3645d28f7132e10997e2e0a4ec32d0426b6d7b2f15",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0016",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 27124,
+    "sha256": "68471d036f1aacd82f756628abb8d9dd4b7cd0ab692bb4d66003f79aa3a40390",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0017",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 44355,
+    "sha256": "07ed2f7a5d141d75aadafd8878120695cbb5f8024b331d81836f5b05da86c39b",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0018",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 30974,
+    "sha256": "57b7e41191f579fdae2df7063ffbb8a281827470470d0fa8c231f6af8ce7ed88",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0019",
+    "file": "www/assets/theme-packs/light/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "light",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23221,
+    "sha256": "357890ff7f203785bd1404822a66f9a2d77059570b34b8e7492ee463fe6bf085",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0020",
+    "file": "www/assets/treasury-theme-previews/light-v1.png",
+    "theme": "light",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 282,
+    "bytes": 71369,
+    "sha256": "146d91e9e0c2bde87659e236dc1496a6d3a048fa9ebfe320e3b4dec830a03677",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0021",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 24199,
+    "sha256": "36e533077aaed86caadf06e207a4d640d2a28cf62578ca010f7243037d00c2c9",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0022",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 31576,
+    "sha256": "4b56e55beec5c736775d4de8325d419a188229470dc87e75710a4449a4ff361a",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0023",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 17432,
+    "sha256": "66da02f012d30e3fe498d3887100e4c49ee543de473720963d00a249575f8eba",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0024",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 18889,
+    "sha256": "4636c24b0a801ac400c0e9f404e40a1207815f5b8c96b39ecb94d763ecb4ef13",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0025",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 28970,
+    "sha256": "ec31410287e02b3e64c257262f4dd5a31f3c09efc790752300753b64d516b4c0",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0026",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 28325,
+    "sha256": "403087676385e6b5799155cb153217ccc0eb7be1c53641609245b400f85f3f56",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0027",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 36422,
+    "sha256": "06c6321549fad875f5a249e3948652d3aae2a10611af8cbb4b0e374e08a9c3b0",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0028",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 28360,
+    "sha256": "cbb1c3e8b78d359a7c73e9b9ab11f6cd62558202d35d17f726fb63afa1f16911",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0029",
+    "file": "www/assets/theme-packs/medium/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "medium",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 26266,
+    "sha256": "4c18a971cd820e9e00aa4f6601e33097028e07b7abab6728fde17ecabd29fd47",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0030",
+    "file": "www/assets/treasury-theme-previews/medium-v1.png",
+    "theme": "medium",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 282,
+    "bytes": 60302,
+    "sha256": "a7ec8ecb4e7865569d9cd607485abc908459e9b3dcb02fd626bca1e5395bd177",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0031",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 24461,
+    "sha256": "37a1b0a005c7d70881b08247ca74f9bedd763a29a5157fc8c6416a19e0f17609",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0032",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29940,
+    "sha256": "3678186d7773fe2a8893667575b487baa5b5d97fef80cf46a1d26493f7b5ac1e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0033",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 16250,
+    "sha256": "be856d7a2c12e994119c144846ce7e2356d18b4d1cda75cc9ed3f201e08834eb",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0034",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 16872,
+    "sha256": "a3fe505488709ebe460aeb55e70cec024f1c1146bfbd7fba0e2954044eaa1c87",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0035",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29536,
+    "sha256": "25ccb767a9c01e56e025ede6f39d367a6679f53ccbe61c0cedf16c2609324beb",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0036",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 30885,
+    "sha256": "f63aeb1ff9400181879037df03d22988785d7721c12a19a90c354a3c839da558",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0037",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 38191,
+    "sha256": "039994c13ee20ba81c6753b4943b8cbd0e4efab28f075d89048db6385782d0fd",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0038",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 31756,
+    "sha256": "d7ff20cfb578b70d772c19e4110b59f1b486e48d9df840350539ec319747b516",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0039",
+    "file": "www/assets/theme-packs/winter/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "winter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 24187,
+    "sha256": "eaf78dd58ddf96ebbbfa0efb6fd1f0284bc28b1e8b68f546f44a3200c045bf5e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0040",
+    "file": "www/assets/treasury-theme-previews/winter-v1.png",
+    "theme": "winter",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 282,
+    "bytes": 76077,
+    "sha256": "33ba5da3c2e483a3314705bdfe261df05876be9f8ca78b4d00c2dbef250af000",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0041",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 20734,
+    "sha256": "6103751011c683cae0b3be4f8fa60eb3830c23f6f2baa5dfde8b0c6a72c352e7",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0042",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 36931,
+    "sha256": "c5a94c0662680d3b9cd63e2a15a52a2c549c1d945acf6208613bb164848b9fa9",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0043",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 18902,
+    "sha256": "c647d4e4702b8eeec035418d724e8d8d5c691f11ef790507efaa348d9feb1277",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0044",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 18478,
+    "sha256": "e4820dc902a6ec2f31353b3b469fcbec680de58528280d78e254d2c878e9bb91",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0045",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23515,
+    "sha256": "90a5516ba51ac97fb2872aaffad8a2cb9948da09ce1c17578b811a63fbb35c0f",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0046",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 28725,
+    "sha256": "c3d4ad30c62e94f770d6a46d653adcf85aeb425426930a8a22a6570de6dee280",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0047",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 34888,
+    "sha256": "3ca1b85a96a5bad8edec67f528a70e10c35f6df48a2ac65f52d05e257f8b48a7",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0048",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 25262,
+    "sha256": "1db96a930c6eed8fdaa54508f44829189e9a448c97074d5bea1bb965b2cded62",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0049",
+    "file": "www/assets/theme-packs/neon/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "neon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23569,
+    "sha256": "9d2686d37646de2d134697b8786967babdb2d78d4796e92666df4172ad0049b4",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0050",
+    "file": "www/assets/treasury-theme-previews/neon-v1.png",
+    "theme": "neon",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 334,
+    "bytes": 68373,
+    "sha256": "45b454d1102654501b190010ef0d51651eda27d5b5c61ade2afb3fa5b2ad3c09",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0051",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23247,
+    "sha256": "2a8bcf94192fa4e9e75e6cfc8a04009acb355e7d59820697af75b222307e895d",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0052",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 36333,
+    "sha256": "50fc2abd9b7caf92ce154405173525148ec13893dbbabc70b62b9fe434d42055",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0053",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 17460,
+    "sha256": "902c0ba08acb206da7b7f3403d95e7b84fced80afa2eddbd7936141da89f84ec",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0054",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 19662,
+    "sha256": "ecdc3f5c279b5df2b4ac7f966b63628a074d3fa8f16480a3fce6b51ac91777de",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0055",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23677,
+    "sha256": "031c22326fecbb909c780688ace8e72c944435812c2ff7a0526e4d698e326644",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0056",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 32457,
+    "sha256": "b19d043b1b0c511a5baa986c05cb9a2d6ea33bc398fc7619c82f0352fd783e5b",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0057",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 40868,
+    "sha256": "a744e94520b175a0b3e88b4812922199772fa04fbdb529576ba17e59f9ee2d5e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0058",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 31478,
+    "sha256": "4c4398f97ea2dbd108cfa66c53c3181413791bf4734b71093855dc0ca684fc00",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0059",
+    "file": "www/assets/theme-packs/amethyst/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "amethyst",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 26033,
+    "sha256": "2f55f591707ecb06c250a122609829e701a05f0702344a36fe95119800350b60",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0060",
+    "file": "www/assets/treasury-theme-previews/amethyst-v1.png",
+    "theme": "amethyst",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 334,
+    "bytes": 68008,
+    "sha256": "669f06fc6bae2b13fad7d62ccbe18bbd22d4e77879204b56f6995a31bbc2b41a",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0061",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23138,
+    "sha256": "99af0f53aeb92048d5610f50139681a1c64387e1a6ba84d97c40269a280fff6d",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0062",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-gold-rain-v2.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 19321,
+    "sha256": "f42be2e82247fdc25885899a3cd6f01f1d90de8d5ff43d71987431e785270740",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0063",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 17321,
+    "sha256": "a8086741c0b869e36c06687a3d966caeb5918193550fc3954e9874ea95863b96",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0064",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 17134,
+    "sha256": "23fbdbf181a681ffeb520352b3303e96aa988bb366f06411e2b40705c8ffeea5",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0065",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 24081,
+    "sha256": "d4a670149e8a828745ee57c5423d6f498ac00a25316252fe2c23b8dec648daef",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0066",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 27896,
+    "sha256": "52ebdd091427c2631c839e508cec0d8fe512e2eaf7777822e98f038eb5c29c42",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0067",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 37440,
+    "sha256": "f0b221fc210e5a22777670105f9a59a7003476c239b3627e79f519ccf1ec9f82",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0068",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29891,
+    "sha256": "4ad05d1d9f2761f31846fa1a0774765c09a70f4f6a8f8af564e4ca404a0da359",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0069",
+    "file": "www/assets/theme-packs/easter/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "easter",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29796,
+    "sha256": "9924b6492ad4628f91079887e01d017c22b4b126f6e15872899d9218fcba6486",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0070",
+    "file": "www/assets/treasury-theme-previews/easter-v1.png",
+    "theme": "easter",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 334,
+    "bytes": 97557,
+    "sha256": "497736b3db61fd58532f5789abbe25ffd0ca2d78df07f1f9e6aaa030a4d017eb",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0071",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 21470,
+    "sha256": "6d54be6c1f936231e7015986b440148bd857205a3a9b7d81b328f93baf5a46e6",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0072",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-gold-rain-v2.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 26295,
+    "sha256": "967f18ccf7459b818d73bae2be31b42dab76ac4e479abc300b5bb0234dc84396",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0073",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 20157,
+    "sha256": "136c40b9278ac020b1916cbbe4d550ad726fea7845a05850494905e47c0fb18e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0074",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 19951,
+    "sha256": "e17420b336a39d5ea7d63c5fd086735e88da125a3ed51959eedc8aaacd41219d",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0075",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 22922,
+    "sha256": "4a7473a88319e86d78aef6e6890b164faf7986fa935627cdb700fca478ea6fbc",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0076",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29901,
+    "sha256": "f4f8de9c004be88ae10911e0de6a689d40f51257d8228e0ed96de7dc17f446bb",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0077",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 39121,
+    "sha256": "dce6989b5d92163f06af64d69966068f2163485d60272cb0c0681f18aae9d2a4",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0078",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 32156,
+    "sha256": "0a617e53af4f77de49a7f5b2807ebfc59d9a0776e9366318e9e590175552398a",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0079",
+    "file": "www/assets/theme-packs/desert/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "desert",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 20761,
+    "sha256": "7e58fabbd88c4af47d5bdf8165676fb7b533b08acd404d8af4bc5d6c06a160a1",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0080",
+    "file": "www/assets/treasury-theme-previews/desert-v1.png",
+    "theme": "desert",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 282,
+    "bytes": 65894,
+    "sha256": "87a9d527e5cbdb4c8be665b066739433547673f8181518c80be28b9ef28715c7",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0081",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 22047,
+    "sha256": "c5cb8e4659de58357dcd4f76cc126c3c003d1b3897aeaa8f5260531d4fa60300",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0082",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-gold-rain-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29997,
+    "sha256": "82e61c92fc82998a3c073d8d7a8213f0a3cd4b94d08e6e4a01578cfe943fa767",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0083",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 18435,
+    "sha256": "2e6dbdec657dbf126962323aadf64f679554309f70d980a6576586f733b387ec",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0084",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 16444,
+    "sha256": "0ec7982ecd5ee445e757c845767d354b69d34e4fd74674d863bfa35de8d8730f",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0085",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 26816,
+    "sha256": "e623c61435a6d68b8cbc40446467f6a1a9f60612ea307c9311e7a68bb6eba26b",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0086",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 28675,
+    "sha256": "5c7a372a996fba5d89e1bab55ebe4b5d8cda50e6b9e554ecbe7a5c97a04657d8",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0087",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 32188,
+    "sha256": "2c4494d42692dd0379b739e2293b7141813301f4dd7c2b96d1488e13fe1417e1",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0088",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 28369,
+    "sha256": "919a3617946b4f6fe9f3c08c5a3e24431f710a1dba27ca0db5121908e92e3ed5",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0089",
+    "file": "www/assets/theme-packs/moon/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "moon",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23509,
+    "sha256": "b2f8a290f14f8ac961c545909ea3350de46239a70b635c2a676c5189a95c1201",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0090",
+    "file": "www/assets/treasury-theme-previews/moon-v1.png",
+    "theme": "moon",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 282,
+    "bytes": 58139,
+    "sha256": "dff81466c92b224538eeadd8b9653cfb29a9e74881f39c63220df0fbfc67755a",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0091",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-confetti-v1.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / confetti"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(confetti)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23156,
+    "sha256": "cd9a28f1f99d9249afd23360a829d14a5e7a608e5278d8227f9d246d4273b377",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0092",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-gold-rain-v2.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / gold_rain"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(gold_rain)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 25276,
+    "sha256": "3a8af39ffb812286890818d2909cc319650d8109bace853595da9e3e1c71c3c8",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0093",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-fireflies-v2.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireflies"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireflies)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 17542,
+    "sha256": "354956129ce04e0fe53efa2f49d81b3a11d0ba242b432001a9637f1b07fb63c3",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0094",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-bubbles-v2.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / bubbles"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(bubbles)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 18313,
+    "sha256": "4bb2d53c766dc02e9dc700645b88a2f3c226d366de607746b9d6846c5f0c161b",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0095",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-neon-pulse-v1.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / neon_pulse"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(neon_pulse)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23265,
+    "sha256": "0bc2fe1393cdaa419aaf4eb3247c28d03f0e307ee0a549cbe2ed9debc2c25de0",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0096",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-thunder-v1.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / thunder"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(thunder)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 29635,
+    "sha256": "37a9f65cb5e06c1c1fbf3d5f1b2cfb8807d706a2e33beffe97489c4746e0ff74",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0097",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-fireworks-v1.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / fireworks"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(fireworks)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 35330,
+    "sha256": "c6175e400be2f9a7cb7b157dfded56dcc01ddfffcc14fc22c131dc9e9e410a87",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0098",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-drones-v1.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / drones"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(drones)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 27023,
+    "sha256": "c8b477a60d13aaf5caef2e852458a6bd2c6e725366feb48b4071a1fc35ccf772",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0099",
+    "file": "www/assets/theme-packs/severna/canonical/treasury-effect-thumbnails/preview-cosmic-dust-v1.png",
+    "theme": "severna",
+    "family": "treasury-effect-thumbnails",
+    "labels": [
+      "Riznica / cosmic_dust"
+    ],
+    "rooms": [
+      "Riznica / Efekti"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryEffectPreviewSource(cosmic_dust)"
+      }
+    ],
+    "width": 192,
+    "height": 128,
+    "bytes": 23259,
+    "sha256": "05973b784b0df7be78c6299096f03eb4d643d6eec2ee6de59d309cb68654fb01",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0100",
+    "file": "www/assets/treasury-theme-previews/severna-v1.png",
+    "theme": "severna",
+    "family": "theme-preview",
+    "labels": [
+      "Pregled teme"
+    ],
+    "rooms": [
+      "Riznica / Teme",
+      "Podešavanja / Izbor teme"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/managers.js#getTreasuryThemePreviewSource + www/theme-settings-picker.js"
+      }
+    ],
+    "width": 188,
+    "height": 334,
+    "bytes": 86851,
+    "sha256": "b91931a342d5f44135cd75443ffdc824a59ee5718b406dfe4e0312afbfd25f2c",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0101",
+    "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "winter",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 102139,
+    "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0102",
+    "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "winter",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 169839,
+    "sha256": "e57738d6fb621b7891102d263d00ec0e72d38911e1f69121ebfce22b85c93c99",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0103",
+    "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "neon",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 112172,
+    "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0104",
+    "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "neon",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 189187,
+    "sha256": "c3b628416cef0b365eee96d57526b81664e96d7405580915993210525c54332c",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0105",
+    "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "amethyst",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 103082,
+    "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0106",
+    "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "amethyst",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 173076,
+    "sha256": "30c8a1e9f285e62eba58b7daf095266ece2af4722a8fdc4a049cf8703cf575d7",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0107",
+    "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "easter",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 101986,
+    "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0108",
+    "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "easter",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 171971,
+    "sha256": "a2e1f41223d04054fef54bb638fb1dd5095fce340817a2978d4f01fc7bcaa569",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0109",
+    "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "desert",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 126344,
+    "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0110",
+    "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "desert",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 215009,
+    "sha256": "83288daddacc1d66a7fae9fda8473719a1ce97851ff6579132c566899cc5e337",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0111",
+    "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "moon",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 104110,
+    "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0112",
+    "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "moon",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 180449,
+    "sha256": "080bf35c5b8d44b213d3fc9a943f45c4e9689236819af9f28d033402df28f38f",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0113",
+    "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+    "theme": "severna",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 118444,
+    "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0114",
+    "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v2.png",
+    "theme": "severna",
+    "family": "tournament-awards",
+    "labels": [
+      "champion-trophy"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 512,
+    "height": 512,
+    "bytes": 199208,
+    "sha256": "b54862e9f51af23488af9e50d08707f5d966a58de5754bc7b7f78de4bdea6ff7",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0115",
+    "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "winter",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 65494,
+    "sha256": "8dbb8efbd7027ec59183677b17277f64c4af7840f1788f002903c9f3ee60c486",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0116",
+    "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "winter",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 60784,
+    "sha256": "099baa2ae1d03f018c70d5baa819720c08ac3b11a1e4344b0132821b219e4709",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0117",
+    "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "winter",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 62952,
+    "sha256": "0b006429eade3d804d5146fe56bef3ce394dfb71a80ed6e453b0690ea81495f7",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0118",
+    "file": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "winter",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 58078,
+    "sha256": "37a9cf3601a1a5bed9bc2774bfbcfa48d583e0dbf3fccfd06d737d53fa6a9789",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0119",
+    "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "neon",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 59580,
+    "sha256": "06e0ad52142fa0eb58a66a949fa520fb39a7aa52aa9682748f61f3e12bcdf84c",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0120",
+    "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "neon",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 55793,
+    "sha256": "2d190ded374c59aa9d93dcad4d48d33085cd4c5b1fc3ea5b34f2e77b69b7fad5",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0121",
+    "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "neon",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 59101,
+    "sha256": "762a3b99f5b75780797fe032bf066d7f50e5a144c7b5398310a032127c2510b1",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0122",
+    "file": "www/assets/theme-packs/neon/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "neon",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 66127,
+    "sha256": "bbf60ab98bdc7deb1897c93d150af1bb6cf4fb77208ac7f84217fbff56ff1a07",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0123",
+    "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "amethyst",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 65862,
+    "sha256": "f619d7648e81a3792b24447355a183deaf3873acb55351967a63ca669f005c98",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0124",
+    "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "amethyst",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 62757,
+    "sha256": "94e6e1e585e37c003ce844ff0064847ffcaf7f0ee40770d67ce8809e77656e1d",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0125",
+    "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "amethyst",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 67178,
+    "sha256": "bb6b9feae6b82829cb2ff377269f435173850ae021bb1d03c182428e6143ee12",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0126",
+    "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "amethyst",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 76365,
+    "sha256": "204072c6dbaff0a0e3712afe86aebb5058ff45f92e7f9ba865a81528642b15ee",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0127",
+    "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "easter",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 57636,
+    "sha256": "429e53c2c175ea7d6eec236e7ac2cb0b9376fdd596d8c238630161d6b204c8e2",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0128",
+    "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "easter",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 52536,
+    "sha256": "1b90bf04abeb1faeddf2b393cc18adb86636fc1dfe0b98d4a908ea7d8360e3bf",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0129",
+    "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "easter",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 56386,
+    "sha256": "7333424eaba99d0a6e0106bd54cc73b51853fe79fdac8fa19f3e246a4b471bc9",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0130",
+    "file": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "easter",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 59157,
+    "sha256": "446f376f10be7fc82a990d8c37654488a69f5a1d6c8580142e124f02921294f7",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0131",
+    "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "desert",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 63185,
+    "sha256": "17e0f8c0169027db5709dcf58c8def3c862c961c60858784d4879387bf469d8a",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0132",
+    "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "desert",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 61766,
+    "sha256": "c8e2b4ef0cb00076e23f5e16a3a9dbf55c7d150e80d1057f6176a0da93295432",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0133",
+    "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "desert",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 63350,
+    "sha256": "766f538c78aa9eff7e539e5c9e3955be0de8a29bababa8d5ec37368f871bf14e",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0134",
+    "file": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "desert",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 73783,
+    "sha256": "213c6ea832dcd46db473903f9e4ba221c489f53c56da6070785dccaff7f91399",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0135",
+    "file": "www/assets/theme-packs/light/daily/reward-video-v3.png",
+    "theme": "light",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 99555,
+    "sha256": "1037bbef0812fdb825b616a1ce22ba24aaa895a08456927ab12a70b7335ebc1f",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0136",
+    "file": "www/assets/theme-packs/light/treasury/reward-video-v3.png",
+    "theme": "light",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 47593,
+    "sha256": "e3cfca24e06f87a3149c6a52120fe20376dc5352db8643c4280aaa726e8d39a7",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0137",
+    "file": "www/assets/theme-packs/light/solo/finish-reward-video-v3.png",
+    "theme": "light",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 148423,
+    "sha256": "a4021aadbe2f5823397b6a792de1c744e30df8f6fa44f41f430ce49047fa40fa",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0138",
+    "file": "www/assets/theme-packs/medium/daily/reward-video-v3.png",
+    "theme": "medium",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 132785,
+    "sha256": "b50ed873cbcebaca5dbb8a77610ef7f2880811bd64d2b1907b8e4bd4e53b7fcf",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0139",
+    "file": "www/assets/theme-packs/medium/treasury/reward-video-v3.png",
+    "theme": "medium",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 62092,
+    "sha256": "0805e88a3576a6f768885e41bad927022f0d40f6218b89dfbcbb032e016879f9",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0140",
+    "file": "www/assets/theme-packs/medium/solo/finish-reward-video-v3.png",
+    "theme": "medium",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 197127,
+    "sha256": "43b72a5444f6711ef20554515813075103fda42b066adae27b20368da60eb72c",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0141",
+    "file": "www/assets/theme-packs/winter/daily/reward-video-v3.png",
+    "theme": "winter",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 97722,
+    "sha256": "875e8ff1befd0185cc1d9432a0ecd6df7b3431621661e51a6050cb0941873996",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0142",
+    "file": "www/assets/theme-packs/winter/treasury/reward-video-v3.png",
+    "theme": "winter",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 47194,
+    "sha256": "16c993cbd5dfcf6cdcd6679f3d08be5686d066258270b5190b730c8a6ded7371",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0143",
+    "file": "www/assets/theme-packs/winter/solo/finish-reward-video-v3.png",
+    "theme": "winter",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 153894,
+    "sha256": "adf574f3b591069b2cc4aa1ba6bbc47f865e95ffbe1be053c5530842a6e21c68",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0144",
+    "file": "www/assets/theme-packs/neon/daily/reward-video-v3.png",
+    "theme": "neon",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 127741,
+    "sha256": "8f4c97235fd71111245fabe05add577f6f0dc8789688403c711ff4a87e12c74b",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0145",
+    "file": "www/assets/theme-packs/neon/treasury/reward-video-v3.png",
+    "theme": "neon",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 60325,
+    "sha256": "3edfe1ffaf52b8abb87f11d06b72adc983f515f9c6152786b9f40f8a0d8fbcee",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0146",
+    "file": "www/assets/theme-packs/neon/solo/finish-reward-video-v3.png",
+    "theme": "neon",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 164728,
+    "sha256": "c09582143b5166afe94d9d138158922bfa18a1c2248c24759b9bb9981a7be0ff",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0147",
+    "file": "www/assets/theme-packs/amethyst/daily/reward-video-v3.png",
+    "theme": "amethyst",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 126314,
+    "sha256": "2c297096823b215ec150f8265b55e3c2f63ffcc1e1a125b7fdd34f924d48e416",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0148",
+    "file": "www/assets/theme-packs/amethyst/treasury/reward-video-v3.png",
+    "theme": "amethyst",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 60761,
+    "sha256": "b7fc2e1f7492743741d601eebb8c9bd8387fb7761bf76319096c66f467c04f6e",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0149",
+    "file": "www/assets/theme-packs/amethyst/solo/finish-reward-video-v3.png",
+    "theme": "amethyst",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 172016,
+    "sha256": "30ee290729c1dcab5eee8624aeff7fc7ca58f997016f86c95af3201431b0d671",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0150",
+    "file": "www/assets/theme-packs/easter/treasury/reward-video-v3.png",
+    "theme": "easter",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 55781,
+    "sha256": "138c04a16278ce49a6b5993e74468670c082f219b89258825f2380755107be1f",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0151",
+    "file": "www/assets/theme-packs/easter/solo/finish-reward-video-v3.png",
+    "theme": "easter",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 129923,
+    "sha256": "47746942c1a254f7caf0709ee8820f74d9a3960cc6703780e93a69cbf4446272",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0152",
+    "file": "www/assets/theme-packs/desert/treasury/reward-video-v3.png",
+    "theme": "desert",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 72598,
+    "sha256": "103617c2a12acde542d98e90819bf46a2826520111b2caf36e593d7aa4c10bce",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0153",
+    "file": "www/assets/theme-packs/desert/solo/finish-reward-video-v3.png",
+    "theme": "desert",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 170537,
+    "sha256": "e56b6fc93c145f86209fee2ea749d5d9bef5571dc4f47e996b4805ec0fcefad3",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0154",
+    "file": "www/assets/theme-packs/moon/daily/reward-video-v3.png",
+    "theme": "moon",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 99988,
+    "sha256": "d14abe37d5a210baa50d1301fc9938415f618bf0e727a77c0f2c2099097e17b0",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0155",
+    "file": "www/assets/theme-packs/moon/treasury/reward-video-v3.png",
+    "theme": "moon",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 47633,
+    "sha256": "caf52c291f891c955d40210a4efa8cb38db13df460dad13bf16aa2546089db08",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0156",
+    "file": "www/assets/theme-packs/moon/solo/finish-reward-video-v3.png",
+    "theme": "moon",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 156231,
+    "sha256": "65a4f09302f6ba61f8eeaaf639cef034fb0c62e83ea66f221d9a3f7c342a0519",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0157",
+    "file": "www/assets/theme-packs/severna/daily/reward-video-v3.png",
+    "theme": "severna",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / daily"
+    ],
+    "rooms": [
+      "daily"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 143805,
+    "sha256": "ed1c4996af6fefb58d5ef28540b1467b7f2f973e456ae5b2c853dfc0201484c7",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0158",
+    "file": "www/assets/theme-packs/severna/treasury/reward-video-v3.png",
+    "theme": "severna",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / treasury"
+    ],
+    "rooms": [
+      "treasury"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 68261,
+    "sha256": "7bb5a76093220c43cbce750d574bd788d5fd9c0fe4b2d3fa6ef8cd7b3416d385",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0159",
+    "file": "www/assets/theme-packs/severna/solo/finish-reward-video-v3.png",
+    "theme": "severna",
+    "family": "theme-preview",
+    "labels": [
+      "Video nagrada / solo"
+    ],
+    "rooms": [
+      "solo"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "www/game.js#getRewardedVideoPackSources + www/theme-rewarded-video-pack.js#sync"
+      }
+    ],
+    "width": 384,
+    "height": 384,
+    "bytes": 145135,
+    "sha256": "85c0c08ae5e8f4075c0a17de30b82a9ed559b1f457c4be37783eed27823136fe",
+    "activation": "resolver-mapped",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0160",
+    "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "moon",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 63695,
+    "sha256": "c583f468096715238734521cebdd3e894158d60481c9abbd88c034b667ecde82",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0161",
+    "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "moon",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 58143,
+    "sha256": "c2d13ddc8c47043dbc2f21d9a48fb62d2b5bc543da4f5025a88c4efb46044b00",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0162",
+    "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "moon",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 61782,
+    "sha256": "7b58abbbaa97455434a685904b99474ec228b4de10ac118bc4fdddae1010dadd",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0163",
+    "file": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "moon",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 53853,
+    "sha256": "542307a8f928f8252787cf7560100c505ed451db350928b0a754286601094e93",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0164",
+    "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v2.png",
+    "theme": "severna",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-gold"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 61067,
+    "sha256": "29f0f8bc8bc27b9ab3865bacc9a1f1639e63b71de665ac48242c68d582352d86",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0165",
+    "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v2.png",
+    "theme": "severna",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-silver"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 57328,
+    "sha256": "b6cbec9eff14cdaa46035cff732a35cf7025a4021fd3e7dbfe2b5c6bc6d7b006",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0166",
+    "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v2.png",
+    "theme": "severna",
+    "family": "competition-medals",
+    "labels": [
+      "tournament-bronze"
+    ],
+    "rooms": [
+      "Turnir / medalje",
+      "Završni ekran turnira"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 57593,
+    "sha256": "e42f1a27251ef8b13afcfc6168b8a02b91ec43117e448550fad45895244021ce",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v1.png",
+    "visualStatus": "nije-pregledano"
+  },
+  {
+    "id": "S0167",
+    "file": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v2.png",
+    "theme": "severna",
+    "family": "tournament-awards",
+    "labels": [
+      "finalist-silver"
+    ],
+    "rooms": [
+      "Turnir",
+      "Glavni meni",
+      "Intro",
+      "Pravila",
+      "Obaveštenja / nagrade"
+    ],
+    "consumers": [
+      {
+        "kind": "runtime-resolver",
+        "evidence": "source-assets/theme-tournament-star-v2/manifest.json + runtime resolvers"
+      }
+    ],
+    "width": 256,
+    "height": 256,
+    "bytes": 63518,
+    "sha256": "8b49e11b37d66fc9bc3acb42978e72ea433822d3d0bae91bd8595d9b18276a50",
+    "activation": "resolver-mapped",
+    "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v1.png",
+    "visualStatus": "nije-pregledano"
+  }
+]

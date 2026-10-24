@@ -11,6 +11,9 @@ class TopListManager {
         this.globalPages = new Map();
         this.globalScrollContainer = null;
         this.globalScrollHandler = null;
+        this.localWritePromise = Promise.resolve();
+        this.currentTab = 'global';
+        this.globalSocket = null;
         
         // Default filteri za top liste
         this.currentGlobalFilter = 'weekly';
@@ -75,6 +78,50 @@ class TopListManager {
         const uid = String(entry?.stableUid || entry?.uid || entry?.playerId || '');
         if (uid) return `uid:${uid}`;
         return `score:${entry?.playerName || entry?.name || ''}:${entry?.score || 0}:${entry?.date || ''}`;
+    }
+
+    _isGlobalVisible() {
+        return this.currentTab === 'global' &&
+            document.getElementById('highscores-screen')?.classList.contains('active');
+    }
+
+    _clearGlobalRequestTimer(state) {
+        clearTimeout(state.requestTimer);
+        state.requestTimer = null;
+    }
+
+    _failGlobalPage(period, requestId) {
+        const state = this._getGlobalPageState(period);
+        if (state.requestId !== requestId) return;
+        this._clearGlobalRequestTimer(state);
+        state.loading = false;
+        state.requestId = ++this.globalRequestSerial;
+        if (period !== this.currentGlobalFilter || !this._isGlobalVisible()) return;
+        this._removeGlobalLoadMoreState();
+        if (state.items.length === 0) {
+            const list = document.getElementById('global-hs-list');
+            if (list) list.innerHTML = this._stateMarkup(this._t('msg_no_connection'), 'offline');
+        }
+    }
+
+    _bindGlobalSocketEvents() {
+        const socket = this.app.socket;
+        if (!socket || socket === this.globalSocket) return;
+        if (this.globalSocket) {
+            this.globalSocket.off('connect', this.globalConnectHandler);
+            this.globalSocket.off('disconnect', this.globalDisconnectHandler);
+        }
+        this.globalSocket = socket;
+        this.globalConnectHandler = () => {
+            if (this._isGlobalVisible()) this._loadGlobal();
+        };
+        this.globalDisconnectHandler = () => {
+            for (const [period, state] of this.globalPages) {
+                this._failGlobalPage(period, state.requestId);
+            }
+        };
+        socket.on('connect', this.globalConnectHandler);
+        socket.on('disconnect', this.globalDisconnectHandler);
     }
 
     _ensureGlobalScrollListener() {
@@ -275,6 +322,19 @@ class TopListManager {
         }
     }
 
+    _updateLocalScores(update) {
+        // IndexedDB reads return snapshots; serialize every read-modify-write.
+        const operation = this.localWritePromise.then(async () => {
+            const scores = await this._readLocalScores();
+            update(scores);
+            const sorted = this._sortScores(scores);
+            await this._writeLocalScores(sorted);
+            return sorted;
+        });
+        this.localWritePromise = operation.catch(() => {});
+        return operation;
+    }
+
     _renderLocalScores(scores) {
         const periodScores = this._filterScoresForPeriod(scores, this.currentLocalFilter);
         this.renderList(periodScores, 'local-hs-list');
@@ -299,26 +359,24 @@ class TopListManager {
         if (!result.ok && !result.permanent) return;
 
         try {
-            let scores = await this._readLocalScores();
+            await this._updateLocalScores(scores => {
+                const idx = scores.findIndex(item => {
+                    if (entry.localId && item.localId === entry.localId) return true;
+                    return !item.synced &&
+                        item.uid === entry.uid &&
+                        item.score === entry.score &&
+                        item.date === entry.date;
+                });
 
-            const idx = scores.findIndex(item => {
-                if (entry.localId && item.localId === entry.localId) return true;
-                return !item.synced &&
-                    item.uid === entry.uid &&
-                    item.score === entry.score &&
-                    item.date === entry.date;
+                if (idx === -1) return;
+
+                if (result.ok) {
+                    scores[idx].synced = true;
+                    delete scores[idx].syncRejected;
+                } else if (result.permanent) {
+                    scores[idx].syncRejected = result.reason || 'server_rejected';
+                }
             });
-
-            if (idx === -1) return;
-
-            if (result.ok) {
-                scores[idx].synced = true;
-                delete scores[idx].syncRejected;
-            } else if (result.permanent) {
-                scores[idx].syncRejected = result.reason || 'server_rejected';
-            }
-
-            await this._writeLocalScores(scores);
         } catch (e) {
             console.warn("Nije moguće označiti sync status skora:", e);
         }
@@ -335,8 +393,6 @@ class TopListManager {
         try {
             let scores = await this._readLocalScores();
 
-            let needsUpdate = false;
-
             for (let i = 0; i < scores.length; i++) {
                 if (String(localStorage.getItem('yamb_uid') || '').trim() !== activeUid) break;
                 if (String(scores[i]?.uid || scores[i]?.playerId || '').trim() !== activeUid) continue;
@@ -344,19 +400,8 @@ class TopListManager {
                     console.log(`📡 Sinhronizacija skora: ${scores[i].score}`);
                     const result = await this._submitScoreToServer(scores[i]);
                     if (String(localStorage.getItem('yamb_uid') || '').trim() !== activeUid) break;
-                    if (result && result.ok) {
-                        scores[i].synced = true;
-                        needsUpdate = true;
-                    } else if (result && result.permanent) {
-                        scores[i].syncRejected = result.reason || 'server_rejected';
-                        needsUpdate = true;
-                        console.warn(`Server je odbio skor ${scores[i].score}: ${scores[i].syncRejected}`);
-                    }
+                    await this._markLocalSubmitResult(scores[i], result);
                 }
-            }
-
-            if (needsUpdate) {
-                await this._writeLocalScores(scores);
             }
         } catch (e) {
             console.error("Sync error:", e);
@@ -365,6 +410,7 @@ class TopListManager {
 
     switchTab(tab) {
         const activeTab = tab === 'local' ? 'local' : 'global';
+        this.currentTab = activeTab;
         document.querySelectorAll('.hs-tab-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.hsTab === activeTab);
         });
@@ -401,12 +447,7 @@ class TopListManager {
 
     async _saveLocal(newEntry) {
         try {
-            let scores = await this._readLocalScores();
-
-            scores.push(newEntry);
-            scores = this._sortScores(scores);
-
-            await this._writeLocalScores(scores);
+            const scores = await this._updateLocalScores(items => items.push(newEntry));
             
             const listLocal = document.getElementById('local-hs-list');
             if (listLocal) {
@@ -431,40 +472,43 @@ class TopListManager {
         if (!listEl) return;
 
         this._ensureGlobalScrollListener();
+        this._bindGlobalSocketEvents();
         const period = this.currentGlobalFilter;
         const state = this._getGlobalPageState(period);
 
         if (reset) {
+            this._clearGlobalRequestTimer(state);
             state.items = [];
             state.keys = new Set();
             state.nextOffset = 0;
             state.hasMore = true;
             state.loading = false;
-            state.requestId = ++this.globalRequestSerial;
             listEl.innerHTML = this._stateMarkup(this._t('msg_connecting'), 'loading');
             if (this.globalScrollContainer) this.globalScrollContainer.scrollTop = 0;
         }
 
         if (state.loading || !state.hasMore) return;
         state.loading = true;
+        const requestId = state.requestId = ++this.globalRequestSerial;
 
+        this._removeGlobalLoadMoreState();
         if (!reset) this._showGlobalLoadMoreState();
 
         if (this.app.socket && this.app.socket.connected) {
+            state.requestTimer = setTimeout(() => this._failGlobalPage(period, requestId), 10000);
             this.app.socket.emit('get_global_highscores', {
                 period,
                 offset: state.nextOffset,
                 limit: this.globalPageSize,
-                requestId: state.requestId
+                requestId
             });
         } else {
             state.loading = false;
             this._removeGlobalLoadMoreState();
             this.app.initSocketConnection();
-            setTimeout(() => {
-                if ((!this.app.socket || !this.app.socket.connected) && state.requestId === this._getGlobalPageState(period).requestId) {
-                    listEl.innerHTML = this._stateMarkup(this._t('msg_no_connection'), 'offline');
-                }
+            this._bindGlobalSocketEvents();
+            state.requestTimer = setTimeout(() => {
+                if (!this.app.socket || !this.app.socket.connected) this._failGlobalPage(period, requestId);
             }, 3000);
         }
     }
@@ -484,6 +528,12 @@ class TopListManager {
         const state = this._getGlobalPageState(period);
         if (payload.requestId !== state.requestId || period !== this.currentGlobalFilter) return;
 
+        if (payload.error) {
+            this._failGlobalPage(period, payload.requestId);
+            return;
+        }
+
+        this._clearGlobalRequestTimer(state);
         state.loading = false;
         this._removeGlobalLoadMoreState();
 

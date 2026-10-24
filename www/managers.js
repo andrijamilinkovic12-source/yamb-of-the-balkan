@@ -330,76 +330,31 @@ class EffectManager {
         this.blackHoleRunId = 0;
         this.blackHoleSpritePromises = {};
         this.blackHoleCleanup = null;
+        this.stageScene = null;
     }
     
     applyPermanent(type) {
         this.stop(); 
         if (!type || type === 'none') return;
-        if (type === 'ice_age') this.loadIceAgeAssets().catch(error => console.warn(error));
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) LiveEffectsStage.preload(type, this.getGoldRainThemeId()).catch(error => console.warn(error));
         if (type === 'black_hole') this.loadBlackHoleSprite(this.getGoldRainThemeId());
         if (type === 'supernova') this.loadSupernovaSprite(this.getGoldRainThemeId());
     }
 
     loadIceAgeAssets() {
-        const frostSrc = 'assets/effects/ice-age/frost-board-v4.png';
-        if (!this.iceAgeAssetsPromise) {
-            this.iceAgeAssetsPromise = Promise.all([frostSrc].map(src => new Promise((resolve, reject) => {
-                const image = new Image();
-                image.onload = () => resolve(image);
-                image.onerror = () => reject(new Error(`Ice Age PNG failed: ${src}`));
-                image.src = src;
-            }))).catch(error => {
-                this.iceAgeAssetsPromise = null;
-                throw error;
-            });
-        }
-        return this.iceAgeAssetsPromise;
+        return LiveEffectsStage.preload('ice_age', this.getGoldRainThemeId());
     }
 
-    async spawnIceAge() {
-        const runId = ++this.iceAgeRunId;
-        try {
-            await this.loadIceAgeAssets();
-        } catch (error) {
-            console.warn(error);
-            return;
-        }
-        if (runId !== this.iceAgeRunId) return;
+    async spawnStageEffect(type) {
+        this.stageScene?.stop();
+        const scene = new LiveEffectsStage(this, type);
+        this.stageScene = scene;
+        try { await scene.start(); }
+        catch (error) { scene.stop(); console.warn(`Effect failed: ${type}`, error); }
+    }
 
-        const tables = [...document.querySelectorAll('.player-table')];
-        const targetTable = tables.find(table => table.style.opacity === '1' || table.style.borderColor.includes('gold') || table.style.borderColor.includes('224')) || tables[0];
-        if (!targetTable) return;
-        document.querySelectorAll('.ice-overlay-container, .ice-age-atmosphere').forEach(node => node.remove());
-        const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
-        const rect = targetTable.getBoundingClientRect();
-        const duration = reducedMotion ? 2700 : 6500;
-        const atmosphere = document.createElement('div');
-        atmosphere.className = 'ice-age-atmosphere';
-        document.body.appendChild(atmosphere);
-
-        const overlay = document.createElement('div');
-        overlay.className = 'ice-overlay-container';
-        overlay.style.setProperty('--ice-left', `${rect.left}px`);
-        overlay.style.setProperty('--ice-top', `${rect.top}px`);
-        overlay.style.setProperty('--ice-width', `${rect.width}px`);
-        overlay.style.setProperty('--ice-height', `${rect.height}px`);
-        overlay.innerHTML = '<div class="ice-age-frost"></div>';
-        document.body.appendChild(overlay);
-        document.body.classList.add('fx-ice-age');
-        window.app?.soundMgr?.iceAge?.();
-        window.app?.vibrate?.([24, 36, 72, 48, 120]);
-
-        this.scheduleEffectTimeout(() => {
-            if (runId !== this.iceAgeRunId) return;
-            overlay.classList.add('ice-melting');
-            atmosphere.classList.add('ice-melting');
-        }, duration - 950);
-        this.scheduleEffectTimeout(() => {
-            if (runId !== this.iceAgeRunId) return;
-            overlay.remove();
-            atmosphere.remove();
-            document.body.classList.remove('fx-ice-age');
-        }, duration);
+    spawnIceAge() {
+        return this.spawnStageEffect('ice_age');
     }
 
     loadBlackHoleSprite(theme = this.getGoldRainThemeId()) {
@@ -829,313 +784,16 @@ class EffectManager {
     }
 
     trigger(type) {
-        if (type !== 'supernova') {
-            this.supernovaRunId++;
-            this.supernovaCanvasCleanup?.();
-        }
+        this.stop();
+        if (type === 'ice_age') { void this.spawnIceAge(); return; }
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) { void this.spawnStageEffect(type); return; }
+        this.stageScene?.stop();
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
         if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
         if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
-
-        if (type === 'ice_age') this.spawnIceAge();
-
         if (type === 'black_hole') void this.spawnBlackHole();
-
         if (type === 'supernova') void this.spawnSupernova();
-
-        if (type === 'neon_pulse') {
-            let targetTable = null;
-            const tables = document.querySelectorAll('.player-table');
-            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
-            if (!targetTable && tables.length > 0) targetTable = tables[0];
-
-            if (targetTable) {
-                const greenNeon = this.isGreenThemeActive();
-                targetTable.classList.add('anim-neon-pulse');
-                if (greenNeon) targetTable.classList.add('anim-neon-pulse--green');
-                document.body.classList.add('fx-neon_pulse'); 
-                if (greenNeon) document.body.classList.add('fx-neon_pulse--green');
-                
-                this.scheduleEffectTimeout(() => {
-                    targetTable.classList.remove('anim-neon-pulse', 'anim-neon-pulse--green');
-                    document.body.classList.remove('fx-neon_pulse', 'fx-neon_pulse--green');
-                }, 5000, 'neon_pulse');
-            }
-        }
-
-        if (type === 'drones') {
-            const duration = 8200;
-            const greenDrones = this.isGreenThemeActive();
-            const compactDroneViewport = window.matchMedia && (
-                window.matchMedia('(max-width: 760px)').matches ||
-                window.matchMedia('(hover: none) and (pointer: coarse)').matches
-            );
-            const reducedDroneMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            const sky = document.createElement('div');
-            sky.className = 'drone-night-sky';
-            if (greenDrones) sky.classList.add('drone-night-sky--green');
-            if (compactDroneViewport || reducedDroneMotion) sky.classList.add('drone-night-sky--compact');
-            sky.innerHTML = `
-                <div class="drone-starfield drone-starfield--far"></div>
-                <div class="drone-starfield drone-starfield--near"></div>
-                <div class="drone-aurora drone-aurora--left"></div>
-                <div class="drone-aurora drone-aurora--right"></div>
-                <div class="drone-holo-stage">
-                    <div class="drone-holo-ring drone-holo-ring--outer"></div>
-                    <div class="drone-holo-ring drone-holo-ring--inner"></div>
-                    <div class="drone-holo-grid"></div>
-                    <div class="drone-holo-flare"></div>
-                </div>
-            `;
-            document.body.appendChild(sky);
-
-            let fullName = _safeT('hs_player') || "IGRAČ";
-            if (window.app && window.app.players && window.app.players[window.app.currentPlayerIdx]) {
-                fullName = window.app.players[window.app.currentPlayerIdx];
-            } else if (window.app && window.app.playerName) {
-                fullName = window.app.playerName;
-            }
-
-            let firstName = fullName.trim().split(/\s+/)[0] || (_safeT('hs_player') || "IGRAČ");
-            firstName = firstName.substring(0, 12);
-
-            const textEl = document.createElement('div');
-            textEl.className = 'drone-text';
-            if (greenDrones) textEl.classList.add('drone-text--green');
-            if (compactDroneViewport || reducedDroneMotion) textEl.classList.add('drone-text--compact');
-            textEl.innerText = firstName;
-            textEl.dataset.text = firstName;
-            textEl.style.setProperty('--name-length', String(firstName.length));
-            document.body.appendChild(textEl);
-
-            const colors = greenDrones
-                ? ['#e7efd2', '#b5cea7', '#d9b98a', '#8aaa82', '#f4f4e7']
-                : ['#66f7ff', '#ffffff', '#51ffd8', '#9d7cff', '#ffd66f'];
-            const droneCount = reducedDroneMotion ? 24 : (compactDroneViewport ? 38 : 64);
-            const fragment = document.createDocumentFragment();
-
-            for (let i = 0; i < droneCount; i++) {
-                const dot = document.createElement('div');
-                dot.className = compactDroneViewport || reducedDroneMotion ? 'drone-dot drone-dot--lite' : 'drone-dot';
-                if (greenDrones) dot.classList.add('drone-dot--green');
-
-                const lane = i / Math.max(1, droneCount - 1);
-                const formationX = 18 + lane * 64 + (Math.random() - 0.5) * 8;
-                const wave = Math.sin(lane * Math.PI * 4.5) * 9;
-                const formationY = 29 + wave + (Math.random() - 0.5) * 14;
-                const side = Math.random() > 0.5 ? 1 : -1;
-
-                dot.style.setProperty('--sx', (48 + side * (28 + Math.random() * 44)) + 'vw');
-                dot.style.setProperty('--sy', (106 + Math.random() * 18) + 'vh');
-                dot.style.setProperty('--mx', (8 + Math.random() * 84) + 'vw');
-                dot.style.setProperty('--my', (62 + Math.random() * 22) + 'vh');
-                dot.style.setProperty('--fx', formationX + 'vw');
-                dot.style.setProperty('--fy', formationY + 'vh');
-                dot.style.setProperty('--ex', (8 + Math.random() * 84) + 'vw');
-                dot.style.setProperty('--ey', (-18 - Math.random() * 18) + 'vh');
-                dot.style.setProperty('--delay', (Math.random() * 0.95).toFixed(2) + 's');
-                dot.style.setProperty('--duration', (7.1 + Math.random() * 0.8).toFixed(2) + 's');
-                dot.style.setProperty('--scale', (0.72 + Math.random() * 0.74).toFixed(2));
-                dot.style.setProperty('--tilt', ((Math.random() - 0.5) * 28).toFixed(1) + 'deg');
-                dot.style.setProperty('--drone-color', colors[Math.floor(Math.random() * colors.length)]);
-                dot.style.setProperty('--strobe-speed', (0.46 + Math.random() * 0.32).toFixed(2) + 's');
-                fragment.appendChild(dot);
-            }
-
-            document.body.appendChild(fragment);
-
-            if(window.app && window.app.soundMgr && window.app.soundMgr.epicDroneShow) {
-                window.app.soundMgr.epicDroneShow();
-            }
-
-            this.scheduleEffectTimeout(() => {
-                if(sky.parentNode) sky.remove();
-                if(textEl.parentNode) textEl.remove();
-                document.querySelectorAll('.drone-dot').forEach(dot => dot.remove());
-            }, duration);
-        }
-
-        if (type === 'thunder') {
-            const flash = document.createElement('div');
-            const greenThunder = this.isGreenThemeActive();
-            flash.className = greenThunder ? 'anim-thunder anim-thunder--green' : 'anim-thunder';
-            if (greenThunder) document.documentElement.classList.add('green-thunder-active');
-            
-            document.body.style.setProperty('--dir', Math.random() > 0.5 ? '1' : '-1');
-            document.body.appendChild(flash);
-            let greenThunderEmblem = null;
-            if (greenThunder) {
-                greenThunderEmblem = document.createElement('img');
-                greenThunderEmblem.className = 'green-thunder-clay';
-                greenThunderEmblem.dataset.themeSrc = 'assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png?v=1';
-                greenThunderEmblem.alt = '';
-                greenThunderEmblem.setAttribute('aria-hidden', 'true');
-                document.body.appendChild(greenThunderEmblem);
-                greenThunderEmblem.src = greenThunderEmblem.dataset.themeSrc;
-            }
-            document.body.classList.add('fx-thunder-shake'); 
-            if (greenThunder) document.body.classList.add('fx-thunder-shake--green');
-            
-            if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
-                window.app.soundMgr.thunder();
-            }
-
-            if (window.app && typeof window.app.vibrate === 'function') {
-                window.app.vibrate([50, 50, 50, 600, 400, 150, 300, 100, 200, 100, 100]);
-            }
-            
-            this.scheduleEffectTimeout(() => {
-                if(flash.parentNode) flash.remove();
-                if (greenThunderEmblem?.parentNode) greenThunderEmblem.remove();
-                document.documentElement.classList.remove('green-thunder-active');
-                document.body.classList.remove('fx-thunder-shake', 'fx-thunder-shake--green');
-            }, 4500, 'thunder');
-        }
-
-        if (type === 'balkan') {
-            document.body.classList.add('fx-balkan');
-            const greenBalkan = this.isGreenThemeActive();
-
-            const bg = document.createElement('div');
-            bg.className = greenBalkan ? 'kafana-overlay kafana-overlay--green' : 'kafana-overlay';
-            bg.innerHTML = `
-                <div class="kafana-tablecloth"></div>
-                <div class="kafana-tablecloth-frame"></div>
-                <div class="kafana-ambient-lights"></div>
-                ${greenBalkan ? '<img class="green-wedding-emblem" data-theme-src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png?v=1" alt="" aria-hidden="true" decoding="async">' : ''}
-            `;
-            document.body.appendChild(bg);
-            if (greenBalkan) {
-                const emblem = bg.querySelector('.green-wedding-emblem');
-                if (emblem) emblem.src = emblem.dataset.themeSrc;
-            }
-
-            const trumpetData = [
-                { side: 'left', top: '15vh', delay: '0s' },
-                { side: 'left', top: '58vh', delay: '0.18s' },
-                { side: 'right', top: '24vh', delay: '0.08s' },
-                { side: 'right', top: '66vh', delay: '0.26s' }
-            ];
-            const trumpets = greenBalkan ? [] : trumpetData.map(data => {
-                const trumpet = document.createElement('div');
-                trumpet.innerText = '🎺';
-                trumpet.className = `trumpet-icon-v2 trumpet-${data.side}`;
-                trumpet.style.top = data.top;
-                trumpet.style.animationDelay = data.delay;
-                document.body.appendChild(trumpet);
-                return trumpet;
-            });
-
-            this.spawnWeddingRain('balkan');
-
-            if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
-                window.app.soundMgr.balkanTrumpet();
-            }
-
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-balkan');
-                if (bg.parentNode) bg.remove();
-                trumpets.forEach(trumpet => trumpet.remove());
-                if (window.app?.soundMgr?.stopBalkanMusic) {
-                    window.app.soundMgr.stopBalkanMusic(true);
-                }
-            }, 8600, 'balkan');
-        }
-        
-        if (type === 'fireworks') {
-             for(let i=0; i<12; i++) { 
-                 this.scheduleEffectTimeout(() => this.spawnRealFirework('fireworks'), i * 500 + Math.random() * 400, 'fireworks');
-             }
-        }
-        
-        if (type === 'cosmic_dust') {
-            document.body.classList.add('fx-cosmic_dust');
-            
-            const container = document.createElement('div');
-            container.className = 'cosmic-container';
-            container.innerHTML = '<div class="stardust-layer layer-1"></div><div class="stardust-layer layer-2"></div><div class="stardust-layer layer-3"></div>';
-            document.body.appendChild(container);
-            
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-cosmic_dust');
-                if(container.parentNode) container.remove();
-            }, 6000, 'cosmic_dust');
-        }
-
-        if (type === 'ufo_abduction') {
-            this.runUfoAbduction();
-        }
-
-        if (type === 'dragon_fire') {
-            document.body.classList.add('fx-dragon_fire');
-            
-            const container = document.createElement('div');
-            container.className = 'dragon-container';
-            container.innerHTML = '<div class="dragon-flames"></div><div class="dragon-embers"></div>';
-            document.body.appendChild(container);
-
-            if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
-                window.app.soundMgr.thunder(); 
-            }
-
-            if (window.app && typeof window.app.vibrate === 'function') {
-                window.app.vibrate([100, 150, 200, 300, 400, 200, 100]); 
-            }
-
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-dragon_fire');
-                if(container.parentNode) container.remove();
-            }, 5500, 'dragon_fire');
-        }
-
-        if (type === 'royal_yamb') {
-            document.body.classList.add('fx-royal_yamb');
-            const greenRoyal = this.isGreenThemeActive();
-            const gameLogoSource = getActiveGameLogoSource();
-
-            const container = document.createElement('div');
-            container.className = 'royal-yamb-container';
-            container.innerHTML = `
-                <div class="royal-yamb-light-rig">
-                    <span class="royal-yamb-lamp lamp-left"></span>
-                    <span class="royal-yamb-lamp lamp-center"></span>
-                    <span class="royal-yamb-lamp lamp-right"></span>
-                </div>
-                <div class="royal-yamb-spotlight spotlight-left"></div>
-                <div class="royal-yamb-spotlight spotlight-right"></div>
-                <div class="royal-yamb-spotlight spotlight-center"></div>
-                <div class="royal-yamb-rays"></div>
-                <div class="royal-yamb-stage-glow"></div>
-                <div class="royal-yamb-footlights"></div>
-                <canvas class="royal-yamb-canvas"></canvas>
-                ${greenRoyal ? `<div class="royal-yamb-emblem royal-yamb-emblem--green">
-                    <img src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1" alt="" draggable="false">
-                </div>` : ''}
-                <div class="royal-yamb-title-active" aria-label="Yamb of the Balkan">
-                    <img src="${gameLogoSource}" alt="" draggable="false">
-                </div>
-                <div class="royal-yamb-sparkles"></div>
-            `;
-            document.body.appendChild(container);
-
-            this.runRoyalYambCanvas(container.querySelector('.royal-yamb-canvas'), 8000);
-            this.playRoyalYambAccents();
-
-            if (window.app && window.app.soundMgr) {
-                window.app.soundMgr.trophy();
-            }
-
-            if (window.app && typeof window.app.vibrate === 'function') {
-                window.app.vibrate([80, 40, 120, 60, 220, 80, 120]);
-            }
-
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-royal_yamb');
-                if (container.parentNode) container.remove();
-            }, 8000, 'royal_yamb');
-        }
     }
 
     getTargetTable() {
@@ -1153,505 +811,6 @@ class EffectManager {
 
         if (!targetTable && tables.length > 0) targetTable = tables[0];
         return targetTable;
-    }
-
-    runUfoAbduction() {
-        const targetTable = this.getTargetTable();
-        if (!targetTable) return;
-        const isGreenTheme = this.isGreenThemeActive();
-
-        const rect = targetTable.getBoundingClientRect();
-        const viewportWidth = window.innerWidth || document.documentElement.clientWidth || rect.width;
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || rect.height;
-        const ufoX = Math.max(110, Math.min(viewportWidth - 110, rect.left + rect.width / 2));
-        const ufoY = Math.max(92, Math.min(viewportHeight - 170, rect.top + rect.height * 0.34));
-        const beamHeight = Math.max(250, Math.min(viewportHeight * 0.74, rect.bottom - ufoY + 70));
-        const beamWidth = Math.max(220, Math.min(viewportWidth * 0.86, rect.width * 1.08));
-
-        document.body.classList.add('fx-ufo_abduction');
-        if (isGreenTheme) document.body.classList.add('fx-ufo_abduction--green');
-        targetTable.classList.add('anim-ufo-table');
-
-        const container = document.createElement('div');
-        container.className = `ufo-abduction-container${isGreenTheme ? ' ufo-abduction-container--green' : ''}`;
-        container.setAttribute('aria-hidden', 'true');
-        container.style.setProperty('--ufo-x', `${ufoX}px`);
-        container.style.setProperty('--ufo-y', `${ufoY}px`);
-        container.style.setProperty('--ufo-beam-height', `${beamHeight}px`);
-        container.style.setProperty('--ufo-beam-width', `${beamWidth}px`);
-        container.innerHTML = `
-            <div class="ufo-space-layer"></div>
-            <div class="ufo-scan-grid"></div>
-            <div class="ufo-stage">
-                ${isGreenTheme ? '<img class="ufo-green-clay" data-theme-src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png" alt="" draggable="false">' : '<div class="ufo-speech">BIP?</div>'}
-                <div class="ufo-beam">
-                    <div class="ufo-beam-core"></div>
-                    <div class="ufo-ray ray-one"></div>
-                    <div class="ufo-ray ray-two"></div>
-                    <div class="ufo-ray ray-three"></div>
-                    <div class="ufo-ray ray-four"></div>
-                </div>
-                ${isGreenTheme ? '' : `<div class="ufo-ship">
-                    <div class="ufo-dome">
-                        <div class="ufo-alien alien-left"><span></span><span></span></div>
-                        <div class="ufo-alien alien-center"><span></span><span></span></div>
-                        <div class="ufo-alien alien-right"><span></span><span></span></div>
-                    </div>
-                    <div class="ufo-body">
-                        <i></i><i></i><i></i><i></i><i></i>
-                    </div>
-                    <div class="ufo-rim"></div>
-                    <div class="ufo-legs"></div>
-                </div>`}
-                <div class="ufo-score-vortex"></div>
-            </div>
-        `;
-        document.body.appendChild(container);
-        if (isGreenTheme) {
-            const greenUfoImage = container.querySelector('.ufo-green-clay');
-            if (greenUfoImage) greenUfoImage.src = greenUfoImage.dataset.themeSrc;
-        }
-
-        const sound = window.app && window.app.soundMgr;
-        if (sound && typeof sound.ufoAbduction === 'function') {
-            sound.ufoAbduction();
-        } else if (sound && typeof sound.epicDroneShow === 'function') {
-            sound.epicDroneShow();
-        }
-
-        if (window.app && typeof window.app.vibrate === 'function') {
-            window.app.vibrate([35, 45, 35, 90, 35, 45, 160]);
-        }
-
-        this.scheduleEffectTimeout(() => {
-            if (!container.isConnected || !document.body.classList.contains('fx-ufo_abduction')) return;
-            this.abductVisibleScores(container, targetTable, ufoX, ufoY);
-        }, 1050, 'ufo_abduction');
-
-        this.scheduleEffectTimeout(() => {
-            document.body.classList.remove('fx-ufo_abduction', 'fx-ufo_abduction--green');
-            targetTable.classList.remove('anim-ufo-table');
-            targetTable.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
-            document.querySelectorAll('.ufo-abducted-score, .ufo-target-ray').forEach(el => el.remove());
-            if (container.parentNode) container.remove();
-        }, 7500, 'ufo_abduction');
-    }
-
-    abductVisibleScores(container, targetTable, ufoX, ufoY) {
-        const buttons = Array.from(targetTable.querySelectorAll('.score-btn.filled'))
-            .filter(btn => (btn.textContent || '').trim() !== '');
-
-        if (buttons.length === 0) return;
-
-        const rayStep = Math.max(1, Math.ceil(buttons.length / 30));
-        const stagger = Math.max(18, Math.min(46, 1450 / buttons.length));
-
-        buttons.forEach((btn, index) => {
-            const text = (btn.textContent || '').trim();
-            const rect = btn.getBoundingClientRect();
-            const startX = rect.left + rect.width / 2;
-            const startY = rect.top + rect.height / 2;
-            const targetX = ufoX + (Math.random() * 44 - 22);
-            const targetY = ufoY + 20 + Math.random() * 22;
-            const dx = targetX - startX;
-            const dy = targetY - startY;
-            const delay = 180 + index * stagger + Math.random() * 120;
-            const duration = 2350 + Math.random() * 950;
-            const wobble = (index % 2 === 0 ? 1 : -1) * (18 + Math.random() * 18);
-            const spin = (index % 2 === 0 ? 1 : -1) * (220 + Math.random() * 260);
-
-            btn.classList.add('ufo-score-dimmed');
-
-            const clone = document.createElement('div');
-            clone.className = 'ufo-abducted-score';
-            clone.textContent = text;
-            clone.style.left = `${startX}px`;
-            clone.style.top = `${startY}px`;
-            clone.style.setProperty('--score-hue', `${160 + (index % 5) * 22}deg`);
-            container.appendChild(clone);
-
-            const animation = clone.animate([
-                { opacity: 0, transform: 'translate3d(0, 0, 0) scale(0.86) rotate(0deg)', filter: 'blur(2px)', offset: 0 },
-                { opacity: 1, transform: `translate3d(${wobble}px, -10px, 0) scale(1.1) rotate(${spin * 0.08}deg)`, filter: 'blur(0)', offset: 0.16 },
-                { opacity: 0.95, transform: `translate3d(${dx * 0.44 + wobble}px, ${dy * 0.42 - 24}px, 0) scale(0.82) rotate(${spin * 0.45}deg)`, filter: 'blur(0.5px)', offset: 0.62 },
-                { opacity: 0, transform: `translate3d(${dx}px, ${dy}px, 0) scale(0.18) rotate(${spin}deg)`, filter: 'blur(5px)', offset: 1 }
-            ], {
-                duration,
-                delay,
-                easing: 'cubic-bezier(0.16, 0.8, 0.24, 1)',
-                fill: 'forwards'
-            });
-
-            animation.onfinish = () => {
-                if (clone.parentNode) clone.remove();
-            };
-
-            if (index % rayStep === 0) {
-                this.spawnUfoTargetRay(container, ufoX, ufoY + 48, startX, startY, delay, Math.min(1900, duration));
-            }
-        });
-    }
-
-    spawnUfoTargetRay(container, fromX, fromY, toX, toY, delay, duration) {
-        if (!container || !container.isConnected) return;
-
-        const dx = toX - fromX;
-        const dy = toY - fromY;
-        const length = Math.hypot(dx, dy);
-        const angle = Math.atan2(dy, dx);
-        const ray = document.createElement('div');
-        ray.className = 'ufo-target-ray';
-        ray.style.left = `${fromX}px`;
-        ray.style.top = `${fromY}px`;
-        ray.style.width = `${length}px`;
-        ray.style.transform = `rotate(${angle}rad)`;
-        ray.style.animationDelay = `${delay}ms`;
-        ray.style.animationDuration = `${duration}ms`;
-        container.appendChild(ray);
-
-        this.scheduleEffectTimeout(() => {
-            if (ray.parentNode) ray.remove();
-        }, delay + duration + 120, 'ufo_abduction');
-    }
-
-    playRoyalYambAccents() {
-        const sound = window.app && window.app.soundMgr;
-        if (!sound) return;
-
-        [760, 1840, 3120, 4680].forEach(delay => {
-            this.scheduleEffectTimeout(() => {
-                if (typeof sound.fireworkLaunch === 'function') sound.fireworkLaunch();
-                this.scheduleEffectTimeout(() => {
-                    if (typeof sound.fireworkExplode === 'function') sound.fireworkExplode();
-                }, 240, 'royal_yamb');
-            }, delay, 'royal_yamb');
-        });
-    }
-
-    async runRoyalYambCanvas(canvas, duration = 8000) {
-        if (!canvas || !canvas.getContext) return;
-        if (this.royalCanvasCleanup) this.royalCanvasCleanup();
-        const runId = ++this.royalYambRunId;
-
-        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
-        if (!ctx) return;
-
-        const isGreenTheme = this.isGreenThemeActive();
-        const greenDucatSprite = isGreenTheme
-            ? await this.loadGreenDucatParticleSprite()
-            : await this.loadThemeDucatParticleSprite();
-        if (runId !== this.royalYambRunId || !canvas.isConnected) return;
-
-        const start = performance.now();
-        let rafId = 0;
-        let width = 0;
-        let height = 0;
-        let dpr = 1;
-
-        const clamp01 = value => Math.max(0, Math.min(1, value));
-        const random = (min, max) => min + Math.random() * (max - min);
-        const easeOutCubic = value => 1 - Math.pow(1 - clamp01(value), 3);
-        const easeInOut = value => {
-            value = clamp01(value);
-            return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
-        };
-
-        const resizeCanvas = () => {
-            width = window.innerWidth || document.documentElement.clientWidth || 1;
-            height = window.innerHeight || document.documentElement.clientHeight || 1;
-            const compact = width < 560 || height < 620;
-            dpr = Math.min(window.devicePixelRatio || 1, compact ? 1 : 1.25);
-            canvas.width = Math.floor(width * dpr);
-            canvas.height = Math.floor(height * dpr);
-            canvas.style.width = '100vw';
-            canvas.style.height = '100vh';
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.imageSmoothingEnabled = true;
-        };
-
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas, { passive: true });
-        const cleanup = () => {
-            cancelAnimationFrame(rafId);
-            window.removeEventListener('resize', resizeCanvas);
-            if (this.royalCanvasCleanup === cleanup) this.royalCanvasCleanup = null;
-        };
-        this.royalCanvasCleanup = cleanup;
-
-        const compact = width < 560 || height < 620;
-        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-        const lowPower = compact || reducedMotion;
-        const golds = ['#fff7c2', '#ffd66f', '#f6b63d', '#d98b18'];
-        const burstColors = greenDucatSprite
-            ? ['#f6f5d9', '#dce9c5', '#ffffff', '#d4bb93', '#a5c496']
-            : ['#fff7c2', '#ffd66f', '#ffffff', '#ffb13d', '#7fffe1'];
-        const coinCount = reducedMotion ? 16 : (compact ? 24 : 36);
-        const sparkleCount = reducedMotion ? 20 : (compact ? 28 : 42);
-        const burstParticleCount = reducedMotion ? 10 : (compact ? 14 : 20);
-
-        const createSprite = (size, paint) => {
-            const sprite = document.createElement('canvas');
-            sprite.width = size;
-            sprite.height = size;
-            const spriteCtx = sprite.getContext('2d');
-            if (spriteCtx) paint(spriteCtx, size);
-            return sprite;
-        };
-
-        const legacyCoinSprites = greenDucatSprite ? [] : golds.map(color => createSprite(64, (spriteCtx, size) => {
-            const center = size / 2;
-            const radius = size * 0.31;
-            const gradient = spriteCtx.createRadialGradient(center - 8, center - 10, 3, center, center, radius);
-            gradient.addColorStop(0, '#fffde8');
-            gradient.addColorStop(0.32, color);
-            gradient.addColorStop(0.7, '#d88a16');
-            gradient.addColorStop(1, '#6d3404');
-            spriteCtx.shadowBlur = 8;
-            spriteCtx.shadowColor = 'rgba(255, 215, 104, 0.72)';
-            spriteCtx.fillStyle = gradient;
-            spriteCtx.beginPath();
-            spriteCtx.arc(center, center, radius, 0, Math.PI * 2);
-            spriteCtx.fill();
-            spriteCtx.shadowBlur = 0;
-            spriteCtx.strokeStyle = 'rgba(75, 34, 3, 0.68)';
-            spriteCtx.lineWidth = 3;
-            spriteCtx.stroke();
-            spriteCtx.strokeStyle = 'rgba(255, 255, 230, 0.58)';
-            spriteCtx.lineWidth = 2;
-            spriteCtx.beginPath();
-            spriteCtx.arc(center, center, radius * 0.56, 0, Math.PI * 2);
-            spriteCtx.stroke();
-            spriteCtx.fillStyle = 'rgba(111, 59, 5, 0.72)';
-            spriteCtx.font = 'bold 17px serif';
-            spriteCtx.textAlign = 'center';
-            spriteCtx.textBaseline = 'middle';
-            spriteCtx.fillText('Y', center, center + 1);
-        }));
-        const coinSprites = greenDucatSprite ? [greenDucatSprite] : legacyCoinSprites;
-
-        const diamondSprite = greenDucatSprite ? null : createSprite(52, (spriteCtx, size) => {
-            const center = size / 2;
-            const radius = size * 0.28;
-            const gradient = spriteCtx.createLinearGradient(center, center - radius, center, center + radius);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(0.42, '#92fff1');
-            gradient.addColorStop(1, '#168b94');
-            spriteCtx.shadowBlur = 10;
-            spriteCtx.shadowColor = 'rgba(103, 255, 229, 0.82)';
-            spriteCtx.fillStyle = gradient;
-            spriteCtx.beginPath();
-            spriteCtx.moveTo(center, center - radius);
-            spriteCtx.lineTo(center + radius * 0.9, center);
-            spriteCtx.lineTo(center, center + radius);
-            spriteCtx.lineTo(center - radius * 0.9, center);
-            spriteCtx.closePath();
-            spriteCtx.fill();
-        });
-
-        const sparkleSprites = burstColors.map(color => createSprite(40, (spriteCtx, size) => {
-            const center = size / 2;
-            const gradient = spriteCtx.createRadialGradient(center, center, 0, center, center, size * 0.46);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(0.12, color);
-            gradient.addColorStop(0.42, color + '99');
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            spriteCtx.fillStyle = gradient;
-            spriteCtx.fillRect(0, 0, size, size);
-            spriteCtx.strokeStyle = color;
-            spriteCtx.lineWidth = 1.5;
-            spriteCtx.beginPath();
-            spriteCtx.moveTo(center, 6);
-            spriteCtx.lineTo(center, size - 6);
-            spriteCtx.moveTo(6, center);
-            spriteCtx.lineTo(size - 6, center);
-            spriteCtx.stroke();
-        }));
-
-        const falling = Array.from({ length: coinCount }, (_, index) => {
-            const size = random(compact ? 7 : 8, compact ? 14 : 18);
-            return {
-                kind: !greenDucatSprite && index % 7 === 0 ? 'diamond' : 'coin',
-                x: random(width * 0.04, width * 0.96),
-                y: random(-height * 0.45, -size * 2),
-                drift: random(-80, 80),
-                size,
-                delay: random(120, 3400),
-                life: random(2800, 4300),
-                spin: random(-5.2, 5.2),
-                wobble: random(0.8, 2.4),
-                sprite: !greenDucatSprite && index % 7 === 0
-                    ? diamondSprite
-                    : coinSprites[index % coinSprites.length]
-            };
-        });
-
-        const sparkles = Array.from({ length: sparkleCount }, (_, index) => ({
-            x: random(width * 0.08, width * 0.92),
-            y: random(height * 0.12, height * 0.86),
-            size: random(1.3, compact ? 3.1 : 4.1),
-            delay: random(0, 2400),
-            life: random(2100, 5200),
-            drift: random(-18, 18),
-            phase: random(0, Math.PI * 2),
-            sprite: sparkleSprites[index % sparkleSprites.length]
-        }));
-
-        const burstTimes = reducedMotion ? [980, 3300, 5200] : [760, 2100, 3650, 5200];
-        const bursts = [];
-        burstTimes.forEach((time, burstIndex) => {
-            const originX = width * (0.22 + (burstIndex % 3) * 0.28) + random(-width * 0.05, width * 0.05);
-            const originY = height * random(0.2, 0.42);
-            for (let i = 0; i < burstParticleCount; i++) {
-                const angle = (Math.PI * 2 * i) / burstParticleCount + random(-0.08, 0.08);
-                bursts.push({
-                    start: time + random(-80, 130),
-                    life: random(1150, 1650),
-                    x: originX,
-                    y: originY,
-                    angle,
-                    speed: random(compact ? 68 : 92, compact ? 150 : 210),
-                    size: random(1.4, compact ? 3.1 : 3.8),
-                    sprite: sparkleSprites[(i + burstIndex) % sparkleSprites.length],
-                    gravity: random(54, 104)
-                });
-            }
-        });
-
-        const drawSprite = (sprite, x, y, radius, rotation, alpha, scaleY = 1) => {
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.translate(x, y);
-            ctx.rotate(rotation);
-            ctx.scale(1, scaleY);
-            ctx.drawImage(sprite, -radius, -radius, radius * 2, radius * 2);
-            ctx.restore();
-        };
-
-        const draw = now => {
-            if (!canvas.isConnected) {
-                cleanup();
-                return;
-            }
-
-            const elapsed = now - start;
-            ctx.clearRect(0, 0, width, height);
-            ctx.globalCompositeOperation = 'lighter';
-
-            sparkles.forEach(sparkle => {
-                const local = (elapsed - sparkle.delay) % sparkle.life;
-                const progress = local / sparkle.life;
-                const alpha = Math.sin(progress * Math.PI) * (0.42 + 0.38 * Math.sin(elapsed / 180 + sparkle.phase));
-                if (alpha <= 0.04) return;
-                const size = sparkle.size * 5;
-                ctx.globalAlpha = alpha;
-                ctx.drawImage(
-                    sparkle.sprite,
-                    sparkle.x + Math.sin(elapsed / 900 + sparkle.phase) * sparkle.drift - size,
-                    sparkle.y - easeInOut(progress) * 46 - size,
-                    size * 2,
-                    size * 2
-                );
-            });
-
-            bursts.forEach(particle => {
-                const local = elapsed - particle.start;
-                if (local < 0 || local > particle.life) return;
-                const progress = local / particle.life;
-                const travel = easeOutCubic(progress);
-                const x = particle.x + Math.cos(particle.angle) * particle.speed * travel;
-                const y = particle.y + Math.sin(particle.angle) * particle.speed * travel + particle.gravity * progress * progress;
-                const alpha = (1 - progress) * 0.95;
-                const size = particle.size * 4.5;
-                ctx.globalAlpha = alpha;
-                ctx.drawImage(particle.sprite, x - size, y - size, size * 2, size * 2);
-            });
-            ctx.globalAlpha = 1;
-
-            ctx.globalCompositeOperation = 'source-over';
-            falling.forEach(item => {
-                const local = elapsed - item.delay;
-                if (local < 0 || local > item.life) return;
-                const progress = local / item.life;
-                const eased = easeInOut(progress);
-                const alpha = progress < 0.12 ? progress / 0.12 : Math.min(1, (1 - progress) / 0.16);
-                const x = item.x + item.drift * Math.sin(progress * Math.PI * item.wobble);
-                const y = item.y + (height + Math.abs(item.y) + item.size * 4) * eased;
-                const rotation = item.spin * progress * Math.PI * 2;
-                const radius = item.kind === 'diamond' ? item.size * 1.28 : item.size * 1.45;
-                drawSprite(item.sprite, x, y, radius, rotation, alpha, item.kind === 'diamond' ? 1 : 0.76);
-            });
-
-            if (elapsed < duration) {
-                rafId = requestAnimationFrame(draw);
-            } else {
-                ctx.clearRect(0, 0, width, height);
-                cleanup();
-            }
-        };
-
-        rafId = requestAnimationFrame(draw);
-        this.scheduleEffectTimeout(cleanup, duration + 120, 'royal_yamb');
-    }
-
-    spawnRealFirework(group = 'fireworks') {
-        const startX = window.innerWidth * 0.1 + Math.random() * window.innerWidth * 0.8;
-        const endY = window.innerHeight * 0.1 + Math.random() * window.innerHeight * 0.4;
-        
-        if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkLaunch) {
-            window.app.soundMgr.fireworkLaunch();
-        }
-
-        const rocket = document.createElement('div');
-        rocket.className = 'fw-rocket';
-        rocket.style.left = startX + 'px';
-        document.body.appendChild(rocket);
-
-        const duration = 800 + Math.random() * 400;
-        rocket.animate([
-            { transform: `translateY(100vh)`, opacity: 1 },
-            { transform: `translateY(${endY}px)`, opacity: 0 }
-        ], { duration: duration, easing: 'ease-out' }).onfinish = () => {
-            if (!rocket.isConnected) return;
-            rocket.remove();
-            this.explodeRealFirework(startX, endY, group);
-        };
-    }
-
-    explodeRealFirework(x, y, group = 'fireworks') {
-        if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkExplode) {
-            window.app.soundMgr.fireworkExplode();
-        }
-
-        const flash = document.createElement('div');
-        flash.className = 'fw-flash';
-        document.body.appendChild(flash);
-        this.scheduleEffectTimeout(() => { if(flash.parentNode) flash.remove(); }, 250, group);
-
-        if (window.app && typeof window.app.vibrate === 'function') {
-            window.app.vibrate([40, 50, 20]);
-        }
-
-        const colors = ['#FF0044', '#00FF44', '#0044FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#FFD700'];
-        const mainColor = colors[Math.floor(Math.random() * colors.length)];
-        const particleCount = 45 + Math.random() * 30; 
-
-        for (let i = 0; i < particleCount; i++) {
-            const p = document.createElement('div');
-            p.className = 'fw-particle';
-            p.style.backgroundColor = mainColor;
-            p.style.boxShadow = `0 0 8px ${mainColor}, 0 0 15px ${mainColor}`;
-            p.style.left = x + 'px';
-            p.style.top = y + 'px';
-
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 180 + 50; 
-            
-            p.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
-            p.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
-
-            document.body.appendChild(p);
-            this.scheduleEffectTimeout(() => { if(p.parentNode) p.remove(); }, 1600, group);
-        }
     }
 
     scheduleEffectTimeout(callback, delay, group = 'default') {
@@ -1884,37 +1043,6 @@ class EffectManager {
         }
     }
 
-    spawnWeddingRain(group = 'balkan') {
-        document.querySelectorAll('.wedding-rain').forEach(layer => layer.remove());
-
-        const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-        const greenWedding = this.isGreenThemeActive();
-        const count = reducedMotion ? 18 : (compact ? 28 : 40);
-        const symbols = ['💶', '💵', '🥂', '🍾', '💖', '🎵', '🍻'];
-        const layer = document.createElement('div');
-        layer.className = 'wedding-rain';
-        layer.setAttribute('aria-hidden', 'true');
-
-        const fragment = document.createDocumentFragment();
-        for (let i = 0; i < count; i++) {
-            const particle = document.createElement('span');
-            particle.className = greenWedding ? `wedding-particle wedding-particle--green${i % 4 === 0 ? ' wedding-particle--ducat' : ''}` : 'wedding-particle';
-            if (!greenWedding) particle.innerText = symbols[i % symbols.length];
-            particle.style.setProperty('--wedding-x', (2 + Math.random() * 96).toFixed(2) + 'vw');
-            particle.style.setProperty('--wedding-drift', (-55 + Math.random() * 110).toFixed(1) + 'px');
-            particle.style.setProperty('--wedding-delay', (Math.random() * 2.5).toFixed(2) + 's');
-            particle.style.setProperty('--wedding-duration', (3.8 + Math.random() * 2.2).toFixed(2) + 's');
-            particle.style.setProperty('--wedding-size', (compact ? 1.05 + Math.random() * 0.9 : 1.2 + Math.random() * 1.05).toFixed(2) + 'rem');
-            particle.style.setProperty('--wedding-spin', (-220 + Math.random() * 440).toFixed(0) + 'deg');
-            fragment.appendChild(particle);
-        }
-
-        layer.appendChild(fragment);
-        document.body.appendChild(layer);
-        this.scheduleEffectTimeout(() => layer.remove(), 8500, group);
-    }
-    
     getEffectSurfaceTone() {
         const styles = getComputedStyle(document.body);
         const source = styles.getPropertyValue('--bg-base').trim() || styles.backgroundColor;
@@ -2444,11 +1572,13 @@ class EffectManager {
     
     celebrateWin() {
         this.trigger('fireworks');
-        this.scheduleEffectTimeout(() => this.trigger('gold_rain'), 1000, 'celebrate_win');
+        this.scheduleEffectTimeout(() => this.spawnGoldRain(), 1000, 'celebrate_win');
     }
     
     stop() {
         this.iceAgeRunId++;
+        this.stageScene?.stop();
+        this.stageScene = null;
         this.blackHoleRunId++;
         this.blackHoleCleanup?.();
         this.confettiRunId++;
@@ -3700,8 +2830,9 @@ class ShopManager {
             severna: item?.severnaIcon,
             easter: item?.easterIcon
         }[activeTheme];
-        const safeSource = String(source || '');
+        const safeSource = globalThis.resolveThemeQualityAsset?.(String(source || '')) || String(source || '');
         if (!safeSource) return '';
+        if (safeSource.includes('-quality-v2.png')) return safeSource;
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }
 
@@ -3715,8 +2846,15 @@ class ShopManager {
     }
 
     getTreasuryEffectPreviewSource(effectId) {
-        if (effectId === 'ice_age') return 'assets/effects/ice-age/frost-preview-v4.png';
-        const theme = localStorage.getItem('yamb_theme') || 'dark';
+        if (effectId === 'ice_age') return 'assets/effects/stage-v1/frost-corner.png?v=1';
+        const selected = localStorage.getItem('yamb_theme') || 'dark';
+        const theme = YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
+        if (effectId === 'balkan') return 'assets/effects/stage-v1/trumpet.png?v=1';
+        if (effectId === 'dragon_fire') return 'assets/effects/stage-v1/flame.png?v=1';
+        if (effectId === 'ufo_abduction') return `assets/effects/stage-v1/ufo-${theme}.png?v=1`;
+        if (effectId === 'royal_yamb') return theme === 'dark'
+            ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
+            : `assets/theme-packs/${theme}/splash-title-soft-clay-v1.png?v=1`;
         if (effectId === 'black_hole' && YAMB_THEME_IDS.includes(theme)) {
             return `assets/effects/black-hole/${theme}-core-v1.png`;
         }
@@ -3733,14 +2871,16 @@ class ShopManager {
         };
         const role = roles[effectId];
         if (theme === 'dark' && role) {
-            return `assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-${role}-v${['fireflies', 'bubbles'].includes(role) ? 2 : 1}.png`;
+            const source = `assets/green-soft-clay/canonical/treasury-effect-thumbnails/preview-${role}-v${['fireflies', 'bubbles'].includes(role) ? 2 : 1}.png`;
+            return globalThis.resolveThemeQualityAsset?.(source) || source;
         }
         const validThemes = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter',
             'desert', 'moon', 'severna'];
         const version = ['fireflies', 'bubbles'].includes(role) || (['easter', 'desert', 'severna'].includes(theme) && effectId === 'gold_rain') ? 2 : 1;
-        return role && validThemes.includes(theme)
+        const source = role && validThemes.includes(theme)
             ? `assets/theme-packs/${theme}/canonical/treasury-effect-thumbnails/preview-${role}-v${version}.png`
             : '';
+        return globalThis.resolveThemeQualityAsset?.(source) || source;
     }
 
     getTreasuryRewardVideoIcon() {
@@ -3937,6 +3077,8 @@ class ShopManager {
             
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.value = itemId;
+        } else if (this.type === 'effect') {
+            window.app?.effectMgr?.applyPermanent(itemId);
         } else if (this.type === 'skin' && window.app && window.app.features) {
             if (typeof window.app.updateDiceVisuals === 'function') {
                 window.app.updateDiceVisuals();

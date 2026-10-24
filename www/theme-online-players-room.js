@@ -8,7 +8,8 @@
     const asset = (role, theme = activeTheme()) => {
         if (!ROLES.has(role)) throw new Error(`Unknown Online Players icon role: ${role}`);
         if (!THEMES.includes(theme)) theme = 'dark';
-        return `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png?v=2`;
+        const source = `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png?v=2`;
+        return globalThis.resolveThemeQualityAsset?.(source) || source;
     };
     const preload = (theme = activeTheme(), roles = ROLES) => Promise.all([...roles].map(role => {
             const source = asset(role, theme);

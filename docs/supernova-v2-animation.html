@@ -4,8 +4,8 @@
   <base href="../www/">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Supernova — animirani pregled</title>
-  <link rel="stylesheet" href="efekti.css?v=3.4">
+  <title>Deset tema — pregled živih efekata</title>
+  <link rel="stylesheet" href="efekti.css?v=3.5">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -33,13 +33,8 @@
     <select id="theme-choice" aria-label="Tema">
       <option value="dark">Zelena</option><option value="light">Svetlo zlato</option><option value="medium">Trula višnja</option><option value="winter">Plavi okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option><option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
     </select>
-    <button type="button" data-effect="confetti">Konfete</button>
-    <button type="button" data-effect="gold_rain">Kiša dukata</button>
-    <button type="button" data-effect="fireflies">Magični svici</button>
-    <button type="button" data-effect="bubbles">Magični mehurići</button>
-    <button type="button" data-effect="ice_age">Ledeno doba</button>
-    <button type="button" data-effect="black_hole">Crna rupa</button>
-    <button type="button" data-effect="supernova">Supernova</button>
+    <select id="effect-choice" aria-label="Efekat"><option value="confetti">Konfete</option><option value="gold_rain">Kiša dukata</option><option value="fireflies">Magični svici</option><option value="bubbles">Magični mehurići</option><option value="ice_age">Ledeno doba</option><option value="black_hole">Crna rupa</option><option value="supernova">Supernova</option><option value="neon_pulse">Neon puls</option><option value="thunder">Gromovnik</option><option value="balkan">Svadba</option><option value="fireworks">Vatromet</option><option value="drones">Svetleći dronovi</option><option value="cosmic_dust">Svemirska prašina</option><option value="ufo_abduction">UFO abdukcija</option><option value="dragon_fire">Zmajeva vatra</option><option value="royal_yamb">Kraljevski Yamb</option></select>
+    <button type="button" data-effect="play">Ponovi</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
   <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
@@ -55,10 +50,8 @@
   <div class="note">Pregled pokreće stvarni EffectManager, bez naloga, kupovine i promene rezultata.</div>
   <canvas id="confetti-canvas"></canvas>
   <div id="qa-error" hidden></div>
-
   <script>
-  // This review embeds the same EffectManager source as the application at build time.
-  const YAMB_THEME_IDS = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const YAMB_THEME_IDS = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
 const YAMB_FREE_THEME_IDS = ['dark', 'light', 'medium', 'winter'];
 // The coin artwork stays canonical; these profiles only control atmosphere and motion.
 const GOLD_RAIN_THEME_PROFILES = Object.freeze({
@@ -99,7 +92,535 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
     severna:  { main: '138, 227, 228', accent: '195, 172, 234', shade: '23, 36, 58' }
 });
 
-  class EffectManager {
+/* Animated effect scenes. PNGs are physical components; motion, light and particles are drawn live. */
+const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
+    ice_age: 6500, neon_pulse: 5000, thunder: 4500, balkan: 8600, fireworks: 7000,
+    drones: 8200, cosmic_dust: 6000, ufo_abduction: 7500, dragon_fire: 5500, royal_yamb: 8000
+});
+const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
+
+class LiveEffectsStage {
+    static imageCache = new Map();
+
+    static sources(type, theme) {
+        const root = 'assets/effects/stage-v1/';
+        const png = name => root + name + '.png?v=1';
+        if (type === 'ice_age') return { frost: png('frost-corner') };
+        if (type === 'balkan') return { trumpet: png('trumpet') };
+        if (type === 'dragon_fire') return { flame: png('flame') };
+        if (type === 'ufo_abduction') return { ship: png(`ufo-${theme}`) };
+        if (type === 'royal_yamb') return {
+            logo: theme === 'dark' ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
+                : `assets/theme-packs/${theme}/splash-title-soft-clay-v1.png?v=1`,
+            coin: theme === 'dark' ? 'assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png?v=1'
+                : `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`
+        };
+        return {};
+    }
+
+    static loadImage(source) {
+        if (this.imageCache.has(source)) return this.imageCache.get(source);
+        const promise = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = async () => {
+                try { await image.decode?.(); } catch (_) {}
+                resolve(image);
+            };
+            image.onerror = () => { this.imageCache.delete(source); resolve(null); };
+            image.src = source;
+        });
+        this.imageCache.set(source, promise);
+        // Retain shared components, but only the selected theme's ship/logo/coin.
+        for (const key of this.imageCache.keys()) {
+            if (this.imageCache.size <= 7) break;
+            if (key !== source && !/stage-v1\/(?:trumpet|flame|frost-corner)\.png/.test(key)) this.imageCache.delete(key);
+        }
+        return promise;
+    }
+
+    static async preload(type, theme) {
+        const entries = await Promise.all(Object.entries(this.sources(type, theme))
+            .map(async ([role, source]) => [role, await this.loadImage(source)]));
+        return Object.fromEntries(entries);
+    }
+
+    constructor(owner, type) {
+        this.owner = owner;
+        this.type = type;
+        this.theme = owner.getGoldRainThemeId();
+        this.palette = SUPERNOVA_THEME_PROFILES[this.theme];
+        this.reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        this.mobile = window.innerWidth <= 760 || Boolean(window.matchMedia?.('(pointer: coarse)').matches);
+        this.duration = this.reduced ? Math.min(2600, LIVE_STAGE_EFFECT_DURATIONS[type]) : LIVE_STAGE_EFFECT_DURATIONS[type];
+        this.stopped = false;
+        this.events = new Set();
+        this.mutedNodes = new Set();
+        this.seed = value => { const n = Math.sin(value * 127.1 + 19.73) * 43758.5453; return n - Math.floor(n); };
+        this.clamp = value => Math.max(0, Math.min(1, value));
+        this.ease = value => { const t = this.clamp(value); return t * t * (3 - 2 * t); };
+        this.rgba = (rgb, alpha) => `rgba(${rgb},${this.clamp(alpha)})`;
+        this.resize = this.resize.bind(this);
+        this.frame = this.frame.bind(this);
+    }
+
+    async start() {
+        this.images = await LiveEffectsStage.preload(this.type, this.theme);
+        if (this.stopped || document.hidden || this.theme !== this.owner.getGoldRainThemeId()) return this.stop();
+        const needed = Object.keys(LiveEffectsStage.sources(this.type, this.theme));
+        if (needed.some(role => !this.images[role])) {
+            console.warn(`Effect component unavailable: ${this.type}/${this.theme}`);
+            return this.stop();
+        }
+        this.table = this.owner.getTargetTable?.() || document.querySelector('.player-table');
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'live-stage-effect';
+        this.overlay.dataset.effect = this.type;
+        this.overlay.dataset.theme = this.theme;
+        this.overlay.setAttribute('aria-hidden', 'true');
+        this.canvas = document.createElement('canvas');
+        this.overlay.appendChild(this.canvas);
+        document.body.appendChild(this.overlay);
+        this.ctx = this.canvas.getContext('2d', { alpha: true });
+        if (!this.ctx) return this.stop();
+        this.resize();
+        this.scores = [...(this.table?.querySelectorAll?.('.score-btn.filled, .qa-board-grid span') || [])]
+            .filter(node => /^\d+$/.test(node.textContent.trim())).slice(0, this.mobile ? 24 : 40)
+            .map(node => ({ node, text: node.textContent.trim(), rect: node.getBoundingClientRect() }));
+        if (this.type === 'drones') this.prepareDroneFormation();
+        window.addEventListener('resize', this.resize, { passive: true });
+        this.visibility = () => { if (document.hidden) this.stop(); };
+        document.addEventListener('visibilitychange', this.visibility);
+        if (typeof MutationObserver !== 'undefined') {
+            this.themeObserver = new MutationObserver(() => {
+                if (this.theme !== this.owner.getGoldRainThemeId()) this.stop();
+            });
+            this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+        }
+        if (!this.reduced) {
+            const sound = { balkan: 'balkanTrumpet', drones: 'epicDroneShow', ufo_abduction: 'ufoAbduction',
+                royal_yamb: 'trophy', ice_age: 'iceAge' }[this.type];
+            if (sound) window.app?.soundMgr?.[sound]?.();
+        }
+        this.timer = setTimeout(() => this.stop(), this.duration + 1000);
+        this.raf = requestAnimationFrame(this.frame);
+    }
+
+    resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        const rect = this.table?.getBoundingClientRect?.();
+        const fallbackWidth = Math.min(360, this.width * 0.8);
+        const fallbackHeight = Math.min(560, this.height * 0.65);
+        const valid = rect && rect.width > 0 && rect.height > 0;
+        this.board = {
+            x: valid ? rect.left : (this.width - fallbackWidth) / 2,
+            y: valid ? rect.top : (this.height - fallbackHeight) / 2,
+            width: valid ? rect.width : fallbackWidth,
+            height: valid ? rect.height : fallbackHeight
+        };
+        this.board.right = this.board.x + this.board.width;
+        this.board.bottom = this.board.y + this.board.height;
+        this.scores?.forEach(score => { score.rect = score.node.getBoundingClientRect(); });
+        const dpr = Math.min(window.devicePixelRatio || 1, this.mobile ? 1.15 : 1.5);
+        this.canvas.width = Math.round(this.width * dpr);
+        this.canvas.height = Math.round(this.height * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.overlay.dataset.board = `${this.board.width}x${this.board.height}`;
+    }
+
+    stop() {
+        this.stopped = true;
+        cancelAnimationFrame(this.raf);
+        clearTimeout(this.timer);
+        this.themeObserver?.disconnect();
+        window.removeEventListener('resize', this.resize);
+        if (this.visibility) document.removeEventListener('visibilitychange', this.visibility);
+        this.mutedNodes.forEach(node => node.classList.remove('live-ufo-score-muted'));
+        this.mutedNodes.clear();
+        this.overlay?.remove();
+        if (this.type === 'balkan') window.app?.soundMgr?.stopBalkanMusic?.(true);
+        if (this.owner.stageScene === this) this.owner.stageScene = null;
+    }
+
+    once(key, callback) {
+        if (!this.events.has(key)) { this.events.add(key); callback(); }
+    }
+
+    frame(now) {
+        if (this.stopped) return;
+        if (this.theme !== this.owner.getGoldRainThemeId() || !this.overlay.isConnected) return this.stop();
+        if (this.startedAt === undefined) this.startedAt = now;
+        if (this.mobile && this.lastFrame !== undefined && now - this.lastFrame < 30) {
+            this.raf = requestAnimationFrame(this.frame); return;
+        }
+        this.lastFrame = now;
+        const elapsed = now - this.startedAt;
+        const p = this.clamp(elapsed / this.duration);
+        const seconds = elapsed / 1000;
+        this.alpha = this.ease(p / 0.075) * this.ease((1 - p) / 0.14);
+        this.overlay.dataset.phase = p < 0.2 ? 'entry' : p < 0.78 ? 'active' : 'exit';
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.globalCompositeOperation = 'source-over';
+        this.ctx.globalAlpha = 1;
+        const render = { ice_age: 'ice', neon_pulse: 'neon', thunder: 'thunder', balkan: 'wedding',
+            fireworks: 'fireworks', drones: 'drones', cosmic_dust: 'dust', ufo_abduction: 'ufo',
+            dragon_fire: 'fire', royal_yamb: 'royal' }[this.type];
+        this[render](this.reduced ? this.type === 'thunder' ? 0.75 : 1.3 : seconds, p);
+        if (elapsed < this.duration) this.raf = requestAnimationFrame(this.frame);
+        else this.stop();
+    }
+
+    shade(amount = 0.18) {
+        this.ctx.fillStyle = this.rgba(this.palette.shade, amount * this.alpha);
+        this.ctx.fillRect(0, 0, this.width, this.height);
+    }
+
+    glow(x, y, radius, color, alpha = 1) {
+        if (radius <= 0 || alpha <= 0) return;
+        const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, this.rgba(color, alpha * this.alpha));
+        gradient.addColorStop(0.24, this.rgba(color, alpha * 0.38 * this.alpha));
+        gradient.addColorStop(1, this.rgba(color, 0));
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+    }
+
+    dot(x, y, radius, color, alpha) {
+        this.ctx.fillStyle = this.rgba(color, alpha * this.alpha);
+        this.ctx.beginPath(); this.ctx.arc(x, y, Math.max(0.2, radius), 0, Math.PI * 2); this.ctx.fill();
+    }
+
+    line(points, color, alpha = 1, width = 1) {
+        this.ctx.strokeStyle = this.rgba(color, alpha * this.alpha);
+        this.ctx.lineWidth = width;
+        this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round';
+        this.ctx.beginPath();
+        points.forEach(([x, y], i) => i ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y));
+        this.ctx.stroke();
+    }
+
+    sprite(image, x, y, width, rotation = 0, alpha = 1, flip = 1, height) {
+        if (!image) return;
+        const h = height || width * image.naturalHeight / image.naturalWidth;
+        this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(rotation);
+        this.ctx.scale(flip, 1); this.ctx.globalAlpha = this.alpha * alpha;
+        this.ctx.drawImage(image, -width / 2, -h / 2, width, h); this.ctx.restore();
+    }
+
+    ice(t, p) {
+        const c = this.ctx, b = this.board;
+        const progress = this.reduced ? this.ease(p / 0.4) : this.ease(t / 2.8);
+        this.shade(0.09);
+        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
+        const reach = Math.hypot(b.width, b.height) * progress * 0.63;
+        this.overlay.dataset.corners = '4';
+        this.overlay.dataset.coverage = progress.toFixed(3);
+        [[b.x, b.y, 1, 1], [b.right, b.y, -1, 1], [b.x, b.bottom, 1, -1], [b.right, b.bottom, -1, -1]]
+            .forEach(([x, y, sx, sy]) => {
+                // Screen-space lengths preserve the full board height on tall phones.
+                const ice = c.createRadialGradient(x, y, 0, x, y, Math.max(1, reach));
+                ice.addColorStop(0, this.rgba('210, 236, 247', 0.54 * this.alpha));
+                ice.addColorStop(0.72, this.rgba('186, 219, 239', 0.32 * this.alpha));
+                ice.addColorStop(0.92, this.rgba('230, 247, 251', 0.2 * this.alpha));
+                ice.addColorStop(1, 'rgba(210,240,255,0)');
+                c.fillStyle = ice; c.fillRect(b.x, b.y, b.width, b.height);
+                c.save(); c.translate(x, y); c.scale(sx, sy); c.globalAlpha = this.alpha * 0.88;
+                c.drawImage(this.images.frost, 0, 0, b.width * progress * 0.86, b.height * progress * 0.86);
+                c.restore();
+            });
+        // Fine glints follow the advancing freezing front rather than falling from above.
+        for (let i = 0; i < 32 && !this.reduced; i++) {
+            const x = b.x + this.seed(i + 4) * b.width, y = b.y + this.seed(i + 90) * b.height;
+            const cornerDistance = Math.min(Math.hypot(x - b.x, y - b.y), Math.hypot(x - b.right, y - b.y),
+                Math.hypot(x - b.x, y - b.bottom), Math.hypot(x - b.right, y - b.bottom));
+            const glint = Math.max(0, 1 - Math.abs(cornerDistance - reach * 0.83) / 32);
+            this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7);
+        }
+        c.restore();
+    }
+
+    neon(t) {
+        const b = this.board, perimeter = 2 * (b.width + b.height);
+        const point = distance => {
+            let d = ((distance % perimeter) + perimeter) % perimeter;
+            if (d < b.width) return [b.x + d, b.y]; d -= b.width;
+            if (d < b.height) return [b.right, b.y + d]; d -= b.height;
+            if (d < b.width) return [b.right - d, b.bottom]; d -= b.width;
+            return [b.x, b.bottom - d];
+        };
+        const speed = this.reduced ? 0 : 280;
+        for (let lane = 0; lane < 3; lane++) {
+            for (let trail = 0; trail < 18; trail++) {
+                const d = t * speed + lane * perimeter / 3 - trail * 7;
+                this.line([point(d - 7), point(d)], lane === 1 ? this.palette.accent : this.palette.main,
+                    (1 - trail / 18) * 0.82, 2.4 + trail * 0.15);
+            }
+            const head = point(t * speed + lane * perimeter / 3);
+            this.glow(head[0], head[1], 20, lane === 1 ? this.palette.accent : this.palette.main, 0.42);
+        }
+        const y = b.y + ((t * 0.32) % 1) * b.height;
+        const pulse = this.reduced ? 0.15 : Math.sin(t * Math.PI / 1.5) ** 2 * 0.32;
+        this.line([[b.x + 2, y], [b.right - 2, y]], this.palette.main, pulse, 1.5);
+        this.glow(b.x + b.width / 2, y, b.width * 0.55, this.palette.main, pulse * 0.16);
+    }
+
+    thunder(t) {
+        this.shade(0.2);
+        const b = this.board;
+        [0.65, 1.8, 3.05].forEach((strike, index) => {
+            const age = t - strike;
+            if (age < 0 || age > 0.58) return;
+            const intensity = this.reduced ? 0.1 : Math.exp(-age * 9) + (age > 0.13 ? Math.exp(-(age - 0.13) * 20) * 0.5 : 0);
+            const x = b.x + b.width * (0.25 + this.seed(index + 3) * 0.5);
+            const endY = b.y + b.height * (0.25 + this.seed(index + 8) * 0.45);
+            const points = Array.from({ length: 18 }, (_, step) => [x + (this.seed(step * 3 + index * 31) - 0.5) * 44 * Math.sin(step / 17 * Math.PI), endY * step / 17]);
+            this.line(points, this.palette.main, intensity * 0.27, 12);
+            this.line(points, this.palette.main, intensity * 0.8, 4);
+            this.line(points, '248, 250, 255', intensity, 1.3);
+            for (let branch = 0; branch < 3; branch++) {
+                const origin = points[5 + branch * 3];
+                this.line([origin, [origin[0] + (branch % 2 ? -28 : 32), origin[1] + 20],
+                    [origin[0] + (branch % 2 ? -47 : 54), origin[1] + 68]], this.palette.main, intensity * 0.6, 1.2);
+            }
+            this.glow(x, endY, 110, this.palette.main, intensity * 0.55);
+            if (!this.reduced) this.once(`thunder-${index}`, () => {
+                if (index === 0) window.app?.soundMgr?.thunder?.();
+                window.app?.vibrate?.([30, 35, 65]);
+            });
+        });
+    }
+
+    wedding(t, p) {
+        this.shade(0.08);
+        const beat = Math.sin(t * Math.PI * 5);
+        const entry = this.ease(p / 0.14) * this.ease((1 - p) / 0.15);
+        const instrumentWidth = Math.min(146, this.width * 0.31);
+        const edge = instrumentWidth * 0.27;
+        for (let i = 0; i < 4; i++) {
+            const left = i % 2 === 0;
+            const x = left ? -instrumentWidth * (1 - entry) + edge : this.width + instrumentWidth * (1 - entry) - edge;
+            const y = this.height * (i < 2 ? 0.26 : 0.65) + (this.reduced ? 0 : Math.sin(t * 8 + i) * 5);
+            this.sprite(this.images.trumpet, x, y, instrumentWidth, (left ? -1 : 1) * beat * 0.035,
+                entry, left ? 1 : -1);
+            for (let wave = 0; wave < 3 && !this.reduced; wave++) {
+                const phase = (t * 1.9 + wave / 3) % 1;
+                const radius = 12 + phase * 45;
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = this.rgba(this.palette.main, (1 - phase) * 0.35 * this.alpha);
+                this.ctx.lineWidth = 1.5;
+                this.ctx.arc(x + (left ? 1 : -1) * instrumentWidth * 0.42, y - 15, radius,
+                    left ? -0.7 : Math.PI - 0.7, left ? 0.7 : Math.PI + 0.7); this.ctx.stroke();
+            }
+        }
+        // A narrow woven band nods to a Balkan tablecloth while leaving the game readable.
+        this.ctx.fillStyle = this.rgba(this.palette.shade, 0.14 * this.alpha);
+        this.ctx.fillRect(0, this.height * 0.91, this.width, this.height * 0.09);
+        for (let x = 0; x < this.width; x += 12) this.line([[x, this.height * 0.91], [x + 12, this.height]], this.palette.main, 0.12, 1);
+        for (let i = 0; i < (this.reduced ? 15 : this.mobile ? 65 : 105); i++) {
+            const x = (this.seed(i + 5) * this.width + Math.sin(t * 1.8 + i) * 18 + this.width) % this.width;
+            const y = ((t * (65 + this.seed(i + 33) * 90) + this.seed(i + 72) * this.height * 2) % (this.height + 50)) - 30;
+            this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(t * 2 + i);
+            this.ctx.fillStyle = this.rgba(i % 3 ? this.palette.main : this.palette.accent, 0.65 * this.alpha);
+            this.ctx.fillRect(-2, -4, 3.5 * Math.cos(t * 4 + i), 8); this.ctx.restore();
+        }
+    }
+
+    fireworks(t) {
+        this.shade(0.25);
+        const count = this.reduced ? 2 : this.mobile ? 9 : 12;
+        for (let i = 0; i < count; i++) {
+            const launch = i * (this.reduced ? 0.65 : 0.57);
+            const age = t - launch;
+            if (age < 0 || age > 2.65) continue;
+            const x = this.width * (0.14 + this.seed(i + 9) * 0.72);
+            const y = this.height * (0.15 + this.seed(i + 45) * 0.38);
+            const color = i % 2 ? this.palette.accent : this.palette.main;
+            if (age < 0.64) {
+                const rise = this.ease(age / 0.64);
+                const rocketY = this.height + 20 + (y - this.height - 20) * rise;
+                this.line([[x - 6, rocketY + 45], [x, rocketY]], color, 0.55, 1.8);
+                this.glow(x, rocketY, 12, color, 0.8);
+                continue;
+            }
+            const life = age - 0.64;
+            if (!this.reduced && i < 4) this.once(`firework-${i}`, () => window.app?.soundMgr?.fireworkExplode?.());
+            const sparks = this.reduced ? 15 : this.mobile ? 56 : 80;
+            for (let j = 0; j < sparks; j++) {
+                const angle = j * Math.PI * 2 / sparks + this.seed(i + j) * 0.1;
+                const speed = 65 + this.seed(i * 99 + j) * Math.min(200, this.width * 0.52);
+                const radius = speed * (1 - Math.exp(-life * 1.9));
+                const fall = life * life * 31;
+                const px = x + Math.cos(angle) * radius, py = y + Math.sin(angle) * radius + fall;
+                const alpha = Math.max(0, 1 - life / 1.9) ** 1.2;
+                this.line([[px - Math.cos(angle) * (8 + life * 3), py - Math.sin(angle) * 8 - life * 4], [px, py]], color, alpha * 0.75, 1.2);
+                this.dot(px, py, 0.7 + this.seed(j + 3) * 0.8, color, alpha);
+                if (j % 9 === 0) this.glow(px, py, 6, color, alpha * 0.2);
+            }
+            this.glow(x, y, 58, color, Math.exp(-life * 9) * 0.5);
+        }
+    }
+
+    prepareDroneFormation() {
+        const app = window.app;
+        const fullName = app?.players?.[app.currentPlayerIdx] || app?.playerName || 'YAMB';
+        const name = String(fullName).trim().split(/\s+/)[0].slice(0, 12).toLocaleUpperCase();
+        const sample = document.createElement('canvas'); sample.width = 360; sample.height = 100;
+        const ctx = sample.getContext('2d', { willReadFrequently: true });
+        ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = `800 ${Math.min(66, 330 / Math.max(3, name.length) * 1.65)}px Arial`;
+        ctx.fillText(name, 180, 50, 345);
+        const data = ctx.getImageData(0, 0, 360, 100).data;
+        const points = [];
+        for (let y = 8; y < 95; y += 6) for (let x = 6; x < 355; x += 6) {
+            if (data[(y * 360 + x) * 4 + 3] > 100) points.push([x / 360, y / 100]);
+        }
+        const max = this.mobile ? 175 : 280;
+        this.droneTargets = points.filter((_, i) => i % Math.max(1, Math.ceil(points.length / max)) === 0);
+    }
+
+    drones(t, p) {
+        this.shade(0.38);
+        const assemble = this.ease(p / 0.42), depart = this.ease((p - 0.76) / 0.24);
+        (this.droneTargets || []).forEach(([tx, ty], i) => {
+            const targetX = this.width * (0.08 + tx * 0.84), targetY = this.height * 0.3 + ty * Math.min(135, this.height * 0.2);
+            const originX = this.width * this.seed(i + 4), originY = this.height + 30 + this.seed(i + 15) * 120;
+            let x = originX + (targetX - originX) * assemble;
+            let y = originY + (targetY - originY) * assemble;
+            if (!this.reduced) { x += Math.sin(t * 2 + i) * 24 * (1 - assemble); y += Math.sin(t * 1.4 + i) * 18 * (1 - assemble); }
+            x += (this.seed(i + 57) - 0.5) * this.width * depart;
+            y -= (this.height * 0.65 + this.seed(i + 81) * 180) * depart;
+            if (this.reduced) { x = targetX; y = targetY; }
+            const color = i % 7 ? this.palette.main : this.palette.accent;
+            const twinkle = 0.68 + Math.sin(t * 3 + i * 2) * 0.13;
+            this.glow(x, y, this.mobile ? 6 : 8, color, 0.26 * twinkle);
+            this.dot(x, y, this.mobile ? 1.25 : 1.6, color, twinkle);
+        });
+    }
+
+    dust(t) {
+        this.shade(0.21);
+        for (let cloud = 0; cloud < 3; cloud++) {
+            const x = this.width * (0.2 + cloud * 0.3) + Math.sin(t * 0.28 + cloud * 2) * this.width * 0.18;
+            const y = this.height * (0.25 + cloud * 0.22) + Math.cos(t * 0.24 + cloud) * 45;
+            this.glow(x, y, Math.min(this.width, this.height) * 0.7,
+                cloud === 1 ? this.palette.accent : this.palette.main, 0.085);
+        }
+        const count = this.reduced ? 45 : this.mobile ? 145 : 250;
+        for (let i = 0; i < count; i++) {
+            const layer = i % 3, speed = this.reduced ? 0 : 0.1 + layer * 0.09;
+            const angle = this.seed(i + 22) * Math.PI * 2 + t * speed;
+            const radius = 0.08 + this.seed(i + 74) * 0.75;
+            const x = this.width / 2 + Math.cos(angle) * radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
+            const y = this.height / 2 + Math.sin(angle) * radius * this.height * 0.75;
+            this.dot(x, y, 0.65 + layer * 0.45, i % 5 ? this.palette.main : this.palette.accent,
+                0.24 + (Math.sin(t + i) + 1) * 0.19);
+            if (i % 15 === 0) this.line([[x - Math.sin(angle) * 7, y + Math.cos(angle) * 5], [x, y]], this.palette.main, 0.2, 0.8);
+            if (i % 37 === 0) this.glow(x, y, 10, this.palette.accent, 0.12);
+        }
+    }
+
+    ufo(t, p) {
+        this.shade(0.23);
+        const b = this.board, enter = this.reduced ? 1 : this.ease(p / 0.2), leave = this.reduced ? 0 : this.ease((p - 0.81) / 0.19);
+        const hoverX = b.x + b.width / 2;
+        const hoverY = Math.max(88, Math.min(this.height * 0.35, b.y + b.height * 0.09));
+        const x = -160 + (hoverX + 160) * enter + leave * (this.width + 160);
+        const y = hoverY - (1 - enter) * 110 - leave * 180 + (this.reduced ? 0 : Math.sin(t * 2.4) * 5);
+        const width = Math.min(235, this.width * 0.56);
+        const beam = this.ease((p - 0.18) / 0.1) * this.ease((0.83 - p) / 0.1);
+        if (beam > 0) {
+            const bottom = b.bottom, spread = b.width * 0.51;
+            const gradient = this.ctx.createLinearGradient(x, y, x, bottom);
+            gradient.addColorStop(0, this.rgba(this.palette.accent, 0.32 * beam * this.alpha));
+            gradient.addColorStop(1, this.rgba(this.palette.main, 0.025 * beam * this.alpha));
+            this.ctx.fillStyle = gradient; this.ctx.beginPath(); this.ctx.moveTo(x - 17, y);
+            this.ctx.lineTo(x + 17, y); this.ctx.lineTo(x + spread, bottom); this.ctx.lineTo(x - spread, bottom);
+            this.ctx.closePath(); this.ctx.fill();
+            for (let i = 0; i < (this.reduced ? 12 : 60); i++) {
+                const life = (t * (0.22 + this.seed(i + 9) * 0.2) + this.seed(i + 15)) % 1;
+                const py = bottom - (bottom - y) * life;
+                const px = x + Math.sin(life * 8 + i) * spread * (1 - life) * 0.75;
+                this.dot(px, py, 0.7 + this.seed(i + 52), this.palette.main, beam * 0.55);
+            }
+            this.scores.forEach((score, i) => {
+                const life = this.clamp((t - 1.7 - i * 0.055) / 2.75);
+                if (!life || life >= 1 || this.reduced) return;
+                if (!this.mutedNodes.has(score.node)) { score.node.classList.add('live-ufo-score-muted'); this.mutedNodes.add(score.node); }
+                const travel = this.ease(life), sx = score.rect.left + score.rect.width / 2, sy = score.rect.top + score.rect.height / 2;
+                const px = sx + (x - sx) * travel + Math.sin(life * 9 + i) * 18 * Math.sin(life * Math.PI);
+                const py = sy + (y - sy) * travel;
+                this.ctx.fillStyle = this.rgba(this.palette.accent, (1 - life) * this.alpha);
+                this.ctx.font = `700 ${12 * (1 - life * 0.6)}px Arial`; this.ctx.textAlign = 'center';
+                this.ctx.fillText(score.text, px, py);
+            });
+        }
+        this.sprite(this.images.ship, x, y - width * 0.07, width, this.reduced ? 0 : Math.sin(t * 1.4) * 0.035);
+        this.glow(x, y + 9, 32, this.palette.main, beam * 0.25);
+    }
+
+    fire(t, p) {
+        this.shade(0.1);
+        const strength = this.ease(p / 0.15) * this.ease((1 - p) / 0.27);
+        const count = this.reduced ? 7 : this.mobile ? 22 : 35;
+        const base = this.ctx.createLinearGradient(0, this.height * 0.48, 0, this.height);
+        base.addColorStop(0, 'rgba(235,95,25,0)');
+        base.addColorStop(0.7, this.rgba('235, 95, 25', strength * this.alpha * 0.12));
+        base.addColorStop(1, this.rgba('255, 170, 65', strength * this.alpha * 0.36));
+        this.ctx.fillStyle = base; this.ctx.fillRect(0, this.height * 0.48, this.width, this.height * 0.52);
+        for (let i = 0; i < count; i++) {
+            const breath = 0.75 + Math.sin(t * (2.2 + this.seed(i + 9)) + i * 2) * 0.22;
+            const x = (i + 0.5) / count * this.width + Math.sin(t * 2 + i) * 18;
+            const height = (this.height * (0.27 + this.seed(i + 84) * 0.4)) * strength * breath;
+            const y = this.height + 30 - height / 2;
+            this.sprite(this.images.flame, x, y, height * 0.5, Math.sin(t * 2 + i) * 0.07,
+                strength * (this.reduced ? 0.14 : 0.53), 1, height);
+        }
+        this.glow(this.width / 2, this.height + 20, this.width * 0.95, '244, 111, 37', strength * 0.24);
+        for (let i = 0; i < (this.reduced ? 8 : 75); i++) {
+            const life = (t * (0.12 + this.seed(i + 12) * 0.24) + this.seed(i + 29)) % 1;
+            const x = this.width * this.seed(i + 35) + Math.sin(life * 6 + i) * 35;
+            const y = this.height - life * this.height * 0.95;
+            this.dot(x, y, 0.6 + this.seed(i + 63) * 1.1, i % 4 ? '249, 175, 71' : this.palette.main,
+                Math.sin(life * Math.PI) * strength * 0.8);
+        }
+    }
+
+    royal(t, p) {
+        this.shade(0.3);
+        const x = this.width / 2, y = this.height * 0.4;
+        for (let i = 0; i < 5; i++) {
+            const originX = this.width * (i % 2 ? 1.1 : -0.1), originY = this.height * 0.95;
+            const angle = -Math.PI / 2 + Math.sin(t * 0.32 + i) * 0.5 + (i - 2) * 0.12;
+            const length = this.height * 1.3, spread = 0.055;
+            const gradient = this.ctx.createLinearGradient(originX, originY, x, 0);
+            gradient.addColorStop(0, this.rgba(this.palette.accent, 0.09 * this.alpha));
+            gradient.addColorStop(1, this.rgba(this.palette.main, 0));
+            this.ctx.fillStyle = gradient; this.ctx.beginPath(); this.ctx.moveTo(originX, originY);
+            this.ctx.lineTo(originX + Math.cos(angle - spread) * length, originY + Math.sin(angle - spread) * length);
+            this.ctx.lineTo(originX + Math.cos(angle + spread) * length, originY + Math.sin(angle + spread) * length);
+            this.ctx.closePath(); this.ctx.fill();
+        }
+        this.glow(x, y, Math.min(260, this.width * 0.66), this.palette.main, 0.14);
+        const entry = this.ease(p / 0.2);
+        this.sprite(this.images.logo, x, y + (1 - entry) * 35, Math.min(350, this.width * 0.83) * (0.88 + entry * 0.12), 0, entry);
+        for (let i = 0; i < (this.reduced ? 10 : this.mobile ? 43 : 70); i++) {
+            const delay = this.seed(i + 8) * 2.1;
+            const life = this.clamp((t - 0.75 - delay) / 4.6);
+            if (!life || life >= 1) continue;
+            const angle = -Math.PI + this.seed(i + 29) * Math.PI;
+            const velocity = 50 + this.seed(i + 45) * 170;
+            const px = x + Math.cos(angle) * velocity * life * 2.5 + Math.sin(t + i) * 9;
+            const py = y + Math.sin(angle) * velocity * life * 1.8 + life * life * this.height * 1.1;
+            const size = 14 + this.seed(i + 66) * 15;
+            const flip = 0.22 + Math.abs(Math.cos(t * 3 + i)) * 0.78;
+            this.sprite(this.images.coin, px, py, size, life * 4 + i, Math.sin(life * Math.PI) * 0.9, flip, size);
+        }
+    }
+}
+
+class EffectManager {
     constructor() {
         this.activeEffects = [];
         this.confettiAnimationId = null;
@@ -125,76 +646,31 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
         this.blackHoleRunId = 0;
         this.blackHoleSpritePromises = {};
         this.blackHoleCleanup = null;
+        this.stageScene = null;
     }
     
     applyPermanent(type) {
         this.stop(); 
         if (!type || type === 'none') return;
-        if (type === 'ice_age') this.loadIceAgeAssets().catch(error => console.warn(error));
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) LiveEffectsStage.preload(type, this.getGoldRainThemeId()).catch(error => console.warn(error));
         if (type === 'black_hole') this.loadBlackHoleSprite(this.getGoldRainThemeId());
         if (type === 'supernova') this.loadSupernovaSprite(this.getGoldRainThemeId());
     }
 
     loadIceAgeAssets() {
-        const frostSrc = 'assets/effects/ice-age/frost-board-v4.png';
-        if (!this.iceAgeAssetsPromise) {
-            this.iceAgeAssetsPromise = Promise.all([frostSrc].map(src => new Promise((resolve, reject) => {
-                const image = new Image();
-                image.onload = () => resolve(image);
-                image.onerror = () => reject(new Error(`Ice Age PNG failed: ${src}`));
-                image.src = src;
-            }))).catch(error => {
-                this.iceAgeAssetsPromise = null;
-                throw error;
-            });
-        }
-        return this.iceAgeAssetsPromise;
+        return LiveEffectsStage.preload('ice_age', this.getGoldRainThemeId());
     }
 
-    async spawnIceAge() {
-        const runId = ++this.iceAgeRunId;
-        try {
-            await this.loadIceAgeAssets();
-        } catch (error) {
-            console.warn(error);
-            return;
-        }
-        if (runId !== this.iceAgeRunId) return;
+    async spawnStageEffect(type) {
+        this.stageScene?.stop();
+        const scene = new LiveEffectsStage(this, type);
+        this.stageScene = scene;
+        try { await scene.start(); }
+        catch (error) { scene.stop(); console.warn(`Effect failed: ${type}`, error); }
+    }
 
-        const tables = [...document.querySelectorAll('.player-table')];
-        const targetTable = tables.find(table => table.style.opacity === '1' || table.style.borderColor.includes('gold') || table.style.borderColor.includes('224')) || tables[0];
-        if (!targetTable) return;
-        document.querySelectorAll('.ice-overlay-container, .ice-age-atmosphere').forEach(node => node.remove());
-        const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
-        const rect = targetTable.getBoundingClientRect();
-        const duration = reducedMotion ? 2700 : 6500;
-        const atmosphere = document.createElement('div');
-        atmosphere.className = 'ice-age-atmosphere';
-        document.body.appendChild(atmosphere);
-
-        const overlay = document.createElement('div');
-        overlay.className = 'ice-overlay-container';
-        overlay.style.setProperty('--ice-left', `${rect.left}px`);
-        overlay.style.setProperty('--ice-top', `${rect.top}px`);
-        overlay.style.setProperty('--ice-width', `${rect.width}px`);
-        overlay.style.setProperty('--ice-height', `${rect.height}px`);
-        overlay.innerHTML = '<div class="ice-age-frost"></div>';
-        document.body.appendChild(overlay);
-        document.body.classList.add('fx-ice-age');
-        window.app?.soundMgr?.iceAge?.();
-        window.app?.vibrate?.([24, 36, 72, 48, 120]);
-
-        this.scheduleEffectTimeout(() => {
-            if (runId !== this.iceAgeRunId) return;
-            overlay.classList.add('ice-melting');
-            atmosphere.classList.add('ice-melting');
-        }, duration - 950);
-        this.scheduleEffectTimeout(() => {
-            if (runId !== this.iceAgeRunId) return;
-            overlay.remove();
-            atmosphere.remove();
-            document.body.classList.remove('fx-ice-age');
-        }, duration);
+    spawnIceAge() {
+        return this.spawnStageEffect('ice_age');
     }
 
     loadBlackHoleSprite(theme = this.getGoldRainThemeId()) {
@@ -624,313 +1100,16 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
     }
 
     trigger(type) {
-        if (type !== 'supernova') {
-            this.supernovaRunId++;
-            this.supernovaCanvasCleanup?.();
-        }
+        this.stop();
+        if (type === 'ice_age') { void this.spawnIceAge(); return; }
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) { void this.spawnStageEffect(type); return; }
+        this.stageScene?.stop();
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
         if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
         if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
-
-        if (type === 'ice_age') this.spawnIceAge();
-
         if (type === 'black_hole') void this.spawnBlackHole();
-
         if (type === 'supernova') void this.spawnSupernova();
-
-        if (type === 'neon_pulse') {
-            let targetTable = null;
-            const tables = document.querySelectorAll('.player-table');
-            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
-            if (!targetTable && tables.length > 0) targetTable = tables[0];
-
-            if (targetTable) {
-                const greenNeon = this.isGreenThemeActive();
-                targetTable.classList.add('anim-neon-pulse');
-                if (greenNeon) targetTable.classList.add('anim-neon-pulse--green');
-                document.body.classList.add('fx-neon_pulse'); 
-                if (greenNeon) document.body.classList.add('fx-neon_pulse--green');
-                
-                this.scheduleEffectTimeout(() => {
-                    targetTable.classList.remove('anim-neon-pulse', 'anim-neon-pulse--green');
-                    document.body.classList.remove('fx-neon_pulse', 'fx-neon_pulse--green');
-                }, 5000, 'neon_pulse');
-            }
-        }
-
-        if (type === 'drones') {
-            const duration = 8200;
-            const greenDrones = this.isGreenThemeActive();
-            const compactDroneViewport = window.matchMedia && (
-                window.matchMedia('(max-width: 760px)').matches ||
-                window.matchMedia('(hover: none) and (pointer: coarse)').matches
-            );
-            const reducedDroneMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            const sky = document.createElement('div');
-            sky.className = 'drone-night-sky';
-            if (greenDrones) sky.classList.add('drone-night-sky--green');
-            if (compactDroneViewport || reducedDroneMotion) sky.classList.add('drone-night-sky--compact');
-            sky.innerHTML = `
-                <div class="drone-starfield drone-starfield--far"></div>
-                <div class="drone-starfield drone-starfield--near"></div>
-                <div class="drone-aurora drone-aurora--left"></div>
-                <div class="drone-aurora drone-aurora--right"></div>
-                <div class="drone-holo-stage">
-                    <div class="drone-holo-ring drone-holo-ring--outer"></div>
-                    <div class="drone-holo-ring drone-holo-ring--inner"></div>
-                    <div class="drone-holo-grid"></div>
-                    <div class="drone-holo-flare"></div>
-                </div>
-            `;
-            document.body.appendChild(sky);
-
-            let fullName = _safeT('hs_player') || "IGRAČ";
-            if (window.app && window.app.players && window.app.players[window.app.currentPlayerIdx]) {
-                fullName = window.app.players[window.app.currentPlayerIdx];
-            } else if (window.app && window.app.playerName) {
-                fullName = window.app.playerName;
-            }
-
-            let firstName = fullName.trim().split(/\s+/)[0] || (_safeT('hs_player') || "IGRAČ");
-            firstName = firstName.substring(0, 12);
-
-            const textEl = document.createElement('div');
-            textEl.className = 'drone-text';
-            if (greenDrones) textEl.classList.add('drone-text--green');
-            if (compactDroneViewport || reducedDroneMotion) textEl.classList.add('drone-text--compact');
-            textEl.innerText = firstName;
-            textEl.dataset.text = firstName;
-            textEl.style.setProperty('--name-length', String(firstName.length));
-            document.body.appendChild(textEl);
-
-            const colors = greenDrones
-                ? ['#e7efd2', '#b5cea7', '#d9b98a', '#8aaa82', '#f4f4e7']
-                : ['#66f7ff', '#ffffff', '#51ffd8', '#9d7cff', '#ffd66f'];
-            const droneCount = reducedDroneMotion ? 24 : (compactDroneViewport ? 38 : 64);
-            const fragment = document.createDocumentFragment();
-
-            for (let i = 0; i < droneCount; i++) {
-                const dot = document.createElement('div');
-                dot.className = compactDroneViewport || reducedDroneMotion ? 'drone-dot drone-dot--lite' : 'drone-dot';
-                if (greenDrones) dot.classList.add('drone-dot--green');
-
-                const lane = i / Math.max(1, droneCount - 1);
-                const formationX = 18 + lane * 64 + (Math.random() - 0.5) * 8;
-                const wave = Math.sin(lane * Math.PI * 4.5) * 9;
-                const formationY = 29 + wave + (Math.random() - 0.5) * 14;
-                const side = Math.random() > 0.5 ? 1 : -1;
-
-                dot.style.setProperty('--sx', (48 + side * (28 + Math.random() * 44)) + 'vw');
-                dot.style.setProperty('--sy', (106 + Math.random() * 18) + 'vh');
-                dot.style.setProperty('--mx', (8 + Math.random() * 84) + 'vw');
-                dot.style.setProperty('--my', (62 + Math.random() * 22) + 'vh');
-                dot.style.setProperty('--fx', formationX + 'vw');
-                dot.style.setProperty('--fy', formationY + 'vh');
-                dot.style.setProperty('--ex', (8 + Math.random() * 84) + 'vw');
-                dot.style.setProperty('--ey', (-18 - Math.random() * 18) + 'vh');
-                dot.style.setProperty('--delay', (Math.random() * 0.95).toFixed(2) + 's');
-                dot.style.setProperty('--duration', (7.1 + Math.random() * 0.8).toFixed(2) + 's');
-                dot.style.setProperty('--scale', (0.72 + Math.random() * 0.74).toFixed(2));
-                dot.style.setProperty('--tilt', ((Math.random() - 0.5) * 28).toFixed(1) + 'deg');
-                dot.style.setProperty('--drone-color', colors[Math.floor(Math.random() * colors.length)]);
-                dot.style.setProperty('--strobe-speed', (0.46 + Math.random() * 0.32).toFixed(2) + 's');
-                fragment.appendChild(dot);
-            }
-
-            document.body.appendChild(fragment);
-
-            if(window.app && window.app.soundMgr && window.app.soundMgr.epicDroneShow) {
-                window.app.soundMgr.epicDroneShow();
-            }
-
-            this.scheduleEffectTimeout(() => {
-                if(sky.parentNode) sky.remove();
-                if(textEl.parentNode) textEl.remove();
-                document.querySelectorAll('.drone-dot').forEach(dot => dot.remove());
-            }, duration);
-        }
-
-        if (type === 'thunder') {
-            const flash = document.createElement('div');
-            const greenThunder = this.isGreenThemeActive();
-            flash.className = greenThunder ? 'anim-thunder anim-thunder--green' : 'anim-thunder';
-            if (greenThunder) document.documentElement.classList.add('green-thunder-active');
-            
-            document.body.style.setProperty('--dir', Math.random() > 0.5 ? '1' : '-1');
-            document.body.appendChild(flash);
-            let greenThunderEmblem = null;
-            if (greenThunder) {
-                greenThunderEmblem = document.createElement('img');
-                greenThunderEmblem.className = 'green-thunder-clay';
-                greenThunderEmblem.dataset.themeSrc = 'assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png?v=1';
-                greenThunderEmblem.alt = '';
-                greenThunderEmblem.setAttribute('aria-hidden', 'true');
-                document.body.appendChild(greenThunderEmblem);
-                greenThunderEmblem.src = greenThunderEmblem.dataset.themeSrc;
-            }
-            document.body.classList.add('fx-thunder-shake'); 
-            if (greenThunder) document.body.classList.add('fx-thunder-shake--green');
-            
-            if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
-                window.app.soundMgr.thunder();
-            }
-
-            if (window.app && typeof window.app.vibrate === 'function') {
-                window.app.vibrate([50, 50, 50, 600, 400, 150, 300, 100, 200, 100, 100]);
-            }
-            
-            this.scheduleEffectTimeout(() => {
-                if(flash.parentNode) flash.remove();
-                if (greenThunderEmblem?.parentNode) greenThunderEmblem.remove();
-                document.documentElement.classList.remove('green-thunder-active');
-                document.body.classList.remove('fx-thunder-shake', 'fx-thunder-shake--green');
-            }, 4500, 'thunder');
-        }
-
-        if (type === 'balkan') {
-            document.body.classList.add('fx-balkan');
-            const greenBalkan = this.isGreenThemeActive();
-
-            const bg = document.createElement('div');
-            bg.className = greenBalkan ? 'kafana-overlay kafana-overlay--green' : 'kafana-overlay';
-            bg.innerHTML = `
-                <div class="kafana-tablecloth"></div>
-                <div class="kafana-tablecloth-frame"></div>
-                <div class="kafana-ambient-lights"></div>
-                ${greenBalkan ? '<img class="green-wedding-emblem" data-theme-src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png?v=1" alt="" aria-hidden="true" decoding="async">' : ''}
-            `;
-            document.body.appendChild(bg);
-            if (greenBalkan) {
-                const emblem = bg.querySelector('.green-wedding-emblem');
-                if (emblem) emblem.src = emblem.dataset.themeSrc;
-            }
-
-            const trumpetData = [
-                { side: 'left', top: '15vh', delay: '0s' },
-                { side: 'left', top: '58vh', delay: '0.18s' },
-                { side: 'right', top: '24vh', delay: '0.08s' },
-                { side: 'right', top: '66vh', delay: '0.26s' }
-            ];
-            const trumpets = greenBalkan ? [] : trumpetData.map(data => {
-                const trumpet = document.createElement('div');
-                trumpet.innerText = '🎺';
-                trumpet.className = `trumpet-icon-v2 trumpet-${data.side}`;
-                trumpet.style.top = data.top;
-                trumpet.style.animationDelay = data.delay;
-                document.body.appendChild(trumpet);
-                return trumpet;
-            });
-
-            this.spawnWeddingRain('balkan');
-
-            if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
-                window.app.soundMgr.balkanTrumpet();
-            }
-
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-balkan');
-                if (bg.parentNode) bg.remove();
-                trumpets.forEach(trumpet => trumpet.remove());
-                if (window.app?.soundMgr?.stopBalkanMusic) {
-                    window.app.soundMgr.stopBalkanMusic(true);
-                }
-            }, 8600, 'balkan');
-        }
-        
-        if (type === 'fireworks') {
-             for(let i=0; i<12; i++) { 
-                 this.scheduleEffectTimeout(() => this.spawnRealFirework('fireworks'), i * 500 + Math.random() * 400, 'fireworks');
-             }
-        }
-        
-        if (type === 'cosmic_dust') {
-            document.body.classList.add('fx-cosmic_dust');
-            
-            const container = document.createElement('div');
-            container.className = 'cosmic-container';
-            container.innerHTML = '<div class="stardust-layer layer-1"></div><div class="stardust-layer layer-2"></div><div class="stardust-layer layer-3"></div>';
-            document.body.appendChild(container);
-            
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-cosmic_dust');
-                if(container.parentNode) container.remove();
-            }, 6000, 'cosmic_dust');
-        }
-
-        if (type === 'ufo_abduction') {
-            this.runUfoAbduction();
-        }
-
-        if (type === 'dragon_fire') {
-            document.body.classList.add('fx-dragon_fire');
-            
-            const container = document.createElement('div');
-            container.className = 'dragon-container';
-            container.innerHTML = '<div class="dragon-flames"></div><div class="dragon-embers"></div>';
-            document.body.appendChild(container);
-
-            if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
-                window.app.soundMgr.thunder(); 
-            }
-
-            if (window.app && typeof window.app.vibrate === 'function') {
-                window.app.vibrate([100, 150, 200, 300, 400, 200, 100]); 
-            }
-
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-dragon_fire');
-                if(container.parentNode) container.remove();
-            }, 5500, 'dragon_fire');
-        }
-
-        if (type === 'royal_yamb') {
-            document.body.classList.add('fx-royal_yamb');
-            const greenRoyal = this.isGreenThemeActive();
-            const gameLogoSource = getActiveGameLogoSource();
-
-            const container = document.createElement('div');
-            container.className = 'royal-yamb-container';
-            container.innerHTML = `
-                <div class="royal-yamb-light-rig">
-                    <span class="royal-yamb-lamp lamp-left"></span>
-                    <span class="royal-yamb-lamp lamp-center"></span>
-                    <span class="royal-yamb-lamp lamp-right"></span>
-                </div>
-                <div class="royal-yamb-spotlight spotlight-left"></div>
-                <div class="royal-yamb-spotlight spotlight-right"></div>
-                <div class="royal-yamb-spotlight spotlight-center"></div>
-                <div class="royal-yamb-rays"></div>
-                <div class="royal-yamb-stage-glow"></div>
-                <div class="royal-yamb-footlights"></div>
-                <canvas class="royal-yamb-canvas"></canvas>
-                ${greenRoyal ? `<div class="royal-yamb-emblem royal-yamb-emblem--green">
-                    <img src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1" alt="" draggable="false">
-                </div>` : ''}
-                <div class="royal-yamb-title-active" aria-label="Yamb of the Balkan">
-                    <img src="${gameLogoSource}" alt="" draggable="false">
-                </div>
-                <div class="royal-yamb-sparkles"></div>
-            `;
-            document.body.appendChild(container);
-
-            this.runRoyalYambCanvas(container.querySelector('.royal-yamb-canvas'), 8000);
-            this.playRoyalYambAccents();
-
-            if (window.app && window.app.soundMgr) {
-                window.app.soundMgr.trophy();
-            }
-
-            if (window.app && typeof window.app.vibrate === 'function') {
-                window.app.vibrate([80, 40, 120, 60, 220, 80, 120]);
-            }
-
-            this.scheduleEffectTimeout(() => {
-                document.body.classList.remove('fx-royal_yamb');
-                if (container.parentNode) container.remove();
-            }, 8000, 'royal_yamb');
-        }
     }
 
     getTargetTable() {
@@ -948,505 +1127,6 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
 
         if (!targetTable && tables.length > 0) targetTable = tables[0];
         return targetTable;
-    }
-
-    runUfoAbduction() {
-        const targetTable = this.getTargetTable();
-        if (!targetTable) return;
-        const isGreenTheme = this.isGreenThemeActive();
-
-        const rect = targetTable.getBoundingClientRect();
-        const viewportWidth = window.innerWidth || document.documentElement.clientWidth || rect.width;
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || rect.height;
-        const ufoX = Math.max(110, Math.min(viewportWidth - 110, rect.left + rect.width / 2));
-        const ufoY = Math.max(92, Math.min(viewportHeight - 170, rect.top + rect.height * 0.34));
-        const beamHeight = Math.max(250, Math.min(viewportHeight * 0.74, rect.bottom - ufoY + 70));
-        const beamWidth = Math.max(220, Math.min(viewportWidth * 0.86, rect.width * 1.08));
-
-        document.body.classList.add('fx-ufo_abduction');
-        if (isGreenTheme) document.body.classList.add('fx-ufo_abduction--green');
-        targetTable.classList.add('anim-ufo-table');
-
-        const container = document.createElement('div');
-        container.className = `ufo-abduction-container${isGreenTheme ? ' ufo-abduction-container--green' : ''}`;
-        container.setAttribute('aria-hidden', 'true');
-        container.style.setProperty('--ufo-x', `${ufoX}px`);
-        container.style.setProperty('--ufo-y', `${ufoY}px`);
-        container.style.setProperty('--ufo-beam-height', `${beamHeight}px`);
-        container.style.setProperty('--ufo-beam-width', `${beamWidth}px`);
-        container.innerHTML = `
-            <div class="ufo-space-layer"></div>
-            <div class="ufo-scan-grid"></div>
-            <div class="ufo-stage">
-                ${isGreenTheme ? '<img class="ufo-green-clay" data-theme-src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png" alt="" draggable="false">' : '<div class="ufo-speech">BIP?</div>'}
-                <div class="ufo-beam">
-                    <div class="ufo-beam-core"></div>
-                    <div class="ufo-ray ray-one"></div>
-                    <div class="ufo-ray ray-two"></div>
-                    <div class="ufo-ray ray-three"></div>
-                    <div class="ufo-ray ray-four"></div>
-                </div>
-                ${isGreenTheme ? '' : `<div class="ufo-ship">
-                    <div class="ufo-dome">
-                        <div class="ufo-alien alien-left"><span></span><span></span></div>
-                        <div class="ufo-alien alien-center"><span></span><span></span></div>
-                        <div class="ufo-alien alien-right"><span></span><span></span></div>
-                    </div>
-                    <div class="ufo-body">
-                        <i></i><i></i><i></i><i></i><i></i>
-                    </div>
-                    <div class="ufo-rim"></div>
-                    <div class="ufo-legs"></div>
-                </div>`}
-                <div class="ufo-score-vortex"></div>
-            </div>
-        `;
-        document.body.appendChild(container);
-        if (isGreenTheme) {
-            const greenUfoImage = container.querySelector('.ufo-green-clay');
-            if (greenUfoImage) greenUfoImage.src = greenUfoImage.dataset.themeSrc;
-        }
-
-        const sound = window.app && window.app.soundMgr;
-        if (sound && typeof sound.ufoAbduction === 'function') {
-            sound.ufoAbduction();
-        } else if (sound && typeof sound.epicDroneShow === 'function') {
-            sound.epicDroneShow();
-        }
-
-        if (window.app && typeof window.app.vibrate === 'function') {
-            window.app.vibrate([35, 45, 35, 90, 35, 45, 160]);
-        }
-
-        this.scheduleEffectTimeout(() => {
-            if (!container.isConnected || !document.body.classList.contains('fx-ufo_abduction')) return;
-            this.abductVisibleScores(container, targetTable, ufoX, ufoY);
-        }, 1050, 'ufo_abduction');
-
-        this.scheduleEffectTimeout(() => {
-            document.body.classList.remove('fx-ufo_abduction', 'fx-ufo_abduction--green');
-            targetTable.classList.remove('anim-ufo-table');
-            targetTable.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
-            document.querySelectorAll('.ufo-abducted-score, .ufo-target-ray').forEach(el => el.remove());
-            if (container.parentNode) container.remove();
-        }, 7500, 'ufo_abduction');
-    }
-
-    abductVisibleScores(container, targetTable, ufoX, ufoY) {
-        const buttons = Array.from(targetTable.querySelectorAll('.score-btn.filled'))
-            .filter(btn => (btn.textContent || '').trim() !== '');
-
-        if (buttons.length === 0) return;
-
-        const rayStep = Math.max(1, Math.ceil(buttons.length / 30));
-        const stagger = Math.max(18, Math.min(46, 1450 / buttons.length));
-
-        buttons.forEach((btn, index) => {
-            const text = (btn.textContent || '').trim();
-            const rect = btn.getBoundingClientRect();
-            const startX = rect.left + rect.width / 2;
-            const startY = rect.top + rect.height / 2;
-            const targetX = ufoX + (Math.random() * 44 - 22);
-            const targetY = ufoY + 20 + Math.random() * 22;
-            const dx = targetX - startX;
-            const dy = targetY - startY;
-            const delay = 180 + index * stagger + Math.random() * 120;
-            const duration = 2350 + Math.random() * 950;
-            const wobble = (index % 2 === 0 ? 1 : -1) * (18 + Math.random() * 18);
-            const spin = (index % 2 === 0 ? 1 : -1) * (220 + Math.random() * 260);
-
-            btn.classList.add('ufo-score-dimmed');
-
-            const clone = document.createElement('div');
-            clone.className = 'ufo-abducted-score';
-            clone.textContent = text;
-            clone.style.left = `${startX}px`;
-            clone.style.top = `${startY}px`;
-            clone.style.setProperty('--score-hue', `${160 + (index % 5) * 22}deg`);
-            container.appendChild(clone);
-
-            const animation = clone.animate([
-                { opacity: 0, transform: 'translate3d(0, 0, 0) scale(0.86) rotate(0deg)', filter: 'blur(2px)', offset: 0 },
-                { opacity: 1, transform: `translate3d(${wobble}px, -10px, 0) scale(1.1) rotate(${spin * 0.08}deg)`, filter: 'blur(0)', offset: 0.16 },
-                { opacity: 0.95, transform: `translate3d(${dx * 0.44 + wobble}px, ${dy * 0.42 - 24}px, 0) scale(0.82) rotate(${spin * 0.45}deg)`, filter: 'blur(0.5px)', offset: 0.62 },
-                { opacity: 0, transform: `translate3d(${dx}px, ${dy}px, 0) scale(0.18) rotate(${spin}deg)`, filter: 'blur(5px)', offset: 1 }
-            ], {
-                duration,
-                delay,
-                easing: 'cubic-bezier(0.16, 0.8, 0.24, 1)',
-                fill: 'forwards'
-            });
-
-            animation.onfinish = () => {
-                if (clone.parentNode) clone.remove();
-            };
-
-            if (index % rayStep === 0) {
-                this.spawnUfoTargetRay(container, ufoX, ufoY + 48, startX, startY, delay, Math.min(1900, duration));
-            }
-        });
-    }
-
-    spawnUfoTargetRay(container, fromX, fromY, toX, toY, delay, duration) {
-        if (!container || !container.isConnected) return;
-
-        const dx = toX - fromX;
-        const dy = toY - fromY;
-        const length = Math.hypot(dx, dy);
-        const angle = Math.atan2(dy, dx);
-        const ray = document.createElement('div');
-        ray.className = 'ufo-target-ray';
-        ray.style.left = `${fromX}px`;
-        ray.style.top = `${fromY}px`;
-        ray.style.width = `${length}px`;
-        ray.style.transform = `rotate(${angle}rad)`;
-        ray.style.animationDelay = `${delay}ms`;
-        ray.style.animationDuration = `${duration}ms`;
-        container.appendChild(ray);
-
-        this.scheduleEffectTimeout(() => {
-            if (ray.parentNode) ray.remove();
-        }, delay + duration + 120, 'ufo_abduction');
-    }
-
-    playRoyalYambAccents() {
-        const sound = window.app && window.app.soundMgr;
-        if (!sound) return;
-
-        [760, 1840, 3120, 4680].forEach(delay => {
-            this.scheduleEffectTimeout(() => {
-                if (typeof sound.fireworkLaunch === 'function') sound.fireworkLaunch();
-                this.scheduleEffectTimeout(() => {
-                    if (typeof sound.fireworkExplode === 'function') sound.fireworkExplode();
-                }, 240, 'royal_yamb');
-            }, delay, 'royal_yamb');
-        });
-    }
-
-    async runRoyalYambCanvas(canvas, duration = 8000) {
-        if (!canvas || !canvas.getContext) return;
-        if (this.royalCanvasCleanup) this.royalCanvasCleanup();
-        const runId = ++this.royalYambRunId;
-
-        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
-        if (!ctx) return;
-
-        const isGreenTheme = this.isGreenThemeActive();
-        const greenDucatSprite = isGreenTheme
-            ? await this.loadGreenDucatParticleSprite()
-            : await this.loadThemeDucatParticleSprite();
-        if (runId !== this.royalYambRunId || !canvas.isConnected) return;
-
-        const start = performance.now();
-        let rafId = 0;
-        let width = 0;
-        let height = 0;
-        let dpr = 1;
-
-        const clamp01 = value => Math.max(0, Math.min(1, value));
-        const random = (min, max) => min + Math.random() * (max - min);
-        const easeOutCubic = value => 1 - Math.pow(1 - clamp01(value), 3);
-        const easeInOut = value => {
-            value = clamp01(value);
-            return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
-        };
-
-        const resizeCanvas = () => {
-            width = window.innerWidth || document.documentElement.clientWidth || 1;
-            height = window.innerHeight || document.documentElement.clientHeight || 1;
-            const compact = width < 560 || height < 620;
-            dpr = Math.min(window.devicePixelRatio || 1, compact ? 1 : 1.25);
-            canvas.width = Math.floor(width * dpr);
-            canvas.height = Math.floor(height * dpr);
-            canvas.style.width = '100vw';
-            canvas.style.height = '100vh';
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.imageSmoothingEnabled = true;
-        };
-
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas, { passive: true });
-        const cleanup = () => {
-            cancelAnimationFrame(rafId);
-            window.removeEventListener('resize', resizeCanvas);
-            if (this.royalCanvasCleanup === cleanup) this.royalCanvasCleanup = null;
-        };
-        this.royalCanvasCleanup = cleanup;
-
-        const compact = width < 560 || height < 620;
-        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-        const lowPower = compact || reducedMotion;
-        const golds = ['#fff7c2', '#ffd66f', '#f6b63d', '#d98b18'];
-        const burstColors = greenDucatSprite
-            ? ['#f6f5d9', '#dce9c5', '#ffffff', '#d4bb93', '#a5c496']
-            : ['#fff7c2', '#ffd66f', '#ffffff', '#ffb13d', '#7fffe1'];
-        const coinCount = reducedMotion ? 16 : (compact ? 24 : 36);
-        const sparkleCount = reducedMotion ? 20 : (compact ? 28 : 42);
-        const burstParticleCount = reducedMotion ? 10 : (compact ? 14 : 20);
-
-        const createSprite = (size, paint) => {
-            const sprite = document.createElement('canvas');
-            sprite.width = size;
-            sprite.height = size;
-            const spriteCtx = sprite.getContext('2d');
-            if (spriteCtx) paint(spriteCtx, size);
-            return sprite;
-        };
-
-        const legacyCoinSprites = greenDucatSprite ? [] : golds.map(color => createSprite(64, (spriteCtx, size) => {
-            const center = size / 2;
-            const radius = size * 0.31;
-            const gradient = spriteCtx.createRadialGradient(center - 8, center - 10, 3, center, center, radius);
-            gradient.addColorStop(0, '#fffde8');
-            gradient.addColorStop(0.32, color);
-            gradient.addColorStop(0.7, '#d88a16');
-            gradient.addColorStop(1, '#6d3404');
-            spriteCtx.shadowBlur = 8;
-            spriteCtx.shadowColor = 'rgba(255, 215, 104, 0.72)';
-            spriteCtx.fillStyle = gradient;
-            spriteCtx.beginPath();
-            spriteCtx.arc(center, center, radius, 0, Math.PI * 2);
-            spriteCtx.fill();
-            spriteCtx.shadowBlur = 0;
-            spriteCtx.strokeStyle = 'rgba(75, 34, 3, 0.68)';
-            spriteCtx.lineWidth = 3;
-            spriteCtx.stroke();
-            spriteCtx.strokeStyle = 'rgba(255, 255, 230, 0.58)';
-            spriteCtx.lineWidth = 2;
-            spriteCtx.beginPath();
-            spriteCtx.arc(center, center, radius * 0.56, 0, Math.PI * 2);
-            spriteCtx.stroke();
-            spriteCtx.fillStyle = 'rgba(111, 59, 5, 0.72)';
-            spriteCtx.font = 'bold 17px serif';
-            spriteCtx.textAlign = 'center';
-            spriteCtx.textBaseline = 'middle';
-            spriteCtx.fillText('Y', center, center + 1);
-        }));
-        const coinSprites = greenDucatSprite ? [greenDucatSprite] : legacyCoinSprites;
-
-        const diamondSprite = greenDucatSprite ? null : createSprite(52, (spriteCtx, size) => {
-            const center = size / 2;
-            const radius = size * 0.28;
-            const gradient = spriteCtx.createLinearGradient(center, center - radius, center, center + radius);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(0.42, '#92fff1');
-            gradient.addColorStop(1, '#168b94');
-            spriteCtx.shadowBlur = 10;
-            spriteCtx.shadowColor = 'rgba(103, 255, 229, 0.82)';
-            spriteCtx.fillStyle = gradient;
-            spriteCtx.beginPath();
-            spriteCtx.moveTo(center, center - radius);
-            spriteCtx.lineTo(center + radius * 0.9, center);
-            spriteCtx.lineTo(center, center + radius);
-            spriteCtx.lineTo(center - radius * 0.9, center);
-            spriteCtx.closePath();
-            spriteCtx.fill();
-        });
-
-        const sparkleSprites = burstColors.map(color => createSprite(40, (spriteCtx, size) => {
-            const center = size / 2;
-            const gradient = spriteCtx.createRadialGradient(center, center, 0, center, center, size * 0.46);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(0.12, color);
-            gradient.addColorStop(0.42, color + '99');
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            spriteCtx.fillStyle = gradient;
-            spriteCtx.fillRect(0, 0, size, size);
-            spriteCtx.strokeStyle = color;
-            spriteCtx.lineWidth = 1.5;
-            spriteCtx.beginPath();
-            spriteCtx.moveTo(center, 6);
-            spriteCtx.lineTo(center, size - 6);
-            spriteCtx.moveTo(6, center);
-            spriteCtx.lineTo(size - 6, center);
-            spriteCtx.stroke();
-        }));
-
-        const falling = Array.from({ length: coinCount }, (_, index) => {
-            const size = random(compact ? 7 : 8, compact ? 14 : 18);
-            return {
-                kind: !greenDucatSprite && index % 7 === 0 ? 'diamond' : 'coin',
-                x: random(width * 0.04, width * 0.96),
-                y: random(-height * 0.45, -size * 2),
-                drift: random(-80, 80),
-                size,
-                delay: random(120, 3400),
-                life: random(2800, 4300),
-                spin: random(-5.2, 5.2),
-                wobble: random(0.8, 2.4),
-                sprite: !greenDucatSprite && index % 7 === 0
-                    ? diamondSprite
-                    : coinSprites[index % coinSprites.length]
-            };
-        });
-
-        const sparkles = Array.from({ length: sparkleCount }, (_, index) => ({
-            x: random(width * 0.08, width * 0.92),
-            y: random(height * 0.12, height * 0.86),
-            size: random(1.3, compact ? 3.1 : 4.1),
-            delay: random(0, 2400),
-            life: random(2100, 5200),
-            drift: random(-18, 18),
-            phase: random(0, Math.PI * 2),
-            sprite: sparkleSprites[index % sparkleSprites.length]
-        }));
-
-        const burstTimes = reducedMotion ? [980, 3300, 5200] : [760, 2100, 3650, 5200];
-        const bursts = [];
-        burstTimes.forEach((time, burstIndex) => {
-            const originX = width * (0.22 + (burstIndex % 3) * 0.28) + random(-width * 0.05, width * 0.05);
-            const originY = height * random(0.2, 0.42);
-            for (let i = 0; i < burstParticleCount; i++) {
-                const angle = (Math.PI * 2 * i) / burstParticleCount + random(-0.08, 0.08);
-                bursts.push({
-                    start: time + random(-80, 130),
-                    life: random(1150, 1650),
-                    x: originX,
-                    y: originY,
-                    angle,
-                    speed: random(compact ? 68 : 92, compact ? 150 : 210),
-                    size: random(1.4, compact ? 3.1 : 3.8),
-                    sprite: sparkleSprites[(i + burstIndex) % sparkleSprites.length],
-                    gravity: random(54, 104)
-                });
-            }
-        });
-
-        const drawSprite = (sprite, x, y, radius, rotation, alpha, scaleY = 1) => {
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.translate(x, y);
-            ctx.rotate(rotation);
-            ctx.scale(1, scaleY);
-            ctx.drawImage(sprite, -radius, -radius, radius * 2, radius * 2);
-            ctx.restore();
-        };
-
-        const draw = now => {
-            if (!canvas.isConnected) {
-                cleanup();
-                return;
-            }
-
-            const elapsed = now - start;
-            ctx.clearRect(0, 0, width, height);
-            ctx.globalCompositeOperation = 'lighter';
-
-            sparkles.forEach(sparkle => {
-                const local = (elapsed - sparkle.delay) % sparkle.life;
-                const progress = local / sparkle.life;
-                const alpha = Math.sin(progress * Math.PI) * (0.42 + 0.38 * Math.sin(elapsed / 180 + sparkle.phase));
-                if (alpha <= 0.04) return;
-                const size = sparkle.size * 5;
-                ctx.globalAlpha = alpha;
-                ctx.drawImage(
-                    sparkle.sprite,
-                    sparkle.x + Math.sin(elapsed / 900 + sparkle.phase) * sparkle.drift - size,
-                    sparkle.y - easeInOut(progress) * 46 - size,
-                    size * 2,
-                    size * 2
-                );
-            });
-
-            bursts.forEach(particle => {
-                const local = elapsed - particle.start;
-                if (local < 0 || local > particle.life) return;
-                const progress = local / particle.life;
-                const travel = easeOutCubic(progress);
-                const x = particle.x + Math.cos(particle.angle) * particle.speed * travel;
-                const y = particle.y + Math.sin(particle.angle) * particle.speed * travel + particle.gravity * progress * progress;
-                const alpha = (1 - progress) * 0.95;
-                const size = particle.size * 4.5;
-                ctx.globalAlpha = alpha;
-                ctx.drawImage(particle.sprite, x - size, y - size, size * 2, size * 2);
-            });
-            ctx.globalAlpha = 1;
-
-            ctx.globalCompositeOperation = 'source-over';
-            falling.forEach(item => {
-                const local = elapsed - item.delay;
-                if (local < 0 || local > item.life) return;
-                const progress = local / item.life;
-                const eased = easeInOut(progress);
-                const alpha = progress < 0.12 ? progress / 0.12 : Math.min(1, (1 - progress) / 0.16);
-                const x = item.x + item.drift * Math.sin(progress * Math.PI * item.wobble);
-                const y = item.y + (height + Math.abs(item.y) + item.size * 4) * eased;
-                const rotation = item.spin * progress * Math.PI * 2;
-                const radius = item.kind === 'diamond' ? item.size * 1.28 : item.size * 1.45;
-                drawSprite(item.sprite, x, y, radius, rotation, alpha, item.kind === 'diamond' ? 1 : 0.76);
-            });
-
-            if (elapsed < duration) {
-                rafId = requestAnimationFrame(draw);
-            } else {
-                ctx.clearRect(0, 0, width, height);
-                cleanup();
-            }
-        };
-
-        rafId = requestAnimationFrame(draw);
-        this.scheduleEffectTimeout(cleanup, duration + 120, 'royal_yamb');
-    }
-
-    spawnRealFirework(group = 'fireworks') {
-        const startX = window.innerWidth * 0.1 + Math.random() * window.innerWidth * 0.8;
-        const endY = window.innerHeight * 0.1 + Math.random() * window.innerHeight * 0.4;
-        
-        if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkLaunch) {
-            window.app.soundMgr.fireworkLaunch();
-        }
-
-        const rocket = document.createElement('div');
-        rocket.className = 'fw-rocket';
-        rocket.style.left = startX + 'px';
-        document.body.appendChild(rocket);
-
-        const duration = 800 + Math.random() * 400;
-        rocket.animate([
-            { transform: `translateY(100vh)`, opacity: 1 },
-            { transform: `translateY(${endY}px)`, opacity: 0 }
-        ], { duration: duration, easing: 'ease-out' }).onfinish = () => {
-            if (!rocket.isConnected) return;
-            rocket.remove();
-            this.explodeRealFirework(startX, endY, group);
-        };
-    }
-
-    explodeRealFirework(x, y, group = 'fireworks') {
-        if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkExplode) {
-            window.app.soundMgr.fireworkExplode();
-        }
-
-        const flash = document.createElement('div');
-        flash.className = 'fw-flash';
-        document.body.appendChild(flash);
-        this.scheduleEffectTimeout(() => { if(flash.parentNode) flash.remove(); }, 250, group);
-
-        if (window.app && typeof window.app.vibrate === 'function') {
-            window.app.vibrate([40, 50, 20]);
-        }
-
-        const colors = ['#FF0044', '#00FF44', '#0044FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#FFD700'];
-        const mainColor = colors[Math.floor(Math.random() * colors.length)];
-        const particleCount = 45 + Math.random() * 30; 
-
-        for (let i = 0; i < particleCount; i++) {
-            const p = document.createElement('div');
-            p.className = 'fw-particle';
-            p.style.backgroundColor = mainColor;
-            p.style.boxShadow = `0 0 8px ${mainColor}, 0 0 15px ${mainColor}`;
-            p.style.left = x + 'px';
-            p.style.top = y + 'px';
-
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 180 + 50; 
-            
-            p.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
-            p.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
-
-            document.body.appendChild(p);
-            this.scheduleEffectTimeout(() => { if(p.parentNode) p.remove(); }, 1600, group);
-        }
     }
 
     scheduleEffectTimeout(callback, delay, group = 'default') {
@@ -1679,37 +1359,6 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
         }
     }
 
-    spawnWeddingRain(group = 'balkan') {
-        document.querySelectorAll('.wedding-rain').forEach(layer => layer.remove());
-
-        const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-        const greenWedding = this.isGreenThemeActive();
-        const count = reducedMotion ? 18 : (compact ? 28 : 40);
-        const symbols = ['💶', '💵', '🥂', '🍾', '💖', '🎵', '🍻'];
-        const layer = document.createElement('div');
-        layer.className = 'wedding-rain';
-        layer.setAttribute('aria-hidden', 'true');
-
-        const fragment = document.createDocumentFragment();
-        for (let i = 0; i < count; i++) {
-            const particle = document.createElement('span');
-            particle.className = greenWedding ? `wedding-particle wedding-particle--green${i % 4 === 0 ? ' wedding-particle--ducat' : ''}` : 'wedding-particle';
-            if (!greenWedding) particle.innerText = symbols[i % symbols.length];
-            particle.style.setProperty('--wedding-x', (2 + Math.random() * 96).toFixed(2) + 'vw');
-            particle.style.setProperty('--wedding-drift', (-55 + Math.random() * 110).toFixed(1) + 'px');
-            particle.style.setProperty('--wedding-delay', (Math.random() * 2.5).toFixed(2) + 's');
-            particle.style.setProperty('--wedding-duration', (3.8 + Math.random() * 2.2).toFixed(2) + 's');
-            particle.style.setProperty('--wedding-size', (compact ? 1.05 + Math.random() * 0.9 : 1.2 + Math.random() * 1.05).toFixed(2) + 'rem');
-            particle.style.setProperty('--wedding-spin', (-220 + Math.random() * 440).toFixed(0) + 'deg');
-            fragment.appendChild(particle);
-        }
-
-        layer.appendChild(fragment);
-        document.body.appendChild(layer);
-        this.scheduleEffectTimeout(() => layer.remove(), 8500, group);
-    }
-    
     getEffectSurfaceTone() {
         const styles = getComputedStyle(document.body);
         const source = styles.getPropertyValue('--bg-base').trim() || styles.backgroundColor;
@@ -2239,11 +1888,13 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
     
     celebrateWin() {
         this.trigger('fireworks');
-        this.scheduleEffectTimeout(() => this.trigger('gold_rain'), 1000, 'celebrate_win');
+        this.scheduleEffectTimeout(() => this.spawnGoldRain(), 1000, 'celebrate_win');
     }
     
     stop() {
         this.iceAgeRunId++;
+        this.stageScene?.stop();
+        this.stageScene = null;
         this.blackHoleRunId++;
         this.blackHoleCleanup?.();
         this.confettiRunId++;
@@ -2292,49 +1943,49 @@ const SUPERNOVA_THEME_PROFILES = Object.freeze({
 
 // --- 5. SOUND MANAGER (WEB AUDIO API SYNTH ONLY) ---
 
-  const fx = new EffectManager();
-  const params = new URLSearchParams(location.search);
-  const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
-  const backgrounds = { dark: 'green-clay-balkan-diorama-v4.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
-  const setTheme = id => {
-    fx.stop();
-    themes.slice(1).forEach(themeId => document.body.classList.toggle(themeId + '-theme', id === themeId));
-    document.documentElement.dataset.splashTheme = id;
-    document.getElementById('theme-choice').value = id;
-    document.body.style.setProperty('--theme-background', "url('assets/" + backgrounds[id] + "')");
-  };
-  setTheme(themes.includes(params.get('theme')) ? params.get('theme') : 'dark');
-  document.getElementById('theme-choice').addEventListener('change', event => {
-    setTheme(event.target.value);
-    if (effect) { showScene(effect); fx.trigger(effect); }
-  });
-  const board = document.querySelector('.qa-board');
-  const card = document.querySelector('.card');
-  document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) => '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)] : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
-  const showScene = effect => { const onBoard = effect === 'ice_age' || effect === 'black_hole' || effect === 'supernova'; board.hidden = !onBoard; card.hidden = onBoard; };
-  document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
-    fx.stop();
-    if (button.dataset.effect !== 'stop') { showScene(button.dataset.effect); fx.trigger(button.dataset.effect); }
-  }));
-  window.qaFx = { fx, setTheme, run(id) { fx.stop(); fx.trigger(id); }, state() { return {
-    theme: document.documentElement.dataset.splashTheme,
-    coinCount: document.querySelectorAll('.gold-rain-particle').length,
-    coinSources: [...new Set([...document.querySelectorAll('.gold-rain-particle')].map(node => node.getAttribute('src')))],
-    confettiActive: Boolean(fx.confettiAnimationId),
-    fireflyCount: document.querySelectorAll('.magic-firefly__sprite').length,
-    fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
-    bubbleCount: document.querySelectorAll('.magic-bubble').length,
-    bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
-    iceFrostCount: document.querySelectorAll('.ice-age-frost').length,
-    iceOverlayCount: document.querySelectorAll('.ice-overlay-container').length,
-    blackHoleCount: document.querySelectorAll('.black-hole-container').length,
-    blackHoleSources: [...new Set([...document.querySelectorAll('.black-hole-sprite')].map(node => node.getAttribute('src')))],
-    supernovaCount: document.querySelectorAll('.supernova-container').length,
-    supernovaSource: document.querySelector('.supernova-plasma')?.getAttribute('src') || null,
-    supernovaPhase: document.querySelector('.supernova-container')?.dataset.phase || null
-  }; } };
-  const effect = params.get('effect') || 'supernova';
-  if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole', 'supernova'].includes(effect)) { showScene(effect); fx.trigger(effect); }
+function bootLiveEffectsReview(EffectManager) {
+    const fx = new EffectManager();
+    const params = new URLSearchParams(location.search);
+    const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+    const effects = ['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole', 'supernova',
+        'neon_pulse', 'thunder', 'balkan', 'fireworks', 'drones', 'cosmic_dust', 'ufo_abduction', 'dragon_fire', 'royal_yamb'];
+    const backgrounds = { dark: 'green-clay-balkan-diorama-v4.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
+    let effect = effects.includes(params.get('effect')) ? params.get('effect') : 'supernova';
+    const board = document.querySelector('.qa-board');
+    const card = document.querySelector('.card');
+    document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) =>
+        '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)]
+            : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
+    window.app ||= { playerName: 'Andrija' };
+    const run = id => {
+        fx.stop(); effect = id;
+        document.getElementById('effect-choice').value = id;
+        const onBoard = !['confetti', 'gold_rain', 'fireflies', 'bubbles'].includes(id);
+        board.hidden = !onBoard; card.hidden = onBoard;
+        fx.trigger(id);
+    };
+    const setTheme = id => {
+        fx.stop();
+        themes.slice(1).forEach(themeId => document.body.classList.toggle(themeId + '-theme', id === themeId));
+        document.documentElement.dataset.splashTheme = id;
+        document.getElementById('theme-choice').value = id;
+        document.body.style.setProperty('--theme-background', "url('assets/" + backgrounds[id] + "')");
+    };
+    setTheme(themes.includes(params.get('theme')) ? params.get('theme') : 'dark');
+    document.getElementById('theme-choice').addEventListener('change', event => { setTheme(event.target.value); run(effect); });
+    document.getElementById('effect-choice').addEventListener('change', event => run(event.target.value));
+    document.querySelector('[data-effect="play"]').addEventListener('click', () => run(effect));
+    document.querySelector('[data-effect="stop"]').addEventListener('click', () => fx.stop());
+    window.qaFx = { fx, setTheme, run, state() { return {
+        theme: document.documentElement.dataset.splashTheme, effect,
+        stage: document.querySelector('.live-stage-effect')?.dataset || null,
+        supernovaPhase: document.querySelector('.supernova-container')?.dataset.phase || null,
+        supernovaSource: document.querySelector('.supernova-plasma')?.getAttribute('src') || null
+    }; } };
+    run(effect);
+}
+
+bootLiveEffectsReview(EffectManager);
   </script>
 </body>
 </html>

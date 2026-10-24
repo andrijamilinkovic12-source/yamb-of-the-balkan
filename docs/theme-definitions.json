@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 66,
+  "schemaVersion": 69,
   "updatedOn": "2026-10-24",
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
@@ -32,10 +32,18 @@
   },
   "iceAgeEffectRule": {
     "scope": "Ledeno doba je isti zajednicki ledeni efekat za svih deset tema, ukljucujuci Zelenu. Ovo je namerni izuzetak od pravila tematski jedinstvenih cestica.",
-    "assets": "Jedan univerzalni prozirni 3D Soft PNG sloj assets/effects/ice-age/frost-board-v4.png koristi se u svih deset tema. Led prati tacan pravougaoni obuhvat table, sa glatkim obodom i gotovo providnom sredinom. Izvor, prompt i SHA-256 su u source-assets/theme-live-ice-age-v4/manifest.json. Raniji grubi led i pukotine nisu aktivni.",
-    "motion": "Mekani front leda prelazi od gornje do donje ivice pravougaone table, zatim se sloj kratko zadrzi i nestane. Blago zatamnjenje okoline istice led, bez centralnog simbola, pahulja, preteranog sjaja, grubih pukotina ili trajnog zaklanjanja igre. Ukupno trajanje 6.5 sekundi; smanjeni pokret prikazuje miran PNG sloj 2.7 sekundi.",
-    "performanceAndAccess": "PNG se ucitava pre pocetka animacije i ponovo koristi iz memorije; ako nedostaje, efekat se ne pokrece. Otkrivanje leda radi CSS animacija bez stalnog iscrtavanja svakog frejma. Stop, promena teme i izlazak uklanjaju sloj, a zakasnelo ucitavanje ne moze vratiti efekat.",
+    "assets": "Univerzalni 3D Soft PNG assets/effects/stage-v1/frost-corner.png je izdvojena prozirna komponenta ledenog ugla. Koristi se ogledalno u cetiri ugla, bez stare slike skracene table. Izvor, prompt i SHA-256 su u source-assets/theme-live-stage-v1/manifest.json.",
+    "motion": "Led istovremeno raste iz sva cetiri ugla ka sredini. Canvas je vezan za puni getBoundingClientRect stvarne table: tacna sirina, cela visina i pravougaona maska, bez object-fit praznina. Prozirna ledena opna povezuje cetiri fronta i prekriva i sredinu table. Ukupno 6.5 sekundi sa smirenim nestajanjem; smanjeni pokret najvise 2.6 sekundi.",
+    "performanceAndAccess": "Samo jedan mali PNG se ucitava i kesira. Iscrtavanje je ograniceno na jedan canvas, smanjenu rezoluciju i najvise oko 30 frejmova u sekundi na telefonu. Stop, promena teme, sakrivanje aplikacije i izlazak uklanjaju sloj; zakasnelo ucitavanje ne moze ga vratiti.",
     "qualityGate": "Proveriti stvarnu tablu u svih deset tema, citljivost brojeva pod ledom i ciscenje efekta na telefonu. Pregled na racunaru nije zamena za probu na Samsung S25."
+  },
+  "liveStageEffectRule": {
+    "scope": "Neon puls, Gromovnik, Svadba, Vatromet, Dronovi, Svemirska prasina, UFO, Zmajeva vatra i Kraljevski Yamb su preradjeni u svih deset tema. Svetlo i cestice prate paletu teme. Materijal stvarnih predmeta prati Clay ili Smooth Rubber / Matte Plastic DNK.",
+    "assets": "source-assets/theme-live-stage-v1/manifest.json vodi 13 zasebno generisanih PNG-ova: deset originalnih UFO silueta po temama i tri namerna univerzalna materijala (prava mesingana truba, prirodni plamen, beli led). Nema prebojavanja jednog tanjira. Kanonski logo igre i kanonski particle dukat svake teme ponovo se koriste u Kraljevskom Yambu.",
+    "motion": "Predmeti su komponente zive animacije. Neon ima putujuce impulse oko table; grom razgranate povratne udare; Svadba ritmicke trube i papirne trake; vatromet lansiranje, otpor vazduha, gravitaciju i gasenje; dronovi stvarno formiraju ime od zasebnih tacaka; prasina ima vise dubinskih slojeva; UFO leti, ukljucuje volumetrijski zrak i usisava vizuelne kopije brojeva; vatra talasa povezane jezike i podize zar; kraljevski logo prati scensko svetlo i kanonski dukati.",
+    "stateAndLifecycle": "Nijedan efekat ne menja rezultat, tekst, dimenzije table ili polja. UFO samo privremeno smanji vidljivost upisanog broja i crta njegovu kopiju; prekid uvek vraca originalnu vidljivost. Promena teme, ponovno pokretanje, izlazak i skrivanje aplikacije otkazuju prethodni canvas, slusaoce, tajmere i zakasnele ucitane slike.",
+    "performance": "Ucitavaju se samo komponente izabranog efekta i teme, sa malim ogranicenim kesom. Svetlosni efekti i fine cestice su Canvas2D geometrija, bez PNG slike po frejmu ili stotina DOM elemenata. Mobilni DPR i broj cestica su ograniceni. Smanjeni pokret daje kratak mirniji prikaz.",
+    "qualityGate": "Proveriti svih 100 scena (devet efekata plus led puta deset tema), pokrivenost male/srednje/velike table, povratak svih vizuelnih stanja i nezavisnost rezultata. Animirani pregled docs/effects-final-animation.html koristi stvarni runtime. Konacna fluidnost i utisak zahtevaju probu na telefonu. Bez kica."
   },
   "blackHoleEffectRule": {
     "scope": "Crna rupa je zivi efekat u svih deset tema. Svaka tema ima sopstveno generisano 3D Soft Neomorphism jezgro u svom Clay ili Smooth Rubber / Matte Plastic pravcu i paleti.",
@@ -245,7 +253,20 @@
   "diceFaceRules": {
     "scope": "Obavezno za svih deset tema, svaki PNG, logo, ikonu, ilustraciju, preview, animacioni kadar i CSS/3D prikaz koji prikazuje jednu ili vise igrackih kockica. Svaka vidljiva kockica se proverava zasebno; pravilo vazi i kada je kockica samo sporedni detalj.",
     "canonicalOrientation": "Koristi se jedna fizicki ispravna sestostrana kockica: kada je 1 gore, 2 napred, 3 desno, suprotne strane su 6 dole, 5 pozadi i 4 levo. Dozvoljene su samo krute rotacije te iste kockice, bez ogledanja ili nezavisnog biranja brojeva na vidljivim stranama.",
-    "oppositeFaces": [[1, 6], [2, 5], [3, 4]],
+    "oppositeFaces": [
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        4
+      ]
+    ],
     "visibleFaces": "Na susednim vidljivim stranama brojevi moraju biti razliciti i nijedan par ne sme biti suprotan. Ista vrednost nikad ne sme da se ponovi na dve strane iste kockice. Ako se vide tri strane, njihov redosled mora odgovarati kanonskoj fizickoj orijentaciji, ne samo dozvoljenom skupu brojeva.",
     "pipLayouts": {
       "1": "jedna tacka tacno u sredini",
@@ -256,13 +277,103 @@
       "6": "dve paralelne kolone od po tri tacke"
     },
     "pipGridNormalized": {
-      "coordinateSystem": "(x,y) na ravnoj strani kockice, od 0 do 1; perspektivna transformacija menja samo prikaz, ne logicki raspored.",
-      "1": [[0.5, 0.5]],
-      "2": [[0.25, 0.25], [0.75, 0.75]],
-      "3": [[0.25, 0.25], [0.5, 0.5], [0.75, 0.75]],
-      "4": [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]],
-      "5": [[0.25, 0.25], [0.75, 0.25], [0.5, 0.5], [0.25, 0.75], [0.75, 0.75]],
-      "6": [[0.25, 0.25], [0.75, 0.25], [0.25, 0.5], [0.75, 0.5], [0.25, 0.75], [0.75, 0.75]]
+      "1": [
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "2": [
+        [
+          0.25,
+          0.25
+        ],
+        [
+          0.75,
+          0.75
+        ]
+      ],
+      "3": [
+        [
+          0.25,
+          0.25
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.75,
+          0.75
+        ]
+      ],
+      "4": [
+        [
+          0.25,
+          0.25
+        ],
+        [
+          0.75,
+          0.25
+        ],
+        [
+          0.25,
+          0.75
+        ],
+        [
+          0.75,
+          0.75
+        ]
+      ],
+      "5": [
+        [
+          0.25,
+          0.25
+        ],
+        [
+          0.75,
+          0.25
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.25,
+          0.75
+        ],
+        [
+          0.75,
+          0.75
+        ]
+      ],
+      "6": [
+        [
+          0.25,
+          0.25
+        ],
+        [
+          0.75,
+          0.25
+        ],
+        [
+          0.25,
+          0.5
+        ],
+        [
+          0.75,
+          0.5
+        ],
+        [
+          0.25,
+          0.75
+        ],
+        [
+          0.75,
+          0.75
+        ]
+      ],
+      "coordinateSystem": "(x,y) na ravnoj strani kockice, od 0 do 1; perspektivna transformacija menja samo prikaz, ne logicki raspored."
     },
     "ufoAbductionPreview": "U svih devet nezelenih tema NLO preview prikazuje jednu zaobljenu, zapreminsku 3D kockicu u snopu: 1 gore (jedna centralna tacka), 2 napred (dva dijagonalna ugla) i 3 desno (dva dijagonalna ugla i centar). To je kanonska fizicka orijentacija kockice. Poklon PNG skin maticne teme cini materijal svake vidljive strane iste 3D kockice, uz pravilno osvetljenje i dubinu; ne sme izgledati kao ravna nalepnica preko generickog tela.",
     "constructionGate": "Za svaki raster asset sa kockicom brojeve i tacke graditi kontrolisano iz proverenih koordinata na stranama fizicki ispravnog 3D modela ili ih nakon generisanja dokazano korigovati. Generativni prikaz bez kontrole rasporeda nije dovoljan. Proveriti svaku vidljivu stranu u masteru i produkcionom PNG-u na stvarnoj velicini.",
@@ -298,25 +409,63 @@
   },
   "backgroundCandidatePolicy": {
     "approvedV4Backgrounds": {
-      "neon": { "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png", "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292", "locked": true },
-      "severna": { "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png", "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2", "locked": true }
+      "neon": {
+        "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
+        "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292",
+        "locked": true
+      },
+      "severna": {
+        "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
+        "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2",
+        "locked": true
+      }
     },
     "approvedV6Backgrounds": {
-      "easter": { "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png", "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944", "version": 1, "locked": true },
-      "amethyst": { "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png", "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae", "locked": true }
+      "easter": {
+        "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+        "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944",
+        "version": 1,
+        "locked": true
+      },
+      "amethyst": {
+        "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
+        "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae",
+        "locked": true
+      }
     },
     "approvedV8Backgrounds": {
-      "desert": { "path": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png", "sha256": "61e4d47eb21d4e127d67c8fbf4128ceaa0d401325d6c85168c14568087120f4b", "version": 2, "locked": true }
+      "desert": {
+        "path": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png",
+        "sha256": "61e4d47eb21d4e127d67c8fbf4128ceaa0d401325d6c85168c14568087120f4b",
+        "version": 2,
+        "locked": true
+      }
     },
     "approvedV9Backgrounds": {
-      "light": { "path": "source-assets/theme-backgrounds-v9/light-background-master-v9.png", "sha256": "0cccdd806dae1c56be8521716f326541e0d83f16778c65e09559b59753aea43c", "locked": true },
-      "medium": { "path": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png", "sha256": "c1400d160a7165b78cfb5a3aa9b591a420e3bb49892f46c2ac7cc95f4eb48920", "locked": true }
+      "light": {
+        "path": "source-assets/theme-backgrounds-v9/light-background-master-v9.png",
+        "sha256": "0cccdd806dae1c56be8521716f326541e0d83f16778c65e09559b59753aea43c",
+        "locked": true
+      },
+      "medium": {
+        "path": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png",
+        "sha256": "c1400d160a7165b78cfb5a3aa9b591a420e3bb49892f46c2ac7cc95f4eb48920",
+        "locked": true
+      }
     },
     "approvedV13Backgrounds": {
-      "winter": { "path": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png", "sha256": "88ea72e66b99875560041e555c1963656e19f68a6320a494445805cde8096ba4", "locked": true }
+      "winter": {
+        "path": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png",
+        "sha256": "88ea72e66b99875560041e555c1963656e19f68a6320a494445805cde8096ba4",
+        "locked": true
+      }
     },
     "approvedV14Backgrounds": {
-      "moon": { "path": "source-assets/theme-backgrounds-v14/moon-background-master-v14.png", "sha256": "d6085eddcaaf4517b5fa434ec687504a16ef2f65d37dc5af1f9cb521416ea13d", "locked": true }
+      "moon": {
+        "path": "source-assets/theme-backgrounds-v14/moon-background-master-v14.png",
+        "sha256": "d6085eddcaaf4517b5fa434ec687504a16ef2f65d37dc5af1f9cb521416ea13d",
+        "locked": true
+      }
     },
     "finalManifestPath": "docs/theme-backgrounds-final.json",
     "status": "Svih deset pozadina je prihvaceno, zakljucano i povezano sa lokalnom aplikacijom. Plavi Okean V13 i Mesecev Sjaj V14 su poslednja dva izabrana mastera. Putanje i SHA-256 otisci mastera i runtime kopija su u docs/theme-backgrounds-final.json.",
@@ -336,7 +485,17 @@
     "greenBoundary": "Green resenje sluzi za odluku o tome sta element radi, gde je, koliki je i kada se pojavljuje. Novi motiv, kompozicija, materijal, logo, boja i tekstura ostaju originalni za pravac ciljane teme; PNG Zelene se ne kopira ni prebojava.",
     "legacyTreatment": "Postojeci nezeleni asseti i CSS su trenutno stanje za audit, a ne odobreni sablon. Novi paket se povezuje tek kada je njegova uloga proverena; ranije fajlove ne brisati na osnovu samog plana i ne oznacavati temu zavrsenom zbog postojeceg broja fajlova.",
     "deviationRule": "Ako Green i eksplicitna definicija daju razlicite odgovore, prati eksplicitnu definiciju i zabelezi konkretno odstupanje ovde i u checkpoint/QA zapisu. Ako Green referenca ima ocigledan funkcionalni kvar, dokumentuj ga pre preuzimanja pravila; ne prenosi kvar u ostale teme.",
-    "workOrderThemeIds": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"]
+    "workOrderThemeIds": [
+      "light",
+      "medium",
+      "winter",
+      "neon",
+      "amethyst",
+      "easter",
+      "desert",
+      "moon",
+      "severna"
+    ]
   },
   "paletteChangePolicy": {
     "scope": "Palete preostalih devet tema mogu se doradjivati tokom dizajna i provere.",
@@ -348,7 +507,15 @@
   "visualReviewBoard": {
     "path": "docs/theme-review-board.html",
     "progressPath": "docs/theme-progress.json",
-    "requiredPerTheme": ["rendered portrait background", "final two-line game logo", "at least six representative original icons including ducat", "menu card in normal/pressed/disabled states", "game board with dice and score columns", "one room intro frame", "SR and EN narrow-screen captures"],
+    "requiredPerTheme": [
+      "rendered portrait background",
+      "final two-line game logo",
+      "at least six representative original icons including ducat",
+      "menu card in normal/pressed/disabled states",
+      "game board with dice and score columns",
+      "one room intro frame",
+      "SR and EN narrow-screen captures"
+    ],
     "rule": "Sema boja i skica u preglednoj tabli nisu dokaz zavrsenog izgleda. Konacni prikazi se vezuju za stvarne assete i snimke iz aplikacije; odobrenje zahteva pregled citljivosti, opticke ravnoteze i razlike medju temama."
   },
   "assetUsageAndOpticalBounds": {
@@ -363,10 +530,30 @@
   "performanceBudget": {
     "status": "Ciljevi za proveru na stvarnom uredjaju; nisu tvrdnja da ih postojeci runtime ispunjava.",
     "units": "MiB = 1048576 bytes; decoded estimate = width * height * 4 bytes per PNG.",
-    "startup": { "maxTransferMiB": 4, "maxDecodedMiB": 16, "scope": "Aktivna pozadina, glavni logo i neophodne menu izvedenice do prvog interaktivnog kadra." },
-    "perRoomAdditional": { "maxTransferMiB": 4, "maxDecodedMiB": 24, "scope": "Samo PNG-ovi koji se prvi put ucitavaju za jednu sobu; ukljucuje njene intro i stanje assete." },
-    "activePeak": { "maxDecodedMiB": 40, "scope": "Zbir trenutno dekodiranih PNG-ova aktivne teme tokom ulaska u sobu; neaktivne sobe se oslobadjaju ili ucitavaju po potrebi." },
-    "measurementRecord": ["device", "build", "network", "coldOrWarm", "transferBytes", "decodedRgbaBytes", "firstInteractiveMs", "evidencePath"],
+    "startup": {
+      "maxTransferMiB": 4,
+      "maxDecodedMiB": 16,
+      "scope": "Aktivna pozadina, glavni logo i neophodne menu izvedenice do prvog interaktivnog kadra."
+    },
+    "perRoomAdditional": {
+      "maxTransferMiB": 4,
+      "maxDecodedMiB": 24,
+      "scope": "Samo PNG-ovi koji se prvi put ucitavaju za jednu sobu; ukljucuje njene intro i stanje assete."
+    },
+    "activePeak": {
+      "maxDecodedMiB": 40,
+      "scope": "Zbir trenutno dekodiranih PNG-ova aktivne teme tokom ulaska u sobu; neaktivne sobe se oslobadjaju ili ucitavaju po potrebi."
+    },
+    "measurementRecord": [
+      "device",
+      "build",
+      "network",
+      "coldOrWarm",
+      "transferBytes",
+      "decodedRgbaBytes",
+      "firstInteractiveMs",
+      "evidencePath"
+    ],
     "measurement": "Izmeriti transfer, vreme prvog interaktivnog kadra i vrhunac memorije na sporijem ciljnom Android uredjaju pri hladnom i toplom startu; dokumentovati uredjaj, mrezu, build i room. Svako prekoracenje zahteva optimizaciju ili eksplicitno obrazlozen izuzetak pre prihvatanja."
   },
   "missingAssetFallback": {
@@ -378,7 +565,13 @@
   },
   "implementationProgress": {
     "path": "docs/theme-progress.json",
-    "stages": ["defined", "created", "linked", "visually-checked", "accepted"],
+    "stages": [
+      "defined",
+      "created",
+      "linked",
+      "visually-checked",
+      "accepted"
+    ],
     "rule": "Svaka tema i svaki ekran/soba imaju fazu sa dokazom. Faza se podize tek posle stvarne provere; postojanje fajla ili prolaz provere HEX boja nije dokaz prihvatanja. Green je zakljucana referenca, ne zadatak za preradu."
   },
   "mainPackRule": "Svaka tema ima jedan glavni Room Pack kao krovni naziv za njene tematske elemente.",
@@ -415,8 +608,14 @@
     "canonicalUse": "Svaka tema ima jedan kanonski identitet glavnog logotipa kroz splash, glavni meni i druga mesta na kojima se prikazuje logo igre. Razlicite rezolucije poticu od istog mastera bez promene dizajna.",
     "sharedGeometry": "Velicina prikaza, bezbedna zona, pozicija i trajanje pojavljivanja glavnog logotipa prate zajednicki UI ugovor za sve teme.",
     "catalogRole": "Glavni logo igre je jedna obavezna kanonska PNG uloga u zajednickom katalogu asseta.",
-    "wordmarkLines": ["YAMB OF THE", "BALKAN"],
-    "sourceCanvasPx": [1672, 941],
+    "wordmarkLines": [
+      "YAMB OF THE",
+      "BALKAN"
+    ],
+    "sourceCanvasPx": [
+      1672,
+      941
+    ],
     "displayWidthCss": "min(90vw, 700px)",
     "displayMaxHeightCss": "32vh",
     "clearSpace": "Najmanje 8% visine vidljivog logotipa sa svake strane; tekst, dugmad i sistemski inseti ne ulaze u taj prostor.",
@@ -467,10 +666,22 @@
       "geometry": "Na istom viewportu kartica sobe, zaglavlje, telo, footer, kartica praznog stanja, welcome kartica, dolazna i poslata poruka, online oznaka, polje unosa i dugmad imaju iste dimenzije, padding, tipografiju i raspored kao Green. Naslov koristi clamp(1.05rem, 4.2vw, 1.22rem), tezinu 850, line-height 1.2 i letter-spacing .025em; na sirini do 360 CSS px prelama se po Green pravilu. Identitet sobe je 32 px, prazno stanje 76 px, send PNG 32 px u dugmetu 45 px, zatvaranje 44 px. Stil i pravac materijala ostaju svojstveni temi.",
       "textContrast": "Svaki tekst u Global Chatu, ukljucujuci online broj, placeholder, broj karaktera, vreme primljene i poslate poruke, tekst u karticama i stanje greske, proverava se na stvarnoj podlozi sa najmanje 4,5:1. Meta tekst poslate poruke koristi onPrimary boju maticne teme. Pozadina polja unosa ne animira boju pri promeni teme, da prethodna paleta ne ostane vidljiva.",
       "roomOnlyContrastTokens": {
-        "light": { "muted": "#5D432C", "success": "#265132" },
-        "winter": { "muted": "#3A5B67", "success": "#165D4B" },
-        "easter": { "muted": "#4D5841", "success": "#31553B" },
-        "desert": { "muted": "#5E4332", "success": "#25513E" }
+        "light": {
+          "muted": "#5D432C",
+          "success": "#265132"
+        },
+        "winter": {
+          "muted": "#3A5B67",
+          "success": "#165D4B"
+        },
+        "easter": {
+          "muted": "#4D5841",
+          "success": "#31553B"
+        },
+        "desert": {
+          "muted": "#5E4332",
+          "success": "#25513E"
+        }
       },
       "qa": "Android qaLocal: docs/qa-theme-global-chat-layout.json, docs/qa-theme-global-chat-layout-320x568.json, docs/qa-theme-global-chat-layout-768x1024.json i docs/qa-theme-global-chat-layout-320x568-font130.json; pregled docs/theme-global-chat-room-review.html."
     },
@@ -513,13 +724,47 @@
     "roomIntroIconBoxCss": "clamp(210px, 34vmin, 290px)",
     "roomIntroPulseMs": 1800,
     "roomIntroPulseScale": 1.035,
-    "modeGrid": { "columns": 2, "maxWidthPx": 292, "gapPx": 12, "cardPaddingPx": 8, "cardRadiusPx": 24, "modeIconHostPx": 64, "modeIconPx": 68, "modeIconMobilePortraitPx": 60, "transparentNoBlur": true },
-    "contentCard": { "radiusPx": 20, "paddingPx": 12, "minHeightPx": 180 },
-    "gameBoard": { "radiusPx": 16, "paddingPx": 2, "mobileCellHeightCss": "clamp(20px, 3.2vh, 36px)" },
-    "menuControl": { "hitBoxPx": 55, "iconBoxPx": 44 },
-    "roomClose": { "hitBoxPx": 44, "pngMasterPx": 768, "pngProductionPx": 256 },
-    "roomShell": { "maxWidthPx": 760, "viewportSideInsetPx": 22, "radiusPx": 22 },
-    "compactModal": { "maxWidthPx": 420, "viewportSideInsetPx": 14, "radiusPx": 20, "paddingPx": 18 },
+    "modeGrid": {
+      "columns": 2,
+      "maxWidthPx": 292,
+      "gapPx": 12,
+      "cardPaddingPx": 8,
+      "cardRadiusPx": 24,
+      "modeIconHostPx": 64,
+      "modeIconPx": 68,
+      "modeIconMobilePortraitPx": 60,
+      "transparentNoBlur": true
+    },
+    "contentCard": {
+      "radiusPx": 20,
+      "paddingPx": 12,
+      "minHeightPx": 180
+    },
+    "gameBoard": {
+      "radiusPx": 16,
+      "paddingPx": 2,
+      "mobileCellHeightCss": "clamp(20px, 3.2vh, 36px)"
+    },
+    "menuControl": {
+      "hitBoxPx": 55,
+      "iconBoxPx": 44
+    },
+    "roomClose": {
+      "hitBoxPx": 44,
+      "pngMasterPx": 768,
+      "pngProductionPx": 256
+    },
+    "roomShell": {
+      "maxWidthPx": 760,
+      "viewportSideInsetPx": 22,
+      "radiusPx": 22
+    },
+    "compactModal": {
+      "maxWidthPx": 420,
+      "viewportSideInsetPx": 14,
+      "radiusPx": 20,
+      "paddingPx": 18
+    },
     "mobileDiceCss": "min(14vw, 60px)",
     "mobileThrowButtonHeightPx": 50,
     "mobileAnnounceButtonHeightPx": 40,
@@ -531,9 +776,24 @@
     "uiFont": "Montserrat",
     "uiFallback": "Arial, sans-serif",
     "quoteFont": "Georgia, serif",
-    "fontWeights": { "body": 400, "control": 600, "heading": 700, "emphasis": 800 },
-    "fontSizesPx": { "caption": 12, "secondary": 14, "body": 16, "cardHeading": 18, "sectionHeading": 22, "roomHeading": 28 },
-    "lineHeights": { "heading": 1.2, "body": 1.45 },
+    "fontWeights": {
+      "body": 400,
+      "control": 600,
+      "heading": 700,
+      "emphasis": 800
+    },
+    "fontSizesPx": {
+      "caption": 12,
+      "secondary": 14,
+      "body": 16,
+      "cardHeading": 18,
+      "sectionHeading": 22,
+      "roomHeading": 28
+    },
+    "lineHeights": {
+      "heading": 1.2,
+      "body": 1.45
+    },
     "rule": "Sve teme koriste iste fontove, velicine, tezine, prelamanje i tekstualne zone radi geometrijske jednakosti; tema menja boju i materijal. Jedinstvena tipografija logotipa je deo PNG dizajna."
   },
   "paletteUsage": {
@@ -547,12 +807,73 @@
     "translucency": "Kontrast se proverava nad stvarnom kompozicijom posle renderovanja, ne samo nad HEX fallback tokenima; poluprovidnost ne menja definisani Clay ili Smooth Rubber / Matte Plastic pravac."
   },
   "acceptanceCriteria": {
-    "viewportsCssPx": [[320, 568], [360, 780], [412, 915], [768, 1024]],
-    "languages": ["sr", "en"],
-    "fontScaleFactors": [1, 1.3],
-    "contrast": { "normalTextMinimum": 4.5, "largeTextMinimum": 3, "essentialNonTextMinimum": 3, "standard": "WCAG 2.2 AA", "reference": "https://www.w3.org/TR/WCAG22/" },
-    "requiredSurfaces": ["splash and login", "main menu", "solo", "hotseat", "online random and waiting", "invite friend and waiting", "game board", "daily challenge", "leaderboard", "statistics and H2H", "settings", "rules", "global chat", "online players", "economy", "quarterly league", "treasury", "tournament", "game over"],
-    "requiredStates": ["normal", "pressed", "active", "selected", "locked", "disabled", "empty", "loading", "error", "success", "reduced motion"],
+    "viewportsCssPx": [
+      [
+        320,
+        568
+      ],
+      [
+        360,
+        780
+      ],
+      [
+        412,
+        915
+      ],
+      [
+        768,
+        1024
+      ]
+    ],
+    "languages": [
+      "sr",
+      "en"
+    ],
+    "fontScaleFactors": [
+      1,
+      1.3
+    ],
+    "contrast": {
+      "normalTextMinimum": 4.5,
+      "largeTextMinimum": 3,
+      "essentialNonTextMinimum": 3,
+      "standard": "WCAG 2.2 AA",
+      "reference": "https://www.w3.org/TR/WCAG22/"
+    },
+    "requiredSurfaces": [
+      "splash and login",
+      "main menu",
+      "solo",
+      "hotseat",
+      "online random and waiting",
+      "invite friend and waiting",
+      "game board",
+      "daily challenge",
+      "leaderboard",
+      "statistics and H2H",
+      "settings",
+      "rules",
+      "global chat",
+      "online players",
+      "economy",
+      "quarterly league",
+      "treasury",
+      "tournament",
+      "game over"
+    ],
+    "requiredStates": [
+      "normal",
+      "pressed",
+      "active",
+      "selected",
+      "locked",
+      "disabled",
+      "empty",
+      "loading",
+      "error",
+      "success",
+      "reduced motion"
+    ],
     "assetGate": "Tacno 191 produkcionih PNG uloga, svi fajlovi validni i dimenzije/alpha po katalogu; odobren originalan dizajn bez preslikavanja druge teme; jedan kanonski motiv po ponovljenoj ulozi.",
     "uiGate": "Na svakoj temi i test velicini nema preklapanja, odsecanja bitnog teksta, pomeranja geometrije prema Green referenci, promene vrednosti ili razlike u funkcionalnom toku.",
     "fontGate": "Stvarno dostupne Montserrat tezine 400/600/700/800 proveravaju se na Android prikazu; sinteticka ili zakasnela zamena fonta ne sme promeniti prelom i geometriju. Georgia citat zadrzava citljiv fallback.",
@@ -576,7 +897,10 @@
     "mobileReadability": "Za svaku temu proveravaju se kontrast, velicine ikonica i dodirnih zona, prelamanje teksta i raspored na uskim i sirim mobilnim ekranima, na srpskom i engleskom.",
     "assetDelivery": "Za renderovane pozadine i ikonice cuvaju se izvorni masteri i optimizovane runtime izvedenice; pri pokretanju se ucitava samo aktivna tema, a ostali tematski asseti po potrebi."
   },
-  "allowedDirectionIds": ["clay", "smooth_rubber_matte_plastic"],
+  "allowedDirectionIds": [
+    "clay",
+    "smooth_rubber_matte_plastic"
+  ],
   "directionPolicy": "Za svih deset tema dozvoljeni su samo Clay i Smooth Rubber / Matte Plastic; ranije razmatrani materijalni pravci vise nisu aktivne opcije. Pravac vazi za pozadinu, Icon Pack, logo, UI, tablu, kockice, intro i svaki tematski PNG.",
   "directions": {
     "clay": {
@@ -596,17 +920,31 @@
       "mainPack": "Green Room Pack",
       "iconPack": "Green Icon Pack",
       "iconPackDirection": "clay",
-      "iconDna": { "status": "locked-reference", "silhouette": "Postojeci Green Clay oblici su zakljucani; oni odredjuju funkciju i razmeru, ali se njihova kompozicija ne prenosi u druge teme." },
+      "iconDna": {
+        "status": "locked-reference",
+        "silhouette": "Postojeci Green Clay oblici su zakljucani; oni odredjuju funkciju i razmeru, ali se njihova kompozicija ne prenosi u druge teme."
+      },
       "iconFormat": "PNG",
       "assetCatalog": "shared-room-pack-production-png",
       "roomContract": "shared-room-ui-contract",
       "direction": "clay",
       "designScope": "locked-reference",
       "paletteReference": "Postojeci Green Room Pack manifest i aktivni Green CSS; bez novih boja u ovoj specifikaciji.",
-      "gameLogo": { "name": "Green Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay", "activeAsset": "www/assets/green-soft-clay/splash-title-soft-clay-v2.png", "silhouette": "Samostalna dvoredna glinena slova bez oblacica, ploce ili drugog nosaca." },
+      "gameLogo": {
+        "name": "Green Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "clay",
+        "activeAsset": "www/assets/green-soft-clay/splash-title-soft-clay-v2.png",
+        "silhouette": "Samostalna dvoredna glinena slova bez oblacica, ploce ili drugog nosaca."
+      },
       "visualIdentity": {
         "background": "Postojeci originalni sumski glineni diorama pejzaz sa prednjim planom, brdima, puteljkom i mirnijom zonom iza menija i table; zakljucana referenca za zivopisnost, ne sablon za kopiranje.",
-        "palette": ["sumska zelena", "topla slonovaca", "terakota"],
+        "palette": [
+          "sumska zelena",
+          "topla slonovaca",
+          "terakota"
+        ],
         "materialAndUi": "Mat glina, zaobljeni reljef, podignute i udubljene kontrole.",
         "boardAndDice": "Sumsko-zelena glinena tabla i glinene kockice sa jasnim tackicama.",
         "screens": "Splash, meni, cekanje, ulazi u sobe i rezultat koriste isti Green Clay identitet.",
@@ -626,22 +964,53 @@
       "direction": "smooth_rubber_matte_plastic",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#E6BE83", "surface": "#FFF1D7", "raised": "#F3D6A8", "inset": "#DBB47B",
-        "text": "#392817", "textMuted": "#705237", "heading": "#4A311B",
-        "primary": "#875024", "onPrimary": "#FFFFFF", "accent": "#76612B", "border": "#9B754F",
-        "success": "#35613D", "danger": "#9B3B3A", "logoMain": "#4A311B", "logoAccent": "#795127",
-        "colDown": "#216486", "colUp": "#A13D4A", "colMiddle": "#80502A", "colManual": "#754394", "colAnnounce": "#875024", "colFree": "#4D5D62"
+        "background": "#E6BE83",
+        "surface": "#FFF1D7",
+        "raised": "#F3D6A8",
+        "inset": "#DBB47B",
+        "text": "#392817",
+        "textMuted": "#705237",
+        "heading": "#4A311B",
+        "primary": "#875024",
+        "onPrimary": "#FFFFFF",
+        "accent": "#76612B",
+        "border": "#9B754F",
+        "success": "#35613D",
+        "danger": "#9B3B3A",
+        "logoMain": "#4A311B",
+        "logoAccent": "#795127",
+        "colDown": "#216486",
+        "colUp": "#A13D4A",
+        "colMiddle": "#80502A",
+        "colManual": "#754394",
+        "colAnnounce": "#875024",
+        "colFree": "#4D5D62"
       },
       "iconPackDirection": "smooth_rubber_matte_plastic",
-      "gameLogo": { "name": "Light Gold Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "gameLogo": {
+        "name": "Light Gold Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "smooth_rubber_matte_plastic"
+      },
       "iconDna": {
         "silhouette": "Siroke, blago zaravnjene oble forme sa mirnim kosim rezom; bez tanke zlatne ornamentike.",
         "coinFace": "Mat medeno-zlatni zetoncic sa pet utisnutih tacaka i sopstvenim glatkim rubom; bez metalnog sjaja i bez kopiranja Green modela.",
-        "colorsHex": { "body": "#E6BE83", "light": "#FFF1D7", "shade": "#875024", "accent": "#76612B", "contour": "#875024" }
+        "colorsHex": {
+          "body": "#E6BE83",
+          "light": "#FFF1D7",
+          "shade": "#875024",
+          "accent": "#76612B",
+          "contour": "#875024"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V9 kadar prikazuje osuncano balkansko dvoriste, tople kamene ploce, drvene krovove i meka brda u daljini. Medeno svetlo i maslinasto drvo daju dubinu; bez vijugave staze, filigrana i metalnog sjaja.",
-        "palette": ["medeno zlato", "topla slonovaca", "maslinasta senka"],
+        "palette": [
+          "medeno zlato",
+          "topla slonovaca",
+          "maslinasta senka"
+        ],
         "materialAndUi": "Gladka meka plastika i mat silikon u medeno-zlatnoj paleti sa prigusenim maslinastim akcentom; cisti oblici i kontrolisana volumenska senka bez metalnog sjaja.",
         "boardAndDice": "Svetla mat-silikonska tabla i krem kockice sa tamnim citljivim oznakama.",
         "screens": "Svi posebni ekrani koriste isti topli mat-silikonski tretman.",
@@ -661,22 +1030,53 @@
       "direction": "clay",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#681D25", "surface": "#431720", "raised": "#60252E", "inset": "#301019",
-        "text": "#FFF6F2", "textMuted": "#E6C9C4", "heading": "#FFEDE6",
-        "primary": "#F1C3B2", "onPrimary": "#3A1424", "accent": "#E39A70", "border": "#AF7777",
-        "success": "#8CDEB2", "danger": "#FF9DAA", "logoMain": "#FFEDE6", "logoAccent": "#E9AF9E",
-        "colDown": "#8AD6EF", "colUp": "#FFB4B7", "colMiddle": "#FFD385", "colManual": "#DDB9F0", "colAnnounce": "#F1C3B2", "colFree": "#C4CFD5"
+        "background": "#681D25",
+        "surface": "#431720",
+        "raised": "#60252E",
+        "inset": "#301019",
+        "text": "#FFF6F2",
+        "textMuted": "#E6C9C4",
+        "heading": "#FFEDE6",
+        "primary": "#F1C3B2",
+        "onPrimary": "#3A1424",
+        "accent": "#E39A70",
+        "border": "#AF7777",
+        "success": "#8CDEB2",
+        "danger": "#FF9DAA",
+        "logoMain": "#FFEDE6",
+        "logoAccent": "#E9AF9E",
+        "colDown": "#8AD6EF",
+        "colUp": "#FFB4B7",
+        "colMiddle": "#FFD385",
+        "colManual": "#DDB9F0",
+        "colAnnounce": "#F1C3B2",
+        "colFree": "#C4CFD5"
       },
       "iconPackDirection": "clay",
-      "gameLogo": { "name": "Dark Cherry Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "gameLogo": {
+        "name": "Dark Cherry Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "clay"
+      },
       "iconDna": {
         "silhouette": "Malo asimetricna, rukom vajana puna glinena masa sa jednom sirokom udubinom; bez preslikavanja Green oblika.",
         "coinFace": "Visnjin glineni novcic sa pet utisnutih tacaka i nepravilno zaobljenim rubom; topla mat dubina bez ukrasa.",
-        "colorsHex": { "body": "#8B3038", "light": "#F1C3B2", "shade": "#431720", "accent": "#E39A70", "contour": "#F1C3B2" }
+        "colorsHex": {
+          "body": "#8B3038",
+          "light": "#F1C3B2",
+          "shade": "#431720",
+          "accent": "#E39A70",
+          "contour": "#F1C3B2"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V9 glineni enterijer ima duboke visnjine zidove, zaobljeni sto, sediste i mali pogled kroz prozor na topli zalazak i kuce. Paleta prati crvenu glinu i narandzasto svetlo, bez folklornih ukrasa, realisticne tkanine i vijugave staze.",
-        "palette": ["duboka visnja", "crvena glina", "topla krem"],
+        "palette": [
+          "duboka visnja",
+          "crvena glina",
+          "topla krem"
+        ],
         "materialAndUi": "Mat bordo glina, rucno vajane ali ciste ivice, neomorfna udubljenja i volumenske senke bez vlakana tkanine.",
         "boardAndDice": "Precizno oblikovana glinena tabla; svetle glinene kockice sa jakim kontrastom tackica.",
         "screens": "Svi posebni ekrani zadrzavaju isti tamnovisnjin Clay identitet.",
@@ -696,22 +1096,54 @@
       "direction": "smooth_rubber_matte_plastic",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#0E5A9B", "surface": "#FFF4E5", "raised": "#DEECEB", "inset": "#BBD8DE",
-        "text": "#18384B", "textMuted": "#476874", "heading": "#173D5B",
-        "primary": "#0B5C8C", "onPrimary": "#FFFFFF", "accent": "#BD684A", "border": "#6D9BA8",
-        "success": "#216F5A", "danger": "#A63A42", "logoMain": "#FFFFFF", "logoAccent": "#FFE8C4", "splashWelcome": "#F7FBFF",
-        "colDown": "#1B6C8E", "colUp": "#A34851", "colMiddle": "#7B5C13", "colManual": "#664E97", "colAnnounce": "#146778", "colFree": "#4E6973"
+        "background": "#0E5A9B",
+        "surface": "#FFF4E5",
+        "raised": "#DEECEB",
+        "inset": "#BBD8DE",
+        "text": "#18384B",
+        "textMuted": "#476874",
+        "heading": "#173D5B",
+        "primary": "#0B5C8C",
+        "onPrimary": "#FFFFFF",
+        "accent": "#BD684A",
+        "border": "#6D9BA8",
+        "success": "#216F5A",
+        "danger": "#A63A42",
+        "logoMain": "#FFFFFF",
+        "logoAccent": "#FFE8C4",
+        "splashWelcome": "#F7FBFF",
+        "colDown": "#1B6C8E",
+        "colUp": "#A34851",
+        "colMiddle": "#7B5C13",
+        "colManual": "#664E97",
+        "colAnnounce": "#146778",
+        "colFree": "#4E6973"
       },
       "iconPackDirection": "smooth_rubber_matte_plastic",
-      "gameLogo": { "name": "Blue Ocean Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "gameLogo": {
+        "name": "Blue Ocean Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "smooth_rubber_matte_plastic"
+      },
       "iconDna": {
         "silhouette": "Cist sirok luk i jedna blago suzena ivica kao ritam obale ili jedra; bez talasica i camaca dodatih na svaku ikonu.",
         "coinFace": "Glatki egejsko-plavi zetoncic sa pet citljivih tacaka i zasecenim mat rubom; originalan obris bez kopije Green dukata.",
-        "colorsHex": { "body": "#0E5A9B", "light": "#FFF4E5", "shade": "#173D5B", "accent": "#BD684A", "contour": "#173D5B" }
+        "colorsHex": {
+          "body": "#0E5A9B",
+          "light": "#FFF4E5",
+          "shade": "#173D5B",
+          "accent": "#BD684A",
+          "contour": "#173D5B"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V13 grcki egejski obalski kadar nadahnut Atinom i Pirejem: jasno nadvodno plavo more je glavni motiv, uz skromnu luku, kuce kosih crepnih krovova i stilizovana dalja ostrva. Mat silikon ili meka plastika, cisti zaobljeni oblici. Bez Santorinija, belih kubnih kuca s plavim kapcima, turistickog kica, fotorealisticne vode, morskog dna i S-krivine obale ili puta.",
-        "palette": ["egejska plava", "topla krem", "boja crepa"],
+        "palette": [
+          "egejska plava",
+          "topla krem",
+          "boja crepa"
+        ],
         "materialAndUi": "Svetla glatka meka plastika i mat silikon; vodeni motiv nastaje kroz oblik i plavu paletu, bez staklaste providnosti.",
         "boardAndDice": "Svetla mat-silikonska tabla i krem kockice sa jasnim oznakama.",
         "screens": "Svi posebni ekrani koriste isti morski mat-silikonski identitet.",
@@ -732,21 +1164,52 @@
       "designScope": "target-for-implementation",
       "iconPackDirection": "smooth_rubber_matte_plastic",
       "paletteHex": {
-        "background": "#080D18", "surface": "#121B2B", "raised": "#1A2B40", "inset": "#0C1625",
-        "text": "#F4FAFF", "textMuted": "#B5C7D6", "heading": "#E9FFFF",
-        "primary": "#56E5D2", "onPrimary": "#071923", "accent": "#F08CE3", "border": "#3A8A94",
-        "success": "#72DDAE", "danger": "#FF97AC", "logoMain": "#E9FFFF", "logoAccent": "#56E5D2",
-        "colDown": "#74CBFF", "colUp": "#FF96C8", "colMiddle": "#FFD17B", "colManual": "#C9A2FF", "colAnnounce": "#56E5D2", "colFree": "#B4C6D8"
+        "background": "#080D18",
+        "surface": "#121B2B",
+        "raised": "#1A2B40",
+        "inset": "#0C1625",
+        "text": "#F4FAFF",
+        "textMuted": "#B5C7D6",
+        "heading": "#E9FFFF",
+        "primary": "#56E5D2",
+        "onPrimary": "#071923",
+        "accent": "#F08CE3",
+        "border": "#3A8A94",
+        "success": "#72DDAE",
+        "danger": "#FF97AC",
+        "logoMain": "#E9FFFF",
+        "logoAccent": "#56E5D2",
+        "colDown": "#74CBFF",
+        "colUp": "#FF96C8",
+        "colMiddle": "#FFD17B",
+        "colManual": "#C9A2FF",
+        "colAnnounce": "#56E5D2",
+        "colFree": "#B4C6D8"
       },
-      "gameLogo": { "name": "Neon Cyber Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "gameLogo": {
+        "name": "Neon Cyber Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "smooth_rubber_matte_plastic"
+      },
       "iconDna": {
         "silhouette": "Zaobljeni pravougaoni segmenti i jedan jasan urez; cijan ivica nosi citljivost bez vise svetlecih kontura.",
         "coinFace": "Jednostavan mat cyber zetoncic sa pet tacaka; tirkiz nosi oblik, magenta je samo mali funkcionalni naglasak.",
-        "colorsHex": { "body": "#193455", "light": "#56E5D2", "shade": "#080D18", "accent": "#F08CE3", "contour": "#56E5D2" }
+        "colorsHex": {
+          "body": "#193455",
+          "light": "#56E5D2",
+          "shade": "#080D18",
+          "accent": "#F08CE3",
+          "contour": "#56E5D2"
+        }
       },
       "visualIdentity": {
         "background": "Zivopisan nocni cyber gradski predeo sa nekoliko zaobljenih mat-plasticnih zgrada, ulicom ili prolazom koji vodi u dubinu i kontrolisanim tirkizno-magenta svetlom. Centar zadrzava scenu bez gustih svetlosnih linija iza teksta; bez praznog tamnog panela.",
-        "palette": ["tamni grafit", "neon tirkizna", "neon magenta"],
+        "palette": [
+          "tamni grafit",
+          "neon tirkizna",
+          "neon magenta"
+        ],
         "materialAndUi": "Cista mat plastika i meka guma sa preciznim neonskim akcentima.",
         "boardAndDice": "Tamna blago providna mat-plasticna 3D Soft tabla sa mekanim uzdignutim zaglavljima i ulegnutim poljima, citljivim izvornim tekstom i kontrolisanim cijan-magenta akcentima. Najava ima namenski 3D PNG megafon; kockice ostaju citljive i u istim dimenzijama.",
         "screens": "Svi posebni ekrani koriste isti cyber identitet i kontrolisan neon.",
@@ -766,22 +1229,53 @@
       "direction": "clay",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#5A386A", "surface": "#3C284B", "raised": "#563660", "inset": "#2D1D3C",
-        "text": "#FBF6FF", "textMuted": "#E0CDE5", "heading": "#FFF2E3",
-        "primary": "#F2C879", "onPrimary": "#2C183A", "accent": "#D691B5", "border": "#A37EAE",
-        "success": "#A3DFC2", "danger": "#F2A3B4", "logoMain": "#FFF5E8", "logoAccent": "#FFD17D",
-        "colDown": "#98CFFF", "colUp": "#F3A9B5", "colMiddle": "#F4D584", "colManual": "#D2A7F0", "colAnnounce": "#E5C46E", "colFree": "#CBD3DE"
+        "background": "#5A386A",
+        "surface": "#3C284B",
+        "raised": "#563660",
+        "inset": "#2D1D3C",
+        "text": "#FBF6FF",
+        "textMuted": "#E0CDE5",
+        "heading": "#FFF2E3",
+        "primary": "#F2C879",
+        "onPrimary": "#2C183A",
+        "accent": "#D691B5",
+        "border": "#A37EAE",
+        "success": "#A3DFC2",
+        "danger": "#F2A3B4",
+        "logoMain": "#FFF5E8",
+        "logoAccent": "#FFD17D",
+        "colDown": "#98CFFF",
+        "colUp": "#F3A9B5",
+        "colMiddle": "#F4D584",
+        "colManual": "#D2A7F0",
+        "colAnnounce": "#E5C46E",
+        "colFree": "#CBD3DE"
       },
       "iconPackDirection": "clay",
-      "gameLogo": { "name": "Royal Amethyst Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "gameLogo": {
+        "name": "Royal Amethyst Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "clay"
+      },
       "iconDna": {
         "silhouette": "Miran, tezak glineni luk i par sirokih faseta, bez dragulja ili krune nalepljene na svaku ikonu.",
         "coinFace": "Pljosnati ametistni glineni zetoncic sa pet reljefnih tacaka; zlatno je malo polje, ne metalna oplata.",
-        "colorsHex": { "body": "#5A386A", "light": "#E0CDE5", "shade": "#2D1D3C", "accent": "#F2C879", "contour": "#E0CDE5" }
+        "colorsHex": {
+          "body": "#5A386A",
+          "light": "#E0CDE5",
+          "shade": "#2D1D3C",
+          "accent": "#F2C879",
+          "contour": "#E0CDE5"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V6 kadar gleda kroz veliki glineni luk na ljubicastu obalu i topli zalazak; pod u prvom planu hvata meko narandzasto svetlo. Bez dodatnih kruna, nakita i filigrana.",
-        "palette": ["ametist ljubicast", "puderasta sljiva", "svetlo zalaska"],
+        "palette": [
+          "ametist ljubicast",
+          "puderasta sljiva",
+          "svetlo zalaska"
+        ],
         "materialAndUi": "Ljubicastasta mat glina, mek reljef i uzdrzani topli akcenti prema svetlu zalaska, bez metalnog ili satenskog sjaja.",
         "boardAndDice": "Ametistna glinena tabla i svetle ljubicaste glinene kockice sa jasnim oznakama.",
         "screens": "Svi posebni ekrani koriste isti kraljevski Clay identitet.",
@@ -801,22 +1295,54 @@
       "direction": "smooth_rubber_matte_plastic",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#E5D4B9", "surface": "#FFF8EA", "raised": "#EEE5D3", "inset": "#D3D5B7",
-        "text": "#3D4434", "textMuted": "#5F654F", "heading": "#3F4A35",
-        "primary": "#4D6B45", "onPrimary": "#FFFFFF", "accent": "#A66443", "border": "#879373",
-        "success": "#3E674A", "danger": "#9E4A42", "logoMain": "#3F4A35", "logoAccent": "#4D6B45", "splashWelcome": "#303B2D",
-        "colDown": "#2F6D8D", "colUp": "#A0445C", "colMiddle": "#806118", "colManual": "#684C9B", "colAnnounce": "#456F5A", "colFree": "#5D6670"
+        "background": "#E5D4B9",
+        "surface": "#FFF8EA",
+        "raised": "#EEE5D3",
+        "inset": "#D3D5B7",
+        "text": "#3D4434",
+        "textMuted": "#5F654F",
+        "heading": "#3F4A35",
+        "primary": "#4D6B45",
+        "onPrimary": "#FFFFFF",
+        "accent": "#A66443",
+        "border": "#879373",
+        "success": "#3E674A",
+        "danger": "#9E4A42",
+        "logoMain": "#3F4A35",
+        "logoAccent": "#4D6B45",
+        "splashWelcome": "#303B2D",
+        "colDown": "#2F6D8D",
+        "colUp": "#A0445C",
+        "colMiddle": "#806118",
+        "colManual": "#684C9B",
+        "colAnnounce": "#456F5A",
+        "colFree": "#5D6670"
       },
       "iconPackDirection": "smooth_rubber_matte_plastic",
-      "gameLogo": { "name": "Easter Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "gameLogo": {
+        "name": "Easter Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "smooth_rubber_matte_plastic"
+      },
       "iconDna": {
         "silhouette": "Kompaktne glatke ovalne forme sa jednim listastim zasekom; bez serije jaja, cvetova ili masni na funkcionalnim ikonama.",
         "coinFace": "Mat krem zetoncic sa pet tacaka i sopstvenim blago ovalnim rubom; ne ponavljati Green materijal i obod.",
-        "colorsHex": { "body": "#D3D5B7", "light": "#FFF8EA", "shade": "#4D6B45", "accent": "#A66443", "contour": "#4D6B45" }
+        "colorsHex": {
+          "body": "#D3D5B7",
+          "light": "#FFF8EA",
+          "shade": "#4D6B45",
+          "accent": "#A66443",
+          "contour": "#4D6B45"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V6 kadar je tih prolecni enterijer sa toplim zidovima, zelenim okvirom prozora, drvetom napolju i samo dva jajeta u jednostavnoj ciniji. Bez dekorativnog niza jaja, cvetnih bordura, zeceva, masni i pastelne pretrpanosti. Materijal je mat silikon ili meka plastika.",
-        "palette": ["topla slonovaca", "kadulja zelena", "svetlo drvo"],
+        "palette": [
+          "topla slonovaca",
+          "kadulja zelena",
+          "svetlo drvo"
+        ],
         "materialAndUi": "Cista meka plastika i mat silikon, zaobljeni oblici bez glinene teksture.",
         "boardAndDice": "Pastelna igrackasta tabla i glatke kockice sa jakom citljivoscu.",
         "screens": "Svi posebni ekrani koriste isti vedri, glatki prolecni identitet.",
@@ -836,22 +1362,53 @@
       "direction": "clay",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#D79269", "surface": "#FFF0DA", "raised": "#F0D0AB", "inset": "#D5B29B",
-        "text": "#443027", "textMuted": "#70513D", "heading": "#56372D",
-        "primary": "#7D4D38", "onPrimary": "#FFFFFF", "accent": "#396B72", "border": "#A87759",
-        "success": "#32634D", "danger": "#9D3D37", "logoMain": "#4A2C23", "logoAccent": "#396B72",
-        "colDown": "#2A687D", "colUp": "#A13D3D", "colMiddle": "#765919", "colManual": "#754C88", "colAnnounce": "#2D6B6F", "colFree": "#5B655B"
+        "background": "#D79269",
+        "surface": "#FFF0DA",
+        "raised": "#F0D0AB",
+        "inset": "#D5B29B",
+        "text": "#443027",
+        "textMuted": "#70513D",
+        "heading": "#56372D",
+        "primary": "#7D4D38",
+        "onPrimary": "#FFFFFF",
+        "accent": "#396B72",
+        "border": "#A87759",
+        "success": "#32634D",
+        "danger": "#9D3D37",
+        "logoMain": "#4A2C23",
+        "logoAccent": "#396B72",
+        "colDown": "#2A687D",
+        "colUp": "#A13D3D",
+        "colMiddle": "#765919",
+        "colManual": "#754C88",
+        "colAnnounce": "#2D6B6F",
+        "colFree": "#5B655B"
       },
       "iconPackDirection": "clay",
-      "gameLogo": { "name": "Desert Glass Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "gameLogo": {
+        "name": "Desert Glass Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "clay"
+      },
       "iconDna": {
         "silhouette": "Slojevite horizontalne glinene forme sa dva-tri siroka preloma kao pescar; bez kristala, faseta stakla i sitnih gravura.",
         "coinFace": "Koralan pescarni glineni zetoncic sa pet tacaka i debelim nepravilnim rubom; bez kopiranja Green reljefa.",
-        "colorsHex": { "body": "#D79269", "light": "#FFF0DA", "shade": "#87523C", "accent": "#396B72", "contour": "#87523C" }
+        "colorsHex": {
+          "body": "#D79269",
+          "light": "#FFF0DA",
+          "shade": "#87523C",
+          "accent": "#396B72",
+          "contour": "#87523C"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V8 kadar prikazuje otvoren glineni kanjon u koralno-pescanoj svetlosti, slojevite stene i prigusene plavosive senke u prvom planu. Bez gomile kristala, graviranja i staklastog odsjaja.",
-        "palette": ["koralni pescar", "topla krem", "prigusena plavosiva"],
+        "palette": [
+          "koralni pescar",
+          "topla krem",
+          "prigusena plavosiva"
+        ],
         "materialAndUi": "Topla peskovita glina, zaobljeni vajani oblici i prigusena plavosiva kao sporedni akcenat, bez providnog stakla.",
         "boardAndDice": "Glinena pescana tabla, jasna polja i glinene tematske kockice.",
         "screens": "Svi posebni ekrani koriste isti pustinjski Clay identitet.",
@@ -871,22 +1428,53 @@
       "direction": "clay",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#08090C", "surface": "#252934", "raised": "#3B3F4B", "inset": "#181B24",
-        "text": "#F5F5F7", "textMuted": "#C9CAD2", "heading": "#FAFAFB",
-        "primary": "#E1E2E7", "onPrimary": "#242630", "accent": "#A7A9B8", "border": "#858895",
-        "success": "#A8D5BE", "danger": "#F0ACB0", "logoMain": "#F5F5F7", "logoAccent": "#C4C5D0",
-        "colDown": "#B9CFDF", "colUp": "#D9BDD2", "colMiddle": "#D7D1BE", "colManual": "#BFC3DF", "colAnnounce": "#B8D0CB", "colFree": "#D0D2D9"
+        "background": "#08090C",
+        "surface": "#252934",
+        "raised": "#3B3F4B",
+        "inset": "#181B24",
+        "text": "#F5F5F7",
+        "textMuted": "#C9CAD2",
+        "heading": "#FAFAFB",
+        "primary": "#E1E2E7",
+        "onPrimary": "#242630",
+        "accent": "#A7A9B8",
+        "border": "#858895",
+        "success": "#A8D5BE",
+        "danger": "#F0ACB0",
+        "logoMain": "#F5F5F7",
+        "logoAccent": "#C4C5D0",
+        "colDown": "#B9CFDF",
+        "colUp": "#D9BDD2",
+        "colMiddle": "#D7D1BE",
+        "colManual": "#BFC3DF",
+        "colAnnounce": "#B8D0CB",
+        "colFree": "#D0D2D9"
       },
       "iconPackDirection": "clay",
-      "gameLogo": { "name": "Moonlight Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "gameLogo": {
+        "name": "Moonlight Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "clay"
+      },
       "iconDna": {
         "silhouette": "Niski zaobljeni reljef sa jednom sirokom konkavnom ivicom; bez zvezda, plavog sjaja i kratera na svakoj ikoni.",
         "coinFace": "Srebrnosivi glineni zetoncic sa pet tacaka i tihim tamnim obodom; mesecni reljef ostaje jednostavan i citljiv.",
-        "colorsHex": { "body": "#3B3F4B", "light": "#E1E2E7", "shade": "#181B24", "accent": "#A7A9B8", "contour": "#E1E2E7" }
+        "colorsHex": {
+          "body": "#3B3F4B",
+          "light": "#E1E2E7",
+          "shade": "#181B24",
+          "accent": "#A7A9B8",
+          "contour": "#E1E2E7"
+        }
       },
       "visualIdentity": {
         "background": "Prihvaceni V14 Mesecev Sjaj prikazuje iskljucivo oblikovanu povrsinu Meseca i otvoreni svemir. Glavni veliki krater je desno, a povrsina Meseca zauzima veci deo kadra; crno nebo je mirno i bez zvezda. Vajani glineni krateri, grebeni i odnos tamnog neba i meke srebrne svetlosti nose identitet. Bez Zemlje, drugih planeta, teleskopa, opservatorija, kuca i druge arhitekture, vijugavog svetlosnog kanala, zimskog fjorda ili polarne aurore.",
-        "palette": ["crni svemir", "srebrnosiva", "hladna bela"],
+        "palette": [
+          "crni svemir",
+          "srebrnosiva",
+          "hladna bela"
+        ],
         "materialAndUi": "Tamna grafitna glina sa diskretnim srebrnosivim tonom; krateri i povrsine su vajani, bez providnosti i realisticnog kamena.",
         "boardAndDice": "Tamna glinena tabla i svetle srebrno-sive glinene kockice sa jakim kontrastom.",
         "screens": "Svi posebni ekrani koriste isti lunarni Clay identitet.",
@@ -906,22 +1494,53 @@
       "direction": "smooth_rubber_matte_plastic",
       "designScope": "target-for-implementation",
       "paletteHex": {
-        "background": "#0B1830", "surface": "#182C44", "raised": "#24445B", "inset": "#0F2137",
-        "text": "#F5FBFF", "textMuted": "#C3D8E0", "heading": "#F2FBFF",
-        "primary": "#8AE3E4", "onPrimary": "#0A2934", "accent": "#C3ACEA", "border": "#759DA9",
-        "success": "#A4E3C9", "danger": "#FFAFB9", "logoMain": "#F2FBFF", "logoAccent": "#8AE3E4",
-        "colDown": "#8AD9FF", "colUp": "#F7B0D2", "colMiddle": "#E4D18B", "colManual": "#CEB9FF", "colAnnounce": "#8AE3E4", "colFree": "#C6D7E0"
+        "background": "#0B1830",
+        "surface": "#182C44",
+        "raised": "#24445B",
+        "inset": "#0F2137",
+        "text": "#F5FBFF",
+        "textMuted": "#C3D8E0",
+        "heading": "#F2FBFF",
+        "primary": "#8AE3E4",
+        "onPrimary": "#0A2934",
+        "accent": "#C3ACEA",
+        "border": "#759DA9",
+        "success": "#A4E3C9",
+        "danger": "#FFAFB9",
+        "logoMain": "#F2FBFF",
+        "logoAccent": "#8AE3E4",
+        "colDown": "#8AD9FF",
+        "colUp": "#F7B0D2",
+        "colMiddle": "#E4D18B",
+        "colManual": "#CEB9FF",
+        "colAnnounce": "#8AE3E4",
+        "colFree": "#C6D7E0"
       },
       "iconPackDirection": "smooth_rubber_matte_plastic",
-      "gameLogo": { "name": "Northern Nebula Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "gameLogo": {
+        "name": "Northern Nebula Game Logo",
+        "format": "PNG",
+        "style": "3D Soft Neomorphism",
+        "direction": "smooth_rubber_matte_plastic"
+      },
       "iconDna": {
         "silhouette": "Siroke neprekinute oble krive sa jednim mekim ledenim zavrsetkom; bez cyber segmenata ili vise aurora po ikoni.",
         "coinFace": "Mat severni zetoncic sa pet tacaka i glatkim obodom u ledeno-plavoj paleti; bez kopiranja Green oblika.",
-        "colorsHex": { "body": "#24445B", "light": "#F5FBFF", "shade": "#0B1830", "accent": "#8AE3E4", "contour": "#8AE3E4" }
+        "colorsHex": {
+          "body": "#24445B",
+          "light": "#F5FBFF",
+          "shade": "#0B1830",
+          "accent": "#8AE3E4",
+          "contour": "#8AE3E4"
+        }
       },
       "visualIdentity": {
         "background": "Zivopisan severni predeo sa velikim glatkim mat-silikonskim oblicima ledenih obala, dalekim planinama ili fjordom, mirnom vodom i jednom mekom cijan-ljubicastom aurom na nebu. Centar je deo predela bez svetlosnog haosa; bez fotorealisticnog leda, mesecevih kratera i kosmickog pejzaza.",
-        "palette": ["ponocno plava", "ledeni cijan", "prigusena ljubicasta"],
+        "palette": [
+          "ponocno plava",
+          "ledeni cijan",
+          "prigusena ljubicasta"
+        ],
         "materialAndUi": "Tamno-plava meka plastika i mat silikon sa hladnim cijan akcentom; led je stilizovan bojom i oblicima bez staklaste providnosti.",
         "boardAndDice": "Tamna mat-silikonska tabla i svetle kockice sa jasnim oznakama.",
         "screens": "Svi posebni ekrani koriste isti severni mat-silikonski identitet.",
@@ -929,5 +1548,22 @@
         "mobileReadabilityRequired": true
       }
     }
-  ]
+  ],
+  "visualAssetFamilyAuditRule": {
+    "scope": "Aktivni PNG u svih deset tema, sobama, podprikazima, karticama, obaveštenjima, introima, završnim ekranima i efektima.",
+    "quality": "Smisleni prepoznatljivi 3D Soft assetsi: bez kiča, kupusastih oblika, lovorovih venaca i suvišnih ukrasa, ali i bez spljoštenih bezidejnih crteža. Unutar teme uskladiti volumen, zaobljenost, materijal, svetlo, senke, detalje i akcente sa njenim DNK, pravcem i paletom.",
+    "canonical": "Pre promene pronaći sva mesta upotrebe i ugrađene motive u kompozitima. Ažurirati sve aktivne prikaze iste teme. Univerzalni skinovi, prirodni led/plamen i mesingana truba su odvojeno evidentirani izuzeci.",
+    "tournament": "Kanonski turnirski pehar ima prepoznatljivu petokraku zvezdu, uključujući medalje i srebrnu izvedenicu finaliste kada je to pehar. Zbirni trofej Riznice i medalje drugih takmičenja nisu turnirski pehari.",
+    "starManifest": "source-assets/theme-tournament-star-v2/manifest.json",
+    "evidence": "docs/theme-visual-audit/report.json",
+    "statuses": [
+      "prihvatljiv",
+      "potrebna dorada",
+      "potrebna zamena"
+    ],
+    "review": "Svaki PNG pregledati u velikom i malom prikazu, na podlozi teme; proveriti i stvarne potrošače u aplikaciji. Status statičkog PNG ne potvrđuje Android prikaz, sve dinamičke podprikaze ili fluidnost efekta. Dimenzije i funkcije ostaju standardizovane.",
+    "refreshManifest": "source-assets/theme-quality-refresh-v2/manifest.json",
+    "runtimeMapping": "www/theme-quality-assets.js",
+    "refreshProcedure": "Svaki PNG koji zahteva doradu/zamenu dobija zaseban image_gen master i verzionisani produkcioni PNG. Tek posle vizuelne provere novi fajl ulazi u zajednički lookup koji koriste stvarni resolveri i preloaderi, bez naknadnog DOM prebojavanja. Video-nagrada koristi postojeći kanonski video PNG iste teme, bez zasebnih ilustracija sa dukatima. Izvorne PNG putanje ostaju samo istorija i ne prepisuju se."
+  }
 }

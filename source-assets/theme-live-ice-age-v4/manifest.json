@@ -1,4 +1,6 @@
 {
+  "status": "retired-runtime",
+  "supersededBy": "source-assets/theme-live-stage-v1/manifest.json#frost-corner",
   "version": 4,
   "effect": "ice_age",
   "scope": "shared by all ten themes",

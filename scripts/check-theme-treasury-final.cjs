@@ -25,7 +25,7 @@ for (const theme of themes) {
     activeTheme = theme;
     for (const item of shop.EFFECTS) {
         const source = previewSource.call({}, item.id);
-        assert(source && fs.existsSync(path.join(root, 'www', source)),
+        assert(source && fs.existsSync(path.join(root, 'www', source.split('?')[0])),
             `Treasury rendering stops or preview is missing at ${theme}/${item.id}: ${source}`);
     }
 }
@@ -68,7 +68,7 @@ for (const theme of themes) {
     const roles = new Map();
     const add = (role, source, themed = true) => {
         assert(!roles.has(role), `Duplicate role ${theme}/${role}`);
-        const location = path.join(root, 'www', source);
+        const location = path.join(root, 'www', source.split('?')[0]);
         assert(fs.existsSync(location), `Missing ${theme}/${role}: ${source}`);
         const bytes = fs.readFileSync(location);
         assert(bytes.subarray(0, 8).equals(pngSignature), `Not PNG: ${source}`);

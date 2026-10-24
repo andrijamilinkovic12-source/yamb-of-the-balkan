@@ -33,14 +33,16 @@
             if (!paths.has(relative)) return;
             if (theme === 'dark') {
                 // Restore Green everywhere, including the shared finish screen, after a theme switch.
-                if (image.getAttribute('src') !== original) image.src = original;
+                const source = globalThis.resolveThemeQualityAsset?.(original) || original;
+                if (image.getAttribute('src') !== source) image.src = source;
                 image.classList.remove('theme-rewarded-video-icon');
                 return;
             }
             const versioned = ['easter', 'desert', 'severna'].includes(theme)
                 && relative.startsWith('canonical/rewarded-video/')
                 ? relative.replace('-v1.png', '-v2.png') : relative;
-            const source = themes.has(theme) ? `assets/theme-packs/${theme}/${versioned}` : original;
+            const target = themes.has(theme) ? `assets/theme-packs/${theme}/${versioned}` : original;
+            const source = globalThis.resolveThemeQualityAsset?.(target) || target;
             if (image.getAttribute('src') !== source) image.src = source;
             image.classList.toggle('theme-rewarded-video-icon', enabled);
             if (!enabled) return;

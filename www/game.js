@@ -1968,20 +1968,19 @@ class YambApp {
                     'assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png?v=1',
+                    'assets/effects/stage-v1/trumpet.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v2.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1',
+                    'assets/effects/stage-v1/flame.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v2.png?v=1',
-                    'assets/effects/ice-age/frost-preview-v4.png?v=1',
+                    'assets/effects/stage-v1/frost-corner.png?v=1',
                     'assets/effects/black-hole/dark-core-v1.png?v=1',
                     'assets/effects/supernova/dark-plasma-v2.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png?v=1',
+                    'assets/effects/stage-v1/ufo-dark.png?v=1',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-confetti-v1.png?v=2',
                     'assets/green-soft-clay/canonical/treasury-effect-previews/preview-gold-rain-v1.png?v=2',
                     'assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png?v=1',
@@ -2210,7 +2209,7 @@ class YambApp {
             'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings', 'statistics'];
         if (role === 'treasury') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
         if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png${theme === 'neon' ? '?v=2' : ''}`;
-        if (role === 'tournament') return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`;
+        if (role === 'tournament') return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v${['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1}.png`;
         if (role === 'leaderboard') return `assets/theme-packs/${theme}/canonical/leaderboard-room-identity/leaderboard-room${variant === 'menu' ? '-menu' : ''}-v2.png`;
         if (role === 'quarterly-league') return `assets/theme-packs/${theme}/canonical/quarterly-league-room-identity/quarterly-league-room${variant === 'menu' ? '-menu' : ''}-v2.png?v=2`;
         if (!roles.includes(role)) return '';
@@ -2297,8 +2296,11 @@ class YambApp {
         const role = roomId === 'daily' ? 'dailyChallenge' : roomId === 'riznica' ? 'treasury'
             : roomId === 'hotseat' ? 'solo' : roomId;
         const critical = ['easter', 'desert', 'severna'].includes(theme);
-        return (files[role] || []).map(path => root + (critical && path.startsWith('canonical/rewarded-video/')
-            ? path.replace('-v1.png', '-v2.png') : path));
+        return (files[role] || []).map(path => {
+            const source = root + (critical && path.startsWith('canonical/rewarded-video/')
+                ? path.replace('-v1.png', '-v2.png') : path);
+            return globalThis.resolveThemeQualityAsset?.(source) || source;
+        });
     }
 
     getThemeSplashSource(theme) {
@@ -2456,7 +2458,7 @@ class YambApp {
                 ...['state-register', 'state-unregister', 'state-registration-locked', 'state-start',
                     'state-match-active', 'state-match-complete'].map(role => ['tournament-states', role]),
                 ['statistics-overview', 'power-index']
-            ].map(([group, role]) => `assets/theme-packs/${theme}/canonical/${group}/${role}-v1.png${theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`)
+            ].map(([group, role]) => `assets/theme-packs/${theme}/canonical/${group}/${role}-v${role === 'finalist-silver' && ['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1}.png${theme === 'neon' && role === 'tab-bracket' ? '?v=2' : ''}`)
             : [];
         const globalChatInternal = safeRoomId === 'globalChat' && ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)
             ? ['empty-state', 'send'].map(role => `assets/theme-packs/${theme}/canonical/global-chat-internal/${role}-v1.png?v=2`)
@@ -2590,6 +2592,7 @@ class YambApp {
 
     preloadThemeImage(src, timeoutMs = 2200, priority = 'auto') {
         if (!src) return Promise.resolve(false);
+        src = globalThis.resolveThemeQualityAsset?.(src) || src;
 
         return new Promise(resolve => {
             let settled = false;
@@ -2620,7 +2623,7 @@ class YambApp {
     }
 
     preloadThemeSources(sources, { concurrency = 4, priority = 'auto', timeoutMs = 2200 } = {}) {
-        const uniqueSources = [...new Set((sources || []).filter(Boolean))];
+        const uniqueSources = [...new Set((sources || []).filter(Boolean).map(source => globalThis.resolveThemeQualityAsset?.(source) || source))];
         if (uniqueSources.length === 0) return Promise.resolve(true);
 
         let nextIndex = 0;
@@ -2694,7 +2697,7 @@ class YambApp {
         const themeRoot = this.getThemeAssetRoot(theme);
         const source = image.dataset.themeSrc || '';
         if (!themeRoot || !source.startsWith(themeRoot) || image.getAttribute('src')) return;
-        image.src = source;
+        image.src = globalThis.resolveThemeQualityAsset?.(source) || source;
     }
 
     installThemeImageHydrationObserver() {

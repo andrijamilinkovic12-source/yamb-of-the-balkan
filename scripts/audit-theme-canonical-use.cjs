@@ -118,7 +118,7 @@ const context = {
     URL, console: { log() {} }, setTimeout() {}
 };
 vm.createContext(context);
-for (const file of ['www/config.js', 'www/languages.js', 'www/pravilaigre.js', 'www/theme-statistics-room.js',
+for (const file of ['www/theme-quality-assets.js', 'www/config.js', 'www/languages.js', 'www/pravilaigre.js', 'www/theme-statistics-room.js',
     'www/theme-game-header.js', 'www/theme-settings-room.js', 'www/theme-online-players-room.js',
     'www/theme-invite-friend-room.js', 'www/theme-solo-results.js']) vm.runInContext(read(file), context, { filename: file });
 const trophyData = vm.runInContext('SHOP_DATA.TROPHIES.map(({id,title,desc})=>({id,title,desc}))', context);
@@ -195,7 +195,9 @@ const themes = registry.themes.map(theme => {
             'Poseban identitet po temi, takmičenju i plasmanu; ne spajati sa drugim takmičenjima.');
     }
     append('close', 'Zatvori sobu ili dijalog', slot('roomClose', 'room-controls/close-v1'), [], sharedSites.roomClose);
-    append('tournament-trophy', 'Pehar šampiona Turnira', slot('tournamentTrophy', 'tournament-awards/champion-trophy-v1'), [], sharedSites.tournamentTrophy,
+    const tournamentCup = slot('tournamentTrophy', 'tournament-awards/champion-trophy-v1');
+    const tournamentVariants = theme.id === 'dark' ? [] : [tournamentCup.replace(/-v([12])\.png$/, '-room-v$1.png')];
+    append('tournament-trophy', 'Pehar šampiona Turnira', tournamentCup, tournamentVariants, sharedSites.tournamentTrophy,
         'Turnirske medalje su zasebni PNG koji nose isti turnirski identitet.');
     for (const role of ['friend', 'search', 'spectate', 'duel']) append(`online-${role}`,
         { friend: 'Dodaj prijatelja', search: 'Pretraži igrača', spectate: 'Gledaj partiju', duel: 'Pozovi na duel' }[role],

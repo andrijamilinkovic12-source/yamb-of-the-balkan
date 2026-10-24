@@ -1,10 +1,11 @@
 <!doctype html>
 <html lang="sr">
 <head>
+  <base href="/">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Deset tema — pregled živih efekata</title>
-  <link rel="stylesheet" href="/efekti.css?v=3.4">
+  <link rel="stylesheet" href="/efekti.css?v=3.5">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -32,13 +33,8 @@
     <select id="theme-choice" aria-label="Tema">
       <option value="dark">Zelena</option><option value="light">Svetlo zlato</option><option value="medium">Trula višnja</option><option value="winter">Plavi okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option><option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
     </select>
-    <button type="button" data-effect="confetti">Konfete</button>
-    <button type="button" data-effect="gold_rain">Kiša dukata</button>
-    <button type="button" data-effect="fireflies">Magični svici</button>
-    <button type="button" data-effect="bubbles">Magični mehurići</button>
-    <button type="button" data-effect="ice_age">Ledeno doba</button>
-    <button type="button" data-effect="black_hole">Crna rupa</button>
-    <button type="button" data-effect="supernova">Supernova</button>
+    <select id="effect-choice" aria-label="Efekat"><option value="confetti">Konfete</option><option value="gold_rain">Kiša dukata</option><option value="fireflies">Magični svici</option><option value="bubbles">Magični mehurići</option><option value="ice_age">Ledeno doba</option><option value="black_hole">Crna rupa</option><option value="supernova">Supernova</option><option value="neon_pulse">Neon puls</option><option value="thunder">Gromovnik</option><option value="balkan">Svadba</option><option value="fireworks">Vatromet</option><option value="drones">Svetleći dronovi</option><option value="cosmic_dust">Svemirska prašina</option><option value="ufo_abduction">UFO abdukcija</option><option value="dragon_fire">Zmajeva vatra</option><option value="royal_yamb">Kraljevski Yamb</option></select>
+    <button type="button" data-effect="play">Ponovi</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
   <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
@@ -57,56 +53,18 @@
   <script>
     (async () => {
       try {
-        const response = await fetch('/managers.js', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`managers.js HTTP ${response.status}`);
-        const source = await response.text();
-        const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.indexOf('const filterYambThemeIds'));
-        const effectClass = source.slice(source.indexOf('class EffectManager {'), source.indexOf('// --- 5. SOUND MANAGER'));
-        const EffectManager = new Function('dukatIconHtml', `${prelude}\n${effectClass}\nreturn EffectManager;`)(() => '');
-        const fx = new EffectManager();
-        const params = new URLSearchParams(location.search);
-        const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
-        const backgrounds = { dark: 'green-clay-balkan-diorama-v4.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
-        const theme = themes.includes(params.get('theme')) ? params.get('theme') : 'dark';
-        const setTheme = id => {
-          fx.stop();
-          themes.slice(1).forEach(themeId => document.body.classList.toggle(`${themeId}-theme`, id === themeId));
-          document.documentElement.dataset.splashTheme = id;
-          document.getElementById('theme-choice').value = id;
-          document.body.style.setProperty('--theme-background', `url('/assets/${backgrounds[id]}')`);
-        };
-        setTheme(theme);
-        document.getElementById('theme-choice').addEventListener('change', event => {
-          setTheme(event.target.value);
-          if (effect) { showScene(effect); fx.trigger(effect); }
-        });
-        const board = document.querySelector('.qa-board');
-        const card = document.querySelector('.card');
-        document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) => `<span>${index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)] : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : ''}</span>`).join('');
-        const showScene = effect => { const onBoard = effect === 'ice_age' || effect === 'black_hole' || effect === 'supernova'; board.hidden = !onBoard; card.hidden = onBoard; };
-        document.querySelectorAll('[data-effect]').forEach(button => button.addEventListener('click', () => {
-          if (button.dataset.effect === 'stop') fx.stop();
-          else { fx.stop(); showScene(button.dataset.effect); fx.trigger(button.dataset.effect); }
-        }));
-        window.qaFx = { fx, setTheme, run(id) { fx.stop(); fx.trigger(id); }, state() { return {
-          theme: document.documentElement.dataset.splashTheme,
-          coinCount: document.querySelectorAll('.gold-rain-particle').length,
-          coinSources: [...new Set([...document.querySelectorAll('.gold-rain-particle')].map(node => node.getAttribute('src')))],
-          confettiActive: Boolean(fx.confettiAnimationId),
-          fireflyCount: document.querySelectorAll('.magic-firefly__sprite').length,
-          fireflySources: [...new Set([...document.querySelectorAll('.magic-firefly__sprite')].map(node => node.getAttribute('src')))],
-          bubbleCount: document.querySelectorAll('.magic-bubble').length,
-          bubbleSources: [...new Set([...document.querySelectorAll('.magic-bubble')].map(node => node.getAttribute('src')))],
-          iceFrostCount: document.querySelectorAll('.ice-age-frost').length,
-          iceOverlayCount: document.querySelectorAll('.ice-overlay-container').length,
-          sprites: Object.keys(fx.confettiSpritePromises)
-        }; } };
-        const effect = params.get('effect');
-        if (['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole', 'supernova'].includes(effect)) { showScene(effect); fx.trigger(effect); }
+        const [managerSource, stageSource, bootSource] = await Promise.all(
+          ['/managers.js', '/live-effects-stage.js', '/qa/live-effects-review-boot.js'].map(async path => {
+            const response = await fetch(path, { cache: 'no-store' });
+            if (!response.ok) throw new Error(path + ' HTTP ' + response.status);
+            return response.text();
+          }));
+        const prelude = managerSource.slice(managerSource.indexOf('const YAMB_THEME_IDS ='), managerSource.indexOf('const filterYambThemeIds'));
+        const effectClass = managerSource.slice(managerSource.indexOf('class EffectManager {'), managerSource.indexOf('// --- 5. SOUND MANAGER'));
+        const Manager = new Function(prelude + '\n' + stageSource + '\n' + effectClass + '\nreturn EffectManager;')();
+        new Function('EffectManager', bootSource + '\nbootLiveEffectsReview(EffectManager);')(Manager);
       } catch (error) {
-        const node = document.getElementById('qa-error');
-        node.hidden = false;
-        node.textContent = error.stack || String(error);
+        const node = document.getElementById('qa-error'); node.hidden = false; node.textContent = error.stack || String(error);
       }
     })();
   </script>

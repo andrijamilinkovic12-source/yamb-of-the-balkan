@@ -12,9 +12,10 @@
     }
 
     function source(theme, role) {
-        return themes.has(theme) && roles.includes(role)
+        const value = themes.has(theme) && roles.includes(role)
             ? `assets/theme-packs/${theme}/canonical/solo-results/${role}-v1.png?v=1`
             : '';
+        return globalThis.resolveThemeQualityAsset?.(value) || value;
     }
 
     function powerIndexSource(theme) {
@@ -29,7 +30,8 @@
         const root = themes.has(theme)
             ? `assets/theme-packs/${theme}/canonical/solo-record-icons/`
             : 'assets/green-soft-clay/canonical/solo-record-icons/';
-        return `${root}${role}-v1.png?v=1`;
+        const value = `${root}${role}-v1.png?v=1`;
+        return globalThis.resolveThemeQualityAsset?.(value) || value;
     }
 
     function sync(loadImages = false) {

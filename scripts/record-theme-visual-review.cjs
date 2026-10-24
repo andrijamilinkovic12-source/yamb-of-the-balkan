@@ -1,0 +1,10 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const target = path.resolve(__dirname, '../docs/theme-visual-audit/review-notes.json');
+const update = JSON.parse(fs.readFileSync(0,'utf8'));
+const notes = JSON.parse(fs.readFileSync(target,'utf8'));
+notes.reviewedSheets = [...new Set([...notes.reviewedSheets,...update.sheets||[]])];
+Object.assign(notes.flags,update.flags||{});
+for(const id of update.clear||[])delete notes.flags[id];
+fs.writeFileSync(target,JSON.stringify(notes,null,2)+'\n');
+console.log(`${notes.reviewedSheets.length} sheets recorded; ${Object.keys(notes.flags).length} explicit findings.`);

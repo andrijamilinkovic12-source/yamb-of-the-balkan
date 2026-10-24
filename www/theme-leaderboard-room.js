@@ -9,7 +9,8 @@
         if (!THEMES.includes(theme)) theme = 'dark';
         const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
         if (role === 'identity') return `${root}/canonical/leaderboard-room-identity/leaderboard-room-${theme === 'dark' ? 'v1' : 'v2'}.png?v=${theme === 'dark' ? 1 : 2}`;
-        return `${root}/canonical/leaderboard-controls/${role}-${theme === 'dark' ? 'v1' : 'v2'}.png?v=${theme === 'dark' ? 1 : 2}`;
+        const source = `${root}/canonical/leaderboard-controls/${role}-${theme === 'dark' ? 'v1' : 'v2'}.png?v=${theme === 'dark' ? 1 : 2}`;
+        return globalThis.resolveThemeQualityAsset?.(source) || source;
     };
     const preload = (theme = activeTheme()) => Promise.all([...ROLES].map(role => {
         const source = asset(role, theme);

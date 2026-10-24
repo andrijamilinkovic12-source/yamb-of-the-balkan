@@ -11930,7 +11930,7 @@ io.on('connection', (socket) => {
         const limit = legacyRequest ? 100 : Math.max(10, Math.min(100, toSafeInt(requestData?.limit, 50)));
         const requestId = legacyRequest ? undefined : requestData?.requestId;
 
-        const emitResult = (data, hasMore = false) => {
+        const emitResult = (data, hasMore = false, error = null) => {
             if (legacyRequest) {
                 socket.emit('global_highscores_data', data);
                 return;
@@ -11942,13 +11942,14 @@ io.on('connection', (socket) => {
                 limit,
                 hasMore,
                 requestId,
+                ...(error ? { error } : {}),
                 data
             });
         };
 
         try {
             if (!MONGO_URI) {
-                emitResult([]);
+                emitResult([], false, 'db_unavailable');
                 return;
             }
 
@@ -11992,7 +11993,7 @@ io.on('connection', (socket) => {
             emitResult(formattedScores, hasMore);
         } catch (err) {
             console.error("Greška pri dohvatanju skorova:", err);
-            emitResult([]);
+            emitResult([], false, 'server_error');
         }
     });
 

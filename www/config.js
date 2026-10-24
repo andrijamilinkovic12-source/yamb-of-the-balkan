@@ -158,20 +158,20 @@ const SHOP_DATA = {
         { id: 'gold_rain', name: { sr: 'Zlatna Kiša', en: 'Gold Rain' }, price: 10000, desc: { sr: 'Kaskada dukata, svetlucavih iskri i zlatnih reflektora.', en: 'A cascade of coins, shimmering sparks, and golden spotlights.' }, duration: '6s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-gold_rain', innerHtml: '' },
         { id: 'fireflies', name: { sr: 'Magični Svici', en: 'Magic Fireflies' }, price: 5000, desc: { sr: 'Nežne svetleće kuglice.', en: 'Gentle glowing lights.' }, duration: '5s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-fireflies', innerHtml: '' },
         { id: 'bubbles', name: { sr: 'Magični Mehurići', en: 'Magic Bubbles' }, price: 8000, desc: { sr: 'Svetlucavi mehurići koji lete i pucaju.', en: 'Shimmering bubbles floating and popping.' }, duration: '5s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-bubbles', innerHtml: '' },
-        { id: 'ice_age', name: { sr: 'Ledeno Doba', en: 'Ice Age' }, price: 12000, desc: { sr: 'Meki led postepeno prekrije tablu, kratko se zadrži i nestane.', en: 'Soft ice gradually covers the board, lingers briefly, then fades.' }, duration: '6.5s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-glass', innerHtml: '' },
+        { id: 'ice_age', name: { sr: 'Ledeno Doba', en: 'Ice Age' }, price: 12000, desc: { sr: 'Led raste iz sva četiri ugla preko cele table, kratko se zadrži i nestane.', en: 'Frost grows from all four corners over the entire board, lingers, then fades.' }, duration: '6.5s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-glass', innerHtml: '' },
         { id: 'black_hole', name: { sr: 'Crna Rupa', en: 'Black Hole' }, price: 15000, desc: { sr: 'Svetlosni tokovi kruže, čestice spiralno ulaze u jezgro, a tabla blago reaguje.', en: 'Light streams orbit, particles spiral into the core, and the board gently reacts.' }, duration: '5.8s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-black-hole', innerHtml: '' },
         { id: 'supernova', name: { sr: 'Supernova', en: 'Supernova' }, price: 18000, desc: { sr: 'Kratko sabijanje svetlosti, snažan prasak plazme i talas koji se širi preko celog ekrana.', en: 'A brief compression of light, a strong plasma burst and a wave expanding across the screen.' }, duration: '5s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-supernova', innerHtml: '' },
         { id: 'neon_pulse', name: { sr: 'Neon Puls', en: 'Neon Pulse' }, price: 15000, desc: { sr: 'Svetleće cyberpunk linije preko cele table pri osvajanju Yamba.', en: 'Glowing cyberpunk lines across the board on Yamb.' }, duration: '5s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-neon', innerHtml: '<div class="neon-line"></div>' },
         { id: 'thunder', name: { sr: 'Gromovnik', en: 'Thunderbringer' }, price: 20000, desc: { sr: 'Masivni udar groma uz produženi potres ekrana.', en: 'Massive thunder strike with extended screen shake.' }, duration: '4.5s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, req: 'sveti_ilija', reqName: { sr: 'Sveti Ilija', en: 'Saint Elijah' }, cssClass: 'prev-thunder', innerHtml: '' },
         { id: 'balkan', name: { sr: 'Svadba', en: 'Wedding' }, price: 25000, desc: { sr: 'Tekstilni kafanski stolnjak, 4 trube, svadbena kiša i brzo kolo u 2/4 taktu.', en: 'A woven kafana tablecloth, 4 trumpets, wedding rain, and a fast folk dance in 2/4.' }, duration: '8.6s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-balkan', innerHtml: '' },
-        { id: 'fireworks', name: { sr: 'Grandiozni Vatromet', en: 'Grand Fireworks' }, price: 30000, desc: { sr: 'Eksplozija boja za pobednike (V.2 sa zvukom i blicem).', en: 'Explosion of colors for winners (V.2).' }, duration: '7s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-fireworks', innerHtml: '' },
-        { id: 'drones', name: { sr: 'Svetleći Dronovi', en: 'Drone Show' }, price: 25000, desc: { sr: 'Aurora nebo, laserski reflektori i roj dronova ispisuju TVOJE IME kao premium 3D hologram.', en: 'Aurora sky, laser spotlights and a drone swarm spell YOUR NAME as a premium 3D hologram.' }, duration: '8s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-drones', innerHtml: '' },
+        { id: 'fireworks', name: { sr: 'Grandiozni Vatromet', en: 'Grand Fireworks' }, price: 30000, desc: { sr: 'Rakete uzleću i raspadaju se u svetleće čestice sa prirodnim padom.', en: 'Rockets rise and burst into glowing particles that drift and fall.' }, duration: '7s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-fireworks', innerHtml: '' },
+        { id: 'drones', name: { sr: 'Svetleći Dronovi', en: 'Drone Show' }, price: 25000, desc: { sr: 'Roj svetlećih dronova uzleće, formira tvoje ime i razilazi se.', en: 'A swarm of illuminated drones rises, forms your name, then disperses.' }, duration: '8.2s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-drones', innerHtml: '' },
         
         // --- NOVI PREMIUM EFEKTI ---
         { id: 'cosmic_dust', name: { sr: 'Svemirska Prašina', en: 'Cosmic Dust' }, price: 40000, desc: { sr: 'Magična zvezdana prašina i maglina polako obavijaju tablu.', en: 'Magical stardust and nebula slowly envelop the board.' }, duration: '6s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-cosmic-dust', innerHtml: '<div class="stardust-layer layer-1"></div><div class="stardust-layer layer-2"></div><div class="stardust-layer layer-3"></div>' },
         { id: 'ufo_abduction', name: { sr: 'UFO Abdukcija', en: 'UFO Abduction' }, price: 35000, desc: { sr: 'Leteći tanjir i luckasti vanzemaljci zracima usisavaju upisane brojeve sa table.', en: 'A flying saucer and goofy aliens beam up the written scores from the board.' }, duration: '7.5s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-ufo-abduction', innerHtml: '<div class="ufo-prev-ship"><div class="ufo-prev-alien"></div></div><div class="ufo-prev-beam"></div>' },
         { id: 'dragon_fire', name: { sr: 'Zmajeva Vatra', en: 'Dragon Fire' }, price: 45000, desc: { sr: 'Masivni vatreni plamenovi i usijani žar gutaju ekran odozdo.', en: 'Massive fire flames and glowing embers engulf the screen from below.' }, duration: '5.5s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-dragon-fire', innerHtml: '<div class="dragon-flames"></div><div class="dragon-embers"></div>' },
-        { id: 'royal_yamb', name: { sr: 'Kraljevski Yamb', en: 'Royal Yamb' }, price: 60000, desc: { sr: 'Kraljevski grb, scenski reflektori, pun Yamb of the Balkan natpis i pljusak dukata.', en: 'A royal crest, stage spotlights, the full Yamb of the Balkan title, and a coin shower.' }, duration: '8s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-royal-yamb', innerHtml: '' }
+        { id: 'royal_yamb', name: { sr: 'Kraljevski Yamb', en: 'Royal Yamb' }, price: 60000, desc: { sr: 'Tematski logo igre, pokretno scensko svetlo i pljusak kanonskih dukata.', en: 'The themed game logo, moving stage lights and a shower of canonical coins.' }, duration: '8s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-royal-yamb', innerHtml: '' }
     ],
 
     THEMES: [
@@ -238,6 +238,9 @@ SHOP_DATA.TROPHIES.forEach(item => {
     item.neonIcon = `assets/theme-packs/neon/canonical/achievement-trophies/${item.id}-v1.png?v=${trophyImageVersion('neon', item.id)}`;
     item.amethystIcon = `assets/theme-packs/amethyst/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
     item.severnaIcon = `assets/theme-packs/severna/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
+    for (const key of Object.keys(item).filter(key => key.endsWith('Icon'))) {
+        item[key] = globalThis.resolveThemeQualityAsset?.(item[key]) || item[key];
+    }
 });
 
 // One medal identity per theme, competition and rank. All consumers resolve
@@ -258,8 +261,11 @@ function getThemeMedalSource(context, tier, theme = localStorage.getItem('yamb_t
         return `${root}/competition-medals/general-podium-${tier}-v2.png?v=2`;
     if (context === 'quarterlyLeague')
         return `${root}/competition-medals/quarterly-league-${tier}-v2.png?v=2`;
+    if (context === 'tournament' && ['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme))
+        return `${root}/competition-medals/tournament-${tier}-v2.png`;
     const version = theme === 'light' ? (context === 'tournament' ? 4 : 3) : 2;
-    return `${root}/${contexts[context]}-${tier}-v1.png?v=${version}`;
+    const source = `${root}/${contexts[context]}-${tier}-v1.png?v=${version}`;
+    return globalThis.resolveThemeQualityAsset?.(source) || source;
 }
 
 function getThemeTreasuryControlSource(role, theme = localStorage.getItem('yamb_theme') || 'dark') {

@@ -453,7 +453,7 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
     const submitted = [];
     await sync.call({ app: { socket: { connected: true } }, async _readLocalScores() { return pendingScores; },
         async _submitScoreToServer(entry) { submitted.push(entry.score); return { ok: true }; },
-        async _writeLocalScores() {} });
+        async _markLocalSubmitResult(entry, result) { if (result.ok) entry.synced = true; } });
     assert.deepEqual(submitted, [1700, 1800], 'offline sync must submit only the signed-in account scores');
     assert.equal(pendingScores[1].synced, false, 'other account results must remain available for that account');
     console.log(`Solo panel: ${themes.length} themes × ${activeSoloPngRoles.length} unique active PNG roles, 9 valid record combinations plus pending, period boundaries, strict records, payout and cap OK.`);

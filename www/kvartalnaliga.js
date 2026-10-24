@@ -249,7 +249,8 @@ class KvartalnaLigaManager {
             return `${root}/quarterly-league-room-identity/quarterly-league-room-v2.png?v=2${retrySuffix}`;
         }
         if (assetName.startsWith('tab-')) {
-            return `${root}/quarterly-navigation/${assetName}-v2.png?v=2${retrySuffix}`;
+            const source = `${root}/quarterly-navigation/${assetName}-v2.png?v=2${retrySuffix}`;
+            return globalThis.resolveThemeQualityAsset?.(source) || source;
         }
         if (assetName.startsWith('rank-')) {
             return `${root}/quarterly-rank-badges/${assetName}-v2.png?v=2${retrySuffix}`;

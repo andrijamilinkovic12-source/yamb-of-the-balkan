@@ -21,6 +21,36 @@ const blackHoleEffectPath = 'source-assets/theme-live-black-hole-v1/manifest.jso
 const blackHoleEffect = read(blackHoleEffectPath);
 const supernovaEffectPath = 'source-assets/theme-live-supernova-v2/manifest.json';
 const supernovaEffect = read(supernovaEffectPath);
+const liveStagePath = 'source-assets/theme-live-stage-v1/manifest.json';
+const liveStage = read(liveStagePath);
+const tournamentStarPath = 'source-assets/theme-tournament-star-v2/manifest.json';
+const tournamentStar = read(tournamentStarPath);
+const qualityPath = 'source-assets/theme-quality-refresh-v2/manifest.json';
+const quality = read(qualityPath);
+function activeQualityPath(themeId, slotId) {
+    const previous = baselinePath(themeId, slotId);
+    const asset = quality.assets.find(item => item.theme === themeId && item.previous === previous && item.status === 'verified');
+    if (!asset) return null;
+    if (sha256(asset.productionPath) !== asset.sha256 || sha256(asset.master) !== asset.masterSha256) throw new Error(`Quality refresh provenance mismatch: ${asset.productionPath}`);
+    return { path: asset.productionPath, masterPath: asset.master, manifest: qualityPath };
+}
+for (const asset of tournamentStar.assets) {
+    if (!exists(asset.master) || sha256(asset.master) !== asset.masterSha256) throw new Error(`Tournament star master mismatch: ${asset.theme}/${asset.role}`);
+    for (const file of asset.production) {
+        if (!exists(file.productionPath) || sha256(file.productionPath) !== file.sha256) throw new Error(`Tournament star production mismatch: ${file.productionPath}`);
+    }
+}
+function activeTournamentStarPath(themeId, slotId) {
+    const previous = baselinePath(themeId, slotId);
+    for (const asset of tournamentStar.assets.filter(item => item.theme === themeId)) {
+        const production = asset.production.find(item => item.supersedes === previous);
+        if (production) return { path: production.productionPath, masterPath: asset.master, manifest: tournamentStarPath };
+    }
+    return null;
+}
+for (const asset of liveStage.assets) {
+    if (!exists(asset.productionPath) || sha256(asset.productionPath) !== asset.sha256) throw new Error(`Live effect component mismatch: ${asset.id}`);
+}
 const outputPath = 'docs/theme-canonical-asset-registry.json';
 const ids = definitions.themes.map(theme => theme.id);
 const expectedIds = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
@@ -151,7 +181,7 @@ function activeSettingsAudioPath(themeId, slotId) {
 }
 
 function activeIdentity(themeId, slotId) {
-    const override = activeEconomyPath(themeId, slotId) || activeMedalPath(themeId, slotId)
+    const override = activeQualityPath(themeId, slotId) || activeTournamentStarPath(themeId, slotId) || activeEconomyPath(themeId, slotId) || activeMedalPath(themeId, slotId)
         || activeStatisticsPath(themeId, slotId) || activeSettingsAudioPath(themeId, slotId);
     const productionPath = override?.path || baselinePath(themeId, slotId);
     if (!productionPath) return { slotId, status: 'defined-without-production-path', productionPath: null };
@@ -175,7 +205,7 @@ const families = Object.entries(familyCounts).sort(([a], [b]) => a.localeCompare
     .map(([id, baselineSlotCount]) => ({ id, baselineSlotCount, source: 'docs/theme-asset-role-catalog.json' }));
 const manifestPaths = [...new Set([
     ...[...JSON.stringify(definitions).matchAll(/source-assets\/[A-Za-z0-9_./-]+\/manifest\.json/g)].map(match => match[0]),
-    goldRainRefreshPath
+    goldRainRefreshPath, tournamentStarPath, qualityPath
 ])].sort();
 const supplementalManifests = manifestPaths.map(manifest => {
     if (!exists(manifest)) throw new Error(`Missing supplemental manifest: ${manifest}`);
@@ -306,7 +336,20 @@ const themes = definitions.themes.map(theme => {
             ...(stages ? { stages, missingMasters } : { status: 'green-reference; runtime verification tracked in its family registry' })
         },
         identities,
-        composites: { treasury, economy, goldRain, blackHole, supernova }
+        composites: { treasury, economy, goldRain, blackHole, supernova,
+            liveStage: { sourceManifest: liveStagePath,
+                themedShip: liveStage.assets.find(asset => asset.id === `ufo-${themeId}`).productionPath,
+                sharedComponents: liveStage.assets.filter(asset => !asset.id.startsWith('ufo-')).map(asset => asset.productionPath),
+                treasuryPreviewOverrides: {
+                    ice_age: 'www/assets/effects/stage-v1/frost-corner.png',
+                    balkan: 'www/assets/effects/stage-v1/trumpet.png',
+                    dragon_fire: 'www/assets/effects/stage-v1/flame.png',
+                    ufo_abduction: `www/assets/effects/stage-v1/ufo-${themeId}.png`,
+                    royal_yamb: themeId === 'dark' ? 'www/assets/green-soft-clay/splash-title-soft-clay-v2.png'
+                        : `www/assets/theme-packs/${themeId}/splash-title-soft-clay-v1.png`
+                },
+                canonicalReuse: ['game-logo', 'ducat-particle'], universalExceptions: liveStage.universalRationale,
+                visualAudit: 'canvas-keyframes-reviewed; real-device-review-pending' } }
     };
 });
 for (const [family, slotIds] of Object.entries(requiredIdentitySlots)) {
@@ -341,6 +384,7 @@ const registry = {
         goldRainRefresh: goldRainRefreshPath,
         blackHoleEffect: blackHoleEffectPath,
         supernovaEffect: supernovaEffectPath,
+        liveStage: liveStagePath,
         supplementaryPacks: supplementalManifests.length
     },
     sourceSha256: {
@@ -354,17 +398,22 @@ const registry = {
         quarterlyLeagueRefresh: sha256('source-assets/theme-quarterly-league-v2/manifest.json'),
         goldRainRefresh: sha256(goldRainRefreshPath),
         blackHoleEffect: sha256(blackHoleEffectPath),
-        supernovaEffect: sha256(supernovaEffectPath)
+        supernovaEffect: sha256(supernovaEffectPath),
+        liveStage: sha256(liveStagePath),
+        tournamentStar: sha256(tournamentStarPath),
+        qualityRefresh: sha256(qualityPath)
     },
     baseline: { themes: 10, requiredSlotsPerTheme: 191, canonicalSlotsPerTheme: 169, canonicalFamilies: families.length, greenFamilyRecords: Object.keys(green.families).length },
     families,
     crossRoomReuse: Object.entries(requiredIdentitySlots).map(([id, slots]) => ({ id, slots, contexts: reuseContexts[id] })),
     supplementalManifests,
+    visualAuditReport: 'docs/theme-visual-audit/report.json',
     themes,
     openVisualAudits: [
         'Ostali kompoziti koji prikazuju dukat (Dukati/Ispravi upis, solo nagrade, drugi efekti i pravila) zahtevaju zasebno vizuelno poredjenje sa aktivnim v2 u Vaskrsnjoj, Pustinjskom Staklu i Severnoj Maglini.',
         'Motiv Vatrenog niza u Statistici, rang listi i Pravilima sada vodi na isti kanonski PNG po temi; vizuelnu uskladjenost sa zavisnim kompozitima proveriti zasebno.',
-        'Status linked u mapi nije vizuelna potvrda; samo verified znaci da je ranija provera zabelezena.'
+        'Detaljni statusi pojedinacnih PNG i kompozita su u docs/theme-visual-audit/report.json. Aktuelni nalazi ukljucuju medalje Vatrenog niza/Indeksa moci, deo oznaka rekorda i slicica efekata, te odvojene ilustracije video nagrade.',
+        'Status linked/verified u istorijskoj mapi nije potpuna potvrda prikaza na telefonu. Pregled lokalnih file:// UI stranica je u ovom prolazu blokiran browser URL pravilom.'
     ]
 };
 const output = JSON.stringify(registry, null, 2) + '\n';

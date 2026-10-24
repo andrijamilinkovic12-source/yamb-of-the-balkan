@@ -599,10 +599,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "39c779f4e724aa6b5e9222fd35f7533e291dad294d5a51d4dfd6a22b6f633c2c"
+            "sha256": "4e1992d8e9ab875c75e6971037b276f6a247490ee3e2f78bf787a5e003a3f7f3"
           },
           "variants": [],
           "sites": [
@@ -621,10 +621,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "67a1dc31edb5a0cbb688c814dced7cb98855e6fde89bd39fbf8884d1c28674a9"
+            "sha256": "93e9028696e26c71239ab825fb80d118e65337303357a44cf3b47b8af0a69375"
           },
           "variants": [],
           "sites": [
@@ -643,10 +643,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "4d38d548163eafff1a5ac939d6a73a6e7956621e1eb2e3b2e0916017defc019b"
+            "sha256": "79a96e362491f2df379ed625c0976e752299be1b21153f68c487ef2932e240c6"
           },
           "variants": [],
           "sites": [
@@ -665,10 +665,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "25690c360dd13eac026cac929d8c60be87d74154799add670ec1e718b7a6781b"
+            "sha256": "76a18cac4c64cdf2b0d6fb925ac9f6158d0b804f01cf1559e2066cee4eb2d262"
           },
           "variants": [],
           "sites": [
@@ -687,10 +687,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "0fac508435cb38d004b24f6832c1cc99ce932120e0b48135dbfffe345f39bce8"
+            "sha256": "f48918ad91b9e63c43e45440c6f67b0ef78fe763893579c9241652215cffbaa0"
           },
           "variants": [],
           "sites": [
@@ -709,10 +709,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e77baa66fdb363b5cec3b074186b9207cf514bb54b501f4489df744cf1558a1a"
+            "sha256": "d8f12b066236d153ed3f4e262f74a91fa02c8ba20aa59761c09cc76908aad514"
           },
           "variants": [],
           "sites": [
@@ -1237,10 +1237,10 @@
           "key": "achievement-godlike",
           "label": "Božanstvo: Ostvari neverovatnih 3000+ poena!",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/achievement-trophies/godlike-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "2f6fd6e3fc62ed42519e84eb217168bf4d90f9cc75d471a746b19313b631603b"
+            "sha256": "86903559a75695558e4c9c2b94b510df3d17132255013d12957f5965716e3b06"
           },
           "variants": [],
           "sites": [
@@ -1849,10 +1849,10 @@
           "key": "achievement-veteran",
           "label": "Veteran: Odigraj 50 partija.",
           "primary": {
-            "file": "www/assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png",
+            "file": "www/assets/green-soft-clay/canonical/achievement-trophies/veteran-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c84e8165651a1090ab654fb4a8b747b11989871f2c4ee8494360a287a020efc8"
+            "sha256": "fd83533d43412bd7125972b9b74e1343e53c5f38fbb4a514a22d4dde6a839dc4"
           },
           "variants": [],
           "sites": [
@@ -2989,10 +2989,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/light/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/light/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "057783044f8984794a2a54addfbd4a2608c6a11e4f2885a0fb8591a79ed40116"
+            "sha256": "eef1419777a26ab3ae8916c67076271386e1f3003ce5046d2cb9161e48e2b713"
           },
           "variants": [],
           "sites": [
@@ -3011,10 +3011,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/light/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/light/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "8a15b52b034dffcc76ed8797af59face70671ed9f050ef6a1e2f5a955dad2a20"
+            "sha256": "4544f9d7d9490bffccf4e4728d2fdadec558eb8da30287c8b4b56bb33fce084c"
           },
           "variants": [],
           "sites": [
@@ -3033,10 +3033,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/light/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/light/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "4d668ededeae1e97e6d82da3ad440c4c5f174289e3dfa7b10cc0dfd913831fcb"
+            "sha256": "34fdcb9d46df8586a7db452ee10cfeb329ebe8220f02a50cb436c752ef04ca6b"
           },
           "variants": [],
           "sites": [
@@ -3147,7 +3147,14 @@
             "height": 384,
             "sha256": "70d920d37d6036e0c7b7f85b48b8763c2dba189d2ca92421ce5189eaf6622c39"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-room-v1.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "16ef2502da0d8b0423aeb677426d3f0460e8b6580ad484b8e384feb90e7c9d08"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -5379,10 +5386,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/medium/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/medium/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "7295ade6bede8efa1ef485cf50c65af4b2600581e299e3b8ea718ac4c7a54f27"
+            "sha256": "764674c2fd5b7809d117055e24c6e70464f52a2690d8351718ac85f93a5fa873"
           },
           "variants": [],
           "sites": [
@@ -5401,10 +5408,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/medium/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/medium/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "578719dc5f3d074bb2424bd66ccea6dfb4af96378c9b018ff258ec2b2d11a575"
+            "sha256": "69feebc584a4b41f76324e392693619f953d61189bab14ccfdea3eb17191f107"
           },
           "variants": [],
           "sites": [
@@ -5423,10 +5430,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/medium/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/medium/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "cc1e09cb303ba09a4bc1b6ed5a6dea622c5bc140ce4138ec8c8664f12b53cb6d"
+            "sha256": "7258ac943cbf1177f1f103db2e638c06b4808d7c400babfe24cb1d341d8ab066"
           },
           "variants": [],
           "sites": [
@@ -5445,10 +5452,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/medium/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/medium/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e69bde02f68640f4c22b34c8ea4fd4f2f978183bd17945110d2f9854fa71af6e"
+            "sha256": "19dfd0f0720acb8bb03721918755cd47426343c576f55144993a06224c5d7510"
           },
           "variants": [],
           "sites": [
@@ -5467,10 +5474,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/medium/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/medium/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "a08ef06093844c44cb0961bb3eefa5854ef25a6609f218ef561af3e059ff84b4"
+            "sha256": "8b61f88ade090fbb447ab04500d18bc82d548fff16a664bbecdc6636968a9cde"
           },
           "variants": [],
           "sites": [
@@ -5489,10 +5496,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/medium/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/medium/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "5c4c275e952802436b2f8787071aef4e595da8ea29c05c010c7bfb2fee34de96"
+            "sha256": "8aa00899b4e566ec485055395eff3b9d68d4ec227241e829296a999abb60143b"
           },
           "variants": [],
           "sites": [
@@ -5537,7 +5544,14 @@
             "height": 384,
             "sha256": "a4ea3a11772dbd8e26631e3a148ec7722e0cdd6345310ff17b3a544c29aebbc8"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-room-v1.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "487a034b802bde2112a09053e47faa3a5ba02783ced1f316a47609574454674d"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -7583,10 +7597,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "8b94416d516e85116de054c349903e88b97e799318abb74082d690852a088530"
+            "sha256": "8dbb8efbd7027ec59183677b17277f64c4af7840f1788f002903c9f3ee60c486"
           },
           "variants": [],
           "sites": [
@@ -7611,10 +7625,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "f54b004df2448c68b67ccd4fc155107fa395c31c1e62c83f49eecc8f78eb5750"
+            "sha256": "099baa2ae1d03f018c70d5baa819720c08ac3b11a1e4344b0132821b219e4709"
           },
           "variants": [],
           "sites": [
@@ -7639,10 +7653,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "bafd83a888b857618a4a2756b8381f6b36338dfbf819c06fd501aff46a4b0ac9"
+            "sha256": "0b006429eade3d804d5146fe56bef3ce394dfb71a80ed6e453b0690ea81495f7"
           },
           "variants": [],
           "sites": [
@@ -7769,10 +7783,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "a0aa5903883215d245b5cf9ba26fd0025b59e6963d07369d896d9798338fbb1a"
+            "sha256": "059ddda96da9b06a5dff1d9a3f34d88115a11d40ca0c0524d854941d396f9dcc"
           },
           "variants": [],
           "sites": [
@@ -7791,10 +7805,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "745199f2535aa43ab21e2502a1a5e7ac197640109a4e2d66f54de7e7ecfce6ff"
+            "sha256": "63fd1f83be06111919807a6d204da05ab49e77f7f464e008ccd6bc6696ed4563"
           },
           "variants": [],
           "sites": [
@@ -7813,10 +7827,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c9bb9ebb2c9e17127ba69bc926e856c7aacdc734d4ffde70bf5cb26d17ddd261"
+            "sha256": "1fb11e76f659bb11e3d03da40b653aaede1263c05dd6658956ee123876edba7e"
           },
           "variants": [],
           "sites": [
@@ -7835,10 +7849,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "69559a314e0595eccdc04af22de96f9237d794db396c39b30a4d5985f2fa75a2"
+            "sha256": "a217e8f0855a927a0b4ed7ece6a2addc241abd72f14dcb9ada86d1a637e8af5c"
           },
           "variants": [],
           "sites": [
@@ -7857,10 +7871,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "a6807f9525212e74e5fa80bd00a09940d635a37229322bd16c8c84f523721635"
+            "sha256": "64bc413e8861ce9e71cd1fc41cf24a17427bac9b4b9e520a685773e49711d645"
           },
           "variants": [],
           "sites": [
@@ -7879,10 +7893,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "55089c74816b49aaaac238257f9b53c78dcc61d658bd8b550de8dc3bcc31ed42"
+            "sha256": "1accb0ff41fc3da448ddd6af79c7247de822450239280302e1af25ee5871b816"
           },
           "variants": [],
           "sites": [
@@ -7922,12 +7936,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "729f58adee144038faade78d6c3690d02c4fdcfc3b9ed9211b6605956457d6a6"
+            "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "e57738d6fb621b7891102d263d00ec0e72d38911e1f69121ebfce22b85c93c99"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -9497,17 +9518,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "d9c3b46749784b33a126128947b3d27172485bf8b4be5946b83cec541f71fb70"
+            "sha256": "e57738d6fb621b7891102d263d00ec0e72d38911e1f69121ebfce22b85c93c99"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "729f58adee144038faade78d6c3690d02c4fdcfc3b9ed9211b6605956457d6a6"
+              "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c"
             }
           ],
           "sites": [
@@ -9973,10 +9994,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "164e0dd57997eb4a0f19c440afb951994a178fb04ee3d782e12c07505e7f6115"
+            "sha256": "06e0ad52142fa0eb58a66a949fa520fb39a7aa52aa9682748f61f3e12bcdf84c"
           },
           "variants": [],
           "sites": [
@@ -10001,10 +10022,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e90474f9c9b7b04ad03972eadbd2a7170ab6430d35f03ebb8adf90043afc12f9"
+            "sha256": "2d190ded374c59aa9d93dcad4d48d33085cd4c5b1fc3ea5b34f2e77b69b7fad5"
           },
           "variants": [],
           "sites": [
@@ -10029,10 +10050,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "7ba78624df5a4bb0abdaa665393be2c18a6a4ffdfded00c826364daa383f53bd"
+            "sha256": "762a3b99f5b75780797fe032bf066d7f50e5a144c7b5398310a032127c2510b1"
           },
           "variants": [],
           "sites": [
@@ -10159,10 +10180,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "7464d0a66b809d34f3a19f149929643b71b44f5cb8a26f0ee6a3c69d5200c9c2"
+            "sha256": "49ed784fc942974b9f8da7bd82cc8be91e0af7ca31a55e3cc7cf41e0085500dc"
           },
           "variants": [],
           "sites": [
@@ -10181,10 +10202,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "df27869202163b6b4917ade0127ae7b126d364c4e313af137528ffd91b0009fd"
+            "sha256": "3ea423741fdbc4697b151389771d0378159b720c05e15cda803b4b11f818dcef"
           },
           "variants": [],
           "sites": [
@@ -10203,10 +10224,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "786ae44b135a552674f0896567f6895d1aa7acba891432bc804dd01a297be0d5"
+            "sha256": "abe9537ab67a21527c212af953ef05b6bf32333692e99a52134930b11a117ee8"
           },
           "variants": [],
           "sites": [
@@ -10225,10 +10246,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e8c4419aea3ebfeda711b96c6f8b1f27467119671f201170d35c3dd6ea6e4870"
+            "sha256": "fc17c14a5d2879bb8a50636fc9424f828093b9706b61d230c045f8d52b7a61e9"
           },
           "variants": [],
           "sites": [
@@ -10247,10 +10268,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "ce81e1757c39aa29980b38c196971593ffe566b53f6e2398e53c0a17add06b8c"
+            "sha256": "871a06d22d6c161373ee060224c287ef8dd306be5aa8a9dd2429ec055b384c2e"
           },
           "variants": [],
           "sites": [
@@ -10269,10 +10290,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "bf3a5ec2c980944ea9e0334eeb71b98b426bdb40318f70aa3178b3eda9ae4295"
+            "sha256": "a97578d8054bace8ff6578b06051f7b00d863e8bd9106e03ee6574587865e1c9"
           },
           "variants": [],
           "sites": [
@@ -10312,12 +10333,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "13d90de5d49ec33e2146a86e3d5f52cfdf5a3adc2046ea56b7dfbcfe77770e9a"
+            "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "c3b628416cef0b365eee96d57526b81664e96d7405580915993210525c54332c"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -11887,17 +11915,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "18983746d3208d642611cbe4ad49d6bf38b94486ade32befc8049d290df57273"
+            "sha256": "c3b628416cef0b365eee96d57526b81664e96d7405580915993210525c54332c"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "13d90de5d49ec33e2146a86e3d5f52cfdf5a3adc2046ea56b7dfbcfe77770e9a"
+              "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8"
             }
           ],
           "sites": [
@@ -12363,10 +12391,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "b0ee861a055b0ae30143ce02fb7bc6f7d1584bdf244a0937d0f09af82f45805a"
+            "sha256": "f619d7648e81a3792b24447355a183deaf3873acb55351967a63ca669f005c98"
           },
           "variants": [],
           "sites": [
@@ -12391,10 +12419,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c7f92aa6eb0dc36724bfa19754df738006753cb386e66773c396afbeb3fea3e1"
+            "sha256": "94e6e1e585e37c003ce844ff0064847ffcaf7f0ee40770d67ce8809e77656e1d"
           },
           "variants": [],
           "sites": [
@@ -12419,10 +12447,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "adfcba0bf56754756c71456b0a5e6fb68b06481f475a78990a0cec7f98692154"
+            "sha256": "bb6b9feae6b82829cb2ff377269f435173850ae021bb1d03c182428e6143ee12"
           },
           "variants": [],
           "sites": [
@@ -12549,10 +12577,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "880d593b75ec48f9e3cedfb1c53f222161e760d5e924885038d37771edcc16f3"
+            "sha256": "3a0df4c178eacc53d884cca8d3b791af78e0a2d24e2bc9b8c5f442ed5c670d07"
           },
           "variants": [],
           "sites": [
@@ -12571,10 +12599,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e62299bb57c47b49df9fee1928f400d7c01190c0a5a7baa78845945adc7acb4b"
+            "sha256": "464d3d212cd1e7b57b44a5cf889f34520250edfc8d0993d705098c1848863a37"
           },
           "variants": [],
           "sites": [
@@ -12593,10 +12621,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "7f27943b3980c9b22bff22f60288c6a7c565a5c41fbfb0263917df0d61ee0fc3"
+            "sha256": "0d5dac8ada86dc0f246fb107728042c7c6b546878ede8f5e3c2a0b19e6654f5e"
           },
           "variants": [],
           "sites": [
@@ -12615,10 +12643,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c354033859a5a3ffbb3d3e8593d7790809dc5feaa2cc49557a27c927aec3eaaf"
+            "sha256": "269eb74f2e329a4dc0ae9d9199b9192ed61d614317d6eb46bb645f6dd3c5323a"
           },
           "variants": [],
           "sites": [
@@ -12637,10 +12665,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "3df2c7d10c4211b19ec1437f55630081b89621ee0d7412e31676cf676498213e"
+            "sha256": "a400e9f31161b007e8e3e97c7bf85efcb999e1d3bb35dfc8b8fd0c160429ca88"
           },
           "variants": [],
           "sites": [
@@ -12659,10 +12687,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "6f266f81698036e7a6483a12ad06f82efdffb0c94e3a3e0f40fccb165790cc41"
+            "sha256": "cc8184706df7d6cb6ab592f735bb3ccb956058c02e1c11492e830ebd01c05f88"
           },
           "variants": [],
           "sites": [
@@ -12702,12 +12730,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "7bec397520b8d3539dd63a9888e2bc7bb8206eab5d2cbf066b70de7c4f808acd"
+            "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "30c8a1e9f285e62eba58b7daf095266ece2af4722a8fdc4a049cf8703cf575d7"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -13187,10 +13222,10 @@
           "key": "achievement-godlike",
           "label": "Božanstvo: Ostvari neverovatnih 3000+ poena!",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/godlike-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/achievement-trophies/godlike-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "80782e94ea410261d27bfc1a02bef4d01fb0b158be35d73c6701fbf1dd9ce9ff"
+            "sha256": "00481c38ba0294e4f6c979e84dc668d6a8807a728f22fcec2813c9357feaf432"
           },
           "variants": [],
           "sites": [
@@ -14277,17 +14312,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "ffc6ef0b9c0d6f1e66e40e6759a2aac5e0bd30d4f62a72445ea71849d7b5d824"
+            "sha256": "30c8a1e9f285e62eba58b7daf095266ece2af4722a8fdc4a049cf8703cf575d7"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "7bec397520b8d3539dd63a9888e2bc7bb8206eab5d2cbf066b70de7c4f808acd"
+              "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73"
             }
           ],
           "sites": [
@@ -14753,10 +14788,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "b8de9dbe454a0a992a704cf364b2f97c51e75b674dc8d742d2d10631697c4b58"
+            "sha256": "429e53c2c175ea7d6eec236e7ac2cb0b9376fdd596d8c238630161d6b204c8e2"
           },
           "variants": [],
           "sites": [
@@ -14781,10 +14816,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "95be9ff929f49a84cae4c6103f9170fbfb689adafa4ce05f9d6b00ba1ec525cc"
+            "sha256": "1b90bf04abeb1faeddf2b393cc18adb86636fc1dfe0b98d4a908ea7d8360e3bf"
           },
           "variants": [],
           "sites": [
@@ -14809,10 +14844,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c79957b209c01eacd2b27d3970c0a163ed59732a1ccc224a33cf5c936ecf260e"
+            "sha256": "7333424eaba99d0a6e0106bd54cc73b51853fe79fdac8fa19f3e246a4b471bc9"
           },
           "variants": [],
           "sites": [
@@ -14939,10 +14974,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "213fa36727ba984a6c178d4269fa40f73b9b48de2e172a0966c9f21745106f2b"
+            "sha256": "ff17b4fe79c5084d488ec15c1089775ebd711ce6d68d0967d917bcfa2f63dbd8"
           },
           "variants": [],
           "sites": [
@@ -14961,10 +14996,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "71575ada3ef5ef0a088edae4fb150f3a7795fac954ee0321f2d51f86e3d1f485"
+            "sha256": "4b8be9b9674d3d768a67287962546daac39ee06c805770d61c7a5bdc2ea10865"
           },
           "variants": [],
           "sites": [
@@ -14983,10 +15018,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c2d37fa193ea70426dad5a001594162aa0fb26064c2f1e5aa82e8fd70bb0b2fc"
+            "sha256": "1593fdc8893a5375a5289b6e0e1c99762721f4d0ca09e128987d2cb75ce80acf"
           },
           "variants": [],
           "sites": [
@@ -15005,10 +15040,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "14cd2fcc80f644672a0008d02da5ef2e4253f052f61704052a63932984406bd0"
+            "sha256": "964910e3b57f250c18dbc4d40e6f877accc10a29f64ca0646dedc75064980a8b"
           },
           "variants": [],
           "sites": [
@@ -15027,10 +15062,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "31b9e14d872d1d38d5ca59752aea6c8d03c6f44946d736ffd1d37194c5a2366d"
+            "sha256": "6c5530cf160e4d7c58f16c41c191c7ffad23948acc8b650e1427692177a6822b"
           },
           "variants": [],
           "sites": [
@@ -15049,10 +15084,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "4960760241d3fa8581d56d23e7cdc2ed985a82e24c1a7de4d394ddfe4be90eef"
+            "sha256": "78a4ad2793bafe53c723b6a6b2a0476c4dde56bf5a3bc81f612b649617399f02"
           },
           "variants": [],
           "sites": [
@@ -15092,12 +15127,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "e67cf2a1f5c0dbc994d714067483428ca56d192cd0938b2846cd3339bd8ef569"
+            "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "a2e1f41223d04054fef54bb638fb1dd5095fce340817a2978d4f01fc7bcaa569"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -15577,10 +15619,10 @@
           "key": "achievement-godlike",
           "label": "Božanstvo: Ostvari neverovatnih 3000+ poena!",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/achievement-trophies/godlike-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/achievement-trophies/godlike-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "f878743b9519113b6f7f435fba1c7a15a4be7af5e85c62106a57c987e5444e3f"
+            "sha256": "949bc78b60bcde4ccf25e1f9566f478293272292ced9275391ec818cff038496"
           },
           "variants": [],
           "sites": [
@@ -16667,17 +16709,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "a631468d7872b7a6b6bba4fa0c971f0ef58606bcb6a2f441c89b295ee803fe14"
+            "sha256": "a2e1f41223d04054fef54bb638fb1dd5095fce340817a2978d4f01fc7bcaa569"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "e67cf2a1f5c0dbc994d714067483428ca56d192cd0938b2846cd3339bd8ef569"
+              "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541"
             }
           ],
           "sites": [
@@ -17143,10 +17185,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "ffd06a037f76f39cd08de8ef3693278b816a74d7526af659be41cb9034d71a52"
+            "sha256": "17e0f8c0169027db5709dcf58c8def3c862c961c60858784d4879387bf469d8a"
           },
           "variants": [],
           "sites": [
@@ -17171,10 +17213,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "8e1b925ec930182fb460463da905111e9c090d92730bda8b65247495be8271d5"
+            "sha256": "c8e2b4ef0cb00076e23f5e16a3a9dbf55c7d150e80d1057f6176a0da93295432"
           },
           "variants": [],
           "sites": [
@@ -17199,10 +17241,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e3a4abb9e8426fc6f524a56105feac39c76f14091963b61a99b032715762080e"
+            "sha256": "766f538c78aa9eff7e539e5c9e3955be0de8a29bababa8d5ec37368f871bf14e"
           },
           "variants": [],
           "sites": [
@@ -17329,10 +17371,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "6b0fe4192bfc1cf167421a8e1b0af690bb9d29f9ab08500e5576a82bd3bf22db"
+            "sha256": "662e3af5f124ae733e4c122fa7a7dcf4f124c1bf5faef32faf84dd6907ade249"
           },
           "variants": [],
           "sites": [
@@ -17351,10 +17393,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c8d2692c1c6ba85de6e859bade285cc581dd9586ceb7377766dc252df3202cd3"
+            "sha256": "68406541f1753d790ca5009a09342c9801fa4e709be1f368f3e2cd8f303ae6a9"
           },
           "variants": [],
           "sites": [
@@ -17373,10 +17415,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "674199cccafc31920d38a40bab855515870351f7f6471fe77e65de0a02360707"
+            "sha256": "2e82c919738abaa6d28efa267fb624c1cee45220ceb9cbbd9f7ab21edd5189f5"
           },
           "variants": [],
           "sites": [
@@ -17395,10 +17437,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "89607d19b2dea664fa42a35428933907fbc8e903406c4218fedf0fbac9c08790"
+            "sha256": "be6b8dbe57d83d1d36e7ec929743ef877d9e179822fc4e17dcbe4a573614a1e0"
           },
           "variants": [],
           "sites": [
@@ -17417,10 +17459,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "35a4be47fccb5ac5854e0fff7f052d11b7d57b3a05162eb8ab748789e813937d"
+            "sha256": "e890f16254d8118889db16534c41474ab32cad19c8314e6088eadadbb5a79d77"
           },
           "variants": [],
           "sites": [
@@ -17439,10 +17481,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "f2dc4370485e7a471bc4d984b718840f44576bcc18ec620ada6220df1c02b7b9"
+            "sha256": "c0abc55e28a07e3c783bd9c9927b94ac57856711e216c6315cf87861b7f7a2f8"
           },
           "variants": [],
           "sites": [
@@ -17482,12 +17524,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "bd90979b358abce8510910703d9b9c8d53cd91f0ae13ff4833902237e88f1e8e"
+            "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "83288daddacc1d66a7fae9fda8473719a1ce97851ff6579132c566899cc5e337"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -19057,17 +19106,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "354a77c655532ba23ec61e5c3ca45aaf9a0b2f72707883e966b995b01d6779e0"
+            "sha256": "83288daddacc1d66a7fae9fda8473719a1ce97851ff6579132c566899cc5e337"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "bd90979b358abce8510910703d9b9c8d53cd91f0ae13ff4833902237e88f1e8e"
+              "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268"
             }
           ],
           "sites": [
@@ -19533,10 +19582,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "55ba5ef692325cffc4c21a78ece4f9fbe83c81321e63df87a85c55728d9d4fe0"
+            "sha256": "c583f468096715238734521cebdd3e894158d60481c9abbd88c034b667ecde82"
           },
           "variants": [],
           "sites": [
@@ -19561,10 +19610,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "292dbe348b16e6865a81a4c5bea2ce04c65b2eb713b948185cc7eda56652df4a"
+            "sha256": "c2d13ddc8c47043dbc2f21d9a48fb62d2b5bc543da4f5025a88c4efb46044b00"
           },
           "variants": [],
           "sites": [
@@ -19589,10 +19638,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "fafdd1c569f683b8136e6d20f96ebab120373ad8963fd55b9d4fe25b7ea412e2"
+            "sha256": "7b58abbbaa97455434a685904b99474ec228b4de10ac118bc4fdddae1010dadd"
           },
           "variants": [],
           "sites": [
@@ -19719,10 +19768,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "afc2c464aa823a834f87405be2f2ce5bf72947fb5c845ea713f72fad88146fbc"
+            "sha256": "614fce05dca4ec512975d1a4bc92f247b2d84553598dca2c2410a82223f1784c"
           },
           "variants": [],
           "sites": [
@@ -19741,10 +19790,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "c1e58edeee69680d1a15b469b0724e2b387f186cc297e49a27b347a0b4bf623d"
+            "sha256": "a25a5675366202f616cd822ebcd5e481ec22ee977178298a7ba46fd574a1b024"
           },
           "variants": [],
           "sites": [
@@ -19763,10 +19812,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "7c67d8e2825373892eeda8864f9285c5b447a02777735c175cf9f6ad97b8dea9"
+            "sha256": "6f32accbafcc2f9cbcb427596ea0383cfab43959e2566fbec0065f76f58694c9"
           },
           "variants": [],
           "sites": [
@@ -19785,10 +19834,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "fd6187db71f20450736631e6013ec02f48b091222fcea6f402951216c0f3346d"
+            "sha256": "2cd72fd14ce5ec5c61677f996613c012c7946fc8bef58195d59b5a0a01646c9c"
           },
           "variants": [],
           "sites": [
@@ -19807,10 +19856,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "9c0d37cd607ab97b8958f28c283dc5a148b6943582103eb3b11298ecd65e69cb"
+            "sha256": "59117a72f9ee6c0a72bcfb7033bf6ded8c24c157a67bcfa234369888bd6d7f2c"
           },
           "variants": [],
           "sites": [
@@ -19829,10 +19878,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "b10346d239c14ccf25b1929401c3b1d1af20ca372c672f133432c539efcc780c"
+            "sha256": "372d0442de772e5517bd48c69f54458dd8db9b3643424686043a24a97e3d7e6e"
           },
           "variants": [],
           "sites": [
@@ -19872,12 +19921,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "a59ff30656133be9bc637b161323be63cdff1c01c28fbaa9bda1911efb38d3df"
+            "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "080bf35c5b8d44b213d3fc9a943f45c4e9689236819af9f28d033402df28f38f"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -21447,17 +21503,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "81d12d617182955c7a6170d73a5a04097798f4c26df24103599725f2685ec991"
+            "sha256": "080bf35c5b8d44b213d3fc9a943f45c4e9689236819af9f28d033402df28f38f"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "a59ff30656133be9bc637b161323be63cdff1c01c28fbaa9bda1911efb38d3df"
+              "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33"
             }
           ],
           "sites": [
@@ -21923,10 +21979,10 @@
           "key": "medal-tournament-gold",
           "label": "Turnir: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "00d6757e24f62a0adddff82e9f263e870c03ef1f3e1b14cefa7f87d28ae7f06e"
+            "sha256": "29f0f8bc8bc27b9ab3865bacc9a1f1639e63b71de665ac48242c68d582352d86"
           },
           "variants": [],
           "sites": [
@@ -21951,10 +22007,10 @@
           "key": "medal-tournament-silver",
           "label": "Turnir: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "b4aa31859304ebec06344c1b2f95faf7583e4e8b218067b89e205a02ab42669d"
+            "sha256": "b6cbec9eff14cdaa46035cff732a35cf7025a4021fd3e7dbfe2b5c6bc6d7b006"
           },
           "variants": [],
           "sites": [
@@ -21979,10 +22035,10 @@
           "key": "medal-tournament-bronze",
           "label": "Turnir: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "e571e9a6578ef2ee7eb2ca2e94f2a5c6a63bdf6ccfb7e57997df6047700093e1"
+            "sha256": "e42f1a27251ef8b13afcfc6168b8a02b91ec43117e448550fad45895244021ce"
           },
           "variants": [],
           "sites": [
@@ -22109,10 +22165,10 @@
           "key": "medal-power-index-gold",
           "label": "Indeks moći: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-gold-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "55cfa784078c320505df6826a3e6e3e284ddf6a224b75c5268ff8aa194cd575f"
+            "sha256": "5a13f797119a22ce534ee288cd58dcdf4dcf3febb36fe87fa7a93b34054bd7b1"
           },
           "variants": [],
           "sites": [
@@ -22131,10 +22187,10 @@
           "key": "medal-power-index-silver",
           "label": "Indeks moći: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-silver-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "3a94849481d5a87ce2504d68d5197f31c3e17c3b3a1b967a33249239e3522292"
+            "sha256": "f16bc7530e1d5986fb863c1df14d633a48b3d94a8c9b14d460a13f50a39586fe"
           },
           "variants": [],
           "sites": [
@@ -22153,10 +22209,10 @@
           "key": "medal-power-index-bronze",
           "label": "Indeks moći: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-bronze-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/power-index-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "a4bf63a51753d6a1752872c93cd4f64a910121c2ca0affcfabeda12224331c09"
+            "sha256": "a5346f037eacda7d30dffa4805355fc26f4d345e7c9861a697fbe5f67d2ce279"
           },
           "variants": [],
           "sites": [
@@ -22175,10 +22231,10 @@
           "key": "medal-fire-streak-gold",
           "label": "Vatreni niz: prvo mesto / zlato",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-gold-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-gold-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "145871434f3bcc51643717237121297aece8f1976e8201f3ded02459cf2a2a4d"
+            "sha256": "081d33df377487053e30dd9921f69b091e2519becf94c0987f6e171459056e16"
           },
           "variants": [],
           "sites": [
@@ -22197,10 +22253,10 @@
           "key": "medal-fire-streak-silver",
           "label": "Vatreni niz: drugo mesto / srebro",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-silver-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-silver-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "0e02fd4f8c02ebcb8bd129331fa5f262dbdf44c02fcf0c6806697116bd5865d0"
+            "sha256": "571b0bbeadcf17afe7b4cd678b2ca6d37134ab96e21a8aa7ffef6ec5417b5407"
           },
           "variants": [],
           "sites": [
@@ -22219,10 +22275,10 @@
           "key": "medal-fire-streak-bronze",
           "label": "Vatreni niz: treće mesto / bronza",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-bronze-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/competition-medals/fire-streak-bronze-quality-v2.png",
             "width": 256,
             "height": 256,
-            "sha256": "a65f85222556b58ab59c9a1c8151742ca241113079db2428f9c9b4628b9bd761"
+            "sha256": "d83bc199cd9b50c2b97706ef5e26b61dbde8f48bca5414fa04d1d2bcbc51609d"
           },
           "variants": [],
           "sites": [
@@ -22262,12 +22318,19 @@
           "key": "tournament-trophy",
           "label": "Pehar šampiona Turnira",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "5b91effedf2b5917ed9f66b6abde4696685d2cc45ec64734e493b07d75aa1c25"
+            "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104"
           },
-          "variants": [],
+          "variants": [
+            {
+              "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v2.png",
+              "width": 512,
+              "height": 512,
+              "sha256": "b54862e9f51af23488af9e50d08707f5d966a58de5754bc7b7f78de4bdea6ff7"
+            }
+          ],
           "sites": [
             {
               "room": "Glavni meni i Turnir",
@@ -23837,17 +23900,17 @@
           "key": "room-tournament",
           "label": "Identitet sobe: Turnir",
           "primary": {
-            "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v1.png",
+            "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v2.png",
             "width": 512,
             "height": 512,
-            "sha256": "9b001a52f9060b3331caf737a862eb46055abdf25b2af03b4583e5d872de9973"
+            "sha256": "b54862e9f51af23488af9e50d08707f5d966a58de5754bc7b7f78de4bdea6ff7"
           },
           "variants": [
             {
-              "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+              "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "5b91effedf2b5917ed9f66b6abde4696685d2cc45ec64734e493b07d75aa1c25"
+              "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104"
             }
           ],
           "sites": [
@@ -23911,7 +23974,7 @@
     "Ledeno doba ima odobrene zajedničke PNG mastere za svih deset tema."
   ],
   "retiredAssetAudit": {
-    "scannedAppFiles": 86,
+    "scannedAppFiles": 88,
     "retiredLiteralPngReferences": [],
     "obsoleteCurrencySvg": [],
     "activeInlineSvg": [

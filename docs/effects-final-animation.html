@@ -1,0 +1,1991 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <base href="../www/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Deset tema — pregled živih efekata</title>
+  <link rel="stylesheet" href="efekti.css?v=3.5">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
+    body { background: linear-gradient(rgba(6, 15, 24, .34), rgba(6, 15, 24, .48)), var(--theme-background, url('assets/green-clay-balkan-diorama-v4.png')) center / cover; color: #f8f3de; }
+    .controls { position: fixed; z-index: 2147483010; top: max(8px, env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+    .controls button, .controls select { border: 1px solid rgba(255,255,255,.65); background: rgba(12, 24, 34, .9); color: #fff; border-radius: 10px; padding: 7px 8px; font: 600 12px Arial, sans-serif; }
+    .card { position: absolute; z-index: 2; left: 50%; top: 51%; transform: translate(-50%,-50%); width: min(94vw, 440px); max-height: calc(100dvh - 115px - env(safe-area-inset-bottom)); padding: 19px 18px 16px; border-radius: 22px; background: var(--card-background, rgba(44, 83, 54, .83)); border: 2px solid var(--card-border, rgba(242, 239, 199, .65)); box-shadow: 0 12px 35px rgba(0,0,0,.35); text-align: center; }
+    .eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; opacity: .8; }
+    h1 { margin: 7px 0 2px; font-size: clamp(23px, 6vw, 30px); line-height: 1.05; }
+    .score { font-size: 66px; font-weight: 900; line-height: 1; margin: 20px 0 2px; }
+    .sub { font-size: 13px; margin: 0 0 18px; }
+    .row { border-radius: 13px; background: rgba(248,252,230,.13); padding: 11px; margin: 8px 0; font-size: 12px; text-align: left; }
+    .action { width: 100%; border: 0; border-radius: 14px; background: var(--action-background, #adca8d); color: var(--action-text, #17331c); padding: 13px; margin-top: 12px; font-weight: 800; }
+    .qa-board { position: absolute; z-index: 2; left: 50%; top: 53%; translate: -50% -50%; width: min(78vw, 360px); height: min(68dvh, 565px); padding: 8px; border: 2px solid rgba(220,244,248,.7); border-radius: 13px; background: rgba(34,61,77,.88); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+    .qa-board[hidden] { display: none; }
+    .qa-board-grid { display: grid; grid-template-columns: 1.35fr repeat(6, 1fr); grid-template-rows: repeat(12, 1fr); gap: 2px; height: 100%; }
+    .qa-board-grid span { display: grid; place-items: center; border-radius: 3px; background: rgba(218,242,246,.14); color: #f7fbfd; font: 700 12px Arial, sans-serif; }
+    .note { position: fixed; z-index: 2; bottom: max(8px, env(safe-area-inset-bottom)); left: 12px; right: 12px; font: 11px Arial, sans-serif; text-align: center; text-shadow: 0 1px 4px #000; }
+    #qa-error { position: fixed; z-index: 2147483011; bottom: 10px; left: 10px; right: 10px; background: #891e22; color: white; padding: 9px; font: 12px Arial, sans-serif; }
+    #confetti-canvas { position: fixed; z-index: 2147483001; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <select id="theme-choice" aria-label="Tema">
+      <option value="dark">Zelena</option><option value="light">Svetlo zlato</option><option value="medium">Trula višnja</option><option value="winter">Plavi okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option><option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
+    </select>
+    <select id="effect-choice" aria-label="Efekat"><option value="confetti">Konfete</option><option value="gold_rain">Kiša dukata</option><option value="fireflies">Magični svici</option><option value="bubbles">Magični mehurići</option><option value="ice_age">Ledeno doba</option><option value="black_hole">Crna rupa</option><option value="supernova">Supernova</option><option value="neon_pulse">Neon puls</option><option value="thunder">Gromovnik</option><option value="balkan">Svadba</option><option value="fireworks">Vatromet</option><option value="drones">Svetleći dronovi</option><option value="cosmic_dust">Svemirska prašina</option><option value="ufo_abduction">UFO abdukcija</option><option value="dragon_fire">Zmajeva vatra</option><option value="royal_yamb">Kraljevski Yamb</option></select>
+    <button type="button" data-effect="play">Ponovi</button>
+    <button type="button" data-effect="stop">Zaustavi</button>
+  </div>
+  <main class="card" aria-label="Simulirana završna kartica za vizuelnu proveru efekata">
+    <div class="eyebrow">Vizuelni QA · simulirana završna kartica</div>
+    <h1>Odlična partija</h1>
+    <div class="score">1.847</div>
+    <p class="sub">OSVOJENI POENI</p>
+    <div class="row">Rekordi partije · nedeljni · lični</div>
+    <div class="row">Najjača kolona · Najava 472</div>
+    <button class="action" type="button">Preuzmi i izađi</button>
+  </main>
+  <div class="qa-board player-table" hidden aria-label="Tabla za proveru ledenog efekta"><div class="qa-board-grid" id="qa-board-grid"></div></div>
+  <div class="note">Pregled pokreće stvarni EffectManager, bez naloga, kupovine i promene rezultata.</div>
+  <canvas id="confetti-canvas"></canvas>
+  <div id="qa-error" hidden></div>
+  <script>
+const YAMB_THEME_IDS = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const YAMB_FREE_THEME_IDS = ['dark', 'light', 'medium', 'winter'];
+// The coin artwork stays canonical; these profiles only control atmosphere and motion.
+const GOLD_RAIN_THEME_PROFILES = Object.freeze({
+    dark:     { glow: '163, 200, 145', glint: '246, 245, 217', drift: 0.68, spin: 0.53 },
+    light:    { glow: '243, 214, 168', glint: '255, 241, 215', drift: 0.64, spin: 0.46 },
+    medium:   { glow: '227, 154, 112', glint: '241, 195, 178', drift: 0.56, spin: 0.50 },
+    winter:   { glow: '109, 155, 168', glint: '255, 244, 229', drift: 0.82, spin: 0.55 },
+    neon:     { glow: '86, 229, 210',  glint: '240, 140, 227', drift: 0.78, spin: 0.60 },
+    amethyst: { glow: '214, 145, 181', glint: '242, 200, 121', drift: 0.58, spin: 0.48 },
+    easter:   { glow: '135, 147, 115', glint: '255, 248, 234', drift: 0.66, spin: 0.46 },
+    desert:   { glow: '215, 146, 105', glint: '255, 240, 218', drift: 0.52, spin: 0.45 },
+    moon:     { glow: '167, 169, 184', glint: '245, 245, 247', drift: 0.43, spin: 0.42 },
+    severna:  { glow: '138, 227, 228', glint: '195, 172, 234', drift: 0.72, spin: 0.52 }
+});
+const FIREFLY_THEME_GLOW = Object.freeze({
+    dark: '211, 244, 110', light: '255, 207, 111', medium: '255, 172, 121',
+    winter: '129, 229, 219', neon: '86, 229, 210', amethyst: '242, 200, 121',
+    easter: '255, 211, 132', desert: '113, 217, 196', moon: '225, 226, 231',
+    severna: '138, 227, 228'
+});
+// Fine alignment of the moving lens with the void in each original PNG.
+const BLACK_HOLE_CORE_POSITION = Object.freeze({
+    dark: [54, 49], light: [50, 49], medium: [53, 51], winter: [52, 55],
+    neon: [49, 48], amethyst: [55, 50], easter: [49, 51], desert: [51, 50],
+    moon: [55, 56], severna: [49, 49]
+});
+// Supernova shares each theme's light language; its PNG is a brief plasma texture inside a live expanding blast.
+const SUPERNOVA_THEME_PROFILES = Object.freeze({
+    dark:     { main: '163, 200, 145', accent: '246, 245, 217', shade: '16, 37, 25' },
+    light:    { main: '243, 214, 168', accent: '255, 241, 215', shade: '68, 49, 37' },
+    medium:   { main: '227, 154, 112', accent: '241, 195, 178', shade: '60, 25, 39' },
+    winter:   { main: '109, 155, 168', accent: '255, 244, 229', shade: '18, 44, 61' },
+    neon:     { main: '86, 229, 210', accent: '240, 140, 227', shade: '8, 16, 27' },
+    amethyst: { main: '214, 145, 181', accent: '242, 200, 121', shade: '39, 24, 58' },
+    easter:   { main: '135, 147, 115', accent: '255, 248, 234', shade: '51, 42, 65' },
+    desert:   { main: '215, 146, 105', accent: '255, 240, 218', shade: '53, 37, 31' },
+    moon:     { main: '167, 169, 184', accent: '245, 245, 247', shade: '23, 26, 39' },
+    severna:  { main: '138, 227, 228', accent: '195, 172, 234', shade: '23, 36, 58' }
+});
+
+/* Animated effect scenes. PNGs are physical components; motion, light and particles are drawn live. */
+const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
+    ice_age: 6500, neon_pulse: 5000, thunder: 4500, balkan: 8600, fireworks: 7000,
+    drones: 8200, cosmic_dust: 6000, ufo_abduction: 7500, dragon_fire: 5500, royal_yamb: 8000
+});
+const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
+
+class LiveEffectsStage {
+    static imageCache = new Map();
+
+    static sources(type, theme) {
+        const root = 'assets/effects/stage-v1/';
+        const png = name => root + name + '.png?v=1';
+        if (type === 'ice_age') return { frost: png('frost-corner') };
+        if (type === 'balkan') return { trumpet: png('trumpet') };
+        if (type === 'dragon_fire') return { flame: png('flame') };
+        if (type === 'ufo_abduction') return { ship: png(`ufo-${theme}`) };
+        if (type === 'royal_yamb') return {
+            logo: theme === 'dark' ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
+                : `assets/theme-packs/${theme}/splash-title-soft-clay-v1.png?v=1`,
+            coin: theme === 'dark' ? 'assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png?v=1'
+                : `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`
+        };
+        return {};
+    }
+
+    static loadImage(source) {
+        if (this.imageCache.has(source)) return this.imageCache.get(source);
+        const promise = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = async () => {
+                try { await image.decode?.(); } catch (_) {}
+                resolve(image);
+            };
+            image.onerror = () => { this.imageCache.delete(source); resolve(null); };
+            image.src = source;
+        });
+        this.imageCache.set(source, promise);
+        // Retain shared components, but only the selected theme's ship/logo/coin.
+        for (const key of this.imageCache.keys()) {
+            if (this.imageCache.size <= 7) break;
+            if (key !== source && !/stage-v1\/(?:trumpet|flame|frost-corner)\.png/.test(key)) this.imageCache.delete(key);
+        }
+        return promise;
+    }
+
+    static async preload(type, theme) {
+        const entries = await Promise.all(Object.entries(this.sources(type, theme))
+            .map(async ([role, source]) => [role, await this.loadImage(source)]));
+        return Object.fromEntries(entries);
+    }
+
+    constructor(owner, type) {
+        this.owner = owner;
+        this.type = type;
+        this.theme = owner.getGoldRainThemeId();
+        this.palette = SUPERNOVA_THEME_PROFILES[this.theme];
+        this.reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        this.mobile = window.innerWidth <= 760 || Boolean(window.matchMedia?.('(pointer: coarse)').matches);
+        this.duration = this.reduced ? Math.min(2600, LIVE_STAGE_EFFECT_DURATIONS[type]) : LIVE_STAGE_EFFECT_DURATIONS[type];
+        this.stopped = false;
+        this.events = new Set();
+        this.mutedNodes = new Set();
+        this.seed = value => { const n = Math.sin(value * 127.1 + 19.73) * 43758.5453; return n - Math.floor(n); };
+        this.clamp = value => Math.max(0, Math.min(1, value));
+        this.ease = value => { const t = this.clamp(value); return t * t * (3 - 2 * t); };
+        this.rgba = (rgb, alpha) => `rgba(${rgb},${this.clamp(alpha)})`;
+        this.resize = this.resize.bind(this);
+        this.frame = this.frame.bind(this);
+    }
+
+    async start() {
+        this.images = await LiveEffectsStage.preload(this.type, this.theme);
+        if (this.stopped || document.hidden || this.theme !== this.owner.getGoldRainThemeId()) return this.stop();
+        const needed = Object.keys(LiveEffectsStage.sources(this.type, this.theme));
+        if (needed.some(role => !this.images[role])) {
+            console.warn(`Effect component unavailable: ${this.type}/${this.theme}`);
+            return this.stop();
+        }
+        this.table = this.owner.getTargetTable?.() || document.querySelector('.player-table');
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'live-stage-effect';
+        this.overlay.dataset.effect = this.type;
+        this.overlay.dataset.theme = this.theme;
+        this.overlay.setAttribute('aria-hidden', 'true');
+        this.canvas = document.createElement('canvas');
+        this.overlay.appendChild(this.canvas);
+        document.body.appendChild(this.overlay);
+        this.ctx = this.canvas.getContext('2d', { alpha: true });
+        if (!this.ctx) return this.stop();
+        this.resize();
+        this.scores = [...(this.table?.querySelectorAll?.('.score-btn.filled, .qa-board-grid span') || [])]
+            .filter(node => /^\d+$/.test(node.textContent.trim())).slice(0, this.mobile ? 24 : 40)
+            .map(node => ({ node, text: node.textContent.trim(), rect: node.getBoundingClientRect() }));
+        if (this.type === 'drones') this.prepareDroneFormation();
+        window.addEventListener('resize', this.resize, { passive: true });
+        this.visibility = () => { if (document.hidden) this.stop(); };
+        document.addEventListener('visibilitychange', this.visibility);
+        if (typeof MutationObserver !== 'undefined') {
+            this.themeObserver = new MutationObserver(() => {
+                if (this.theme !== this.owner.getGoldRainThemeId()) this.stop();
+            });
+            this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+        }
+        if (!this.reduced) {
+            const sound = { balkan: 'balkanTrumpet', drones: 'epicDroneShow', ufo_abduction: 'ufoAbduction',
+                royal_yamb: 'trophy', ice_age: 'iceAge' }[this.type];
+            if (sound) window.app?.soundMgr?.[sound]?.();
+        }
+        this.timer = setTimeout(() => this.stop(), this.duration + 1000);
+        this.raf = requestAnimationFrame(this.frame);
+    }
+
+    resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        const rect = this.table?.getBoundingClientRect?.();
+        const fallbackWidth = Math.min(360, this.width * 0.8);
+        const fallbackHeight = Math.min(560, this.height * 0.65);
+        const valid = rect && rect.width > 0 && rect.height > 0;
+        this.board = {
+            x: valid ? rect.left : (this.width - fallbackWidth) / 2,
+            y: valid ? rect.top : (this.height - fallbackHeight) / 2,
+            width: valid ? rect.width : fallbackWidth,
+            height: valid ? rect.height : fallbackHeight
+        };
+        this.board.right = this.board.x + this.board.width;
+        this.board.bottom = this.board.y + this.board.height;
+        this.scores?.forEach(score => { score.rect = score.node.getBoundingClientRect(); });
+        const dpr = Math.min(window.devicePixelRatio || 1, this.mobile ? 1.15 : 1.5);
+        this.canvas.width = Math.round(this.width * dpr);
+        this.canvas.height = Math.round(this.height * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.overlay.dataset.board = `${this.board.width}x${this.board.height}`;
+    }
+
+    stop() {
+        this.stopped = true;
+        cancelAnimationFrame(this.raf);
+        clearTimeout(this.timer);
+        this.themeObserver?.disconnect();
+        window.removeEventListener('resize', this.resize);
+        if (this.visibility) document.removeEventListener('visibilitychange', this.visibility);
+        this.mutedNodes.forEach(node => node.classList.remove('live-ufo-score-muted'));
+        this.mutedNodes.clear();
+        this.overlay?.remove();
+        if (this.type === 'balkan') window.app?.soundMgr?.stopBalkanMusic?.(true);
+        if (this.owner.stageScene === this) this.owner.stageScene = null;
+    }
+
+    once(key, callback) {
+        if (!this.events.has(key)) { this.events.add(key); callback(); }
+    }
+
+    frame(now) {
+        if (this.stopped) return;
+        if (this.theme !== this.owner.getGoldRainThemeId() || !this.overlay.isConnected) return this.stop();
+        if (this.startedAt === undefined) this.startedAt = now;
+        if (this.mobile && this.lastFrame !== undefined && now - this.lastFrame < 30) {
+            this.raf = requestAnimationFrame(this.frame); return;
+        }
+        this.lastFrame = now;
+        const elapsed = now - this.startedAt;
+        const p = this.clamp(elapsed / this.duration);
+        const seconds = elapsed / 1000;
+        this.alpha = this.ease(p / 0.075) * this.ease((1 - p) / 0.14);
+        this.overlay.dataset.phase = p < 0.2 ? 'entry' : p < 0.78 ? 'active' : 'exit';
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.globalCompositeOperation = 'source-over';
+        this.ctx.globalAlpha = 1;
+        const render = { ice_age: 'ice', neon_pulse: 'neon', thunder: 'thunder', balkan: 'wedding',
+            fireworks: 'fireworks', drones: 'drones', cosmic_dust: 'dust', ufo_abduction: 'ufo',
+            dragon_fire: 'fire', royal_yamb: 'royal' }[this.type];
+        this[render](this.reduced ? this.type === 'thunder' ? 0.75 : 1.3 : seconds, p);
+        if (elapsed < this.duration) this.raf = requestAnimationFrame(this.frame);
+        else this.stop();
+    }
+
+    shade(amount = 0.18) {
+        this.ctx.fillStyle = this.rgba(this.palette.shade, amount * this.alpha);
+        this.ctx.fillRect(0, 0, this.width, this.height);
+    }
+
+    glow(x, y, radius, color, alpha = 1) {
+        if (radius <= 0 || alpha <= 0) return;
+        const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, this.rgba(color, alpha * this.alpha));
+        gradient.addColorStop(0.24, this.rgba(color, alpha * 0.38 * this.alpha));
+        gradient.addColorStop(1, this.rgba(color, 0));
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+    }
+
+    dot(x, y, radius, color, alpha) {
+        this.ctx.fillStyle = this.rgba(color, alpha * this.alpha);
+        this.ctx.beginPath(); this.ctx.arc(x, y, Math.max(0.2, radius), 0, Math.PI * 2); this.ctx.fill();
+    }
+
+    line(points, color, alpha = 1, width = 1) {
+        this.ctx.strokeStyle = this.rgba(color, alpha * this.alpha);
+        this.ctx.lineWidth = width;
+        this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round';
+        this.ctx.beginPath();
+        points.forEach(([x, y], i) => i ? this.ctx.lineTo(x, y) : this.ctx.moveTo(x, y));
+        this.ctx.stroke();
+    }
+
+    sprite(image, x, y, width, rotation = 0, alpha = 1, flip = 1, height) {
+        if (!image) return;
+        const h = height || width * image.naturalHeight / image.naturalWidth;
+        this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(rotation);
+        this.ctx.scale(flip, 1); this.ctx.globalAlpha = this.alpha * alpha;
+        this.ctx.drawImage(image, -width / 2, -h / 2, width, h); this.ctx.restore();
+    }
+
+    ice(t, p) {
+        const c = this.ctx, b = this.board;
+        const progress = this.reduced ? this.ease(p / 0.4) : this.ease(t / 2.8);
+        this.shade(0.09);
+        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
+        const reach = Math.hypot(b.width, b.height) * progress * 0.63;
+        this.overlay.dataset.corners = '4';
+        this.overlay.dataset.coverage = progress.toFixed(3);
+        [[b.x, b.y, 1, 1], [b.right, b.y, -1, 1], [b.x, b.bottom, 1, -1], [b.right, b.bottom, -1, -1]]
+            .forEach(([x, y, sx, sy]) => {
+                // Screen-space lengths preserve the full board height on tall phones.
+                const ice = c.createRadialGradient(x, y, 0, x, y, Math.max(1, reach));
+                ice.addColorStop(0, this.rgba('210, 236, 247', 0.54 * this.alpha));
+                ice.addColorStop(0.72, this.rgba('186, 219, 239', 0.32 * this.alpha));
+                ice.addColorStop(0.92, this.rgba('230, 247, 251', 0.2 * this.alpha));
+                ice.addColorStop(1, 'rgba(210,240,255,0)');
+                c.fillStyle = ice; c.fillRect(b.x, b.y, b.width, b.height);
+                c.save(); c.translate(x, y); c.scale(sx, sy); c.globalAlpha = this.alpha * 0.88;
+                c.drawImage(this.images.frost, 0, 0, b.width * progress * 0.86, b.height * progress * 0.86);
+                c.restore();
+            });
+        // Fine glints follow the advancing freezing front rather than falling from above.
+        for (let i = 0; i < 32 && !this.reduced; i++) {
+            const x = b.x + this.seed(i + 4) * b.width, y = b.y + this.seed(i + 90) * b.height;
+            const cornerDistance = Math.min(Math.hypot(x - b.x, y - b.y), Math.hypot(x - b.right, y - b.y),
+                Math.hypot(x - b.x, y - b.bottom), Math.hypot(x - b.right, y - b.bottom));
+            const glint = Math.max(0, 1 - Math.abs(cornerDistance - reach * 0.83) / 32);
+            this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7);
+        }
+        c.restore();
+    }
+
+    neon(t) {
+        const b = this.board, perimeter = 2 * (b.width + b.height);
+        const point = distance => {
+            let d = ((distance % perimeter) + perimeter) % perimeter;
+            if (d < b.width) return [b.x + d, b.y]; d -= b.width;
+            if (d < b.height) return [b.right, b.y + d]; d -= b.height;
+            if (d < b.width) return [b.right - d, b.bottom]; d -= b.width;
+            return [b.x, b.bottom - d];
+        };
+        const speed = this.reduced ? 0 : 280;
+        for (let lane = 0; lane < 3; lane++) {
+            for (let trail = 0; trail < 18; trail++) {
+                const d = t * speed + lane * perimeter / 3 - trail * 7;
+                this.line([point(d - 7), point(d)], lane === 1 ? this.palette.accent : this.palette.main,
+                    (1 - trail / 18) * 0.82, 2.4 + trail * 0.15);
+            }
+            const head = point(t * speed + lane * perimeter / 3);
+            this.glow(head[0], head[1], 20, lane === 1 ? this.palette.accent : this.palette.main, 0.42);
+        }
+        const y = b.y + ((t * 0.32) % 1) * b.height;
+        const pulse = this.reduced ? 0.15 : Math.sin(t * Math.PI / 1.5) ** 2 * 0.32;
+        this.line([[b.x + 2, y], [b.right - 2, y]], this.palette.main, pulse, 1.5);
+        this.glow(b.x + b.width / 2, y, b.width * 0.55, this.palette.main, pulse * 0.16);
+    }
+
+    thunder(t) {
+        this.shade(0.2);
+        const b = this.board;
+        [0.65, 1.8, 3.05].forEach((strike, index) => {
+            const age = t - strike;
+            if (age < 0 || age > 0.58) return;
+            const intensity = this.reduced ? 0.1 : Math.exp(-age * 9) + (age > 0.13 ? Math.exp(-(age - 0.13) * 20) * 0.5 : 0);
+            const x = b.x + b.width * (0.25 + this.seed(index + 3) * 0.5);
+            const endY = b.y + b.height * (0.25 + this.seed(index + 8) * 0.45);
+            const points = Array.from({ length: 18 }, (_, step) => [x + (this.seed(step * 3 + index * 31) - 0.5) * 44 * Math.sin(step / 17 * Math.PI), endY * step / 17]);
+            this.line(points, this.palette.main, intensity * 0.27, 12);
+            this.line(points, this.palette.main, intensity * 0.8, 4);
+            this.line(points, '248, 250, 255', intensity, 1.3);
+            for (let branch = 0; branch < 3; branch++) {
+                const origin = points[5 + branch * 3];
+                this.line([origin, [origin[0] + (branch % 2 ? -28 : 32), origin[1] + 20],
+                    [origin[0] + (branch % 2 ? -47 : 54), origin[1] + 68]], this.palette.main, intensity * 0.6, 1.2);
+            }
+            this.glow(x, endY, 110, this.palette.main, intensity * 0.55);
+            if (!this.reduced) this.once(`thunder-${index}`, () => {
+                if (index === 0) window.app?.soundMgr?.thunder?.();
+                window.app?.vibrate?.([30, 35, 65]);
+            });
+        });
+    }
+
+    wedding(t, p) {
+        this.shade(0.08);
+        const beat = Math.sin(t * Math.PI * 5);
+        const entry = this.ease(p / 0.14) * this.ease((1 - p) / 0.15);
+        const instrumentWidth = Math.min(146, this.width * 0.31);
+        const edge = instrumentWidth * 0.27;
+        for (let i = 0; i < 4; i++) {
+            const left = i % 2 === 0;
+            const x = left ? -instrumentWidth * (1 - entry) + edge : this.width + instrumentWidth * (1 - entry) - edge;
+            const y = this.height * (i < 2 ? 0.26 : 0.65) + (this.reduced ? 0 : Math.sin(t * 8 + i) * 5);
+            this.sprite(this.images.trumpet, x, y, instrumentWidth, (left ? -1 : 1) * beat * 0.035,
+                entry, left ? 1 : -1);
+            for (let wave = 0; wave < 3 && !this.reduced; wave++) {
+                const phase = (t * 1.9 + wave / 3) % 1;
+                const radius = 12 + phase * 45;
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = this.rgba(this.palette.main, (1 - phase) * 0.35 * this.alpha);
+                this.ctx.lineWidth = 1.5;
+                this.ctx.arc(x + (left ? 1 : -1) * instrumentWidth * 0.42, y - 15, radius,
+                    left ? -0.7 : Math.PI - 0.7, left ? 0.7 : Math.PI + 0.7); this.ctx.stroke();
+            }
+        }
+        // A narrow woven band nods to a Balkan tablecloth while leaving the game readable.
+        this.ctx.fillStyle = this.rgba(this.palette.shade, 0.14 * this.alpha);
+        this.ctx.fillRect(0, this.height * 0.91, this.width, this.height * 0.09);
+        for (let x = 0; x < this.width; x += 12) this.line([[x, this.height * 0.91], [x + 12, this.height]], this.palette.main, 0.12, 1);
+        for (let i = 0; i < (this.reduced ? 15 : this.mobile ? 65 : 105); i++) {
+            const x = (this.seed(i + 5) * this.width + Math.sin(t * 1.8 + i) * 18 + this.width) % this.width;
+            const y = ((t * (65 + this.seed(i + 33) * 90) + this.seed(i + 72) * this.height * 2) % (this.height + 50)) - 30;
+            this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(t * 2 + i);
+            this.ctx.fillStyle = this.rgba(i % 3 ? this.palette.main : this.palette.accent, 0.65 * this.alpha);
+            this.ctx.fillRect(-2, -4, 3.5 * Math.cos(t * 4 + i), 8); this.ctx.restore();
+        }
+    }
+
+    fireworks(t) {
+        this.shade(0.25);
+        const count = this.reduced ? 2 : this.mobile ? 9 : 12;
+        for (let i = 0; i < count; i++) {
+            const launch = i * (this.reduced ? 0.65 : 0.57);
+            const age = t - launch;
+            if (age < 0 || age > 2.65) continue;
+            const x = this.width * (0.14 + this.seed(i + 9) * 0.72);
+            const y = this.height * (0.15 + this.seed(i + 45) * 0.38);
+            const color = i % 2 ? this.palette.accent : this.palette.main;
+            if (age < 0.64) {
+                const rise = this.ease(age / 0.64);
+                const rocketY = this.height + 20 + (y - this.height - 20) * rise;
+                this.line([[x - 6, rocketY + 45], [x, rocketY]], color, 0.55, 1.8);
+                this.glow(x, rocketY, 12, color, 0.8);
+                continue;
+            }
+            const life = age - 0.64;
+            if (!this.reduced && i < 4) this.once(`firework-${i}`, () => window.app?.soundMgr?.fireworkExplode?.());
+            const sparks = this.reduced ? 15 : this.mobile ? 56 : 80;
+            for (let j = 0; j < sparks; j++) {
+                const angle = j * Math.PI * 2 / sparks + this.seed(i + j) * 0.1;
+                const speed = 65 + this.seed(i * 99 + j) * Math.min(200, this.width * 0.52);
+                const radius = speed * (1 - Math.exp(-life * 1.9));
+                const fall = life * life * 31;
+                const px = x + Math.cos(angle) * radius, py = y + Math.sin(angle) * radius + fall;
+                const alpha = Math.max(0, 1 - life / 1.9) ** 1.2;
+                this.line([[px - Math.cos(angle) * (8 + life * 3), py - Math.sin(angle) * 8 - life * 4], [px, py]], color, alpha * 0.75, 1.2);
+                this.dot(px, py, 0.7 + this.seed(j + 3) * 0.8, color, alpha);
+                if (j % 9 === 0) this.glow(px, py, 6, color, alpha * 0.2);
+            }
+            this.glow(x, y, 58, color, Math.exp(-life * 9) * 0.5);
+        }
+    }
+
+    prepareDroneFormation() {
+        const app = window.app;
+        const fullName = app?.players?.[app.currentPlayerIdx] || app?.playerName || 'YAMB';
+        const name = String(fullName).trim().split(/\s+/)[0].slice(0, 12).toLocaleUpperCase();
+        const sample = document.createElement('canvas'); sample.width = 360; sample.height = 100;
+        const ctx = sample.getContext('2d', { willReadFrequently: true });
+        ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = `800 ${Math.min(66, 330 / Math.max(3, name.length) * 1.65)}px Arial`;
+        ctx.fillText(name, 180, 50, 345);
+        const data = ctx.getImageData(0, 0, 360, 100).data;
+        const points = [];
+        for (let y = 8; y < 95; y += 6) for (let x = 6; x < 355; x += 6) {
+            if (data[(y * 360 + x) * 4 + 3] > 100) points.push([x / 360, y / 100]);
+        }
+        const max = this.mobile ? 175 : 280;
+        this.droneTargets = points.filter((_, i) => i % Math.max(1, Math.ceil(points.length / max)) === 0);
+    }
+
+    drones(t, p) {
+        this.shade(0.38);
+        const assemble = this.ease(p / 0.42), depart = this.ease((p - 0.76) / 0.24);
+        (this.droneTargets || []).forEach(([tx, ty], i) => {
+            const targetX = this.width * (0.08 + tx * 0.84), targetY = this.height * 0.3 + ty * Math.min(135, this.height * 0.2);
+            const originX = this.width * this.seed(i + 4), originY = this.height + 30 + this.seed(i + 15) * 120;
+            let x = originX + (targetX - originX) * assemble;
+            let y = originY + (targetY - originY) * assemble;
+            if (!this.reduced) { x += Math.sin(t * 2 + i) * 24 * (1 - assemble); y += Math.sin(t * 1.4 + i) * 18 * (1 - assemble); }
+            x += (this.seed(i + 57) - 0.5) * this.width * depart;
+            y -= (this.height * 0.65 + this.seed(i + 81) * 180) * depart;
+            if (this.reduced) { x = targetX; y = targetY; }
+            const color = i % 7 ? this.palette.main : this.palette.accent;
+            const twinkle = 0.68 + Math.sin(t * 3 + i * 2) * 0.13;
+            this.glow(x, y, this.mobile ? 6 : 8, color, 0.26 * twinkle);
+            this.dot(x, y, this.mobile ? 1.25 : 1.6, color, twinkle);
+        });
+    }
+
+    dust(t) {
+        this.shade(0.21);
+        for (let cloud = 0; cloud < 3; cloud++) {
+            const x = this.width * (0.2 + cloud * 0.3) + Math.sin(t * 0.28 + cloud * 2) * this.width * 0.18;
+            const y = this.height * (0.25 + cloud * 0.22) + Math.cos(t * 0.24 + cloud) * 45;
+            this.glow(x, y, Math.min(this.width, this.height) * 0.7,
+                cloud === 1 ? this.palette.accent : this.palette.main, 0.085);
+        }
+        const count = this.reduced ? 45 : this.mobile ? 145 : 250;
+        for (let i = 0; i < count; i++) {
+            const layer = i % 3, speed = this.reduced ? 0 : 0.1 + layer * 0.09;
+            const angle = this.seed(i + 22) * Math.PI * 2 + t * speed;
+            const radius = 0.08 + this.seed(i + 74) * 0.75;
+            const x = this.width / 2 + Math.cos(angle) * radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
+            const y = this.height / 2 + Math.sin(angle) * radius * this.height * 0.75;
+            this.dot(x, y, 0.65 + layer * 0.45, i % 5 ? this.palette.main : this.palette.accent,
+                0.24 + (Math.sin(t + i) + 1) * 0.19);
+            if (i % 15 === 0) this.line([[x - Math.sin(angle) * 7, y + Math.cos(angle) * 5], [x, y]], this.palette.main, 0.2, 0.8);
+            if (i % 37 === 0) this.glow(x, y, 10, this.palette.accent, 0.12);
+        }
+    }
+
+    ufo(t, p) {
+        this.shade(0.23);
+        const b = this.board, enter = this.reduced ? 1 : this.ease(p / 0.2), leave = this.reduced ? 0 : this.ease((p - 0.81) / 0.19);
+        const hoverX = b.x + b.width / 2;
+        const hoverY = Math.max(88, Math.min(this.height * 0.35, b.y + b.height * 0.09));
+        const x = -160 + (hoverX + 160) * enter + leave * (this.width + 160);
+        const y = hoverY - (1 - enter) * 110 - leave * 180 + (this.reduced ? 0 : Math.sin(t * 2.4) * 5);
+        const width = Math.min(235, this.width * 0.56);
+        const beam = this.ease((p - 0.18) / 0.1) * this.ease((0.83 - p) / 0.1);
+        if (beam > 0) {
+            const bottom = b.bottom, spread = b.width * 0.51;
+            const gradient = this.ctx.createLinearGradient(x, y, x, bottom);
+            gradient.addColorStop(0, this.rgba(this.palette.accent, 0.32 * beam * this.alpha));
+            gradient.addColorStop(1, this.rgba(this.palette.main, 0.025 * beam * this.alpha));
+            this.ctx.fillStyle = gradient; this.ctx.beginPath(); this.ctx.moveTo(x - 17, y);
+            this.ctx.lineTo(x + 17, y); this.ctx.lineTo(x + spread, bottom); this.ctx.lineTo(x - spread, bottom);
+            this.ctx.closePath(); this.ctx.fill();
+            for (let i = 0; i < (this.reduced ? 12 : 60); i++) {
+                const life = (t * (0.22 + this.seed(i + 9) * 0.2) + this.seed(i + 15)) % 1;
+                const py = bottom - (bottom - y) * life;
+                const px = x + Math.sin(life * 8 + i) * spread * (1 - life) * 0.75;
+                this.dot(px, py, 0.7 + this.seed(i + 52), this.palette.main, beam * 0.55);
+            }
+            this.scores.forEach((score, i) => {
+                const life = this.clamp((t - 1.7 - i * 0.055) / 2.75);
+                if (!life || life >= 1 || this.reduced) return;
+                if (!this.mutedNodes.has(score.node)) { score.node.classList.add('live-ufo-score-muted'); this.mutedNodes.add(score.node); }
+                const travel = this.ease(life), sx = score.rect.left + score.rect.width / 2, sy = score.rect.top + score.rect.height / 2;
+                const px = sx + (x - sx) * travel + Math.sin(life * 9 + i) * 18 * Math.sin(life * Math.PI);
+                const py = sy + (y - sy) * travel;
+                this.ctx.fillStyle = this.rgba(this.palette.accent, (1 - life) * this.alpha);
+                this.ctx.font = `700 ${12 * (1 - life * 0.6)}px Arial`; this.ctx.textAlign = 'center';
+                this.ctx.fillText(score.text, px, py);
+            });
+        }
+        this.sprite(this.images.ship, x, y - width * 0.07, width, this.reduced ? 0 : Math.sin(t * 1.4) * 0.035);
+        this.glow(x, y + 9, 32, this.palette.main, beam * 0.25);
+    }
+
+    fire(t, p) {
+        this.shade(0.1);
+        const strength = this.ease(p / 0.15) * this.ease((1 - p) / 0.27);
+        const count = this.reduced ? 7 : this.mobile ? 22 : 35;
+        const base = this.ctx.createLinearGradient(0, this.height * 0.48, 0, this.height);
+        base.addColorStop(0, 'rgba(235,95,25,0)');
+        base.addColorStop(0.7, this.rgba('235, 95, 25', strength * this.alpha * 0.12));
+        base.addColorStop(1, this.rgba('255, 170, 65', strength * this.alpha * 0.36));
+        this.ctx.fillStyle = base; this.ctx.fillRect(0, this.height * 0.48, this.width, this.height * 0.52);
+        for (let i = 0; i < count; i++) {
+            const breath = 0.75 + Math.sin(t * (2.2 + this.seed(i + 9)) + i * 2) * 0.22;
+            const x = (i + 0.5) / count * this.width + Math.sin(t * 2 + i) * 18;
+            const height = (this.height * (0.27 + this.seed(i + 84) * 0.4)) * strength * breath;
+            const y = this.height + 30 - height / 2;
+            this.sprite(this.images.flame, x, y, height * 0.5, Math.sin(t * 2 + i) * 0.07,
+                strength * (this.reduced ? 0.14 : 0.53), 1, height);
+        }
+        this.glow(this.width / 2, this.height + 20, this.width * 0.95, '244, 111, 37', strength * 0.24);
+        for (let i = 0; i < (this.reduced ? 8 : 75); i++) {
+            const life = (t * (0.12 + this.seed(i + 12) * 0.24) + this.seed(i + 29)) % 1;
+            const x = this.width * this.seed(i + 35) + Math.sin(life * 6 + i) * 35;
+            const y = this.height - life * this.height * 0.95;
+            this.dot(x, y, 0.6 + this.seed(i + 63) * 1.1, i % 4 ? '249, 175, 71' : this.palette.main,
+                Math.sin(life * Math.PI) * strength * 0.8);
+        }
+    }
+
+    royal(t, p) {
+        this.shade(0.3);
+        const x = this.width / 2, y = this.height * 0.4;
+        for (let i = 0; i < 5; i++) {
+            const originX = this.width * (i % 2 ? 1.1 : -0.1), originY = this.height * 0.95;
+            const angle = -Math.PI / 2 + Math.sin(t * 0.32 + i) * 0.5 + (i - 2) * 0.12;
+            const length = this.height * 1.3, spread = 0.055;
+            const gradient = this.ctx.createLinearGradient(originX, originY, x, 0);
+            gradient.addColorStop(0, this.rgba(this.palette.accent, 0.09 * this.alpha));
+            gradient.addColorStop(1, this.rgba(this.palette.main, 0));
+            this.ctx.fillStyle = gradient; this.ctx.beginPath(); this.ctx.moveTo(originX, originY);
+            this.ctx.lineTo(originX + Math.cos(angle - spread) * length, originY + Math.sin(angle - spread) * length);
+            this.ctx.lineTo(originX + Math.cos(angle + spread) * length, originY + Math.sin(angle + spread) * length);
+            this.ctx.closePath(); this.ctx.fill();
+        }
+        this.glow(x, y, Math.min(260, this.width * 0.66), this.palette.main, 0.14);
+        const entry = this.ease(p / 0.2);
+        this.sprite(this.images.logo, x, y + (1 - entry) * 35, Math.min(350, this.width * 0.83) * (0.88 + entry * 0.12), 0, entry);
+        for (let i = 0; i < (this.reduced ? 10 : this.mobile ? 43 : 70); i++) {
+            const delay = this.seed(i + 8) * 2.1;
+            const life = this.clamp((t - 0.75 - delay) / 4.6);
+            if (!life || life >= 1) continue;
+            const angle = -Math.PI + this.seed(i + 29) * Math.PI;
+            const velocity = 50 + this.seed(i + 45) * 170;
+            const px = x + Math.cos(angle) * velocity * life * 2.5 + Math.sin(t + i) * 9;
+            const py = y + Math.sin(angle) * velocity * life * 1.8 + life * life * this.height * 1.1;
+            const size = 14 + this.seed(i + 66) * 15;
+            const flip = 0.22 + Math.abs(Math.cos(t * 3 + i)) * 0.78;
+            this.sprite(this.images.coin, px, py, size, life * 4 + i, Math.sin(life * Math.PI) * 0.9, flip, size);
+        }
+    }
+}
+
+class EffectManager {
+    constructor() {
+        this.activeEffects = [];
+        this.confettiAnimationId = null;
+        this.confettiRunId = 0;
+        this.confettiSpritePromises = {};
+        this.goldRainThemeObserver = null;
+        this.greenDucatParticleSpritePromise = null;
+        this.goldRainRunId = 0;
+        this.fireflyRunId = 0;
+        this.fireflySpritePromises = {};
+        this.fireflyThemeObserver = null;
+        this.bubbleRunId = 0;
+        this.bubbleSpritePromises = {};
+        this.bubbleThemeObserver = null;
+        this.royalYambRunId = 0;
+        this.royalCanvasCleanup = null;
+        this.supernovaCanvasCleanup = null;
+        this.supernovaRunId = 0;
+        this.supernovaSpritePromises = {};
+        this.effectTimeouts = [];
+        this.iceAgeRunId = 0;
+        this.iceAgeAssetsPromise = null;
+        this.blackHoleRunId = 0;
+        this.blackHoleSpritePromises = {};
+        this.blackHoleCleanup = null;
+        this.stageScene = null;
+    }
+    
+    applyPermanent(type) {
+        this.stop(); 
+        if (!type || type === 'none') return;
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) LiveEffectsStage.preload(type, this.getGoldRainThemeId()).catch(error => console.warn(error));
+        if (type === 'black_hole') this.loadBlackHoleSprite(this.getGoldRainThemeId());
+        if (type === 'supernova') this.loadSupernovaSprite(this.getGoldRainThemeId());
+    }
+
+    loadIceAgeAssets() {
+        return LiveEffectsStage.preload('ice_age', this.getGoldRainThemeId());
+    }
+
+    async spawnStageEffect(type) {
+        this.stageScene?.stop();
+        const scene = new LiveEffectsStage(this, type);
+        this.stageScene = scene;
+        try { await scene.start(); }
+        catch (error) { scene.stop(); console.warn(`Effect failed: ${type}`, error); }
+    }
+
+    spawnIceAge() {
+        return this.spawnStageEffect('ice_age');
+    }
+
+    loadBlackHoleSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        for (const cachedTheme of Object.keys(this.blackHoleSpritePromises)) {
+            if (cachedTheme !== theme) delete this.blackHoleSpritePromises[cachedTheme];
+        }
+        if (this.blackHoleSpritePromises[theme]) return this.blackHoleSpritePromises[theme];
+        const source = `assets/effects/black-hole/${theme}-core-v1.png`;
+        this.blackHoleSpritePromises[theme] = new Promise(resolve => {
+            const sprite = new Image();
+            sprite.decoding = 'async';
+            sprite.onload = () => resolve(sprite);
+            sprite.onerror = () => {
+                delete this.blackHoleSpritePromises[theme];
+                console.warn(`Black Hole PNG failed: ${source}`);
+                resolve(null);
+            };
+            sprite.src = source;
+        });
+        return this.blackHoleSpritePromises[theme];
+    }
+
+    async spawnBlackHole() {
+        const runId = ++this.blackHoleRunId;
+        const theme = this.getGoldRainThemeId();
+        this.clearEffectTimeouts('black_hole');
+        this.blackHoleCleanup?.();
+        const sprite = await this.loadBlackHoleSprite(theme);
+        if (!sprite || runId !== this.blackHoleRunId || theme !== this.getGoldRainThemeId()) return;
+
+        const tables = [...document.querySelectorAll('.player-table')];
+        const targetTable = tables.find(table => table.style.opacity === '1' || table.style.borderColor.includes('gold') || table.style.borderColor.includes('224')) || tables[0];
+        if (!targetTable) return;
+        const rect = targetTable.getBoundingClientRect();
+        const reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        const duration = reduced ? 2600 : 5800;
+        const size = Math.max(140, Math.min(rect.width * 0.58, 230));
+        const scene = document.createElement('div');
+        scene.className = `black-hole-container${reduced ? ' black-hole-container--reduced' : ''}`;
+        scene.setAttribute('aria-hidden', 'true');
+        scene.style.setProperty('--bh-x', `${rect.left + rect.width / 2}px`);
+        scene.style.setProperty('--bh-y', `${rect.top + rect.height / 2}px`);
+        scene.style.setProperty('--bh-size', `${size}px`);
+        scene.style.setProperty('--bh-lens-width', `${size * 1.15}px`);
+        scene.style.setProperty('--bh-lens-height', `${size * 0.63}px`);
+        scene.style.setProperty('--bh-glow', GOLD_RAIN_THEME_PROFILES[theme].glow);
+        scene.style.setProperty('--bh-glint', GOLD_RAIN_THEME_PROFILES[theme].glint);
+        const [coreX, coreY] = BLACK_HOLE_CORE_POSITION[theme];
+        scene.style.setProperty('--bh-core-x', `${coreX}%`);
+        scene.style.setProperty('--bh-core-y', `${coreY}%`);
+        const atmosphere = document.createElement('div');
+        atmosphere.className = 'black-hole-atmosphere';
+        const orbit = document.createElement('div');
+        orbit.className = 'black-hole-orbit';
+        const image = document.createElement('img');
+        image.className = 'black-hole-sprite';
+        image.src = sprite.src;
+        image.alt = '';
+        image.decoding = 'async';
+        orbit.appendChild(image);
+        scene.append(atmosphere, orbit);
+
+        if (!reduced) {
+            for (const name of ['outer', 'inner']) {
+                const stream = document.createElement('span');
+                stream.className = `black-hole-stream black-hole-stream--${name}`;
+                orbit.appendChild(stream);
+            }
+            for (let i = 0; i < 2; i++) {
+                const lens = document.createElement('span');
+                lens.className = `black-hole-lens black-hole-lens--${i + 1}`;
+                scene.appendChild(lens);
+            }
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < 16; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'black-hole-particle';
+                const angle = (i * 2.39996) + 0.3;
+                const radius = size * (0.62 + (i % 4) * 0.15);
+                particle.style.setProperty('--bh-start-x', `${Math.cos(angle) * radius}px`);
+                particle.style.setProperty('--bh-start-y', `${Math.sin(angle) * radius}px`);
+                particle.style.setProperty('--bh-mid-x', `${Math.cos(angle + 1.35) * radius * 0.62}px`);
+                particle.style.setProperty('--bh-mid-y', `${Math.sin(angle + 1.35) * radius * 0.62}px`);
+                particle.style.setProperty('--bh-near-x', `${Math.cos(angle + 3.05) * radius * 0.26}px`);
+                particle.style.setProperty('--bh-near-y', `${Math.sin(angle + 3.05) * radius * 0.26}px`);
+                particle.style.setProperty('--bh-delay', `${(i % 6) * 0.27}s`);
+                particle.style.setProperty('--bh-particle-size', `${i % 3 === 0 ? 4 : 3}px`);
+                fragment.appendChild(particle);
+            }
+            scene.appendChild(fragment);
+            targetTable.classList.add('anim-black-hole-table');
+        }
+        document.body.appendChild(scene);
+
+        let observer = null;
+        const cleanup = () => {
+            observer?.disconnect();
+            scene.remove();
+            targetTable.classList.remove('anim-black-hole-table');
+            if (this.blackHoleCleanup === cleanup) this.blackHoleCleanup = null;
+        };
+        this.blackHoleCleanup = cleanup;
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (theme !== this.getGoldRainThemeId()) {
+                    ++this.blackHoleRunId;
+                    cleanup();
+                }
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+        }
+        this.scheduleEffectTimeout(() => {
+            if (runId === this.blackHoleRunId) cleanup();
+        }, duration, 'black_hole');
+    }
+
+    loadSupernovaSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        for (const cachedTheme of Object.keys(this.supernovaSpritePromises)) {
+            if (cachedTheme !== theme) delete this.supernovaSpritePromises[cachedTheme];
+        }
+        if (this.supernovaSpritePromises[theme]) return this.supernovaSpritePromises[theme];
+        const source = `assets/effects/supernova/${theme}-plasma-v2.png`;
+        this.supernovaSpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.supernovaSpritePromises[theme];
+                console.warn(`Supernova PNG failed: ${source}`);
+                resolve(null);
+            };
+            image.src = source;
+        });
+        return this.supernovaSpritePromises[theme];
+    }
+
+    async spawnSupernova() {
+        const runId = ++this.supernovaRunId;
+        this.supernovaCanvasCleanup?.();
+        const theme = this.getGoldRainThemeId();
+        const sprite = await this.loadSupernovaSprite(theme);
+        if (!sprite || runId !== this.supernovaRunId || theme !== this.getGoldRainThemeId()) return;
+
+        const table = [...document.querySelectorAll('.player-table')]
+            .find(node => node.style.opacity === '1') || document.querySelector('.player-table');
+        const reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+        const mobile = window.innerWidth <= 760 || Boolean(window.matchMedia?.('(hover: none) and (pointer: coarse)').matches);
+        const duration = reduced ? 1150 : 5000;
+        const ignitionAt = reduced ? 190 : 560;
+        const profile = SUPERNOVA_THEME_PROFILES[theme];
+        const overlay = document.createElement('div');
+        overlay.className = 'supernova-container';
+        overlay.dataset.theme = theme;
+        overlay.dataset.phase = 'compression';
+        overlay.innerHTML = '<canvas class="sn-canvas"></canvas><img class="supernova-plasma" alt="" aria-hidden="true">';
+        document.body.appendChild(overlay);
+        const canvas = overlay.querySelector('canvas');
+        const plasma = overlay.querySelector('img');
+        plasma.src = sprite.src;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { overlay.remove(); return; }
+
+        const clamp = value => Math.max(0, Math.min(1, value));
+        const ease = value => 1 - Math.pow(1 - clamp(value), 3);
+        const rgba = (rgb, alpha) => `rgba(${rgb},${clamp(alpha)})`;
+        const center = { x: 0, y: 0 };
+        let width = 0;
+        let height = 0;
+        let farthest = 0;
+        let rafId = 0;
+        let lastDraw = 0;
+        const resize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            const rect = table?.getBoundingClientRect();
+            center.x = rect ? rect.left + rect.width / 2 : width / 2;
+            center.y = rect ? rect.top + rect.height / 2 : height / 2;
+            plasma.style.left = `${center.x}px`;
+            plasma.style.top = `${center.y}px`;
+            farthest = Math.hypot(Math.max(center.x, width - center.x), Math.max(center.y, height - center.y));
+            const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.2 : 1.5);
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+        if (!reduced) {
+            table?.classList.add('anim-supernova-table');
+            table?.style.setProperty('--sn-main', profile.main);
+            if (mobile) table?.classList.add('anim-supernova-table--compact');
+        }
+
+        const jitter = seed => {
+            const value = Math.sin(seed * 127.1 + 78.233) * 43758.5453;
+            return value - Math.floor(value);
+        };
+        const particleCount = reduced ? 0 : mobile ? 58 : 92;
+        const particles = Array.from({ length: particleCount }, (_, index) => ({
+            angle: index * 2.399963229728653 + (jitter(index + 3) - 0.5) * 0.37,
+            drift: (jitter(index + 57) - 0.5) * 0.17,
+            reach: 0.53 + jitter(index + 19) * 0.55,
+            delay: jitter(index + 31) * 250,
+            lifetime: 2100 + jitter(index + 77) * 2400,
+            size: index % 11 === 0 ? 3.1 : 0.9 + jitter(index + 11) * 1.7,
+            hue: index % 5 === 0 ? profile.accent : profile.main
+        }));
+        // Fine ejecta travel at different speeds and keep drifting after the bright front has passed.
+        const dustCount = reduced ? 0 : mobile ? 115 : 210;
+        const dust = Array.from({ length: dustCount }, (_, index) => ({
+            angle: index * 2.399963229728653 + jitter(index + 401) * 0.5,
+            reach: 0.16 + jitter(index + 433) * 0.93,
+            delay: jitter(index + 449) * 780,
+            lifetime: 2700 + jitter(index + 467) * 2300,
+            size: 0.45 + jitter(index + 479) * 1.25,
+            wobble: (jitter(index + 491) - 0.5) * 18,
+            tint: index % 4 === 0 ? profile.accent : profile.main
+        }));
+        const filaments = Array.from({ length: reduced ? 0 : mobile ? 15 : 23 }, (_, index) => ({
+            angle: index * 2.399963229728653 + (jitter(index + 703) - 0.5) * 0.4,
+            reach: 0.53 + jitter(index + 721) * 0.44,
+            bend: (jitter(index + 739) - 0.5) * 0.13,
+            delay: jitter(index + 757) * 150,
+            tint: index % 3 === 0 ? profile.accent : profile.main
+        }));
+        const cleanup = () => {
+            cancelAnimationFrame(rafId);
+            window.removeEventListener('resize', resize);
+            table?.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
+            table?.style.removeProperty('--sn-main');
+            overlay.remove();
+            if (this.supernovaCanvasCleanup === cleanup) this.supernovaCanvasCleanup = null;
+        };
+        this.supernovaCanvasCleanup = cleanup;
+
+        const draw = start => now => {
+            if (runId !== this.supernovaRunId || !overlay.isConnected) return;
+            if (theme !== this.getGoldRainThemeId()) { cleanup(); return; }
+            if (mobile && lastDraw && now - lastDraw < 26) {
+                rafId = requestAnimationFrame(draw(start));
+                return;
+            }
+            lastDraw = now;
+            const elapsed = Math.min(now - start, duration);
+            const blastTime = Math.max(0, elapsed - ignitionAt);
+            const fadeLength = reduced ? 260 : 900;
+            const endFade = 1 - ease((elapsed - (duration - fadeLength)) / fadeLength);
+            const compression = ease(elapsed / ignitionAt);
+            const flash = Math.sin(clamp(blastTime / (reduced ? 420 : 680)) * Math.PI);
+            overlay.dataset.phase = elapsed < ignitionAt ? 'compression'
+                : elapsed < ignitionAt + 850 ? 'blast'
+                    : elapsed < duration - fadeLength ? 'ejecta' : 'fade';
+            ctx.clearRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'source-over';
+
+            // A brief dip in ambient light makes the ignition readable without hiding scores.
+            ctx.fillStyle = rgba(profile.shade, (0.09 + 0.08 * compression) * endFade);
+            ctx.fillRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'screen';
+
+            // The pre-blast core is drawn, not a static PNG object.
+            if (elapsed < ignitionAt) {
+                const radius = 38 - compression * 27;
+                const coreGlow = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, radius * 2.6);
+                coreGlow.addColorStop(0, rgba(profile.accent, (0.5 + compression * 0.45) * endFade));
+                coreGlow.addColorStop(0.21, rgba(profile.main, 0.29 * endFade));
+                coreGlow.addColorStop(1, rgba(profile.main, 0));
+                ctx.fillStyle = coreGlow;
+                ctx.beginPath();
+                ctx.arc(center.x, center.y, radius * 2.6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            if (blastTime > 0) {
+                // The pressure front outruns the slower gas. It is broad and slightly uneven, not a drawn circle.
+                const waveLife = clamp(blastTime / (reduced ? 620 : 2200));
+                const waveRadius = 12 + ease(waveLife) * farthest * 1.09;
+                const shellWidth = Math.max(24, waveRadius * 0.19);
+                const shellAlpha = Math.pow(1 - waveLife, 0.45) * clamp(blastTime / 190) * endFade;
+                if (shellAlpha > 0) {
+                    const shell = ctx.createRadialGradient(
+                        center.x, center.y, Math.max(0, waveRadius - shellWidth * 1.55),
+                        center.x, center.y, waveRadius + shellWidth
+                    );
+                    shell.addColorStop(0, rgba(profile.main, 0));
+                    shell.addColorStop(0.32, rgba(profile.main, 0.06 * shellAlpha));
+                    shell.addColorStop(0.59, rgba(profile.main, 0.16 * shellAlpha));
+                    shell.addColorStop(0.76, rgba(profile.accent, 0.27 * shellAlpha));
+                    shell.addColorStop(0.88, rgba(profile.main, 0.08 * shellAlpha));
+                    shell.addColorStop(1, rgba(profile.main, 0));
+                    ctx.fillStyle = shell;
+                    ctx.beginPath();
+                    ctx.arc(center.x, center.y, waveRadius + shellWidth, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.save();
+                    ctx.strokeStyle = rgba(profile.accent, 0.24 * shellAlpha);
+                    ctx.lineWidth = mobile ? 2.3 : 3.2;
+                    ctx.shadowColor = rgba(profile.main, 0.4 * shellAlpha);
+                    ctx.shadowBlur = mobile ? 12 : 18;
+                    ctx.beginPath();
+                    for (let segment = 0; segment <= 84; segment++) {
+                        const angle = segment / 84 * Math.PI * 2;
+                        const uneven = 1 + 0.018 * Math.sin(angle * 7 + 0.8)
+                            + 0.013 * Math.sin(angle * 13 - 1.2);
+                        const x = center.x + Math.cos(angle) * waveRadius * uneven;
+                        const y = center.y + Math.sin(angle) * waveRadius * uneven;
+                        if (segment === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // Gas continues expanding behind the fast shock front.
+                if (!reduced) {
+                    const gasLife = clamp(blastTime / 2950);
+                    const gasRadius = 24 + ease(gasLife) * Math.min(farthest * 0.83, 670);
+                    const gas = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, gasRadius);
+                    const gasAlpha = (1 - gasLife) * 0.21 * endFade;
+                    gas.addColorStop(0, rgba(profile.accent, 0.18 * gasAlpha));
+                    gas.addColorStop(0.35, rgba(profile.main, gasAlpha));
+                    gas.addColorStop(0.68, rgba(profile.main, 0.42 * gasAlpha));
+                    gas.addColorStop(1, rgba(profile.main, 0));
+                    ctx.fillStyle = gas;
+                    ctx.beginPath();
+                    ctx.arc(center.x, center.y, gasRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // A short volumetric flash leads the shell; it is not a persistent lens.
+                if (flash > 0) {
+                    const flareRadius = 90 + flash * Math.min(farthest * 0.92, 460);
+                    const flare = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, flareRadius);
+                    flare.addColorStop(0, rgba(profile.accent, 0.62 * flash * endFade));
+                    flare.addColorStop(0.18, rgba(profile.main, 0.36 * flash * endFade));
+                    flare.addColorStop(0.55, rgba(profile.main, 0.12 * flash * endFade));
+                    flare.addColorStop(1, rgba(profile.main, 0));
+                    ctx.fillStyle = flare;
+                    ctx.beginPath();
+                    ctx.arc(center.x, center.y, flareRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Faint plasma streams stretch from the ignition point and dissolve into ejecta.
+            filaments.forEach(filament => {
+                const life = clamp((blastTime - filament.delay) / 2650);
+                if (!life || life >= 1) return;
+                const reach = (1 - Math.exp(-3.1 * life)) * farthest * filament.reach;
+                ctx.save();
+                ctx.strokeStyle = rgba(filament.tint, 0.32 * Math.pow(1 - life, 1.2) * endFade);
+                ctx.lineWidth = (mobile ? 2.2 : 3.4) * (1 - life * 0.65);
+                ctx.shadowColor = rgba(filament.tint, 0.38 * endFade);
+                ctx.shadowBlur = mobile ? 7 : 12;
+                ctx.beginPath();
+                for (let point = 0; point <= 8; point++) {
+                    const fraction = point / 8;
+                    const angle = filament.angle + filament.bend * fraction * fraction
+                        + Math.sin(fraction * 8 + filament.angle * 3) * 0.018;
+                    const radius = 7 + reach * fraction;
+                    const x = center.x + Math.cos(angle) * radius;
+                    const y = center.y + Math.sin(angle) * radius;
+                    if (point === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                ctx.restore();
+            });
+
+            // Bright fragments have independent speeds, lifetimes and curved radial drift.
+            particles.forEach(particle => {
+                const life = clamp((blastTime - particle.delay) / particle.lifetime);
+                if (!life || life >= 1) return;
+                const angle = particle.angle + particle.drift * life * life;
+                const radius = 13 + (1 - Math.exp(-3.4 * life)) * farthest * particle.reach;
+                const x = center.x + Math.cos(angle) * radius;
+                const y = center.y + Math.sin(angle) * radius;
+                const alpha = Math.pow(Math.sin(life * Math.PI), 0.65) * 0.73 * endFade;
+                const tail = 6 + (1 - life) * (particle.size > 3 ? 35 : 18);
+                ctx.strokeStyle = rgba(particle.hue, alpha);
+                ctx.lineWidth = Math.max(0.7, particle.size * (1 - life * 0.5));
+                ctx.beginPath();
+                ctx.moveTo(x - Math.cos(angle) * tail, y - Math.sin(angle) * tail);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.fillStyle = rgba(profile.accent, alpha * 0.76);
+                ctx.beginPath();
+                ctx.arc(x, y, Math.max(0.65, particle.size * (1 - life * 0.4)), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Small, dim space dust gives the blast depth instead of reading as fireworks.
+            dust.forEach(mote => {
+                const life = clamp((blastTime - mote.delay) / mote.lifetime);
+                if (!life || life >= 1) return;
+                const radius = 8 + (1 - Math.exp(-3 * life)) * farthest * mote.reach;
+                const angle = mote.angle + Math.sin(life * 4 + mote.angle) * 0.025;
+                const x = center.x + Math.cos(angle) * radius + mote.wobble * life;
+                const y = center.y + Math.sin(angle) * radius - mote.wobble * life * 0.4;
+                const alpha = Math.pow(Math.sin(life * Math.PI), 0.7) * 0.39 * endFade;
+                ctx.fillStyle = rgba(mote.tint, alpha);
+                ctx.beginPath();
+                ctx.arc(x, y, mote.size * (1 - life * 0.55), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // The PNG is a moving texture: the plasma plume grows behind the particles and dissipates.
+            const plumeLife = clamp(blastTime / (reduced ? 680 : 2950));
+            const plumeAlpha = reduced
+                ? Math.sin(plumeLife * Math.PI) * 0.42 * endFade
+                : clamp(blastTime / 280) * Math.pow(1 - plumeLife, 0.72) * 0.72 * endFade;
+            const plumeScale = 0.08 + (1 - Math.exp(-3.4 * plumeLife)) * (mobile ? 2.8 : 3.25);
+            plasma.style.transform = `translate(-50%, -50%) scale(${plumeScale}) rotate(${plumeLife * 2}deg)`;
+            plasma.style.opacity = String(clamp(plumeAlpha));
+
+            ctx.globalCompositeOperation = 'source-over';
+            if (elapsed < duration) rafId = requestAnimationFrame(draw(start));
+            else cleanup();
+        };
+        rafId = requestAnimationFrame(now => draw(now)(now));
+        this.scheduleEffectTimeout(() => {
+            if (runId === this.supernovaRunId) cleanup();
+        }, duration + 80, 'supernova');
+    }
+
+    trigger(type) {
+        this.stop();
+        if (type === 'ice_age') { void this.spawnIceAge(); return; }
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) { void this.spawnStageEffect(type); return; }
+        this.stageScene?.stop();
+        if (type === 'confetti') this.spawnConfetti();
+        if (type === 'gold_rain') this.spawnGoldRain();
+        if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
+        if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
+        if (type === 'black_hole') void this.spawnBlackHole();
+        if (type === 'supernova') void this.spawnSupernova();
+    }
+
+    getTargetTable() {
+        let targetTable = null;
+        const tables = document.querySelectorAll('.player-table');
+        tables.forEach(tbl => {
+            if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) {
+                targetTable = tbl;
+            }
+        });
+
+        if (!targetTable && window.app && Number.isInteger(window.app.currentPlayerIdx)) {
+            targetTable = document.getElementById(`ptable-${window.app.currentPlayerIdx}`);
+        }
+
+        if (!targetTable && tables.length > 0) targetTable = tables[0];
+        return targetTable;
+    }
+
+    scheduleEffectTimeout(callback, delay, group = 'default') {
+        const timeoutId = setTimeout(() => {
+            this.effectTimeouts = this.effectTimeouts.filter(entry => {
+                const id = typeof entry === 'object' ? entry.id : entry;
+                return id !== timeoutId;
+            });
+            callback();
+        }, delay);
+        this.effectTimeouts.push({ id: timeoutId, group });
+        return timeoutId;
+    }
+
+    clearEffectTimeouts(group = null) {
+        if (group) {
+            this.effectTimeouts = this.effectTimeouts.filter(entry => {
+                const timeoutId = typeof entry === 'object' ? entry.id : entry;
+                const timeoutGroup = typeof entry === 'object' ? entry.group : 'default';
+                if (timeoutGroup === group) {
+                    clearTimeout(timeoutId);
+                    return false;
+                }
+                return true;
+            });
+            return;
+        }
+
+        this.effectTimeouts.forEach(entry => clearTimeout(typeof entry === 'object' ? entry.id : entry));
+        this.effectTimeouts = [];
+        this.goldRainThemeObserver?.disconnect();
+        this.goldRainThemeObserver = null;
+    }
+
+    isGreenThemeActive() {
+        const activeTheme = document.documentElement?.dataset?.splashTheme
+            || localStorage.getItem('yamb_theme')
+            || 'dark';
+        if (activeTheme !== 'dark') return false;
+
+        return ![
+            'light-theme',
+            'medium-theme',
+            'winter-theme',
+            'neon-theme',
+            'amethyst-theme',
+            'easter-theme',
+            'desert-theme',
+            'moon-theme',
+            'severna-theme'
+        ].some(className => document.body?.classList.contains(className));
+    }
+
+    getGoldRainThemeId() {
+        const bodyTheme = YAMB_THEME_IDS.slice(1).find(id => document.body?.classList.contains(`${id}-theme`));
+        if (bodyTheme) return bodyTheme;
+        const selected = document.documentElement?.dataset?.splashTheme || localStorage.getItem('yamb_theme');
+        return YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
+    }
+
+    loadGreenDucatParticleSprite() {
+        if (this.greenDucatParticleSpritePromise) {
+            return this.greenDucatParticleSpritePromise;
+        }
+
+        this.greenDucatParticleSpritePromise = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                this.greenDucatParticleSpritePromise = null;
+                resolve(null);
+            };
+            image.src = 'assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png?v=1';
+        });
+
+        return this.greenDucatParticleSpritePromise;
+    }
+
+    loadThemeDucatParticleSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.slice(1).includes(theme)) return Promise.resolve(null);
+        this.themeDucatParticleSpritePromises ||= {};
+        if (this.themeDucatParticleSpritePromises[theme]) return this.themeDucatParticleSpritePromises[theme];
+        this.themeDucatParticleSpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.themeDucatParticleSpritePromises[theme];
+                resolve(null);
+            };
+            image.src = `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
+        });
+        return this.themeDucatParticleSpritePromises[theme];
+    }
+
+    async spawnGoldRain() {
+        const runId = ++this.goldRainRunId;
+        const themeId = this.getGoldRainThemeId();
+        const profile = GOLD_RAIN_THEME_PROFILES[themeId];
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const isCompact = window.innerWidth < 640;
+        const totalDuration = reducedMotion ? 2700 : 5800;
+        const rand = (min, max) => min + Math.random() * (max - min);
+
+        this.clearEffectTimeouts('gold_rain');
+        this.goldRainThemeObserver?.disconnect();
+        this.goldRainThemeObserver = null;
+        document.querySelectorAll('.gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin, .falling-coin.gold-rain-coin').forEach(el => el.remove());
+        document.body.classList.remove('fx-gold-rain');
+
+        let ducatSprite = themeId === 'dark'
+            ? await this.loadGreenDucatParticleSprite()
+            : await this.loadThemeDucatParticleSprite(themeId);
+        if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId()) return;
+        if (!ducatSprite) {
+            const root = themeId === 'dark' ? 'assets/green-soft-clay/' : `assets/theme-packs/${themeId}/`;
+            const version = ['easter', 'desert', 'severna'].includes(themeId) ? 2 : 1;
+            ducatSprite = await new Promise(resolve => {
+                const fallback = new Image();
+                fallback.onload = () => resolve(fallback);
+                fallback.onerror = () => resolve(null);
+                fallback.src = `${root}canonical/ducat/ducat-front-v${version}.png`;
+            });
+        }
+        if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId() || !ducatSprite) return;
+
+        const atmosphere = document.createElement('div');
+        atmosphere.className = 'gold-rain-atmosphere gold-rain-atmosphere--clear';
+        atmosphere.style.setProperty('--gold-rain-glow', profile.glow);
+        atmosphere.style.setProperty('--gold-rain-glint', profile.glint);
+        atmosphere.innerHTML = `
+            <div class="gold-rain-spotlight gold-rain-spotlight--left"></div>
+            <div class="gold-rain-spotlight gold-rain-spotlight--right"></div>
+            <div class="gold-rain-glint gold-rain-glint--one"></div>
+            <div class="gold-rain-glint gold-rain-glint--two"></div>
+        `;
+        document.body.appendChild(atmosphere);
+
+        const layer = document.createElement('div');
+        layer.className = reducedMotion ? 'gold-rain-static-coin' : 'gold-rain-particles';
+        layer.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(layer);
+        document.body.classList.add('fx-gold-rain');
+
+        const addCoin = (size) => {
+            const coin = document.createElement('img');
+            coin.className = reducedMotion ? 'gold-rain-static-particle' : 'gold-rain-particle';
+            coin.src = ducatSprite.src;
+            coin.alt = '';
+            coin.decoding = 'async';
+            coin.style.width = `${size}px`;
+            coin.style.height = `${size}px`;
+            layer.appendChild(coin);
+            return coin;
+        };
+
+        if (reducedMotion) {
+            [34, 42, 34].forEach(addCoin);
+        } else {
+            const coinCount = isCompact ? 46 : 68;
+            for (let index = 0; index < coinCount; index++) {
+                const size = Math.round(rand(isCompact ? 27 : 32, isCompact ? 43 : 52));
+                const coin = addCoin(size);
+                const drift = rand(isCompact ? -54 : -100, isCompact ? 54 : 100) * profile.drift;
+                const tilt = rand(-18, 18) * profile.spin;
+                const wave = index % 3;
+                const lane = Math.floor(index / 3);
+                const lanesInWave = Math.ceil((coinCount - wave) / 3);
+                coin.style.left = `${(2 + ((lane + rand(0.15, 0.85)) / lanesInWave) * 92).toFixed(1)}vw`;
+                coin.style.setProperty('--fall-delay', `${Math.round(wave * 430 + rand(0, 490))}ms`);
+                coin.style.setProperty('--fall-duration', `${Math.round(rand(3000, 4200))}ms`);
+                coin.style.setProperty('--fall-start-tilt', `${Math.round(-tilt * 0.5)}deg`);
+                coin.style.setProperty('--fall-quarter-drift', `${Math.round(drift * 0.45)}px`);
+                coin.style.setProperty('--fall-mid-drift', `${Math.round(drift * 0.12)}px`);
+                coin.style.setProperty('--fall-late-drift', `${Math.round(drift * 0.76)}px`);
+                coin.style.setProperty('--fall-end-drift', `${Math.round(drift)}px`);
+                coin.style.setProperty('--fall-quarter-tilt', `${Math.round(tilt * 0.38)}deg`);
+                coin.style.setProperty('--fall-mid-tilt', `${Math.round(-tilt * 0.55)}deg`);
+                coin.style.setProperty('--fall-late-tilt', `${Math.round(tilt * 0.7)}deg`);
+                coin.style.setProperty('--fall-end-tilt', `${Math.round(tilt)}deg`);
+            }
+        }
+
+        let observer = null;
+        const cleanup = () => {
+            if (runId !== this.goldRainRunId) return;
+            observer?.disconnect();
+            if (this.goldRainThemeObserver === observer) this.goldRainThemeObserver = null;
+            document.body.classList.remove('fx-gold-rain');
+            layer.remove();
+            atmosphere.remove();
+        };
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (themeId !== this.getGoldRainThemeId()) cleanup();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+            this.goldRainThemeObserver = observer;
+        }
+
+        if (!reducedMotion) {
+            this.scheduleEffectTimeout(() => {
+                if (runId !== this.goldRainRunId) return;
+                atmosphere.classList.add('closing');
+            }, totalDuration - 650, 'gold_rain');
+        }
+        this.scheduleEffectTimeout(cleanup, totalDuration + (reducedMotion ? 0 : 650), 'gold_rain');
+    }
+    
+    spawnEmojiRain(emojis, count, group = 'emoji_rain') {
+        for (let i = 0; i < count; i++) {
+            this.scheduleEffectTimeout(() => {
+                const el = document.createElement('div');
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                if (emoji === 'dukat-icon') {
+                    el.innerHTML = dukatIconHtml();
+                } else {
+                    el.innerText = emoji;
+                }
+                el.className = `falling-coin${group === 'gold_rain' ? ' gold-rain-coin' : ''}`;
+                if (group === 'gold_rain') {
+                    el.style.setProperty('--gold-rain-glow', GOLD_RAIN_THEME_PROFILES[this.getGoldRainThemeId()].glow);
+                }
+                el.style.left = Math.random() * 100 + 'vw'; el.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(el);
+                this.scheduleEffectTimeout(() => el.remove(), 3000, group);
+            }, Math.random() * 2000, group);
+        }
+    }
+
+    getEffectSurfaceTone() {
+        const styles = getComputedStyle(document.body);
+        const source = styles.getPropertyValue('--bg-base').trim() || styles.backgroundColor;
+        const probe = document.createElement('span');
+        probe.style.color = source;
+        probe.style.display = 'none';
+        document.body.appendChild(probe);
+
+        const resolved = getComputedStyle(probe).color;
+        probe.remove();
+        const channels = resolved.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+        if (!channels || channels.length < 3) return 'dark';
+
+        const linear = channels.map(channel => {
+            const value = channel / 255;
+            return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+        });
+        const luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+        return luminance > 0.36 ? 'light' : 'dark';
+    }
+
+    loadThemeFireflySprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        if (this.fireflySpritePromises[theme]) return this.fireflySpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        this.fireflySpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.fireflySpritePromises[theme];
+                resolve(null);
+            };
+            image.src = `${root}/canonical/effects/firefly-v1.png`;
+        });
+        return this.fireflySpritePromises[theme];
+    }
+
+    async spawnFireflies(count = 52, group = 'fireflies') {
+        const runId = ++this.fireflyRunId;
+        const themeId = this.getGoldRainThemeId();
+        this.clearEffectTimeouts(group);
+        this.fireflyThemeObserver?.disconnect();
+        this.fireflyThemeObserver = null;
+        document.querySelectorAll('.firefly-field').forEach(field => field.remove());
+
+        const sprite = await this.loadThemeFireflySprite(themeId);
+        if (runId !== this.fireflyRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const compact = window.matchMedia?.('(max-width: 760px)').matches;
+        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 20) : Math.min(count, 28));
+        const tone = this.getEffectSurfaceTone();
+        const field = document.createElement('div');
+        field.className = `firefly-field firefly-field--${tone}${reducedMotion ? ' firefly-field--reduced' : ''}`;
+        field.style.setProperty('--ff-glow', FIREFLY_THEME_GLOW[themeId]);
+        field.setAttribute('aria-hidden', 'true');
+
+        const fragment = document.createDocumentFragment();
+        const routes = [[-1, -1], [1, -1], [-1, 1], [1, 1], [1, 0], [-1, 0], [0, 1], [0, -1]];
+        for (let i = 0; i < particleCount; i++) {
+            const fly = document.createElement('span');
+            fly.className = 'magic-firefly';
+            const [horizontal, vertical] = routes[i % routes.length];
+            const stepX = horizontal * (62 + Math.random() * 85);
+            const stepY = vertical * (52 + Math.random() * 88);
+            fly.style.setProperty('--ff-x', (6 + ((i + Math.random() * 0.6) / particleCount) * 86).toFixed(2) + 'vw');
+            fly.style.setProperty('--ff-y', (22 + Math.random() * 60).toFixed(2) + 'vh');
+            fly.style.setProperty('--ff-dx-a', (stepX * 0.52).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-a', (stepY * 0.35).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dx-b', (stepX * 0.18 - vertical * 22).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-b', (stepY * 0.82).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dx-c', (stepX * 1.12).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-c', (stepY * 1.22).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-size', (compact ? 32 + Math.random() * 13 : 36 + Math.random() * 16).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-delay', (i < 6 ? Math.random() * 0.3 : 0.2 + Math.random() * 1.2).toFixed(2) + 's');
+            fly.style.setProperty('--ff-duration', (5.2 + Math.random() * 1.25).toFixed(2) + 's');
+            fly.style.setProperty('--ff-flap', (0.17 + Math.random() * 0.08).toFixed(2) + 's');
+            const halo = document.createElement('span');
+            halo.className = 'magic-firefly__halo';
+            const image = document.createElement('img');
+            image.className = 'magic-firefly__sprite';
+            image.src = sprite.src;
+            image.alt = '';
+            image.decoding = 'async';
+            image.draggable = false;
+            fly.append(halo, image);
+            fragment.appendChild(fly);
+        }
+
+        field.appendChild(fragment);
+        document.body.appendChild(field);
+        let observer = null;
+        const cleanup = () => {
+            if (runId !== this.fireflyRunId) return;
+            observer?.disconnect();
+            if (this.fireflyThemeObserver === observer) this.fireflyThemeObserver = null;
+            field.remove();
+        };
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (themeId !== this.getGoldRainThemeId()) cleanup();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+            this.fireflyThemeObserver = observer;
+        }
+        this.scheduleEffectTimeout(cleanup, reducedMotion ? 5200 : 8000, group);
+    }
+
+    loadThemeBubbleSprite(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
+        if (this.bubbleSpritePromises[theme]) return this.bubbleSpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        this.bubbleSpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.bubbleSpritePromises[theme];
+                resolve(null);
+            };
+            image.src = `${root}/canonical/effects/bubble-v1.png`;
+        });
+        return this.bubbleSpritePromises[theme];
+    }
+
+    async spawnBubbles(count = 35, group = 'bubbles') {
+        const runId = ++this.bubbleRunId;
+        const themeId = this.getGoldRainThemeId();
+        this.clearEffectTimeouts(group);
+        this.bubbleThemeObserver?.disconnect();
+        this.bubbleThemeObserver = null;
+        document.querySelectorAll('.bubble-field').forEach(field => field.remove());
+
+        const sprite = await this.loadThemeBubbleSprite(themeId);
+        if (runId !== this.bubbleRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const compact = window.matchMedia?.('(max-width: 760px)').matches;
+        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 24) : Math.min(count, 35));
+        const field = document.createElement('div');
+        field.className = `bubble-field${reducedMotion ? ' bubble-field--reduced' : ''}`;
+        field.setAttribute('aria-hidden', 'true');
+        const fragment = document.createDocumentFragment();
+        const sizeRanges = compact ? [[20, 30], [34, 48], [56, 72]] : [[24, 34], [42, 58], [68, 88]];
+        for (let i = 0; i < particleCount; i++) {
+            const bubble = document.createElement('img');
+            bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][i % 3]}`;
+            bubble.src = sprite.src;
+            bubble.alt = '';
+            bubble.decoding = 'async';
+            bubble.draggable = false;
+            const [minSize, maxSize] = sizeRanges[i % 3];
+            const size = Math.round(minSize + Math.random() * (maxSize - minSize));
+            const drift = (Math.random() - .5) * (compact ? 110 : 180);
+            bubble.style.setProperty('--bubble-size', `${size}px`);
+            bubble.style.setProperty('--bubble-x', (4 + ((Math.floor(i / 3) + Math.random() * .8) / Math.ceil(particleCount / 3)) * 88).toFixed(1) + 'vw');
+            bubble.style.setProperty('--bubble-drift-a', `${Math.round(drift * .55)}px`);
+            bubble.style.setProperty('--bubble-drift-b', `${Math.round(-drift * .3)}px`);
+            bubble.style.setProperty('--bubble-drift-c', `${Math.round(drift)}px`);
+            bubble.style.setProperty('--bubble-delay', `${(i < 6 ? Math.random() * .25 : .2 + Math.random() * 1.4).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-duration', `${(4.8 + Math.random() * 1.7 + (i % 3) * .18).toFixed(2)}s`);
+            if (reducedMotion) {
+                bubble.style.setProperty('--bubble-x', `${18 + i * 30}vw`);
+                bubble.style.setProperty('--bubble-static-y', `${30 + i * 20}vh`);
+            }
+            fragment.appendChild(bubble);
+        }
+        field.appendChild(fragment);
+        document.body.appendChild(field);
+        let observer = null;
+        const cleanup = () => {
+            if (runId !== this.bubbleRunId) return;
+            observer?.disconnect();
+            if (this.bubbleThemeObserver === observer) this.bubbleThemeObserver = null;
+            field.remove();
+        };
+        if (typeof MutationObserver !== 'undefined') {
+            observer = new MutationObserver(() => {
+                if (themeId !== this.getGoldRainThemeId()) cleanup();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+            this.bubbleThemeObserver = observer;
+        }
+        this.scheduleEffectTimeout(cleanup, reducedMotion ? 4600 : 8000, group);
+    }
+    
+    spawnExplosion() {
+        const x = Math.random() * window.innerWidth; const y = Math.random() * (window.innerHeight / 2); 
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; const color = colors[Math.floor(Math.random() * colors.length)];
+        for (let i = 0; i < 20; i++) {
+            const el = document.createElement('div'); el.innerText = '●'; el.className = 'firework-particle';
+            el.style.color = color; el.style.left = x + 'px'; el.style.top = y + 'px';
+            const angle = Math.random() * Math.PI * 2; const velocity = Math.random() * 150 + 50;
+            el.style.setProperty('--dx', Math.cos(angle) * velocity + 'px'); el.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
+            document.body.appendChild(el); this.scheduleEffectTimeout(() => el.remove(), 1000, 'explosion');
+        }
+    }
+    
+    spawnConfetti() {
+        const theme = this.getGoldRainThemeId();
+        if (YAMB_THEME_IDS.includes(theme)) {
+            void this.spawnThemedConfetti(theme);
+            return;
+        }
+        const colors = ['#FFD166', '#F7B801', '#EF476F', '#06D6A0', '#4CC9F0', '#FFFFFF'];
+
+        if (window.confetti) { 
+            const baseOptions = {
+                colors,
+                zIndex: 99999,
+                disableForReducedMotion: true
+            };
+
+            window.confetti({
+                ...baseOptions,
+                particleCount: 90,
+                spread: 74,
+                startVelocity: 54,
+                gravity: 0.82,
+                scalar: 1.02,
+                ticks: 190,
+                origin: { x: 0.5, y: 0.72 }
+            });
+
+            window.confetti({
+                ...baseOptions,
+                particleCount: 42,
+                angle: 58,
+                spread: 56,
+                startVelocity: 48,
+                gravity: 0.86,
+                scalar: 0.92,
+                ticks: 170,
+                origin: { x: 0.02, y: 0.84 }
+            });
+
+            window.confetti({
+                ...baseOptions,
+                particleCount: 42,
+                angle: 122,
+                spread: 56,
+                startVelocity: 48,
+                gravity: 0.86,
+                scalar: 0.92,
+                ticks: 170,
+                origin: { x: 0.98, y: 0.84 }
+            });
+
+            const end = Date.now() + 1600;
+            const drift = () => {
+                window.confetti({
+                    ...baseOptions,
+                    particleCount: 8,
+                    spread: 110,
+                    startVelocity: 20,
+                    gravity: 0.55,
+                    drift: (Math.random() - 0.5) * 1.2,
+                    scalar: 0.72,
+                    ticks: 210,
+                    origin: { x: Math.random(), y: -0.08 }
+                });
+
+                if (Date.now() < end) {
+                    this.scheduleEffectTimeout(drift, 180, 'confetti');
+                }
+            };
+
+            this.scheduleEffectTimeout(drift, 260, 'confetti');
+            return;
+        }
+
+        this.spawnCanvasConfetti(colors);
+    }
+
+    loadConfettiSprites(theme) {
+        if (this.confettiSpritePromises[theme]) return this.confettiSpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay/' : `assets/theme-packs/${theme}/`;
+        const roles = ['ribbon', 'chip', 'lozenge'];
+        this.confettiSpritePromises[theme] = Promise.all(roles.map(role => new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => resolve(null);
+            image.src = `${root}canonical/confetti-particles/${role}-v1.png`;
+        }))).then(images => images.filter(Boolean));
+        return this.confettiSpritePromises[theme];
+    }
+
+    async spawnThemedConfetti(theme) {
+        const runId = ++this.confettiRunId;
+        if (this.confettiAnimationId) {
+            cancelAnimationFrame(this.confettiAnimationId);
+            this.confettiAnimationId = null;
+        }
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas?.getContext('2d');
+        if (!ctx) return;
+        const sprites = await this.loadConfettiSprites(theme);
+        if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId() || !sprites.length) return;
+
+        const rand = (min, max) => min + Math.random() * (max - min);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let width = 0;
+        let height = 0;
+        const resize = () => {
+            width = window.innerWidth || document.documentElement.clientWidth || 1;
+            height = window.innerHeight || document.documentElement.clientHeight || 1;
+            canvas.width = Math.ceil(width * dpr);
+            canvas.height = Math.ceil(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        const count = width < 640 ? 132 : 180;
+        const particles = Array.from({ length: count }, (_, index) => {
+            const spread = (index / (count - 1)) * 2 - 1;
+            return {
+                image: sprites[index % sprites.length],
+                x: width * 0.5 + rand(-width * 0.06, width * 0.06),
+                y: height * rand(0.75, 0.82),
+                vx: spread * width * rand(0.72, 1.08) + rand(-30, 30),
+                vy: -height * rand(1.08, 1.78),
+                gravity: height * rand(1.35, 1.82),
+                wobble: rand(0, Math.PI * 2),
+                rotation: rand(-0.45, 0.45),
+                spin: rand(-2.8, 2.8),
+                size: rand(14, 24),
+                age: -rand(0, 0.12),
+                ttl: rand(2.35, 2.95)
+            };
+        });
+        let lastFrame = 0;
+        const animate = now => {
+            if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId()) {
+                ctx.clearRect(0, 0, width, height);
+                this.confettiAnimationId = null;
+                return;
+            }
+            if (window.innerWidth !== width || window.innerHeight !== height) resize();
+            const delta = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0;
+            lastFrame = now;
+            ctx.clearRect(0, 0, width, height);
+            let remaining = 0;
+            for (const particle of particles) {
+                particle.age += delta;
+                if (particle.age >= particle.ttl) continue;
+                remaining++;
+                if (particle.age < 0) continue;
+                particle.x += particle.vx * delta;
+                particle.y += particle.vy * delta;
+                particle.vy += particle.gravity * delta;
+                particle.rotation += particle.spin * delta;
+                particle.wobble += delta * 5;
+                if (particle.y > height + particle.size || particle.x < -particle.size || particle.x > width + particle.size) {
+                    particle.age = particle.ttl;
+                    continue;
+                }
+                const fade = Math.min(1, (particle.ttl - particle.age) / 0.42);
+                const side = particle.size * (0.87 + Math.sin(particle.wobble) * 0.13);
+                ctx.save();
+                ctx.globalAlpha = fade;
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation);
+                ctx.drawImage(particle.image, -side / 2, -side / 2, side, side);
+                ctx.restore();
+            }
+            if (remaining) this.confettiAnimationId = requestAnimationFrame(animate);
+            else {
+                ctx.clearRect(0, 0, width, height);
+                this.confettiAnimationId = null;
+            }
+        };
+        this.confettiAnimationId = requestAnimationFrame(animate);
+    }
+
+    spawnCanvasConfetti(colors) {
+        const canvas = document.getElementById('confetti-canvas');
+        const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (reducedMotion) return;
+
+        if (!canvas) {
+            this.spawnEmojiRain(['🎉', '🎊', '✨', '🏆', '💫'], 8);
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            this.spawnEmojiRain(['🎉', '🎊', '✨', '🏆', '💫'], 8);
+            return;
+        }
+
+        if (this.confettiAnimationId) {
+            cancelAnimationFrame(this.confettiAnimationId);
+            this.confettiAnimationId = null;
+        }
+
+        const particles = [];
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let width = 0;
+        let height = 0;
+        let lastFrame = performance.now();
+        let nextDrift = 0;
+        const startedAt = performance.now();
+        const rand = (min, max) => min + Math.random() * (max - min);
+        const degToRad = deg => deg * Math.PI / 180;
+
+        const resizeCanvas = () => {
+            width = window.innerWidth || document.documentElement.clientWidth || 1;
+            height = window.innerHeight || document.documentElement.clientHeight || 1;
+            canvas.width = Math.ceil(width * dpr);
+            canvas.height = Math.ceil(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        const addParticle = (x, y, angleDeg, speed, sizeScale = 1) => {
+            const angle = degToRad(angleDeg);
+            particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                gravity: rand(0.13, 0.24),
+                drift: rand(-0.035, 0.035),
+                wobble: rand(0, Math.PI * 2),
+                wobbleSpeed: rand(0.08, 0.16),
+                rotation: rand(0, Math.PI * 2),
+                rotationSpeed: rand(-0.22, 0.22),
+                size: rand(5, 10) * sizeScale,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                shape: Math.random() > 0.78 ? 'circle' : 'ribbon',
+                age: 0,
+                ttl: rand(125, 185)
+            });
+        };
+
+        const addBurst = (x, y, count, minAngle, maxAngle, minSpeed, maxSpeed, sizeScale = 1) => {
+            for (let i = 0; i < count; i++) {
+                addParticle(x, y, rand(minAngle, maxAngle), rand(minSpeed, maxSpeed), sizeScale);
+            }
+        };
+
+        const addDrift = () => {
+            for (let i = 0; i < 8; i++) {
+                addParticle(rand(0, width), -18, rand(74, 106), rand(1.2, 3), 0.78);
+            }
+        };
+
+        resizeCanvas();
+        addBurst(width * 0.5, height * 0.72, 90, 205, 335, 6.5, 13.5, 1.02);
+        addBurst(width * 0.02, height * 0.84, 42, 292, 348, 5.8, 11.5, 0.92);
+        addBurst(width * 0.98, height * 0.84, 42, 192, 248, 5.8, 11.5, 0.92);
+
+        const drawParticle = particle => {
+            const fadeStart = particle.ttl * 0.66;
+            const alpha = particle.age > fadeStart
+                ? Math.max(0, 1 - ((particle.age - fadeStart) / (particle.ttl - fadeStart)))
+                : 1;
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(particle.x + Math.sin(particle.wobble) * 5, particle.y);
+            ctx.rotate(particle.rotation);
+            ctx.fillStyle = particle.color;
+
+            if (particle.shape === 'circle') {
+                ctx.beginPath();
+                ctx.arc(0, 0, particle.size * 0.45, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(-particle.size * 0.75, -particle.size * 0.22, particle.size * 1.5, particle.size * 0.44);
+            }
+
+            ctx.restore();
+        };
+
+        const animate = now => {
+            const delta = Math.min(2, (now - lastFrame) / 16.67);
+            lastFrame = now;
+            const currentWidth = window.innerWidth || document.documentElement.clientWidth || 1;
+            const currentHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+
+            if (currentWidth !== width || currentHeight !== height) {
+                resizeCanvas();
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            if (now - startedAt > 260 && now - startedAt < 1700 && now > nextDrift) {
+                addDrift();
+                nextDrift = now + 180;
+            }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                particle.age += delta;
+                particle.x += particle.vx * delta;
+                particle.y += particle.vy * delta;
+                particle.vy += particle.gravity * delta;
+                particle.vx += particle.drift * delta;
+                particle.wobble += particle.wobbleSpeed * delta;
+                particle.rotation += particle.rotationSpeed * delta;
+
+                if (particle.age > particle.ttl || particle.y > height + 60) {
+                    particles.splice(i, 1);
+                } else {
+                    drawParticle(particle);
+                }
+            }
+
+            if (particles.length) {
+                this.confettiAnimationId = requestAnimationFrame(animate);
+            } else {
+                ctx.clearRect(0, 0, width, height);
+                this.confettiAnimationId = null;
+            }
+        };
+
+        this.confettiAnimationId = requestAnimationFrame(animate);
+    }
+    
+    celebrateYamb() {
+        const active = localStorage.getItem('yamb_active_effect') || 'confetti';
+        this.trigger(active); 
+    }
+    
+    celebrateWin() {
+        this.trigger('fireworks');
+        this.scheduleEffectTimeout(() => this.spawnGoldRain(), 1000, 'celebrate_win');
+    }
+    
+    stop() {
+        this.iceAgeRunId++;
+        this.stageScene?.stop();
+        this.stageScene = null;
+        this.blackHoleRunId++;
+        this.blackHoleCleanup?.();
+        this.confettiRunId++;
+        this.goldRainRunId++;
+        this.fireflyRunId++;
+        this.bubbleRunId++;
+        this.royalYambRunId++;
+        this.fireflyThemeObserver?.disconnect();
+        this.fireflyThemeObserver = null;
+        this.bubbleThemeObserver?.disconnect();
+        this.bubbleThemeObserver = null;
+        if (this.royalCanvasCleanup) this.royalCanvasCleanup();
+        if (this.supernovaCanvasCleanup) this.supernovaCanvasCleanup();
+        this.supernovaRunId++;
+        this.clearEffectTimeouts();
+        document.documentElement.classList.remove('green-thunder-active');
+        if (window.app?.soundMgr?.stopBalkanMusic) {
+            window.app.soundMgr.stopBalkanMusic(true);
+        }
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-neon_pulse--green', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-thunder-shake--green', 'fx-cosmic_dust', 'fx-ufo_abduction', 'fx-ufo_abduction--green', 'fx-dragon_fire', 'fx-royal_yamb', 'fx-gold-rain');
+
+        if (this.confettiAnimationId) {
+            cancelAnimationFrame(this.confettiAnimationId);
+            this.confettiAnimationId = null;
+        }
+        window.confetti?.reset?.();
+
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        if (confettiCanvas) {
+            const confettiCtx = confettiCanvas.getContext('2d');
+            if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+        
+        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .bubble-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin').forEach(e => e.remove());
+        
+        document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
+        document.querySelectorAll('.anim-black-hole-table').forEach(tbl => tbl.classList.remove('anim-black-hole-table'));
+        document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
+        document.querySelectorAll('.anim-supernova-table--compact').forEach(tbl => tbl.classList.remove('anim-supernova-table--compact'));
+        document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
+        document.querySelectorAll('.anim-neon-pulse--green').forEach(tbl => tbl.classList.remove('anim-neon-pulse--green'));
+        document.querySelectorAll('.anim-ufo-table').forEach(tbl => tbl.classList.remove('anim-ufo-table'));
+        document.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
+    }
+}
+
+// --- 5. SOUND MANAGER (WEB AUDIO API SYNTH ONLY) ---
+
+function bootLiveEffectsReview(EffectManager) {
+    const fx = new EffectManager();
+    const params = new URLSearchParams(location.search);
+    const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+    const effects = ['confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole', 'supernova',
+        'neon_pulse', 'thunder', 'balkan', 'fireworks', 'drones', 'cosmic_dust', 'ufo_abduction', 'dragon_fire', 'royal_yamb'];
+    const backgrounds = { dark: 'green-clay-balkan-diorama-v4.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
+    let effect = effects.includes(params.get('effect')) ? params.get('effect') : 'neon_pulse';
+    const board = document.querySelector('.qa-board');
+    const card = document.querySelector('.card');
+    document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) =>
+        '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)]
+            : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
+    window.app ||= { playerName: 'Andrija' };
+    const run = id => {
+        fx.stop(); effect = id;
+        document.getElementById('effect-choice').value = id;
+        const onBoard = !['confetti', 'gold_rain', 'fireflies', 'bubbles'].includes(id);
+        board.hidden = !onBoard; card.hidden = onBoard;
+        fx.trigger(id);
+    };
+    const setTheme = id => {
+        fx.stop();
+        themes.slice(1).forEach(themeId => document.body.classList.toggle(themeId + '-theme', id === themeId));
+        document.documentElement.dataset.splashTheme = id;
+        document.getElementById('theme-choice').value = id;
+        document.body.style.setProperty('--theme-background', "url('assets/" + backgrounds[id] + "')");
+    };
+    setTheme(themes.includes(params.get('theme')) ? params.get('theme') : 'dark');
+    document.getElementById('theme-choice').addEventListener('change', event => { setTheme(event.target.value); run(effect); });
+    document.getElementById('effect-choice').addEventListener('change', event => run(event.target.value));
+    document.querySelector('[data-effect="play"]').addEventListener('click', () => run(effect));
+    document.querySelector('[data-effect="stop"]').addEventListener('click', () => fx.stop());
+    window.qaFx = { fx, setTheme, run, state() { return {
+        theme: document.documentElement.dataset.splashTheme, effect,
+        stage: document.querySelector('.live-stage-effect')?.dataset || null,
+        supernovaPhase: document.querySelector('.supernova-container')?.dataset.phase || null,
+        supernovaSource: document.querySelector('.supernova-plasma')?.getAttribute('src') || null
+    }; } };
+    run(effect);
+}
+
+bootLiveEffectsReview(EffectManager);
+  </script>
+</body>
+</html>

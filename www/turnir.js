@@ -9,7 +9,7 @@ const TOURNEY_ENTRY_FEE = 5500;
 const TOURNEY_PARTICIPATION_RULES_VERSION = '2026-10-23';
 
 const getTournamentFinalistSource = (theme = localStorage.getItem('yamb_theme') || 'dark') => {
-    if (['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)) return `assets/theme-packs/${theme}/canonical/tournament-awards/finalist-silver-v1.png`;
+    if (['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)) return `assets/theme-packs/${theme}/canonical/tournament-awards/finalist-silver-v${['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1}.png`;
     if (theme === 'dark') return 'assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png';
     return getThemeMedalSource('tournament', 'silver', theme);
 };

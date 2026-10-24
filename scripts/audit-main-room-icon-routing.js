@@ -62,7 +62,7 @@ function expectedPath(theme, anchor) {
   }
   if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
   if (green.includes('ducats-undo-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png${theme === 'neon' ? '?v=2' : ''}`;
-  if (green.includes('champion-trophy-v1')) return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${room ? '-room' : ''}-v1.png`;
+  if (green.includes('champion-trophy-v1')) return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${room ? '-room' : ''}-v${['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1}.png`;
   throw new Error(`Unexpected anchor ${green}`);
 }
 

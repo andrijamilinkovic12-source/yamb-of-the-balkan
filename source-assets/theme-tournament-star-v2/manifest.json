@@ -1,0 +1,916 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-24",
+  "tool": "built-in image_gen",
+  "scope": "Seven missing-star cup identities: champion, silver finalist and gold/silver/bronze medal composites. Green, Light Gold and Dark Cherry preserve their existing stars.",
+  "assets": [
+    {
+      "theme": "winter",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/winter/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Replace ONLY the orange leaf/teardrop emblem on the front of the blue cup with a clearly recognizable FIVE-POINTED raised warm ivory star, matching the handles. Remove the leaf completely. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c",
+          "bytes": 102139,
+          "opticalBox": [
+            53,
+            57,
+            278,
+            287
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "e57738d6fb621b7891102d263d00ec0e72d38911e1f69121ebfce22b85c93c99",
+          "bytes": 169839,
+          "opticalBox": [
+            71,
+            75,
+            370,
+            383
+          ]
+        }
+      ],
+      "masterSha256": "74925bdd755cc88dd49a6e4266d521811d238d67d844ff4feda71dc2d270360c"
+    },
+    {
+      "theme": "neon",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/neon/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Add ONE clearly recognizable FIVE-POINTED soft raised pale turquoise star centered on the blank front bowl, matching the restrained cyan band. A matte cyan relief with controlled edges, not an extra bright flare. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8",
+          "bytes": 112172,
+          "opticalBox": [
+            34,
+            59,
+            316,
+            269
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "c3b628416cef0b365eee96d57526b81664e96d7405580915993210525c54332c",
+          "bytes": 189187,
+          "opticalBox": [
+            45,
+            78,
+            421,
+            358
+          ]
+        }
+      ],
+      "masterSha256": "58c201036cd4d8efe313edc7d7a3b7504711a0bb7280fea66fe01387aa7a013a"
+    },
+    {
+      "theme": "amethyst",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/amethyst/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Replace ONLY the blank pale shield plaque on the bowl with a clearly recognizable FIVE-POINTED raised pale ivory-lavender star. Keep the purple bowl and gold collar exactly as they are; no shield behind the star. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73",
+          "bytes": 103082,
+          "opticalBox": [
+            40,
+            72,
+            303,
+            254
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "30c8a1e9f285e62eba58b7daf095266ece2af4722a8fdc4a049cf8703cf575d7",
+          "bytes": 173076,
+          "opticalBox": [
+            53,
+            95,
+            404,
+            339
+          ]
+        }
+      ],
+      "masterSha256": "bfa93edde74cfd8afa340ae748d692457196f4f98b2e141b3ae1112db7d03113"
+    },
+    {
+      "theme": "easter",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/easter/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Add ONE clear FIVE-POINTED raised matte sage-green star centered on the blank ivory bowl. Match the handles' green with a softly shaded bevel for readable contrast. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541",
+          "bytes": 101986,
+          "opticalBox": [
+            42,
+            62,
+            300,
+            271
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "a2e1f41223d04054fef54bb638fb1dd5095fce340817a2978d4f01fc7bcaa569",
+          "bytes": 171971,
+          "opticalBox": [
+            55,
+            82,
+            401,
+            362
+          ]
+        }
+      ],
+      "masterSha256": "d3b3d0139ba9cc59b2c37f3ed5af7515ed9499b0fcce121a21768acdb08f1548"
+    },
+    {
+      "theme": "desert",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/desert/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Add ONE clear FIVE-POINTED raised warm ivory clay star centered on the terracotta bowl, in front of the existing wavy clay strata. Keep the strata visible around it, with no added ornament. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268",
+          "bytes": 126344,
+          "opticalBox": [
+            40,
+            81,
+            304,
+            241
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "83288daddacc1d66a7fae9fda8473719a1ce97851ff6579132c566899cc5e337",
+          "bytes": 215009,
+          "opticalBox": [
+            53,
+            108,
+            405,
+            321
+          ]
+        }
+      ],
+      "masterSha256": "1308af0773885b0addbaa9e6f81a1e00862c10360b22db8b4b7e4df6cf0aff60"
+    },
+    {
+      "theme": "moon",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/moon/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Add ONE clear FIVE-POINTED raised pale silver-gray clay star centered on the blank graphite bowl, readable against the dark cup. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33",
+          "bytes": 104110,
+          "opticalBox": [
+            49,
+            58,
+            286,
+            275
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "080bf35c5b8d44b213d3fc9a943f45c4e9689236819af9f28d033402df28f38f",
+          "bytes": 180449,
+          "opticalBox": [
+            64,
+            76,
+            383,
+            368
+          ]
+        }
+      ],
+      "masterSha256": "408afe7596fa9da0eece7f40e7b46967503b1182b85f0f94603765e60a8e0bd5"
+    },
+    {
+      "theme": "severna",
+      "role": "champion-trophy",
+      "master": "source-assets/theme-tournament-star-v2/severna/champion-trophy-master-v2.png",
+      "prompt": "Edit target: attached existing themed tournament cup. Add ONE clear FIVE-POINTED raised ice-cyan matte star centered on the blank navy bowl, matching the handles and collar. Keep the lavender base accent. Preserve the existing cup silhouette, handles, base, proportions, lighting, palette, 3D Soft Neomorphism material, camera angle and generous transparent margins exactly. This is a minimal emblem correction, not a redesign. No laurels, leaves, wreaths, ornaments, extra stars, text or background. Keep true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+          "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+          "width": 384,
+          "height": 384,
+          "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104",
+          "bytes": 118444,
+          "opticalBox": [
+            32,
+            45,
+            320,
+            302
+          ]
+        },
+        {
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v2.png",
+          "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v1.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "b54862e9f51af23488af9e50d08707f5d966a58de5754bc7b7f78de4bdea6ff7",
+          "bytes": 199208,
+          "opticalBox": [
+            42,
+            59,
+            426,
+            403
+          ]
+        }
+      ],
+      "masterSha256": "15c66cf6547850f8a9c5f9aa421b3087f791577a85e686bcaf2e6bb3180f4c0f"
+    },
+    {
+      "theme": "winter",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/winter/tournament-gold-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: existing tournament-gold award for the Blue Ocean theme. Image 2 is the CANONICAL CUP REFERENCE. Correct only the emblem on the cup in Image 1: remove its orange leaf/teardrop and put ONE clearly recognizable FIVE-POINTED raised ivory star in the same front position, matching the canonical reference. Preserve Image 1's exact cup geometry, existing colors including its blue bowl, handles, base, award outline, medal rim color and ribbon, 3D Soft matte material and camera. No extra stars, no wreaths or decoration. Remove any white opaque backdrop and export a genuinely transparent PNG. The result must look like the same cup identity with a star, not a new trophy design.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "8dbb8efbd7027ec59183677b17277f64c4af7840f1788f002903c9f3ee60c486",
+          "bytes": 65494,
+          "opticalBox": [
+            34,
+            9,
+            200,
+            215
+          ]
+        }
+      ],
+      "masterSha256": "5ff5e59d993b8ba16fc70472de8eb7a903930077d872c03200369ca1b72d5dba"
+    },
+    {
+      "theme": "winter",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/winter/tournament-silver-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: existing tournament-silver award for the Blue Ocean theme. Image 2 is the CANONICAL CUP REFERENCE. Correct only the emblem on the cup in Image 1: remove its orange leaf/teardrop and put ONE clearly recognizable FIVE-POINTED raised ivory star in the same front position, matching the canonical reference. Preserve Image 1's exact cup geometry, existing colors including its blue bowl, handles, base, award outline, medal rim color and ribbon, 3D Soft matte material and camera. No extra stars, no wreaths or decoration. Remove any white opaque backdrop and export a genuinely transparent PNG. The result must look like the same cup identity with a star, not a new trophy design.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "099baa2ae1d03f018c70d5baa819720c08ac3b11a1e4344b0132821b219e4709",
+          "bytes": 60784,
+          "opticalBox": [
+            34,
+            9,
+            200,
+            215
+          ]
+        }
+      ],
+      "masterSha256": "e18608f6bce546cd975bd8f7a71e0f563f19d4c4a1e6e9f49a4911f9190fe8ae"
+    },
+    {
+      "theme": "winter",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/winter/tournament-bronze-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: existing tournament-bronze award for the Blue Ocean theme. Image 2 is the CANONICAL CUP REFERENCE. Correct only the emblem on the cup in Image 1: remove its orange leaf/teardrop and put ONE clearly recognizable FIVE-POINTED raised ivory star in the same front position, matching the canonical reference. Preserve Image 1's exact cup geometry, existing colors including its blue bowl, handles, base, award outline, medal rim color and ribbon, 3D Soft matte material and camera. No extra stars, no wreaths or decoration. Remove any white opaque backdrop and export a genuinely transparent PNG. The result must look like the same cup identity with a star, not a new trophy design.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "0b006429eade3d804d5146fe56bef3ce394dfb71a80ed6e453b0690ea81495f7",
+          "bytes": 62952,
+          "opticalBox": [
+            34,
+            9,
+            200,
+            215
+          ]
+        }
+      ],
+      "masterSha256": "cf52958e2ac938436eb42ed3327b9912d166d2b44c41b92f2a8447e29ea7e5ab"
+    },
+    {
+      "theme": "winter",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/winter/finalist-silver-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: existing finalist-silver award for the Blue Ocean theme. Image 2 is the CANONICAL CUP REFERENCE. Correct only the emblem on the cup in Image 1: remove its orange leaf/teardrop and put ONE clearly recognizable FIVE-POINTED raised ivory star in the same front position, matching the canonical reference. Preserve Image 1's exact cup geometry, existing colors including its silver bowl, handles, base, award outline, standalone-cup composition, 3D Soft matte material and camera. No extra stars, no wreaths or decoration. Remove any white opaque backdrop and export a genuinely transparent PNG. The result must look like the same cup identity with a star, not a new trophy design.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "37a9cf3601a1a5bed9bc2774bfbcfa48d583e0dbf3fccfd06d737d53fa6a9789",
+          "bytes": 58078,
+          "opticalBox": [
+            28,
+            30,
+            200,
+            207
+          ]
+        }
+      ],
+      "masterSha256": "7f622b956e563da28bf7cc5a574e1814db4cce946af5c7ae063aead5dc492cfb"
+    },
+    {
+      "theme": "neon",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/neon/tournament-gold-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing neon tournament-gold tournament award. Image 2 is the CANONICAL CUP REFERENCE. Add ONE clear FIVE-POINTED raised pale cyan star to the blank front bowl, matching the canonical cup's cyan band. Keep the glow restrained. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing theme-colored bowl, handles, base, silhouette, medal rim color, medal face and ribbon, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "06e0ad52142fa0eb58a66a949fa520fb39a7aa52aa9682748f61f3e12bcdf84c",
+          "bytes": 59580,
+          "opticalBox": [
+            41,
+            20,
+            180,
+            204
+          ]
+        }
+      ],
+      "masterSha256": "7223d54a3f8abdd0509da71fb9cc44e899fa42329cf824dd8916a50f222e1f8b"
+    },
+    {
+      "theme": "neon",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/neon/tournament-silver-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing neon tournament-silver tournament award. Image 2 is the CANONICAL CUP REFERENCE. Add ONE clear FIVE-POINTED raised pale cyan star to the blank front bowl, matching the canonical cup's cyan band. Keep the glow restrained. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing theme-colored bowl, handles, base, silhouette, medal rim color, medal face and ribbon, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "2d190ded374c59aa9d93dcad4d48d33085cd4c5b1fc3ea5b34f2e77b69b7fad5",
+          "bytes": 55793,
+          "opticalBox": [
+            41,
+            20,
+            180,
+            204
+          ]
+        }
+      ],
+      "masterSha256": "8963739f38f0cfd1457c897143c3e1dbda7a9dc818aaac152ec6332e8241053e"
+    },
+    {
+      "theme": "neon",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/neon/tournament-bronze-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing neon tournament-bronze tournament award. Image 2 is the CANONICAL CUP REFERENCE. Add ONE clear FIVE-POINTED raised pale cyan star to the blank front bowl, matching the canonical cup's cyan band. Keep the glow restrained. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing theme-colored bowl, handles, base, silhouette, medal rim color, medal face and ribbon, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "762a3b99f5b75780797fe032bf066d7f50e5a144c7b5398310a032127c2510b1",
+          "bytes": 59101,
+          "opticalBox": [
+            41,
+            20,
+            180,
+            204
+          ]
+        }
+      ],
+      "masterSha256": "0830fef9506c6c5cf7cc53f10a60b7cc23d1058dece3b654de90c348943d0825"
+    },
+    {
+      "theme": "neon",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/neon/finalist-silver-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing neon finalist-silver tournament award. Image 2 is the CANONICAL CUP REFERENCE. Add ONE clear FIVE-POINTED raised pale cyan star to the blank front bowl, matching the canonical cup's cyan band. Keep the glow restrained. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing silver bowl, handles, base, silhouette, standalone composition, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "bbf60ab98bdc7deb1897c93d150af1bb6cf4fb77208ac7f84217fbff56ff1a07",
+          "bytes": 66127,
+          "opticalBox": [
+            18,
+            39,
+            220,
+            188
+          ]
+        }
+      ],
+      "masterSha256": "a8fa20f63bccfe88ed7db8c9b3ad7f1e04197bc9eb09022a530c8728c0b19f32"
+    },
+    {
+      "theme": "amethyst",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/amethyst/tournament-gold-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing amethyst tournament-gold tournament award. Image 2 is the CANONICAL CUP REFERENCE. Replace the blank shield plaque on the bowl with ONE clear FIVE-POINTED raised pale lavender star matching the canonical cup. Remove the shield shape behind it. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing theme-colored bowl, handles, base, silhouette, medal rim color, medal face and ribbon, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "f619d7648e81a3792b24447355a183deaf3873acb55351967a63ca669f005c98",
+          "bytes": 65862,
+          "opticalBox": [
+            19,
+            15,
+            223,
+            209
+          ]
+        }
+      ],
+      "masterSha256": "80ffd99c9c493572215d8b863b0c8415f93fa779944341e9a5b6d215cc1b6ff9"
+    },
+    {
+      "theme": "amethyst",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/amethyst/tournament-silver-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing amethyst tournament-silver tournament award. Image 2 is the CANONICAL CUP REFERENCE. Replace the blank shield plaque on the bowl with ONE clear FIVE-POINTED raised pale lavender star matching the canonical cup. Remove the shield shape behind it. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing theme-colored bowl, handles, base, silhouette, medal rim color, medal face and ribbon, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "94e6e1e585e37c003ce844ff0064847ffcaf7f0ee40770d67ce8809e77656e1d",
+          "bytes": 62757,
+          "opticalBox": [
+            19,
+            15,
+            223,
+            209
+          ]
+        }
+      ],
+      "masterSha256": "c79a3be5a030117d6c56f9997f12eadf90452cda86c4306e096c79f043ab23c2"
+    },
+    {
+      "theme": "amethyst",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/amethyst/tournament-bronze-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing amethyst tournament-bronze tournament award. Image 2 is the CANONICAL CUP REFERENCE. Replace the blank shield plaque on the bowl with ONE clear FIVE-POINTED raised pale lavender star matching the canonical cup. Remove the shield shape behind it. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing theme-colored bowl, handles, base, silhouette, medal rim color, medal face and ribbon, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "bb6b9feae6b82829cb2ff377269f435173850ae021bb1d03c182428e6143ee12",
+          "bytes": 67178,
+          "opticalBox": [
+            19,
+            15,
+            223,
+            209
+          ]
+        }
+      ],
+      "masterSha256": "6440492ccf24f1f200e8d4bcb968b203bf4a3778a7ddec09c734c564aeb39844"
+    },
+    {
+      "theme": "amethyst",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/amethyst/finalist-silver-master-v2.png",
+      "prompt": "Image 1 is the EDIT TARGET: the existing amethyst finalist-silver tournament award. Image 2 is the CANONICAL CUP REFERENCE. Replace the blank shield plaque on the bowl with ONE clear FIVE-POINTED raised pale lavender star matching the canonical cup. Remove the shield shape behind it. Only correct the cup's front emblem in Image 1. Preserve its exact cup geometry, existing silver bowl, handles, base, silhouette, standalone composition, soft 3D material and camera. Keep all structural detail and colors except the corrected emblem. Do not copy a full reference cup over the award. No laurel, leaves, wreaths, extra stars, text or added decoration. Remove any opaque white backdrop; export true alpha transparency.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "204072c6dbaff0a0e3712afe86aebb5058ff45f92e7f9ba865a81528642b15ee",
+          "bytes": 76365,
+          "opticalBox": [
+            10,
+            33,
+            236,
+            198
+          ]
+        }
+      ],
+      "masterSha256": "d6ac52088bd18e0cf0ce3110c7af2e5b3d85959aa05fc7e9de9abd9be138d480"
+    },
+    {
+      "theme": "easter",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/easter/tournament-gold-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing easter tournament-gold. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED sage-green star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (gold medal rim and ribbon), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "429e53c2c175ea7d6eec236e7ac2cb0b9376fdd596d8c238630161d6b204c8e2",
+          "bytes": 57636,
+          "opticalBox": [
+            49,
+            14,
+            164,
+            210
+          ]
+        }
+      ],
+      "masterSha256": "986a26bcc189528c47dce776b5783daf439cbec91174519f4e1c03b96e709993"
+    },
+    {
+      "theme": "easter",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/easter/tournament-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing easter tournament-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED sage-green star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (silver medal rim and ribbon), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "1b90bf04abeb1faeddf2b393cc18adb86636fc1dfe0b98d4a908ea7d8360e3bf",
+          "bytes": 52536,
+          "opticalBox": [
+            49,
+            14,
+            164,
+            210
+          ]
+        }
+      ],
+      "masterSha256": "5aa14191c83756957c16be5a9ae4241986c16eb7823ff1a3b9b514c6da8a1803"
+    },
+    {
+      "theme": "easter",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/easter/tournament-bronze-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing easter tournament-bronze. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED sage-green star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (bronze medal rim and ribbon), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "7333424eaba99d0a6e0106bd54cc73b51853fe79fdac8fa19f3e246a4b471bc9",
+          "bytes": 56386,
+          "opticalBox": [
+            49,
+            14,
+            164,
+            210
+          ]
+        }
+      ],
+      "masterSha256": "fa54fab53860462d825b322f59a6f443f50ca3009e14c314c19ba4eb6b22c492"
+    },
+    {
+      "theme": "easter",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/easter/finalist-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing easter finalist-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED sage-green star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (silver cup), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "446f376f10be7fc82a990d8c37654488a69f5a1d6c8580142e124f02921294f7",
+          "bytes": 59157,
+          "opticalBox": [
+            17,
+            35,
+            222,
+            196
+          ]
+        }
+      ],
+      "masterSha256": "b1f629963eb992dd622985523e5162112118207cdbc469f2ca6029715f4be9fa"
+    },
+    {
+      "theme": "desert",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/desert/tournament-gold-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing desert tournament-gold. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED warm ivory star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (gold medal rim and ribbon), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "17e0f8c0169027db5709dcf58c8def3c862c961c60858784d4879387bf469d8a",
+          "bytes": 63185,
+          "opticalBox": [
+            16,
+            16,
+            230,
+            208
+          ]
+        }
+      ],
+      "masterSha256": "a84237a623305fdac9c9fd6905adec5d0e5e9d72af8559960250b2c15c3f6ef5"
+    },
+    {
+      "theme": "desert",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/desert/tournament-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing desert tournament-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED warm ivory star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (silver medal rim and ribbon), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "c8e2b4ef0cb00076e23f5e16a3a9dbf55c7d150e80d1057f6176a0da93295432",
+          "bytes": 61766,
+          "opticalBox": [
+            16,
+            16,
+            230,
+            208
+          ]
+        }
+      ],
+      "masterSha256": "d828d08ce8f94f46b440d58cba17cef47ae7e9e6340ff0f4a0222e35ae176254"
+    },
+    {
+      "theme": "desert",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/desert/tournament-bronze-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing desert tournament-bronze. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED warm ivory star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (bronze medal rim and ribbon), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "766f538c78aa9eff7e539e5c9e3955be0de8a29bababa8d5ec37368f871bf14e",
+          "bytes": 63350,
+          "opticalBox": [
+            16,
+            16,
+            230,
+            208
+          ]
+        }
+      ],
+      "masterSha256": "64c65b346aa4171af1fc02f3739c34aab8993a630238ce9641395e0a264e6005"
+    },
+    {
+      "theme": "desert",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/desert/finalist-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing desert finalist-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a small, clearly legible raised FIVE-POINTED warm ivory star to the front of the cup in Image 1, matching the star identity and placement in Image 2. Preserve Image 1's cup silhouette, handles, stem, base, proportions, tier metal color (silver cup), composition, palette, existing 3D Soft material and lighting. For a tiny cup embedded on a medal, keep the same cup and add its front star, not a new star floating outside the cup. No wreath, leaves, extra stars, text, decoration or scenery. Keep genuine alpha transparency with clean edges. Preserve the existing generous margins. This is one minimal emblem correction, not a redesign.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "213c6ea832dcd46db473903f9e4ba221c489f53c56da6070785dccaff7f91399",
+          "bytes": 73783,
+          "opticalBox": [
+            12,
+            48,
+            232,
+            182
+          ]
+        }
+      ],
+      "masterSha256": "a67109fbdad9973262132b7123d6f83d1ffc67ca07c6d7e00fa6a8cbf567fa95"
+    },
+    {
+      "theme": "moon",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/moon/tournament-gold-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing moon tournament-gold. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED silver star with darker graphite bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (gold rim and ribbon), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "c583f468096715238734521cebdd3e894158d60481c9abbd88c034b667ecde82",
+          "bytes": 63695,
+          "opticalBox": [
+            37,
+            25,
+            197,
+            200
+          ]
+        }
+      ],
+      "masterSha256": "f849ab875c0af5a971ef43c78881a5a4abdfb98b89efebcde4a0d9a043d7e484"
+    },
+    {
+      "theme": "moon",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/moon/tournament-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing moon tournament-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED silver star with darker graphite bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (silver rim and ribbon), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "c2d13ddc8c47043dbc2f21d9a48fb62d2b5bc543da4f5025a88c4efb46044b00",
+          "bytes": 58143,
+          "opticalBox": [
+            37,
+            25,
+            197,
+            200
+          ]
+        }
+      ],
+      "masterSha256": "a531bd6618641cd2572f792b642b94de53f572138c1aec8a51cfa20c856658b9"
+    },
+    {
+      "theme": "moon",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/moon/tournament-bronze-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing moon tournament-bronze. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED silver star with darker graphite bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (bronze rim and ribbon), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "7b58abbbaa97455434a685904b99474ec228b4de10ac118bc4fdddae1010dadd",
+          "bytes": 61782,
+          "opticalBox": [
+            37,
+            25,
+            197,
+            200
+          ]
+        }
+      ],
+      "masterSha256": "fc510ea08d0446f7ec054dd90138dc981fae368df5bcb368ffe4ca4e4e5d0275"
+    },
+    {
+      "theme": "moon",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/moon/finalist-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing moon finalist-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED silver star with darker graphite bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (SILVER cup body must remain silver), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "542307a8f928f8252787cf7560100c505ed451db350928b0a754286601094e93",
+          "bytes": 53853,
+          "opticalBox": [
+            31,
+            38,
+            195,
+            188
+          ]
+        }
+      ],
+      "masterSha256": "d6638c047c71e48683e63a2d58e41bb5dc04faaca4f54ccdf65a9048159c4d39"
+    },
+    {
+      "theme": "severna",
+      "role": "tournament-gold",
+      "master": "source-assets/theme-tournament-star-v2/severna/tournament-gold-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing severna tournament-gold. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED ice-cyan star with darker blue bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (gold rim and ribbon), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v2.png",
+          "supersedes": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "29f0f8bc8bc27b9ab3865bacc9a1f1639e63b71de665ac48242c68d582352d86",
+          "bytes": 61067,
+          "opticalBox": [
+            38,
+            30,
+            185,
+            196
+          ]
+        }
+      ],
+      "masterSha256": "dc869bb696fbda219fed436f137a226993bb8099120b3e16a93b5e8ecd71de56"
+    },
+    {
+      "theme": "severna",
+      "role": "tournament-silver",
+      "master": "source-assets/theme-tournament-star-v2/severna/tournament-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing severna tournament-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED ice-cyan star with darker blue bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (silver rim and ribbon), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "b6cbec9eff14cdaa46035cff732a35cf7025a4021fd3e7dbfe2b5c6bc6d7b006",
+          "bytes": 57328,
+          "opticalBox": [
+            38,
+            30,
+            185,
+            196
+          ]
+        }
+      ],
+      "masterSha256": "4e4f910073543966a648b851662dc7b4b3839d11326ec950dd9019e523ec629a"
+    },
+    {
+      "theme": "severna",
+      "role": "tournament-bronze",
+      "master": "source-assets/theme-tournament-star-v2/severna/tournament-bronze-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing severna tournament-bronze. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED ice-cyan star with darker blue bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (bronze rim and ribbon), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v2.png",
+          "supersedes": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "e42f1a27251ef8b13afcfc6168b8a02b91ec43117e448550fad45895244021ce",
+          "bytes": 57593,
+          "opticalBox": [
+            38,
+            30,
+            185,
+            196
+          ]
+        }
+      ],
+      "masterSha256": "15347698f0d53d4fd9471d736ea983368f793035f73ddfd0e15ce12661e04ff7"
+    },
+    {
+      "theme": "severna",
+      "role": "finalist-silver",
+      "master": "source-assets/theme-tournament-star-v2/severna/finalist-silver-master-v2.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: existing severna finalist-silver. Image 2 is the canonical themed cup REFERENCE. Add ONLY a clearly recognizable small raised FIVE-POINTED ice-cyan star with darker blue bevel on the FRONT of the CUP in Image 1, matching the emblem in Image 2. Preserve Image 1's silhouette, handles, stem, base, proportions, tier colors (SILVER cup body must remain silver), palette, composition, 3D Soft material, lighting and margins. For medal, preserve the embedded cup body and place its star on the front, not outside the cup. Clean controlled contrast even at 28px. No wreath, leaves, extra stars, text, scenery or new decoration. Genuine alpha transparency, clean edges. Minimal emblem correction only.",
+      "production": [
+        {
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v2.png",
+          "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v1.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "8b49e11b37d66fc9bc3acb42978e72ea433822d3d0bae91bd8595d9b18276a50",
+          "bytes": 63518,
+          "opticalBox": [
+            21,
+            30,
+            218,
+            205
+          ]
+        }
+      ],
+      "masterSha256": "a5cb4a4b4ef43cd57b6abfe41eb51eb9dfddf0eaa17a553819e91c0ce33fafca"
+    }
+  ],
+  "review": {
+    "method": "Built-in image_gen precise object edits, one call per target; manual contact-sheet review at large and 28px sizes.",
+    "result": "35 masters; 42 production PNGs; five-point stars present; original canvas and optical bounds preserved; real device review pending.",
+    "report": "docs/theme-visual-audit/report.json"
+  }
+}

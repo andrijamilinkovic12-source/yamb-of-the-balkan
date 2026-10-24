@@ -33,7 +33,7 @@ function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
         h2h: green ? 'h2h-statistics/h2h-identity-v1.png' : 'statistics-overview/h2h-v2.png',
         onlineRandom: 'online-random-room-identity/online-random-room-v1.png',
         inviteFriend: 'invite-friend-room-identity/invite-friend-room-v1.png',
-        tournament: 'tournament-awards/champion-trophy-v1.png',
+        tournament: `tournament-awards/champion-trophy-v${['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1}.png`,
         tournamentStart: 'tournament-states/state-start-v1.png',
         hallOfFame: 'tournament-navigation/tab-hall-of-fame-v1.png',
         quarterly: 'quarterly-league-room-identity/quarterly-league-room-v2.png',
@@ -60,7 +60,8 @@ function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
         timer: 'game-header/timer-v1.png'
     };
     if (!Object.hasOwn(roles, role)) throw new Error(`Unknown rules asset role: ${role}`);
-    return `${canonical}/${roles[role]}`;
+    const source = `${canonical}/${roles[role]}`;
+    return globalThis.resolveThemeQualityAsset?.(source) || source;
 }
 
 function rulesCanonicalIcon(role, extraClass = '') {

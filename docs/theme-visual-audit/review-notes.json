@@ -1,0 +1,569 @@
+{
+  "schemaVersion": 1,
+  "reviewedSheets": [
+    "dark-01.png",
+    "dark-02.png",
+    "dark-03.png",
+    "dark-04.png",
+    "dark-05.png",
+    "light-01.png",
+    "light-02.png",
+    "light-03.png",
+    "light-04.png",
+    "amethyst-01.png",
+    "amethyst-02.png",
+    "amethyst-03.png",
+    "amethyst-04.png",
+    "medium-01.png",
+    "medium-02.png",
+    "medium-03.png",
+    "medium-04.png",
+    "neon-01.png",
+    "neon-02.png",
+    "neon-03.png",
+    "neon-04.png",
+    "winter-01.png",
+    "winter-02.png",
+    "winter-03.png",
+    "winter-04.png",
+    "easter-01.png",
+    "easter-02.png",
+    "easter-03.png",
+    "easter-04.png",
+    "desert-01.png",
+    "desert-02.png",
+    "desert-03.png",
+    "desert-04.png",
+    "moon-01.png",
+    "moon-02.png",
+    "moon-03.png",
+    "moon-04.png",
+    "severna-01.png",
+    "severna-02.png",
+    "severna-03.png",
+    "severna-04.png",
+    "universal-01.png",
+    "universal-02.png",
+    "universal-03.png",
+    "universal-04.png",
+    "universal-05.png",
+    "universal-06.png",
+    "universal-07.png",
+    "universal-08.png",
+    "universal-09.png",
+    "universal-10.png",
+    "supplement-01.png",
+    "supplement-02.png",
+    "supplement-03.png",
+    "supplement-04.png",
+    "quality-dark-v2.png",
+    "quality-light-v2.png",
+    "quality-medium-v2.png",
+    "quality-winter-v2.png",
+    "quality-neon-v2.png",
+    "quality-amethyst-v2.png",
+    "quality-easter-v2.png",
+    "quality-desert-v2.png",
+    "quality-moon-v2.png",
+    "quality-severna-v2.png"
+  ],
+  "evidence": "Uvecani pregled PNG-a i dodatni prikaz od 28px na tematskoj povrsini; stvarni UI prikazi vode se posebno.",
+  "flags": {
+    "A0192": [
+      "potrebna zamena",
+      "Lovorov venac dominira motivom i krsi novo pravilo bez lovora."
+    ],
+    "A0211": [
+      "potrebna dorada",
+      "Veteranska medalja ima dodatni lovor u sredisnjem motivu."
+    ],
+    "A0215": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza nosi petarde umesto kanonskog plamena Vatrenog niza."
+    ],
+    "A0216": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza nosi petarde umesto kanonskog plamena Vatrenog niza."
+    ],
+    "A0217": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza nosi petarde umesto kanonskog plamena Vatrenog niza."
+    ],
+    "A0221": [
+      "potrebna dorada",
+      "Reljef grafikona ne ponavlja kanonski znak Indeksa moci (munju)."
+    ],
+    "A0222": [
+      "potrebna dorada",
+      "Reljef grafikona ne ponavlja kanonski znak Indeksa moci (munju)."
+    ],
+    "A0223": [
+      "potrebna dorada",
+      "Reljef grafikona ne ponavlja kanonski znak Indeksa moci (munju)."
+    ],
+    "A0294": [
+      "potrebna dorada",
+      "Detaljna lica odstupaju od jednostavnih bezlicnih figura u ostalim ikonama ove porodice."
+    ],
+    "A0330": [
+      "potrebna dorada",
+      "Biljni ukrasi i reljefna postolja opterecuju jednostavan znak rekorda za sva vremena."
+    ],
+    "A0331": [
+      "potrebna dorada",
+      "Biljni ukrasi na kalendaru nepotrebno opterecuju mali prikaz."
+    ],
+    "A0332": [
+      "potrebna dorada",
+      "Biljni ukrasi na kartici licnog rekorda stvaraju visak detalja."
+    ],
+    "A0333": [
+      "potrebna dorada",
+      "Biljni ukrasi na nedeljnom kalendaru stvaraju visak detalja."
+    ],
+    "A0372": [
+      "potrebna zamena",
+      "Ukrasna zvezda u biljnom vrtlogu ne prati miran aktuelni efekat svemirske prasine."
+    ],
+    "A0375": [
+      "potrebna dorada",
+      "Ukrasna posuda i biljni motiv nisu potrebni za jasan prikaz vatrometa."
+    ],
+    "A0791": [
+      "potrebna dorada",
+      "Medalja Indeksa moci koristi grafikon umesto kanonske munje te teme."
+    ],
+    "A0792": [
+      "potrebna dorada",
+      "Medalja Indeksa moci koristi grafikon umesto kanonske munje te teme."
+    ],
+    "A0793": [
+      "potrebna dorada",
+      "Medalja Indeksa moci koristi grafikon umesto kanonske munje te teme."
+    ],
+    "A0889": [
+      "potrebna dorada",
+      "Oznaka rezultata izgleda kao minus; u maloj velicini nije jasno sta predstavlja."
+    ],
+    "A0932": [
+      "potrebna zamena",
+      "Ukrasni planeti i prstenovi opterecuju mali prikaz i ne odgovaraju aktuelnoj svemirskoj prasini."
+    ],
+    "A0935": [
+      "potrebna dorada",
+      "Zaobljeni snopovi vatrometa podsecaju na cvetne glavice; potreban jasniji eksplozivni raspon."
+    ],
+    "A0007": [
+      "potrebna zamena",
+      "Lovorov venac oko kockice direktno krsi novo pravilo."
+    ],
+    "A0030": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza sadrzi dinamit umesto kanonskog plamena."
+    ],
+    "A0031": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza sadrzi dinamit umesto kanonskog plamena."
+    ],
+    "A0032": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza sadrzi dinamit umesto kanonskog plamena."
+    ],
+    "A0036": [
+      "potrebna dorada",
+      "Ugradjeni grafikon ne ponavlja kanonsku ikonu Indeksa moci."
+    ],
+    "A0037": [
+      "potrebna dorada",
+      "Ugradjeni grafikon ne ponavlja kanonsku ikonu Indeksa moci."
+    ],
+    "A0038": [
+      "potrebna dorada",
+      "Ugradjeni grafikon ne ponavlja kanonsku ikonu Indeksa moci."
+    ],
+    "A0092": [
+      "potrebna zamena",
+      "Ukrasni ram sa ornamentalnim zavijucima dominira dvema jednostavnim figurama."
+    ],
+    "A0129": [
+      "potrebna zamena",
+      "Znak rekorda za sva vremena opterecen postoljem, ukrasima i dodatnim arhitektonskim detaljima."
+    ],
+    "A0130": [
+      "potrebna dorada",
+      "Mesecni kalendar ima previse okvira i ukrasa za mali prikaz."
+    ],
+    "A0131": [
+      "potrebna zamena",
+      "Licni rekord dobija nepotrebnu palatu/portal oko osnovnog znaka, gubi citljivost."
+    ],
+    "A0132": [
+      "potrebna zamena",
+      "Nedeljni rekord dobija nepotrebnu palatu/portal oko kalendara."
+    ],
+    "A0134": [
+      "potrebna dorada",
+      "Znak rezultata izgleda kao minus; slabo prenosi znacenje."
+    ],
+    "A0157": [
+      "potrebna dorada",
+      "I srebrnom peharu finaliste nedostaje zvezda; potrebno uskladiti sa glavnim peharom."
+    ],
+    "A0177": [
+      "potrebna zamena",
+      "Ukrasna maglina ima oblik zbijene biljne skulpture, ne citljivog oblaka prasine."
+    ],
+    "A0180": [
+      "potrebna dorada",
+      "Oblici vatrometa podsecaju na cvetne bukete umesto izbijanja cestica."
+    ],
+    "A0970": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza koristi petardu umesto kanonskog plamena."
+    ],
+    "A0971": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza koristi petardu umesto kanonskog plamena."
+    ],
+    "A0972": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza koristi petardu umesto kanonskog plamena."
+    ],
+    "A0976": [
+      "potrebna dorada",
+      "Grafikon na medalji ne ponavlja kanonski Indeks moci."
+    ],
+    "A0977": [
+      "potrebna dorada",
+      "Grafikon na medalji ne ponavlja kanonski Indeks moci."
+    ],
+    "A0978": [
+      "potrebna dorada",
+      "Grafikon na medalji ne ponavlja kanonski Indeks moci."
+    ],
+    "A1047": [
+      "potrebna dorada",
+      "Kruna i ukrasni vrh portala opterecuju malu navigacionu ikonu dvorane slavnih."
+    ],
+    "A1069": [
+      "potrebna dorada",
+      "Ukrasne tresnje oko znaka beskonacnosti smanjuju jasnocu u panelu rekorda."
+    ],
+    "A1070": [
+      "potrebna dorada",
+      "Dodatni plodovi i listici kalendara prave visak detalja u maloj velicini."
+    ],
+    "A1072": [
+      "potrebna dorada",
+      "Dodatni plodovi i listici nedeljnog kalendara prave visak detalja."
+    ],
+    "A1074": [
+      "potrebna zamena",
+      "Tresnja sa minusom nema jasno znacenje oznake osvojenog rezultata."
+    ],
+    "A1117": [
+      "potrebna zamena",
+      "Ukrasna biljkolika maglina ne prati aktuelni efekat svemirske prasine."
+    ],
+    "A1120": [
+      "potrebna dorada",
+      "Vatromet izgleda kao cvetni buket i trazi jednostavniji prikaz izbijanja."
+    ],
+    "A1340": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza prikazuje petardu, ne kanonski plamen."
+    ],
+    "A1341": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza prikazuje petardu, ne kanonski plamen."
+    ],
+    "A1342": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza prikazuje petardu, ne kanonski plamen."
+    ],
+    "A1346": [
+      "potrebna dorada",
+      "Grafikon na medalji ne odgovara kanonskoj munji Indeksa moci."
+    ],
+    "A1347": [
+      "potrebna dorada",
+      "Grafikon na medalji ne odgovara kanonskoj munji Indeksa moci."
+    ],
+    "A1348": [
+      "potrebna dorada",
+      "Grafikon na medalji ne odgovara kanonskoj munji Indeksa moci."
+    ],
+    "A1471": [
+      "potrebna dorada",
+      "Srebrnom turnirskom peharu nedostaje zvezda; uskladiti sa glavnim peharom."
+    ],
+    "A1491": [
+      "potrebna zamena",
+      "Fiksne ukrasne kugle/kometa ne prate diskretnu zivu svemirsku prasinu."
+    ],
+    "A1494": [
+      "potrebna dorada",
+      "Pregled vatrometa je cvetolik; pojednostaviti u jasne radialne svetlosne tragove."
+    ],
+    "A2190": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza koristi petardu, ne kanonski plamen."
+    ],
+    "A2191": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza koristi petardu, ne kanonski plamen."
+    ],
+    "A2192": [
+      "potrebna zamena",
+      "Medalja Vatrenog niza koristi petardu, ne kanonski plamen."
+    ],
+    "A2196": [
+      "potrebna dorada",
+      "Medalja Indeksa moci sadrzi grafikon umesto kanonske munje u talasu."
+    ],
+    "A2197": [
+      "potrebna dorada",
+      "Medalja Indeksa moci sadrzi grafikon umesto kanonske munje u talasu."
+    ],
+    "A2198": [
+      "potrebna dorada",
+      "Medalja Indeksa moci sadrzi grafikon umesto kanonske munje u talasu."
+    ],
+    "A2289": [
+      "potrebna dorada",
+      "Kucice i vodeno postolje oko beskonacnosti opterecuju mali znak rekorda."
+    ],
+    "A2291": [
+      "potrebna dorada",
+      "Suvisni talasi ispod licnog rekorda umanjuju citljivost avatar-grafikon motiva."
+    ],
+    "A2292": [
+      "potrebna dorada",
+      "Mini kuce i talasi na nedeljnom kalendaru predstavljaju visak detalja za mali panel."
+    ],
+    "A2294": [
+      "potrebna dorada",
+      "Oznaka rezultata izgleda kao minus u portalu, ne kao rezultat."
+    ],
+    "A2317": [
+      "potrebna dorada",
+      "Srebrni turnirski pehar nosi list umesto zvezde; uskladiti sa glavnim peharom."
+    ],
+    "A2337": [
+      "potrebna zamena",
+      "Ukrasni orbitalni objekti ne prate aktuelni cestican efekat prasine."
+    ],
+    "A2340": [
+      "potrebna dorada",
+      "Vatromet je cvetolik, sa zaobljenim glavicama i listastim stablima."
+    ],
+    "A0574": [
+      "potrebna zamena",
+      "Lovorasti listovi okružuju kocku; ukloniti venac i sačuvati jasan rang bez kiča."
+    ],
+    "A0597": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A0598": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A0599": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A0603": [
+      "potrebna dorada",
+      "Indeks moći ima kanonsku munju, a medalja prikazuje stubičasti grafikon; uskladiti identitet."
+    ],
+    "A0604": [
+      "potrebna dorada",
+      "Indeks moći ima kanonsku munju, a medalja prikazuje stubičasti grafikon; uskladiti identitet."
+    ],
+    "A0605": [
+      "potrebna dorada",
+      "Indeks moći ima kanonsku munju, a medalja prikazuje stubičasti grafikon; uskladiti identitet."
+    ],
+    "A0648": [
+      "potrebna dorada",
+      "Lišće uz peščani sat je suvišna dekoracija prazne rang liste; pojednostaviti u isti postolje identitet."
+    ],
+    "A0649": [
+      "potrebna dorada",
+      "Lovorasti grančice oko globusa nisu u skladu sa zabranom venaca i suvišnih ukrasa."
+    ],
+    "A0674": [
+      "potrebna dorada",
+      "Pehrar lige ima dodatne grančice; zadržati četvorodelni identitet lige bez lovoraste dekoracije."
+    ],
+    "A0698": [
+      "potrebna dorada",
+      "Višestruki okvir i postolje preopterećuju simbol beskonačnosti u malom prikazu."
+    ],
+    "A0703": [
+      "potrebna dorada",
+      "Oznaka rezultata liči na znak minus; proveriti značenje i prepoznatljivost bez dekorativnog jajeta."
+    ],
+    "A0747": [
+      "potrebna zamena",
+      "Pregled kosmičke prašine izgleda kao ukrasna lisnata skulptura umesto čestica efekta."
+    ],
+    "A0750": [
+      "potrebna dorada",
+      "Pregled vatrometa izgleda kao buket/palma; jasnije prikazati jednostavne radijalne eksplozije."
+    ],
+    "A0410": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A0411": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A0412": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A0416": [
+      "potrebna dorada",
+      "Medalja indeksa moći koristi grafikon umesto kanonske munje."
+    ],
+    "A0417": [
+      "potrebna dorada",
+      "Medalja indeksa moći koristi grafikon umesto kanonske munje."
+    ],
+    "A0418": [
+      "potrebna dorada",
+      "Medalja indeksa moći koristi grafikon umesto kanonske munje."
+    ],
+    "A0510": [
+      "potrebna dorada",
+      "Ornamentisano postolje i više lukova nadjačavaju znak beskonačnosti na maloj veličini."
+    ],
+    "A0513": [
+      "potrebna dorada",
+      "Arhitektonski ukrasi i sitni detalji zaklanjaju identitet nedeljnog kalendara na 28px."
+    ],
+    "A0515": [
+      "potrebna dorada",
+      "Oznaka rezultata liči na znak minus; pojednostaviti semantiku u kontekstu završnog ekrana."
+    ],
+    "A0559": [
+      "potrebna zamena",
+      "Kosmička prašina prikazana kao ukrasna kamena skulptura, ne kao čestice efekta."
+    ],
+    "A0562": [
+      "potrebna dorada",
+      "Vatromet liči na palme u saksiji; jasnije oblikovati radijalne eksplozije bez postolja."
+    ],
+    "A1155": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A1156": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A1157": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A1161": [
+      "potrebna dorada",
+      "Medalja indeksa moći koristi stubičasti grafikon umesto kanonske munje."
+    ],
+    "A1162": [
+      "potrebna dorada",
+      "Medalja indeksa moći koristi stubičasti grafikon umesto kanonske munje."
+    ],
+    "A1163": [
+      "potrebna dorada",
+      "Medalja indeksa moći koristi stubičasti grafikon umesto kanonske munje."
+    ],
+    "A1254": [
+      "potrebna dorada",
+      "Više lukova, kratera i postolje preopterećuju znak rekorda svih vremena na 28px."
+    ],
+    "A1257": [
+      "potrebna dorada",
+      "Ukrasni krateri iznad nedeljnog kalendara smanjuju čitljivost malog simbola."
+    ],
+    "A1259": [
+      "potrebna dorada",
+      "Oznaka rezultata izgleda kao znak minus; razjasniti identitet u završnom ekranu."
+    ],
+    "A1302": [
+      "potrebna zamena",
+      "Sličica kosmičke prašine je statična skulptura, ne prikaz čestica i njihove putanje."
+    ],
+    "A1305": [
+      "potrebna dorada",
+      "Sličica vatrometa liči na palme na mesečevom postolju umesto eksplozije."
+    ],
+    "A1529": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A1530": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A1531": [
+      "potrebna zamena",
+      "Medalja vatrenog niza prikazuje petardu umesto kanonskog plamena teme."
+    ],
+    "A1535": [
+      "potrebna dorada",
+      "Medalja indeksa moći ima grafikon umesto kanonskog simbola moći teme."
+    ],
+    "A1536": [
+      "potrebna dorada",
+      "Medalja indeksa moći ima grafikon umesto kanonskog simbola moći teme."
+    ],
+    "A1537": [
+      "potrebna dorada",
+      "Medalja indeksa moći ima grafikon umesto kanonskog simbola moći teme."
+    ],
+    "A1629": [
+      "potrebna dorada",
+      "Dodatni luk i postolje iznad/ispod beskonačnosti smanjuju jasnoću malog prikaza."
+    ],
+    "A1634": [
+      "potrebna dorada",
+      "Oznaka rezultata je nejasan luk; proveriti njeno značenje u završnom ekranu."
+    ],
+    "A1677": [
+      "potrebna zamena",
+      "Kosmička prašina prikazana kao ukrasna talasasta skulptura umesto čestica efekta."
+    ],
+    "A1680": [
+      "potrebna dorada",
+      "Vatromet liči na palme; smanjiti dekorativnu osnovu i jasnije prikazati eksploziju."
+    ],
+    "S0001": [
+      "potrebna dorada",
+      "Centralni cvet/listovi u sličici konfeta nisu potrebni; zadržati samo čiste papirne delove."
+    ],
+    "S0002": [
+      "potrebna dorada",
+      "Ukloniti dekorativno lisnato postolje oko kanonskih dukata; sličica treba jasno da prikazuje kišu dukata."
+    ],
+    "S0041": [
+      "potrebna dorada",
+      "Tanke tamne trake konfeta gube kontrast u malom prikazu na tamnoj Neon podlozi."
+    ],
+    "S0082": [
+      "potrebna dorada",
+      "Veliki polumesec i postolje dominiraju sličicom kiše dukata; pojednostaviti oko kanonskih novčića."
+    ],
+    "A0729": [
+      "potrebna dorada",
+      "Vrlo svetla zvezda Dvorane slavnih gubi jasnu siluetu u malom prikazu na krem površini Vaskršnje teme; pojačati diskretan sage obod/senku, bez promene dimenzija."
+    ],
+    "A0660": [
+      "potrebna dorada",
+      "Arhitektonski okvir sa lišćem dominira malim prikazom stanja igrača; smanjiti dekoraciju."
+    ]
+  }
+}

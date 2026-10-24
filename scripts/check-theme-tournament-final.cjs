@@ -28,7 +28,9 @@ function contrast(a, b) {
 for (const theme of themes) {
     const prefix = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
     for (const [group, role] of roles) {
-        const file = path.join(root, 'www/assets', prefix, 'canonical', group, `${role}-v1.png`);
+        const starRevision = ((group === 'tournament-awards' && ['champion-trophy', 'finalist-silver'].includes(role)) || group === 'competition-medals')
+            && ['winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme) ? 2 : 1;
+        const file = path.join(root, 'www/assets', prefix, 'canonical', group, `${role}-v${starRevision}.png`);
         assert(fs.existsSync(file), `${theme}/${group}/${role}: missing PNG`);
         const bytes = fs.readFileSync(file);
         assert.equal(bytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${theme}/${role}: invalid PNG`);
