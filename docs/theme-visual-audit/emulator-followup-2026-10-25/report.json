@@ -1,0 +1,238 @@
+{
+  "date": "2026-10-25",
+  "scope": "Nastavak vidljivog pregleda; dva pregledana tematska paketa, četiri nova runtime nalaza.",
+  "deployment": "Javni theme-settings-room.js vraća HTTP 200, ali ne sadrži lokalni decoded-prepare popravak. Snimci su sa objavljene verzije pre lokalnih popravki.",
+  "method": "Vidljivi Android ekrani i ADB ulaz/snimci; prozor emulatora potvrđen i prikazan kroz Computer Use. Bez WebView debug porta ili čitanja sesije.",
+  "limits": "Nije puna konačna vizuelna provera svih deset tema i soba. Nisu odigravane partije, preuzimane nagrade, aktivirani efekti, menjani profili niti slati pozivi. Jedan automatski test interstitial pri izlasku iz Top liste je zatvoren; nije pokretan rewarded ad.",
+  "findings": [
+    {
+      "id": "R04",
+      "scope": "Zelena / Statistika",
+      "status": "lokalno ispravljeno; vizuelna potvrda čeka deploy",
+      "problem": "Beli naslov, opis i broj na svetloj kartici Indeksa moći.",
+      "fix": "Tamnozeleno mastilo #254c32, bez senke i promene dimenzija. Kontrast proveren prema oba kraja postojećeg svetlog gradijenta."
+    },
+    {
+      "id": "R05",
+      "scope": "Svih deset tema / persistentna rang-lista Vatrenog niza",
+      "status": "lokalno ispravljeno; vizuelna potvrda čeka deploy",
+      "problem": "Zaglavlje skrivenog modala ostaje u prethodnoj temi, dok redovi koriste novu.",
+      "fix": "Pri svakom otvaranju primenjuje se postojeći kanonski PNG aktivne teme; nema novih crteža. Regresioni test ponovo otvara isti modal u svih deset tema."
+    },
+    {
+      "id": "R06",
+      "scope": "Devet nezelenih tema / Statistika i obe rang-liste",
+      "status": "lokalno ispravljeno; vizuelna potvrda čeka deploy",
+      "problem": "Posebna CSS pravila zaobilaze Green bezbedne margine i menjaju raspoloživu visinu.",
+      "fix": "Iste formule top/bottom/side sa --safe-top i --safe-bottom kroz --theme-room-*; mali razmak pregleda usklađen sa Green 6px standardom. Boje i materijali sačuvani."
+    },
+    {
+      "id": "R07",
+      "scope": "Svih deset tema / glavna kartica Kvartalne lige",
+      "status": "lokalno ispravljeno; vizuelna potvrda čeka deploy",
+      "problem": "Na 411px tekst prelazi u dva reda i iznos poena se skraćuje, iako 360px prikaz staje.",
+      "fix": "Pravilo za kompaktnu tipografiju lige važi do 480px; geometrija kartice, logo i funkcije nisu menjani. Veličina ekonomskog broja ostaje u svom ranijem 360px pravilu."
+    }
+  ],
+  "matrix": [
+    {
+      "theme": "dark",
+      "actualUiThisPass": [
+        "Top lista: globalna i prazna lokalna",
+        "Statistika: pregled, H2H i obe rang-liste",
+        "Pravila: prva strana"
+      ],
+      "additionalUi": [
+        "Detalj H2H rivala",
+        "Pravila: šesta strana",
+        "Glavni meni: 411px i 360px"
+      ],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "light",
+      "actualUiThisPass": [
+        "Top lista: globalna i prazna lokalna",
+        "Statistika: pregled, H2H i obe rang-liste",
+        "Pravila: prva strana"
+      ],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "medium",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "winter",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "neon",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "amethyst",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "easter",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "desert",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "moon",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    },
+    {
+      "theme": "severna",
+      "actualUiThisPass": [],
+      "additionalUi": [],
+      "automated": "PNG resolveri/identiteti i ponovno otvaranje Vatrenog niza provereni programatski.",
+      "pending": "Novi deploy i vizuelna potvrda lokalnih ispravki. Ostale teme/prikazi koji nisu gore navedeni nemaju potvrdu ovog emulator prolaza."
+    }
+  ],
+  "entries": [
+    {
+      "file": "reopened-loading",
+      "theme": "dark",
+      "title": "Glavni meni na originalnom ekranu",
+      "note": "411 × 891: naslov lige prelazi u dva reda, poeni su skraćeni."
+    },
+    {
+      "file": "dark-leaderboard-global",
+      "theme": "dark",
+      "title": "Top lista — globalna",
+      "note": "Tri medalje i ispunjena lista; 360 × 780."
+    },
+    {
+      "file": "dark-leaderboard-local",
+      "theme": "dark",
+      "title": "Top lista — prazna lokalna",
+      "note": "PNG praznog stanja i njegov tekst."
+    },
+    {
+      "file": "dark-statistics-overview",
+      "theme": "dark",
+      "title": "Statistika — pregled",
+      "note": "R04: beo tekst na svetloj kartici Indeksa moći."
+    },
+    {
+      "file": "dark-statistics-power-rank",
+      "theme": "dark",
+      "title": "Rang-lista Indeksa moći",
+      "note": "Kanonske medalje, broj, identitet i avatar."
+    },
+    {
+      "file": "dark-statistics-fire-rank",
+      "theme": "dark",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "Kanonske medalje, aktuelni i prekinut niz."
+    },
+    {
+      "file": "dark-statistics-h2h",
+      "theme": "dark",
+      "title": "Statistika — H2H",
+      "note": "Lista rivala i otvoreni drugi prikaz."
+    },
+    {
+      "file": "dark-statistics-h2h-detail",
+      "theme": "dark",
+      "title": "Statistika — detalji rivala",
+      "note": "Otvorena kartica, bez deljenja ili pozivanja na duel."
+    },
+    {
+      "file": "dark-rules-page1",
+      "theme": "dark",
+      "title": "Pravila — prva strana",
+      "note": "Tekst, oznake kolona i kanonske ilustracije."
+    },
+    {
+      "file": "dark-rules-page6",
+      "theme": "dark",
+      "title": "Pravila — šesta strana",
+      "note": "Dugačak naslov i tekstualni sadržaj; bez promene podešavanja."
+    },
+    {
+      "file": "light-leaderboard-local",
+      "theme": "light",
+      "title": "Top lista — globalna",
+      "note": "Naziv izvornog snimka je istorijski; ovo je globalna lista."
+    },
+    {
+      "file": "light-leaderboard-empty-local",
+      "theme": "light",
+      "title": "Top lista — prazna lokalna",
+      "note": "Isti slot praznog stanja, PNG Svetlog zlata."
+    },
+    {
+      "file": "light-statistics-summary",
+      "theme": "light",
+      "title": "Statistika — pregled",
+      "note": "R06: različite spoljne margine od Zelene."
+    },
+    {
+      "file": "light-statistics-overview",
+      "theme": "light",
+      "title": "Statistika — H2H",
+      "note": "Naziv izvornog snimka je istorijski; ovo je druga H2H strana."
+    },
+    {
+      "file": "light-statistics-power-rank",
+      "theme": "light",
+      "title": "Rang-lista Indeksa moći",
+      "note": "Zasebne zlatne, srebrne i bronzane medalje."
+    },
+    {
+      "file": "light-statistics-fire-rank",
+      "theme": "light",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: prethodni zeleni plamen u zaglavlju, odgovarajući zlatni plamen u redovima."
+    },
+    {
+      "file": "light-rules-page1",
+      "theme": "light",
+      "title": "Pravila — prva strana",
+      "note": "Tematska paleta i nove ilustracije."
+    }
+  ],
+  "validation": [
+    "check:theme-statistics-room, uključujući ponovno otvaranje istog Vatrenog niza kroz svih deset tema",
+    "Kontrast Green power kartice prema oba gradijentna kraja",
+    "check:theme-leaderboard-room",
+    "check:theme-rules-room",
+    "check:js",
+    "git diff --check"
+  ],
+  "next": [
+    "Korisnik objavljuje pripremljene lokalne ispravke (uključujući R01–R03 prethodnog prolaza).",
+    "Ponoviti R04–R07 na objavljenoj verziji, zatim nastaviti ovim prikazima u preostalih osam tema.",
+    "Nastaviti ostale sobe i retka stanja iz prethodne evidencije; ne označavati ih kao proverene bez snimka."
+  ]
+}

@@ -34,6 +34,12 @@
 #stats-screen .stats-power-card { gap: 9px; }
 #stats-screen .stats-power-card > div:first-of-type { flex: 1 1 auto; min-width: 0; }
 #stats-screen .stats-power-card #stat-power-index { margin-right: 0 !important; }
+/* Green's pale power card needs dark ink, including its small rank caption. */
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #stats-screen#stats-screen .stats-power-card :is(.stats-power-label,.stats-power-rank,#stat-power-index) {
+    color:#254c32 !important;
+    text-shadow:none !important;
+}
 #stats-screen :is(.stats-power-card,.stat-item[role="button"]):focus-visible { outline:2px solid var(--stats-accent,var(--gold-main)); outline-offset:-2px; }
 
 body.light-theme { --stats-surface:rgba(255,243,220,.94); --stats-card:rgba(255,249,238,.92); --stats-subcard:rgba(255,249,238,.96); --stats-ink:#392817; --stats-muted:#604a37; --stats-accent:#875024; --stats-line:rgba(120,78,40,.26); --stats-power:#704426; --stats-power-ink:#fff9ef; }

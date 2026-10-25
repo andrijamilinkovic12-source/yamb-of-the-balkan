@@ -10,12 +10,12 @@ body.moon-theme { --stats-accent-ink:#242833; --stats-win:#a8d5be; --stats-draw:
 body.severna-theme { --stats-accent-ink:#17344a; --stats-win:#a4e3c9; --stats-draw:#c3acea; --stats-loss:#ffafb9; }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen {
-    padding-top:max(10px,env(safe-area-inset-top)) !important;
-    padding-bottom:max(16px,calc(env(safe-area-inset-bottom) + 4px)) !important;
+    padding-top:var(--theme-room-top) !important;
+    padding-bottom:var(--theme-room-bottom) !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-shell {
     box-sizing:border-box;
-    width:calc(100vw - max(10px,env(safe-area-inset-left)) - max(10px,env(safe-area-inset-right))) !important;
+    width:calc(100vw - var(--theme-room-side) - var(--theme-room-side)) !important;
     max-width:100% !important;
     border-radius:20px !important;
     backdrop-filter:none !important;
@@ -176,6 +176,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #h2h-detail-modal#h2h-detail-modal .h2h-streak-val span { color:var(--stats-muted) !important; }
 
 @media (max-width:390px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-overview-panel { gap:6px; }
     body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-page { padding-inline:8px; }
     body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #stats-screen#stats-screen .stats-card-body { padding-block:8px !important; }
 }

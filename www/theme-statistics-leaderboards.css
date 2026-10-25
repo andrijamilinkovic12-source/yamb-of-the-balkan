@@ -9,12 +9,12 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
   :is(#pi-modal-overlay#pi-modal-overlay,#streak-overlay#streak-overlay) :is(.pi-modal-shell,.streak-modal-shell) {
-    top:calc(var(--global-chat-top,0px) + max(10px,env(safe-area-inset-top))) !important;
-    left:max(10px,env(safe-area-inset-left)) !important;
+    top:var(--theme-room-top) !important;
+    left:var(--theme-room-side) !important;
     transform:none !important;
-    width:calc(100vw - max(10px,env(safe-area-inset-left)) - max(10px,env(safe-area-inset-right))) !important;
-    height:calc(var(--global-chat-height,100dvh) - max(10px,env(safe-area-inset-top)) - max(16px,calc(env(safe-area-inset-bottom) + 4px))) !important;
-    max-height:calc(var(--global-chat-height,100dvh) - max(10px,env(safe-area-inset-top)) - max(16px,calc(env(safe-area-inset-bottom) + 4px))) !important;
+    width:calc(100vw - var(--theme-room-side) - var(--theme-room-side)) !important;
+    height:calc(var(--global-chat-height,100dvh) - var(--theme-room-top) - var(--theme-room-bottom)) !important;
+    max-height:calc(var(--global-chat-height,100dvh) - var(--theme-room-top) - var(--theme-room-bottom)) !important;
     border-radius:20px !important;
     border:1px solid var(--ranking-line) !important;
     background:var(--stats-surface) !important;

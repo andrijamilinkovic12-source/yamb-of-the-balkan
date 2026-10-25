@@ -66,7 +66,12 @@ class VatreniNizManager {
         }
 
         const overlay = document.getElementById('streak-overlay');
-        if (overlay) overlay.style.display = 'flex';
+        if (overlay) {
+            overlay.style.display = 'flex';
+            // This modal persists while hidden. Its header may still hold the
+            // theme that was active when the manager was first constructed.
+            window.themeStatisticsRoom?.apply(overlay);
+        }
 
         this.resetState();
         this.renderList();

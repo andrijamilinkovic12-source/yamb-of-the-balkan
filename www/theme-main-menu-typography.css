@@ -120,7 +120,8 @@ body.medium-theme #main-menu#main-menu .main-summary-row .main-online-card :is(#
     text-align: center !important;
 }
 
-@media (max-width: 360px) {
+/* The league text column is narrow on 390–430px phones too. */
+@media (max-width: 480px) {
     #main-menu#main-menu .main-summary-row .main-league-card .main-league-title {
         font-size: .56rem !important;
         line-height: 1.1 !important;
@@ -133,6 +134,8 @@ body.medium-theme #main-menu#main-menu .main-summary-row .main-online-card :is(#
     #main-menu#main-menu .main-summary-row .main-league-card #league-pts-text {
         font-size: .48rem !important;
     }
+}
+@media (max-width: 360px) {
     #main-menu#main-menu .main-summary-row .main-economy-card #menu-dukati-count {
         font-size: .84rem !important;
         letter-spacing: 0 !important;

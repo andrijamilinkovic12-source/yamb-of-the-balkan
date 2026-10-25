@@ -1,5 +1,15 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Nastavak posle ponovnog otvaranja emulatora
+
+[Novi snimci i nalazi R04–R07](emulator-followup-2026-10-25/index.html). U ovom nastavku stvarno su otvoreni Top lista (globalna i prazna lokalna), Statistika (pregled, H2H i obe rang-liste) i Pravila u **Zelenoj i Svetlom zlatu**. Zeleni H2H detalj i šesta strana Pravila su dodatno pregledani. Preostalih osam tema ovih soba još nisu označene kao vizuelno potvrđene.
+
+Četiri nova lokalna popravka: kontrast Green kartice Indeksa moći, osvežavanje ranije skrivenog zaglavlja Vatrenog niza, Green bezbedne margine u Statistici/rang-listama za ostalih devet tema i prelom teksta glavne kartice Kvartalne lige na 411px. Regresioni test otvara isti Vatreni niz u svih deset tema. Objavljena verzija još nema prethodne lokalne ispravke: javni `theme-settings-room.js` je HTTP 200, ali se razlikuje i nema novi decoded-prepare kod. Potreban je sledeći deploy za poštenu vizuelnu potvrdu R01–R07.
+
+Emulator je ponovo ostavljen otvoren, prijavljen, u Zelenoj temi, na originalnim dimenzijama. U ovom nastavku nisu pokretane partije ni nagradne reklame niti preuzimane nagrade. Automatski test interstitial pri jednom izlasku je zatvoren.
+
+## Prethodni prolaz
+
 Korisnik je ručno završio prijavu i objavio poslednje izmene. Javni `theme-quality-assets.js` sada vraća **HTTP 200**, sa istim normalizovanim SHA-256 kao lokalni fajl (26.334 bajta). Pregledani deploy uključuje prethodnih 121 PNG zamenu i kanonsko povezivanje video-ikona.
 
 [Galerija sa nalazima i granicama provere](emulator-2026-10-25/index.html).

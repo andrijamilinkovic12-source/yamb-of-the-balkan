@@ -65,7 +65,7 @@ for (const file of ['powerindex.js','vatreniniz.js']) {
   for (const marker of ['data-stat-icon="avatar"','data-stat-medal-context=']) if (!code.includes(marker)) throw Error(`Unbound ranking asset in ${file}: ${marker}`);
 }
 for (const stylesheet of ['theme-statistics-room.css','theme-statistics-layout.css','theme-statistics-leaderboards.css','theme-medals.css','theme-room-close-controls.css']) if (!html.includes(`href="${stylesheet}?`)) throw Error(`Missing statistics stylesheet: ${stylesheet}`);
-if (!html.includes('theme-statistics-room.css?v=4') || !html.includes('theme-statistics-leaderboards.css?v=2')) throw Error('Statistics CSS cache version is stale');
+if (!html.includes('theme-statistics-room.css?v=5') || !html.includes('theme-statistics-leaderboards.css?v=3')) throw Error('Statistics CSS cache version is stale');
 const config=fs.readFileSync(path.join(root,'www/config.js'),'utf8');
 const game=fs.readFileSync(path.join(root,'www/game.js'),'utf8');
 if (!config.includes('ROOM_INTRO_TIMING = Object.freeze({ openAtMs: 2400, durationMs: 3200 })') || !game.includes("this.playEasterRoomIntro('statistics'")) throw Error('Statistics intro does not use the common room timing');
@@ -76,6 +76,12 @@ if (!roomCss.includes('background:var(--green-clay-surface-soft) !important;') |
 const lightInk=[242,246,232];
 const luminance=rgb=>rgb.map(value=>{const v=value/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
 const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+// The actual Green power card is pale, unlike the other dark Statistics layers.
+// Its previous white title/rank/value passed no useful contrast threshold.
+if (!roomCss.includes('color:#254c32 !important;')) throw Error('Green power-card ink is missing');
+for (const endpoint of [[207,221,163],[241,245,230]]) {
+  if (contrast([37,76,50],endpoint)<4.5) throw Error('Green power-card text contrast below 4.5:1');
+}
 const greenSurface=greenCss.match(/--green-clay-surface-soft: linear-gradient\(145deg, rgba\(([^)]+)\), rgba\(([^)]+)\)\)/);
 if (!greenSurface) throw Error('Green Clay surface is missing');
 for (const endpoint of greenSurface.slice(1).map(value=>value.split(',').map(Number))) for (const backdrop of [0,255]) {
