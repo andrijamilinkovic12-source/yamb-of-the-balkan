@@ -27,6 +27,17 @@ const tournamentStarPath = 'source-assets/theme-tournament-star-v2/manifest.json
 const tournamentStar = read(tournamentStarPath);
 const qualityPath = 'source-assets/theme-quality-refresh-v2/manifest.json';
 const quality = read(qualityPath);
+const effectCardPath = 'source-assets/theme-effect-card-thumbnails-v1/manifest.json';
+const effectCards = read(effectCardPath);
+for (const asset of effectCards.assets) {
+    if (sha256(asset.source) !== asset.sourceSha256 || sha256(asset.productionPath) !== asset.sha256)
+        throw new Error(`Effect card derivative provenance mismatch: ${asset.productionPath}`);
+}
+function effectCard(theme, effectId) {
+    const item = effectCards.assets.find(asset => asset.effectId === effectId && (asset.theme === theme || asset.theme === 'universal'));
+    if (!item || item.status !== 'verified') throw new Error(`Unreviewed effect thumbnail: ${theme}/${effectId}`);
+    return item.productionPath;
+}
 function activeQualityPath(themeId, slotId) {
     const previous = baselinePath(themeId, slotId);
     const asset = quality.assets.find(item => item.theme === themeId && item.previous === previous && item.status === 'verified');
@@ -205,7 +216,7 @@ const families = Object.entries(familyCounts).sort(([a], [b]) => a.localeCompare
     .map(([id, baselineSlotCount]) => ({ id, baselineSlotCount, source: 'docs/theme-asset-role-catalog.json' }));
 const manifestPaths = [...new Set([
     ...[...JSON.stringify(definitions).matchAll(/source-assets\/[A-Za-z0-9_./-]+\/manifest\.json/g)].map(match => match[0]),
-    goldRainRefreshPath, tournamentStarPath, qualityPath
+    goldRainRefreshPath, tournamentStarPath, qualityPath, effectCardPath
 ])].sort();
 const supplementalManifests = manifestPaths.map(manifest => {
     if (!exists(manifest)) throw new Error(`Missing supplemental manifest: ${manifest}`);
@@ -304,7 +315,9 @@ const themes = definitions.themes.map(theme => {
     const blackHole = {
         runtimeEffectId: 'black_hole',
         primaryPath: blackHoleEntry.productionPath,
-        runtimeAndTreasuryUseSamePng: true,
+        treasuryThumbnailPath: effectCard(themeId, 'black_hole'),
+        runtimeAndTreasuryUseSamePng: false,
+        canonicalDerivativeManifest: effectCardPath,
         sourceManifest: blackHoleEffectPath,
         visualAudit: 'new-theme-specific-png; device-review-pending'
     };
@@ -316,7 +329,9 @@ const themes = definitions.themes.map(theme => {
     const supernova = {
         runtimeEffectId: 'supernova',
         primaryPath: supernovaEntry.productionPath,
-        runtimeAndTreasuryUseSamePng: true,
+        treasuryThumbnailPath: effectCard(themeId, 'supernova'),
+        runtimeAndTreasuryUseSamePng: false,
+        canonicalDerivativeManifest: effectCardPath,
         sourceManifest: supernovaEffectPath,
         visualAudit: 'new-theme-specific-png; device-review-pending'
     };
@@ -341,12 +356,8 @@ const themes = definitions.themes.map(theme => {
                 themedShip: liveStage.assets.find(asset => asset.id === `ufo-${themeId}`).productionPath,
                 sharedComponents: liveStage.assets.filter(asset => !asset.id.startsWith('ufo-')).map(asset => asset.productionPath),
                 treasuryPreviewOverrides: {
-                    ice_age: 'www/assets/effects/stage-v1/frost-corner.png',
-                    balkan: 'www/assets/effects/stage-v1/trumpet.png',
-                    dragon_fire: 'www/assets/effects/stage-v1/flame.png',
-                    ufo_abduction: `www/assets/effects/stage-v1/ufo-${themeId}.png`,
-                    royal_yamb: themeId === 'dark' ? 'www/assets/green-soft-clay/splash-title-soft-clay-v2.png'
-                        : `www/assets/theme-packs/${themeId}/splash-title-soft-clay-v1.png`
+                    ...Object.fromEntries(['ice_age','balkan','dragon_fire','ufo_abduction','royal_yamb']
+                        .map(effectId => [effectId, effectCard(themeId, effectId)]))
                 },
                 canonicalReuse: ['game-logo', 'ducat-particle'], universalExceptions: liveStage.universalRationale,
                 visualAudit: 'canvas-keyframes-reviewed; real-device-review-pending' } }

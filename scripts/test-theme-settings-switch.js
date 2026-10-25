@@ -3,7 +3,9 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 
 let active = 'easter';
-const images = ['room','profile','sound','privacy'].map(role => ({ dataset: { settingsRole: role }, src: '' }));
+const images = ['room','profile','privacy'].map(role => ({ dataset: { settingsRole: role }, src: '' }));
+const sharedImages = ['sound','music','vibration'].map(role => ({ dataset: { gameHeaderRole: role }, src: 'old-theme.png' }));
+const allImages = [...images, ...sharedImages];
 const pending = [];
 class PendingImage {
     set src(source) { this.source = source; pending.push(this); }
@@ -12,7 +14,7 @@ class PendingImage {
 const document = {
     readyState: 'complete',
     body: {},
-    querySelectorAll: () => images,
+    querySelectorAll: selector => selector.includes('.settings-standard-icon') ? allImages : images,
 };
 const window = {
     themeGameHeader: {
@@ -29,12 +31,13 @@ vm.runInNewContext(fs.readFileSync('www/theme-settings-room.js', 'utf8'),
     const switched = window.themeSettingsRoom.apply();
     for (const image of pending.filter(item => item.source.includes('/neon/'))) image.onload();
     await switched;
-    assert.ok(images.every(image => image.src.includes('/neon/')));
-    assert.equal(images.find(image => image.dataset.settingsRole === 'sound').src,
-        window.themeGameHeader.asset('sound', 'neon'));
+    assert.ok(allImages.every(image => image.src.includes('/neon/')));
+    for (const image of sharedImages) assert.equal(image.src,
+        window.themeGameHeader.asset(image.dataset.gameHeaderRole, 'neon'),
+        'Visible Settings audio icon must switch without waiting for hidden header controls');
     for (const image of pending.filter(item => item.source.includes('/easter/'))) image.onload();
     await new Promise(resolve => setImmediate(resolve));
-    assert.ok(images.every(image => image.src.includes('/neon/')),
+    assert.ok(allImages.every(image => image.src.includes('/neon/')),
         'Late PNG from the previous theme must never replace the selected theme');
     console.log('Settings switch keeps one theme and shares the game-panel PNG.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

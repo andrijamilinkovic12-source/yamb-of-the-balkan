@@ -27,6 +27,17 @@ for(const [index,q] of quality.assets.entries())if(q.status==='verified'){
   width:q.width,height:q.height,bytes:q.bytes,sha256:q.sha256,activation:'resolver-mapped',replaces:q.previous,
   sourceMaster:q.master,qualityReview:q.review,correctedFinding:q.reason});
 }
+const effectCardFile=path.join(root,'source-assets/theme-effect-card-thumbnails-v1/manifest.json');
+const effectCards=fs.existsSync(effectCardFile)?JSON.parse(fs.readFileSync(effectCardFile)):{assets:[]};
+for(const [index,card] of effectCards.assets.entries()){
+ if(card.status!=='verified')throw Error('Unreviewed effect derivative: '+card.productionPath);
+ const reviewSheet='effect-card-derivatives-v1.png',id='D'+String(index+1).padStart(4,'0');
+ if(!notes.reviewedSheets.includes(reviewSheet))throw Error('Missing derivative contact review');
+ inspected.set(id,reviewSheet);contrast.set(id,reviewSheet);
+ all.push({id,file:card.productionPath,theme:card.theme,family:'effect-card-derivative',labels:[card.effectId+' / kartica'],rooms:['Riznica / Efekti'],
+  consumers:[{kind:'canonical-derivative',evidence:'www/managers.js#getTreasuryEffectPreviewSource'}],width:card.width,height:card.height,bytes:card.bytes,sha256:card.sha256,
+  canonicalVariantOf:card.source,variantReview:card.review,exception:card.exception||null});
+}
 const byFile=new Map(all.map(a=>[a.file,a]));
 for(const a of all){
  const themedFile=a.file.match(/\/effects\/(?:black-hole|supernova)\/(\w+)-/)||a.file.match(/\/stage-v1\/ufo-(\w+)\.png/)
@@ -36,7 +47,7 @@ for(const a of all){
  const flag=notes.flags[a.id];
  a.visualStatus=flag?.[0]||'prihvatljiv';
  a.reason=flag?.[1]||'U pregledanom PNG-u i malom prikazu motiv je prepoznatljiv, volumen i detalji primereni njegovoj ulozi; nema uočene preterane dekoracije.';
- a.evidence={sheet:inspected.get(a.id)||null,largeAnd28px:inspected.has(a.id),surfaceProbe:contrast.get(a.id)||null,inApplication:'nije vizuelno potvrđeno u ovom prolazu; lokalni file:// pregled blokira browser URL policy'};
+  a.evidence={sheet:inspected.get(a.id)||null,largeAnd28px:inspected.has(a.id),surfaceProbe:contrast.get(a.id)||null,inApplication:'Pojedinačni dinamički prikaz ovog fajla nije potvrđen ovim statičkim zapisom. Delimični pregled emulatora je zasebno evidentiran u emulator-2026-10-25/index.html.'};
  if(!a.evidence.sheet)throw Error('Unreviewed sheet: '+a.id);
  if(a.file.includes('/treasury-effect-previews/')){
   a.activation='inactive-css-art';a.activationReason='Kasniji #riznica-screen#riznica-screen#riznica-screen .effect-preview-box::before/::after u theme-treasury-room.css isključuje ove pozadine. Aktivni IMG rešava managers.js.';
@@ -67,6 +78,7 @@ for(const a of all){
   a.resolution='Zamenjeno pregledanim PNG-om ili postojećom kanonskom video-ikonom. Resolveri i preloader odmah koriste novu putanju; istorijski fajl nije aktivan prikaz.';
  }
  if(a.replaces)a.reason=a.qualityReview||'Nova zasebna PNG izvedenica, vizuelno pregledana u velikom i 28px prikazu na podlozi teme; uklonjen evidentirani problem. Dimenzije i optička veličina sačuvani.';
+ if(a.canonicalVariantOf)a.reason=a.variantReview;
  if(a.file.includes('/skin-action-buttons-v1/')||a.file.includes('/skin-roll-counter-v1/')||a.file.includes('/dice-skins-v1/')||a.file.includes('/treasury-skin-previews/')){
   a.exception='Vlasništvo skina, nezavisno od izabrane teme. Isti skin i njegove komande rade u svih deset tema; ovo nije kopiranje tematskog icon packa.';
  }
@@ -98,8 +110,8 @@ const htmlEscape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>'
   accepted:all.filter(a=>a.theme===id&&active(a)&&a.visualStatus==='prihvatljiv').length,
   refine:all.filter(a=>a.theme===id&&active(a)&&a.visualStatus==='potrebna dorada').length,
   replace:all.filter(a=>a.theme===id&&active(a)&&a.visualStatus==='potrebna zamena').length}));
- const report={schemaVersion:1,date:'2026-10-24',scope:definitions.visualAssetFamilyAuditRule,
-  evidenceLevel:'Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, kanonski potrošači, dimenzije i alpha uzorci provereni. Browser je odbio file:// navigaciju, pa ovaj prolaz nije puna vizuelna potvrda svakog dinamičkog prikaza niti Samsung S25 testa.',
+ const report={schemaVersion:1,date:'2026-10-25',scope:definitions.visualAssetFamilyAuditRule,
+  evidenceLevel:'Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, kanonski potrošači, dimenzije i alpha uzorci provereni. Delimični pregled na emulatoru je u zasebnoj evidenciji emulator-2026-10-25/index.html; nije potvrđen svaki dinamički prikaz niti fizički Samsung S25.',
   totalPathCandidates:all.length,activePathCount:all.filter(active).length,inactivePathCount:all.filter(a=>!active(a)).length,totals,summary,
   starCorrection:{themes:[...new Set(stars.assets.map(a=>a.theme))],masters:stars.assets.length,productionPngs:stars.assets.reduce((n,a)=>n+a.production.length,0),manifest:'source-assets/theme-tournament-star-v2/manifest.json',preservedThemes:['dark','light','medium'],routing:'menu, intro, room, rules, medals, finalist, ceremony and preload updated'},
   qualityRefresh:{manifest:'source-assets/theme-quality-refresh-v2/manifest.json',planned:quality.assets.length,verified:quality.assets.filter(a=>a.status==='verified').length,awaitingReview:quality.assets.filter(a=>a.status==='generated-awaiting-review').length,pending:quality.assets.filter(a=>a.status==='pending').length,canonicalVideoRedirects:quality.redirects.length,runtime:'www/theme-quality-assets.js'},

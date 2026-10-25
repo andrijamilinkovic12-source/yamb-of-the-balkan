@@ -1,4 +1,37 @@
 /* Green menu typography is the shared geometry; themes supply only ink and shadows. */
+body:is(.light-theme,.easter-theme) #main-menu#main-menu .modes-grid .mode-text {
+    color: var(--theme-card-ink) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.6) !important;
+}
+body.winter-theme { --menu-caption-edge: #18384B; }
+body.severna-theme { --menu-caption-edge: #0F2137; }
+body.winter-theme #main-menu#main-menu .modes-grid .mode-text {
+    color: #FFF4E5 !important;
+}
+body:is(.winter-theme,.severna-theme) #main-menu#main-menu .modes-grid .mode-text {
+    text-shadow: .6px 0 var(--menu-caption-edge), -.6px 0 var(--menu-caption-edge),
+        0 .6px var(--menu-caption-edge), 0 -.6px var(--menu-caption-edge),
+        0 1px 3px var(--menu-caption-edge) !important;
+}
+/* Summary captions must stay readable on their themed card surfaces. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #main-menu#main-menu .main-summary-row :is(.main-online-card span[data-lang="ui_online_short"], .main-economy-card span[data-lang="menu_ducats"]) {
+    color: var(--theme-card-ink) !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #main-menu#main-menu .main-summary-row .main-online-card #live-online-count {
+    color: var(--theme-card-primary) !important;
+    text-shadow: none !important;
+}
+/* Cherry's Online tile uses its pale accent, with dark cherry ink. */
+body.medium-theme #main-menu#main-menu .main-summary-row > .main-online-card {
+    background: linear-gradient(145deg, #F1C3B2, #E6C9C4) !important;
+}
+body.medium-theme #main-menu#main-menu .main-summary-row .main-online-card :is(#live-online-count, span[data-lang="ui_online_short"]) {
+    color: #301019 !important;
+}
 #main-menu#main-menu .modes-grid .mode-text {
     display: block !important;
     width: 100% !important;

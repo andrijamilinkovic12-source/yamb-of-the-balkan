@@ -50,7 +50,7 @@
     "check:theme-online-players-final": "node scripts/check-theme-online-players-room.js && node scripts/check-theme-online-players-final.cjs",
     "check:theme-economy-final": "node scripts/check-theme-economy-critical-v2.js && node scripts/check-theme-economy-contrast.js && node scripts/check-theme-economy-final.cjs && node scripts/check-ad-reward-flow.js && node scripts/check-offline-undo-reward.js",
     "check:theme-economy-critical": "node scripts/check-theme-economy-critical-v2.js",
-    "check:theme-treasury-final": "node scripts/check-theme-treasury-controls.js && node scripts/check-theme-treasury-final.cjs && node scripts/check-trophies.js",
+    "check:theme-treasury-final": "node scripts/check-theme-treasury-controls.js && node scripts/check-theme-treasury-final.cjs && node scripts/check-trophies.js && node scripts/check-effect-card-thumbnails.cjs",
     "check:theme-tournament-final": "node scripts/check-tournament-room-packs.js && node scripts/check-theme-tournament-final.cjs",
     "check:theme-visual-audit": "node scripts/check-tournament-star-v2.cjs && node scripts/audit-main-room-icon-routing.js && node scripts/audit-theme-canonical-use.cjs --check",
     "check:theme-quality-refresh": "node scripts/check-theme-quality-refresh.cjs --complete",

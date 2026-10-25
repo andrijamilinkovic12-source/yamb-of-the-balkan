@@ -73,5 +73,36 @@ app.socket = { connected: false };
             assert(fs.existsSync(path.join(root, 'www', url.split('?')[0])), `${theme}: missing ${url}`);
         }
     }
+
+    let releaseSettings;
+    const settingsReady = new Promise(resolve => { releaseSettings = resolve; });
+    context.window.themeSettingsRoom = {
+        sources: () => ['settings-profile.png', 'settings-sound.png'],
+        prepare: (_, options) => {
+            assert.equal(options.timeoutMs, 6000);
+            return settingsReady;
+        }
+    };
+    context.document.getElementById = id => id === 'settings-screen'
+        ? { classList: { contains: () => true } }
+        : id === 'setting-theme' ? { blur() {} } : null;
+    app.isThemeUnlocked = () => true;
+    app.warmThemePack = () => ({ critical: Promise.resolve(true) });
+    app.preloadThemeSources = () => Promise.resolve(true);
+    app.prepareThemeLoadingGate = () => {};
+    app.hideThemeLoadingGate = () => {};
+    app.saveSettingAuto('theme', 'light');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(storage.get('yamb_theme'), 'neon', 'Generic preload must not release the visible Settings pack early');
+    releaseSettings();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(storage.get('yamb_theme'), 'light');
+    assert.equal(app.appliedTheme, 'light');
+
+    context.window.themeSettingsRoom.prepare = () => Promise.reject(new Error('Image decode failed'));
+    app.saveSettingAuto('theme', 'neon');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(storage.get('yamb_theme'), 'light', 'Failed Settings artwork must preserve the previous complete theme');
+    assert.equal(app.appliedTheme, 'light');
     console.log('In-game theme switch waits for visible decoded PNGs, then changes theme; special assets exist.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

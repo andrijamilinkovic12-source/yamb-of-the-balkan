@@ -5997,10 +5997,15 @@ class YambApp {
             const settingsSources = document.getElementById('settings-screen')?.classList.contains('active')
                 ? (window.themeSettingsRoom?.sources?.(nextTheme) || []) : [];
             const settingsReady = this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
+            // Keep the Settings controller's decoded images ready too. A separate
+            // generic preload can be evicted before its theme observer runs.
+            const settingsPackReady = settingsSources.length && window.themeSettingsRoom?.prepare
+                ? window.themeSettingsRoom.prepare(nextTheme, { timeoutMs: 6000 }).then(() => true, () => false)
+                : Promise.resolve(true);
             this.prepareThemeLoadingGate(nextTheme, { manualSwitch: true });
-            Promise.all([warmup.critical, settingsReady]).then(([menuReady, visibleSettingsReady]) => {
+            Promise.all([warmup.critical, settingsReady, settingsPackReady]).then(([menuReady, visibleSettingsReady, decodedSettingsReady]) => {
                 if (token !== this.themeSwitchRequestToken) return;
-                if (menuReady === false || visibleSettingsReady === false) {
+                if (menuReady === false || visibleSettingsReady === false || decodedSettingsReady === false) {
                     this.hideThemeLoadingGate({ immediate: true });
                     const english = (localStorage.getItem('yamb_lang') || 'sr').startsWith('en');
                     window.showNotification?.(

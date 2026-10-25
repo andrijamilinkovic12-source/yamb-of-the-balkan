@@ -1,20 +1,20 @@
 # Vizuelni audit PNG assetsa
 
-Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, kanonski potrošači, dimenzije i alpha uzorci provereni. Browser je odbio file:// navigaciju, pa ovaj prolaz nije puna vizuelna potvrda svakog dinamičkog prikaza niti Samsung S25 testa.
+Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, kanonski potrošači, dimenzije i alpha uzorci provereni. Delimični pregled na emulatoru je u zasebnoj evidenciji emulator-2026-10-25/index.html; nije potvrđen svaki dinamički prikaz niti fizički Samsung S25.
 
 | Tema | Aktivne putanje | Prihvatljivo | Dorada | Zamena |
 |---|---:|---:|---:|---:|
-| Zelena | 197 | 197 | 0 | 0 |
-| Svetlo Zlato | 190 | 190 | 0 | 0 |
-| Trula Višnja | 190 | 190 | 0 | 0 |
-| Plavi Okean | 190 | 190 | 0 | 0 |
-| Neon Cyber | 191 | 191 | 0 | 0 |
-| Kraljevski Ametist | 190 | 190 | 0 | 0 |
-| Vaskršnja | 192 | 192 | 0 | 0 |
-| Pustinjsko Staklo | 191 | 191 | 0 | 0 |
-| Mesečev Sjaj | 190 | 190 | 0 | 0 |
-| Severna Maglina | 191 | 191 | 0 | 0 |
-| Univerzalni skinovi i materijali | 435 | 435 | 0 | 0 |
+| Zelena | 201 | 201 | 0 | 0 |
+| Svetlo Zlato | 194 | 194 | 0 | 0 |
+| Trula Višnja | 194 | 194 | 0 | 0 |
+| Plavi Okean | 194 | 194 | 0 | 0 |
+| Neon Cyber | 195 | 195 | 0 | 0 |
+| Kraljevski Ametist | 194 | 194 | 0 | 0 |
+| Vaskršnja | 196 | 196 | 0 | 0 |
+| Pustinjsko Staklo | 195 | 195 | 0 | 0 |
+| Mesečev Sjaj | 194 | 194 | 0 | 0 |
+| Severna Maglina | 195 | 195 | 0 | 0 |
+| Univerzalni skinovi i materijali | 438 | 438 | 0 | 0 |
 
 ## Primena dorada
 

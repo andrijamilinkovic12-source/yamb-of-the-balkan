@@ -2846,20 +2846,19 @@ class ShopManager {
     }
 
     getTreasuryEffectPreviewSource(effectId) {
-        if (effectId === 'ice_age') return 'assets/effects/stage-v1/frost-corner.png?v=1';
+        const previewRoot = 'assets/effects/treasury-thumbnails-v1';
+        if (effectId === 'ice_age') return `${previewRoot}/universal-ice-age-v1.png`;
         const selected = localStorage.getItem('yamb_theme') || 'dark';
         const theme = YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
-        if (effectId === 'balkan') return 'assets/effects/stage-v1/trumpet.png?v=1';
-        if (effectId === 'dragon_fire') return 'assets/effects/stage-v1/flame.png?v=1';
-        if (effectId === 'ufo_abduction') return `assets/effects/stage-v1/ufo-${theme}.png?v=1`;
-        if (effectId === 'royal_yamb') return theme === 'dark'
-            ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
-            : `assets/theme-packs/${theme}/splash-title-soft-clay-v1.png?v=1`;
+        if (effectId === 'balkan') return `${previewRoot}/universal-balkan-v1.png`;
+        if (effectId === 'dragon_fire') return `${previewRoot}/universal-dragon-fire-v1.png`;
+        if (effectId === 'ufo_abduction') return `${previewRoot}/${theme}-ufo-abduction-v1.png`;
+        if (effectId === 'royal_yamb') return `${previewRoot}/${theme}-royal-yamb-v1.png`;
         if (effectId === 'black_hole' && YAMB_THEME_IDS.includes(theme)) {
-            return `assets/effects/black-hole/${theme}-core-v1.png`;
+            return `${previewRoot}/${theme}-black-hole-v1.png`;
         }
         if (effectId === 'supernova') {
-            return `assets/effects/supernova/${YAMB_THEME_IDS.includes(theme) ? theme : 'dark'}-plasma-v2.png`;
+            return `${previewRoot}/${theme}-supernova-v1.png`;
         }
         const roles = {
             confetti: 'confetti', gold_rain: 'gold-rain', balkan: 'wedding',

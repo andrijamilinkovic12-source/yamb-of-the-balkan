@@ -24,7 +24,7 @@
     "blackHoleEffect": "source-assets/theme-live-black-hole-v1/manifest.json",
     "supernovaEffect": "source-assets/theme-live-supernova-v2/manifest.json",
     "liveStage": "source-assets/theme-live-stage-v1/manifest.json",
-    "supplementaryPacks": 27
+    "supplementaryPacks": 28
   },
   "sourceSha256": {
     "themeDefinitions": "bb4abff8401c7f77e978915ffaea3ca941022bf9866d8b783e94386abbc04aa6",
@@ -446,6 +446,10 @@
     {
       "path": "source-assets/theme-economy-critical-v2/manifest.json",
       "sha256": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9"
+    },
+    {
+      "path": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
+      "sha256": "393e6e3abddec62591a635f265f15cf658adbb5e6e997aa88b14eeda1d055e89"
     },
     {
       "path": "source-assets/theme-game-header-v1/manifest.json",
@@ -1053,14 +1057,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/dark-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/dark-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/dark-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/dark-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -1073,11 +1081,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-dark.png",
-            "royal_yamb": "www/assets/green-soft-clay/splash-title-soft-clay-v2.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/dark-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/dark-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -1604,14 +1612,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/light-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/light-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/light-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/light-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -1624,11 +1636,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-light.png",
-            "royal_yamb": "www/assets/theme-packs/light/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/light-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/light-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -2164,14 +2176,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/medium-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/medium-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/medium-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/medium-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -2184,11 +2200,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-medium.png",
-            "royal_yamb": "www/assets/theme-packs/medium/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/medium-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/medium-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -2741,14 +2757,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/winter-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/winter-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/winter-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/winter-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -2761,11 +2781,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-winter.png",
-            "royal_yamb": "www/assets/theme-packs/winter/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/winter-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/winter-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -3313,14 +3333,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/neon-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/neon-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/neon-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/neon-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -3333,11 +3357,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-neon.png",
-            "royal_yamb": "www/assets/theme-packs/neon/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/neon-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/neon-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -3888,14 +3912,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/amethyst-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/amethyst-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/amethyst-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/amethyst-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -3908,11 +3936,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-amethyst.png",
-            "royal_yamb": "www/assets/theme-packs/amethyst/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/amethyst-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/amethyst-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -4499,14 +4527,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/easter-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/easter-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/easter-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/easter-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -4519,11 +4551,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-easter.png",
-            "royal_yamb": "www/assets/theme-packs/easter/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/easter-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/easter-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -5112,14 +5144,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/desert-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/desert-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/desert-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/desert-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -5132,11 +5168,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-desert.png",
-            "royal_yamb": "www/assets/theme-packs/desert/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/desert-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/desert-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -5689,14 +5725,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/moon-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/moon-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/moon-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/moon-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -5709,11 +5749,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-moon.png",
-            "royal_yamb": "www/assets/theme-packs/moon/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/moon-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/moon-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",
@@ -6302,14 +6342,18 @@
         "blackHole": {
           "runtimeEffectId": "black_hole",
           "primaryPath": "www/assets/effects/black-hole/severna-core-v1.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/severna-black-hole-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-black-hole-v1/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
         "supernova": {
           "runtimeEffectId": "supernova",
           "primaryPath": "www/assets/effects/supernova/severna-plasma-v2.png",
-          "runtimeAndTreasuryUseSamePng": true,
+          "treasuryThumbnailPath": "www/assets/effects/treasury-thumbnails-v1/severna-supernova-v1.png",
+          "runtimeAndTreasuryUseSamePng": false,
+          "canonicalDerivativeManifest": "source-assets/theme-effect-card-thumbnails-v1/manifest.json",
           "sourceManifest": "source-assets/theme-live-supernova-v2/manifest.json",
           "visualAudit": "new-theme-specific-png; device-review-pending"
         },
@@ -6322,11 +6366,11 @@
             "www/assets/effects/stage-v1/frost-corner.png"
           ],
           "treasuryPreviewOverrides": {
-            "ice_age": "www/assets/effects/stage-v1/frost-corner.png",
-            "balkan": "www/assets/effects/stage-v1/trumpet.png",
-            "dragon_fire": "www/assets/effects/stage-v1/flame.png",
-            "ufo_abduction": "www/assets/effects/stage-v1/ufo-severna.png",
-            "royal_yamb": "www/assets/theme-packs/severna/splash-title-soft-clay-v1.png"
+            "ice_age": "www/assets/effects/treasury-thumbnails-v1/universal-ice-age-v1.png",
+            "balkan": "www/assets/effects/treasury-thumbnails-v1/universal-balkan-v1.png",
+            "dragon_fire": "www/assets/effects/treasury-thumbnails-v1/universal-dragon-fire-v1.png",
+            "ufo_abduction": "www/assets/effects/treasury-thumbnails-v1/severna-ufo-abduction-v1.png",
+            "royal_yamb": "www/assets/effects/treasury-thumbnails-v1/severna-royal-yamb-v1.png"
           },
           "canonicalReuse": [
             "game-logo",

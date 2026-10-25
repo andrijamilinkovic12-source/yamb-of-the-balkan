@@ -570,6 +570,19 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 
 /* The three summary cards keep their own theme surfaces and Green's shared geometry. */
+/* A translucent gold card over the dark tree made the balance unreadable. */
+body.light-theme #main-menu .main-summary-row > .main-economy-card {
+    background: linear-gradient(145deg, var(--theme-card-surface), var(--theme-card-raised)) !important;
+    border-color: var(--theme-card-border) !important;
+}
+body.light-theme #main-menu .main-summary-row .main-economy-card #menu-dukati-count {
+    color: var(--theme-card-primary) !important;
+    text-shadow: none !important;
+}
+body.light-theme #main-menu .main-summary-row .main-economy-card span[data-lang="menu_ducats"] {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
 #main-menu .main-summary-row {
     box-sizing: border-box;
     width: 100% !important;

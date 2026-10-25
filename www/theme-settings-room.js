@@ -40,14 +40,26 @@
         promise.catch(() => cache.delete(src));
         return promise;
     };
-    const prepare = theme => Promise.all(sources(theme).map(preload));
+    const prepare = (theme, { timeoutMs = 0 } = {}) => {
+        const visibleSources = [...sources(theme), window.themeGameHeader?.asset('close', theme)].filter(Boolean);
+        const loading = Promise.all([...new Set(visibleSources)].map(preload));
+        if (!timeoutMs) return loading;
+        let timer;
+        return Promise.race([
+            loading,
+            new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Settings artwork timeout')), timeoutMs); })
+        ]).finally(() => clearTimeout(timer));
+    };
     const apply = async () => {
         const theme = activeTheme(), token = ++request;
-        const icons = [...document.querySelectorAll('img[data-settings-role]')];
-        await Promise.allSettled(icons.map(icon => preload(asset(icon.dataset.settingsRole, theme))));
+        // Shared audio controls also carry game-header roles. Update them with
+        // the visible Settings pack instead of waiting for hidden game controls.
+        const icons = [...document.querySelectorAll('img[data-settings-role], .settings-standard-icon[data-game-header-role]')];
+        const roleOf = icon => icon.dataset.settingsRole || icon.dataset.gameHeaderRole;
+        await Promise.allSettled(icons.map(icon => preload(asset(roleOf(icon), theme))));
         if (token !== request) return;
         icons.forEach(icon => {
-            const src = asset(icon.dataset.settingsRole, theme);
+            const src = asset(roleOf(icon), theme);
             if (cache.has(src)) icon.src = src;
         });
     };
