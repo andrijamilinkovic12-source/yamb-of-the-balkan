@@ -24,6 +24,11 @@ img[data-leaderboard-error="true"] { opacity: 0 !important; }
 #highscores-screen .hs-panel-title { display: flex; align-items: center; justify-content: center; gap: 7px; }
 #highscores-screen .hs-tab-btn { gap: 4px; }
 #highscores-screen .rank-1::before { display: none !important; }
+/* Legacy Easter hid every rank label, including places without a medal. */
+#highscores-screen#highscores-screen .rank-circle:not(:is(.rank-1,.rank-2,.rank-3)) .hs-rank-legacy {
+    display: inline !important;
+    color: inherit !important;
+}
 #highscores-screen .rank-circle:is(.rank-1,.rank-2,.rank-3) {
     background: transparent !important;
     border-color: transparent !important;

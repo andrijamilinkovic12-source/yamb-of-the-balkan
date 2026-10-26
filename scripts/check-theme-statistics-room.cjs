@@ -65,13 +65,14 @@ for (const file of ['powerindex.js','vatreniniz.js']) {
   for (const marker of ['data-stat-icon="avatar"','data-stat-medal-context=']) if (!code.includes(marker)) throw Error(`Unbound ranking asset in ${file}: ${marker}`);
 }
 for (const stylesheet of ['theme-statistics-room.css','theme-statistics-layout.css','theme-statistics-leaderboards.css','theme-medals.css','theme-room-close-controls.css']) if (!html.includes(`href="${stylesheet}?`)) throw Error(`Missing statistics stylesheet: ${stylesheet}`);
-if (!html.includes('theme-statistics-room.css?v=5') || !html.includes('theme-statistics-leaderboards.css?v=3')) throw Error('Statistics CSS cache version is stale');
+if (!html.includes('theme-statistics-room.css?v=5') || !html.includes('theme-statistics-leaderboards.css?v=4')) throw Error('Statistics CSS cache version is stale');
 const config=fs.readFileSync(path.join(root,'www/config.js'),'utf8');
 const game=fs.readFileSync(path.join(root,'www/game.js'),'utf8');
 if (!config.includes('ROOM_INTRO_TIMING = Object.freeze({ openAtMs: 2400, durationMs: 3200 })') || !game.includes("this.playEasterRoomIntro('statistics'")) throw Error('Statistics intro does not use the common room timing');
 const greenCss=fs.readFileSync(path.join(root,'www/teme.css'),'utf8');
 const roomCss=fs.readFileSync(path.join(root,'www/theme-statistics-room.css'),'utf8');
 const rankCss=fs.readFileSync(path.join(root,'www/theme-statistics-leaderboards.css'),'utf8');
+const layoutCss=fs.readFileSync(path.join(root,'www/theme-statistics-layout.css'),'utf8');
 if (!roomCss.includes('background:var(--green-clay-surface-soft) !important;') || !rankCss.includes('background:var(--green-clay-surface-soft) !important;')) throw Error('Green Statistics contrast layers are missing');
 const lightInk=[242,246,232];
 const luminance=rgb=>rgb.map(value=>{const v=value/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
@@ -89,6 +90,11 @@ for (const endpoint of greenSurface.slice(1).map(value=>value.split(',').map(Num
   if (contrast(lightInk,composed)<4.5) throw Error('Green Statistics surface text contrast is below 4.5:1');
 }
 for (const rgb of [[52,89,55],[59,96,58],[62,99,60]]) if (contrast(lightInk,rgb)<4.5) throw Error('Green Statistics subcard text contrast is below 4.5:1');
+for (const hex of ['#b5e5b6','#e2dfab','#ffd0b8']) for (const backdrop of [0,255]) {
+  const text=[1,3,5].map(index=>parseInt(hex.slice(index,index+2),16));
+  const surface=[59,96,58].map(channel=>channel*.98+backdrop*.02);
+  if (contrast(text,surface)<4.5) throw Error('Green H2H status text contrast below 4.5:1');
+}
 for (const theme of themes.filter(value=>value!=='dark')) {
   const palette=roomCss.match(new RegExp(`body\\.${theme}-theme \\{ ([^}]+) \\}`));
   if (!palette) throw Error(`${theme}: missing Statistics palette`);
@@ -96,11 +102,17 @@ for (const theme of themes.filter(value=>value!=='dark')) {
   const ink=[1,3,5].map(index=>parseInt(vars['stats-ink'].slice(index,index+2),16));
   const muted=[1,3,5].map(index=>parseInt(vars['stats-muted'].slice(index,index+2),16));
   const accent=[1,3,5].map(index=>parseInt(vars['stats-accent'].slice(index,index+2),16));
+  const statusPalette=layoutCss.match(new RegExp(`body\\.${theme}-theme \\{ ([^}]+) \\}`))[1];
   for (const layer of ['surface','card','subcard']) {
     const rgba=vars[`stats-${layer}`].match(/rgba\(([^)]+)\)/)[1].split(',').map(Number);
     for (const backdrop of [0,255]) {
       const composed=rgba.slice(0,3).map(channel=>channel*rgba[3]+backdrop*(1-rgba[3]));
       for (const text of [ink,muted,accent]) if (contrast(text,composed)<4.5) throw Error(`${theme} ${layer}: Statistics contrast below 4.5:1`);
+      if (layer==='subcard') for (const status of ['win','draw','loss']) {
+        const hex=statusPalette.match(new RegExp(`--stats-${status}:(#[a-f0-9]+)`))[1];
+        const text=[1,3,5].map(index=>parseInt(hex.slice(index,index+2),16));
+        if (contrast(text,composed)<4.5) throw Error(`${theme} H2H ${status}: text contrast below 4.5:1`);
+      }
     }
   }
 }

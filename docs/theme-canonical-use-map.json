@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedOn": "2026-10-24",
+  "generatedOn": "2026-10-25",
   "scope": "Aktivni ponavljani semantički PNG identiteti u 15 soba i podprikazima; univerzalni skinovi i zajednički efekat Ledeno doba su izuzeti.",
   "evidence": "Putanje, PNG potpisi, dimenzije, SHA-256, kodski potrošači i aktivni resolveri. Vizuelna ocena kompozita zahteva zaseban pregled.",
   "themes": [
@@ -23974,13 +23974,13 @@
     "Ledeno doba ima odobrene zajedničke PNG mastere za svih deset tema."
   ],
   "retiredAssetAudit": {
-    "scannedAppFiles": 88,
+    "scannedAppFiles": 89,
     "retiredLiteralPngReferences": [],
     "obsoleteCurrencySvg": [],
     "activeInlineSvg": [
       {
         "file": "www/index.html",
-        "offset": 27696
+        "offset": 27763
       },
       {
         "file": "www/onlinenumber.js",

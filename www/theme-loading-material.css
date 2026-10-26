@@ -1,0 +1,66 @@
+/* The destination theme owns the loading gate, even while body still uses the old theme. */
+#theme-loading-gate.theme-dark {
+    --gate-surface:#344f37; --gate-ink:#f2f6e8; --gate-accent:#e2dfab; --gate-muted:#d8e5cf;
+    --theme-loading-bg-image:url('assets/green-clay-balkan-diorama-v4.png');
+}
+#theme-loading-gate.theme-light {
+    --gate-surface:#fff1d7; --gate-ink:#392817; --gate-accent:#875024; --gate-muted:#705237;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/light-v9.png');
+}
+#theme-loading-gate.theme-medium {
+    --gate-surface:#431720; --gate-ink:#fff6f2; --gate-accent:#f1c3b2; --gate-muted:#e6c9c4;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/medium-v9.png');
+}
+#theme-loading-gate.theme-winter {
+    --gate-surface:#fff4e5; --gate-ink:#18384b; --gate-accent:#0b5c8c; --gate-muted:#476874;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/winter-v13.png');
+}
+#theme-loading-gate.theme-neon {
+    --gate-surface:#121b2b; --gate-ink:#f4faff; --gate-accent:#56e5d2; --gate-muted:#b5c7d6;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/neon-v4.png');
+}
+#theme-loading-gate.theme-amethyst {
+    --gate-surface:#3c284b; --gate-ink:#fbf6ff; --gate-accent:#f2c879; --gate-muted:#e0cde5;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/amethyst-v6.png');
+}
+#theme-loading-gate.theme-easter {
+    --gate-surface:#fff8ea; --gate-ink:#3d4434; --gate-accent:#4d6b45; --gate-muted:#5f654f;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/easter-v6-1.png');
+}
+#theme-loading-gate.theme-desert {
+    --gate-surface:#fff0da; --gate-ink:#443027; --gate-accent:#7d4d38; --gate-muted:#70513d;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/desert-v8-2.png');
+}
+#theme-loading-gate.theme-moon {
+    --gate-surface:#252934; --gate-ink:#f5f5f7; --gate-accent:#e1e2e7; --gate-muted:#c9cad2;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/moon-v14.png');
+}
+#theme-loading-gate.theme-severna {
+    --gate-surface:#182c44; --gate-ink:#f5fbff; --gate-accent:#8ae3e4; --gate-muted:#c3d8e0;
+    --theme-loading-bg-image:url('assets/theme-backgrounds/severna-v4.png');
+}
+#theme-loading-gate {
+    --theme-loading-base:var(--gate-surface);
+    --theme-loading-ink:var(--gate-ink);
+    --theme-loading-title:var(--gate-ink);
+    --theme-loading-muted:var(--gate-muted);
+    --theme-loading-accent:var(--gate-accent);
+    --theme-loading-accent-2:var(--gate-muted);
+    --theme-loading-panel:var(--gate-surface);
+    --theme-loading-panel-light:rgba(255,255,255,.04);
+    --theme-loading-panel-dark:rgba(0,0,0,.02);
+    --theme-loading-pill-bg:var(--gate-surface);
+    --theme-loading-pill-ink:var(--gate-ink);
+    --theme-loading-pill-line:var(--gate-accent);
+    --theme-loading-status:var(--gate-muted);
+}
+#theme-loading-gate .theme-loading-gate__panel {
+    color:var(--gate-ink) !important;
+    border-color:var(--gate-accent) !important;
+}
+#theme-loading-gate #theme-loading-title {
+    color:var(--gate-ink) !important;
+    text-shadow:none !important;
+}
+#theme-loading-gate #theme-loading-kicker { color:var(--gate-accent) !important; text-shadow:none !important; }
+#theme-loading-gate #theme-loading-copy { color:var(--gate-muted) !important; text-shadow:none !important; }

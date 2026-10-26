@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-24",
-  "definitionSchemaVersion": 69,
+  "updatedOn": "2026-10-25",
+  "definitionSchemaVersion": 71,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
@@ -27,7 +27,7 @@
     "supplementaryPacks": 28
   },
   "sourceSha256": {
-    "themeDefinitions": "bb4abff8401c7f77e978915ffaea3ca941022bf9866d8b783e94386abbc04aa6",
+    "themeDefinitions": "4ef68e66863082a214b598453a73cd840df43958f27862ce2378e8fd04d0b706",
     "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
     "greenRegistry": "c268f8627b5b332a49828e877d98a6219004bcc5696045f28b6b0d54ad8134f0",

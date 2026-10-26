@@ -26,6 +26,28 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     text-shadow: none !important;
 }
 /* Cherry's Online tile uses its pale accent, with dark cherry ink. */
+/* Easter uses its approved cream/sage material, including the league accents. */
+body.easter-theme #main-menu#main-menu .main-summary-row > :is(.main-online-card,.main-league-card,.main-economy-card) {
+    background:linear-gradient(145deg,var(--theme-card-surface),var(--theme-card-raised)) !important;
+    border-color:var(--theme-card-border) !important;
+    box-shadow:var(--theme-card-shadow) !important;
+}
+body.easter-theme #main-menu#main-menu .main-summary-row .main-league-card :is(.main-league-title,#league-pts-text) {
+    color:var(--theme-card-ink) !important;
+    text-shadow:none !important;
+}
+body.easter-theme #main-menu#main-menu .main-summary-row .main-league-card #league-rank-name {
+    color:var(--theme-card-primary) !important;
+    text-shadow:none !important;
+}
+body.easter-theme #main-menu#main-menu .main-summary-row .main-league-progress {
+    background:var(--theme-card-inset) !important;
+    box-shadow:inset 0 1px 3px rgba(61,68,52,.16) !important;
+}
+body.easter-theme #main-menu#main-menu .main-summary-row #league-progress-bar {
+    background:linear-gradient(90deg,var(--theme-card-primary),var(--theme-card-border)) !important;
+    box-shadow:none !important;
+}
 body.medium-theme #main-menu#main-menu .main-summary-row > .main-online-card {
     background: linear-gradient(145deg, #F1C3B2, #E6C9C4) !important;
 }

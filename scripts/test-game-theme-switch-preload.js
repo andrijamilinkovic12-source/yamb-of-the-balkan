@@ -88,7 +88,11 @@ app.socket = { connected: false };
         : id === 'setting-theme' ? { blur() {} } : null;
     app.isThemeUnlocked = () => true;
     app.warmThemePack = () => ({ critical: Promise.resolve(true) });
-    app.preloadThemeSources = () => Promise.resolve(true);
+    let duplicateSettingsPreloads = 0;
+    app.preloadThemeSources = sources => {
+        if (sources.includes('settings-profile.png')) duplicateSettingsPreloads++;
+        return Promise.resolve(true);
+    };
     app.prepareThemeLoadingGate = () => {};
     app.hideThemeLoadingGate = () => {};
     app.saveSettingAuto('theme', 'light');
@@ -98,6 +102,7 @@ app.socket = { connected: false };
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(storage.get('yamb_theme'), 'light');
     assert.equal(app.appliedTheme, 'light');
+    assert.equal(duplicateSettingsPreloads, 0, 'Settings controller already owns the visible decoded pack; do not preload it twice');
 
     context.window.themeSettingsRoom.prepare = () => Promise.reject(new Error('Image decode failed'));
     app.saveSettingAuto('theme', 'neon');

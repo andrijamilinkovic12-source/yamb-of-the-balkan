@@ -140,7 +140,7 @@ assert.equal((topList.match(/data-leaderboard-control="global"/g) || []).length,
 assert.equal((topList.match(/data-leaderboard-control="local"/g) || []).length, 2);
 assert.ok(topList.includes('data-lang="hs_global_plain"'));
 assert.ok(topList.includes('data-lang="hs_local_list"'));
-assert.ok(html.includes('theme-leaderboard-room.css?v=4'));
+assert.ok(html.includes('theme-leaderboard-room.css?v=5'));
 assert.ok(html.indexOf('theme-leaderboard-room.js?v=2') < html.indexOf('toplista.js?v=5.0'));
 for (const file of ['www/index.html', 'www/toplista.js', 'www/game.js']) {
     const source = read(file).toString();

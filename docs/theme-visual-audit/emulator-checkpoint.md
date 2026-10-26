@@ -1,6 +1,24 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
-## Nastavak posle ponovnog otvaranja emulatora
+## Nastavak — stabilnost promene teme
+
+[Dijagnostika i regresioni dokazi R01/R13](../theme-switch-stability-2026-10-25.md). Lokalno je uklonjen vremenski prozor od 2,5s koji dopušta zakasnelom cloud odgovoru da vrati prethodnu temu. Ručni izbor sada ima prvenstvo u sesiji istog naloga, uz nalogom ograničen nepotvrđen izbor i proveru inventara. Obuhvaćeni su Settings, game panel i Riznica. Generički PNG preloader deli download/decode i ima ograničen cache; Settings ne priprema isti paket dva puta. Regresione provere prolaze. Brzina prvog transfera i potvrda u Android aplikaciji čekaju naredni korisnikov deploy; ranija galerija nije dokaz ovih novih izmena.
+
+## Najnoviji prolaz — posle korisnikovog commit/deploya
+
+[Galerija 80 stvarnih snimaka i nalazi R01–R13](emulator-deployed-2026-10-25/index.html), [strukturisana evidencija](emulator-deployed-2026-10-25/report.json). Javni Settings JS, Vatreni niz, Statistics CSS i menu typography provereni su kao HTTP 200 i normalizovano jednaki lokalnim verzijama na početku prolaza.
+
+Preostalih osam tema sada je pregledano u **Top listi (globalna i prazna lokalna), Statistici (pregled, H2H, obe rang-liste) i prvoj strani Pravila**. Zelena i Svetlo zlato imaju prethodni detaljniji prolaz; Zelena power kartica ponovo je potvrđena posle deploya. Potvrđena je popravka zaglavlja Vatrenog niza kroz osam dodatnih tema. U Ametistu su ponovo proverene manje kartice efekata, uključujući Crnu rupu i Supernovu.
+
+Nove lokalne ispravke, koje **još nisu objavljene**: R07 cache verzija menija; R08 Green geometrija unutrašnjeg podnožja i 44px navigacioni dodiri statistike; R09 tematski H2H kontrast; R10 Vaskršnje zaostale pastelne površine/redovi/skrol; R11 nevidljivi redni brojevi 4+ u Vaskršnjoj Top listi; R12 paleta i pozadina gate-a pripadaju odredišnoj temi. Palete su evidentirane u `docs/theme-definitions.json`; identiteti PNG nisu precrtavani zbog CSS problema.
+
+**Otvoreno:** R01 prvi hladni transfer tema Desert/Moon/Severna prekoračio je rok, ponovni izbor je uspeo. R13 pri kasnijem ulasku u Podešavanja primećen povratak na Desert; uzrok nije potvrđen i zahteva odvojenu proveru sinhronizacije, bez pretpostavke da je problem u samim PNG. Nova CSS popravka gate-a ne rešava transfer. Ostatak svih soba, retkih stanja i završnih ekrana nije označen kao potpuno pregledan.
+
+Provere: Statistics sa ponovnim otvaranjem istog Fire modala u deset tema i kontrastom H2H; Top lista i zaštita od zakašnjelog starog PNG; Pravila (10 tema / 2 jezika / 6 strana); decoded game theme switch; gate (10 usvojenih pozadina / 4.5:1 mastilo). Vizuelna potvrda novih lokalnih izmena čeka sledeći korisnikov deploy.
+
+Emulator je vraćen na Zelenu, originalni ekran 1440×3120 / 560 dpi, uz očuvanu prijavu. Nisu pokretane nove partije, kupovine ni nagradne reklame. Blokirajući poziv Lidije odbijan je prema izričitom korisnikovom odobrenju; automatski test interstitiali su zatvoreni Android back kontrolom. Tokom završnog vraćanja prozora došlo je do duže pauze alata/uređaja; iz nje se ne izvode merenja performansi aplikacije.
+
+## Prethodni nastavak — pre gornjeg deploya
 
 [Novi snimci i nalazi R04–R07](emulator-followup-2026-10-25/index.html). U ovom nastavku stvarno su otvoreni Top lista (globalna i prazna lokalna), Statistika (pregled, H2H i obe rang-liste) i Pravila u **Zelenoj i Svetlom zlatu**. Zeleni H2H detalj i šesta strana Pravila su dodatno pregledani. Preostalih osam tema ovih soba još nisu označene kao vizuelno potvrđene.
 

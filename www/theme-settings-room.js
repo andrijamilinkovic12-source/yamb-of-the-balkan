@@ -33,6 +33,8 @@
                 settled = true;
                 reject(error);
             };
+            img.fetchPriority = 'high';
+            img.decoding = 'async';
             img.src = src;
             if (img.complete && img.naturalWidth) img.onload();
         });

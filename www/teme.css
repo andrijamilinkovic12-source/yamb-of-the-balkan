@@ -4423,7 +4423,7 @@ body.easter-theme .trophy-showcase-total {
 }
 
 body.easter-theme ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #d9b8ff, #8b45be) !important;
+    background: linear-gradient(180deg, #879373, #4D6B45) !important;
 }
 
 /* Vaskr game HUD: potez, status i zona kockica kao neumorphic pills, bez promene rasporeda/dimenzija. */

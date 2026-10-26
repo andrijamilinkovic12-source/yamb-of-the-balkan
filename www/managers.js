@@ -3068,6 +3068,7 @@ class ShopManager {
 
         if (this.type === 'theme') {
             if (window.app && typeof window.app.applyTheme === 'function') {
+                window.app.rememberManualThemeSelection?.(itemId);
                 window.app.applyTheme(itemId);
             } else {
                 document.body.className = ''; 

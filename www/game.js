@@ -163,7 +163,7 @@ class YambApp {
         this.gameThemeLoading = new Set();
         this.themeImageObserver = null;
         this.installThemeImageHydrationObserver();
-        this.themeManualSwitchUntil = 0;
+        this.manualThemeSelection = null;
         this.skinManualSwitchUntil = 0;
         this.dualBoardLastFollowedPlayerIdx = null;
         this.onlineRollPending = false;
@@ -841,7 +841,7 @@ class YambApp {
         if (token !== this.themeSwitchRequestToken) return;
         button?.removeAttribute('aria-busy');
         menuButton?.removeAttribute('aria-busy');
-        this.themeManualSwitchUntil = Date.now() + 2500;
+        this.rememberManualThemeSelection(theme);
         localStorage.setItem('yamb_theme', theme);
         this.applyTheme(theme);
         const activeSkin = localStorage.getItem('yamb_active_skin');
@@ -2593,33 +2593,57 @@ class YambApp {
     preloadThemeImage(src, timeoutMs = 2200, priority = 'auto') {
         if (!src) return Promise.resolve(false);
         src = globalThis.resolveThemeQualityAsset?.(src) || src;
-
-        return new Promise(resolve => {
-            let settled = false;
+        this.themePreloadImages ||= new Map();
+        let entry = this.themePreloadImages.get(src);
+        if (!entry) {
             const img = new Image();
-            const finish = success => {
-                if (settled) return;
-                settled = true;
-                clearTimeout(timer);
-                resolve(success);
-            };
-            const timer = setTimeout(() => finish(false), timeoutMs);
+            entry = { image: img, ready: false, pixels: 0, usedAt: Date.now() };
+            entry.promise = new Promise(resolve => {
+                let settled = false, decoding = false;
+                const finish = success => {
+                    if (settled) return;
+                    settled = true;
+                    entry.ready = success;
+                    entry.pixels = success ? img.naturalWidth * img.naturalHeight : 0;
+                    if (!success && this.themePreloadImages.get(src) === entry) this.themePreloadImages.delete(src);
+                    resolve(success);
+                };
+                img.decoding = 'async';
+                img.fetchPriority = priority;
+                img.onload = async () => {
+                    if (settled || decoding) return;
+                    decoding = true;
+                    try { if (typeof img.decode === 'function') await img.decode(); }
+                    catch (_) { /* A loaded image remains a usable fallback. */ }
+                    finish(true);
+                };
+                img.onerror = () => finish(false);
+                img.src = src;
+                if (img.complete && img.naturalWidth > 0) void img.onload();
+            });
+            this.themePreloadImages.set(src, entry);
+            entry.promise.then(() => this.trimThemePreloadImages());
+        }
+        entry.usedAt = Date.now();
+        if (priority === 'high') entry.image.fetchPriority = 'high';
+        if (entry.ready) return Promise.resolve(true);
+        // Callers share one download/decode, but keep their own time budget.
+        // A timed-out caller must not discard a download that can warm the retry.
+        let timer;
+        return Promise.race([
+            entry.promise,
+            new Promise(resolve => { timer = setTimeout(() => resolve(false), timeoutMs); })
+        ]).finally(() => clearTimeout(timer));
+    }
 
-            img.decoding = 'async';
-            img.fetchPriority = priority;
-            img.onload = async () => {
-                try {
-                    if (typeof img.decode === 'function') await img.decode();
-                } catch (_) {
-                    // Učitana slika je dovoljna; decode greška ne sme blokirati temu.
-                }
-                finish(true);
-            };
-            img.onerror = () => finish(false);
-            img.src = src;
-
-            if (img.complete && img.naturalWidth > 0) finish(true);
-        });
+    trimThemePreloadImages() {
+        const entries = [...this.themePreloadImages.entries()].sort((a, b) => a[1].usedAt - b[1].usedAt);
+        let pixels = entries.reduce((sum, [, entry]) => sum + entry.pixels, 0);
+        for (const [source, entry] of entries) {
+            if (this.themePreloadImages.size <= 64 && pixels <= 12_000_000) break;
+            this.themePreloadImages.delete(source);
+            pixels -= entry.pixels;
+        }
     }
 
     preloadThemeSources(sources, { concurrency = 4, priority = 'auto', timeoutMs = 2200 } = {}) {
@@ -3393,6 +3417,40 @@ class YambApp {
         });
     }
 
+    rememberManualThemeSelection(theme) {
+        const uid = localStorage.getItem('yamb_uid') || '';
+        this.manualThemeSelection = { uid, theme };
+        // Keep an offline/unconfirmed choice scoped to this account on restart.
+        if (uid) localStorage.setItem(`yamb_theme_pending_sync_${uid}`, theme);
+    }
+
+    applySyncedThemeSelection(cloudTheme) {
+        const uid = localStorage.getItem('yamb_uid') || '';
+        const pendingKey = uid ? `yamb_theme_pending_sync_${uid}` : '';
+        const pendingTheme = pendingKey ? localStorage.getItem(pendingKey) : null;
+        let selection = this.manualThemeSelection?.uid === uid ? this.manualThemeSelection : null;
+        if (!selection && pendingTheme) selection = { uid, theme: pendingTheme };
+        // Inventory has already been merged by applyCloudProfileSync. A revoked
+        // entitlement must still obey the server; old account choices never leak.
+        if (selection && !this.isThemeUnlocked(selection.theme)) {
+            selection = null;
+            this.manualThemeSelection = null;
+            if (pendingKey) localStorage.removeItem(pendingKey);
+        }
+        if (selection) this.manualThemeSelection = selection;
+        const nextTheme = selection?.theme || cloudTheme;
+        if (pendingTheme && cloudTheme === nextTheme && pendingKey) localStorage.removeItem(pendingKey);
+        const current = localStorage.getItem('yamb_theme');
+        if (nextTheme !== current) {
+            localStorage.setItem('yamb_theme', nextTheme);
+            this.applyTheme(nextTheme, { initialLoad: true });
+        }
+        const themeSelect = document.getElementById('setting-theme');
+        if (themeSelect) themeSelect.value = nextTheme;
+        // Explicit local choice wins in this session, even after acknowledgement:
+        // an older concurrent profile reply can arrive after the confirming one.
+    }
+
     applyCloudProfileSync(data = {}) {
         const uid = localStorage.getItem('yamb_uid');
 
@@ -3539,16 +3597,7 @@ class YambApp {
             });
         }
         if (data.activeEffect) localStorage.setItem('yamb_active_effect', data.activeEffect);
-        if (data.activeTheme) {
-            const localTheme = localStorage.getItem('yamb_theme');
-            const hasRecentManualThemeSwitch = Date.now() < this.themeManualSwitchUntil;
-            if (!hasRecentManualThemeSwitch || data.activeTheme === localTheme) {
-                localStorage.setItem('yamb_theme', data.activeTheme);
-                this.applyTheme(data.activeTheme, { initialLoad: true });
-            }
-            const themeSelect = document.getElementById('setting-theme');
-            if (themeSelect) themeSelect.value = localStorage.getItem('yamb_theme') || data.activeTheme;
-        }
+        if (data.activeTheme) this.applySyncedThemeSelection(data.activeTheme);
 
         if (data.soundEnabled !== undefined) {
             localStorage.setItem('yamb_sound', data.soundEnabled);
@@ -5996,16 +6045,15 @@ class YambApp {
             const warmup = this.warmThemePack(nextTheme);
             const settingsSources = document.getElementById('settings-screen')?.classList.contains('active')
                 ? (window.themeSettingsRoom?.sources?.(nextTheme) || []) : [];
-            const settingsReady = this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
-            // Keep the Settings controller's decoded images ready too. A separate
-            // generic preload can be evicted before its theme observer runs.
+            // The Settings controller owns its decoded images. Do not create a
+            // second set of Image objects for the same visible pack in parallel.
             const settingsPackReady = settingsSources.length && window.themeSettingsRoom?.prepare
                 ? window.themeSettingsRoom.prepare(nextTheme, { timeoutMs: 6000 }).then(() => true, () => false)
-                : Promise.resolve(true);
+                : this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
             this.prepareThemeLoadingGate(nextTheme, { manualSwitch: true });
-            Promise.all([warmup.critical, settingsReady, settingsPackReady]).then(([menuReady, visibleSettingsReady, decodedSettingsReady]) => {
+            Promise.all([warmup.critical, settingsPackReady]).then(([menuReady, decodedSettingsReady]) => {
                 if (token !== this.themeSwitchRequestToken) return;
-                if (menuReady === false || visibleSettingsReady === false || decodedSettingsReady === false) {
+                if (menuReady === false || decodedSettingsReady === false) {
                     this.hideThemeLoadingGate({ immediate: true });
                     const english = (localStorage.getItem('yamb_lang') || 'sr').startsWith('en');
                     window.showNotification?.(
@@ -6015,7 +6063,7 @@ class YambApp {
                     );
                     return;
                 }
-                this.themeManualSwitchUntil = Date.now() + 2500;
+                this.rememberManualThemeSelection(nextTheme);
                 localStorage.setItem('yamb_theme', nextTheme);
                 this.applyTheme(nextTheme);
                 if (themeSelect) themeSelect.value = nextTheme;

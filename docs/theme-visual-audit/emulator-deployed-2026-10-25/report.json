@@ -1,0 +1,711 @@
+{
+  "date": "2026-10-25",
+  "scope": "Nastavak stvarnog vizuelnog pregleda nakon korisnikovog commit/deploya.",
+  "validation": [
+    "check:js",
+    "check:theme-statistics-room sa H2H kontrastom i ponovnim otvaranjem Fire modala kroz deset tema",
+    "check:theme-leaderboard-room",
+    "check:theme-rules-room",
+    "test-game-theme-switch-preload.js",
+    "check-theme-loading-material.cjs",
+    "check:theme-canonical-assets",
+    "check:theme-visual-audit",
+    "check:theme-quality-refresh",
+    "git diff --check"
+  ],
+  "deployment": "Javni HTTP200 izvori Settings, vatreniniz, Statistics CSS i menu typography normalizovano su jednaki lokalnim verzijama na pocetku prolaza. Lokalni R07–R12 popravci nastali tokom ovog prolaza jos nisu objavljeni.",
+  "method": "Vidljivi Android UI, pojedinacni ADB unosi i snimci; logicki360x780 (1080x2340 /480dpi). Bez WebView debug porta, session ekstrakcije ili file:// zaobilaska.",
+  "boundaries": "Nije zavrsena provera svih soba/stanja. Ne potvrduje retke podprikaze, sve stranice Pravila, nove zavrsne ekrane ili fluidnost svih efekata. Green i Light detaljniji pregled sacuvan je u prethodnoj galeriji.",
+  "safety": "Nisu pokretane nove partije, kupovine, preuzimanja nagrada ili rewarded reklame. Automatski interstitiali zatvarani Android back kontrolom. Ponavljani blokirajuci poziv od Lidije odbijen po izricitom korisnikovom odobrenju. Na kraju vracena Zelena, originalni ekran i ocuvana prijava.",
+  "findings": [
+    {
+      "id": "R01",
+      "status": "Delimicno potvrdjeno; hladno ucitavanje ostaje otvoreno.",
+      "scope": "Promena teme / Podesavanja",
+      "detail": "Kada se odabrana tema uspesno primeni, pregledani Settings PNG i X pripadaju njoj. Desert, Moon i Severna prvi put nisu stigli u 6s; prethodna tema ostaje, ponovni izbor uspeva. Nije potvrda trenutne promene iz praznog cache-a."
+    },
+    {
+      "id": "R02",
+      "status": "Potvrdjeno u prikazanim menijima; R10 je preostala Easter paleta.",
+      "scope": "Tekst glavnog menija",
+      "detail": "Cherry caption i svetli natpisi modova u Ocean/Severna vidljivi; Online/Dukati tekst koristi tematsko mastilo."
+    },
+    {
+      "id": "R03",
+      "status": "Potvrdjeno na prethodno problematicnom primeru.",
+      "scope": "Ametist / kartice efekata Riznice",
+      "detail": "BH i Supernova slike se vide odmah pri dolasku do kosmickih kartica. Ovo nije merenje svakog efekta i svih tema niti aktivacija animacija."
+    },
+    {
+      "id": "R04",
+      "status": "Potvrdjeno na objavljenoj verziji.",
+      "scope": "Zelena / power kartica",
+      "detail": "Naslov, opis ranga i broj koriste tamnozeleno mastilo, sa ocuvanom geometrijom."
+    },
+    {
+      "id": "R05",
+      "status": "Potvrdjeno kroz osam dodatnih tema.",
+      "scope": "Vatreni niz / zaglavlje",
+      "detail": "Isti persistentni modal prati odabranu temu i kanonski plamen; ne ostaje prethodna ikona."
+    },
+    {
+      "id": "R06",
+      "status": "Spoljne margine potvrdjene; unutrasnja geometrija dopunjena u R08.",
+      "scope": "Statistika i dve rang-liste",
+      "detail": "Devet tema koristi zajednicke Green bezbedne margine; sve prikazane kontrole staju na 360x780."
+    },
+    {
+      "id": "R07",
+      "status": "Lokalno ispravljeno; vizuelna potvrda ceka naredni korisnikov deploy.",
+      "scope": "Glavni meni / Liga na 411px",
+      "detail": "CSS je vec bio prosiren do 480px, ali je URL ostao ?v=2. Nova verzija ?v=3 uklanja stari cache; 411px ponovo proveriti posle objave."
+    },
+    {
+      "id": "R08",
+      "status": "Lokalno ispravljeno; vizuelna potvrda ceka naredni korisnikov deploy.",
+      "scope": "Statistika / unutrasnji razmaci i navigacija",
+      "detail": "Devet tema imalo je samo 10px navigacione elemente i drugaciju visinu podnozja. Kao Green: 44px polje dodira sa malom pseudo-tackom, bez skaliranja celog dugmeta; mali ekran zadrzava 12px body razmak."
+    },
+    {
+      "id": "R09",
+      "status": "Lokalno ispravljeno; vizuelna potvrda ceka naredni korisnikov deploy.",
+      "scope": "H2H / statusno mastilo",
+      "detail": "Globalna jarka W/L boja zamenjena je postojecim tematskim statusima. Cetiri draw nijanse korigovane radi 4.5:1 na obe krajnje podloge; sve evidentirano u theme-definitions.json."
+    },
+    {
+      "id": "R10",
+      "status": "Lokalno ispravljeno; vizuelna potvrda ceka naredni korisnikov deploy.",
+      "scope": "Vaskrsnja / zaostale povrsine",
+      "detail": "Krem/zalfija boje i postojece senke na tri glavne kartice i progresu lige; jacina selektora redova obe rang-liste uklanja lavanda gradient; skrol koristi paletu teme."
+    },
+    {
+      "id": "R11",
+      "status": "Lokalno ispravljeno; vizuelna potvrda ceka naredni korisnikov deploy.",
+      "scope": "Vaskrsnja / Top lista",
+      "detail": "Staro pravilo je sakrilo brojeve svih mesta. Samo za mesta bez medalje eksplicitno vracen redni broj; prve tri medalje ostaju nepromenjene."
+    },
+    {
+      "id": "R12",
+      "status": "Lokalno ispravljeno; vizuelna potvrda ceka naredni korisnikov deploy. Brzina prvog ucitavanja NIJE resena ovom CSS izmenom.",
+      "scope": "Gate pri izboru teme",
+      "detail": "Novi theme-loading-material.css vezuje mastilo/povrsinu i odobrenu pozadinu za odredisnu temu, ne prethodnu body klasu. Test svih deset paleta i 4.5:1 prolazi."
+    },
+    {
+      "id": "R13",
+      "status": "Potrebna posebna dijagnostika; uzrok nije potvrdjen.",
+      "scope": "Ponovni ulazak u Podesavanja",
+      "detail": "Posle Moon/Severna pri kasnijem otvaranju Podesavanja primecen povratak Desert izbora. Moguca sinhronizacija profila ili drugi klijent; nije dokazano samo CSS problemom. Nisu menjana pravila servera ili citana privatna sesija."
+    }
+  ],
+  "entries": [
+    {
+      "file": "medium-main-deployed",
+      "theme": "medium",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "medium-settings-ready",
+      "theme": "medium",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "medium-top-global",
+      "theme": "medium",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "medium-top-local",
+      "theme": "medium",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "medium-statistics-ready",
+      "theme": "medium",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "medium-h2h",
+      "theme": "medium",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "medium-power-rank",
+      "theme": "medium",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "medium-fire-rank",
+      "theme": "medium",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "medium-rules",
+      "theme": "medium",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "winter-main",
+      "theme": "winter",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "winter-settings-switch",
+      "theme": "winter",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "winter-top-global",
+      "theme": "winter",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "winter-top-local",
+      "theme": "winter",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "winter-statistics-overview",
+      "theme": "winter",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "winter-statistics",
+      "theme": "winter",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "winter-power-rank",
+      "theme": "winter",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "winter-fire-rank",
+      "theme": "winter",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "winter-rules",
+      "theme": "winter",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "neon-main",
+      "theme": "neon",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "neon-settings-ready",
+      "theme": "neon",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "neon-top-global",
+      "theme": "neon",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "neon-top-local",
+      "theme": "neon",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "neon-statistics",
+      "theme": "neon",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "neon-h2h",
+      "theme": "neon",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "neon-power-rank",
+      "theme": "neon",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "neon-fire-rank",
+      "theme": "neon",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "neon-rules",
+      "theme": "neon",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "amethyst-main-after-treasury",
+      "theme": "amethyst",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "amethyst-settings-ready",
+      "theme": "amethyst",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "amethyst-top-global",
+      "theme": "amethyst",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "amethyst-top-local",
+      "theme": "amethyst",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "amethyst-statistics-overview",
+      "theme": "amethyst",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "amethyst-statistics",
+      "theme": "amethyst",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "amethyst-power-rank",
+      "theme": "amethyst",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "amethyst-fire-rank",
+      "theme": "amethyst",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "amethyst-rules",
+      "theme": "amethyst",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "easter-main",
+      "theme": "easter",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "easter-settings-ready",
+      "theme": "easter",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "easter-top-global",
+      "theme": "easter",
+      "title": "Top lista — globalna",
+      "note": "R11: mesta 4+ imaju nevidljive redne brojeve."
+    },
+    {
+      "file": "easter-top-local",
+      "theme": "easter",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "easter-statistics",
+      "theme": "easter",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "easter-h2h",
+      "theme": "easter",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "easter-power-rank",
+      "theme": "easter",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "easter-fire-rank",
+      "theme": "easter",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R10: stari lavanda gradijent na obicnim redovima."
+    },
+    {
+      "file": "easter-rules",
+      "theme": "easter",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "desert-main",
+      "theme": "desert",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "desert-settings-retry",
+      "theme": "desert",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "desert-top-global",
+      "theme": "desert",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "desert-top-local",
+      "theme": "desert",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "desert-statistics-overview",
+      "theme": "desert",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "desert-statistics",
+      "theme": "desert",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "desert-power-rank-ready",
+      "theme": "desert",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "desert-fire-rank",
+      "theme": "desert",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "desert-rules",
+      "theme": "desert",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "moon-main",
+      "theme": "moon",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "moon-settings-retry",
+      "theme": "moon",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "moon-top-global",
+      "theme": "moon",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "moon-top-local",
+      "theme": "moon",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "moon-statistics-ready",
+      "theme": "moon",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "moon-h2h-ready",
+      "theme": "moon",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "moon-power-rank",
+      "theme": "moon",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "moon-fire-rank",
+      "theme": "moon",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "moon-rules",
+      "theme": "moon",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "severna-main",
+      "theme": "severna",
+      "title": "Glavni meni",
+      "note": ""
+    },
+    {
+      "file": "severna-settings-retry",
+      "theme": "severna",
+      "title": "Podesavanja posle promene teme",
+      "note": ""
+    },
+    {
+      "file": "severna-top-global",
+      "theme": "severna",
+      "title": "Top lista — globalna",
+      "note": ""
+    },
+    {
+      "file": "severna-top-local",
+      "theme": "severna",
+      "title": "Top lista — prazna lokalna",
+      "note": ""
+    },
+    {
+      "file": "severna-statistics-overview",
+      "theme": "severna",
+      "title": "Statistika — pregled",
+      "note": ""
+    },
+    {
+      "file": "severna-statistics",
+      "theme": "severna",
+      "title": "Statistika — H2H",
+      "note": "R09: tvrdokodirane W/L boje; lokalna korekcija koristi statusno mastilo teme."
+    },
+    {
+      "file": "severna-power-rank",
+      "theme": "severna",
+      "title": "Rang-lista Indeksa moci",
+      "note": ""
+    },
+    {
+      "file": "severna-fire-rank",
+      "theme": "severna",
+      "title": "Rang-lista Vatrenog niza",
+      "note": "R05: zaglavlje sada pripada istoj temi kao redovi."
+    },
+    {
+      "file": "severna-rules",
+      "theme": "severna",
+      "title": "Pravila — prva strana",
+      "note": ""
+    },
+    {
+      "file": "dark-statistics-fixed",
+      "theme": "dark",
+      "title": "Statistika — potvrda R04",
+      "note": "Tamno mastilo sada je citljivo na svetloj power kartici."
+    },
+    {
+      "file": "dark-main-411",
+      "theme": "dark",
+      "title": "Glavni meni — 411px",
+      "note": "R07: stari ?v=2 CSS je ostao u cache-u. Lokalni ?v=3 osvezava kompaktnu tipografiju do 480px."
+    },
+    {
+      "file": "amethyst-effects-top",
+      "theme": "amethyst",
+      "title": "Riznica — efekti: top",
+      "note": "R03: manje tehnicke PNG kopije; BH/Supernova kartice vidljive. Efekti nisu aktivirani."
+    },
+    {
+      "file": "amethyst-effects-middle",
+      "theme": "amethyst",
+      "title": "Riznica — efekti: middle",
+      "note": "R03: manje tehnicke PNG kopije; BH/Supernova kartice vidljive. Efekti nisu aktivirani."
+    },
+    {
+      "file": "amethyst-effects-cosmos",
+      "theme": "amethyst",
+      "title": "Riznica — efekti: cosmos",
+      "note": "R03: manje tehnicke PNG kopije; BH/Supernova kartice vidljive. Efekti nisu aktivirani."
+    },
+    {
+      "file": "easter-settings-switch",
+      "theme": "easter",
+      "title": "Prvo ucitavanje / gate",
+      "note": "R12: prvi transfer moze da istekne; gate nasledjuje neke boje/pozadinu prethodne teme. Lokalni CSS popravlja izgled gate-a, ne brzinu transfera."
+    },
+    {
+      "file": "moon-settings-switch",
+      "theme": "moon",
+      "title": "Prvo ucitavanje / gate",
+      "note": "R12: prvi transfer moze da istekne; gate nasledjuje neke boje/pozadinu prethodne teme. Lokalni CSS popravlja izgled gate-a, ne brzinu transfera."
+    },
+    {
+      "file": "severna-settings-switch",
+      "theme": "severna",
+      "title": "Prvo ucitavanje / gate",
+      "note": "R12: prvi transfer moze da istekne; gate nasledjuje neke boje/pozadinu prethodne teme. Lokalni CSS popravlja izgled gate-a, ne brzinu transfera."
+    }
+  ],
+  "matrix": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "actual": [
+        "Power kartica posle deploya",
+        "Glavni meni 360/411px",
+        "Ostali prikazi: prethodna galerija"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "actual": [
+        "Prethodna galerija: Top lista, Statistika/H2H/dve rang-liste, Pravila"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "medium",
+      "name": "Trula visnja",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskrsnja",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "moon",
+      "name": "Mesecev sjaj",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "actual": [
+        "Glavni meni",
+        "Podesavanja",
+        "Top lista globalna i prazna lokalna",
+        "Statistika pregled i H2H",
+        "Obe rang-liste",
+        "Pravila prva strana"
+      ],
+      "scopeLimit": "Ne oznacava sve sobe/retka stanja kao proverena."
+    }
+  ],
+  "next": [
+    "Objaviti konkretne lokalne ispravke R07–R12 kad korisnik odluci, pa proveriti njihove iste snimke.",
+    "Posebno analizirati prvi hladni transfer PNG i sinhronizaciju izbora teme (R01/R13); ne povecavati rok samo radi skrivanja sporosti.",
+    "Nastaviti stvarne podprikaze i ostale sobe iz glavnog registra; ne ponavljati zavrsene staticke PNG provere umesto Android pregleda."
+  ]
+}

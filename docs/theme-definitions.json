@@ -1,6 +1,35 @@
 {
-  "schemaVersion": 69,
-  "updatedOn": "2026-10-24",
+  "schemaVersion": 71,
+  "updatedOn": "2026-10-25",
+  "themeSwitchStabilityRule": {
+    "evidence": "docs/theme-switch-stability-2026-10-25.md",
+    "status": "Lokalno implementirano i regresiono provereno; brzina na telefonu i stvarni zakasneli cloud odgovori cekaju potvrdu posle deploya.",
+    "manualSelection": "Izricit izbor u Podesavanjima, panelu igre ili Riznici ima prvenstvo tokom iste sesije istog naloga. Zakasneli ili stariji cloud odgovor ne vraca prethodnu temu, ni posle potvrde trenutne. Novi lokalni izbor zamenjuje prethodni. Ne menja se pravo pristupa temama: primenjuje se dozvoljeni inventar.",
+    "accountScope": "Nepotvrdjen izbor cuva se pod yamb_theme_pending_sync_<uid> do cloud potvrde. Ne primenjuje se na drugi nalog. Nova sesija bez nepotvrdjenog izbora ucitava cloud preferencu; nov lokalni izbor ponovo ima prvenstvo.",
+    "imageLoading": "Jedan genericki download i decode po razresenoj PNG putanji; priprema istog paketa deli postojeci posao. Settings kontroler sam priprema svoj vidljivi paket, bez paralelnog duplog generickog paketa. Svaki pozivalac zadrzava svoj rok. Neuspeo transfer dozvoljava novi pokusaj; istek roka ne odbacuje jos aktivan download.",
+    "memory": "Genericki dekodirani cache ogranicen na 64 stavke i 12 miliona dekodiranih piksela, uz uklanjanje najstarijih referenci. To nije ogranicenje kompletne memorije WebView-a ili drugih kontrolera.",
+    "quality": "Nijedan PNG, DNK, stil, pravac, boja, dimenzija elementa ili funkcija nagrada nije promenjena ovim korakom. Ne tvrditi da je hladna promena teme trenutna bez merenja na objavljenoj aplikaciji."
+  },
+  "runtimePaletteAudit20261025": {
+    "evidence": "docs/theme-visual-audit/emulator-deployed-2026-10-25/report.json",
+    "status": "Lokalne CSS ispravke posle vidljivog pregleda; njihova potvrda u Android aplikaciji ceka korisnikov deploy. Nije potvrda svih soba i stanja.",
+    "geometry": "Statistika koristi Green raspored, 12px unutrasnji razmak na malim ekranima i 44px polja za dodir navigacionih tacaka. Funkcije i PNG identiteti ostaju isti.",
+    "h2hText": "Pobede, nereseno i porazi koriste statusno mastilo teme umesto globalne jarke zelene/crvene. Najmanje 4.5:1 prema krajevima podloge; brojevi i W/D/L oznake ostaju dodatna oznaka znacenja.",
+    "h2hInkWinDrawLoss": {
+      "dark": ["#b5e5b6", "#e2dfab", "#ffd0b8"],
+      "light": ["#35613d", "#76612b", "#9b3b3a"],
+      "medium": ["#8cdeb2", "#e39a70", "#ff9daa"],
+      "winter": ["#216f5a", "#9b5037", "#a63a42"],
+      "neon": ["#72ddae", "#f08ce3", "#ff97ac"],
+      "amethyst": ["#a3dfc2", "#e1a4c7", "#f2a3b4"],
+      "easter": ["#3e674a", "#8d5438", "#9e4a42"],
+      "desert": ["#32634d", "#396b72", "#9d3d37"],
+      "moon": ["#a8d5be", "#b8bac7", "#f0acb0"],
+      "severna": ["#a4e3c9", "#c3acea", "#ffafb9"]
+    },
+    "easter": "Glavne tri kartice koriste postojecu krem-zalfija paletu i senke teme. Skrol traka koristi #879373 do #4D6B45. Redovi Vatrenog niza koriste stats-subcard i stats-card, bez starog lavanda gradijenta. Brojevi mesta 4+ u Top listi moraju ostati vidljivi, dok prva tri mesta koriste medalje.",
+    "loadingGate": "Paleta i usvojena pozadina pripadaju odredisnoj temi na samom gate elementu, nezavisno od prethodne body teme. Povrsina je dovoljno neprozirna za tekst; mastilo, naglasci i opis imaju najmanje 4.5:1. Ovo ne potvrdjuje brzo hladno ucitavanje; prvi pokusaji Desert/Moon/Severna su zahtevali ponavljanje."
+  },
   "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
   "sharedStyle": "3D Soft Neomorphism",
   "canonicalAssetRegistryRule": {
