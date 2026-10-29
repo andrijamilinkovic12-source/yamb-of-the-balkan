@@ -1,0 +1,3792 @@
+{
+  "date": "2026-10-29",
+  "room": "Online random",
+  "scope": "Svih10tema,720izolovanih stvarnih produkcionih prikaza sa sintetičkim servisnim odgovorima. Android je delimičan offline pregled Green/Easter u originalnim1440×3120/560dpi (~411×891CSSpx), bez uparivanja. Nijedan pravi online meč ili novi rezultat nije kreiran.",
+  "deployment": "R28–R30 i prethodne lokalne dorade nisu commitovane/deployovane. Android pokazuje raniju objavljenu verziju; lokalni prikazi odvojeno prikazuju novi kod. Nije potvrda nove verzije na telefonu.",
+  "findings": {
+    "R28": "Čekaonica: uklonjeni slučajni obrub cele sobe i dodatni obrub liste koji su menjali Green širinu; naslov ima isti font, line-height, tracking i prelamanje. Loading liste ima Green minimalnu visinu na kratkim ekranima. Uklonjen nasleđeni ljubičasti rub/senka Easter protivničke statistike. Pronađen protivnik sada menja naslov i uklanja poruku čekanja u svim temama, ranije samoGreen. Online završni fontovi/score42px/claim29px/preuzimanje55px i razmaci prate Green; Revanš najmanje44px i uEaster. Modali imaju zaseban online-duel kontekst i tematski kontrast. Materijali/palete/DNK nisu redefinisani.",
+    "R29": "highlightCurrentPlayer uključivao je zajednički vertikalni online pager/random room klasu samo zaGreen/Easter/Severna. Preostalih7tema time je gubilo i CSS opseg canonical disconnect PNG-a; Winter/Desert table bile su flex sabijene. Sve online partije sa2igrača sada dobijaju isti pager i zaštitu od flex sabijanja premaGreen. Spoljašnje mere table/dugmadi i potezi nisu menjani. Primena zajedničkog ponašanja obuhvata i ostale online duele; server/rules/rematch uslovi nisu menjani.",
+    "R30": "Pri povratku veze uklanjala se klasa opponent-reconnecting, ali su privremeni PNG/tekst ostajali u tajmeru do state-sync odgovora. PNG je tada gubio jedini27px CSS selektor i mogao postati256px. clearOpponentReconnectGraceCountdown sada odmah uklanja samo privremeno disconnected stanje/sadržaj i skriva ga; običan tajmer ostaje netaknut.27px PNG mera važi kroz ceo random room opseg. Povratno obaveštenje koristi postojeći kanonski42px PNG, isti grid/font/rub i tematske površine u svim temama.",
+    "versions": "game.jsv6.35,managers.jsv6.36,theme-online-random-room.cssv4,theme-online-random-finish.cssv7,theme-finish-compact.cssv5."
+  },
+  "inventory": "23osnovne PNG uloge po temi,230quality-resolved putanja, različiti hashovi svake uloge između tema. Meni i intro/header su izvedenice istog sobnog identiteta; medalje su kanonske general-podium, različite od turnirskih/kvartalnih. Video/dukat/PowerIndex i zajednički finish PNG ostaju povezani sa ostalim sobama iste teme. Dodatni zajednički resursi su board megafon gde postoji, skinovi, akcijska dugmad, brojač, game-header i pozadina. Fotografije naloga/protivnika nisu posebne tematske PNG uloge.",
+  "validation": {
+    "runtime": "PASS720=10tema×18stanja×4mobilne veličine320×568/360×640/360×780/412×915. Stvarni setupOnline, setupSocketListeners/game_start, renderHallOfFame, handleGameOver, createScoreTables/highlightCurrentPlayer, ModalManager, disconnect/reconnected handler i showNotification. Blokirani svi spoljni zahtevi, lažni socket i profili, bez app konstruktora ili naloga. UTF-8 fixture; animacije isključene i offline font fallback moguć.",
+    "states": "4lobby stanja (traženje/pronađen/prazno/loading), greška veze,9završnih stanja,2table,prekid i povratak veze. Pregledni fontovi/mere premaGreen; završni ekran i čekaonica bez skrola/izlaska iz safezone. Vertikalni pager dve table je nameran. Ispravna imena/uloge TI-PROTIVNIK i nagrada za playerindex0 i1, pobeda/poraz/remi, zapisi rekorda, potvrđen+24PowerIndex i pending—, limit8000,bez starogPOBEDNIK teksta.",
+    "minimumPlayerTextContrast": 5.203965038382018,
+    "contrast": "Najmanje5,20:1 za ime/ulogu/poene oba igrača u360završnih prikaza. Postojeće palette provere zahtevale su4,5:1 za osnovni/prigušeni/akcentni tekst čekaonice, a board proverava najmanje4,92:1. To nije merenje fizičkog ekrana niti svih renderovanih gradijenata/PNG piksela.",
+    "node": "Ciljane OnlineRandom, reconnect, matchresults, onlinefinish/rematch, header/skin/theme-preload i lokalno slanje prolaze. Nova brza regresija izvršava stvarni pager uslov u svih10tema; reconnect regresija zahteva odmah prazan/sklonjen privremeni tajmer. Funkcionalni server testovi koriste simulirane sokete, ne prave takmičare."
+  },
+  "android": {
+    "scope": "Green/Easter: stvarna greška veze, dodatno Green čekaonica sa imenom naloga/Moć7620/4pobede/0remija/3poraza i praznim učitavanjem liste. Izlaz sačuvane Hotseat test partije potvrđen tek posle novog izričitog odobrenja. Bez njenog završavanja ili novog poteza.",
+    "network": "Pre testa airplane-mode disabled,wifi_on1,mobile_data1. Tokom testa airplane-mode enabled,wifi0,data0,pre otvaranja random sobe. Uparivanje nije moglo da se dogodi. Posle potvrđene greške/povratka u glavni meni vraćene početne vrednosti disabled/1/1.",
+    "limits": "Offline hladni canonical PNG nisu svi u WebView kešu: intro/prazna lista pokazali su slomljenu sliku, a izborLight je odbijen sa porukom Tema nije učitana i sačuvanGreen. Zato nije nastavljen lažni pregled preostalih tema bez slika. To je ograničenje offline keša, ne dokaz lošeg PNG crteža niti potpuni Android prolaz.",
+    "restoration": "Green glavni meni, prijava očuvana, originalne mere i mreža vraćeni; nema otvorenog reda za igru. Hotseat Gost_QA test je autoSave sačuvan. Nema commita/deploya."
+  },
+  "limits": [
+    "Pravi online meč, opponent-found na Androidu, predaja poteza, rematch sa drugim uređajem, stvarna reklama/isplata i fizičkiS25 nisu izvršeni.",
+    "Svih10tema imaju novi lokalni dokaz; Android svih tema i potvrda R28–R30 posle deploya ostaju otvoreni. Ne povećavati12/15osnovnih Android prolaza na13/15 samo na osnovu ovog testa.",
+    "Intro timing2400/3200ms i putanje provereni statički. Offline Easter intro nije mogao učitati neskladišten PNG; trajanje nije mereno kadrovima.",
+    "Novi PNG crteži nisu stvarani. Identiteti ostaju zasebni po temi, medalje ostaju razdvojene po takmičenju; korisničke fotografije i univerzalni skinovi su namerni izuzeci."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "a1593092e3f0634f2f07d824b9fc3173eb654f9f30690e3d20fbdf33a27aceb4",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "4a35ca20523d6ed8929f4179767841eee53dd1d15665078cf7e175a957a5820a",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/green-soft-clay/opponent/scanning-v1.png",
+          "sha256": "5542f6cad09efbdf1b378757ed480047ad29db6df5f31c4cd5bc7ce7bba85a1d",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/green-soft-clay/opponent/found-v1.png",
+          "sha256": "a0b49794775cf0fd2d9a84ee7964273838479ef15ae068f30c2a0db824d0f568",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/green-soft-clay/opponent/vs-v1.png",
+          "sha256": "b7ec5cb43a04ae446474cbc55a9461d355563b9bc302003693b66ae43427c932",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/green-soft-clay/opponent/disconnected-v1.png",
+          "sha256": "e67b2ae2c7d93d5c58e82a6ba4b9748c350ea6c8bee544a5cfe6e101ee9006ee",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/green-soft-clay/opponent/reconnected-v1.png",
+          "sha256": "fd9cf0dfab285c9dfe8867308d9e7027518f67a96011e9730e9c5e7ba0231391",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "9b787ddc1a670399ac6df509fe2277df68c476c3129f03bdc2d599197f427b80",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "1bdf6e1cc7ebe84c4c17ad020419bc8bfa227804fcd5f68be2b10db3e291f59f",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "6cbbede48615d29177a24bfde527f06bbc0adddbc3a7a5ac6fb4048a8cc8989a",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png",
+          "sha256": "7b0c89808cd5185fb53e16a52320f1e575fbeeb691efad255971f5ca9aee67ba",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/green-soft-clay/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "fcb140ba62fc6203d34cff7d0e4722b62420069cb0957a288424ae5cc58484cc",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/green-soft-clay/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "444b51787b54fc8064208bbcd27b9f1aaeb45e826cfd59bd0f9f8ae59c8fb272",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png",
+          "sha256": "722f391eb7d85e41b537212d81d680f1f2fc152dbe42fe5e45bba2f8960d33ce",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "f7102115b111f605f9bf38d25ff7a0d5aedd9bb812814fee79e1771eeb5ef09e",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/green-soft-clay/canonical/solo-results/record-panel-v2.png",
+          "sha256": "ddf0636979846cc27018aad31eb9291793dd0bf0722765654711cba5a569b8b9",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "b99de127ec3ff3b751673c741f548c796670dce6e73f10385eee6c973f31338c",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/monthly-quality-v2.png",
+          "sha256": "9db54d9fe5ffeb192202dfccfe3c4bfb7d1ff3b1d8ff27dafb073492e52566c8",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "a29ed3cb8883f893ccd19b557ca4e71f96357104463b5e783729e7e83b72dd77",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/personal-quality-v2.png",
+          "sha256": "c9e652a1a05e9afc90f789ecf0f4bb0c7c820183ca660eae9545bb5a05c49135",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "7c2a30a774a62a81874807be9d73c84752a47fb765f13db268f5f48977a4a5fa",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "d1988cf91e07f1b94ee0036d2f1dba6bf7f37899015cf8852b5d9651e4de901e",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-dark-lobby-searching.jpg",
+        "local-dark-lobby-found.jpg",
+        "local-dark-lobby-empty.jpg",
+        "local-dark-lobby-loading.jpg",
+        "local-dark-notice.jpg",
+        "local-dark-win-close.jpg",
+        "local-dark-win-decisive.jpg",
+        "local-dark-draw.jpg",
+        "local-dark-pending.jpg",
+        "local-dark-zero.jpg",
+        "local-dark-capped.jpg",
+        "local-dark-board-0.jpg",
+        "local-dark-board-1.jpg",
+        "local-dark-connection.jpg",
+        "local-dark-restored.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "8457a52818b76da83969a78edc68a51eeb4d3651d2c1cc77b1f3e66c94223100",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "002a5d55d406e566e6e3ee051cf6a8fe1a1d4a25d9402a0a621ed55b1e0b731e",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/light/canonical/online-random-states/scanning-v1.png",
+          "sha256": "2cac0038e8aa7f8ac52d0bd48e72fb42130d959ab1c9f5378333a43ac552fda0",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/light/canonical/online-random-states/found-v1.png",
+          "sha256": "009bbb4df24be8f7e665ca2ac667b904960703c911bb0e36a4f6b1b6d4911abd",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/light/canonical/online-random-states/vs-v1.png",
+          "sha256": "9773fe49e182440cfc60b77d038cf1f9dd09dc7d6b68c54a0874ee72bc09b85d",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/light/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "0326d24e6fa915a9a40bf8d45e03310d137ea1ce25235544453d33af82f9783c",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/light/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "e1e1dd92a7e0c71c4c5f7c6b3cd8ba5105bb06d0c9e1724ed2eef5792da4cf6d",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/light/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "f51a97b93eb4c1a7353ecd2ad779729082b1af39fa14e4a995bc1b454392ac43",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/light/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "6919eea5c33137e6a926dcf85be62dabb5f725e5f1d183eed18b4e1c66d6e6ff",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/light/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "2280fdca1dfe0db1cf77b345cc6f5f15e1876eeeb00fb49602484a406cb186f2",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/light/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "df81a5525e28860892712c9704620c93bdd16b1cd3d260e20671af6fbc70608b",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/light/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "62f7b960261ffc64d3045faf2fd673369c2d1a9a099a8996839496704be908a5",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/light/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "4d66c4f27f7965082edf67d94586c1f277f7b7c1da2f4226920009e5eab386b6",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/light/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "8f1d207ae29b375339067196fd9b5d893559990ceb9e0ced652d2b29c86a6cb1",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/light/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "b5b03d22328d197c7d742846a47e1e654b0d15456442def45d5206e499405495",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/light/canonical/solo-results/record-panel-v2.png",
+          "sha256": "db1310a8208ac73a36253152f284c141fb671cc5c5596f71f46045d67a1a965e",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "9b20f0043dd02561c9239fc80dc044564ca57dd705f42b71dbb1f591acec2a7d",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "76045f062d60a66f685d5fae5a97f3fe129ace8ccf62ac9edf7e072cc410063f",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/all_time-v1.png",
+          "sha256": "ed38d9b3fa23d93b338be74bb6e51095561df127570760f180051d73afc5f887",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "b6a475033e2770d61b02013879760a785e6c4a3cf99cd685fc05f6fd21cb3e4d",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "a84c498bac4f203c0460e384ae4cee3dec19c5b1d8c189e8b07c2e9477e9c5ed",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/light/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "50f66226d0a567aa64e039f46264cead76ffee8364aa09756f9a21715342339c",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "fbdcb9fd27250eab0e7505e64f5caeb513b0d326456e92385f6e66be5e36444d",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-light-lobby-searching.jpg",
+        "local-light-lobby-found.jpg",
+        "local-light-lobby-empty.jpg",
+        "local-light-lobby-loading.jpg",
+        "local-light-notice.jpg",
+        "local-light-win-close.jpg",
+        "local-light-win-decisive.jpg",
+        "local-light-draw.jpg",
+        "local-light-pending.jpg",
+        "local-light-zero.jpg",
+        "local-light-capped.jpg",
+        "local-light-board-0.jpg",
+        "local-light-board-1.jpg",
+        "local-light-connection.jpg",
+        "local-light-restored.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "61479856bd101d6f5357d77966c7f45d3e8afa42c826e3f2532206633b7cedae",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "4b5f36567e5dc97b8f1dfd7c022a1f24d772f8cdd9bcdfde3956593601e71ab7",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-states/scanning-v1.png",
+          "sha256": "aaf40192cc510c2fdd96231e582aa26c064912b7b73132bf1f213e794df6643f",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-states/found-v1.png",
+          "sha256": "b230f32638ca12013c3fbb7ce412cc7f81d1d169363f9855cf55074cc23e3e34",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-states/vs-v1.png",
+          "sha256": "8cd8ac4c72f9c62f65906cce432e0172c2bfdf37743d2971fc3018178f779efa",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "b8c115d64cd4ba9cb99e0caa0afa882f1818c77a045af4ec0146e08adff8e7e1",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "ee021005f466d88eeea7efbbfdb3747559ed05cde31c410b29d0aa8b882f9852",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/medium/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "1a43ec8edc5cb550684815ed2bf8ffca058a981dca9fb228ef50208aba21d1bf",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/medium/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "126f5e58a22190b139e04e8a624caf58c5dac31d4f2225f34a4ff26bc3e1db5c",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/medium/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "e71c2235e9ddf11200dc83614ab11fb008f6879716ff012c2f9fc6d7e2280501",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/medium/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "f286d9c0d5e090bc832b203db20fdea8e68d7374daa7cd2428508fc3be1df9f6",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "a29ecf8d526f975ea8b70beab171a3d1c70e7d0a7a8a02d285ed7667bc95ae8d",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/medium/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "40fddc0e54083a41f1aef4371d6c992879c52162367148cb66414886ec8482c6",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/medium/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "e843a425de6e193abb6bdf8b6d71cf25963171f0fefc0cce8b3c908150e3fcd4",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/medium/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "e71fd9ec84bb508f47036e746c0d543d46d9a86b330031c0805cf78fbe60ddb1",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/medium/canonical/solo-results/record-panel-v2.png",
+          "sha256": "4b7c2db9e1712037ae5494aa344ac06e776cbbb36582d71050859bb0bba3f9a6",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "63319c6f25cf2393d506b339e7810b872075def5d191ebfc7f0dacd9392dc9bb",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/monthly-quality-v2.png",
+          "sha256": "ba3a486e14a8526f0924107ca13e7825269ed9e4913431e25935c21b11dbfbcf",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "ffec9cae54ce0b33eac9db012cf88c7615851811f3364961b0bdc2275bc4f05d",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "d86bb374e69b525f7dccba18471e635f70bd2c86da74079e7285dc19ad450caa",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "88708adafc84717bbb30c8e3c88477b50b772596162cbd383f8056469b0387c3",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/medium/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "4bdd57d237c89416d7c96e57f12dfc7e08b442348ffc31c7c1a2ef60822e4626",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "1f79b032b192d86e97f39715ecbccea9618466fab7e24e01e4293e1f191ddc08",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-medium-lobby-searching.jpg",
+        "local-medium-lobby-found.jpg",
+        "local-medium-lobby-empty.jpg",
+        "local-medium-lobby-loading.jpg",
+        "local-medium-notice.jpg",
+        "local-medium-win-close.jpg",
+        "local-medium-win-decisive.jpg",
+        "local-medium-draw.jpg",
+        "local-medium-pending.jpg",
+        "local-medium-zero.jpg",
+        "local-medium-capped.jpg",
+        "local-medium-board-0.jpg",
+        "local-medium-board-1.jpg",
+        "local-medium-connection.jpg",
+        "local-medium-restored.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "311195e9f94efdd3817d9d3299618bcdc58d3173eef878a97fd614ed74fe666a",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "90c7b064fa142046bdb73ca5232a94e49f107906e18f376d2011cc957b26376d",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-states/scanning-v1.png",
+          "sha256": "543c1fa00158c2fd1667f9dcebe3f10ea7f73b38bd753337eb008c7d84f44774",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-states/found-v1.png",
+          "sha256": "5729c87b7554a9d7de12966003137ef4796b8161219cbb1e19b28f5f5f5b34e9",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-states/vs-v1.png",
+          "sha256": "c3eb5416e2f6dc57806b1898536f2472acbb73467e093f2c3dbe7eb76c383346",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "892647cd2e8087ef78e2c223cbe2f53e8b3309b804730bf35aae794dec129c7b",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "bb33567b9590048928266435161108052b393b803dfb4a0d8eb7eb5b1ab706d3",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/winter/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "63a7646a828a4ee832417715eecc6aa7bd1d8cf85086e32259d7ae8d89e9684b",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/winter/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "cb16a5515db307a4ffce47a6996a7b1411e74d99facf4648642dedf36674ec12",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/winter/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "b6c1e283fc32434b44c6425579fbe6dcca1854d65b13a595d738ee56014ea071",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/winter/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "55f7ef2baf6169c376fbf0a59622535688e919ecaa7d9e648f3afa9cc743aec7",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "cc73bbe4a6f3c17ada073d054e5c0e30ebda72765dea79ab0913af429aac354e",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/winter/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "87f14aa397070ed7db520392da79827ca56259e40709618ffaf2d1c6052e8bc1",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/winter/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "0906d2c6710a7ce4d2186f07ab85afac319764a2057dc6189716ed9dfd2d2726",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/winter/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "0b42dae22f7b50daf601108915ba2d72da2d6361c45c9811a96cb46d9f17d240",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/winter/canonical/solo-results/record-panel-v2.png",
+          "sha256": "6fe95234579f7cb79365a27a3e5d3d2226eac1f4f3e891ba82637818ea873be1",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "e6a8adafe4883828d734519a2f52ea87bcc1884deda33814bfe7ef9e18be7bd7",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "4ef8c8763305944c1606a716bdc6cee9de70463ec60632e0badd2c071007ec9d",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "0c3c9af9fd32905a8bcf6e7c29fbe5a649167cd513755af08e496c07c8fa8a7d",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/personal-quality-v2.png",
+          "sha256": "ac94e5f569c56bac4bf70597af844599bae1d3a8b05f80ff5916f0ffc5f6d134",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "6d072396680b7c60d7898a4047970364b09f5ebd71cbcb455e1cb79058ee2e40",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/winter/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "1d379e427dca632c8a9fe5b197cc791eebd2660ce058c76e5b5bf6f8fd87de4c",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "b39e0599b6c1eaf9cf852bb625d9c70811521d7f84df7d5de3702dcdf2de94b8",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-winter-lobby-searching.jpg",
+        "local-winter-lobby-found.jpg",
+        "local-winter-lobby-empty.jpg",
+        "local-winter-lobby-loading.jpg",
+        "local-winter-notice.jpg",
+        "local-winter-win-close.jpg",
+        "local-winter-win-decisive.jpg",
+        "local-winter-draw.jpg",
+        "local-winter-pending.jpg",
+        "local-winter-zero.jpg",
+        "local-winter-capped.jpg",
+        "local-winter-board-0.jpg",
+        "local-winter-board-1.jpg",
+        "local-winter-connection.jpg",
+        "local-winter-restored.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "94c3acc9033de9f03c71133eae70d728fe68f4df258f54cba06b1607e6fb2f38",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "dfb7fe8c42b3740037d0558d1e5de17863843672b3c87032bdebde1b6bc73648",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-states/scanning-v1.png",
+          "sha256": "68f788601f9f3e0877ca74ed351fb5cdff1c02fb0ca3e7b137ae56a0a690bffa",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-states/found-v1.png",
+          "sha256": "6d49d089688c58b6e67b9dd1b66c5b82f6af9d0779bcb261cb91d529ab689c3c",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-states/vs-v1.png",
+          "sha256": "2303d339b209ae46df9ba52b0a98a46f8848cb24ecf83e6918865e38638492cf",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "12143f6416a5c025a7931178b513941c281228b011f520479234c27229e575f4",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "6530f9fa1763869f62d4afec7d3b3a05e3c33fa1f6bcbf82e5cb0d01f82c73e9",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "94ae96bd458248aceb0d3756cac31ea7771c2f2feae5028ae84da99128f17a0c",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "5ebde732fffc75f1e0910052e9ed37bc762eb4ad68079efae19dfb9c806b725d",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/neon/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "af75ea264f9ff44d6934f01220eef9515c389393a09fddbfb49b1e0ab5465447",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/neon/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "5ce7a791b3f8a670fd9ea4a2230cd1410d18399bd01fbdaebf48cfd45e52c819",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "15139ad17250bd6194dc81dd32ba2e60c7d37949e7d252702f1fa95d9df212e4",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/neon/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "eeea7cc70df631baf5a7500b3212505d15d5d5d3611ed286745b1f0efe681130",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/neon/canonical/solo-results/finish-score-mark-v1.png",
+          "sha256": "9f0d64502c589b9e9e214f64ffbbcaa6f9b6cfeb9f64dfe94088ce3126e09a44",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/neon/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "9c6a2874d8062175be3d11f883f1e00b95943be1d2b128e70ce33e0083938e7f",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/neon/canonical/solo-results/record-panel-v2.png",
+          "sha256": "eed6ae8406cbbe41830140bfa820bb6f8f05d0fc0df3137f07fda1ceb46a508c",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "decd21a1662e4d779bef05258ad38c281df642d7d8f2369dbf6ada2d61bb3621",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "1ae57d03004f9da68e40812438e385802a34d5013dcd6502431f0e910924be02",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/all_time-v1.png",
+          "sha256": "3776c37ef4dad9b48fbf8724dea3cd4e57faf27b30a4ab47342d73c123d52a8b",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "30dd89e813b029c16553a9a75aedfe3b9b3d04fd3e298640d1c1cb978c2bc7eb",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "bfcd2360ab1d565e14f5c96aa4c85e6a841ad5c83c4c993070244f1acf70d2be",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/neon/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "78ddc8559baa80afa809f37beb4d4fe6e1c04083bf5e9d2d567e41566c9f866f",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "87beb97b224ae81fcc4cb15fa51b91e7c2bff9caccbebee2593310c56296ce0e",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-neon-lobby-searching.jpg",
+        "local-neon-lobby-found.jpg",
+        "local-neon-lobby-empty.jpg",
+        "local-neon-lobby-loading.jpg",
+        "local-neon-notice.jpg",
+        "local-neon-win-close.jpg",
+        "local-neon-win-decisive.jpg",
+        "local-neon-draw.jpg",
+        "local-neon-pending.jpg",
+        "local-neon-zero.jpg",
+        "local-neon-capped.jpg",
+        "local-neon-board-0.jpg",
+        "local-neon-board-1.jpg",
+        "local-neon-connection.jpg",
+        "local-neon-restored.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "168fee2f95eb3d688b1e6c5c8d2043734ff4c1190c7b7c07d381413c885fa69d",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "3306158b1b3cef933cecc474dd675c80dbca5890001156a08981131f9368a490",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-states/scanning-v1.png",
+          "sha256": "f0b3013c6ab7a8951188317fcca04b50af336bb59c39f93f80243c80ed6dd13b",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-states/found-v1.png",
+          "sha256": "341c7bd8e498a0bf07e1506dfef1abaf46f661122ff72279ab523ed31da6cf7d",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-states/vs-v1.png",
+          "sha256": "15f81abe067695b1ee9693ac011d17eac5a8b2fa0e3ba9ad42b6f24eb49554ba",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "3fb52e20f8dfda1960c71ffe302092c92057f8b5267de40fde4fa0d81fd1e89d",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "d1c10860d6c8f324c4e5c1a64135b8d4e657f3ed40a987ca5cc3496c6d9ae0e7",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "ad271c20f260563604918f9dca64cc480f9744cee5fad39ab02192b2c2c47d7b",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "ebb73f31f6875c2ffab243af89bdddc8a16252b6eebe5b333333d0795d4731f9",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/amethyst/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "452eb633d342942b47463b1571b94e706e355568bf5eb4640eef2cdb69d74499",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/amethyst/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "8d63817fe2b62674fc9604b4b594d47bc27ebd6b0a57971e38c2c99b13d6d220",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "d4a4015e955a161df652d348f04deea1571b3fcd87f9736f071f2b5ad722875b",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "05e9b78c4c40a0ed98cc12eb13c8f811fcf7a75e8e968a8e7d8e4ebfb20e10ab",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "c131da212c16c0f8400372b4eb2816c532ab479836df4a46398cccac6592ffe0",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "8f8113bc9ffafa1ae0b3f311d99fbf319ec7b564c313ad3108dae3770408c23c",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-results/record-panel-v2.png",
+          "sha256": "35e274cc7710ae6d58f8063a437be349d34223ac5415ad17efa1fdaa14f5a05c",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "a7dd53f577c9bb23d86b96184e81e048910765d3cc4a8afd3368c9b256b4be92",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/monthly-quality-v2.png",
+          "sha256": "0749a54c2e3cd77849ac4cfb93db79959e7e55c5f6b3f59222af95c192c59f68",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "7c2ed4e5db6920f6f1785187723f0479032e46d6e881bba016e230e3298abe83",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/personal-quality-v2.png",
+          "sha256": "1bd5af20ad9347d0fd31567502718d5c1dfd92ffcf4af6932499f07de709ac45",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "e753a823f7b6225a2839745c94b9746feb350c2a95317e6ca72fa0d7aef1aff8",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/amethyst/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "5e57b7df27af7b4b06d73e7564c20ec3b3b78907b80d2cf8e5883814dc447b7c",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "4ec64d85040f36ac47d33e8c5ed360c5f328c70d1839a52943dc828ee23be386",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-amethyst-lobby-searching.jpg",
+        "local-amethyst-lobby-found.jpg",
+        "local-amethyst-lobby-empty.jpg",
+        "local-amethyst-lobby-loading.jpg",
+        "local-amethyst-notice.jpg",
+        "local-amethyst-win-close.jpg",
+        "local-amethyst-win-decisive.jpg",
+        "local-amethyst-draw.jpg",
+        "local-amethyst-pending.jpg",
+        "local-amethyst-zero.jpg",
+        "local-amethyst-capped.jpg",
+        "local-amethyst-board-0.jpg",
+        "local-amethyst-board-1.jpg",
+        "local-amethyst-connection.jpg",
+        "local-amethyst-restored.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "189b119e79fd97f9313cb00ae855b895c3004b9b7823008fafd815c3abdfe8c0",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "6e1bc9cb2884cde6d882db393042138b98351e34c7a9803f07cfa9996c997ae8",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-states/scanning-v1.png",
+          "sha256": "af09b8dba100479631870d5c5032a11719ea13a3fbbad9ba4e6f633a37487b98",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-states/found-v1.png",
+          "sha256": "8e459d5f889bddaead1bfc84309dec1805b9ad656f7e0acd0408660b684ca957",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-states/vs-v1.png",
+          "sha256": "b32af1c40806c89b8e09c1505c6000dbc477ef90263b4a0a870cab8af17fce4f",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "6cc33b901a7f8baa591e129aa1009c23f2f9f5512a9067418c891589775537c7",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "cad5bd0bf45e88b0767223764fa1c57b96c90857eb3cd9d332c33b4ddd65175a",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/easter/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "877ddefc1be647f594b7efbb057d492176c2026791fe06ba7265d43d34ea0d62",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/easter/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "44b01acc8db7a09fb85a590e8e139512b89ffb26b19bdf3f2d64c5fe65b38c91",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/easter/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "5ffb9348285c66dbf304df526e91715eced1d0db6e81e0df8464e27717bac53e",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/easter/canonical/leaderboard-controls/empty-loading-quality-v2.png",
+          "sha256": "34b3efd57f297ff4f6d9b24d959b231ef3098011ee782b7781436f0187cf54c5",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "d53524e5f258d76c91154b77420a5db386178ed7686ddd1647b9ab2709895e18",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/easter/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "a386574049e6e154fcf31e3753bc00851f9129aad829c0ea5c45028416b7999d",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/easter/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "d16c76896e102b85c1eeb84ae6338c72071685289116232b2a3bf78c3b11c554",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/easter/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "71308eaa8d6155f5c1604f8c3c829015ec97d31aeb47b23d6c91f25b649e0569",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/easter/canonical/solo-results/record-panel-v2.png",
+          "sha256": "a4a356891c0a8820c2307cb1aeff9ba51b8cdc041de095ff87044f57ccba70c6",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "2286fbb25e513faf55e9dff7b53162dc9f327d8ceee1a6470a597261b10a6ed7",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "301acb14fdbf8b3815adf8e829a372977f96957f8dc92efdd823814be9091224",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "84d8cbdd80da4bf4ec303bce260d8c4f2a46ff3f061cf08ada8d19b292b9a035",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "4eeba9578e4969dfe570f36c7924594c499b2c8e763c8ec69ccff00591a821d6",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "11d3aa85dce02e8fb6b0a1d6f2c68ef49ed1d4febd388dd6e9b34fa43e33413f",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png",
+          "sha256": "089974282f5f855ac508bc1f1b0b7aff41f5d37629aed63199cb32b8a64c91cc",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "sha256": "710a3e7c40413889413a83d65ced482da1a5acf75aa412c5927bcdb2d46f82f2",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-easter-lobby-searching.jpg",
+        "local-easter-lobby-found.jpg",
+        "local-easter-lobby-empty.jpg",
+        "local-easter-lobby-loading.jpg",
+        "local-easter-notice.jpg",
+        "local-easter-win-close.jpg",
+        "local-easter-win-decisive.jpg",
+        "local-easter-draw.jpg",
+        "local-easter-pending.jpg",
+        "local-easter-zero.jpg",
+        "local-easter-capped.jpg",
+        "local-easter-board-0.jpg",
+        "local-easter-board-1.jpg",
+        "local-easter-connection.jpg",
+        "local-easter-restored.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "4cd5f33946ab707bccb0f52ca17ecec85b5799d72cbbf488eee5cfb9f25e149a",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "14e1954fa1ef17ff5e67ee55eb9a7da9163af772c635c595f2f879ec90bd658d",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-states/scanning-v1.png",
+          "sha256": "a2fa3b52c206676899e27987a6d7159bcc79927d034cfd1e6b9efdd71877b0d1",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-states/found-v1.png",
+          "sha256": "2c28e789a2e808b8c131a8b749c371536cd4b40153910c06555b1b9c6d35a090",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-states/vs-v1.png",
+          "sha256": "adc9e9fdef0d7a550f837887783e5a5407b4562f46057bb49895e77200e3ad15",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "191993e0fe86d7ad878a8d7c40c4ee7d5371fd285ccb7e1079715f4d93bc6fa3",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "0359db7bb3d0e41196c56ef99130c2096d114cbbd8c720f45de837585fdfdb0f",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/desert/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "d78db502efab927deb82717a88f738e627c1ed94a564087d410b6acf056b91f6",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/desert/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "e88a7d03ad1e09368fe9f1db6484a7ae88e7ebe13572dbb345966366285fbc60",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/desert/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "28a5942bc643be023b6b7d5be4d00ad6adfba9b64772292453295586afe5447e",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/desert/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "6a6fd053a2c59c6a7bc01cb409e8a139a2f7c37eb4d77dc95611ae3afd7b5af5",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "31a84f72332a81d05540652a116949632711806950ae14e7e981512015514cad",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/desert/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "5db249033777c029c9e1ccfa0d7d859602bc0e43a3c4e0245ee41116803e92cd",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/desert/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "722faa93b0a78a4c532780174d9a27b667031976ab716186ae7798b888e87456",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/desert/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "0ab8f1e672cac6a2c1c3f508c24fa76f4783b1299a6ad4b83aa0495c6f7c3652",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/desert/canonical/solo-results/record-panel-v2.png",
+          "sha256": "498e1bf05c3ce76795d3df844562caf4294a4ddfc5eabd1685e3f841834f2c20",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "cc9b791cb956c8b3194a8ce49082f96d52bdcdea0edabe9d46f63b33ff172838",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "208723b8b5553ead838a4c0451f5d3cb0d0209364bf05cb79d2fc31bec2f8da9",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "2f67738b55e97a0f8efc850451a6b6816f83045874d6d18892a64ce045104e9b",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "4c5c8fdf5b919373a78b0af62023c33a77fb91aed071d1c4f7500084c868bcae",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "132bb6e49d4849f4e0df4508a1f85932abca0c9b889a421cc28a19ee774b84bd",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/desert/canonical/ducat/ducat-inline-v2.png",
+          "sha256": "c4bc1d4d63f4fa5438ec7bba5f4801ab58224d588a7674d348cb06707ac8f713",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "sha256": "c8ee20f13dff19a7b1289a1fcafcf2e288054e2062dc672bab8ce32ae0181c5a",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-desert-lobby-searching.jpg",
+        "local-desert-lobby-found.jpg",
+        "local-desert-lobby-empty.jpg",
+        "local-desert-lobby-loading.jpg",
+        "local-desert-notice.jpg",
+        "local-desert-win-close.jpg",
+        "local-desert-win-decisive.jpg",
+        "local-desert-draw.jpg",
+        "local-desert-pending.jpg",
+        "local-desert-zero.jpg",
+        "local-desert-capped.jpg",
+        "local-desert-board-0.jpg",
+        "local-desert-board-1.jpg",
+        "local-desert-connection.jpg",
+        "local-desert-restored.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "8a5044d07b17c69dbbe3de1713991bea58a416f0826b7861252747019e35570f",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "f3632f7d5542c36299d3e47e6a2cdbe298684517425eaf8cc6b958b06463abee",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-states/scanning-v1.png",
+          "sha256": "c0ea031ee144c0872fe2f61c1bbd3fea1f67fe1a7b1dcd63a73798fd799154c2",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-states/found-v1.png",
+          "sha256": "254db1840b7756a5c06a29792fb1c097d61d804f6e0a271b4f01eecff868e174",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-states/vs-v1.png",
+          "sha256": "4dfd080a137fcad5182d469aed5aea5ce409228f064c7b88ab10e1579857b370",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "63883562e90ecb3a186b3219679596c56aa35fbea9386ea24bde19eb200b210b",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "5faf6b01b8a8221d01dacfd2ffb640330120cbf883290e66619d4cc586a9f093",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/moon/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "10068b75c6742714a22bf1f76dbd743bc9c5ed5de4aadd03975f2b54beefa7da",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/moon/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "58c4629bd45a5c162d12edbd8e8339e40356719e18e041e25b12de8d5ff8a216",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/moon/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "db61f2711344fae9e9163227f9e8a02e8044700b33224774d90cfdaa5ab2b1b9",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/moon/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "efd10b52dddd46e0cf3b0e7e7cfaa1ceb8c763e5a2317817f0e7416d0235be35",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "1014573f5cfdc9a3b2d258815fd42c5558a82a7ef8bcf8f26e0c565e354827ed",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/moon/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "36589e53eeeef81c274b0e94dda61a132f1bf1ddd82992e3b1c329c04bfaca44",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/moon/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "a7dbde83fd8ce7a434246ff6b1472e82fe2ffd72ce2b608c0681e2b8c40ee1a1",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "6479d6dfd7d39c19b4be5e912d3b5f622fe989dfe51bc9eb03f66cbcce13538a",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/moon/canonical/solo-results/record-panel-v2.png",
+          "sha256": "72184fa541887491b06ccc49d8222b3da4261fb1dc6a240d15aec9008df5a67e",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "eff198aeab1ceb4267ecf935bdd4879230b014a286d386a11349624276ce1e40",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "038854ba22160c339222caf20110b6fc2b7571e2543b351098c5592b44bb1578",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "05d3a4ecb455a4da53ab215f6fefa7555e4611cc14c4467e39d28936d2c39a4c",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "25445a9824412f510ce6b3726783671768dd933effb550bde345f0a4f3459615",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "7bc305f573ab38cad1ed64d2cf92c07a864107c5cb2a289c80fe61942fe65aad",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "6d32ceafc30cfe53e60945d5b6c286ff7301df5b500f97db78febff9533a736c",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "1af5a9ea6a0c42e2b5539e4cb442cbbecca5cc0804809fb730215a43cc07c660",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-moon-lobby-searching.jpg",
+        "local-moon-lobby-found.jpg",
+        "local-moon-lobby-empty.jpg",
+        "local-moon-lobby-loading.jpg",
+        "local-moon-notice.jpg",
+        "local-moon-win-close.jpg",
+        "local-moon-win-decisive.jpg",
+        "local-moon-draw.jpg",
+        "local-moon-pending.jpg",
+        "local-moon-zero.jpg",
+        "local-moon-capped.jpg",
+        "local-moon-board-0.jpg",
+        "local-moon-board-1.jpg",
+        "local-moon-connection.jpg",
+        "local-moon-restored.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "status": "Lokalni produkcioni prikazi provereni; Android svih stanja i potvrda posle deploya ostaju otvoreni.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+          "sha256": "9b3e71f2d314427cf5163340a66f838c2fba1e901ed48a7f832891bd06dccc4a",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-v1.png",
+          "sha256": "116610614ee2bc79c602c3ccf20e77ee8fa31b8e9b647425aacebcea07108757",
+          "uses": [
+            "Intro",
+            "Zaglavlje sobe"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "searching",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-states/scanning-v1.png",
+          "sha256": "d2f06cefe65ae51c4238265c93faee1aaed773e965566c19f29dd623214be730",
+          "uses": [
+            "Kartica traženja protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "opponent-found",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-states/found-v1.png",
+          "sha256": "083618064bda02d092d92b463284a8634ad81334788f536284aec7b15e6b045e",
+          "uses": [
+            "Kartica pronađenog protivnika"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "versus",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-states/vs-v1.png",
+          "sha256": "33d0f44ab7af97b358cad7ebc4d521c77afbae02c01fe5066eb7309bedac33f7",
+          "uses": [
+            "Između kartica igrača"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-lost",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-states/disconnected-v1.png",
+          "sha256": "56be31b090b04841350fe8884d1fb7e322c6bf100fdfdd7e89edc191281ede20",
+          "uses": [
+            "Privremeni panel tajmera pri prekidu veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "connection-restored",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-states/reconnected-v1.png",
+          "sha256": "501f3ac30df41a56bd5b3dd22f3a33e616ceaa87fb76b261dd79cd6293f0f70c",
+          "uses": [
+            "Obaveštenje o povratku veze"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-gold",
+          "file": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-gold-v2.png",
+          "sha256": "18dcb109ee5c98cbe91f467bf5f20774832bcbc4b2855d5ca5dafb2f3b3096f5",
+          "uses": [
+            "Prvo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-silver",
+          "file": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-silver-v2.png",
+          "sha256": "4889d26cc5a00f9cdcff9b2e8b0a6b21e4bfff4fc39f66a4c551ddd6b56bc32b",
+          "uses": [
+            "Drugo mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "podium-bronze",
+          "file": "www/assets/theme-packs/severna/canonical/competition-medals/general-podium-bronze-v2.png",
+          "sha256": "3407e624415de6c35b58cdce64e955a9a410ede273fde3881ba61bca295e2632",
+          "uses": [
+            "Treće mesto liste u sobi",
+            "Kanonska porodica opšte Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "list-empty-loading",
+          "file": "www/assets/theme-packs/severna/canonical/leaderboard-controls/empty-loading-v2.png",
+          "sha256": "6c2f79205629a20153697ae79ffc259bb62b5cf9d3e1bc73aea41aecf34e93a0",
+          "uses": [
+            "Prazna lista",
+            "Učitavanje liste",
+            "Kanonski identitet prazne Top liste"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-glyph",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-rematch/rematch-icon-v1.png",
+          "sha256": "d1182008afb4d9236df12df57cb1bab62c60ef8de66dfc389a645a7393c427a8",
+          "uses": [
+            "Dugme Revanš",
+            "Ponovljeni turnirski meč samo posle remija"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "rematch-button",
+          "file": "www/assets/theme-packs/severna/canonical/online-random-rematch/rematch-button-v1.png",
+          "sha256": "e08aaa3370c35f484f4bd1a5be1bac9a1b9d824d08e8f826ad307169e291d343",
+          "uses": [
+            "PNG površina dugmeta Revanš"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "score",
+          "file": "www/assets/theme-packs/severna/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "af24a263569cc0a0b223eafc52c39cc1e06c6d7b651b182ee1a9cac13852f4be",
+          "uses": [
+            "Oznaka ukupnog rezultata završnog ekrana"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "claim",
+          "file": "www/assets/theme-packs/severna/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "5edaab395761b565cd370f521a75774903fdb85340543aac6c6738d66329643d",
+          "uses": [
+            "Preuzimanje nagrade / izlaz"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/severna/canonical/solo-results/record-panel-v2.png",
+          "sha256": "0e8dac1a3fb77cfc928003d79ac2e0ff53ef759bb28a8594611e30fa3009bac5",
+          "uses": [
+            "Pozadina zajedničkog panela rekorda"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "weekly",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "3c639febca8e696df5b612217a44bddb923d56577e980cb2437157ebf5a55c89",
+          "uses": [
+            "Nedeljni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "monthly",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "56fbbb94199f69ffadf9192d5333b955091ba40e09623b5b454df54268f09531",
+          "uses": [
+            "Mesečni rekord"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "all-time",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "1e994958732e62f537abf9531adb38f1ac6631a68de81e2c98a59bbdd4a9936d",
+          "uses": [
+            "Rekord svih vremena"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "personal",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "5e64464bae14d49b834152c65b5c20408286afceb674a74d6d31da02d6dcaa22",
+          "uses": [
+            "Lični rekord aktivnog naloga"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "f6ae9223fbe49cbcb7b78c048ccad4dd42383eb7b9fd59db0fb3f281aff06d33",
+          "uses": [
+            "Podaci igrača u čekaonici",
+            "Potvrđeni dobitak na završnom ekranu",
+            "Kanonska porodica Indeksa moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png",
+          "sha256": "251c9d532b76935c64db49565a091da8bfe04a1902c7dd1ae615913cc959a489",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski dukat iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "sha256": "8d1ed86fac7c58d318e0e03ba86932c4c7abbe6cf2ed9a1039187095018fa1c5",
+          "uses": [
+            "Dugme Dupliraj",
+            "Kanonski nagradni video iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG ili odobrena izvedenica, lokalno pravilno prikazana u svojoj temi. Dorade povezivanja/rasporeda obrađene su u R28–R30; nema novog crteža. Status ne predstavlja stvarni Android prolaz svakog mesta upotrebe."
+        }
+      ],
+      "evidence": [
+        "local-severna-lobby-searching.jpg",
+        "local-severna-lobby-found.jpg",
+        "local-severna-lobby-empty.jpg",
+        "local-severna-lobby-loading.jpg",
+        "local-severna-notice.jpg",
+        "local-severna-win-close.jpg",
+        "local-severna-win-decisive.jpg",
+        "local-severna-draw.jpg",
+        "local-severna-pending.jpg",
+        "local-severna-zero.jpg",
+        "local-severna-capped.jpg",
+        "local-severna-board-0.jpg",
+        "local-severna-board-1.jpg",
+        "local-severna-connection.jpg",
+        "local-severna-restored.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-lobby-searching",
+      "file": "local-dark-lobby-searching",
+      "title": "Zelena — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-lobby-found",
+      "file": "local-dark-lobby-found",
+      "title": "Zelena — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-lobby-empty",
+      "file": "local-dark-lobby-empty",
+      "title": "Zelena — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-lobby-loading",
+      "file": "local-dark-lobby-loading",
+      "title": "Zelena — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-notice",
+      "file": "local-dark-notice",
+      "title": "Zelena — lokalni renderer / notice"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-win-close",
+      "file": "local-dark-win-close",
+      "title": "Zelena — lokalni renderer / win-close"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-win-decisive",
+      "file": "local-dark-win-decisive",
+      "title": "Zelena — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-draw",
+      "file": "local-dark-draw",
+      "title": "Zelena — lokalni renderer / draw"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-pending",
+      "file": "local-dark-pending",
+      "title": "Zelena — lokalni renderer / pending"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-zero",
+      "file": "local-dark-zero",
+      "title": "Zelena — lokalni renderer / zero"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-capped",
+      "file": "local-dark-capped",
+      "title": "Zelena — lokalni renderer / capped"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-board-0",
+      "file": "local-dark-board-0",
+      "title": "Zelena — lokalni renderer / board-0"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-board-1",
+      "file": "local-dark-board-1",
+      "title": "Zelena — lokalni renderer / board-1"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-connection",
+      "file": "local-dark-connection",
+      "title": "Zelena — lokalni renderer / connection"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-restored",
+      "file": "local-dark-restored",
+      "title": "Zelena — lokalni renderer / restored"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-lobby-searching",
+      "file": "local-light-lobby-searching",
+      "title": "Svetlo zlato — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-lobby-found",
+      "file": "local-light-lobby-found",
+      "title": "Svetlo zlato — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-lobby-empty",
+      "file": "local-light-lobby-empty",
+      "title": "Svetlo zlato — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-lobby-loading",
+      "file": "local-light-lobby-loading",
+      "title": "Svetlo zlato — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-notice",
+      "file": "local-light-notice",
+      "title": "Svetlo zlato — lokalni renderer / notice"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-win-close",
+      "file": "local-light-win-close",
+      "title": "Svetlo zlato — lokalni renderer / win-close"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-win-decisive",
+      "file": "local-light-win-decisive",
+      "title": "Svetlo zlato — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-draw",
+      "file": "local-light-draw",
+      "title": "Svetlo zlato — lokalni renderer / draw"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-pending",
+      "file": "local-light-pending",
+      "title": "Svetlo zlato — lokalni renderer / pending"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-zero",
+      "file": "local-light-zero",
+      "title": "Svetlo zlato — lokalni renderer / zero"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-capped",
+      "file": "local-light-capped",
+      "title": "Svetlo zlato — lokalni renderer / capped"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-board-0",
+      "file": "local-light-board-0",
+      "title": "Svetlo zlato — lokalni renderer / board-0"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-board-1",
+      "file": "local-light-board-1",
+      "title": "Svetlo zlato — lokalni renderer / board-1"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-connection",
+      "file": "local-light-connection",
+      "title": "Svetlo zlato — lokalni renderer / connection"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-restored",
+      "file": "local-light-restored",
+      "title": "Svetlo zlato — lokalni renderer / restored"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-lobby-searching",
+      "file": "local-medium-lobby-searching",
+      "title": "Trula višnja — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-lobby-found",
+      "file": "local-medium-lobby-found",
+      "title": "Trula višnja — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-lobby-empty",
+      "file": "local-medium-lobby-empty",
+      "title": "Trula višnja — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-lobby-loading",
+      "file": "local-medium-lobby-loading",
+      "title": "Trula višnja — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-notice",
+      "file": "local-medium-notice",
+      "title": "Trula višnja — lokalni renderer / notice"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-win-close",
+      "file": "local-medium-win-close",
+      "title": "Trula višnja — lokalni renderer / win-close"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-win-decisive",
+      "file": "local-medium-win-decisive",
+      "title": "Trula višnja — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-draw",
+      "file": "local-medium-draw",
+      "title": "Trula višnja — lokalni renderer / draw"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-pending",
+      "file": "local-medium-pending",
+      "title": "Trula višnja — lokalni renderer / pending"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-zero",
+      "file": "local-medium-zero",
+      "title": "Trula višnja — lokalni renderer / zero"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-capped",
+      "file": "local-medium-capped",
+      "title": "Trula višnja — lokalni renderer / capped"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-board-0",
+      "file": "local-medium-board-0",
+      "title": "Trula višnja — lokalni renderer / board-0"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-board-1",
+      "file": "local-medium-board-1",
+      "title": "Trula višnja — lokalni renderer / board-1"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-connection",
+      "file": "local-medium-connection",
+      "title": "Trula višnja — lokalni renderer / connection"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-restored",
+      "file": "local-medium-restored",
+      "title": "Trula višnja — lokalni renderer / restored"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-lobby-searching",
+      "file": "local-winter-lobby-searching",
+      "title": "Plavi okean — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-lobby-found",
+      "file": "local-winter-lobby-found",
+      "title": "Plavi okean — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-lobby-empty",
+      "file": "local-winter-lobby-empty",
+      "title": "Plavi okean — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-lobby-loading",
+      "file": "local-winter-lobby-loading",
+      "title": "Plavi okean — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-notice",
+      "file": "local-winter-notice",
+      "title": "Plavi okean — lokalni renderer / notice"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-win-close",
+      "file": "local-winter-win-close",
+      "title": "Plavi okean — lokalni renderer / win-close"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-win-decisive",
+      "file": "local-winter-win-decisive",
+      "title": "Plavi okean — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-draw",
+      "file": "local-winter-draw",
+      "title": "Plavi okean — lokalni renderer / draw"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-pending",
+      "file": "local-winter-pending",
+      "title": "Plavi okean — lokalni renderer / pending"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-zero",
+      "file": "local-winter-zero",
+      "title": "Plavi okean — lokalni renderer / zero"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-capped",
+      "file": "local-winter-capped",
+      "title": "Plavi okean — lokalni renderer / capped"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-board-0",
+      "file": "local-winter-board-0",
+      "title": "Plavi okean — lokalni renderer / board-0"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-board-1",
+      "file": "local-winter-board-1",
+      "title": "Plavi okean — lokalni renderer / board-1"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-connection",
+      "file": "local-winter-connection",
+      "title": "Plavi okean — lokalni renderer / connection"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-restored",
+      "file": "local-winter-restored",
+      "title": "Plavi okean — lokalni renderer / restored"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-lobby-searching",
+      "file": "local-neon-lobby-searching",
+      "title": "Neon Cyber — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-lobby-found",
+      "file": "local-neon-lobby-found",
+      "title": "Neon Cyber — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-lobby-empty",
+      "file": "local-neon-lobby-empty",
+      "title": "Neon Cyber — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-lobby-loading",
+      "file": "local-neon-lobby-loading",
+      "title": "Neon Cyber — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-notice",
+      "file": "local-neon-notice",
+      "title": "Neon Cyber — lokalni renderer / notice"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-win-close",
+      "file": "local-neon-win-close",
+      "title": "Neon Cyber — lokalni renderer / win-close"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-win-decisive",
+      "file": "local-neon-win-decisive",
+      "title": "Neon Cyber — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-draw",
+      "file": "local-neon-draw",
+      "title": "Neon Cyber — lokalni renderer / draw"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-pending",
+      "file": "local-neon-pending",
+      "title": "Neon Cyber — lokalni renderer / pending"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-zero",
+      "file": "local-neon-zero",
+      "title": "Neon Cyber — lokalni renderer / zero"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-capped",
+      "file": "local-neon-capped",
+      "title": "Neon Cyber — lokalni renderer / capped"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-board-0",
+      "file": "local-neon-board-0",
+      "title": "Neon Cyber — lokalni renderer / board-0"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-board-1",
+      "file": "local-neon-board-1",
+      "title": "Neon Cyber — lokalni renderer / board-1"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-connection",
+      "file": "local-neon-connection",
+      "title": "Neon Cyber — lokalni renderer / connection"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-restored",
+      "file": "local-neon-restored",
+      "title": "Neon Cyber — lokalni renderer / restored"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-lobby-searching",
+      "file": "local-amethyst-lobby-searching",
+      "title": "Kraljevski ametist — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-lobby-found",
+      "file": "local-amethyst-lobby-found",
+      "title": "Kraljevski ametist — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-lobby-empty",
+      "file": "local-amethyst-lobby-empty",
+      "title": "Kraljevski ametist — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-lobby-loading",
+      "file": "local-amethyst-lobby-loading",
+      "title": "Kraljevski ametist — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-notice",
+      "file": "local-amethyst-notice",
+      "title": "Kraljevski ametist — lokalni renderer / notice"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-win-close",
+      "file": "local-amethyst-win-close",
+      "title": "Kraljevski ametist — lokalni renderer / win-close"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-win-decisive",
+      "file": "local-amethyst-win-decisive",
+      "title": "Kraljevski ametist — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-draw",
+      "file": "local-amethyst-draw",
+      "title": "Kraljevski ametist — lokalni renderer / draw"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-pending",
+      "file": "local-amethyst-pending",
+      "title": "Kraljevski ametist — lokalni renderer / pending"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-zero",
+      "file": "local-amethyst-zero",
+      "title": "Kraljevski ametist — lokalni renderer / zero"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-capped",
+      "file": "local-amethyst-capped",
+      "title": "Kraljevski ametist — lokalni renderer / capped"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-board-0",
+      "file": "local-amethyst-board-0",
+      "title": "Kraljevski ametist — lokalni renderer / board-0"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-board-1",
+      "file": "local-amethyst-board-1",
+      "title": "Kraljevski ametist — lokalni renderer / board-1"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-connection",
+      "file": "local-amethyst-connection",
+      "title": "Kraljevski ametist — lokalni renderer / connection"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-restored",
+      "file": "local-amethyst-restored",
+      "title": "Kraljevski ametist — lokalni renderer / restored"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-lobby-searching",
+      "file": "local-easter-lobby-searching",
+      "title": "Vaskršnja — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-lobby-found",
+      "file": "local-easter-lobby-found",
+      "title": "Vaskršnja — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-lobby-empty",
+      "file": "local-easter-lobby-empty",
+      "title": "Vaskršnja — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-lobby-loading",
+      "file": "local-easter-lobby-loading",
+      "title": "Vaskršnja — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-notice",
+      "file": "local-easter-notice",
+      "title": "Vaskršnja — lokalni renderer / notice"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-win-close",
+      "file": "local-easter-win-close",
+      "title": "Vaskršnja — lokalni renderer / win-close"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-win-decisive",
+      "file": "local-easter-win-decisive",
+      "title": "Vaskršnja — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-draw",
+      "file": "local-easter-draw",
+      "title": "Vaskršnja — lokalni renderer / draw"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-pending",
+      "file": "local-easter-pending",
+      "title": "Vaskršnja — lokalni renderer / pending"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-zero",
+      "file": "local-easter-zero",
+      "title": "Vaskršnja — lokalni renderer / zero"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-capped",
+      "file": "local-easter-capped",
+      "title": "Vaskršnja — lokalni renderer / capped"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-board-0",
+      "file": "local-easter-board-0",
+      "title": "Vaskršnja — lokalni renderer / board-0"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-board-1",
+      "file": "local-easter-board-1",
+      "title": "Vaskršnja — lokalni renderer / board-1"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-connection",
+      "file": "local-easter-connection",
+      "title": "Vaskršnja — lokalni renderer / connection"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-restored",
+      "file": "local-easter-restored",
+      "title": "Vaskršnja — lokalni renderer / restored"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-lobby-searching",
+      "file": "local-desert-lobby-searching",
+      "title": "Pustinjsko staklo — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-lobby-found",
+      "file": "local-desert-lobby-found",
+      "title": "Pustinjsko staklo — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-lobby-empty",
+      "file": "local-desert-lobby-empty",
+      "title": "Pustinjsko staklo — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-lobby-loading",
+      "file": "local-desert-lobby-loading",
+      "title": "Pustinjsko staklo — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-notice",
+      "file": "local-desert-notice",
+      "title": "Pustinjsko staklo — lokalni renderer / notice"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-win-close",
+      "file": "local-desert-win-close",
+      "title": "Pustinjsko staklo — lokalni renderer / win-close"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-win-decisive",
+      "file": "local-desert-win-decisive",
+      "title": "Pustinjsko staklo — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-draw",
+      "file": "local-desert-draw",
+      "title": "Pustinjsko staklo — lokalni renderer / draw"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-pending",
+      "file": "local-desert-pending",
+      "title": "Pustinjsko staklo — lokalni renderer / pending"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-zero",
+      "file": "local-desert-zero",
+      "title": "Pustinjsko staklo — lokalni renderer / zero"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-capped",
+      "file": "local-desert-capped",
+      "title": "Pustinjsko staklo — lokalni renderer / capped"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-board-0",
+      "file": "local-desert-board-0",
+      "title": "Pustinjsko staklo — lokalni renderer / board-0"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-board-1",
+      "file": "local-desert-board-1",
+      "title": "Pustinjsko staklo — lokalni renderer / board-1"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-connection",
+      "file": "local-desert-connection",
+      "title": "Pustinjsko staklo — lokalni renderer / connection"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-restored",
+      "file": "local-desert-restored",
+      "title": "Pustinjsko staklo — lokalni renderer / restored"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-lobby-searching",
+      "file": "local-moon-lobby-searching",
+      "title": "Mesečev sjaj — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-lobby-found",
+      "file": "local-moon-lobby-found",
+      "title": "Mesečev sjaj — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-lobby-empty",
+      "file": "local-moon-lobby-empty",
+      "title": "Mesečev sjaj — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-lobby-loading",
+      "file": "local-moon-lobby-loading",
+      "title": "Mesečev sjaj — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-notice",
+      "file": "local-moon-notice",
+      "title": "Mesečev sjaj — lokalni renderer / notice"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-win-close",
+      "file": "local-moon-win-close",
+      "title": "Mesečev sjaj — lokalni renderer / win-close"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-win-decisive",
+      "file": "local-moon-win-decisive",
+      "title": "Mesečev sjaj — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-draw",
+      "file": "local-moon-draw",
+      "title": "Mesečev sjaj — lokalni renderer / draw"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-pending",
+      "file": "local-moon-pending",
+      "title": "Mesečev sjaj — lokalni renderer / pending"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-zero",
+      "file": "local-moon-zero",
+      "title": "Mesečev sjaj — lokalni renderer / zero"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-capped",
+      "file": "local-moon-capped",
+      "title": "Mesečev sjaj — lokalni renderer / capped"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-board-0",
+      "file": "local-moon-board-0",
+      "title": "Mesečev sjaj — lokalni renderer / board-0"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-board-1",
+      "file": "local-moon-board-1",
+      "title": "Mesečev sjaj — lokalni renderer / board-1"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-connection",
+      "file": "local-moon-connection",
+      "title": "Mesečev sjaj — lokalni renderer / connection"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-restored",
+      "file": "local-moon-restored",
+      "title": "Mesečev sjaj — lokalni renderer / restored"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-lobby-searching",
+      "file": "local-severna-lobby-searching",
+      "title": "Severna maglina — lokalni renderer / lobby-searching"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-lobby-found",
+      "file": "local-severna-lobby-found",
+      "title": "Severna maglina — lokalni renderer / lobby-found"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-lobby-empty",
+      "file": "local-severna-lobby-empty",
+      "title": "Severna maglina — lokalni renderer / lobby-empty"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-lobby-loading",
+      "file": "local-severna-lobby-loading",
+      "title": "Severna maglina — lokalni renderer / lobby-loading"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-notice",
+      "file": "local-severna-notice",
+      "title": "Severna maglina — lokalni renderer / notice"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-win-close",
+      "file": "local-severna-win-close",
+      "title": "Severna maglina — lokalni renderer / win-close"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-win-decisive",
+      "file": "local-severna-win-decisive",
+      "title": "Severna maglina — lokalni renderer / win-decisive"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-draw",
+      "file": "local-severna-draw",
+      "title": "Severna maglina — lokalni renderer / draw"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-pending",
+      "file": "local-severna-pending",
+      "title": "Severna maglina — lokalni renderer / pending"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-zero",
+      "file": "local-severna-zero",
+      "title": "Severna maglina — lokalni renderer / zero"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-capped",
+      "file": "local-severna-capped",
+      "title": "Severna maglina — lokalni renderer / capped"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-board-0",
+      "file": "local-severna-board-0",
+      "title": "Severna maglina — lokalni renderer / board-0"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-board-1",
+      "file": "local-severna-board-1",
+      "title": "Severna maglina — lokalni renderer / board-1"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-connection",
+      "file": "local-severna-connection",
+      "title": "Severna maglina — lokalni renderer / connection"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-restored",
+      "file": "local-severna-restored",
+      "title": "Severna maglina — lokalni renderer / restored"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "easter-offline-menu",
+      "file": "easter-offline-menu",
+      "title": "Vaskršnja — meni pre offline testa"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "easter-online-intro",
+      "file": "easter-online-intro",
+      "title": "Vaskršnja — intro PNG nije u offline kešu"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "easter-offline-notice",
+      "file": "easter-offline-notice",
+      "title": "Vaskršnja — stvarna greška veze"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "dark-offline-lobby",
+      "file": "dark-offline-lobby",
+      "title": "Zelena — stvarna greška veze pri prvom pokušaju"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "dark-offline-notice-final",
+      "file": "dark-offline-notice-final",
+      "title": "Zelena — stvarna greška veze pri drugom pokušaju"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "light-offline-settings",
+      "file": "light-offline-settings",
+      "title": "Neuspeo offline izbor Svetlog zlata, ostala Zelena"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "light-offline-notice",
+      "file": "light-offline-notice",
+      "title": "Zelena — stvarna čekaonica, deo PNG nije u kešu"
+    },
+    {
+      "theme": "android",
+      "kind": "android",
+      "source": "dark-network-restored",
+      "file": "dark-network-restored",
+      "title": "Vraćeni mreža, Zelena i glavni meni"
+    }
+  ]
+}

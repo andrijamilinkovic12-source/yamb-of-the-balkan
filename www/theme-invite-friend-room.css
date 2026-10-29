@@ -560,10 +560,6 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 #waiting-screen#waiting-screen.is-hosting-invite .friend-request-accept { border-color: var(--invite-primary); }
 #waiting-screen#waiting-screen.is-hosting-invite .friend-request-decline { opacity: .85; }
 
-body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
-    padding-top: 13px !important;
-    padding-bottom: 13px !important;
-}
 
 @media (max-width: 360px) {
     body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite #waiting-title {
@@ -663,18 +659,6 @@ body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-i
     }
 }
 
-@media (max-height: 760px) and (min-height: 650px) {
-    body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
-        padding-top: 8px !important;
-        padding-bottom: 8px !important;
-    }
-}
-@media (max-height: 699px) and (min-height: 650px) {
-    body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
-        padding-top: 5px !important;
-        padding-bottom: 5px !important;
-    }
-}
 
 @media (max-width: 370px) {
     #waiting-screen#waiting-screen.is-hosting-invite .ws-share-row { grid-template-columns: minmax(0,1fr) 100px; }
@@ -871,4 +855,89 @@ body:is(.easter-theme,.desert-theme) #waiting-screen#waiting-screen.is-hosting-i
 }
 @media (prefers-reduced-motion: reduce) {
     #waiting-screen#waiting-screen.is-hosting-invite .theme-invite-add-icon { animation: none !important; }
+}
+
+/* Final audit: a room-wide legacy border must not narrow the Green layout. */
+body #waiting-screen#waiting-screen:is(.is-friend-invite,.is-hosting-invite) { border: 0 !important; }
+body #waiting-screen#waiting-screen:is(.is-friend-invite,.is-hosting-invite) #waiting-title {
+    font-weight: 850 !important;
+    letter-spacing: .025em !important;
+}
+body #waiting-screen#waiting-screen:is(.is-friend-invite,.is-hosting-invite) .green-invite-header-icon {
+    display: block !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+    object-fit: contain;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card { flex: 0 0 auto !important; }
+body #waiting-screen#waiting-screen.is-hosting-invite #waiting-my-name { padding: 0 !important; }
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-name {
+    min-height: 2.4em;
+    max-height: 2.4em;
+    flex-shrink: 0;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-btn { margin: auto 0 0 !important; border-radius: 8px !important; }
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .easter-friend-records {
+    display: grid !important;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    height: 100%;
+    gap: 1px !important;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .easter-friend-record-row { min-height: 0; margin: 0 !important; }
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .green-friend-presence {
+    display: block;
+    width: 100%;
+    flex: 0 0 auto;
+    font: 900 .67rem/1.1 Montserrat, sans-serif;
+    letter-spacing: .4px;
+    text-align: center;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .green-friend-presence { color: var(--invite-primary); }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen#waiting-screen.is-hosting-invite .is-offline .green-friend-presence { color: var(--invite-muted); }
+body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .waiting-header { border-radius: 20px !important; }
+body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .waiting-status-panel { border: 0 !important; border-radius: 0 !important; }
+body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .ws-glass-card { padding: 12px 8px 10px !important; }
+body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .ws-glass-stats { padding: 6px 7px !important; border: 0 !important; }
+body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .ws-g-stat { gap: 6px !important; }
+body #custom-notification-container > .custom-toast.invite-room-toast { border-radius: 12px !important; }
+body #custom-notification-container > .custom-toast.invite-room-toast .toast-title { font: 700 .98rem/1.22 Montserrat,sans-serif !important; letter-spacing: normal !important; }
+body #custom-notification-container > .custom-toast.invite-room-toast .toast-msg { font: 400 .9rem/1.42 Montserrat,sans-serif !important; }
+/* Host header/status spacing follows Green at each existing height breakpoint. */
+@media (min-height: 761px) {
+    body #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel { padding: 14px 15px !important; border: 0 !important; }
+}
+@media (max-height: 760px) and (min-height: 650px) {
+    body #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel { padding: 9px 15px !important; border: 0 !important; }
+}
+@media (max-height: 699px) and (min-height: 650px) {
+    body #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel { padding: 6px 15px !important; }
+}
+@media (max-height: 649px) {
+    body #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel { border: 0 !important; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        grid-template-rows: 28px 46px 24px 12px;
+        align-content: start;
+        column-gap: 4px;
+        row-gap: 2px;
+    }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-img { grid-column: 1; grid-row: 1; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-name { grid-column: 2; grid-row: 1; width: 100%; align-self: center; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats { grid-column: 1 / -1; grid-row: 2; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-btn { grid-column: 1 / -1; grid-row: 3; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .green-friend-presence { grid-column: 1 / -1; grid-row: 4; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .easter-friend-records { grid-template-rows: repeat(4, minmax(0, 1fr)); height: 100%; gap: 0; }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .easter-friend-record-row { min-height: 0; }
+}
+@media (max-width: 360px) {
+    body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .ws-glass-avatar { width: 52px !important; height: 52px !important; }
+    body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .ws-glass-stats { gap: 4px !important; }
+    body #waiting-screen#waiting-screen.is-hosting-invite #friends-list { padding-inline: 2px !important; }
 }

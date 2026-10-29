@@ -1,5 +1,69 @@
+/* Local game exit confirmation uses Green's type scale with the active room palette. */
+body #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) .cm-title { font: 800 .98rem/1.22 Montserrat,sans-serif !important; letter-spacing: 1px !important; }
+body #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) .cm-msg { font: 400 .9rem/1.42 Montserrat,sans-serif !important; }
+body #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) .cm-btn { font: 700 .9rem/1.2 Montserrat,sans-serif !important; border-radius: 25px !important; }
+body #custom-modal-overlay.modal-context-hotseat #cm-input { border-radius: 6px !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-hotseat #cm-input { color: var(--theme-card-ink) !important; background: var(--theme-card-inset) !important; border-color: var(--theme-card-line) !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) .custom-modal {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) :is(.cm-title,.cm-msg) { color: var(--theme-card-ink) !important; text-shadow: none !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) .cm-btn-ok { color: var(--theme-card-surface) !important; background: var(--theme-card-primary) !important; text-shadow: none !important; border: 0 !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay:is(.modal-context-solo,.modal-context-hotseat,.modal-context-online-duel,.modal-context-invite-friend) .cm-btn-cancel { color: var(--theme-card-ink) !important; background: var(--theme-card-inset) !important; border: 1px solid var(--theme-card-line) !important; text-shadow: none !important; }
+
+/* Shared finishes inherit Green's exact type and geometry; each theme keeps its material. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #game-over-screen#game-over-screen.is-solo-result
+    :is(#go-title,#go-tier-title,#go-msg,#go-score,#hotseat-result-comment,.hotseat-result-role,.hotseat-result-name,.hotseat-result-points,.game-over-score-card > [data-lang],.solo-record-panel-title,.solo-record-panel-footer,#go-double-label,#go-claim-label,.easter-solo-finish-stats > div > span,.easter-solo-finish-stats strong) {
+    text-shadow: none !important;
+}
+body #game-over-screen#game-over-screen.is-solo-result #go-title {
+    font-weight: 700 !important;
+    line-height: 1.18 !important;
+}
+body #game-over-screen#game-over-screen.is-solo-result :is(#btn-ad-double,.game-over-claim-button) {
+    font-weight: 800 !important;
+    border-radius: 999px !important;
+}
+body #game-over-screen#game-over-screen.is-solo-result .game-over-claim-button {
+    min-height: 55px !important;
+}
+body #game-over-screen#game-over-screen.is-solo-result .theme-solo-finish-score-mark {
+    width: 42px !important; height: 42px !important; flex-basis: 42px !important;
+}
+body #game-over-screen#game-over-screen.is-solo-result .theme-solo-finish-claim-icon {
+    width: 29px !important; height: 29px !important; flex-basis: 29px !important;
+}
+body #game-over-screen#game-over-screen.is-solo-result .easter-solo-finish-stats > div > span {
+    letter-spacing: .07em !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #game-over-screen#game-over-screen.is-solo-result .game-over-claim-button {
+    background: linear-gradient(145deg, #416746, #31573a) !important;
+}
+
+/* Match Green's statistical labels even where older theme rules have higher specificity. */
+body #game-over-screen#game-over-screen.is-hotseat-result .easter-solo-finish-stats > div > span { font-size: .58rem !important; letter-spacing: .07em !important; }
+body #game-over-screen#game-over-screen.is-hotseat-result .easter-solo-finish-stats strong { font-size: 1.02rem !important; line-height: 1 !important; margin-top: 4px !important; }
+
 /* The shared Solo and Hotseat result stays fully visible on short portrait screens. */
 @media (max-height: 700px) {
+    body #game-over-screen#game-over-screen.is-solo-result > .modal-box {
+        padding: 7px 8px !important;
+        gap: 3px !important;
+    }
+    body #game-over-screen#game-over-screen.is-solo-result #go-title { line-height: 1.1 !important; }
+    body #game-over-screen#game-over-screen.is-solo-result .easter-solo-finish-stats strong { margin-top: 4px !important; }
     body #game-over-screen.is-hotseat-result.is-solo-result #go-title { font-size: 1.05rem !important; line-height: 1.1 !important; }
     body #game-over-screen.is-hotseat-result.is-solo-result #go-msg { font-size: .69rem !important; line-height: 1.12 !important; }
     #game-over-screen.is-solo-result:not(.is-online-duel-result).screen.active > .modal-box {

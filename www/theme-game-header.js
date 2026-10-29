@@ -20,7 +20,11 @@
         }
         if (role === 'theme' || role === 'skin') return `${root}/canonical/treasury-controls/tab-${role === 'theme' ? 'themes' : 'skins'}-v1.png?v=1`;
         if (role === 'lock') return `${root}/canonical/treasury-controls/status-locked-v1.png?v=1`;
-        if (role === 'close') return `${root}/canonical/room-controls/close-v1.png?v=1`;
+        if (role === 'close') {
+            // Match the CSS URL exactly so Settings warms the image it will display.
+            const version = ['light', 'severna'].includes(theme) ? 4 : 3;
+            return `${root}/canonical/room-controls/close-v1.png?v=${version}`;
+        }
         return `${root}/canonical/game-header/${role}-v1.png?v=1`;
     };
     const preload = source => {

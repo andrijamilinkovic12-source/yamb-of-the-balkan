@@ -26,4 +26,38 @@ Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, k
 
 ## Aktivni nalazi
 
+### R32 — pogrešna perspektiva poruke tehničkog poraza, 29.10.2026.
 
+Stvarni kontrolisani Random par Andrija/Sara završio se istekom poteza pre potvrđenog upisa. Server emituje isti pobednički `message` obema stranama; klijent ga je prikazivao i uz PORAZ. Lokalno `game_over_timeout` sada bira postojeće lokalizovane poruke za pobednika/poraženog. Nisu menjani nagrade, kazne, statistika ili trajanje poteza. Osam izolovanih slučajeva stvarnog handlera prolazi, uključujući srpski/engleski i izbegavanje dvostrukog lokalnog obračuna već potvrđenog serverskog rezultata. Čeka deploy i novu Android potvrdu.
+
+[Dokazi i posledice testa](two-emulators-2026-10-29/index.html): server je automatski promenio stvarna salda (Sara −1758, Andrija +1775) i statistiku, bez pritiska na preuzimanje. Nije urađeno poništavanje. To je neuspešan test običnog toka, ne dokaz pravilnog normalnog završetka/revanša/dupliranja. Dalji transakcioni testovi zahtevaju aktuelni izolovani QA.
+
+### R24 / R25 — Solo završni tok i standardizacija, 29.10.2026.
+
+R24 pomera `localResultAccepted` u potreban opseg: ranije je `ReferenceError` preskakao slanje/potvrdu lokalnog rezultata. Nova regresija pokriva Solo i Hotseat uz accepted/rejected/pending odgovor, bez stvarnog naloga ili nagrade. R25 usklađuje Solo završne mere/fontove/PNG dimenzije i potvrdu izlaska sa Green; Green akcijski gradijent koristi čitljivije postojeće tonove. [Dokazi i granice](emulator-solo-2026-10-29/index.html): aktivna Android partija/quick-menu svih10tema,400izolovanih lokalnih slučajeva. Nove dorade još nisu objavljene, a pravi završetak/isplata nisu testirani na nalogu.
+
+### R22 / R23 — Dnevni izazov i priprema X, 29.10.2026.
+
+Lokalno ispravljeni Daily fontovi/mere obaveštenja i kontrast tematskog dugmeta, plus Green akcijski gradijenti koriste tamnije postojeće tonove. Priprema X sada učitava isti URL/cache verziju kao prikazani CSS. PNG crteži nisu menjani. [Dokazi i precizan obuhvat](emulator-daily-2026-10-29/index.html): Android reentry svih10tema,150izolovanih lokalnih stanja/veličina. Nove dorade čekaju deploy i Android potvrdu; aktivni/završni Daily tok nije sada odigran jer je današnji izazov već završen na nalogu.
+
+
+
+
+## R26 — Hotseat tipografija i geometrija završetka, lokalno 29.10.2026.
+Stvarni izolovani renderer je pokazao razlike Green/ostalih tema u naslovu, kratkom paddingu/gap-u, statističkim fontovima/marginama, score/claim PNG veličinama i modalu. Ujednačeno samo za lokalne završetke (online izuzet), dodati Hotseat kontekst unosa gosta/izlaza/završnih obaveštenja i postojeći tematski površinski tokeni. Završni/aktivni BACAJ/NAJAVA PNG crteži nisu menjani.520lokalnih slučajeva, Solo400 i funkcionalne regresije prolaze. Čeka deploy/Android potvrdu.
+
+## R27 — Vaskršnji board megafon bez src posle promene teme, lokalno 29.10.2026.
+Android Hotseat prikazuje prazno najava zaglavlje u obe table posle ulaska iz druge teme. Stara generička hidratacija proverava assets/easter-soft-clay/, dok novi PNG živi u assets/theme-packs/easter/canonical/game-board/. Preloader ga dekodira, ali DOM ne dobija src; observer ne reaguje na samu promenu teme. syncGameBoardThemeImages povezuje postojeći canonical PNG za Easter/Neon i na applyTheme i po createScoreTables. Nova regresija proverava obe table i odložene neaktivne ikone, a stvarni lokalni renderer proverava src pre svog pomoćnog učitavanja. Nema nove slike/promene dimenzija. Čeka deploy/Android potvrdu.
+
+
+## R28 — Online random čekaonica/završetak/modali, lokalno29.10.2026.
+Stvarni renderer je otkrio različite širine/rubove, fontove, loading visinu i Green-only naslov pronađenog protivnika. Usklađeno premaGreen uz sopstvene palete i uklonjen Easterljubičasti rub. Zajednički završni tip/PNGmere sada važe i online; Revanš44px i uEaster, online modalni kontekst je zaseban.720lokalnih slučajeva; čeka deploy/Android potvrdu.
+
+## R29 — Online pager i reconnect CSS opseg samo u3teme, lokalno29.10.2026.
+Uslov je uključivao theme-dual-board-view/online-duel-room/random-online-duel-room samo zaGreen/Easter/Severna. Ostalih7tema nema sharedscope, Winter/Desert table su sabijene; disconnect PNG CSSne važi. Sve online partije sa2igrača sada imaju isti pager i sprečeno flexsabijanje. Brza CI regresija izvršava pravi uslov kroz10tema. Nema promene serverskih pravila ili dimenzija.
+
+## R30 — DisconnectPNG ostaje/raste posle povratka veze, lokalno29.10.2026.
+Privremeni timerPNG ostaje uDOM-u, a gubi27pxCSS kad se ukloni opponent-reconnecting. Lokalni screenshot pokazao je256pxPNG dok se čeka state-sync. clearOpponentReconnectGraceCountdown sada briše/sklanja samo disconnected sadržaj, uz trajnu27pxmeru unutar randomscope-a. Povratni canonical42pxPNG toast ima ujednačen font/grid/rub i tematsku površinu. Reconnect i720runtime slučajeva proveravaju sklanjanje/oporavak bez uticaja na obračun.
+
+## R31 — Pozovi prijatelja: nejednaka geometrija i prelivanje statistike, lokalno29.10.2026.
+450 stvarnih izolovanih renderera i Android domaćin svih10tema. Uklonjen nasleđeni obrub sobe koji sužava9tema, ujednačeni profili/razmaci/fontovi/gost/prazna lista i34px zaglavna ikona; Vaskršnji/Pustinjski posebni padding više ne pomera sadržaj. Četiri statistička reda ostaju u podkartici, status je vidljiv u svim temama; na niskom ekranu avatar i ime dele gornji red postojeće138px kartice. Modali imaju zaseban invite-friend kontekst i paletu/Green tipografiju, toast isti radijus/font. Kanonski8PNGuloga po temi ostaju isti, bez novog crteža ili promene DNK. Prolazi svih450slučajeva/5mobilnih veličina, uključujući granice statistike/statusa. Android prikazuje pre-deploy verziju; lokalne dorade čekaju objavu/potvrdu. Prvi Neon/Ametist izbor vraćen na prethodnu temu, ponovljeni uspeli — hladno učitavanje ostaje otvoreno.

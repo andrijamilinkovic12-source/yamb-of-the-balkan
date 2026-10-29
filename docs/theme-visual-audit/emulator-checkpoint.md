@@ -1,5 +1,95 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Dva emulatora posle restarta — 29.10.2026.
+
+[Objedinjeni plan preostalih provera](remaining-work-plan-2026-10-29.md) razdvaja osnovne preglede, funkcionalne testove i potvrdu posle deploya.
+
+[18 Android snimaka](two-emulators-2026-10-29/index.html), [rezultati i ograničenja](two-emulators-2026-10-29/report.json). Pokrenuti Easter_QA_10GB i Duel_QA_Player2, sačuvane prijave Andrije i Sare, originalnih 1440×3120/560dpi. Android SystemUI je pri startu drugog emulatora zastao; zakašnjeli unos otvorio je Random čekanje, otkazano pre uparivanja. Posle toga pokrenut je zaseban kontrolisani test dva korisnikova naloga.
+
+**Dnevni izazov:** na Sarinom nalogu u Truloj višnji zaustavljeno svih šest kockica: `[4,2,3,5,1,4]`, rezultat `(4+2+3+5)×1×4=56`. Aktivni i završni panel staju u ekran. Završni PNG pojavio se tek u narednom kadru; brzina prvog učitavanja nije potvrđena. Bez reklame ili preuzimanja; nakon ponovnog otvaranja aplikacije saldo je ostao 4107. Ovo je stvarni aktivni/završni dokaz jedne teme, ne svih deset.
+
+**Random:** uparivanje Sare i Andrije potvrđeno po imenima. Oba prikaza table viđena, ali prvi sačuvani kadrovi imaju samo 12/8 sekundi preostalog poteza. Test nije izvršio potvrđen upis pre isteka vremena. Nije izmeren uzrok potrošenog vremena; ne pripisivati ga aplikaciji, mreži ili introu. Običan završetak, reklama, dupliranje, revanš i reconnect nisu potvrđeni.
+
+**Stvarne posledice neuspešnog test poteza:** server je automatski obračunao tehnički rezultat bez pritiska na preuzimanje. Sara: 4107 → 2349 dukata (−1758), prikazana kazna −20 Indeksa moći. Andrija: 18547 → 20322 dukata (+1775), liga 37969 → 39744. Serverov tok obračunava i statistiku/H2H; sve te pojedinačne vrednosti nisu dodatno proverene. Posledice nisu poništene, baza i salda nisu ručno menjani. Korisnik je obavešten.
+
+**R32 — lokalna ispravka:** gubitnik je uz PORAZ video serverovu zajedničku poruku „Protivniku je isteklo vreme! Tehnička pobeda.” Klijent sada bira lokalizovanu poruku prema sopstvenoj ulozi. Osam izolovanih testova stvarnog handlera pokriva obe uloge, srpski/engleski, potvrđen serverski/lokalni obračun i zaštitu od ponovljenog ili zastarelog događaja. Ekonomija i tajmer nisu menjani. `game.js?v=6.36`, bez commita/deploya; emulator još ne potvrđuje ovu ispravku.
+
+Oba uređaja ostavljena na svojim glavnim menijima (Zelena/Trula višnja), bez novog meča ili reda čekanja. Osnovni audit se **ne povećava automatski sa 13/15**: novi Daily dokaz je samo jedne teme, a običan Random tok nije završen. Dalji testovi koji menjaju profile treba da koriste odvojeni QA. Read-only `/healthz` potvrđuje postojeći izolovani servis `yamb-reconnect-qa`, staging instancu `reconnect-qa-01`, ali njegov klijent je stariji `game.js?v=5.49`; potrebno je posebno pripremiti aktuelnu QA verziju. Produkcioni commit/deploy nije rađen.
+
+## Pozovi prijatelja — svih deset tema, 29.10.2026.
+
+[Android i odvojeni lokalni prikazi](invite-friend-2026-10-29/index.html), [80 PNG putanja i granice](invite-friend-2026-10-29/report.json). Osnovni domaćin pregledan u svih deset tema na originalnih1440×3120/560dpi (~411×891CSSpx): nalog/rival, lista prijatelja/zahteva, pretraga i izlaz. Green dodatno vodoravni strip i fokus pretrage. Nema stvarnog slanja/prihvatanja/odbijanja poziva ili prijateljstva, duela, rezultata ili nagrada. Link za deljenje ostaje skriven.
+
+**R31 — lokalno, nije objavljeno:** slučajni obrub sužavao devet tema, nejednaki profili/razmaci/fontovi/dugmad/prazna lista i Vaskršnji/Pustinjski nasleđeni stilovi. Ujednačeno premaGreen uz postojeće materijale/palete,34px zaglavnu ikonu i poseban `invite-friend` modalni kontekst. Statistika i status ostaju u kartici; do649px visine avatar+ime dele gornji red iste138px kartice. Novi PNG nisu potrebni.
+
+450 izolovanih stvarnih produkcionih prikaza prolazi:10tema×9stanja×5veličina320×568/360×640/360×780/390×844/430×932. Host/prijatelji/zahtev/prazno/bezrivala/pretraga-refresh, guest čeka/pronađen, modal/toast. Green mere/fontovi, PNG decode i glavno rutiranje, bez sobnog skrola/safezone i prelivanja sadržaja kartice. Sintetički soketi/profili; bez konstruktora/naloga, blokirani spoljni zahtevi. Animacije isključene/offline font fallback moguć; nije stvarni guest ili nagrada na Androidu. Lokalni Socket.IO tokovi i ciljane regresije prolaze.
+
+**Granice:** prvi Neon i Ametist izbor vratili prethodnu temu, ponovljeni uspeli; uzrok/stabilnost hladnog transfera otvoreni. Tastatura emulatora bila samo plutajući/stylus panel, ne puna resize tastatura. Intro2400/3200ms proveren statički, ne kadrovima. Gost, retka obaveštenja, pravi duel/nagrade i fizičkiS25 ostaju otvoreni. VraćeniGreen, prijava, originalne mere i tastatura0. Bez commita/deploya; Android ne potvrđuje R22–R31 lokalne dorade.
+
+**Napredak13/15osnovnih Android prolaza:** preostaju kontrolisan Online random sa drugim uređajem i aktivni/završni Dnevni izazov. Naknadna potvrda svih lokalnih izmena posle deploya i retka stanja ostaju odvojeno otvoreni.
+
+## Online random — lokalno svih10tema, Android delimično, 29.10.2026.
+
+[158slika i lokalni prikazi](online-random-2026-10-29/index.html), [kanonske uloge/značenja i ograničenja](online-random-2026-10-29/report.json), [720lokalnih slučajeva](online-random-2026-10-29/local-layout-report.json).23osnovne PNGuloge/tema,230quality-resolved putanja. Nema novih PNGcrteža. Green meni/intro i sharedvideo/dukat/PowerIndex/medalje su kanonske porodice; general-podium se ne spaja sa turnirskim/kvartalnim medaljama.
+
+**R28 — lokalno:** Green geometrija naslova, rubova/širina, loading liste i statistike u čekaonici. „Protivnik pronađen” sada ažurira naslov i uklanja waitporuku u svim temama; ranije samoGreen. Uklonjen nasleđeni Easterljubičasti rub. Online završni fontovi/razmaci i42pxscore/29pxclaim/55pxpreuzmi prateGreen; Revanš44px i uEaster. Online obaveštenja imaju zaseban modalni kontekst sa paletom teme.
+
+**R29 — lokalno:** `highlightCurrentPlayer` uključivao je onlinepager i randomroomscope samo zaGreen/Easter/Severna. Ostalih7tema gubilo je i CSS opseg canonicaldisconnectPNG-a; Winter/Desert bile su flexsabijene. Zajednički vertikalni pager i zaštita od sabijanja sada obuhvataju sve online partije sa2igrača, bez promene dimenzija table, dugmadi ili pravila igre.
+
+**R30 — lokalno:** privremeni disconnectPNG/tekst ostajao je u tajmeru do state-sync odgovora i posle uklanjanja reconnect klase gubio27pxmeru, pa mogao postati256px. Oporavak sada odmah briše/sklanja samo to privremeno stanje; običan tajmer ostaje.27pxmera važi kroz randomroomopseg. Povratni toast ima isti42pxcanonicalPNG, Greenfont/grid/rub i tematsku podlogu. Nova regresija proverava odmah prazan/sklonjen privremeni tajmer.
+
+720izolovanih stvarnih renderera=10tema×18stanja×4veličine.4čekaonice, greška veze,9završnih stanja,2table, prekid/povratak veze; mere/fontovi/PNG i završni safezone/bezskrola prolaze. Provereni oba accountindeksa, TI/PROTIVNIK, pobeda/poraz/remi, records/pending/nula/limit8000 i potvrđen+24PowerIndex/pending—. Tekst igrača najmanje5,20:1. Sintetički socket/servis, bez appkonstruktora/naloga, blokirani spoljni zahtevi; UTF-8, animacije isključene i font može biti offlinefallback. To nije stvarna reklama/isplata ili stvarni duel.
+
+**Android granica:** novo izričito odobrenje dozvolilo je izlazak/autosave praznog HotseatGost_QA testa. Zatim je mreža emulatora isključena pre ulaska uRandom, da se ne upari drugi igrač. Green/Easter stvarno pokazuju grešku veze; Green dodatno čekaonicu sa nalogom/Moć7620/4pobede/0remija/3poraza. Nekoliko canonicalPNG nije u offlinekešu (intro/prazna lista); izborLight odbijen sa porukom „Tema nije učitana”, ostaoGreen. Zato nije nastavljen lažni pregled ostalih tema bezslika. Originalne1440×3120/560dpi (~411×891CSSpx); nema potpunog novog Androidprolaza10tema.
+
+**Vraćeno:** Green glavni meni/prijava/originalne mere; airplane-mode disabled,wifi1,data1 kao na početku. Nema reda za igru, novog duela/rezultata, reklame/nagrade, poruke ili commita/deploya. game.jsv6.35,managers.jsv6.36,online-roomCSSv4,online-finishCSSv7,compactCSSv5 čekaju deploy/Androidpotvrdu.
+
+**Napredak ostaje12/15osnovnih Androidprolaza.** Online random ima završen lokalni deo svih10tema i delimičan Android; za punu proveru potreban kontrolisan online meč/drugi uređaj. Pozovi prijatelja ostaje sledeća soba; Daily aktivni/završni Android tok i ranija retka stanja ostaju otvoreni.
+
+## Hotseat — svih deset tema, 29.10.2026.
+
+[Android i odvojeni lokalni prikazi](emulator-hotseat-2026-10-29/index.html), [130 osnovnih PNG putanja i nalazi](emulator-hotseat-2026-10-29/report.json), [520 lokalnih slučajeva](emulator-hotseat-2026-10-29/local-layout-report.json). Korisnik je izričito odobrio novu praznu partiju sa Gost_QA. U svih deset tema pregledane obe table, gornji/donji panel i meni igre. Nema bacanja/upisa, promene poteza ili završetka/nagrade. Originalnih1440×3120/560dpi (~411×891CSSpx); pokušaj360×780 dao je oštećene emulator kadrove, oporavljene resetom i rebootom bez brisanja podataka. Povremeno kasni osvežavanje posle tap/swipe; uzrok nije utvrđen.
+
+**R26 — lokalno:** Hotseat završni fontovi, padding/gap, statistički tracking/margine i PNG mere izjednačeni saGreen. Preuzimanje55px, score42px/claim29px. Unos gosta, izlaz i završna obaveštenja dobijaju Hotseat modal kontekst, tematske površine i Green tipografiju; Easter unos isti6px radijus. Online ekran ne nasleđuje ovaj kontekst. Uklonjene stare tekstualne senke, PNG volumen ostaje.
+
+**R27 — lokalno:** stvarni Android Easter nakon promene teme u partiji pokazuje prazno polje megafona u obe table. Kanonski PNG je pripremljen, ali stari hydration koren ga ne povezuje; eksplicitna sinhronizacija postojala je samo zaNeon. Novi zajednički helper sada povezuje postojeće Easter/Neon megafone pri promeni teme i stvaranju table. Posebna regresija proverava obe table i da druge teme ostaju odložene. Nema novog PNG-a niti promene dimenzija/upisa. game.jsv6.34, managers.jsv6.35, compactCSSv4.
+
+Izračunati kontrast imena, uloga i poena na podkarticama oba igrača je najmanje5,20:1 u360završnih prikaza. To nije merenje svih drugih površina ili fizičkog telefona.
+
+520 izolovanih slučajeva stvarnog renderera:10tema×(9završnih stanja+2table+izlaz+unos gosta)×4mobilne veličine. Jednake Green mere/fontovi, učitani PNG, oba imena/poeni i pobeda/poraz/remi iz perspektive naloga0, oznake rekorda, limiti nagrade i bez offline revanša. Završni panel bez skrola/izlaska iz safezone. Solo400ponovo prolazi, kao i ciljane funkcionalne/PNG regresije. Servisni odgovori su sintetički, animacije isključene i font može biti offline fallback; to nije stvarna reklama/isplata ili Android završetak.
+
+**Stanje:**34Android +100lokalnih snimaka. Green, originalne mere i prijava vraćeni; prazna test partija ostaje otvorena. Automatski reviewer je odbio potvrdu izlaska/autosave, pa je ona otkazana bez alternativnog puta napuštanja. Bez commita/deploya. Android snimci ne potvrđuju lokalne R22–R27. Intro PNG/timing2400/3200ms potvrđeni statički; sam PNG intro nije sada uhvaćen kadrom, citat viđen samo uGreen.
+
+**Napredak:**12/15osnovnih Android prolaza svih10tema, uz ove granice. Preostaju Online random i Pozovi prijatelja, a Daily ima sve ponovne ulaske i lokalni dokaz, ali ne aktivni/završni Android tok. Retka stanja, prava isplata i potvrda novih lokalnih izmena ostaju odvojene obaveze.
+
+## Solo — aktivna partija svih deset tema, 29.10.2026.
+
+Dodatna dorada R25: `ModalManager` automatski prepoznaje obaveštenja aktivnog Solo završnog ekrana, uključujući nagradne/oglasne greške, i daje im istu tematsku tipografiju/paletu. Skriven Solo ekran i Hotseat/online završetak ne menjaju kontekst drugih soba; CI regresija to potvrđuje. managers.jsv6.34. Nasleđene zamućujuće tekstualne senke uklonjene su iz završnog teksta devet tema, bez uklanjanja PNG volumena/senki.
+
+[Android i odvojeni lokalni prikazi](emulator-solo-2026-10-29/index.html), [kanonske putanje i nalazi](emulator-solo-2026-10-29/report.json), [400 lokalnih slučajeva](emulator-solo-2026-10-29/local-layout-report.json). Nastavljena postojeća partija, bez Nova igra/bacanja/upisa/završavanja. U svih deset tema pregledani tabla sa istim ranijim1/4upisima, zbirom5, istim kockicama i3/3, gornji/donji panel i quick-menu. Green dodatno inline Nastavi/Nova igra, intro i potvrda izlaska. Posle pregleda partija je sačuvana postojećim autoSave izlaskom; vraćeni Zelena,1440×3120/560dpi i prijava.
+
+**R24 — važna funkcionalna ispravka, lokalno:** `localResultAccepted` bio je deklarisan unutar `if` bloka, a korišćen izvan njega pri slanju rezultata. Stvarni renderer je ponovljivo pokazao `ReferenceError`, uhvaćen kao greška Top liste, pa slanje/potvrda rekorda nije ni izvršeno. Deklaracija sada važi u potrebnom opsegu. Nova Node regresija poziva stvarni pre-render tok Solo/Hotseat, proverava rezultat vlasnika naloga i accepted/rejected/pending odgovor; nepotvrđen rezultat ne dobija izmišljenu potvrdu nagrade. Nema promene pravila nagrađivanja ili stvarne isplate.
+
+**R25 — lokalno:** Solo završni naslov, kratki padding/gap/margine i statistički tracking prate Green. Preuzimanje55px, oznake rezultata42px i preuzimanja29px ostaju jednake Green i na kratkim ekranima; ranije su ostale teme imale28/20px. Potvrda izlaska koristi Solo kontekst sa Green tipografijom i tematskim kontrastom. Green preuzimanje koristi postojeće tamnije tonove (paletni par5,98:1 naspram3,06:1). game.jsv6.33, compactCSSv3. Tabla, veličine aktivnih BACAJ/NAJAVA i PNG crteži nisu menjani.
+
+400 izolovanih stvarnih `handleGameOver/createScoreTables/ModalManager` prikaza:10tema ×(9rezultatskih stanja+potvrda izlaska) ×4mobilne veličine. Bez skrola/izlaska iz safe zone, jednake mere/fontovi/razmaci i vidljivi kanonski PNG. Iznosi preuzimanja/dupliranja potvrđeni iz DOM-a; postojeći test pokriva svih9validnih kombinacija rekorda. Oznaka najjače kolone kopira stvarnu boju/font/PNG sopstvene table; unutrašnja širina Neon/Easter megafona je namerni izuzetak. Sintetički odgovori nisu stvarni nalog/server/reklama ili isplata; offline font fallback moguć, animacije isključene za merenje.
+
+12 osnovnih Solo PNG uloga po temi /120 quality-resolved putanja; dodatni deljeni skinovi, game-header, akcijska dugmad i brojač vode se odvojeno. Nema potrebe za novim PNG crtežima u pregledanim stanjima. Android je **pre lokalnih R24/R25 i prethodnih R22/R23**, koje čekaju commit/deploy i novu potvrdu.
+
+**Napredak:** ranijih10osnovnih sobnih prolaza + Solo aktivna partija svih10tema =11/15osnovnih Android prolaza, uz navedene granice. Daily trenutno ima svih10ponovnih ulazaka i lokalne renderere, ali ne novi aktivni/završni Android tok. Slede Hotseat, Online random i Pozovi prijatelja. Stvarni završeci/nagrade, retka stanja i fizički S25 nisu time proglašeni završenim.
+
+## Dnevni izazov — ponovni ulazak svih deset tema, 29.10.2026.
+
+[Android i odvojeni lokalni prikazi](emulator-daily-2026-10-29/index.html), [kanonski inventar i granice](emulator-daily-2026-10-29/report.json), [150 lokalnih slučajeva](emulator-daily-2026-10-29/local-layout-report.json). Stvarno pregledano obaveštenje „već odigrano“ na360×780 u svih deset tema, osam intro kadrova. Nalog je već odigrao današnji izazov, zato odobreni test šest zaustavljanja nije korišćen. Aktivni/završni panel, nagradna i serverska poruka imaju zaseban izolovani dokaz stvarnih Daily/Modal renderera sa sintetičkim podacima i stvarnim YambFeatures/PNG skinom na tri mobilne veličine. To nije stvarna isplata ili Android završetak novog izazova.
+
+**R22 — lokalno:** jednaka Green tipografija i mere Daily obaveštenja; tematske površine/kontrast, bez crnog teksta na braon/plavom dugmetu i stare Easter razlike2px. Dva Green akcijska gradijenta koriste postojeće tamnije paletne tonove (najmanje5,46:1 tekst). Daily CSSv4/JSv3.4. **R23 — lokalno:** X priprema je koristila ?v=1, a CSS?v=3/4. Resolver sada priprema isti puni URL koji se prikazuje, u svih deset tema; HeaderJSv5 i regresija. Novi PNG crteži, dimenzije i funkcije nisu menjani.
+
+Šest semantičkih PNG uloga po temi,60različitih fajlova; kanonski dukat/video su deljeni sa drugim sobama. Aktivne/završne lokalne mere/fontovi jednaki Green, nema odsecanja/skrola u150slučajeva. Najmanji kontrast dugmeta obaveštenja5,67:1. Animacije isključene radi merenja, offline font može biti fallback. Svih devet prvih izbora tema uspelo; Desert X kasnio, pa brzo hladno učitavanje nije proglašeno potvrđenim.
+
+Prethodne izmene sada su korisnikovim commitom/deployem objavljene; javni TournamentCSSv3 odgovara lokalnom fajlu. To nije automatska nova potvrda svih ranijih soba. Ovi Android snimci su **pre novih R22/R23**, koje čekaju deploy i novu potvrdu. Vraćeni Zelena, originalnih1440×3120/560dpi i otvorena prijava. Bez novih partija, kupovina, nagrada, reklama ili slanja poruka.
+
+**Sledeće:** Solo, Hotseat, Online random i Pozovi prijatelja. Ranijih10osnovnih sobnih prolaza ostaju evidentirani; Daily ponovni ulazak sada pokriva svih10tema, ali aktivni/završni Android tok i stvarna isplata ostaju otvoreni. Ne sabirati sintetičke testove kao potpuno završenu Android sobu ili svih15/15.
+
 ## Turnir — svih deset tema, 28–29.10.2026.
 
 [62 Android snimka](emulator-tournament-2026-10-29/index.html), [kanonske putanje i rezultati](emulator-tournament-2026-10-29/report.json), [210 lokalnih slučajeva](emulator-tournament-2026-10-29/local-layout-report.json). U svim temama stvarno pregledani Info sa već prijavljenim nalogom/osam učesnika, četvrtfinale, finale, detalj odigranog meča i prve kartice Dvorane slavnih. Green dodatno polufinale i Put do titule. U tim prikazima PNG identiteti odgovaraju temi i pehari imaju zvezdu; nema nove PNG zamene. Aktivne navigacione tačke su cele i funkcije nisu menjane.

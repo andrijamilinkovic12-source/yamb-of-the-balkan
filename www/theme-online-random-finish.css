@@ -1,4 +1,8 @@
 /* Every regular online duel shares the Hotseat/Solo result composition. */
+body #game-over-screen#game-over-screen.is-online-duel-result #btn-rematch:not([hidden]) { min-height: 44px !important; }
+@media (min-height: 701px) {
+    body #game-over-screen#game-over-screen.is-online-duel-result.screen.active > .modal-box { gap: 6px !important; }
+}
 #game-over-screen #btn-rematch[hidden] { display: none !important; }
 #game-over-screen.is-online-duel-result #btn-rematch:not([hidden]) {
     display: flex !important;

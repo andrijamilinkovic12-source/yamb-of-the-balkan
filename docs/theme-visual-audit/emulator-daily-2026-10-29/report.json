@@ -1,0 +1,896 @@
+{
+  "date": "2026-10-29",
+  "room": "Dnevni izazov",
+  "scope": "Android emulator: svih deset tema, stvarno obaveštenje već odigrano na 360×780; osam sačuvanih intro kadrova. Nalogu je današnji izazov već odigran, zato nov aktivni/završni tok i isplata nisu izvršeni.",
+  "deployment": "Korisnik je potvrdio commit/deploy prethodnih izmena. Javni theme-tournament-final.css?v=3 odgovara lokalnom fajlu. Snimci Androida su PRE novih R22/R23 dorada, koje nisu commitovane/deployovane.",
+  "findings": {
+    "R22": "Daily obaveštenja dobijaju svoj modal-context-daily: jednake Green mere/fontovi naslova, teksta i dugmeta, bez stare Easter razlike od2px. Paletne površine/mastilo i jasno dugme U REDU, bez starog crnog teksta na tamnobraon/plavoj podlozi ili nasleđenih senki devet tema. Dva Green akcijska gradijenta koriste postojeće tamnije tonove radi kontrasta najmanje5,46:1 za tekst. Funkcije i PNG crteži nisu menjani.",
+    "R23": "Priprema X učitavala close-v1.png?v=1, a prikazani CSS ?v=3 odnosno?v=4. Resolver sada vraća isti URL i verziju kao CSS svih deset tema, da se pripremljena slika zaista koristi. Regresioni test poredi svih deset punih URL-ova. Android potvrda čeka deploy.",
+    "versions": "Daily CSSv4, dnevniizazov.jsv3.4, theme-game-header.jsv5."
+  },
+  "tests": {
+    "runtime": "PASS150:10tema×5stanja×320×568/360×780/412×915. Stvarni DnevniIzazov, ModalManager i YambFeatures; sintetički posedovani tematski skin, šest učitanih PNG kockica, jednake Green mere/fontovi, bez odsecanja/skrola, vidljivi PNG.",
+    "noticeButtonContrastMinimum": 5.668904514949242,
+    "static": "PASS Daily šest različitih aktivnih RGBA PNG uloga po temi, kanonska ponovna upotreba, intro konfiguracija, reentry, priprema novih slika. PASS Game Header i Settings regresije.",
+    "limit": "Izolovani test nema nalog, server ni spoljašnju mrežu; nema oglasa/isplate. Animacije isključene, Montserrat može koristiti offline fallback. Ne meri fizički S25 ili fps."
+  },
+  "inventory": "Šest semantičkih PNG uloga po temi =60 različitih fajlova u Daily inventaru. Dukat i reward-video isti su kanonski identiteti kao u drugim sobama. PNG pozadina i odabrani univerzalni/tematski skin su deljeni resursi i vode se odvojeno.",
+  "switching": "Devet izbora posedovanih tema i vraćanje Zelene uspeli su iz prvog pokušaja. Pustinjsko staklo imalo je prazno X pre naknadnog učitavanja, pa trenutno hladno učitavanje nije potvrđeno; R23 rešava uočeno neslaganje URL-ova, ne tvrdi da je svako mrežno kašnjenje otklonjeno.",
+  "safety": "Korisnik je odobrio zaustavljanje šest kockica bez reklame/nagrade; nalog je već odigrao izazov i taj test nije korišćen. Nisu zaustavljane nove kockice, preuzimane nagrade, gledane nagradne reklame, menjani skinovi, kupovano ili slati pozivi/poruke. Otvarana su i zatvarana samo informativna stanja.",
+  "restoration": "Zelena i originalnih1440×3120/560dpi vraćeni, prijava očuvana. Nema novog commita/deploya.",
+  "limits": [
+    "Aktivan i završni Daily panel nisu novi Android dokaz; imaju lokalni sintetički renderer dokaz u svih deset tema. Stvarna reklama/isplata i oporavak nakon greške nisu sada testirani na nalogu.",
+    "Precizno trajanje intra nije mereno screenshotima; zajednička konfiguracija ostaje2400/3200ms.",
+    "Nove R22/R23 izmene zahtevaju korisnikov deploy i Android potvrdu. Ranijih deset soba nije ponovo kompletno pregledano posle ovog deploya.",
+    "Preostaju četiri igračka moda i ove otvorene Daily transakcione/Android provere. Ne označavati svih15soba ili sve tokove kao završene."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/green-soft-clay/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/green-soft-clay/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/green-soft-clay/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "dark-reentry.jpg",
+        "local-dark-active.jpg",
+        "local-dark-complete.jpg",
+        "local-dark-already.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/light/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/light/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/light/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/light/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/light/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "light-reentry.jpg",
+        "local-light-active.jpg",
+        "local-light-complete.jpg",
+        "local-light-already.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/medium/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/medium/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/medium/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/medium/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/medium/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "medium-reentry.jpg",
+        "medium-intro.jpg",
+        "local-medium-active.jpg",
+        "local-medium-complete.jpg",
+        "local-medium-already.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/winter/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/winter/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/winter/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/winter/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/winter/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "winter-reentry.jpg",
+        "winter-intro.jpg",
+        "local-winter-active.jpg",
+        "local-winter-complete.jpg",
+        "local-winter-already.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/neon/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/neon/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/neon/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/neon/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/neon/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "neon-reentry.jpg",
+        "neon-intro.jpg",
+        "local-neon-active.jpg",
+        "local-neon-complete.jpg",
+        "local-neon-already.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/amethyst/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/amethyst/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/amethyst/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/amethyst/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/amethyst/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "amethyst-reentry.jpg",
+        "amethyst-intro.jpg",
+        "local-amethyst-active.jpg",
+        "local-amethyst-complete.jpg",
+        "local-amethyst-already.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/easter/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/easter/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/easter/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/easter/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "easter-reentry.jpg",
+        "easter-intro.jpg",
+        "local-easter-active.jpg",
+        "local-easter-complete.jpg",
+        "local-easter-already.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/desert/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/desert/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/desert/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/desert/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/desert/canonical/ducat/ducat-inline-v2.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "desert-reentry.jpg",
+        "desert-intro.jpg",
+        "local-desert-active.jpg",
+        "local-desert-complete.jpg",
+        "local-desert-already.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/moon/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/moon/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/moon/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/moon/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "moon-reentry.jpg",
+        "moon-intro.jpg",
+        "local-moon-active.jpg",
+        "local-moon-complete.jpg",
+        "local-moon-already.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "android": "Pregledan intro/ponovni ulazak i obaveštenje na 360×780; današnji izazov već odigran.",
+      "local": "Aktivan panel, završni panel, već odigrano, nagradna i serverska poruka: sintetički podaci u stvarnim Daily/Modal rendererima na tri veličine.",
+      "roles": [
+        {
+          "role": "room",
+          "primary": "www/assets/theme-packs/severna/canonical/daily-room-identity/daily-room-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "task",
+          "primary": "www/assets/theme-packs/severna/canonical/daily-states/task-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "complete",
+          "primary": "www/assets/theme-packs/severna/canonical/daily-states/complete-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "already-played",
+          "primary": "www/assets/theme-packs/severna/canonical/daily-states/already-played-v1.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "reward-video",
+          "primary": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        },
+        {
+          "role": "ducat",
+          "primary": "www/assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png",
+          "status": "prihvatljiv",
+          "reason": "Kanonski PNG aktivne teme; u pregledanim PNG/renderima nema nove potrebe za crtanjem. Reentry/room Android dokaz, ostale uloge dodatno lokalni renderer."
+        }
+      ],
+      "evidence": [
+        "severna-reentry.jpg",
+        "severna-intro.jpg",
+        "local-severna-active.jpg",
+        "local-severna-complete.jpg",
+        "local-severna-already.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "theme": "dark",
+      "source": "dark-daily-active",
+      "file": "dark-reentry",
+      "kind": "android",
+      "title": "Zelena — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "light",
+      "source": "light-daily-reentry",
+      "file": "light-reentry",
+      "kind": "android",
+      "title": "Svetlo zlato — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "medium",
+      "source": "medium-daily-reentry",
+      "file": "medium-reentry",
+      "kind": "android",
+      "title": "Trula višnja — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "winter",
+      "source": "winter-daily-reentry",
+      "file": "winter-reentry",
+      "kind": "android",
+      "title": "Plavi okean — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "neon",
+      "source": "neon-daily-reentry",
+      "file": "neon-reentry",
+      "kind": "android",
+      "title": "Neon Cyber — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "amethyst",
+      "source": "amethyst-daily-reentry",
+      "file": "amethyst-reentry",
+      "kind": "android",
+      "title": "Kraljevski ametist — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "easter",
+      "source": "easter-daily-reentry",
+      "file": "easter-reentry",
+      "kind": "android",
+      "title": "Vaskršnja — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "desert",
+      "source": "desert-daily-reentry",
+      "file": "desert-reentry",
+      "kind": "android",
+      "title": "Pustinjsko staklo — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "moon",
+      "source": "moon-daily-reentry",
+      "file": "moon-reentry",
+      "kind": "android",
+      "title": "Mesečev sjaj — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "severna",
+      "source": "severna-daily-reentry",
+      "file": "severna-reentry",
+      "kind": "android",
+      "title": "Severna maglina — stvarni ponovni ulazak / već odigrano"
+    },
+    {
+      "theme": "medium",
+      "source": "medium-daily-enter",
+      "file": "medium-intro",
+      "kind": "android",
+      "title": "Trula višnja — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "winter",
+      "source": "winter-daily-enter",
+      "file": "winter-intro",
+      "kind": "android",
+      "title": "Plavi okean — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "neon",
+      "source": "neon-daily-intro",
+      "file": "neon-intro",
+      "kind": "android",
+      "title": "Neon Cyber — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "amethyst",
+      "source": "amethyst-daily-intro",
+      "file": "amethyst-intro",
+      "kind": "android",
+      "title": "Kraljevski ametist — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "easter",
+      "source": "easter-daily-intro",
+      "file": "easter-intro",
+      "kind": "android",
+      "title": "Vaskršnja — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "desert",
+      "source": "desert-daily-intro",
+      "file": "desert-intro",
+      "kind": "android",
+      "title": "Pustinjsko staklo — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "moon",
+      "source": "moon-daily-intro",
+      "file": "moon-intro",
+      "kind": "android",
+      "title": "Mesečev sjaj — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "severna",
+      "source": "severna-daily-intro",
+      "file": "severna-intro",
+      "kind": "android",
+      "title": "Severna maglina — kadar intra (ne merenje trajanja)"
+    },
+    {
+      "theme": "extra",
+      "source": "desert-settings-first-switch",
+      "file": "desert-close-delayed",
+      "kind": "android",
+      "title": "Pustinjsko staklo — X još nije učitan"
+    },
+    {
+      "theme": "extra",
+      "source": "desert-settings-ready",
+      "file": "desert-close-ready",
+      "kind": "android",
+      "title": "Isti prikaz nakon učitavanja X"
+    },
+    {
+      "theme": "extra",
+      "source": "dark-main-restored-original",
+      "file": "dark-main-restored",
+      "kind": "android",
+      "title": "Vraćena Zelena i originalne mere emulatora"
+    },
+    {
+      "theme": "dark",
+      "source": "dark-active",
+      "file": "local-dark-active",
+      "kind": "local",
+      "title": "Zelena — lokalni test: active"
+    },
+    {
+      "theme": "dark",
+      "source": "dark-complete",
+      "file": "local-dark-complete",
+      "kind": "local",
+      "title": "Zelena — lokalni test: complete"
+    },
+    {
+      "theme": "dark",
+      "source": "dark-already",
+      "file": "local-dark-already",
+      "kind": "local",
+      "title": "Zelena — lokalni test: already"
+    },
+    {
+      "theme": "light",
+      "source": "light-active",
+      "file": "local-light-active",
+      "kind": "local",
+      "title": "Svetlo zlato — lokalni test: active"
+    },
+    {
+      "theme": "light",
+      "source": "light-complete",
+      "file": "local-light-complete",
+      "kind": "local",
+      "title": "Svetlo zlato — lokalni test: complete"
+    },
+    {
+      "theme": "light",
+      "source": "light-already",
+      "file": "local-light-already",
+      "kind": "local",
+      "title": "Svetlo zlato — lokalni test: already"
+    },
+    {
+      "theme": "medium",
+      "source": "medium-active",
+      "file": "local-medium-active",
+      "kind": "local",
+      "title": "Trula višnja — lokalni test: active"
+    },
+    {
+      "theme": "medium",
+      "source": "medium-complete",
+      "file": "local-medium-complete",
+      "kind": "local",
+      "title": "Trula višnja — lokalni test: complete"
+    },
+    {
+      "theme": "medium",
+      "source": "medium-already",
+      "file": "local-medium-already",
+      "kind": "local",
+      "title": "Trula višnja — lokalni test: already"
+    },
+    {
+      "theme": "winter",
+      "source": "winter-active",
+      "file": "local-winter-active",
+      "kind": "local",
+      "title": "Plavi okean — lokalni test: active"
+    },
+    {
+      "theme": "winter",
+      "source": "winter-complete",
+      "file": "local-winter-complete",
+      "kind": "local",
+      "title": "Plavi okean — lokalni test: complete"
+    },
+    {
+      "theme": "winter",
+      "source": "winter-already",
+      "file": "local-winter-already",
+      "kind": "local",
+      "title": "Plavi okean — lokalni test: already"
+    },
+    {
+      "theme": "neon",
+      "source": "neon-active",
+      "file": "local-neon-active",
+      "kind": "local",
+      "title": "Neon Cyber — lokalni test: active"
+    },
+    {
+      "theme": "neon",
+      "source": "neon-complete",
+      "file": "local-neon-complete",
+      "kind": "local",
+      "title": "Neon Cyber — lokalni test: complete"
+    },
+    {
+      "theme": "neon",
+      "source": "neon-already",
+      "file": "local-neon-already",
+      "kind": "local",
+      "title": "Neon Cyber — lokalni test: already"
+    },
+    {
+      "theme": "amethyst",
+      "source": "amethyst-active",
+      "file": "local-amethyst-active",
+      "kind": "local",
+      "title": "Kraljevski ametist — lokalni test: active"
+    },
+    {
+      "theme": "amethyst",
+      "source": "amethyst-complete",
+      "file": "local-amethyst-complete",
+      "kind": "local",
+      "title": "Kraljevski ametist — lokalni test: complete"
+    },
+    {
+      "theme": "amethyst",
+      "source": "amethyst-already",
+      "file": "local-amethyst-already",
+      "kind": "local",
+      "title": "Kraljevski ametist — lokalni test: already"
+    },
+    {
+      "theme": "easter",
+      "source": "easter-active",
+      "file": "local-easter-active",
+      "kind": "local",
+      "title": "Vaskršnja — lokalni test: active"
+    },
+    {
+      "theme": "easter",
+      "source": "easter-complete",
+      "file": "local-easter-complete",
+      "kind": "local",
+      "title": "Vaskršnja — lokalni test: complete"
+    },
+    {
+      "theme": "easter",
+      "source": "easter-already",
+      "file": "local-easter-already",
+      "kind": "local",
+      "title": "Vaskršnja — lokalni test: already"
+    },
+    {
+      "theme": "desert",
+      "source": "desert-active",
+      "file": "local-desert-active",
+      "kind": "local",
+      "title": "Pustinjsko staklo — lokalni test: active"
+    },
+    {
+      "theme": "desert",
+      "source": "desert-complete",
+      "file": "local-desert-complete",
+      "kind": "local",
+      "title": "Pustinjsko staklo — lokalni test: complete"
+    },
+    {
+      "theme": "desert",
+      "source": "desert-already",
+      "file": "local-desert-already",
+      "kind": "local",
+      "title": "Pustinjsko staklo — lokalni test: already"
+    },
+    {
+      "theme": "moon",
+      "source": "moon-active",
+      "file": "local-moon-active",
+      "kind": "local",
+      "title": "Mesečev sjaj — lokalni test: active"
+    },
+    {
+      "theme": "moon",
+      "source": "moon-complete",
+      "file": "local-moon-complete",
+      "kind": "local",
+      "title": "Mesečev sjaj — lokalni test: complete"
+    },
+    {
+      "theme": "moon",
+      "source": "moon-already",
+      "file": "local-moon-already",
+      "kind": "local",
+      "title": "Mesečev sjaj — lokalni test: already"
+    },
+    {
+      "theme": "severna",
+      "source": "severna-active",
+      "file": "local-severna-active",
+      "kind": "local",
+      "title": "Severna maglina — lokalni test: active"
+    },
+    {
+      "theme": "severna",
+      "source": "severna-complete",
+      "file": "local-severna-complete",
+      "kind": "local",
+      "title": "Severna maglina — lokalni test: complete"
+    },
+    {
+      "theme": "severna",
+      "source": "severna-already",
+      "file": "local-severna-already",
+      "kind": "local",
+      "title": "Severna maglina — lokalni test: already"
+    }
+  ]
+}

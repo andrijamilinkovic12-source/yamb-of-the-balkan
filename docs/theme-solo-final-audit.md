@@ -1,5 +1,7 @@
 # Završna provera — Solo mod
 
+**Dopuna29.10.2026:** [novi Android i lokalni dokazi](theme-visual-audit/emulator-solo-2026-10-29/index.html). U svih10tema pregledana ista sačuvana partija i quick-menu bez novih upisa; Green dodatno Nastavi/intro/izlaz. Novi stvarni renderer, sa svim produkcionim CSS slojevima, prolazi400kombinacija na četiri mobilne veličine. Otkriven i ispravljen `ReferenceError` koji je preskakao potvrdu lokalnog rezultata, kao i razlike kratkog rasporeda/fontova/PNG dimenzija u odnosu na Green. Green preuzimanje koristi tamnije postojeće tonove za kontrast. Nove dorade još nisu commitovane/deployovane; pravi završetak/isplata nisu sada testirani na nalogu. Nalazi ispod su istorijski presek23.10, a ne nova Android potvrda.
+
 Datum: 23. oktobar 2026. Obuhvat: Zelena i svih devet ostalih tema. Zelena je referenca za raspored i dimenzije; materijal i boje ostaju svojstvo svake teme.
 
 | Provera | Nalaz |

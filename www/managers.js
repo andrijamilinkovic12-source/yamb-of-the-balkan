@@ -262,7 +262,16 @@ class ModalManager {
         const economyOpen = document.getElementById('undo-menu-overlay')?.style.display === 'flex';
         const treasuryOpen = document.getElementById('riznica-screen')?.classList.contains('active');
         const tournamentOpen = document.getElementById('tournament-screen')?.classList.contains('active');
-        const contextClass = String(options.contextClass || (economyOpen ? 'economy' : treasuryOpen ? 'treasury' : tournamentOpen ? 'tournament' : ''))
+        const finishScreen = document.getElementById('game-over-screen');
+        const soloFinishOpen = finishScreen?.classList.contains('active')
+            && finishScreen.classList.contains('is-solo-result') && !finishScreen.classList.contains('is-hotseat-result');
+        const hotseatFinishOpen = finishScreen?.classList.contains('active')
+            && finishScreen.classList.contains('is-hotseat-result') && !finishScreen.classList.contains('is-online-duel-result');
+        const onlineFinishOpen = finishScreen?.classList.contains('active') && finishScreen.classList.contains('is-online-duel-result');
+        const waitingScreen = document.getElementById('waiting-screen');
+        const randomWaitingOpen = waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-random-online');
+        const friendWaitingOpen = waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-friend-invite');
+        const contextClass = String(options.contextClass || (economyOpen ? 'economy' : treasuryOpen ? 'treasury' : tournamentOpen ? 'tournament' : soloFinishOpen ? 'solo' : hotseatFinishOpen ? 'hotseat' : onlineFinishOpen || randomWaitingOpen ? 'online-duel' : friendWaitingOpen ? 'invite-friend' : ''))
             .replace(/[^a-zA-Z0-9_-]/g, '');
         if (contextClass) els.overlay.classList.add(`modal-context-${contextClass}`);
         if (contextClass === 'tourney-winner' || contextClass === 'tourney-finalist') {

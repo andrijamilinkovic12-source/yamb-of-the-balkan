@@ -74,6 +74,21 @@ app.socket = { connected: false };
         }
     }
 
+    // An image can be decoded in the warmup yet still have no src in an existing board.
+    // Legacy hydration roots do not include the canonical Easter path.
+    const boardImages = Object.fromEntries(['easter','neon'].map(theme=>[theme,[0,1].map(()=>({
+        dataset:theme==='easter'?{themeSrc:'assets/theme-packs/easter/canonical/game-board/announce-megaphone-v1.png?v=1'}:{neonBoardSrc:'assets/theme-packs/neon/canonical/game-board/announce-megaphone-v1.png?v=1'},
+        getAttribute(name){return this[name]||null;}
+    }))]));
+    context.document.querySelectorAll=selector=>selector.includes('easter')?boardImages.easter:boardImages.neon;
+    app.syncGameBoardThemeImages('dark');
+    assert(boardImages.easter.every(i=>!i.src)&&boardImages.neon.every(i=>!i.src),'Inactive board images must stay deferred');
+    for(const theme of ['easter','neon']){
+        app.syncGameBoardThemeImages(theme);
+        assert(boardImages[theme].every(i=>i.src?.includes(`theme-packs/${theme}/canonical/game-board/announce-megaphone-v1.png`)),`${theme}: both existing boards need their canonical announcement PNG`);
+    }
+    assert(source.includes('this.syncGameBoardThemeImages(safeTheme)')&&source.includes("this.syncGameBoardThemeImages(localStorage.getItem('yamb_theme') || 'dark')"),'Hydrate both existing and newly created boards');
+
     let releaseSettings;
     const settingsReady = new Promise(resolve => { releaseSettings = resolve; });
     context.window.themeSettingsRoom = {

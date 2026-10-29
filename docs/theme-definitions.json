@@ -1,6 +1,62 @@
 {
-  "schemaVersion": 76,
+  "schemaVersion": 82,
   "updatedOn": "2026-10-29",
+  "dualEmulatorRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/two-emulators-2026-10-29/report.json",
+    "scope": "Dva ponovo pokrenuta Android emulatora, sacuvane prijave Andrije i Sare. Produkciona aplikacija com.yamb.balkan, originalnih 1440x3120/560dpi. Nema CDP, citanja tokena ili privatne sesije.",
+    "daily": "Sara/Trula visnja: sest kockica [4,2,3,5,1,4], rezultat (4+2+3+5)*1*4=56. Aktivni/zavrsni panel staje u ekran. Zavrsni PNG kasni do narednog kadra. Bez reklame/preuzimanja, saldo posle Daily testa ostao 4107. Nije aktivni/zavrsni Android prolaz svih deset tema.",
+    "random": "Uparivanje sopstvenih naloga potvrdjeno. Prvi kadrovi table 12/8 sekundi; test nije potvrdio upis pre isteka. Uzrok potrosenog vremena nije izmeren. Obican zavrsetak, dupliranje/isplata, revans i reconnect nisu potvrdjeni.",
+    "testConsequences": "Server je automatski obracunao tehnicki rezultat bez klika na preuzimanje: Sara 4107->2349 (-1758), prikazano -20 Indeksa moci; Andrija 18547->20322 (+1775), liga 37969->39744. Server menja i statistiku/H2H; sve pojedinacne vrednosti nisu dodatno proverene. Nema rucne izmene baze ili ponistavanja; korisnik obavesten.",
+    "pendingLocal": "R32: game_over_timeout bira sopstvenu lokalizovanu win/loss poruku umesto zajednicke serverove pobednicke poruke. Ekonomija/tajmer nisu menjani. game.js v6.36. Osam izolovanih testova stvarnog handlera: uloge x sr/en x server/local obracun, duplicate/stale/offline zastite.",
+    "staging": "Read-only health potvrden: yamb-reconnect-qa, staging/reconnect-qa-01, odvojeni Firebase projekat. Klijent v5.49 je stariji; potrebna aktuelna QA verzija pre daljih transakcionih testova. Nema novog commita/deploya ili QA instalacije.",
+    "status": "Oba emulatora na glavnim menijima, Green/Medium teme i prijave sacuvane. Nema novog reda cekanja/meca/reklame/preuzimanja. Osnovni audit ostaje 13/15 uz navedene granice; ovaj neuspesan obican Random tok ne racunati kao prolaz. Nova lokalna R32 i ranije dorade cekaju deploy/Android potvrdu. Nema novih PNG crteza."
+  },
+  "inviteFriendRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/invite-friend-2026-10-29/report.json",
+    "scope": "Svih10tema: osnovni Android domacin i450izolovanih stvarnih produkcionih prikaza (9stanja x5velicina). Android1440x3120/560dpi (~411x891CSSpx); nema pravih poziva/poruka ili duela.",
+    "inventory": "8osnovnih PNGuloga/tema,80quality-resolved putanja. Friend/search deljeni sa Online igracima, PowerIndex iX su zasebni kanonski deljeni identiteti. Fotografije naloga/prijatelja i zajednicki online zavrsetak/skin/game-header resursi vode se odvojeno. Nema novih PNGcrteza.",
+    "pendingLocal": "R31: obrub cele sobe vise ne suzava9tema; Green geometrija profila/razmaka, zaglavlje34px, font/tracking naslova gosta, prazna lista, Vaskrsnji avatar/statistika i statusni padding Vaskrsnje/Pustinjske. Sve teme imaju citljiv status prijatelja; statisticka4reda ostaju u podkartici. Na ekranima do649px visine avatar+ime dele gornji red nepromenjene138px kartice. Poseban invite-friend modalni kontekst, tematski kontrast i isti toast font/radijus. Palete, stil i pravci ostaju postojeci.",
+    "validation": "PASS450:10tema x9stanja x320x568/360x640/360x780/390x844/430x932. Stvarni host/guest/friends/rival/socket game_start/ModalManager/showNotification i main-room PNG rutiranje, sintetički profili/socket, blokirani spoljni zahtevi. Green mere/fontovi, PNG decode,48px donja safezona, bez vertikalnog skrola i bez izlaska statistike/statusa/dugmadi iz kartice. Fokus/tekst pretrage zadrzani pri refreshu, offline poziv onemogucen i linkskriven. Paletni parovi9tema najmanje4.5:1; nije merenje svih gradijenata/PNG piksela. Animacije iskljucene, offline fontfallback moguc.",
+    "functional": "PASS izolovani lokalni Socket.IO tok send/duplikat/accept/game_start/busy/DND/offline/decline/cancelled host. Shared online finish i JS prolaze. Modalni kontekst ne prelazi na druge sobe.",
+    "android": "Hostroom svih10tema, Green i vodoravno pomeranje liste/fokus pretrage. Emulator otvorio samo plutajuci/stylus IME; nije pun resize tastature. Prvi Neon i Ametist izbor vratili prethodnu temu, ponovljeni uspeo; uzrok nije utvrdjen. Na krajuGreen/prijava/originalne mere/tastatura0, bez stvarnih poziva/duela/nagrada ili commita/deploya.",
+    "status": "Osnovni Android prolaz13/15, uz odvojene granice. Preostaju kontrolisan Online random sa drugim uredjajem i aktivni/zavrsni Dnevni izazov. Guest/retka stanja/reklama/isplata i potvrda svih lokalnih R22–R31 posle deploya ostaju otvoreni.",
+    "versions": "managers.jsv6.37,invite-friend-roomCSSv6,compactCSSv6; game.jsv6.35 nepromenjen u ovom koraku."
+  },
+  "onlineRandomRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/online-random-2026-10-29/report.json",
+    "scope": "Svih10tema lokalnim stvarnim produkcionim rendererima,720slucajeva. Android samo delimicno offlineGreen/Easter u originalnim1440x3120/560dpi (~411x891CSSpx), bez povezivanja sa drugim igracem. Ne racunati13/15osnovnih Android prolaza.",
+    "inventory": "23osnovne PNGuloge/tema,230quality-resolved putanja; nema novih PNGcrteza ili starog aktivnog Easter/Desert/Severna opponent paketa. Meni i intro/header su izvedenice istog identiteta; general-podium medalje ostaju odvojene od turnirskih/kvartalnih. Dukat/video/PowerIndex i finish PNG su kanonski deljeni identiteti. Fotografije igraca nisu zasebni tematski PNG.",
+    "pendingLocal": "R28: Green fontovi/raspored cekanja i zavrsetka, loading visina, rubovi liste/statistike, naslov Pronadjen protivnik u svim temama; Revanš44px,claim55px,score42px/claim29px i online-duel modalni kontekst sa paletom teme. R29: svi online dueli sa2igraca koriste Green vertikalni pager/random room scope; Winter/Desert vise nisu flex sabijene. R30: pri oporavku odmah ukloniti privremeni disconnectedPNG/tekst iz tajmera pre state-sync odgovora,27px mera ne zavisi od privremene klase; povratno obavestenje ima kanonski42pxPNG i jednaku Green tipografiju/tematsku povrsinu. Pravila servera, bodova, nagrada i turnirskog revansa nisu menjana.",
+    "validation": "PASS720=10tema x18stanja x320x568/360x640/360x780/412x915. Stvarni setupOnline/socket UI handleri/HallOfFame/handleGameOver/ModalManager/obe table/reconnect/showNotification, lazni socket i servisne potvrde, blokirani svi spoljni zahtevi. Jednake Green mere/fontovi, bez zavrsnog ili sobnog skrola/safezone prelivanja. Ispravne ulogeTI/PROTIVNIK i rezultat/nagrada za oba indeksa, records/pending/nula/limit8000 i potvrđen+24PowerIndex/pending—. Najmanji kontrast imena/uloga/poena5.20:1. Animacije iskljucene, offline font fallback moguc; nije prava isplata/reklama.",
+    "android": "Uz novo izricito odobrenje potvrdjen izlazak/autosave praznog HotseatGost_QA testa. Offline random prikazGreen/Easter pokazuje gresku veze, Green dodatno cekanje. Deo PNG nije u kesu (intro/prazna lista), Light izbor odbijen i sacuvanGreen, pa nema laznog punog prolaza ostalih tema. Preotvaranja random sobe mreza disabled; na kraju vraceni airplane-mode disabled,wifi1,data1,Greenglavni meni/prijava/originalne mere. Nema uparivanja, igre/nagrade, slanja poruka ili commita/deploya.",
+    "status": "Lokalni deo svih10tema dovrsen; potpuni Android online prolaz i potvrda R28–R30 posle deploya ostaju otvoreni. Native offline dokazi nisu dokazi hladnog ucitavanja online niti svih tema. Slede Pozovi prijatelja i kontrolisani online test sa drugim uredjajem, kao i ranije otvoreni Daily aktivni/zavrsni tok i retka stanja.",
+    "versions": "game.jsv6.35,managers.jsv6.36,online-random-roomCSSv4,online-random-finishCSSv7,compactCSSv5."
+  },
+  "hotseatRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/emulator-hotseat-2026-10-29/report.json",
+    "scope": "Android svih10tema: prazna Hotseat partija sa Gost_QA otvorena uz izricito odobrenje. Obe table pregledane vertikalnim pagerom, gornji/donji panel i quick-menu, bez bacanja/upisa ili zavrsetka. Originalne1440x3120/560dpi, priblizno411x891CSSpx; promena na360x780 izazvala ostecene kadrove emulatora, oporavljene resetom/rebootom bez brisanja podataka.",
+    "inventory": "13osnovnih PNGuloga/tema,130quality-resolved putanja. Zajednicke kanonske porodice: avatar, score/claim/panel/4rekorda/video/Indeks moci/dukat; meni i intro su dve izvedenice jednog identiteta. Skinovi, dugmad, brojac, kontrolni panel i board PNG su dodatni deljeni resursi. Nema novih PNGcrteza.",
+    "pendingLocal": "R26: Hotseat fontovi/mere zavrsetka ujednaceni saGreen, ukljucujuci55px preuzimanje i42/29pxPNG. Tematski kontrast unosa gosta/izlaza/zavrsnih obavestenja kroz poseban Hotseat kontekst; ne prenosi se online ekranima. R27: Vaskrsnji megafon nije dobijao src pri promeni teme u vec postojecoj tabli zbog starog hydration korena; syncGameBoardThemeImages sada povezuje postojece canonical Easter/NeonPNG pri applyTheme i createScoreTables. game.jsv6.34,managers.jsv6.35,compactCSSv4.",
+    "validation": "PASS520izolovanih stvarnih renderera:10tema x(9rezultatskih stanja+2table+izlaz+unosgosta) x4velicine320x568/360x640/360x780/412x915. Jednake Green mere/fontovi, oba igraca/avatar/aktivna tabla, potvrdene zastavice i prikaz nagrade naloga0, bez zavrsnog skrola/safezone prelivanja. Posebna regresija pokriva PNG hidrataciju obe table; Solo400ponovo prolazi. CI Hotseat, komentari, lokalno slanje, matchresults, onlinefinish, adflow, board/header i JS prolaze. Sinteticki servis nije stvarna isplata/reklama. Izracunati kontrast imena/uloga/poena na podkarticama oba igraca najmanje5.20:1 kroz360zavrsnih prikaza; ne predstavlja merenje svih drugih povrsina.",
+    "status": "Osnovni Hotseat Android prolaz svih10tema dovrsen uz konkretan Easter nalaz i navedene granice. R26/R27 i ranije lokalne dorade cekaju commit/deploy i novu Android potvrdu. VraceniGreen/originalne mere/prijava; test ostaje otvoren jer je automatski reviewer odbio potvrdu izlaska/autosave, a ona je otkazana. Nema novih rezultata, nagrada ili poruka. Slede Online random/Pozovi prijatelja; Daily aktivni/zavrsni tok i retka stanja ostaju otvoreni."
+  },
+  "soloRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/emulator-solo-2026-10-29/report.json",
+    "notifications": "ModalManager automatski dodeljuje Solo kontekst porukama aktivnog Solo zavrsetka (npr. nagradne/oglasne greske). Skriven Solo ekran i Hotseat/online zavrsetak ne nasledjuju taj kontekst. managers.jsv6.34; zasebna CI regresija. Nasledjene tekstualne senke devet tema uklonjene iz Solo zavrsnog teksta radi citljivosti, uz iste boje/fontove i PNG senke.",
+    "scope": "Android360x780 u svih deset tema: ista sacuvana Solo partija sa dva ranija upisa, zbirom5 i bacanjem3/3; tabla, gornji/donji panel, PNG skin i meni sa tri tacke. Green dodatno Nastavi/Nova igra, intro i potvrda izlaska. Nema novog bacanja/upisa ili dovrsavanja partije.",
+    "inventory": "12 osnovnih Solo PNG uloga po temi,120 quality-resolved putanja. Meni i intro su dve uloge istog identiteta; video, dukat i Indeks moci su kanonske porodice deljene sa drugim sobama. Skinovi, akcijska dugmad/brojac i game-header su dodatni zajednicki resursi. U ovom prolazu nema novih PNG crteza.",
+    "pendingLocal": "R24: localResultAccepted je bio let unutar if-bloka, a koriscen van tog opsega pri safeSubmitScore; ReferenceError je preskakao potvrdu rekorda/nagradne ponude za lokalni zavrsetak. Deklaracija pomerena u zajednicki opseg. R25: Solo Green fontovi, padding/gap/margine,55px preuzimanje,42/29px PNG oznake i tipografija/paleta potvrde izlaska. Green gradijent preuzimanja koristi postojece tamnije tonove (paletni par najmanje5.98:1). game.jsv6.33 i compactCSSv3; tabla i pravila nagrade nisu menjani.",
+    "validation": "PASS400 lokalnih slucajeva:10tema x(9zavrsnih stanja+potvrda izlaska) x320x568/360x640/360x780/412x915. Stvarni handleGameOver/createScoreTables/ModalManager/PNG kontroleri, sinteticki servisni odgovori; mere/fontovi/razmaci/vidljivi PNG uskladjeni sa Green, bez skrola/odsecanja. Najjaca kolona prati stvarni PNG ili glyph sopstvene table; unutrasnja sirina megafona Neon/Easter je namerni izuzetak. CI stvarnog toka Solo/Hotseat proverava accepted/rejected/pending odgovor i da nepotvrdjen rezultat ne dobije izmisljenu potvrdu nagrade.",
+    "status": "Novi R24/R25 i prethodni lokalni R22/R23 ostaju bez commita/deploya. Android snimci ne potvrdjuju nove izmene. Nisu prikazani stvarni Solo zavrsetak, reklama/isplata ili svi introi na Androidu. Sve promene tema uspele prvi put, ali hladna brzina/fps nisu mereni. Zelena, originalnih1440x3120/560dpi i prijava vraceni; sacuvana partija napustena kroz postojeci autoSave bez promene upisa. Slede Hotseat, Online random i Pozovi prijatelja; Daily aktivni/zavrsni Android tok i ranija retka stanja ostaju otvoreni."
+  },
+  "dailyRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/emulator-daily-2026-10-29/report.json",
+    "scope": "Stvarni Android360x780: svih deset tema, ponovni ulazak/vec odigrano; osam intro kadrova. Danasnji izazov je na nalogu vec odigran. Aktivni/zavrsni panel i nagradna/serverska poruka provereni su izolovanim stvarnim rendererima sa sintetickim podacima, nisu novi Android dokaz tih tokova.",
+    "inventory": "Sest aktivnih semantickih PNG uloga po temi,60razlicitih fajlova: identitet, zadatak, zavrsetak, vec odigrano, kanonski video i dukat. Deljeni skin i pozadina vode se odvojeno. Nema nove PNG zamene ili promene DNK/pravca/palete.",
+    "pendingLocal": "R22: Daily obavestenja imaju poseban modal kontekst, istu Green tipografiju i mere, tematske povrsine i citljivo dugme bez crnog teksta na braon/plavoj podlozi. Uklonjena Easter razlika2px. Green Zaustavi/Preuzmi koriste postojece tamnije tonove za kontrast teksta. Daily CSSv4/JSv3.4. R23: priprema X i prikazani CSS koriste isti URL/cache verziju za svaku temu; theme-game-header.jsv5. Funkcije i dimenzije nisu menjane.",
+    "validation": "PASS150izolovanih slucajeva:10tema x5stanja x3velicine320x568/360x780/412x915. Stvarni DnevniIzazov/ModalManager/YambFeatures; sinteticki posedovan skin teme, sest ucitanih PNGkockica, jednake Green mere/fontovi, bez odsecanja/skrola. Najmanji kontrast dugmeta obavestenja5.67:1. Montserrat offline fallback moguc; animacije iskljucene. Ciljane Daily, Header i Settings regresije prolaze.",
+    "status": "Prethodne izmene korisnik je commitovao/deployovao; javni CSS odgovara lokalnom. Novi R22/R23 ostaju bez commita/deploya i cekaju Android potvrdu. Devet prvih izbora tema uspelo; kasnjenje Desert X je zabelezeno. Nema novog izazova, reklame/isplate, kupovine ili poziva/poruke. Zelena/originalne mere/prijava vraceni. Cetiri moda preostaju uz otvorena Daily aktivna/transakciona stanja; ne proglasavati svih15soba i sve tokove zavrsenim."
+  },
   "tournamentRuntimeVerification20261029": {
     "evidence": "docs/theme-visual-audit/emulator-tournament-2026-10-29/report.json",
     "scope": "Stvarni Android 360x780 u svih deset tema: Info sa vec prijavljenim nalogom/osam ucesnika, cetvrtfinale, finale, detalj odigranog cetvrtfinalnog meca i prve kartice Dvorane slavnih. Green dodatno polufinale i Put do titule. Intro kadrovi za osam dodatnih tema; trajanje nije mereno screenshotima.",
@@ -51,16 +107,56 @@
     "geometry": "Statistika koristi Green raspored, 12px unutrasnji razmak na malim ekranima i 44px polja za dodir navigacionih tacaka. Funkcije i PNG identiteti ostaju isti.",
     "h2hText": "Pobede, nereseno i porazi koriste statusno mastilo teme umesto globalne jarke zelene/crvene. Najmanje 4.5:1 prema krajevima podloge; brojevi i W/D/L oznake ostaju dodatna oznaka znacenja.",
     "h2hInkWinDrawLoss": {
-      "dark": ["#b5e5b6", "#e2dfab", "#ffd0b8"],
-      "light": ["#35613d", "#76612b", "#9b3b3a"],
-      "medium": ["#8cdeb2", "#e39a70", "#ff9daa"],
-      "winter": ["#216f5a", "#9b5037", "#a63a42"],
-      "neon": ["#72ddae", "#f08ce3", "#ff97ac"],
-      "amethyst": ["#a3dfc2", "#e1a4c7", "#f2a3b4"],
-      "easter": ["#3e674a", "#8d5438", "#9e4a42"],
-      "desert": ["#32634d", "#396b72", "#9d3d37"],
-      "moon": ["#a8d5be", "#b8bac7", "#f0acb0"],
-      "severna": ["#a4e3c9", "#c3acea", "#ffafb9"]
+      "dark": [
+        "#b5e5b6",
+        "#e2dfab",
+        "#ffd0b8"
+      ],
+      "light": [
+        "#35613d",
+        "#76612b",
+        "#9b3b3a"
+      ],
+      "medium": [
+        "#8cdeb2",
+        "#e39a70",
+        "#ff9daa"
+      ],
+      "winter": [
+        "#216f5a",
+        "#9b5037",
+        "#a63a42"
+      ],
+      "neon": [
+        "#72ddae",
+        "#f08ce3",
+        "#ff97ac"
+      ],
+      "amethyst": [
+        "#a3dfc2",
+        "#e1a4c7",
+        "#f2a3b4"
+      ],
+      "easter": [
+        "#3e674a",
+        "#8d5438",
+        "#9e4a42"
+      ],
+      "desert": [
+        "#32634d",
+        "#396b72",
+        "#9d3d37"
+      ],
+      "moon": [
+        "#a8d5be",
+        "#b8bac7",
+        "#f0acb0"
+      ],
+      "severna": [
+        "#a4e3c9",
+        "#c3acea",
+        "#ffafb9"
+      ]
     },
     "easter": "Glavne tri kartice koriste postojecu krem-zalfija paletu i senke teme. Skrol traka koristi #879373 do #4D6B45. Redovi Vatrenog niza koriste stats-subcard i stats-card, bez starog lavanda gradijenta. Brojevi mesta 4+ u Top listi moraju ostati vidljivi, dok prva tri mesta koriste medalje.",
     "loadingGate": "Paleta i usvojena pozadina pripadaju odredisnoj temi na samom gate elementu, nezavisno od prethodne body teme. Povrsina je dovoljno neprozirna za tekst; mastilo, naglasci i opis imaju najmanje 4.5:1. Ovo ne potvrdjuje brzo hladno ucitavanje; prvi pokusaji Desert/Moon/Severna su zahtevali ponavljanje."

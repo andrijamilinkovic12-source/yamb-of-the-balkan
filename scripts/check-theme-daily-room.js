@@ -146,7 +146,11 @@ const game = read('www/game.js').toString();
 const rules = read('www/pravilaigre.js').toString();
 const roomIcons = read('www/theme-main-room-icons.js').toString();
 const oceanPreview = read('www/themes/ocean/qa-preview.html').toString();
-assert.match(html, /theme-daily-room\.css\?v=3/);
+assert.match(html, /theme-daily-room\.css\?v=4/);
+assert.match(html, /dnevniizazov\.js\?v=3\.4/);
+const dailyAlerts = js.split('\n').filter(line => line.includes('this.app.modal.alert('));
+assert.equal(dailyAlerts.length, 6);
+assert.ok(dailyAlerts.every(line => line.includes("contextClass: 'daily'")), 'Daily notices must opt into scoped Green typography and theme contrast');
 assert.match(config, /ROOM_INTRO_TIMING = Object\.freeze\(\{ openAtMs: 2400, durationMs: 3200 \}\)/);
 assert.match(sharedCss, /--room-intro-duration: 3\.2s/);
 for (const file of ['www/dnevniizazov.js', 'www/game.js', 'www/kvartalnaliga.js', 'www/riznica.js', 'www/turnir.js']) {
@@ -192,6 +196,12 @@ const contrast = (first, second) => {
     const values = [luminance(first), luminance(second)].sort((a, b) => b - a);
     return (values[0] + .05) / (values[1] + .05);
 };
+for (const [text, stops] of [['#fff6e9', ['#a74731','#713426']], ['#f4f7e9', ['#476941','#31573a']]]) {
+    for (const stop of stops) {
+        assert.ok(css.includes(stop), `Green Daily gradient stop ${stop} missing`);
+        assert.ok(contrast(color(text), color(stop)) >= 4.5, `Green action label contrast on ${stop}`);
+    }
+}
 for (const greenSurface of [[71, 105, 65, .98], [45, 81, 53, .98]]) {
     for (const backdrop of [[0, 0, 0], [255, 255, 255]]) {
         const surface = composite(greenSurface, backdrop);

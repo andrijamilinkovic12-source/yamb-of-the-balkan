@@ -68,4 +68,23 @@ assert(game.includes("this.playEasterRoomIntro('opponent', () => this.setupOnlin
 assert(roomCss.includes('--online-room-card: var(--theme-card-fill)') && roomCss.includes('--online-room-subcard: var(--theme-subcard-fill)'), 'theme material tokens missing');
 assert(roomCss.includes('@media (max-height: 700px)') && finishCss.includes('@media (max-height: 700px)'), 'short phone layout missing');
 assert(game.includes("const showRematch = !isTournament || isDraw;"), 'online duel rematch rule changed');
+
+// Execute the actual pager decision with a minimal DOM; every online theme must
+// expose the same room scope that its canonical reconnect PNG relies on.
+const highlight = game.match(/^    highlightCurrentPlayer\(\) \{[\s\S]*?(?=^    toggleHold\()/m)?.[0];
+assert(highlight);
+for (const theme of themes) {
+    const active = new Set();
+    const scene = { classList: { toggle: (key,on) => on ? active.add(key) : active.delete(key) } };
+    const run = vm.runInNewContext(`({${highlight}}).highlightCurrentPlayer`, {
+        document: {
+            querySelectorAll: () => [],
+            getElementById: id => id === 'game-scene' ? scene : null,
+            body: { classList: { contains: cls => cls === `${theme}-theme` } }
+        },
+        localStorage: { getItem: () => theme }, setTimeout
+    });
+    run.call({players:['A','B'],onlineMode:true,modeTag:'Online',currentPlayerIdx:0,roomId:'room_fixture',onlineDuelType:'random',inferOnlineDuelType:()=> 'random',updateHeaderAvatar(){}});
+    assert(active.has('theme-dual-board-view') && active.has('online-duel-room') && active.has('random-online-duel-room'), `${theme}: online pager/reconnect scope missing`);
+}
 console.log('Online Random final: ten themes × 23 distinct active PNG roles, shared 3.2s intro, no active legacy PNG/SVG.');

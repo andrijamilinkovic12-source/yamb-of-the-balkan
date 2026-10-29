@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const vm = require('node:vm');
 
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file));
@@ -58,6 +59,15 @@ assert(code.includes("localStorage.setItem('yamb_active_skin', item.id)"));
 assert(code.includes('window.skinActionButtons?.sync()'));
 assert(controller.includes("if (role === 'undo')") && controller.includes("role === 'theme' || role === 'skin'"));
 assert(controller.includes("if (role === 'close')"), 'Picker must reuse the themed room close PNG');
+const headerContext = { window: {}, document: { readyState: 'loading', addEventListener() {} } };
+vm.runInNewContext(controller, headerContext);
+const closeCss = read('www/theme-room-close-controls.css').toString('utf8');
+for (const theme of expectedThemes) {
+    const selector = theme === 'dark' ? 'body {' : `body.${theme}-theme {`;
+    const displayed = closeCss.split(/\r?\n/).find(line => line.startsWith(selector)).match(/url\("([^"]+)"\)/)[1];
+    assert.equal(headerContext.window.themeGameHeader.asset('close', theme), displayed,
+        `${theme}: preloaded X URL/cache version must match the displayed CSS image`);
+}
 assert(css.includes('gh-spectator-icon.gh-btn-active .theme-online-game-spectator-icon') && css.includes('timer-turn--urgent'));
 assert(css.includes('.game-skin-picker-list') && css.includes('overflow-y:auto'), 'Owned skin picker must scroll');
 assert(css.includes('#game-scene:is(#game-scene) #turn-timer-display') && css.includes('#game-scene:is(#game-scene) #game-dropdown-menu'),

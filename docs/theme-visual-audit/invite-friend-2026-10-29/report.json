@@ -1,0 +1,1881 @@
+{
+  "date": "2026-10-29",
+  "room": "Pozovi prijatelja",
+  "scope": "Svih deset tema: osnovni domaćin na Android emulatoru; 450 izolovanih stvarnih produkcionih prikaza za devet stanja i pet mobilnih veličina. Nisu slati stvarni pozivi, poruke ili zahtevi.",
+  "deployment": "Bez commita/deploya. Android prikazuje raniju objavljenu verziju. Lokalni prikazi zasebno dokazuju R31; potrebna potvrda posle deploya.",
+  "findings": {
+    "R31": "Nasleđeni obrub cele sobe sužavao je devet tema za2px. Razlikovali su se flex raspored profila, razmaci i položaj dugmadi prijatelja, širina prazne liste, težina/tracking naslova gosta, Vaskršnji avatar/statistički razmaci i statusni padding Vaskršnje/Pustinjske. Ujednačena geometrija i tipografija premaGreen uz postojeće tematske materijale. Obaveštenja dobijaju poseban invite-friend modalni kontekst; toast ima isti Green font/radijus. Nove PNG slike, palete i pravci nisu menjani."
+  },
+  "inventory": "8osnovnih PNG uloga po temi,80quality-resolved putanja. Friend/search se namerno dele sa Online igračima iste teme; PowerIndex i X su kanonski deljeni. Fotografije naloga/prijatelja nisu tematski PNG. Zajednički online završni ekran, game-header/board/skin resursi i pozadine vode se zasebno.",
+  "validation": {
+    "runtime": "PASS450=10tema×9stanja×320×568/360×640/360×780/390×844/430×932. startPrivateHosting/joinPrivateGame/renderFriendsList/renderInviteOwnerRival/socket game_start/ModalManager/showNotification. Green geometrija/fontovi, PNG decode, bez uspravnog skrola ili prekoračenja48px donje safezone. Pretraga zadržava tekst/fokus/selektovan opseg pri refreshu; offline prijatelj onemogućen, online omogućen. Link za deljenje ostaje skriven.",
+    "states": "Domaćin sa prijateljima/zahtevom/praznom listom/bez rivala/fokusiranom pretragom; gost čeka/pronađen prijatelj; obaveštenje i toast. Sintetički profili/avatar PNG zamenjuju fotografije. Svi spoljni zahtevi blokirani, nema app konstruktora ili prijavljene sesije. Animacije isključene i offline font fallback moguć.",
+    "contrast": "Postojeće paletne provere najmanje4,5:1 za osnovni/prigušeni/akcentni tekst na surface/raised devet tema. Ovo nije merenje svih gradijenata/PNG piksela niti fizičkog telefona.",
+    "functional": "Lokalni Socket.IO test: send, duplikat, accept/two-player start, busy,DND,offline,decline,cancelled host. Samo sintetički lokalni klijenti, bez pravih igrača. JS, shared online finish i prethodni modalni konteksti prolaze."
+  },
+  "android": {
+    "scope": "Originalnih1440×3120/560dpi (~411×891CSSpx), prijavljen nalog. U svih10tema osnovni domaćin sa karticama naloga/rivala, prijateljima/zahtevima i pretragom. Green dodatno vodoravno pomeranje liste i fokus pretrage.",
+    "keyboard": "Privremeno show_ime_with_hard_keyboard1; emulator otvorio plutajući/stylus IME panel, a ne punu resize tastaturu. Fokus je zatim uklonjen i vraćena početna0. Ne proglašavati punu mobilnu tastaturu/S25 testom.",
+    "loading": "Prvi Neon i Ametist izbori pokazali su gate, pa vratili prethodnu temu. Ponovljeni izbori uspeli. Prva Green poseta nije prikazala zaglavni PNG, a ponovni ulazak na kraju jeste. Nije utvrđen uzrok, niti je ovo benchmark praznog cache-a; ostaje otvoreno praćenje stabilnosti hladnog učitavanja.",
+    "restoration": "Na kraju Green glavni meni, prijava i originalne mere očuvani; tastatura0. Bez realnog slanja/odgovaranja na zahteve, duela, poteza, reklame/nagrade ili commita/deploya."
+  },
+  "limits": [
+    "Pravi poziv/prihvatanje/duel na dva uređaja, guest UI i retka obaveštenja nisu izvršeni na produkcionom nalogu. Lokalni testovi tih stanja nisu Android dokaz.",
+    "Intro putanje i zajednički timing2400/3200ms provereni statički; ovaj prolaz ne meri trajanje kadrovima.",
+    "Osnovni Android prolaz13/15: preostaju pun Online random sa kontrolisanim drugim uređajem i aktivni/završni Dnevni izazov. Retka stanja, prava nagrada i potvrda lokalnih R22–R31 posle deploya ostaju otvoreni."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "ae634e3928fef02d57d8dc13f5415ff5de76e1451575a92a155319fd1c5b77e4",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "30894f35a73c1ae1e1ca27267c2342e7c2aac46753c3d8ccffcc5bfaaa0dd356",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/dark/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "aec1575768d7134131b2c669c368b1d0fdc4a053407622e026da4ac75cd0a92b",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/dark/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "f3416fd625205321ff840912db8a5b3f6c10358ecdb347c88d85c318effef637",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png",
+          "sha256": "fb6da98876a0996458bd82ee0dc657f74fcd0265930316dcf2e9ad683a4a0086",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/dark/canonical/online-players-internal/search-v1.png",
+          "sha256": "0d764d8307c683a873f3973424dde1211a2287ab7c8fcfd9a41a7def4340681f",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/green-soft-clay/canonical/room-controls/close-v1.png",
+          "sha256": "e6a214cdb14ab3b71914939f2fe700c87852321231c4360aabd888e37acfd877",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-dark-host.jpg",
+        "local-dark-host-friends.jpg",
+        "local-dark-host-request.jpg",
+        "local-dark-host-empty.jpg",
+        "local-dark-host-no-rival.jpg",
+        "local-dark-host-focus-refresh.jpg",
+        "local-dark-guest-wait.jpg",
+        "local-dark-guest-found.jpg",
+        "local-dark-notice.jpg",
+        "local-dark-toast.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "cb277a68eecec026c01501f10c2732738dfc7cab506db142e13c38a1e073a5af",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "43a3ccee8daf3954d2e63fa6cac702e03fa681d7e5d9a38160fd10edb5f2feba",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/light/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "d185bc73d0c77ccabd58dbf5c81f2ffb01f884fceaba75c2b6b9bd2a1daeebae",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/light/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "4fa5679c0a4c22124f2f597a367631434396a83106c8989442f22854f79c35ee",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/light/canonical/online-players-internal/friend-v1.png",
+          "sha256": "003ecc1510e7d715d7687f1f9af99e0249c82d72ec824b7dea227704ef2bf554",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/light/canonical/online-players-internal/search-v1.png",
+          "sha256": "3b09962d308a92010a987f74ddf3f8f87bf3e17d61e9c00212ad4249730e8d52",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "a84c498bac4f203c0460e384ae4cee3dec19c5b1d8c189e8b07c2e9477e9c5ed",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/light/canonical/room-controls/close-v1.png",
+          "sha256": "25a44ea2e673389240a9a35a254377202d10b2014ba273b79637e37948709ef2",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-light-host.jpg",
+        "local-light-host-friends.jpg",
+        "local-light-host-request.jpg",
+        "local-light-host-empty.jpg",
+        "local-light-host-no-rival.jpg",
+        "local-light-host-focus-refresh.jpg",
+        "local-light-guest-wait.jpg",
+        "local-light-guest-found.jpg",
+        "local-light-notice.jpg",
+        "local-light-toast.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "5477ef19ec2b81772877530754a7b0a6e0cd54e843c2984b5245742ce2771054",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "ff4d7e4989474f67768368726805638150c1e6a34c97fd14b68039fc17e8eca3",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/medium/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "c4aba2eb861430ce227d0a7e3b412829c627ffa19ae44372539cec5d9a16f622",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/medium/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "16feaa355314f4f63583974e05b0fe6de784ff8c34f80c4a597fbd72134fa8f6",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png",
+          "sha256": "e413796512a41f10372f323b6039080faedb5852bd2d2b54e63db617e835f854",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/medium/canonical/online-players-internal/search-v1.png",
+          "sha256": "0ba4cf2e311e8136bd0174d04364452914f2ba218d6cd4ecfeb5282db3f95f99",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "88708adafc84717bbb30c8e3c88477b50b772596162cbd383f8056469b0387c3",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/medium/canonical/room-controls/close-v1.png",
+          "sha256": "019a2b221293cd36c5e30ab4dfe58acac30b5d73d47aa0b9e5f9a302dc2686bd",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-medium-host.jpg",
+        "local-medium-host-friends.jpg",
+        "local-medium-host-request.jpg",
+        "local-medium-host-empty.jpg",
+        "local-medium-host-no-rival.jpg",
+        "local-medium-host-focus-refresh.jpg",
+        "local-medium-guest-wait.jpg",
+        "local-medium-guest-found.jpg",
+        "local-medium-notice.jpg",
+        "local-medium-toast.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "17fced36ad6a090008302d98498371dcd1aeece160f6d310b8c835af8ae84224",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "f2206d46e3c0518a2bca898485898952e5ccdc75c9e72ae3c0a3af0f4beee8a0",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/winter/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "487dca76dcc15d06e2f60b19602a024eab4e21d085e3bd05b7724c534e08bf6a",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/winter/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "cc77646cd4fddb710a8ca1c10e4e42866057649e56b6fecf98d148447fd8c127",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png",
+          "sha256": "154b4fc7a29081bf0437009bd0db76c8571fb0b9d35e9e5f6250c57750160844",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/winter/canonical/online-players-internal/search-v1.png",
+          "sha256": "a3f6b139621c4830267cda86e83f2b7a54f20c3da0b519d1d3390792b95fb3f9",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "6d072396680b7c60d7898a4047970364b09f5ebd71cbcb455e1cb79058ee2e40",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/winter/canonical/room-controls/close-v1.png",
+          "sha256": "5f50ac9cf2542e9cf87e87970c1f1efd5bc349e6d4561d7e2d3908b059c860b2",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-winter-host.jpg",
+        "local-winter-host-friends.jpg",
+        "local-winter-host-request.jpg",
+        "local-winter-host-empty.jpg",
+        "local-winter-host-no-rival.jpg",
+        "local-winter-host-focus-refresh.jpg",
+        "local-winter-guest-wait.jpg",
+        "local-winter-guest-found.jpg",
+        "local-winter-notice.jpg",
+        "local-winter-toast.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "c1269c14eea9453a66bf50088c050a25eb1fd8ac81c84fb4d8549d650e448718",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "cadd6771d182f6ea9d1a4c074e341bd5aa3bccd9ebec3dddcba937f07846fd7d",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/neon/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "2e8934231632280c700d018d9fa19d29c46fef1c925bc9aa5c7ea5e31a80fb8a",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/neon/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "c25d23e1ce9bedf2eb08dce3caec07ef7c06bd1d74ca9b2e19fafe03297baf31",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png",
+          "sha256": "3a4b8a4ef574f700bcce1c18391df26a10954c841f8a214d8cd85b4bca04062b",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/neon/canonical/online-players-internal/search-v1.png",
+          "sha256": "c06dee6606e5a956b05f7938339fbdcc5b0d85c9b29289ad373e5f95a2cb03a9",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "bfcd2360ab1d565e14f5c96aa4c85e6a841ad5c83c4c993070244f1acf70d2be",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/neon/canonical/room-controls/close-v1.png",
+          "sha256": "f2019041dda506ccc25c2dc92b2a9c02d42635f0be3bc48da7fc1c43ca89fcf8",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-neon-host.jpg",
+        "local-neon-host-friends.jpg",
+        "local-neon-host-request.jpg",
+        "local-neon-host-empty.jpg",
+        "local-neon-host-no-rival.jpg",
+        "local-neon-host-focus-refresh.jpg",
+        "local-neon-guest-wait.jpg",
+        "local-neon-guest-found.jpg",
+        "local-neon-notice.jpg",
+        "local-neon-toast.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "baa39ea45c0e9dca6e5faa7cfaf1bea3674eff627f748b17ce6efbe0a41acaa7",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "0bde80dbd84fe124996f56cd084d6e744213e0d11105fecb354bebaf46215f1b",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/amethyst/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "d6cac7e9522ec1782f0015c62cc3ca0b8b951ff59ddd8edb6b4b45e52495cad0",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/amethyst/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "c4a4372f5b37c830825a0bebf9573951c5b92319057ae9ec3c3c6a9fc2a23da2",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png",
+          "sha256": "31a2e775562201d37c4c208bc845726eb2fe20e48a1edacfcc32fae9ba59ec57",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png",
+          "sha256": "0679e8ec854f43817ea965c1519ba44ae681037136fcb1c31f73eb4777fdcab4",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "e753a823f7b6225a2839745c94b9746feb350c2a95317e6ca72fa0d7aef1aff8",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/amethyst/canonical/room-controls/close-v1.png",
+          "sha256": "e7812932209d996cf6f6d8dbb7c32225de7d8ce003d31a2e29d670ff2f3a95f9",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-amethyst-host.jpg",
+        "local-amethyst-host-friends.jpg",
+        "local-amethyst-host-request.jpg",
+        "local-amethyst-host-empty.jpg",
+        "local-amethyst-host-no-rival.jpg",
+        "local-amethyst-host-focus-refresh.jpg",
+        "local-amethyst-guest-wait.jpg",
+        "local-amethyst-guest-found.jpg",
+        "local-amethyst-notice.jpg",
+        "local-amethyst-toast.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "485a381847dac55180a965ef30e27c2a7e86f3127c29e98945e74acee4eb9a81",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "e24c438b155617d3cc87f53139f60e067032f6c5ca923cb890854d9b0c05ce04",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/easter/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "08b971986e4c63a036c705c5884eec0a6d6595b3af4368f108ff39a652e3f83a",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/easter/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "78690cbcfb9e4bfc727d23c890a56627ab36a1b3c5f2274ca0893cb3c26ded2f",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png",
+          "sha256": "f0d21e3447ab53b73eb3e983ca2d2b131ff90c09c93ec140fa34971fb9db87d4",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/easter/canonical/online-players-internal/search-v1.png",
+          "sha256": "4e7775a25180e20f0e5e282d3a2b28a6bd4696b3835ca0ab216eae3114831a15",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "11d3aa85dce02e8fb6b0a1d6f2c68ef49ed1d4febd388dd6e9b34fa43e33413f",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/easter/canonical/room-controls/close-v1.png",
+          "sha256": "17934ed7e43bb032f7828eab66dce464702143fccb98d8587a98e727eb4f40bc",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-easter-host.jpg",
+        "local-easter-host-friends.jpg",
+        "local-easter-host-request.jpg",
+        "local-easter-host-empty.jpg",
+        "local-easter-host-no-rival.jpg",
+        "local-easter-host-focus-refresh.jpg",
+        "local-easter-guest-wait.jpg",
+        "local-easter-guest-found.jpg",
+        "local-easter-notice.jpg",
+        "local-easter-toast.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "78e13979fa1f463a2a842f381b33b325caff981603874a110f942f22dddd4351",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "5ec2b482ee6db61617b31fc339c86b742233175a2a3c534836fd76f84a573dd9",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/desert/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "bd7985228ba32ffc79b09973d842a2540d03b5fced81cecd73629a60d803bbd8",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/desert/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "eb6b77b45f10bbeb687b9b92a244027395fb8e264639fa4785253e309473fa56",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png",
+          "sha256": "2028c17c6bb535e56f57e55280877d537a16762c854f6398a51f132e95f96e0b",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/desert/canonical/online-players-internal/search-v1.png",
+          "sha256": "689161db366a90005c3bfb1cbdcc2c26abba08c72f0871d9171723c2877185b0",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "132bb6e49d4849f4e0df4508a1f85932abca0c9b889a421cc28a19ee774b84bd",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/desert/canonical/room-controls/close-v1.png",
+          "sha256": "550646d7bdaa74786b389702a1cf0a12e5a48c33a47047813c3db006783b1570",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-desert-host.jpg",
+        "local-desert-host-friends.jpg",
+        "local-desert-host-request.jpg",
+        "local-desert-host-empty.jpg",
+        "local-desert-host-no-rival.jpg",
+        "local-desert-host-focus-refresh.jpg",
+        "local-desert-guest-wait.jpg",
+        "local-desert-guest-found.jpg",
+        "local-desert-notice.jpg",
+        "local-desert-toast.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "7184019bf1ab0cb96bb9c256fb89c72ba38d06edbd4b4d3edd0caf1524082c30",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "cf483a58066a6be9c640f0615ccf161453dbfc4a261d7356de196bbe183b9f4f",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/moon/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "5b034c4cb9b8d652ad184c3ab29c288a67832a89e53a15983be133ccc9bbce67",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/moon/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "837ab5b28510850a9062ae496e39f09ecc9a8cb16e2c3b81f8565cc228b84413",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png",
+          "sha256": "c4d889755d7bd6e4849d343388c3084920f02787a3261d09bca3aa0025bd0f5a",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/moon/canonical/online-players-internal/search-v1.png",
+          "sha256": "4a46b8dd4dafa32959a20772b0bf85ce740d06461a05d1e23ed0b580d611ca4c",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "7bc305f573ab38cad1ed64d2cf92c07a864107c5cb2a289c80fe61942fe65aad",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/moon/canonical/room-controls/close-v1.png",
+          "sha256": "d4baf97e331674f0a73160f70dcc0c2b693aa8b5341c0407b379d34d7b9ca9e2",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-moon-host.jpg",
+        "local-moon-host-friends.jpg",
+        "local-moon-host-request.jpg",
+        "local-moon-host-empty.jpg",
+        "local-moon-host-no-rival.jpg",
+        "local-moon-host-focus-refresh.jpg",
+        "local-moon-guest-wait.jpg",
+        "local-moon-guest-found.jpg",
+        "local-moon-notice.jpg",
+        "local-moon-toast.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "android": "Osnovni prikaz domaćina vizuelno pregledan; objavljena verzija pre lokalne dorade R31.",
+      "local": "Devet stanja × pet veličina, stvarni produkcioni renderer sa sintetičkim podacima.",
+      "assets": [
+        {
+          "role": "menu",
+          "file": "www/assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+          "sha256": "378814109f577e144a6a90fe9f0e9f17acfe7ecd16e2c73b3dc8dc2bbcec7510",
+          "uses": [
+            "Glavni meni"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "intro-header",
+          "file": "www/assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+          "sha256": "a2e38a3ed3fcf42f475bd064c379149925ba771f314d662afdaeb73aeffa4d06",
+          "uses": [
+            "Intro bez teksta",
+            "Zaglavlje domaćina i gosta"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "send",
+          "file": "www/assets/theme-packs/severna/canonical/invite-friend-internal/send-v1.png",
+          "sha256": "deb150e9775840e78e50b2b4a34a00032c44f88476e15cdcbec21bae7086e8f6",
+          "uses": [
+            "Poziv prijatelju",
+            "Obaveštenje o pozivu"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "empty",
+          "file": "www/assets/theme-packs/severna/canonical/invite-friend-internal/empty-v1.png",
+          "sha256": "e82dd8ed618d21796195eb5743d8ed34a7eb92fd502433d8a5a8a74c84d86664",
+          "uses": [
+            "Prazna lista prijatelja",
+            "Nema H2H rivala"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "friend",
+          "file": "www/assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png",
+          "sha256": "1a8f23cc3955900588661ae0630660a65576663727732ae135338a9afa373b9c",
+          "uses": [
+            "Dodaj prijatelja",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "search",
+          "file": "www/assets/theme-packs/severna/canonical/online-players-internal/search-v1.png",
+          "sha256": "0f52b61102082db92e8b977f237c84648241cd1a79a75d54fe458e66c6bf08a7",
+          "uses": [
+            "Pretraga po imenu",
+            "Deljeno sa sobom Online igrači"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "power",
+          "file": "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "f6ae9223fbe49cbcb7b78c048ccad4dd42383eb7b9fd59db0fb3f281aff06d33",
+          "uses": [
+            "Indeks moći naloga",
+            "Indeks moći rivala i prijatelja",
+            "Kanonski Indeks moći"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        },
+        {
+          "role": "close",
+          "file": "www/assets/theme-packs/severna/canonical/room-controls/close-v1.png",
+          "sha256": "a14d2953b89d5c8ccf4aea6bfdf1381972d18fddf43602cf8ec0756f248660e1",
+          "uses": [
+            "Zatvaranje sobe",
+            "Kanonski X svih soba iste teme"
+          ],
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG iste teme; nema potrebe za novim crtežom. Lokalno učitan u odgovarajućem prikazu. Android ne potvrđuje sva retka stanja ili novu lokalnu doradu."
+        }
+      ],
+      "evidence": [
+        "android-severna-host.jpg",
+        "local-severna-host-friends.jpg",
+        "local-severna-host-request.jpg",
+        "local-severna-host-empty.jpg",
+        "local-severna-host-no-rival.jpg",
+        "local-severna-host-focus-refresh.jpg",
+        "local-severna-guest-wait.jpg",
+        "local-severna-guest-found.jpg",
+        "local-severna-notice.jpg",
+        "local-severna-toast.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "theme": "dark",
+      "kind": "android",
+      "source": "dark-invite-revisit",
+      "file": "android-dark-host",
+      "title": "Zelena — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-host-friends",
+      "file": "local-dark-host-friends",
+      "title": "Zelena — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-host-request",
+      "file": "local-dark-host-request",
+      "title": "Zelena — lokalni renderer / host-request"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-host-empty",
+      "file": "local-dark-host-empty",
+      "title": "Zelena — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-host-no-rival",
+      "file": "local-dark-host-no-rival",
+      "title": "Zelena — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-host-focus-refresh",
+      "file": "local-dark-host-focus-refresh",
+      "title": "Zelena — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-guest-wait",
+      "file": "local-dark-guest-wait",
+      "title": "Zelena — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-guest-found",
+      "file": "local-dark-guest-found",
+      "title": "Zelena — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-notice",
+      "file": "local-dark-notice",
+      "title": "Zelena — lokalni renderer / notice"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-toast",
+      "file": "local-dark-toast",
+      "title": "Zelena — lokalni renderer / toast"
+    },
+    {
+      "theme": "light",
+      "kind": "android",
+      "source": "light-invite-host",
+      "file": "android-light-host",
+      "title": "Svetlo zlato — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-host-friends",
+      "file": "local-light-host-friends",
+      "title": "Svetlo zlato — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-host-request",
+      "file": "local-light-host-request",
+      "title": "Svetlo zlato — lokalni renderer / host-request"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-host-empty",
+      "file": "local-light-host-empty",
+      "title": "Svetlo zlato — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-host-no-rival",
+      "file": "local-light-host-no-rival",
+      "title": "Svetlo zlato — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-host-focus-refresh",
+      "file": "local-light-host-focus-refresh",
+      "title": "Svetlo zlato — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-guest-wait",
+      "file": "local-light-guest-wait",
+      "title": "Svetlo zlato — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-guest-found",
+      "file": "local-light-guest-found",
+      "title": "Svetlo zlato — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-notice",
+      "file": "local-light-notice",
+      "title": "Svetlo zlato — lokalni renderer / notice"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-toast",
+      "file": "local-light-toast",
+      "title": "Svetlo zlato — lokalni renderer / toast"
+    },
+    {
+      "theme": "medium",
+      "kind": "android",
+      "source": "medium-invite-host",
+      "file": "android-medium-host",
+      "title": "Trula višnja — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-host-friends",
+      "file": "local-medium-host-friends",
+      "title": "Trula višnja — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-host-request",
+      "file": "local-medium-host-request",
+      "title": "Trula višnja — lokalni renderer / host-request"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-host-empty",
+      "file": "local-medium-host-empty",
+      "title": "Trula višnja — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-host-no-rival",
+      "file": "local-medium-host-no-rival",
+      "title": "Trula višnja — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-host-focus-refresh",
+      "file": "local-medium-host-focus-refresh",
+      "title": "Trula višnja — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-guest-wait",
+      "file": "local-medium-guest-wait",
+      "title": "Trula višnja — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-guest-found",
+      "file": "local-medium-guest-found",
+      "title": "Trula višnja — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-notice",
+      "file": "local-medium-notice",
+      "title": "Trula višnja — lokalni renderer / notice"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-toast",
+      "file": "local-medium-toast",
+      "title": "Trula višnja — lokalni renderer / toast"
+    },
+    {
+      "theme": "winter",
+      "kind": "android",
+      "source": "winter-invite-host",
+      "file": "android-winter-host",
+      "title": "Plavi okean — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-host-friends",
+      "file": "local-winter-host-friends",
+      "title": "Plavi okean — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-host-request",
+      "file": "local-winter-host-request",
+      "title": "Plavi okean — lokalni renderer / host-request"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-host-empty",
+      "file": "local-winter-host-empty",
+      "title": "Plavi okean — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-host-no-rival",
+      "file": "local-winter-host-no-rival",
+      "title": "Plavi okean — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-host-focus-refresh",
+      "file": "local-winter-host-focus-refresh",
+      "title": "Plavi okean — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-guest-wait",
+      "file": "local-winter-guest-wait",
+      "title": "Plavi okean — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-guest-found",
+      "file": "local-winter-guest-found",
+      "title": "Plavi okean — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-notice",
+      "file": "local-winter-notice",
+      "title": "Plavi okean — lokalni renderer / notice"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-toast",
+      "file": "local-winter-toast",
+      "title": "Plavi okean — lokalni renderer / toast"
+    },
+    {
+      "theme": "neon",
+      "kind": "android",
+      "source": "neon-invite-host",
+      "file": "android-neon-host",
+      "title": "Neon Cyber — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-host-friends",
+      "file": "local-neon-host-friends",
+      "title": "Neon Cyber — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-host-request",
+      "file": "local-neon-host-request",
+      "title": "Neon Cyber — lokalni renderer / host-request"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-host-empty",
+      "file": "local-neon-host-empty",
+      "title": "Neon Cyber — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-host-no-rival",
+      "file": "local-neon-host-no-rival",
+      "title": "Neon Cyber — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-host-focus-refresh",
+      "file": "local-neon-host-focus-refresh",
+      "title": "Neon Cyber — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-guest-wait",
+      "file": "local-neon-guest-wait",
+      "title": "Neon Cyber — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-guest-found",
+      "file": "local-neon-guest-found",
+      "title": "Neon Cyber — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-notice",
+      "file": "local-neon-notice",
+      "title": "Neon Cyber — lokalni renderer / notice"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-toast",
+      "file": "local-neon-toast",
+      "title": "Neon Cyber — lokalni renderer / toast"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "android",
+      "source": "amethyst-invite-host",
+      "file": "android-amethyst-host",
+      "title": "Kraljevski ametist — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-host-friends",
+      "file": "local-amethyst-host-friends",
+      "title": "Kraljevski ametist — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-host-request",
+      "file": "local-amethyst-host-request",
+      "title": "Kraljevski ametist — lokalni renderer / host-request"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-host-empty",
+      "file": "local-amethyst-host-empty",
+      "title": "Kraljevski ametist — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-host-no-rival",
+      "file": "local-amethyst-host-no-rival",
+      "title": "Kraljevski ametist — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-host-focus-refresh",
+      "file": "local-amethyst-host-focus-refresh",
+      "title": "Kraljevski ametist — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-guest-wait",
+      "file": "local-amethyst-guest-wait",
+      "title": "Kraljevski ametist — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-guest-found",
+      "file": "local-amethyst-guest-found",
+      "title": "Kraljevski ametist — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-notice",
+      "file": "local-amethyst-notice",
+      "title": "Kraljevski ametist — lokalni renderer / notice"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-toast",
+      "file": "local-amethyst-toast",
+      "title": "Kraljevski ametist — lokalni renderer / toast"
+    },
+    {
+      "theme": "easter",
+      "kind": "android",
+      "source": "easter-invite-host",
+      "file": "android-easter-host",
+      "title": "Vaskršnja — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-host-friends",
+      "file": "local-easter-host-friends",
+      "title": "Vaskršnja — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-host-request",
+      "file": "local-easter-host-request",
+      "title": "Vaskršnja — lokalni renderer / host-request"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-host-empty",
+      "file": "local-easter-host-empty",
+      "title": "Vaskršnja — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-host-no-rival",
+      "file": "local-easter-host-no-rival",
+      "title": "Vaskršnja — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-host-focus-refresh",
+      "file": "local-easter-host-focus-refresh",
+      "title": "Vaskršnja — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-guest-wait",
+      "file": "local-easter-guest-wait",
+      "title": "Vaskršnja — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-guest-found",
+      "file": "local-easter-guest-found",
+      "title": "Vaskršnja — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-notice",
+      "file": "local-easter-notice",
+      "title": "Vaskršnja — lokalni renderer / notice"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-toast",
+      "file": "local-easter-toast",
+      "title": "Vaskršnja — lokalni renderer / toast"
+    },
+    {
+      "theme": "desert",
+      "kind": "android",
+      "source": "desert-invite-host",
+      "file": "android-desert-host",
+      "title": "Pustinjsko staklo — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-host-friends",
+      "file": "local-desert-host-friends",
+      "title": "Pustinjsko staklo — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-host-request",
+      "file": "local-desert-host-request",
+      "title": "Pustinjsko staklo — lokalni renderer / host-request"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-host-empty",
+      "file": "local-desert-host-empty",
+      "title": "Pustinjsko staklo — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-host-no-rival",
+      "file": "local-desert-host-no-rival",
+      "title": "Pustinjsko staklo — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-host-focus-refresh",
+      "file": "local-desert-host-focus-refresh",
+      "title": "Pustinjsko staklo — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-guest-wait",
+      "file": "local-desert-guest-wait",
+      "title": "Pustinjsko staklo — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-guest-found",
+      "file": "local-desert-guest-found",
+      "title": "Pustinjsko staklo — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-notice",
+      "file": "local-desert-notice",
+      "title": "Pustinjsko staklo — lokalni renderer / notice"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-toast",
+      "file": "local-desert-toast",
+      "title": "Pustinjsko staklo — lokalni renderer / toast"
+    },
+    {
+      "theme": "moon",
+      "kind": "android",
+      "source": "moon-invite-host",
+      "file": "android-moon-host",
+      "title": "Mesečev sjaj — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-host-friends",
+      "file": "local-moon-host-friends",
+      "title": "Mesečev sjaj — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-host-request",
+      "file": "local-moon-host-request",
+      "title": "Mesečev sjaj — lokalni renderer / host-request"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-host-empty",
+      "file": "local-moon-host-empty",
+      "title": "Mesečev sjaj — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-host-no-rival",
+      "file": "local-moon-host-no-rival",
+      "title": "Mesečev sjaj — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-host-focus-refresh",
+      "file": "local-moon-host-focus-refresh",
+      "title": "Mesečev sjaj — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-guest-wait",
+      "file": "local-moon-guest-wait",
+      "title": "Mesečev sjaj — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-guest-found",
+      "file": "local-moon-guest-found",
+      "title": "Mesečev sjaj — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-notice",
+      "file": "local-moon-notice",
+      "title": "Mesečev sjaj — lokalni renderer / notice"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-toast",
+      "file": "local-moon-toast",
+      "title": "Mesečev sjaj — lokalni renderer / toast"
+    },
+    {
+      "theme": "severna",
+      "kind": "android",
+      "source": "severna-invite-host",
+      "file": "android-severna-host",
+      "title": "Severna maglina — Android, objavljena verzija / domaćin"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-host-friends",
+      "file": "local-severna-host-friends",
+      "title": "Severna maglina — lokalni renderer / host-friends"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-host-request",
+      "file": "local-severna-host-request",
+      "title": "Severna maglina — lokalni renderer / host-request"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-host-empty",
+      "file": "local-severna-host-empty",
+      "title": "Severna maglina — lokalni renderer / host-empty"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-host-no-rival",
+      "file": "local-severna-host-no-rival",
+      "title": "Severna maglina — lokalni renderer / host-no-rival"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-host-focus-refresh",
+      "file": "local-severna-host-focus-refresh",
+      "title": "Severna maglina — lokalni renderer / host-focus-refresh"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-guest-wait",
+      "file": "local-severna-guest-wait",
+      "title": "Severna maglina — lokalni renderer / guest-wait"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-guest-found",
+      "file": "local-severna-guest-found",
+      "title": "Severna maglina — lokalni renderer / guest-found"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-notice",
+      "file": "local-severna-notice",
+      "title": "Severna maglina — lokalni renderer / notice"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-toast",
+      "file": "local-severna-toast",
+      "title": "Severna maglina — lokalni renderer / toast"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-invite-host",
+      "file": "dark-invite-host",
+      "title": "dark-invite-host"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-invite-unfocused",
+      "file": "dark-invite-unfocused",
+      "title": "dark-invite-unfocused"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-invite-keyboard",
+      "file": "dark-invite-keyboard",
+      "title": "dark-invite-keyboard"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "neon-selected",
+      "file": "neon-selected",
+      "title": "neon-selected"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "neon-settings",
+      "file": "neon-settings",
+      "title": "neon-settings"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "neon-retry-selected",
+      "file": "neon-retry-selected",
+      "title": "neon-retry-selected"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "amethyst-selected",
+      "file": "amethyst-selected",
+      "title": "amethyst-selected"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "amethyst-settings",
+      "file": "amethyst-settings",
+      "title": "amethyst-settings"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "amethyst-retry-selected",
+      "file": "amethyst-retry-selected",
+      "title": "amethyst-retry-selected"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-restored-main",
+      "file": "dark-restored-main",
+      "title": "dark-restored-main"
+    }
+  ]
+}

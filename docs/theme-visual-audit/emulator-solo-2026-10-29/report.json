@@ -1,0 +1,1635 @@
+{
+  "date": "2026-10-29",
+  "room": "Solo",
+  "scope": "Android 360×780 u svih deset tema: ista sačuvana partija, dva ranija upisa (1 i4), zbir5, iste kockice i3/3, tabla, gornji/donji panel, tematski PNG skin, meni sa tri tačke. Green dodatno inline Nastavi/Nova igra, intro i potvrda izlaska. Nema novih bacanja/upisa.",
+  "deployment": "Prethodne lokalne R22/R23 i nove R24/R25 nisu commitovane/deployovane. Android snimci predstavljaju postojeću objavljenu verziju; lokalni prikazi ispod odvojeno pokazuju nove dorade.",
+  "findings": {
+    "R24": "Stvarni handleGameOver koristio je localResultAccepted izvan if-bloka u kom je let bio deklarisan. ReferenceError je uhvaćen kao greška slanja na Top listu, pa safeSubmitScore nije ni pozvan za lokalni završetak. Deklaracija je podignuta u zajednički opseg. Test stvarnog toka Solo/Hotseat potvrđuje jedan poziv za rezultat vlasnika naloga i ispravan serverVerified za accepted/rejected/pending odgovor, bez stvarnog servera. Izmena ne tvrdi da je stvarna isplata već proverena.",
+    "R25": "Solo naslov, padding/gap i kratki statistički blokovi sada imaju iste Green mere/fontove, tracking i margine. Dugme preuzimanja ostaje55px i oblina999px u svim temama. PNG oznake rezultata42px i preuzimanja29px prate Green i na kratkim ekranima (ranije28/20px u ostalim temama). Potvrda izlaska dobija Solo kontekst sa istom Green tipografijom i tematskim kontrastom. Green preuzimanje koristi postojeće tamnije tonove: paletni par najmanje5,98:1 umesto3,06:1 na svetlom kraju prethodnog gradijenta. Tabla i funkcije dugmadi nisu promenjene. ModalManager automatski daje Solo kontekst obaveštenjima aktivnog Solo završetka (npr. nagradne/oglasne greške). Skriven Solo i Hotseat/online ekran ne menjaju kontekst drugih soba, što proverava CI test. managers.js?v=6.34. Uklonjene nasleđene tekstualne senke devet tema; PNG volumen/senke i palete ostaju.",
+    "versions": "game.js?v=6.33, theme-finish-compact.css?v=3; nema novih PNG fajlova. managers.js?v=6.34."
+  },
+  "notifications": "ModalManager automatski daje Solo kontekst obaveštenjima aktivnog Solo završetka (npr. nagradne/oglasne greške). Skriven Solo i Hotseat/online ekran ne menjaju kontekst drugih soba, što proverava CI test. managers.js?v=6.34. Uklonjene nasleđene tekstualne senke devet tema; PNG volumen/senke i palete ostaju.",
+  "inventory": "12 osnovnih Solo PNG uloga po temi /120putanja nakon quality resolvera: meni, intro, oznaka rezultata, preuzimanje, panel, četiri rekorda, video, Indeks moći i dukat. Nisu120novih identiteta: meni/intro su izvedenice istog identiteta, a video/dukat/Indeks moći ponovo koriste kanonske porodice. PNG skinovi, akcijska dugmad, brojač, gornje kontrole i pozadina su dodatni deljeni resursi i nisu izostavljene per-theme uloge.",
+  "validation": {
+    "runtime": "PASS400:10tema ×(9završnih stanja + potvrda izlaska) ×320×568/360×640/360×780/412×915. Stvarni handleGameOver/createScoreTables, ModalManager i PNG kontroleri; simulirani odgovori queue/score servisa. Jednake Green mere/fontovi/padding/margine/gap; bez skrola ili izlaska iz safe zone; učitani vidljivi PNG i ispravne oznake postignutih rekorda.",
+    "labels": "Iz snimljenog stvarnog DOM-a potvrđeni iznosi preuzmi/dupliraj:650/1300,1375/2750,2100/4200,2925/5850,4290/8000,4950/8000,8000/8000. Na granici nema dugmeta bez dodatne nagrade. Pending i nula takođe pregledani.",
+    "node": "PASS nove CI regresije lokalnog slanja; check:theme-solo-results, check:match-results, check:online-duel-finish, check:ad-reward-flow i check:js.",
+    "limits": "Sintetički servisni odgovori nisu prava reklama, slanje rezultata ili isplata. Animacije/transitions isključene radi stabilnog poređenja; Montserrat offline fallback moguć. Četiri viewporta su lokalni Chromium dokaz, ne četiri stvarna Android uređaja."
+  },
+  "exceptions": [
+    "Oznaka najjače kolone kopira stvarnu boju, font i PNG/glyph iz sopstvene table. Neon/Easter megafon PNG ima drugačiju unutrašnju širinu od Green tekstualnog znaka; spoljašnja statistička kartica je iste veličine. Test zasebno proverava podudaranje sa tablom, ne menja odobrene oznake kolona.",
+    "Univerzalni/tematski skin koristi se na svim temama po vlasništvu; pri promeni teme postojeći auto gift mehanizam menja povezani tematski skin. Nije izvršen ručni izbor/kupovina skina.",
+    "Šest rezultatskih nivoa, posebne kombinacije rekorda i pending/nula/limit su provereni u lokalnom rendereru. Potpuni obračun svih devet validnih kombinacija pokriva postojeći Node test, ne nova Android partija."
+  ],
+  "switching": "Svih devet promena kroz meni igre i vraćanje na Zelenu uspeli su iz prvog pokušaja, pri istom zbiru5 i istim kockicama. Stabilni kadrovi su kompletni; nije mereno trenutno hladno učitavanje, mreža ili fps.",
+  "safety": "Korišćeno Nastavi, bez Nova igra, bacanja, zaustavljanja/upisa, završavanja partije, reklame/nagrade, kupovine ili poziva/poruke. Izlaz lokalnog moda čuva partiju (postojeći showMainMenu/autoSave), potvrda jednom otkazana radi pregleda i potom prihvaćena radi povratka u meni. Nema pristupa auth podacima ili injekcije u emulator.",
+  "restoration": "Zelena vraćena, originalnih1440×3120/560dpi potvrđeno, prijava ostala otvorena. Nove izmene nisu commitovane ili deployovane.",
+  "limits": [
+    "Završni ekran i isplata nisu sada izazvani na Android nalogu. Postojeća partija nije dovršena; novi kod treba potvrditi posle deploya.",
+    "Intro na Androidu novim kadrom obuhvaćen samo u Green pri Nastavi; zajednička konfiguracija2400/3200ms i putanje za svih10tema proverene statički.",
+    "Nije nova provera svih mogućih skinova, najave/otkazivanja, gubitka mreže ili oglasa uživo; postojeće funkcionalne regresije prolaze.",
+    "Fizički S25 i precizni fps/hladni transfer nisu pregledani. Preostaju Hotseat, Online random i Pozovi prijatelja, kao i ranije otvoreni retki tokovi."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "71ea4a39070b18d03403818a26689add95223ccbd952736282ddaf4031bd4ee5",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "d697e38721762c01fcf90a13475ff67dc7413b677765c70865ff3453e589ceb4",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png",
+          "sha256": "722f391eb7d85e41b537212d81d680f1f2fc152dbe42fe5e45bba2f8960d33ce",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "f7102115b111f605f9bf38d25ff7a0d5aedd9bb812814fee79e1771eeb5ef09e",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/green-soft-clay/canonical/solo-results/record-panel-v2.png",
+          "sha256": "ddf0636979846cc27018aad31eb9291793dd0bf0722765654711cba5a569b8b9",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "b99de127ec3ff3b751673c741f548c796670dce6e73f10385eee6c973f31338c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/monthly-quality-v2.png",
+          "sha256": "9db54d9fe5ffeb192202dfccfe3c4bfb7d1ff3b1d8ff27dafb073492e52566c8",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "a29ed3cb8883f893ccd19b557ca4e71f96357104463b5e783729e7e83b72dd77",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/green-soft-clay/canonical/solo-record-icons/personal-quality-v2.png",
+          "sha256": "c9e652a1a05e9afc90f789ecf0f4bb0c7c820183ca660eae9545bb5a05c49135",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "d1988cf91e07f1b94ee0036d2f1dba6bf7f37899015cf8852b5d9651e4de901e",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "7c2a30a774a62a81874807be9d73c84752a47fb765f13db268f5f48977a4a5fa",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "dark-board.jpg",
+        "dark-quick-menu.jpg",
+        "local-dark-rough-none.jpg",
+        "local-dark-masterful-all.jpg",
+        "local-dark-pending.jpg",
+        "local-dark-zero.jpg",
+        "local-dark-capped.jpg",
+        "local-dark-exit.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/light/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "1e748768d6f2dcb8b7eb0a1bd560583a46fdf7667e1ba25bbb94f6205b11cf7b",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/light/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "47066fd109b67ba432f41edb7c4c9fa8f4dedfa7098a6f134027cb207bf3dda0",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/light/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "8f1d207ae29b375339067196fd9b5d893559990ceb9e0ced652d2b29c86a6cb1",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/light/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "b5b03d22328d197c7d742846a47e1e654b0d15456442def45d5206e499405495",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/light/canonical/solo-results/record-panel-v2.png",
+          "sha256": "db1310a8208ac73a36253152f284c141fb671cc5c5596f71f46045d67a1a965e",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "9b20f0043dd02561c9239fc80dc044564ca57dd705f42b71dbb1f591acec2a7d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "76045f062d60a66f685d5fae5a97f3fe129ace8ccf62ac9edf7e072cc410063f",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/all_time-v1.png",
+          "sha256": "ed38d9b3fa23d93b338be74bb6e51095561df127570760f180051d73afc5f887",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/light/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "b6a475033e2770d61b02013879760a785e6c4a3cf99cd685fc05f6fd21cb3e4d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "fbdcb9fd27250eab0e7505e64f5caeb513b0d326456e92385f6e66be5e36444d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "a84c498bac4f203c0460e384ae4cee3dec19c5b1d8c189e8b07c2e9477e9c5ed",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/light/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "50f66226d0a567aa64e039f46264cead76ffee8364aa09756f9a21715342339c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "light-board.jpg",
+        "light-quick-menu.jpg",
+        "local-light-rough-none.jpg",
+        "local-light-masterful-all.jpg",
+        "local-light-pending.jpg",
+        "local-light-zero.jpg",
+        "local-light-capped.jpg",
+        "local-light-exit.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/medium/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "6fdaf9d63c4d903729bd7278d662dd8ae05bbf33eb91303c3c034b7e18c17202",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/medium/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "6a1fecb3822a6c39f73f86d49a4827761e548efcf532cd13f7fcaa172c096660",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/medium/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "e843a425de6e193abb6bdf8b6d71cf25963171f0fefc0cce8b3c908150e3fcd4",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/medium/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "e71fd9ec84bb508f47036e746c0d543d46d9a86b330031c0805cf78fbe60ddb1",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/medium/canonical/solo-results/record-panel-v2.png",
+          "sha256": "4b7c2db9e1712037ae5494aa344ac06e776cbbb36582d71050859bb0bba3f9a6",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "63319c6f25cf2393d506b339e7810b872075def5d191ebfc7f0dacd9392dc9bb",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/monthly-quality-v2.png",
+          "sha256": "ba3a486e14a8526f0924107ca13e7825269ed9e4913431e25935c21b11dbfbcf",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "ffec9cae54ce0b33eac9db012cf88c7615851811f3364961b0bdc2275bc4f05d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/medium/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "d86bb374e69b525f7dccba18471e635f70bd2c86da74079e7285dc19ad450caa",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "1f79b032b192d86e97f39715ecbccea9618466fab7e24e01e4293e1f191ddc08",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "88708adafc84717bbb30c8e3c88477b50b772596162cbd383f8056469b0387c3",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/medium/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "4bdd57d237c89416d7c96e57f12dfc7e08b442348ffc31c7c1a2ef60822e4626",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "medium-board.jpg",
+        "medium-quick-menu.jpg",
+        "local-medium-rough-none.jpg",
+        "local-medium-masterful-all.jpg",
+        "local-medium-pending.jpg",
+        "local-medium-zero.jpg",
+        "local-medium-capped.jpg",
+        "local-medium-exit.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/winter/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "6a4c6578bf7caf4df4784b0f7563e829106e978705f23a9c8e2b595f01db82f5",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/winter/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "f2b983d2211ae3e7320ebb2f5d1dda5532d78be1ac0efb2efbb9f0325485e7af",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/winter/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "0906d2c6710a7ce4d2186f07ab85afac319764a2057dc6189716ed9dfd2d2726",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/winter/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "0b42dae22f7b50daf601108915ba2d72da2d6361c45c9811a96cb46d9f17d240",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/winter/canonical/solo-results/record-panel-v2.png",
+          "sha256": "6fe95234579f7cb79365a27a3e5d3d2226eac1f4f3e891ba82637818ea873be1",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "e6a8adafe4883828d734519a2f52ea87bcc1884deda33814bfe7ef9e18be7bd7",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "4ef8c8763305944c1606a716bdc6cee9de70463ec60632e0badd2c071007ec9d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "0c3c9af9fd32905a8bcf6e7c29fbe5a649167cd513755af08e496c07c8fa8a7d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/winter/canonical/solo-record-icons/personal-quality-v2.png",
+          "sha256": "ac94e5f569c56bac4bf70597af844599bae1d3a8b05f80ff5916f0ffc5f6d134",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "b39e0599b6c1eaf9cf852bb625d9c70811521d7f84df7d5de3702dcdf2de94b8",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "6d072396680b7c60d7898a4047970364b09f5ebd71cbcb455e1cb79058ee2e40",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/winter/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "1d379e427dca632c8a9fe5b197cc791eebd2660ce058c76e5b5bf6f8fd87de4c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "winter-board.jpg",
+        "winter-quick-menu.jpg",
+        "local-winter-rough-none.jpg",
+        "local-winter-masterful-all.jpg",
+        "local-winter-pending.jpg",
+        "local-winter-zero.jpg",
+        "local-winter-capped.jpg",
+        "local-winter-exit.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "7366cdfb1b6efbf2be00dee0c8bcfecc689a5dd3df3358ce23d4b77fb232d864",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/neon/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "1373afbfb273547aa989bd27abbce45fb9b428857177ed38992b582d613390a4",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/neon/canonical/solo-results/finish-score-mark-v1.png",
+          "sha256": "9f0d64502c589b9e9e214f64ffbbcaa6f9b6cfeb9f64dfe94088ce3126e09a44",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/neon/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "9c6a2874d8062175be3d11f883f1e00b95943be1d2b128e70ce33e0083938e7f",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/neon/canonical/solo-results/record-panel-v2.png",
+          "sha256": "eed6ae8406cbbe41830140bfa820bb6f8f05d0fc0df3137f07fda1ceb46a508c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "decd21a1662e4d779bef05258ad38c281df642d7d8f2369dbf6ada2d61bb3621",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "1ae57d03004f9da68e40812438e385802a34d5013dcd6502431f0e910924be02",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/all_time-v1.png",
+          "sha256": "3776c37ef4dad9b48fbf8724dea3cd4e57faf27b30a4ab47342d73c123d52a8b",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/neon/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "30dd89e813b029c16553a9a75aedfe3b9b3d04fd3e298640d1c1cb978c2bc7eb",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "87beb97b224ae81fcc4cb15fa51b91e7c2bff9caccbebee2593310c56296ce0e",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "bfcd2360ab1d565e14f5c96aa4c85e6a841ad5c83c4c993070244f1acf70d2be",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/neon/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "78ddc8559baa80afa809f37beb4d4fe6e1c04083bf5e9d2d567e41566c9f866f",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "neon-board.jpg",
+        "neon-quick-menu.jpg",
+        "local-neon-rough-none.jpg",
+        "local-neon-masterful-all.jpg",
+        "local-neon-pending.jpg",
+        "local-neon-zero.jpg",
+        "local-neon-capped.jpg",
+        "local-neon-exit.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "81469b39c075bed6b0509f08cc001d0c992d058f95bee9569719acc7fced719e",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "c6adef38b3ea5b303d0507a26b0fc1973f0cda0d4d4add69ad84e64f698c190d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "c131da212c16c0f8400372b4eb2816c532ab479836df4a46398cccac6592ffe0",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "8f8113bc9ffafa1ae0b3f311d99fbf319ec7b564c313ad3108dae3770408c23c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-results/record-panel-v2.png",
+          "sha256": "35e274cc7710ae6d58f8063a437be349d34223ac5415ad17efa1fdaa14f5a05c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "a7dd53f577c9bb23d86b96184e81e048910765d3cc4a8afd3368c9b256b4be92",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/monthly-quality-v2.png",
+          "sha256": "0749a54c2e3cd77849ac4cfb93db79959e7e55c5f6b3f59222af95c192c59f68",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "7c2ed4e5db6920f6f1785187723f0479032e46d6e881bba016e230e3298abe83",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/amethyst/canonical/solo-record-icons/personal-quality-v2.png",
+          "sha256": "1bd5af20ad9347d0fd31567502718d5c1dfd92ffcf4af6932499f07de709ac45",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "4ec64d85040f36ac47d33e8c5ed360c5f328c70d1839a52943dc828ee23be386",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "e753a823f7b6225a2839745c94b9746feb350c2a95317e6ca72fa0d7aef1aff8",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/amethyst/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "5e57b7df27af7b4b06d73e7564c20ec3b3b78907b80d2cf8e5883814dc447b7c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "amethyst-board.jpg",
+        "amethyst-quick-menu.jpg",
+        "local-amethyst-rough-none.jpg",
+        "local-amethyst-masterful-all.jpg",
+        "local-amethyst-pending.jpg",
+        "local-amethyst-zero.jpg",
+        "local-amethyst-capped.jpg",
+        "local-amethyst-exit.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "7f3381ff22ce5ea77212e4dbcf4720cfd367c6ba5b0ef444a77cb44dd2170ddd",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/easter/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "4c5da48c6a54f0131c4907dde11f3162dccaca90b7cd03705dea37d17ef83908",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/easter/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "d16c76896e102b85c1eeb84ae6338c72071685289116232b2a3bf78c3b11c554",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/easter/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "71308eaa8d6155f5c1604f8c3c829015ec97d31aeb47b23d6c91f25b649e0569",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/easter/canonical/solo-results/record-panel-v2.png",
+          "sha256": "a4a356891c0a8820c2307cb1aeff9ba51b8cdc041de095ff87044f57ccba70c6",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "2286fbb25e513faf55e9dff7b53162dc9f327d8ceee1a6470a597261b10a6ed7",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "301acb14fdbf8b3815adf8e829a372977f96957f8dc92efdd823814be9091224",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "84d8cbdd80da4bf4ec303bce260d8c4f2a46ff3f061cf08ada8d19b292b9a035",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/easter/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "4eeba9578e4969dfe570f36c7924594c499b2c8e763c8ec69ccff00591a821d6",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "sha256": "710a3e7c40413889413a83d65ced482da1a5acf75aa412c5927bcdb2d46f82f2",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "11d3aa85dce02e8fb6b0a1d6f2c68ef49ed1d4febd388dd6e9b34fa43e33413f",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/easter/canonical/ducat/ducat-inline-v2.png",
+          "sha256": "089974282f5f855ac508bc1f1b0b7aff41f5d37629aed63199cb32b8a64c91cc",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "easter-board.jpg",
+        "easter-quick-menu.jpg",
+        "local-easter-rough-none.jpg",
+        "local-easter-masterful-all.jpg",
+        "local-easter-pending.jpg",
+        "local-easter-zero.jpg",
+        "local-easter-capped.jpg",
+        "local-easter-exit.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/desert/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "9c5848908332c75106133fd36d84561d4628abca5eaf2ac190c25ebd2bb985bb",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/desert/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "651141ddb8bafacb16bfa4984f39b9217b6b8cf080d810947e5982f5e2f89d0c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/desert/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "722faa93b0a78a4c532780174d9a27b667031976ab716186ae7798b888e87456",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/desert/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "0ab8f1e672cac6a2c1c3f508c24fa76f4783b1299a6ad4b83aa0495c6f7c3652",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/desert/canonical/solo-results/record-panel-v2.png",
+          "sha256": "498e1bf05c3ce76795d3df844562caf4294a4ddfc5eabd1685e3f841834f2c20",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "cc9b791cb956c8b3194a8ce49082f96d52bdcdea0edabe9d46f63b33ff172838",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "208723b8b5553ead838a4c0451f5d3cb0d0209364bf05cb79d2fc31bec2f8da9",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "2f67738b55e97a0f8efc850451a6b6816f83045874d6d18892a64ce045104e9b",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/desert/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "4c5c8fdf5b919373a78b0af62023c33a77fb91aed071d1c4f7500084c868bcae",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "sha256": "c8ee20f13dff19a7b1289a1fcafcf2e288054e2062dc672bab8ce32ae0181c5a",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "132bb6e49d4849f4e0df4508a1f85932abca0c9b889a421cc28a19ee774b84bd",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/desert/canonical/ducat/ducat-inline-v2.png",
+          "sha256": "c4bc1d4d63f4fa5438ec7bba5f4801ab58224d588a7674d348cb06707ac8f713",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "desert-board.jpg",
+        "desert-quick-menu.jpg",
+        "local-desert-rough-none.jpg",
+        "local-desert-masterful-all.jpg",
+        "local-desert-pending.jpg",
+        "local-desert-zero.jpg",
+        "local-desert-capped.jpg",
+        "local-desert-exit.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/moon/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "b5fcdb8ab529832c28e0201285935a3dc9786254d849650d5368b7ebfeb7a386",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/moon/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "e3b31e72bf9945a59d60ec8ad8fba5dd7ad585aec2cfec4e6589f0b7dbc49b3d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/moon/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "a7dbde83fd8ce7a434246ff6b1472e82fe2ffd72ce2b608c0681e2b8c40ee1a1",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "6479d6dfd7d39c19b4be5e912d3b5f622fe989dfe51bc9eb03f66cbcce13538a",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/moon/canonical/solo-results/record-panel-v2.png",
+          "sha256": "72184fa541887491b06ccc49d8222b3da4261fb1dc6a240d15aec9008df5a67e",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/weekly-quality-v2.png",
+          "sha256": "eff198aeab1ceb4267ecf935bdd4879230b014a286d386a11349624276ce1e40",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "038854ba22160c339222caf20110b6fc2b7571e2543b351098c5592b44bb1578",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "05d3a4ecb455a4da53ab215f6fefa7555e4611cc14c4467e39d28936d2c39a4c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "25445a9824412f510ce6b3726783671768dd933effb550bde345f0a4f3459615",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "sha256": "1af5a9ea6a0c42e2b5539e4cb442cbbecca5cc0804809fb730215a43cc07c660",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "7bc305f573ab38cad1ed64d2cf92c07a864107c5cb2a289c80fe61942fe65aad",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "sha256": "6d32ceafc30cfe53e60945d5b6c286ff7301df5b500f97db78febff9533a736c",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "moon-board.jpg",
+        "moon-quick-menu.jpg",
+        "local-moon-rough-none.jpg",
+        "local-moon-masterful-all.jpg",
+        "local-moon-pending.jpg",
+        "local-moon-zero.jpg",
+        "local-moon-capped.jpg",
+        "local-moon-exit.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "status": "Aktivna sačuvana partija i quick-menu pregledani na Androidu; nove dorade i završni tok imaju lokalni dokaz i čekaju deploy.",
+      "assets": [
+        {
+          "role": "room-menu",
+          "file": "www/assets/theme-packs/severna/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "sha256": "2c2a6b2467ca5b25d508d9d9d1e86a05b52005ed3f14416976e658586b9eb662",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "room-intro",
+          "file": "www/assets/theme-packs/severna/canonical/solo-room-identity/solo-room-v1.png",
+          "sha256": "cc85a14000b1e861902ba5e40deca5387045e585faabfefd9e738a6494313af3",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-score-mark",
+          "file": "www/assets/theme-packs/severna/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "sha256": "af24a263569cc0a0b223eafc52c39cc1e06c6d7b651b182ee1a9cac13852f4be",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "finish-claim",
+          "file": "www/assets/theme-packs/severna/canonical/solo-results/finish-claim-v1.png",
+          "sha256": "5edaab395761b565cd370f521a75774903fdb85340543aac6c6738d66329643d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-panel",
+          "file": "www/assets/theme-packs/severna/canonical/solo-results/record-panel-v2.png",
+          "sha256": "0e8dac1a3fb77cfc928003d79ac2e0ff53ef759bb28a8594611e30fa3009bac5",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-weekly",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/weekly-v1.png",
+          "sha256": "3c639febca8e696df5b612217a44bddb923d56577e980cb2437157ebf5a55c89",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-monthly",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/monthly-v1.png",
+          "sha256": "56fbbb94199f69ffadf9192d5333b955091ba40e09623b5b454df54268f09531",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-all_time",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/all_time-quality-v2.png",
+          "sha256": "1e994958732e62f537abf9531adb38f1ac6631a68de81e2c98a59bbdd4a9936d",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "record-personal",
+          "file": "www/assets/theme-packs/severna/canonical/solo-record-icons/personal-v1.png",
+          "sha256": "5e64464bae14d49b834152c65b5c20408286afceb674a74d6d31da02d6dcaa22",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "reward-video",
+          "file": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+          "sha256": "8d1ed86fac7c58d318e0e03ba86932c4c7abbe6cf2ed9a1039187095018fa1c5",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "power-index",
+          "file": "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+          "sha256": "f6ae9223fbe49cbcb7b78c048ccad4dd42383eb7b9fd59db0fb3f281aff06d33",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        },
+        {
+          "role": "ducat",
+          "file": "www/assets/theme-packs/severna/canonical/ducat/ducat-inline-v2.png",
+          "sha256": "251c9d532b76935c64db49565a091da8bfe04a1902c7dd1ae615913cc959a489",
+          "status": "prihvatljiv",
+          "reason": "Postojeći kanonski PNG/odobrena izvedenica. U pregledanim renderima nije potrebna nova PNG dorada. Meni/intro su isti identitet u dve uloge; tematski skin i zajednički kontrolni PNG vode se odvojeno."
+        }
+      ],
+      "evidence": [
+        "severna-board.jpg",
+        "severna-quick-menu.jpg",
+        "local-severna-rough-none.jpg",
+        "local-severna-masterful-all.jpg",
+        "local-severna-pending.jpg",
+        "local-severna-zero.jpg",
+        "local-severna-capped.jpg",
+        "local-severna-exit.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "theme": "dark",
+      "kind": "android",
+      "source": "dark-solo-board",
+      "file": "dark-board",
+      "title": "Zelena — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "dark",
+      "kind": "android",
+      "source": "dark-quick-menu",
+      "file": "dark-quick-menu",
+      "title": "Zelena — Android meni sa tri tačke"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-rough-none",
+      "file": "local-dark-rough-none",
+      "title": "Zelena — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-masterful-all",
+      "file": "local-dark-masterful-all",
+      "title": "Zelena — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-pending",
+      "file": "local-dark-pending",
+      "title": "Zelena — lokalni renderer / pending"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-zero",
+      "file": "local-dark-zero",
+      "title": "Zelena — lokalni renderer / zero"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-capped",
+      "file": "local-dark-capped",
+      "title": "Zelena — lokalni renderer / capped"
+    },
+    {
+      "theme": "dark",
+      "kind": "local",
+      "source": "dark-exit",
+      "file": "local-dark-exit",
+      "title": "Zelena — lokalni renderer / exit"
+    },
+    {
+      "theme": "light",
+      "kind": "android",
+      "source": "light-theme-transition",
+      "file": "light-board",
+      "title": "Svetlo zlato — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "light",
+      "kind": "android",
+      "source": "light-solo-quick-menu",
+      "file": "light-quick-menu",
+      "title": "Svetlo zlato — Android meni sa tri tačke"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-rough-none",
+      "file": "local-light-rough-none",
+      "title": "Svetlo zlato — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-masterful-all",
+      "file": "local-light-masterful-all",
+      "title": "Svetlo zlato — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-pending",
+      "file": "local-light-pending",
+      "title": "Svetlo zlato — lokalni renderer / pending"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-zero",
+      "file": "local-light-zero",
+      "title": "Svetlo zlato — lokalni renderer / zero"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-capped",
+      "file": "local-light-capped",
+      "title": "Svetlo zlato — lokalni renderer / capped"
+    },
+    {
+      "theme": "light",
+      "kind": "local",
+      "source": "light-exit",
+      "file": "local-light-exit",
+      "title": "Svetlo zlato — lokalni renderer / exit"
+    },
+    {
+      "theme": "medium",
+      "kind": "android",
+      "source": "medium-solo-board",
+      "file": "medium-board",
+      "title": "Trula višnja — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "medium",
+      "kind": "android",
+      "source": "medium-solo-quick-menu",
+      "file": "medium-quick-menu",
+      "title": "Trula višnja — Android meni sa tri tačke"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-rough-none",
+      "file": "local-medium-rough-none",
+      "title": "Trula višnja — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-masterful-all",
+      "file": "local-medium-masterful-all",
+      "title": "Trula višnja — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-pending",
+      "file": "local-medium-pending",
+      "title": "Trula višnja — lokalni renderer / pending"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-zero",
+      "file": "local-medium-zero",
+      "title": "Trula višnja — lokalni renderer / zero"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-capped",
+      "file": "local-medium-capped",
+      "title": "Trula višnja — lokalni renderer / capped"
+    },
+    {
+      "theme": "medium",
+      "kind": "local",
+      "source": "medium-exit",
+      "file": "local-medium-exit",
+      "title": "Trula višnja — lokalni renderer / exit"
+    },
+    {
+      "theme": "winter",
+      "kind": "android",
+      "source": "winter-solo-board",
+      "file": "winter-board",
+      "title": "Plavi okean — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "winter",
+      "kind": "android",
+      "source": "winter-solo-quick-menu",
+      "file": "winter-quick-menu",
+      "title": "Plavi okean — Android meni sa tri tačke"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-rough-none",
+      "file": "local-winter-rough-none",
+      "title": "Plavi okean — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-masterful-all",
+      "file": "local-winter-masterful-all",
+      "title": "Plavi okean — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-pending",
+      "file": "local-winter-pending",
+      "title": "Plavi okean — lokalni renderer / pending"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-zero",
+      "file": "local-winter-zero",
+      "title": "Plavi okean — lokalni renderer / zero"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-capped",
+      "file": "local-winter-capped",
+      "title": "Plavi okean — lokalni renderer / capped"
+    },
+    {
+      "theme": "winter",
+      "kind": "local",
+      "source": "winter-exit",
+      "file": "local-winter-exit",
+      "title": "Plavi okean — lokalni renderer / exit"
+    },
+    {
+      "theme": "neon",
+      "kind": "android",
+      "source": "neon-solo-board",
+      "file": "neon-board",
+      "title": "Neon Cyber — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "neon",
+      "kind": "android",
+      "source": "neon-solo-quick-menu",
+      "file": "neon-quick-menu",
+      "title": "Neon Cyber — Android meni sa tri tačke"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-rough-none",
+      "file": "local-neon-rough-none",
+      "title": "Neon Cyber — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-masterful-all",
+      "file": "local-neon-masterful-all",
+      "title": "Neon Cyber — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-pending",
+      "file": "local-neon-pending",
+      "title": "Neon Cyber — lokalni renderer / pending"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-zero",
+      "file": "local-neon-zero",
+      "title": "Neon Cyber — lokalni renderer / zero"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-capped",
+      "file": "local-neon-capped",
+      "title": "Neon Cyber — lokalni renderer / capped"
+    },
+    {
+      "theme": "neon",
+      "kind": "local",
+      "source": "neon-exit",
+      "file": "local-neon-exit",
+      "title": "Neon Cyber — lokalni renderer / exit"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "android",
+      "source": "amethyst-solo-board",
+      "file": "amethyst-board",
+      "title": "Kraljevski ametist — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "android",
+      "source": "amethyst-solo-quick-menu",
+      "file": "amethyst-quick-menu",
+      "title": "Kraljevski ametist — Android meni sa tri tačke"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-rough-none",
+      "file": "local-amethyst-rough-none",
+      "title": "Kraljevski ametist — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-masterful-all",
+      "file": "local-amethyst-masterful-all",
+      "title": "Kraljevski ametist — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-pending",
+      "file": "local-amethyst-pending",
+      "title": "Kraljevski ametist — lokalni renderer / pending"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-zero",
+      "file": "local-amethyst-zero",
+      "title": "Kraljevski ametist — lokalni renderer / zero"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-capped",
+      "file": "local-amethyst-capped",
+      "title": "Kraljevski ametist — lokalni renderer / capped"
+    },
+    {
+      "theme": "amethyst",
+      "kind": "local",
+      "source": "amethyst-exit",
+      "file": "local-amethyst-exit",
+      "title": "Kraljevski ametist — lokalni renderer / exit"
+    },
+    {
+      "theme": "easter",
+      "kind": "android",
+      "source": "easter-solo-board",
+      "file": "easter-board",
+      "title": "Vaskršnja — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "easter",
+      "kind": "android",
+      "source": "easter-solo-quick-menu",
+      "file": "easter-quick-menu",
+      "title": "Vaskršnja — Android meni sa tri tačke"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-rough-none",
+      "file": "local-easter-rough-none",
+      "title": "Vaskršnja — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-masterful-all",
+      "file": "local-easter-masterful-all",
+      "title": "Vaskršnja — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-pending",
+      "file": "local-easter-pending",
+      "title": "Vaskršnja — lokalni renderer / pending"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-zero",
+      "file": "local-easter-zero",
+      "title": "Vaskršnja — lokalni renderer / zero"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-capped",
+      "file": "local-easter-capped",
+      "title": "Vaskršnja — lokalni renderer / capped"
+    },
+    {
+      "theme": "easter",
+      "kind": "local",
+      "source": "easter-exit",
+      "file": "local-easter-exit",
+      "title": "Vaskršnja — lokalni renderer / exit"
+    },
+    {
+      "theme": "desert",
+      "kind": "android",
+      "source": "desert-solo-board",
+      "file": "desert-board",
+      "title": "Pustinjsko staklo — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "desert",
+      "kind": "android",
+      "source": "desert-solo-quick-menu",
+      "file": "desert-quick-menu",
+      "title": "Pustinjsko staklo — Android meni sa tri tačke"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-rough-none",
+      "file": "local-desert-rough-none",
+      "title": "Pustinjsko staklo — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-masterful-all",
+      "file": "local-desert-masterful-all",
+      "title": "Pustinjsko staklo — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-pending",
+      "file": "local-desert-pending",
+      "title": "Pustinjsko staklo — lokalni renderer / pending"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-zero",
+      "file": "local-desert-zero",
+      "title": "Pustinjsko staklo — lokalni renderer / zero"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-capped",
+      "file": "local-desert-capped",
+      "title": "Pustinjsko staklo — lokalni renderer / capped"
+    },
+    {
+      "theme": "desert",
+      "kind": "local",
+      "source": "desert-exit",
+      "file": "local-desert-exit",
+      "title": "Pustinjsko staklo — lokalni renderer / exit"
+    },
+    {
+      "theme": "moon",
+      "kind": "android",
+      "source": "moon-solo-board",
+      "file": "moon-board",
+      "title": "Mesečev sjaj — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "moon",
+      "kind": "android",
+      "source": "moon-solo-quick-menu",
+      "file": "moon-quick-menu",
+      "title": "Mesečev sjaj — Android meni sa tri tačke"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-rough-none",
+      "file": "local-moon-rough-none",
+      "title": "Mesečev sjaj — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-masterful-all",
+      "file": "local-moon-masterful-all",
+      "title": "Mesečev sjaj — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-pending",
+      "file": "local-moon-pending",
+      "title": "Mesečev sjaj — lokalni renderer / pending"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-zero",
+      "file": "local-moon-zero",
+      "title": "Mesečev sjaj — lokalni renderer / zero"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-capped",
+      "file": "local-moon-capped",
+      "title": "Mesečev sjaj — lokalni renderer / capped"
+    },
+    {
+      "theme": "moon",
+      "kind": "local",
+      "source": "moon-exit",
+      "file": "local-moon-exit",
+      "title": "Mesečev sjaj — lokalni renderer / exit"
+    },
+    {
+      "theme": "severna",
+      "kind": "android",
+      "source": "severna-solo-board",
+      "file": "severna-board",
+      "title": "Severna maglina — Android tabla / sačuvana partija"
+    },
+    {
+      "theme": "severna",
+      "kind": "android",
+      "source": "severna-solo-quick-menu",
+      "file": "severna-quick-menu",
+      "title": "Severna maglina — Android meni sa tri tačke"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-rough-none",
+      "file": "local-severna-rough-none",
+      "title": "Severna maglina — lokalni renderer / rough-none"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-masterful-all",
+      "file": "local-severna-masterful-all",
+      "title": "Severna maglina — lokalni renderer / masterful-all"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-pending",
+      "file": "local-severna-pending",
+      "title": "Severna maglina — lokalni renderer / pending"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-zero",
+      "file": "local-severna-zero",
+      "title": "Severna maglina — lokalni renderer / zero"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-capped",
+      "file": "local-severna-capped",
+      "title": "Severna maglina — lokalni renderer / capped"
+    },
+    {
+      "theme": "severna",
+      "kind": "local",
+      "source": "severna-exit",
+      "file": "local-severna-exit",
+      "title": "Severna maglina — lokalni renderer / exit"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-solo-entry",
+      "file": "dark-solo-entry",
+      "title": "Postojeća sačuvana partija — Nastavi / Nova igra"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-solo-intro",
+      "file": "dark-solo-intro",
+      "title": "Green intro pri nastavku partije"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-solo-exit-prompt",
+      "file": "dark-solo-exit-prompt",
+      "title": "Green potvrda izlaska, objavljena verzija"
+    },
+    {
+      "theme": "extra",
+      "kind": "android",
+      "source": "dark-main-restored-original",
+      "file": "dark-main-restored-original",
+      "title": "Vraćena Zelena i originalne mere"
+    }
+  ]
+}

@@ -1,4 +1,16 @@
 /* Online Random shares Green geometry; each of the other nine themes supplies its own PNG states. */
+/* The room canvas has no card border; its child cards own their themed surfaces. */
+body #waiting-screen#waiting-screen.is-random-online { border: 0 !important; }
+body #waiting-screen#waiting-screen.is-random-online .waiting-hof { border: 0 !important; }
+body #waiting-screen#waiting-screen.is-random-online .waiting-header .global-chat-title-group { flex: 1 1 auto; min-width: 0; }
+body #waiting-screen#waiting-screen.is-random-online .waiting-header #waiting-title {
+    font-weight: 850 !important;
+    line-height: 1.12 !important;
+    letter-spacing: .025em !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+}
+body #waiting-screen#waiting-screen.is-random-online .ws-glass-vs { border-radius: 50% !important; }
 #waiting-screen .online-random-state-icon { display: none; }
 #waiting-screen.is-random-online .online-random-header-icon,
 #waiting-screen.is-random-online .online-random-scan-icon,
@@ -120,7 +132,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     align-items: center;
     justify-content: center;
 }
-#game-scene.random-online-duel-room.opponent-reconnecting .online-random-connection-icon {
+#game-scene.random-online-duel-room .online-random-connection-icon {
     display: block;
     width: 27px;
     height: 27px;
@@ -263,7 +275,14 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 
 /* Keep the weekly podium visible on short portrait phones in every theme. */
+body #waiting-screen#waiting-screen#waiting-screen.is-random-online .waiting-hof { border: 0 !important; }
+body #waiting-screen#waiting-screen#waiting-screen.is-random-online .ws-glass-stats {
+    border-color: var(--online-room-line) !important;
+    box-shadow: var(--online-room-shadow) !important;
+}
+body #waiting-screen#waiting-screen.is-random-online .waiting-hof-loading-state .loader { box-sizing: content-box !important; }
 @media (max-height: 700px) {
+    body #waiting-screen#waiting-screen.is-random-online .waiting-hof-loading-state { min-height: 112px; }
     #waiting-screen#waiting-screen.is-random-online .waiting-header {
         margin-bottom: 6px !important;
     }
@@ -291,4 +310,62 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
         padding-top: 2px;
         padding-bottom: 2px;
     }
+}
+
+/* Reconnection uses the same canonical identity and readable material in every theme. */
+body .custom-toast.opponent-reconnected-toast {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 9px;
+    background: var(--green-clay-surface-soft) !important;
+    color: var(--green-clay-ink-strong) !important;
+    border: 1px solid var(--green-clay-line) !important;
+    box-shadow: var(--green-clay-raised-small) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .custom-toast.opponent-reconnected-toast {
+    background: var(--theme-card-fill) !important;
+    color: var(--theme-card-ink) !important;
+    border-color: var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+}
+body .opponent-reconnected-toast :is(.toast-title,.toast-msg) { color: inherit !important; text-shadow: none !important; }
+body #custom-notification-container .opponent-reconnected-toast {
+    padding: 12px 15px !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: var(--theme-card-line, var(--green-clay-line)) !important;
+    background: var(--theme-card-fill, var(--green-clay-surface-soft)) !important;
+    color: var(--theme-card-ink, var(--green-clay-ink-strong)) !important;
+    box-shadow: var(--theme-card-shadow, var(--green-clay-raised-small)) !important;
+    grid-template-columns: 42px minmax(0, 1fr) !important;
+    gap: 9px !important;
+}
+body #custom-notification-container .opponent-reconnected-toast .toast-title { font: 700 .9rem/1.2 Montserrat,sans-serif !important; margin: 0 0 5px !important; color: inherit !important; text-shadow: none !important; }
+body #custom-notification-container .opponent-reconnected-toast .toast-msg { font: 400 .85rem/1.3 Montserrat,sans-serif !important; color: inherit !important; text-shadow: none !important; }
+
+/* Apply Green's existing two-board pager to every online theme without flex compression. */
+body #game-scene#game-scene.online-duel-room.theme-dual-board-view .tables-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+    scroll-padding-block: 4px;
+}
+body #game-scene#game-scene.online-duel-room.theme-dual-board-view .player-table {
+    flex: 0 0 auto !important;
+    min-height: max-content;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
 }

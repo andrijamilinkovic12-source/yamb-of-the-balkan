@@ -1,5 +1,21 @@
 # Završna provera — Pozovi prijatelja
 
+## Novi prolaz — 29. oktobar 2026.
+
+[Galerija Android i lokalnih prikaza](theme-visual-audit/invite-friend-2026-10-29/index.html), [80 PNG putanja i precizne granice provere](theme-visual-audit/invite-friend-2026-10-29/report.json).
+
+Osnovna soba domaćina pregledana je na Android emulatoru u svih deset tema: nalog/rival, kartice prijatelja i zahteva, pretraga i izlaz. Originalni ekran1440×3120/560dpi (~411×891CSSpx). Nisu poslati pozivi, zahtevi ili odgovori drugim igračima. Link za deljenje ostaje skriven. Green dodatno ima pregled vodoravnog pomeranja liste i fokusa pretrage; emulator je otvorio plutajući/stylus IME, zato puna tastatura i fizičkiS25 nisu potvrđeni.
+
+**R31 — lokalno popravljeno, čeka deploy:** uklonjen slučajni obrub cele sobe koji je sužavao devet tema; Green raspored profila, razmaci,34px zaglavna ikona, naslov gosta i prazna lista sada su zajednički. Ispravljeni Vaskršnji avatar/statistički razmaci i Vaskršnji/Pustinjski statusni padding. Sve teme prikazuju status prijatelja. Četiri reda statistike ograničena su na svoju podkarticu. Na ekranima visine do649px avatar i ime dele gornji red postojeće138px kartice, pa status i dugme ostaju unutra. Obaveštenja koriste zaseban `invite-friend` modalni kontekst, svoju paletu i Green tipografiju; toast radijus/font isti. DNK, pravac i palete nisu redefinisani, novi PNG nisu potrebni.
+
+**450 novih izolovanih produkcionih prikaza prolazi:** deset tema × devet stanja × pet veličina320×568/360×640/360×780/390×844/430×932. Stvarni host/guest/friends/rival/socket UI handleri, ModalManager, showNotification i glavno PNG rutiranje; sintetički profili i soketi, blokirani svi spoljni zahtevi. Provereni Green fontovi/mere, PNG decode, pretraga kroz refresh, offline/online dugmad, skriven link, bez uspravnog skrola ili prekoračenja48px donje safezone i bez izlaska statistike/statusa/dugmadi iz kartice. Animacije isključene, offline font fallback moguć. Istorijski `file://` testovi ispod nisu ponovo pokretani.
+
+Kanonske provere potvrđuju osam različitih osnovnih PNG uloga po temi (80 putanja). Friend/search su namerno deljeni sa Online igračima; Indeks moći iX imaju svoje kanonske porodice. Fotografije prijatelja i zajednički online završni resursi nisu dodatne sobne uloge. Postojeći paletni parovi devet tema najmanje4,5:1; to nije merenje svih PNG piksela ili gradijenata. Lokalni Socket.IO tokovi, JS, shared online finish i modalni kontekst prolaze bez pravih igrača.
+
+Prvi Neon i Ametist izbor na emulatoru vratili su prethodnu temu; ponovljeni izbori uspeli. Uzrok nije utvrđen i stabilnost prvog hladnog učitavanja ostaje otvorena. Android galerija prikazuje objavljenu verziju preR31; nova lokalna dorada nije commitovana/deployovana. VraćeniGreen/prijava/originalne mere i tastatura0. Pravi poziv/duel na dva uređaja, gost/retka stanja na Androidu i potvrda posle deploya ostaju otvoreni.
+
+## Istorijski lokalni prolaz — 23. oktobar
+
 Datum: 23. oktobar 2026. Obuhvat: Zelena i devet ostalih tema. Zelena je referenca za raspored i dimenzije; svaka tema koristi svoj DNK, pravac i paletu.
 
 | Provera | Nalaz |

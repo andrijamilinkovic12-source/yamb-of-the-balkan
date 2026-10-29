@@ -2887,6 +2887,18 @@ class YambApp {
         return warmup.all;
     }
 
+    syncGameBoardThemeImages(theme) {
+        const selector = theme === 'easter' ? '.easter-announce-col-icon'
+            : theme === 'neon' ? '.neon-announce-col-icon' : null;
+        if (!selector) return;
+        document.querySelectorAll(selector).forEach(icon => {
+            const source = icon.dataset.themeSrc || icon.dataset.neonBoardSrc;
+            if (source && !icon.getAttribute('src')) {
+                icon.src = globalThis.resolveThemeQualityAsset?.(source) || source;
+            }
+        });
+    }
+
     applyTheme(theme, { initialLoad = false, skipThemeDiceDefault = false, manualSwitch = false, loadingDelayMs = 0 } = {}) {
         const validThemes = this.getValidThemeIds();
         const safeTheme = validThemes.includes(theme) ? theme : 'dark';
@@ -2896,11 +2908,7 @@ class YambApp {
 
         document.body.classList.remove(...themeClasses);
         if (safeTheme !== 'dark') document.body.classList.add(`${safeTheme}-theme`);
-        if (safeTheme === 'neon') {
-            document.querySelectorAll('.neon-announce-col-icon').forEach(icon => {
-                if (!icon.getAttribute('src')) icon.src = icon.dataset.neonBoardSrc;
-            });
-        }
+        this.syncGameBoardThemeImages(safeTheme);
         document.querySelectorAll('img[data-treasury-control]').forEach(image => {
             image.src = getThemeTreasuryControlSource(image.dataset.treasuryControl, safeTheme);
         });
@@ -6699,7 +6707,9 @@ class YambApp {
         }
 
         const confirmKey = this.isSpectator ? 'alert_spectate_quit_confirm' : 'alert_quit_confirm';
-        if (await this.modal.confirm(gt(confirmKey))) { 
+        const confirmOptions = !this.onlineMode && !this.isSpectator && [1, 2].includes(this.players.length)
+            ? { contextClass: this.players.length === 1 ? 'solo' : 'hotseat' } : {};
+        if (await this.modal.confirm(gt(confirmKey), confirmOptions)) {
             let backToMenuSent = false;
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
                 // Server jedini obračunava tehnički poraz, H2H, kaznene poene,
@@ -7159,6 +7169,12 @@ class YambApp {
         }
         this.opponentReconnectNoticeVisible = false;
         this.opponentReconnectGraceDeadline = 0;
+        const timerDisplay = document.getElementById('turn-timer-display');
+        if (timerDisplay?.classList.contains('timer-turn--disconnected')) {
+            timerDisplay.classList.remove('timer-turn--disconnected');
+            timerDisplay.replaceChildren();
+            timerDisplay.style.display = 'none';
+        }
         const gameScene = document.getElementById('game-scene');
         if (gameScene) gameScene.classList.remove('opponent-reconnecting');
     }
@@ -7534,7 +7550,7 @@ class YambApp {
                     loserName: data.loserName || data.opponent || 'Protivnik',
                     rewardAmount: winnerReward,
                     penaltyAmount: coinPenalty,
-                    message: data.message || (gt('timeout_technical_win_msg') || 'Protivniku je isteklo vreme. Tehnička pobeda.')
+                    message: gt('timeout_technical_win_msg') || 'Protivniku je isteklo vreme. Tehnička pobeda.'
                 });
             } else {
                 this.soundMgr.loss();
@@ -7567,7 +7583,9 @@ class YambApp {
                     loserName: data.loserName || this.playerName,
                     rewardAmount: winnerReward,
                     penaltyAmount: coinPenalty || penalty,
-                    message: (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak
+                    // The room-wide server message describes the winner's perspective.
+                    // Render the losing player's own localized timeout explanation.
+                    message: (gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak
                 });
             }
         });
@@ -7789,7 +7807,7 @@ class YambApp {
             const canShowWaitingTransition = !data.directDuel && waitingScreen && waitingScreen.classList.contains('active') && searchingUI && foundUI && oppBox;
 
             if (canShowWaitingTransition) {
-                if ((localStorage.getItem('yamb_theme') || 'dark') === 'dark' && waitingScreen.classList.contains('is-random-online')) {
+                if (waitingScreen.classList.contains('is-random-online')) {
                     const titleEl = document.getElementById('waiting-title');
                     if (titleEl) {
                         titleEl.setAttribute('data-lang', 'ws_found_title');
@@ -8574,7 +8592,7 @@ class YambApp {
         else {
             this.modeTag = "Hotseat"; this.players.push(p1Name);
             for(let i=1; i<numPlayers; i++) {
-                let guestName = await this.modal.prompt(`${gt('prompt_player_name')} ${i+1}:`, { cancellable: true });
+                let guestName = await this.modal.prompt(`${gt('prompt_player_name')} ${i+1}:`, { cancellable: true, contextClass: 'hotseat' });
                 if (guestName === null) {
                     this.players = [];
                     this.modeTag = "Solo";
@@ -8811,6 +8829,7 @@ class YambApp {
             tableDiv.appendChild(totalDiv); 
             container.appendChild(tableDiv); 
         }); 
+        this.syncGameBoardThemeImages(localStorage.getItem('yamb_theme') || 'dark');
     }
     
     resetTurnLogic() { 
@@ -8869,7 +8888,8 @@ class YambApp {
             && !document.body.classList.contains('desert-theme')
             && !document.body.classList.contains('severna-theme')
             && this.players.length === 2;
-        const usesTwoPlayerThemePager = isEasterTwoPlayerGame || isSevernaTwoPlayerGame || isGreenTwoPlayerGame || isHotseatTwoPlayerGame;
+        const usesTwoPlayerThemePager = isEasterTwoPlayerGame || isSevernaTwoPlayerGame || isGreenTwoPlayerGame || isHotseatTwoPlayerGame
+            || (this.onlineMode && this.players.length === 2);
         const isThemeOnlineDuel = usesTwoPlayerThemePager && this.onlineMode;
         const isThemeRandomDuel = isThemeOnlineDuel
             && this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
@@ -10101,6 +10121,7 @@ class YambApp {
         const isHeadToHeadFinish = detectedMode === 'Hotseat' || isOnlineDuelFinish;
         let soloRecordAchievements = isSharedFinish && Number(myScoreEntry?.score) <= 0 ? [] : null;
         let soloPowerIndexGain = null;
+        let localResultAccepted = false;
         this.soloRewardPreview = null;
 
         if (this.onlineMode) {
@@ -10179,7 +10200,6 @@ class YambApp {
                  Array.isArray(onlineResult.serverStatsAppliedUids) &&
                  onlineResult.serverStatsAppliedUids.includes(myUid)
              );
-             let localResultAccepted = false;
              if (!this.onlineMode) {
                  const queuedResult = await this.queueCompletedLocalMatchResult({
                      mode: detectedMode,

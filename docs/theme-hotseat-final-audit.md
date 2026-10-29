@@ -19,3 +19,8 @@ Datum: 23. oktobar 2026. Obuhvat: Zelena i devet ostalih tema. Zelena je referen
 Šira istorijska provera `npm run check:theme-performance` trenutno se zaustavlja na ranijoj tvrdnji o kanonskoj vezi ikonice u sobi Pravila, pre Hotseat dela testa. To nije zaključak Hotseat provere; nova ciljana provera pokriva aktivne Hotseat putanje.
 
 Automatizovana provera ne zamenjuje pregled na fizičkom telefonu ni proveru reklamnog servisa uživo.
+
+
+Dopuna29.10.2026: [stvarni Android i520lokalnih slučajeva](theme-visual-audit/emulator-hotseat-2026-10-29/index.html) razdvajaju objavljenu verziju od novih R26/R27. Stvarni produkcioni renderer otkrio je geometrijske/tipografske razlike koje stariji preview test nije obuhvatio; lokalno su ispravljene. Vaskršnji canonical megafon sada dobija src pri promeni teme i kreiranju obe table. Android je pregledan u originalnim1440×3120/560dpi, bez igranja/završavanja; prazna partija Gost_QA ostaje otvorena. Prava reklama/isplata, predaja poteza, intro svih tema i potvrda lokalnih popravki posle deploya ostaju otvoreni.
+
+Nova produkciona provera29.10: kontrast imena, uloga i poena oba igrača najmanje5,20:1 u360završnih prikaza. Razlikuje se od ranijeg preview minimuma7,83:1 jer obuhvata stvarni renderer i dodatni sekundarni tekst.

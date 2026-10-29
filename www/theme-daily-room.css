@@ -237,3 +237,58 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 @media (prefers-reduced-motion: reduce) {
     #glass-daily-overlay .daily-glass-die.rolling { animation: none; }
 }
+
+/* The existing darker Green palette tones keep white labels readable across the fill. */
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #glass-daily-overlay .daily-glass-btn-stop {
+    background: linear-gradient(145deg, #a74731, #713426) !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #glass-daily-overlay .daily-glass-btn-claim {
+    background: linear-gradient(145deg, #476941, #31573a) !important;
+}
+
+/* Daily notices share Green's typography; palette and material stay theme-specific. */
+body #custom-modal-overlay.modal-context-daily .custom-modal {
+    font-family: 'Montserrat', sans-serif;
+}
+body #custom-modal-overlay.modal-context-daily .cm-title {
+    font-size: .98rem !important;
+    font-weight: 800 !important;
+    line-height: 1.22 !important;
+    letter-spacing: 1px !important;
+}
+body #custom-modal-overlay.modal-context-daily .cm-msg,
+body #custom-modal-overlay.modal-context-daily .daily-already,
+body #custom-modal-overlay.modal-context-daily .daily-already span {
+    font-size: .9rem !important;
+    line-height: 1.42 !important;
+}
+body #custom-modal-overlay.modal-context-daily .cm-btn {
+    font-size: .9rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    border-radius: 25px !important;
+    border: 0 !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-daily .custom-modal {
+    color: var(--theme-card-ink) !important;
+    background: var(--theme-card-fill) !important;
+    border: 1px solid var(--theme-card-line) !important;
+    box-shadow: var(--theme-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-daily :is(.cm-title,.cm-msg,.daily-already span) {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #custom-modal-overlay.modal-context-daily .cm-btn-ok {
+    color: var(--theme-card-surface) !important;
+    background: var(--theme-card-primary) !important;
+    box-shadow: var(--theme-subcard-shadow) !important;
+    text-shadow: none !important;
+}

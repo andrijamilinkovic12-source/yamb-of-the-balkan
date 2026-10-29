@@ -118,5 +118,5 @@ assert(hofMethod.includes('waiting-hof-entry') && hofMethod.includes('getThemeMe
 assert(!hofMethod.includes('const colors =') && !hofMethod.includes('color: ${color}'),
     'Top 3 text must not use fixed medal colors');
 assert(!waitingMarkup.includes('🏆 Top 3'), 'Top 3 heading should not duplicate the theme medal');
-assert(html.includes('theme-online-random-room.css?v=3'));
+assert(html.includes('theme-online-random-room.css?v=4'));
 console.log('Online Random: 45 distinct PNGs, Green geometry, ten material palettes and text contrast OK.');

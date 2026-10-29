@@ -663,7 +663,7 @@ class DnevniIzazov {
             const message = challenge?.reason === 'auth_required'
                 ? (t('auth_required') || t('economy_auth_required'))
                 : (t('err_server_conn') || t('dc_ads_unavailable'));
-            this.app.modal.alert(message, t('info_title'));
+            this.app.modal.alert(message, t('info_title'), { contextClass: 'daily' });
             return;
         }
 
@@ -768,7 +768,7 @@ class DnevniIzazov {
     showAlreadyPlayedInfo() {
         const message = `<div class="daily-already"><img class="daily-already-icon" src="${this.getDailyAsset('already-played')}" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`;
         const alertPromise = this.app?.modal?.alert
-            ? this.app.modal.alert(message, t('info_title'))
+            ? this.app.modal.alert(message, t('info_title'), { contextClass: 'daily' })
             : Promise.resolve(window.alert(t('dc_done')));
 
         Promise.resolve(alertPromise).finally(() => this.hideIntroBackdrop());
@@ -1084,7 +1084,7 @@ class DnevniIzazov {
                 if (!this.rewardClaimed) this.setResultButtonsDisabled(false);
             }
         } else {
-            this.app.modal.alert(t('dc_ads_unavailable'), t('info_title'));
+            this.app.modal.alert(t('dc_ads_unavailable'), t('info_title'), { contextClass: 'daily' });
             this.adInProgress = false;
             await this.claim(false);
         }
@@ -1197,7 +1197,7 @@ class DnevniIzazov {
                 : (rewardResult.reason === 'ad_verification_required' || rewardResult.reason === 'ad_verification_pending'
                     ? (t('ad_confirmation_retry') || 'Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.')
                     : (t('err_server_conn') || t('dc_ads_unavailable')));
-            this.app.modal.alert(message, t('info_title'));
+            this.app.modal.alert(message, t('info_title'), { contextClass: 'daily' });
             return;
         }
 
@@ -1224,9 +1224,9 @@ class DnevniIzazov {
 
         if (doubled) {
             if (this.app.effectMgr) this.app.effectMgr.trigger('confetti');
-            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_doubled', awardedAmount), t('dc_congrats'));
+            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_doubled', awardedAmount), t('dc_congrats'), { contextClass: 'daily' });
         } else {
-            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_won', awardedAmount), t('dc_success'));
+            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_won', awardedAmount), t('dc_success'), { contextClass: 'daily' });
         }
     }
 }

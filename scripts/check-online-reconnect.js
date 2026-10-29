@@ -113,6 +113,7 @@ const timerDisplay = {
     appendChild(child) { this.innerHTML += child.textContent || ''; },
     classList: {
         add: (...names) => names.forEach(name => timerClasses.add(name)),
+        contains: name => timerClasses.has(name),
         remove: (...names) => names.forEach(name => timerClasses.delete(name))
     }
 };
@@ -1235,6 +1236,9 @@ async function run() {
     assert(timerDisplay.innerHTML.length > 0, 'Duzi prekid mora prikazati reconnect stanje');
     longDrop.clearOpponentReconnectGraceCountdown();
     assert.strictEqual(longDrop.opponentReconnectNoticeVisible, false, 'Reconnect stanje mora biti uklonjeno posle oporavka');
+    assert.strictEqual(timerDisplay.innerHTML, '', 'Privremeni disconnect PNG/tekst ne sme ostati do narednog state-sync odgovora');
+    assert.strictEqual(timerDisplay.style.display, 'none', 'Privremeni disconnect tajmer mora nestati odmah po oporavku');
+    assert(!timerClasses.has('timer-turn--disconnected'));
 
     const syncedDrop = createHarness();
     timerDisplay.innerHTML = '';
