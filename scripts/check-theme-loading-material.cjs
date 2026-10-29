@@ -16,5 +16,5 @@ for(const bg of backgrounds){
         assert.ok(contrast(vars[text],surface)>=4.5,`${bg.themeId} ${text}: loading text below 4.5:1`);
     }
 }
-assert.ok(fs.readFileSync(path.join(root,'www/index.html'),'utf8').includes('theme-loading-material.css?v=1'));
+assert.ok(fs.readFileSync(path.join(root,'www/index.html'),'utf8').includes('theme-loading-material.css?v=2'));
 console.log('Loading gate: ten destination palettes, approved backgrounds and 4.5:1 text contrast verified. Cold-load speed still requires device measurement.');

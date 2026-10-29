@@ -4341,7 +4341,6 @@ body.easter-theme #online-players-body > .online-players-load-more {
     color: var(--easter-ui-title) !important;
 }
 
-body.easter-theme #online-players-body img,
 body.easter-theme .friend-card-img,
 body.easter-theme .settings-avatar {
     border-color: rgba(156,77,204,0.42) !important;

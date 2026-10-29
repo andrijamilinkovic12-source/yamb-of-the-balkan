@@ -1,5 +1,15 @@
 # Završna provera — Online igrači (10 tema)
 
+## Novi pregled u emulatoru — 27–28.10.2026.
+
+[45 snimaka i precizni nalazi](theme-visual-audit/emulator-online-players-2026-10-28/index.html). Svih deset tema sada ima stvarni pregled liste, tastature i pretrage bez rezultata na logičkom prikazu360×780. Green/Light/Medium su završeni27.10; prekinuti Winter i ostalih šest tema dovršeni su28.10. Tekst i raspored su pregledni. Moon je imao samo sopstveni nalog, pa njegove akcije uz drugog igrača nisu sada vizuelno potvrđene. Dostupnost/isključenost akcija drugih tema je vidljiva, ali prijateljstva, dueli i posmatranje nisu pokretani.
+
+Pronađene su i lokalno pripremljene dve CSS dorade: native X za brisanje pretrage koristi postojeći tematski kanonski PNG; Easter blanket img pravilo više ne dodaje ljubičasti rub i pravougaonu senku slikama u ovoj sobi. Nove ilustracije, funkcije i dimenzije sobe nisu menjane. **Ove dorade nisu commitovane/deployovane; snimci pokazuju problem pre ispravke.** Statički inventar sada proverava i konačne quality-resolved PNG putanje. Osam uloga po temi i najmanji provereni kontrast4,59:1 ostaju potvrđeni statičkim proverama.
+
+Prvi Neon izbor28.10. vratio je Winter, drugi uspeo; hladna promena teme ostaje zaseban otvoren nalaz. Nema novog dokaza za dugačku listu, mrežne kvarove i potvrde. Emulator nije fizički S25. Vraćen je na Zelenu i originalne dimenzije/dpi i tastaturu, uz očuvanu prijavu. Nije bilo slanja poruka ili poziva niti uzimanja nagrada.
+
+## Prethodna statička provera
+
 Datum: 23.10.2026. „Online number” je soba Online igrači sa brojem prisutnih, pretragom i akcijama nad igračem. Zelena određuje geometriju i tipografiju; svaka tema koristi svoj materijal, pravac i paletu.
 
 | Tačka | Nalaz |
@@ -13,4 +23,4 @@ Datum: 23.10.2026. „Online number” je soba Online igrači sa brojem prisutni
 
 Ponovljiva provera: `npm run check:theme-online-players-final`. Uključuje inventar originalnih PNG, aktivne putanje, intro, kontrast i poređenje geometrije sa Zelenom.
 
-Granica provere: sačuvani Android QA snimci nastali su pre skraćenja natpisa pretrage i pre tematskih obaveštenja. Statički test potvrđuje pravila i stare snimke geometrije, ali ne dokazuje najnoviji prikaz, virtuelnu tastaturu i tok pozivanja na fizičkom telefonu. Za to je potreban novi pregled na uređaju.
+Granica prethodne provere od23.10: sačuvani QA rasporedi potvrđuju pravila i geometriju, a ne ceo aktuelni Android tok. Novi emulator dokaz iznad sada pokriva tastaturu i filtriranje u deset tema; fizički telefon, potvrde i stvarne radnje nad drugim igračem ostaju posebna provera.

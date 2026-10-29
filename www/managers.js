@@ -3046,13 +3046,29 @@ class ShopManager {
         }
     }
 
-    equip(id) {
+    async equip(id) {
         const itemId = String(id || '').trim();
         const itemExists = this.items.some(item => item.id === itemId);
         const item = this.getItemById(itemId);
         if (!itemExists || !this.unlocked.includes(itemId) || (this.type === 'skin' && item?.themeGift && !this.getOwnedThemeIds().includes(item.themeGift))) {
             this.render();
             return;
+        }
+
+        if (this.type === 'theme' && window.app?.prepareTreasuryTheme) {
+            const app = window.app;
+            const token = app.themeSwitchRequestToken = (app.themeSwitchRequestToken || 0) + 1;
+            let ready = false;
+            try { ready = await app.prepareTreasuryTheme(itemId); }
+            catch (error) { console.warn('Treasury theme artwork unavailable:', itemId, error); }
+            if (token !== app.themeSwitchRequestToken || this.type !== 'theme'
+                || !this.items.some(entry => entry.id === itemId) || !this.unlocked.includes(itemId)) return;
+            if (!ready) {
+                window.showNotification?.(_safeT('modal_title_info'),
+                    (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
+                        ? 'Theme unavailable. Try again.' : 'Tema nije učitana. Pokušaj ponovo.');
+                return;
+            }
         }
 
         this.activeItem = itemId;

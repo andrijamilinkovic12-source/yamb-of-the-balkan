@@ -1,0 +1,20 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const timers=[],images=[];
+const node=()=>({style:{},dataset:{},classList:{add(){},remove(){},contains(){return false;}},setAttribute(){},replaceChildren(){},appendChild(){}});
+const nodes=Object.fromEntries(['theme-loading-gate','theme-loading-title','theme-loading-kicker','theme-loading-copy','theme-loading-status','theme-loading-progress','theme-loading-icons','theme-loading-pills'].map(id=>[id,node()]));
+const context={window:{},document:{body:node(),getElementById:id=>nodes[id],createElement:tag=>{
+ const el=node();if(tag==='img'){el.naturalWidth=256;el.decode=()=>new Promise(resolve=>{el.release=resolve;});images.push(el);}return el;
+}},console,requestAnimationFrame:fn=>fn(),setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;},clearTimeout(){}};
+vm.runInNewContext(fs.readFileSync('www/game.js','utf8').replace('window.app = new YambApp();','globalThis.App=YambApp;'),context);
+const app=Object.create(context.App.prototype);app.themeLoadingToken=0;
+app.getThemeLoadingPack=()=>({title:'Moon',icons:['one.png'],pills:[]});
+app.warmThemePack=()=>({critical:new Promise(()=>{}),all:new Promise(()=>{})});
+(async()=>{
+ app.prepareThemeLoadingGate('moon',{manualSwitch:true});timers.find(t=>t.ms===700).fn();
+ const reveal=images[0].onload();assert.equal(images[0].dataset.decoded,undefined,'Do not display partially downloaded PNG');
+ images[0].release();await reveal;assert.equal(images[0].dataset.decoded,'true');
+ app.prepareThemeLoadingGate('moon',{manualSwitch:true});timers.filter(t=>t.ms===700).at(-1).fn();
+ const obsolete=images[1].onload();app.themeLoadingToken++;images[1].release();await obsolete;
+ assert.equal(images[1].dataset.decoded,undefined,'Late image must not reveal an obsolete gate');
+ console.log('PASS: gate icons reveal only after decode and only for the current transition.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

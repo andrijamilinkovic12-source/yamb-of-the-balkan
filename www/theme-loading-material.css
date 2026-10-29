@@ -40,6 +40,10 @@
     --theme-loading-bg-image:url('assets/theme-backgrounds/severna-v4.png');
 }
 #theme-loading-gate {
+    --theme-loading-veil-top:rgba(0,0,0,.04);
+    --theme-loading-veil-bottom:rgba(0,0,0,.26);
+    --theme-loading-glow:rgba(255,255,255,.08);
+    --theme-loading-accent-glow:transparent;
     --theme-loading-base:var(--gate-surface);
     --theme-loading-ink:var(--gate-ink);
     --theme-loading-title:var(--gate-ink);
@@ -64,3 +68,13 @@
 }
 #theme-loading-gate #theme-loading-kicker { color:var(--gate-accent) !important; text-shadow:none !important; }
 #theme-loading-gate #theme-loading-copy { color:var(--gate-muted) !important; text-shadow:none !important; }
+#theme-loading-gate #theme-loading-icons img {
+    opacity:0;
+    padding:0 !important;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    filter:drop-shadow(0 3px 5px rgba(0,0,0,.18)) !important;
+    transition:opacity 120ms ease;
+}
+#theme-loading-gate #theme-loading-icons img[data-decoded="true"] { opacity:1; }

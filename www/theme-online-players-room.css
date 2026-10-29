@@ -100,6 +100,17 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 body #online-players-overlay .online-players-search-wrap:focus-within {
     box-shadow: inset 2px 2px 5px var(--op-shadow), 0 0 0 2px var(--op-accent) !important;
 }
+/* Keep the native search-clearing action, with this theme's existing canonical X. */
+body #online-players-overlay .online-players-search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1em;
+    height: 1em;
+    background: var(--theme-room-close-image) center / contain no-repeat;
+    box-shadow: none;
+    filter: none;
+    cursor: pointer;
+}
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #online-players-overlay #online-players-body.online-players-body {
     padding: 14px !important;
     gap: 10px !important;

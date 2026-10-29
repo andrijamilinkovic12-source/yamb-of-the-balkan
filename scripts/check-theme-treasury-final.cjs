@@ -3,6 +3,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const crypto = require('node:crypto');
 const assert = require('node:assert/strict');
+const { resolve: resolveQuality } = require('../www/theme-quality-assets.js');
 
 const root = path.resolve(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
@@ -62,11 +63,15 @@ function contrast(a, b) {
 }
 const surfaceCss = read('www/theme-card-surfaces.css');
 const results = [];
+const inventory = [];
 for (const theme of themes) {
+    activeTheme = theme;
     const prefix = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
     const canonical = `${prefix}/canonical`;
     const roles = new Map();
+    let themedRoles = 0;
     const add = (role, source, themed = true) => {
+        source = resolveQuality(source) || source;
         assert(!roles.has(role), `Duplicate role ${theme}/${role}`);
         const location = path.join(root, 'www', source.split('?')[0]);
         assert(fs.existsSync(location), `Missing ${theme}/${role}: ${source}`);
@@ -75,7 +80,8 @@ for (const theme of themes) {
         const hash = crypto.createHash('sha256').update(bytes).digest('hex');
         roles.set(role, source);
         if (themed) {
-            assert(source.startsWith(prefix + '/'), `Foreign theme asset: ${theme}/${role}: ${source}`);
+            themedRoles++;
+            assert(source.startsWith(prefix + '/') || source.startsWith(`assets/effects/treasury-thumbnails-v1/${theme}-`), `Foreign theme asset: ${theme}/${role}: ${source}`);
             if (!hashesByRole.has(role)) hashesByRole.set(role, new Set());
             assert(!hashesByRole.get(role).has(hash), `Recolored or copied binary: ${theme}/${role}`);
             hashesByRole.get(role).add(hash);
@@ -87,8 +93,8 @@ for (const theme of themes) {
     for (const item of shop.EFFECTS) {
         const name = effectNames[item.id];
         assert(name, `Missing effect role ${item.id}`);
-        const version = ['fireflies', 'bubbles'].includes(name) || (critical.has(theme) && item.id === 'gold_rain') ? 2 : 1;
-        add(`effect/${item.id}`, `${canonical}/treasury-effect-thumbnails/preview-${name}-v${version}.png`);
+        const source = previewSource.call({}, item.id);
+        add(`effect/${item.id}`, source, !['ice_age', 'balkan', 'dragon_fire'].includes(item.id));
     }
     for (const tier of collection) add(`collection/${tier}`, `${canonical}/collection-medals/collection-${tier}-v1.png`);
     const rewardVersion = critical.has(theme) ? 2 : 1;
@@ -115,7 +121,11 @@ for (const theme of themes) {
             action: contrast(value('surface'), value('primary'))
         };
         for (const [pair, ratio] of Object.entries(ratios)) assert(ratio >= 4.5, `${theme}/${pair} contrast ${ratio.toFixed(2)} < 4.5`);
-        results.push({ theme, pngRoles: roles.size, themedRoles: roles.size - shop.SKINS.length - shop.THEMES.length, sharedRoles: shop.SKINS.length + shop.THEMES.length, minContrast: Math.min(...Object.values(ratios)).toFixed(2) });
+        const blend = [0, 1, 2].map(i => Math.round(parseInt(value('primary').slice(1+i*2,3+i*2),16)*.18+parseInt(value('raised').slice(1+i*2,3+i*2),16)*.82));
+        const statusFill = '#' + blend.map(n => n.toString(16).padStart(2,'0')).join('');
+        const statusContrast = contrast(value('ink'), statusFill);
+        assert(statusContrast >= 4.5, `${theme}/status contrast ${statusContrast.toFixed(2)} < 4.5`);
+        results.push({ theme, pngRoles: roles.size, themedRoles, sharedRoles: roles.size-themedRoles, minContrast: Math.min(...Object.values(ratios)).toFixed(2), statusContrast: statusContrast.toFixed(2) });
     } else {
         const greenCss = read('www/teme.css');
         const token = name => {
@@ -128,8 +138,9 @@ for (const theme of themes) {
         const endpoint = '#' + greenSurface.slice(1, 4).map(n => Number(n).toString(16).padStart(2, '0')).join('');
         const greenRatios = ['ink', 'ink-strong', 'muted'].map(name => contrast(token(name), endpoint));
         assert(greenRatios.every(ratio => ratio >= 4.5), 'Green clay contrast below 4.5');
-        results.push({ theme, pngRoles: roles.size, themedRoles: roles.size - shop.SKINS.length - shop.THEMES.length, sharedRoles: shop.SKINS.length + shop.THEMES.length, minContrast: `${Math.min(...greenRatios).toFixed(2)} (opaque endpoint)` });
+        results.push({ theme, pngRoles: roles.size, themedRoles, sharedRoles: roles.size-themedRoles, minContrast: `${Math.min(...greenRatios).toFixed(2)} (opaque endpoint)` });
     }
+    inventory.push({theme,roles:Object.fromEntries(roles)});
 }
 assert.equal(new Set(results.map(result => result.pngRoles)).size, 1, 'Unequal PNG roles');
 assert.equal(shop.TROPHIES.length, 26);
@@ -146,4 +157,6 @@ assert(read('www/theme-treasury-room.css').includes('effect-preview-box::before'
 assert(!read('www/managers.js').includes('}[activeTheme] || item?.easterIcon'), 'Cross-theme trophy fallback');
 assert(read('www/onlinenumber.js').includes("toast.classList.add('treasury-notice')"));
 assert(read('www/managers.js').includes("treasuryOpen ? 'treasury'"));
+assert(html.includes('theme-treasury-room.css?v=8'), 'Treasury CSS cache version missing');
+if (process.env.YAMB_TREASURY_INVENTORY) fs.writeFileSync(process.env.YAMB_TREASURY_INVENTORY,JSON.stringify({results,inventory},null,2)+'\n');
 console.log(JSON.stringify({ room: 'treasury', catalog: { trophies: shop.TROPHIES.length, skins: shop.SKINS.length, effects: shop.EFFECTS.length, themePreviews: shop.THEMES.length }, results }, null, 2));

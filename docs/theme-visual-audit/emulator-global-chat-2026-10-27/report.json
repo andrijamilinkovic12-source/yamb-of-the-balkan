@@ -1,0 +1,439 @@
+{
+  "date": "2026-10-27",
+  "room": "Globalni chat",
+  "scope": "Stvarni Android UI pregled svih deset tema: ulazak, prazna istorija, zaglavlje/online oznaka, kanonski PNG, unos sa zatvorenom i otvorenom tastaturom i izlazak.",
+  "device": {
+    "avd": "Easter_QA_10GB",
+    "physicalPixelsDuringReview": [
+      1080,
+      2340
+    ],
+    "density": 480,
+    "logicalViewport": [
+      360,
+      780
+    ],
+    "restoredPixels": [
+      1440,
+      3120
+    ],
+    "restoredDensity": 560,
+    "physicalS25Test": false
+  },
+  "deployment": "Pregledana je postojeća objavljena verzija. Ranije lokalne dorade R07/R12/R14/R15 nisu commitovane ni deployovane na zahtev korisnika; ovi snimci nisu potvrda tih dorada.",
+  "outcome": "U pregledanim stanjima svih deset tema nisu nađeni novi vizuelni problemi. Nije menjana implementacija Globalnog chata niti kreiran dodatni PNG.",
+  "limits": [
+    "Istorija je bila prazna u svim temama. Stvarne poruke, duge poruke, avatari, meni drugog igrača i potvrda prijave poruke nisu vizuelno potvrđeni ovim prolazom.",
+    "Početna potvrda pravila stvarno je pregledana samo u Zelenoj. Ostale palete imaju statičke provere; ne tvrdi se novi Android dokaz za sve potvrde.",
+    "Pregled nije fizički Samsung S25, merenje hladnog mrežnog cache-a niti merenje tačnog trajanja intra. Podešeno čekanje u alatu nije latencija aplikacije.",
+    "Četiri putanje označavaju uloge unutar same sobe. PNG menija/intro izvedenice i avatari nisu sabrani kao dodatni novi identiteti."
+  ],
+  "staticChecks": {
+    "command": "npm run check:theme-global-chat-final",
+    "activePngPerTheme": 4,
+    "uniqueHashesPerRole": 10,
+    "legacyReferences": "Nema starih Easter/Desert/Severna Global Chat rezervnih PNG putanja ni SVG u aktivnom markup-u sobe.",
+    "savedLayoutViewports": [
+      "411×891",
+      "320×568",
+      "768×1024",
+      "320×568 sa font130%"
+    ],
+    "savedLayoutTextContrastMinimum": 4.59,
+    "paletteAndNoticeContrastMinimum": 4.54,
+    "evidenceNote": "Sačuvani izračunati rasporedi i paletni parovi su zaseban statički dokaz, ne novi Android snimci tih viewporta.",
+    "intro": {
+      "openAtMs": 2400,
+      "durationMs": 3200,
+      "note": "Proverena zajednička konfiguracija. Tačno trajanje nije mereno snimcima ovog prolaza."
+    }
+  },
+  "safety": "Nisu poslate poruke/pozivi/prijave, pokretane partije, kupovine, preuzimanja nagrada ili nagradne reklame. Automatski test interstitiali pri izlasku zatvoreni su Android back kontrolom. Jedan slučajno unet znak zbog promene položaja tastature odmah je obrisan bez slanja; taj kadar nije uključen u galeriju. Korišćene su vidljive Android kontrole i snimci, bez debugger pristupa ili izvlačenja sesije.",
+  "restoration": "Vraćeni Zelena, fizička rezolucija/dpi i početna show_ime_with_hard_keyboard vrednost 0; emulator je otvoren i prijavljen.",
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Krem/zeleno mastilo i Clay površine. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/green-soft-clay/global-chat-empty-v1.png",
+        "send": "assets/green-soft-clay/global-chat-send-v1.png",
+        "close": "assets/green-soft-clay/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "dark-chat-history.jpg",
+        "dark-chat-keyboard-empty.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Tamno mastilo na svetloj zlatnoj podlozi. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/light/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/light/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/light/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "light-chat.jpg",
+        "light-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Svetlo mastilo na bordo površinama. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/medium/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/medium/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/medium/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "medium-chat.jpg",
+        "medium-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Tamno mastilo na svetlim plavim površinama. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/winter/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/winter/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/winter/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "winter-chat.jpg",
+        "winter-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Svetlo mastilo, taman panel i ograničeni cijan akcenti. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/neon/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/neon/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/neon/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "neon-chat.jpg",
+        "neon-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Ljubičasti panel, svetlo mastilo i zlatni fokus. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/amethyst/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/amethyst/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/amethyst/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "amethyst-chat.jpg",
+        "amethyst-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Krem/salvija površine i tamno mastilo; novi tematski PNG. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/easter/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/easter/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/easter/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "easter-chat.jpg",
+        "easter-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Pesak/terakota površine i tamno mastilo; novi tematski PNG. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/desert/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/desert/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/desert/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "desert-chat.jpg",
+        "desert-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Tamnosive površine, srebrni PNG i svetlo mastilo. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/moon/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/moon/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/moon/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "moon-chat.jpg",
+        "moon-chat-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "status": "prihvatljiv u pregledanim stanjima",
+      "observed": [
+        "ulazak u sobu",
+        "prazna istorija",
+        "naslov i online oznaka",
+        "prazan unos bez tastature",
+        "prazan unos sa tastaturom",
+        "povratak u glavni meni"
+      ],
+      "visualResult": "Tamna plava podloga, svetlo mastilo i plavi PNG. Geometrija i tipografija vizuelno odgovaraju Zelenoj; nema odsečenog teksta ili footera u sistemskoj zoni.",
+      "pngCount": 4,
+      "sources": {
+        "identity": "assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "empty": "assets/theme-packs/severna/canonical/global-chat-internal/empty-state-v1.png",
+        "send": "assets/theme-packs/severna/canonical/global-chat-internal/send-v1.png",
+        "close": "assets/theme-packs/severna/canonical/room-controls/close-v1.png"
+      },
+      "evidence": [
+        "severna-chat.jpg",
+        "severna-chat-keyboard.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "file": "dark-chat-history",
+      "theme": "dark",
+      "title": "Zelena — prazna istorija",
+      "note": "Krem/zeleno mastilo i Clay površine."
+    },
+    {
+      "file": "dark-chat-keyboard-empty",
+      "theme": "dark",
+      "title": "Zelena — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "light-chat",
+      "theme": "light",
+      "title": "Svetlo zlato — prazna istorija",
+      "note": "Tamno mastilo na svetloj zlatnoj podlozi."
+    },
+    {
+      "file": "light-chat-keyboard",
+      "theme": "light",
+      "title": "Svetlo zlato — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "medium-chat",
+      "theme": "medium",
+      "title": "Trula višnja — prazna istorija",
+      "note": "Svetlo mastilo na bordo površinama."
+    },
+    {
+      "file": "medium-chat-keyboard",
+      "theme": "medium",
+      "title": "Trula višnja — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "winter-chat",
+      "theme": "winter",
+      "title": "Plavi okean — prazna istorija",
+      "note": "Tamno mastilo na svetlim plavim površinama."
+    },
+    {
+      "file": "winter-chat-keyboard",
+      "theme": "winter",
+      "title": "Plavi okean — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "neon-chat",
+      "theme": "neon",
+      "title": "Neon Cyber — prazna istorija",
+      "note": "Svetlo mastilo, taman panel i ograničeni cijan akcenti."
+    },
+    {
+      "file": "neon-chat-keyboard",
+      "theme": "neon",
+      "title": "Neon Cyber — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "amethyst-chat",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — prazna istorija",
+      "note": "Ljubičasti panel, svetlo mastilo i zlatni fokus."
+    },
+    {
+      "file": "amethyst-chat-keyboard",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "easter-chat",
+      "theme": "easter",
+      "title": "Vaskršnja — prazna istorija",
+      "note": "Krem/salvija površine i tamno mastilo; novi tematski PNG."
+    },
+    {
+      "file": "easter-chat-keyboard",
+      "theme": "easter",
+      "title": "Vaskršnja — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "desert-chat",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — prazna istorija",
+      "note": "Pesak/terakota površine i tamno mastilo; novi tematski PNG."
+    },
+    {
+      "file": "desert-chat-keyboard",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "moon-chat",
+      "theme": "moon",
+      "title": "Mesečev sjaj — prazna istorija",
+      "note": "Tamnosive površine, srebrni PNG i svetlo mastilo."
+    },
+    {
+      "file": "moon-chat-keyboard",
+      "theme": "moon",
+      "title": "Mesečev sjaj — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "severna-chat",
+      "theme": "severna",
+      "title": "Severna maglina — prazna istorija",
+      "note": "Tamna plava podloga, svetlo mastilo i plavi PNG."
+    },
+    {
+      "file": "severna-chat-keyboard",
+      "theme": "severna",
+      "title": "Severna maglina — tastatura",
+      "note": "Prazan unos 0/550, slanje i broj znakova ostaju iznad tastature. Bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "dark-chat-open",
+      "theme": "dark",
+      "title": "Zelena — početna potvrda pravila",
+      "note": "Stvarno prikazana i prihvaćena pri prvom ulasku. Potvrda pravila u ostalih devet tema nije ponavljana; njen kontrast je zasebna statička provera."
+    },
+    {
+      "file": "dark-menu-restored-original",
+      "theme": "dark",
+      "title": "Vraćeno početno okruženje",
+      "note": "Zelena i originalnih 1440×3120 / 560dpi. Prijava očuvana, tastatura zatvorena, show_ime_with_hard_keyboard vraćen sa 1 na početnih 0."
+    }
+  ]
+}

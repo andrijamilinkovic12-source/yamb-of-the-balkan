@@ -28,11 +28,57 @@
 }
 
 /* Same text metrics in Green and all nine other themes. Long names wrap inside a card. */
+body.easter-theme #riznica-screen#riznica-screen .tab-btn {
+    background:var(--theme-card-fill) !important;
+    border-color:var(--theme-card-border) !important;
+    box-shadow:var(--theme-subcard-shadow) !important;
+}
+body.easter-theme #riznica-screen#riznica-screen .tab-btn.active {
+    background:var(--theme-subcard-fill) !important;
+    border-color:var(--theme-card-primary) !important;
+    box-shadow:inset 0 0 0 1px var(--theme-card-primary),var(--theme-subcard-shadow) !important;
+}
+body.light-theme #riznica-screen#riznica-screen .riznica-header {
+    background:var(--theme-card-fill) !important;
+    border-color:var(--theme-card-border) !important;
+}
+body.light-theme #riznica-screen#riznica-screen .riznica-header-title { color:var(--theme-card-ink) !important; }
+/* Runtime audit: readable room header/statuses in each palette, including Ocean.
+   Keep these scoped above the older theme-specific button and status rules. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen#riznica-screen .riznica-header {
+    background: var(--theme-card-fill) !important;
+    border-color: var(--theme-card-line) !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen#riznica-screen .riznica-header-title {
+    color: var(--theme-card-ink) !important;
+    text-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)
+    #riznica-screen#riznica-screen#riznica-screen :is(.riznica-ad-btn,.status-unlocked,.status-locked) {
+    color: var(--theme-card-ink) !important;
+    background: color-mix(in srgb, var(--theme-card-primary) 18%, var(--theme-card-raised)) !important;
+    box-shadow: inset 0 0 0 1px var(--theme-card-line), var(--theme-subcard-shadow) !important;
+    text-shadow: none !important;
+}
+body #riznica-screen#riznica-screen#riznica-screen :is(.btn-action,.riznica-ad-btn,.price,.status,.req-text) {
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme))
+    #riznica-screen#riznica-screen#riznica-screen :is(.status-unlocked,.status-locked) {
+    color: var(--green-clay-ink-strong) !important;
+    background: var(--green-clay-surface-inset) !important;
+    box-shadow: inset 0 0 0 1px var(--green-clay-line) !important;
+}
 #riznica-screen {
     font-family: Montserrat, sans-serif;
 }
 #riznica-screen#riznica-screen .riznica-header-title {
     font-size: 1rem !important;
+    font-weight: 850 !important;
+    letter-spacing: .025em !important;
     line-height: 1.2;
 }
 #riznica-screen#riznica-screen :is(.balance-display,.btn-add-coins) {
@@ -46,6 +92,7 @@
 }
 #riznica-screen#riznica-screen .category-grid > .card .title {
     font-size: .78rem !important;
+    letter-spacing: normal !important;
     line-height: 1.2;
     overflow-wrap: anywhere;
 }

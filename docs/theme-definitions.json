@@ -1,6 +1,41 @@
 {
-  "schemaVersion": 71,
-  "updatedOn": "2026-10-25",
+  "schemaVersion": 76,
+  "updatedOn": "2026-10-29",
+  "tournamentRuntimeVerification20261029": {
+    "evidence": "docs/theme-visual-audit/emulator-tournament-2026-10-29/report.json",
+    "scope": "Stvarni Android 360x780 u svih deset tema: Info sa vec prijavljenim nalogom/osam ucesnika, cetvrtfinale, finale, detalj odigranog cetvrtfinalnog meca i prve kartice Dvorane slavnih. Green dodatno polufinale i Put do titule. Intro kadrovi za osam dodatnih tema; trajanje nije mereno screenshotima.",
+    "pendingLocal": "R21: rezultat ispod imena u kartici osvajaca, bez promene sirine kartice/avatara; ujednacena Green tipografija naslova/tabova/modala. Tematske povrsine i kontrast opisa, prijave, tabova, statusa, kartica i navigacije. Uklonjeni nasleđeni Easter ljubicasti rubovi, plavi status, genericka siva/zelena/zlatna podloga i senke teksta. Porazeni ostaje citljiv bez opacity/filter sloja. CSS v3; PNG crtezi, DNK, stil, pravac i palete nisu menjani.",
+    "inventory": "14 turnirskih semantickih uloga po temi: pehar, finalista, tri taba, sest stanja i tri turnirske medalje. Dukat, Indeks moci i X su dodatni deljeni kanonski identiteti. Devet 512px room izvedenica pehara naspram Green 384px PNG ostaju namerni tehnicki izuzetak, ne novi identitet. U snimljenim stanjima kanonski PNG pripadaju temi i pehari imaju zvezdu; nema potrebe za novim PNG.",
+    "validation": "Ciljane provere Turnira i online zavrsnog ekrana PASS. Izolovani stvarni TournamentManager/ModalManager/CSS sa sintetickim turnirom: 210 kombinacija deset tema/sedam stanja/tri mobilne sirine; Green mere/fontovi, safe bounds, vidljivi PNG, navigacija 44/10px, prostor za ime i paletno mastilo opisa/prijave. Animacije iskljucene radi stabilnog merenja, offline font moze biti fallback.",
+    "status": "Bez commita/deploya. Android snimci su pre novih lokalnih dorada; R21 i ranije ucitavanje cekaju deploy i potvrdu. Svi prvi izbori posedovanih tema ovog prolaza uspeli, ali pojedini PNG kasne. Nema novih partija, prijave/odjave, zakazivanja, nagrada, kupovina, deljenja ili slanja poruka. Ceremonije i stvarna isplata nisu novi Android dokaz. Vraceni Zelena i originalne mere emulatora uz prijavu. Osnovni prolazi 10/15; pet soba i retka stanja ostaju."
+  },
+  "treasuryRuntimeVerification20261028": {
+    "evidence": "docs/theme-visual-audit/emulator-treasury-2026-10-28/report.json",
+    "scope": "Stvarni Android 360x780: sva cetiri taba u svih deset tema. Prve kategorije Trofeja, cetiri klasicna skina, efekti proslave/atmosfera/kosmos i razliciti delovi kataloga Tema. Nije pregled svake kartice, zive animacije, kupovine, nagradnih potvrda ili preciznog vremena intra.",
+    "activeInventory": "116 semantickih uloga po temi: 55 tematskih + 61 zajednicka (48 skinova, 10 odobrenih pregleda tema i tri namerno univerzalne slicice: ice_age, balkan, dragon_fire). Ranijih 58+58 ukljucivalo tri tematska originala koja vise nisu aktivne slicice. Provera sada prati stvarni getTreasuryEffectPreviewSource i quality-resolved putanje. Vidljivost skinova uz temu zavisi od vlasnistva; ovo nije broj istovremeno ucitanih PNG.",
+    "pendingLocal": "R20: tematsko zaglavlje, statusne/nagradne podloge i kontrast, Green Clay statusi; naslov tezine 850 i razmaka .025em prati Green, akcije/statusi 700, uklonjen nasleđeni razmak naslova kartica i tekstualne senke. PNG crtezi, DNK, stil, pravac i palete nisu menjani. CSS v8. Prethodne R14/R15 dorade takodje cekaju deploy.",
+    "validation": "Ciljane provere Riznice PASS. Izolovani Chromium koristi stvarni ShopManager/CSS sa sintetickim inventarom i blokiranom spoljnom mrezom: 120 kombinacija deset tema/cetiri taba/tri mobilne sirine, Green mere/fontovi i PNG dimenzije/vidljivost. Offline font moze biti Arial fallback. Najnizi provereni paletni par 4.85:1, nove neprozirne statusne podloge devet tema najmanje 6.12:1; nije merenje svakog piksela preko pozadine.",
+    "status": "Bez commita/deploya. Android snimci prikazuju prethodnu objavljenu verziju. Devet direktnih izbora posedovanih tema uspelo prvi put, ali prve sekunde pokazuju stare/nepotpune ikone. Nema potvrde trenutnog hladnog ucitavanja. Nema novih partija, kupovina, nagrada ili izbora drugog skina/efekta. Novi Lidijin poziv nestao sam bez prihvatanja/odbijanja. Vracena Zelena i originalne dimenzije emulatora uz ocuvanu prijavu. Osnovni prolazi 9/15 soba; retka stanja i potvrda lokalnih dorada ostaju."
+  },
+  "quarterlyLeagueRuntimeVerification20261028": {
+    "evidence": "docs/theme-visual-audit/emulator-league-2026-10-28/report.json",
+    "scope": "Stvarni Android 360x780: meni, Liga/Majstor, Medalje i Sampioni u svih deset tema. Prethodni Green kadar sacuvan, ostalih devet dovrseno posle oporavka emulatora. Green dodatno Amater/Sva vremena. Nije potvrda svih rangova, retkih obavestenja ili preciznog vremena intra.",
+    "pendingLocal": "R18: zajednicke Green mere, tipografija, dvokolonski rezime i 44px navigacija sa 10px tackom; zastita avatara uz dugo ime i uklonjeno tablet translate pomeranje. R19: sva stanja tabova koriste postojece tematske povrsine i mastilo, bez starih Easter/Desert/Severna boja. PNG identiteti, stil, pravac i palete nisu menjani; CSS v9.",
+    "validation": "Ciljane provere lige PASS; izolovani lokalni Chromium koristi stvarni renderer sa sintetickim podacima, 40 kombinacija deset tema/cetiri viewporta, jednake izracunate mere/fontove i paletne tabove. Offline font moze biti Arial fallback; ovo nije Android potvrda novih CSS izmena.",
+    "status": "Bez commita/deploya. Galerija prikazuje postojecu objavljenu verziju. Svih devet prvih izbora u nastavku vratilo prethodnu temu, drugi izbor uspeo; stabilnost prelaska ostaje otvorena. Raniji ANR uzrok nepoznat, u nastavku nije ponovljen. Nove dorade cekaju deploy i ponovni Android pregled. Nema novih partija, kupovina ili preuzimanja nagrada. Novi poziv Lidije odbijen uz izricito odobrenje korisnika. Vracena Zelena i originalne dimenzije emulatora uz ocuvanu prijavu."
+  },
+  "onlinePlayersRuntimeVerification20261028": {
+    "evidence": "docs/theme-visual-audit/emulator-online-players-2026-10-28/report.json",
+    "scope": "Stvarni emulator 360x780: lista, pretraga sa tastaturom i stanje bez rezultata u svih deset tema, uz prethodne snimke Green/Light/Medium od27.10. Moon ima samo sopstveni nalog pa akcije uz drugog igraca nisu vizuelno potvrdjene. Nisu slati pozivi, prijateljstva ili poruke.",
+    "pendingLocal": "Easter legacy pravilo vise ne dodaje ljubicasti rub i pravougaonu senku svakoj slici u Online Players listi. Avatar zadrzava op-available/busy/playing boju teme; transparentni PNG zadrzava sopstvenu siluetu. Native search cancel koristi postojeci theme-room-close-image PNG aktivne teme, bez novog identiteta ili promene dimenzija kartice/pretrage.",
+    "status": "Lokalna CSS dorada i staticka provera; nije commitovano ni deployovano. Novi Android snimci prikazuju objavljenu verziju pre ove dorade. Prvi Neon izbor28.10. vratio je Winter, drugi uspeo; to nije potvrda trenutne hladne promene teme. Tacno vreme intra, duga lista, mrežne greske i interaktivni tokovi akcija ostaju zasebne provere."
+  },
+  "runtimeVerification20261027": {
+    "evidence": "docs/theme-visual-audit/emulator-verified-2026-10-27/report.json",
+    "confirmed": "Desert/Moon/Severna izbor i povratak u Podesavanja, Moon restart, Light izbor iz Riznice zadrzavaju temu u pregledanom scenariju. Moon/Easter H2H mastilo, statisticko podnozje i Easter Top lista4+ i redovi Vatrenog niza vizuelno potvrdjeni. Nije potvrda svih soba/stanja ili hladnog cache-a.",
+    "pendingLocal": "Dorade posle ovog snimanja: kasniji CSS lige zadrzava kompaktnu tipografiju361–480px; gate otkriva samo dekodirane PNG i koristi neutralni veo; Green gate koristi aktivne meni ikone bez hue-rotate; Riznica priprema slike pre aktiviranja teme; Easter tabovi i Light zaglavlje Riznice koriste vec definisane tematske povrsine.",
+    "unchanged": "PNG crtezi, DNK, stil, pravac, elementarne dimenzije, inventar i pravila nagrada nisu menjani. Novi lokalni popravci zahtevaju korisnikov deploy i naknadnu Android potvrdu."
+  },
   "themeSwitchStabilityRule": {
     "evidence": "docs/theme-switch-stability-2026-10-25.md",
     "status": "Lokalno implementirano i regresiono provereno; brzina na telefonu i stvarni zakasneli cloud odgovori cekaju potvrdu posle deploya.",

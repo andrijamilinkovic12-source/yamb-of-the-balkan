@@ -1,5 +1,13 @@
 # Završna provera — Globalni chat (10 tema)
 
+## Stvarni Android pregled — 27.10.2026.
+
+[Galerija svih deset tema](theme-visual-audit/emulator-global-chat-2026-10-27/index.html) sada potvrđuje praznu istoriju i unos sa zatvorenom/otvorenom tastaturom na logičkom prikazu 360×780. U tim stanjima nema odsecanja teksta, prekrivanja unosa tastaturom ili preliva u sistemsku navigaciju; površine, mastilo i PNG odgovaraju temi. Nije menjana implementacija sobe. Prethodne lokalne dorade drugih delova aplikacije ostaju necommitovane i neobjavljene.
+
+Istorija je bila prazna: stvarne poruke i avatari, duge poruke, meni drugog igrača i potvrda prijave poruke ostaju bez novog Android dokaza. Prva potvrda pravila pregledana je samo u Zelenoj. Ništa nije poslato u chat. Ovo nije fizički S25 test; ranije sačuvani rasporedi i izračunati kontrasti u tabeli ispod ostaju zaseban dokaz. Emulator je vraćen na početnu veličinu, dpi i podešavanje tastature, uz Zelenu i očuvanu prijavu.
+
+## Prethodna statička provera
+
 Datum: 22.10.2026. Zelena tema određuje dimenzije i tipografiju, a svaka tema zadržava svoj materijal, ikone i paletu.
 
 | Tačka | Nalaz |
@@ -13,4 +21,4 @@ Datum: 22.10.2026. Zelena tema određuje dimenzije i tipografiju, a svaka tema z
 
 Ponovljiva provera: `npm run check:theme-global-chat-final`. Prošli su i `npm run check:js` i `git diff --check` za izmenjene fajlove. [Pregled ikona i sobe](theme-global-chat-room-review.html) prikazuje vizuelne reference.
 
-Granica provere: sačuvani Android QA snimci nastali su ranije, a trenutni WebView nije dostupan za novo snimanje iz ovog okruženja. Zato novi prozor za potvrdu i ponašanje tastature treba završno pogledati na fizičkom telefonu; statički kontrast i postojeći rasporedi sami po sebi to ne potvrđuju. Širi `check:theme-performance` trenutno staje na zastarelom očekivanju Vaskršnje ikone teme u Riznici, van opsega Globalnog chata.
+Granica prethodne provere od 22.10: sačuvani QA rasporedi sami ne potvrđuju aktuelno ponašanje tastature i potvrda u aplikaciji. Novi emulator dokaz od 27.10. iznad pokriva tastaturu u svih deset tema i početnu potvrdu samo u Zelenoj; fizički telefon i preostala dinamička stanja ostaju odvojena provera. Širi `check:theme-performance` ranije je stajao na zastarelom očekivanju Vaskršnje ikone teme u Riznici, van opsega Globalnog chata.

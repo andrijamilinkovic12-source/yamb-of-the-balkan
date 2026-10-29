@@ -1,0 +1,894 @@
+{
+  "date": "2026-10-28",
+  "room": "Online igrači / Online number",
+  "scope": "Nastavljen prekinuti pregled u stvarnom emulatoru. Green/Light/Medium snimci od27.10. sačuvani kao prethodni dokaz; Winter ponovo otvoren28.10. i dovršen zajedno sa ostalih šest tema.",
+  "device": {
+    "avd": "Easter_QA_10GB",
+    "logicalViewport": [
+      360,
+      780
+    ],
+    "pixels": [
+      1080,
+      2340
+    ],
+    "density": 480,
+    "restoredPixels": [
+      1440,
+      3120
+    ],
+    "restoredDensity": 560,
+    "physicalS25": false
+  },
+  "outcome": "Svih deset tema ima pregled liste, fokus pretrage, otvorenu tastaturu i filtriranu praznu listu sa/bez tastature. Nađene dve CSS dorade; sprovedene lokalno. Novi PNG crteži i funkcije sobe nisu menjani.",
+  "deployment": "Snimci prikazuju postojeću objavljenu aplikaciju, pre novih lokalnih CSS ispravki. Ni prethodne dorade R07/R12/R14/R15 ni ovaj korak nisu commitovani ili deployovani.",
+  "findings": [
+    {
+      "id": "R16",
+      "status": "lokalno ispravljeno; Android potvrda čeka deploy",
+      "reason": "Native X u pretrazi većine tema ostaje standardno plav umesto identiteta teme.",
+      "fix": "Pseudo-element search-cancel-button koristi postojeći --theme-room-close-image, koji je već mapiran za svih deset tema. Ostaje native akcija brisanja, bez novog asseta ili menjanja dimenzija kartica i polja."
+    },
+    {
+      "id": "R17",
+      "status": "lokalno ispravljeno; Android potvrda čeka deploy",
+      "reason": "Easter legacy blanket pravilo za #online-players-body img dodaje ljubičasti rub avatarima i pravougaonu svetlu senku praznom PNG i drugim slikama.",
+      "fix": "Uklonjen samo Online Players img selektor iz starog pravila. Postojeći op-available/op-busy/op-playing rubovi zadržavaju status i paletu. Ne menjaju se slike prijatelja ili Settings van ove sobe."
+    },
+    {
+      "id": "R01-followup",
+      "status": "otvorena provera stabilnosti/učitavanja",
+      "reason": "Prvi Neon izbor28.10. pokazao gate pa vratio Winter; drugi uspeva. Bez merenja hladnog cache-a ili zaključka o tačnom uzroku."
+    },
+    {
+      "id": "startup-observation",
+      "status": "jednokratno zabeleženo; uzrok nepotvrđen",
+      "reason": "Posle pokretanja emulatora aplikacija se jednom vratila na Android Home. Ponovno pokretanje aplikacije uspelo; crash buffer nije dao zapis. Nije pripisano Online Players funkciji bez dokaza."
+    }
+  ],
+  "limits": [
+    "Nisu slati zahtevi prijateljstva, dueli ili poruke; potvrde tih akcija i ulazak u posmatranje nisu testirani.",
+    "Moon je prikazao samo sopstveni nalog. Drugi igrač i akcione ikone u toj temi nisu potvrđeni novim Android snimkom.",
+    "Duga lista, mrežni kvarovi, generički avatar-fallback, uvećan sistemski font i drugi viewporti nisu novo testirani u emulatoru. Raniji sačuvani rasporedi su zaseban dokaz.",
+    "Intro je korišćen pri ulasku, ali njegovo tačno trajanje i animacija nisu mereni screenshotima. Nema posebnog završnog ekrana ove sobe.",
+    "Ovo nije pregled svih soba aplikacije niti dokaz fizičkog Samsung S25 prikaza. Nove lokalne dorade još zahtevaju naknadnu Android potvrdu."
+  ],
+  "checks": {
+    "command": "npm run check:theme-online-players-final",
+    "result": "PASS: deset tema, osam aktivnih PNG uloga po temi, originalni i quality-resolved fajlovi, Green geometrija/fontovi u četiri prethodno sačuvana viewporta.",
+    "minimumPaletteContrast": 4.59,
+    "canonical": "npm run check:theme-canonical-assets — PASS",
+    "note": "Hash razlikuje fajlove, ali sam nije dokaz vizuelne jedinstvenosti; stvarni snimci su zaseban vizuelni dokaz."
+  },
+  "safety": "Bez kupovina, nagrada, novih partija, slanja poziva/prijateljstava ili poruka. Upit zzqa987 filtrira već učitanu listu lokalno. Automatski test interstitiali zatvoreni Android back kontrolom. Vidljiv UI i ADB snimci; bez debug porta ili izvlačenja sesije.",
+  "restoration": "Vraćeni Zelena, originalnih1440×3120 /560dpi i show_ime_with_hard_keyboard=0. Emulator otvoren i prijavljen.",
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "date": "2026-10-27",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/dark/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/dark/canonical/online-players-internal/state-quality-v2.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/dark/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/dark/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/dark/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/dark/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/dark/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/dark/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/dark/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/dark/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/green-soft-clay/canonical/room-controls/close-v1.png",
+          "resolved": "assets/green-soft-clay/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "dark-online-list.jpg",
+        "dark-online-keyboard.jpg",
+        "dark-online-filter-empty.jpg",
+        "dark-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "date": "2026-10-27",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/light/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/light/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/light/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "light-online-list.jpg",
+        "light-online-keyboard.jpg",
+        "light-online-filter-empty.jpg",
+        "light-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "date": "2026-10-27",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/medium/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/medium/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "medium-online-list.jpg",
+        "medium-online-keyboard.jpg",
+        "medium-online-filter-empty.jpg",
+        "medium-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/winter/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/winter/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/winter/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "winter-online-list.jpg",
+        "winter-online-keyboard-ready.jpg",
+        "winter-online-filter-empty.jpg",
+        "winter-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/neon/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/neon/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/neon/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "neon-online-list.jpg",
+        "neon-online-keyboard.jpg",
+        "neon-online-filter-empty.jpg",
+        "neon-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-internal/state-quality-v2.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/amethyst/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/amethyst/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "amethyst-online-list.jpg",
+        "amethyst-online-keyboard.jpg",
+        "amethyst-online-filter-empty.jpg",
+        "amethyst-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-internal/state-quality-v2.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/easter/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/easter/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "potrebna dorada — lokalno ispravljeno, Android potvrda čeka deploy",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "Objavljeni CSS daje avatarima stari ljubičasti rub i svim slikama pravougaonu senku. Uklonjeno lokalno iz teme.css; ovi snimci prikazuju problem pre popravke.",
+      "evidence": [
+        "easter-online-list.jpg",
+        "easter-online-keyboard.jpg",
+        "easter-online-filter-empty.jpg",
+        "easter-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/desert/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/desert/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "desert-online-list.jpg",
+        "desert-online-keyboard.jpg",
+        "desert-online-filter-empty.jpg",
+        "desert-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/moon/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/moon/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/moon/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": false,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "Akcije nad drugim igračem nisu stvarno prikazane, jer je lista sadržala samo sopstveni nalog.",
+      "evidence": [
+        "moon-online-list.jpg",
+        "moon-online-keyboard.jpg",
+        "moon-online-filter-empty.jpg",
+        "moon-online-filter-empty-no-keyboard.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "date": "2026-10-28",
+      "pngRoles": 8,
+      "sources": {
+        "identity": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-v1.png"
+        },
+        "state": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-internal/state-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-internal/state-v1.png"
+        },
+        "search": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-internal/search-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-internal/search-v1.png"
+        },
+        "friend": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png"
+        },
+        "spectate": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png"
+        },
+        "duel": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png"
+        },
+        "avatar": {
+          "canonical": "assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png"
+        },
+        "close": {
+          "canonical": "assets/theme-packs/severna/canonical/room-controls/close-v1.png",
+          "resolved": "assets/theme-packs/severna/canonical/room-controls/close-v1.png"
+        }
+      },
+      "status": "pregledani raspored i tekst prihvatljivi; tematski search X lokalno dorađen",
+      "layout": "Naslov, pretraga, kartice, imena i prazno stanje vizuelno odgovaraju Green rasporedu na 360×780; bez odsečenog teksta i izlaska okvira u sistemsku zonu.",
+      "actionIconsObserved": true,
+      "assetAssessment": "Aktuelni PNG identiteti prihvatljivi u snimljenim veličinama. Nije bilo potrebe za novim ilustracijama.",
+      "caveat": "",
+      "evidence": [
+        "severna-online-list.jpg",
+        "severna-online-keyboard.jpg",
+        "severna-online-filter-empty.jpg",
+        "severna-online-filter-empty-no-keyboard.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "file": "dark-online-list",
+      "date": "2026-10-27",
+      "theme": "dark",
+      "title": "Zelena — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "dark-online-keyboard",
+      "date": "2026-10-27",
+      "theme": "dark",
+      "title": "Zelena — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "dark-online-filter-empty",
+      "date": "2026-10-27",
+      "theme": "dark",
+      "title": "Zelena — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "dark-online-filter-empty-no-keyboard",
+      "date": "2026-10-27",
+      "theme": "dark",
+      "title": "Zelena — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "light-online-list",
+      "date": "2026-10-27",
+      "theme": "light",
+      "title": "Svetlo zlato — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "light-online-keyboard",
+      "date": "2026-10-27",
+      "theme": "light",
+      "title": "Svetlo zlato — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "light-online-filter-empty",
+      "date": "2026-10-27",
+      "theme": "light",
+      "title": "Svetlo zlato — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "light-online-filter-empty-no-keyboard",
+      "date": "2026-10-27",
+      "theme": "light",
+      "title": "Svetlo zlato — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "medium-online-list",
+      "date": "2026-10-27",
+      "theme": "medium",
+      "title": "Trula višnja — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "medium-online-keyboard",
+      "date": "2026-10-27",
+      "theme": "medium",
+      "title": "Trula višnja — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "medium-online-filter-empty",
+      "date": "2026-10-27",
+      "theme": "medium",
+      "title": "Trula višnja — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "medium-online-filter-empty-no-keyboard",
+      "date": "2026-10-27",
+      "theme": "medium",
+      "title": "Trula višnja — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "winter-online-list",
+      "date": "2026-10-28",
+      "theme": "winter",
+      "title": "Plavi okean — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "winter-online-keyboard-ready",
+      "date": "2026-10-28",
+      "theme": "winter",
+      "title": "Plavi okean — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "winter-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "winter",
+      "title": "Plavi okean — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "winter-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "winter",
+      "title": "Plavi okean — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "neon-online-list",
+      "date": "2026-10-28",
+      "theme": "neon",
+      "title": "Neon Cyber — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "neon-online-keyboard",
+      "date": "2026-10-28",
+      "theme": "neon",
+      "title": "Neon Cyber — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "neon-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "neon",
+      "title": "Neon Cyber — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "neon-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "neon",
+      "title": "Neon Cyber — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "amethyst-online-list",
+      "date": "2026-10-28",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "amethyst-online-keyboard",
+      "date": "2026-10-28",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "amethyst-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "amethyst-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "easter-online-list",
+      "date": "2026-10-28",
+      "theme": "easter",
+      "title": "Vaskršnja — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "easter-online-keyboard",
+      "date": "2026-10-28",
+      "theme": "easter",
+      "title": "Vaskršnja — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "easter-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "easter",
+      "title": "Vaskršnja — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "easter-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "easter",
+      "title": "Vaskršnja — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "desert-online-list",
+      "date": "2026-10-28",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "desert-online-keyboard",
+      "date": "2026-10-28",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "desert-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "desert-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "moon-online-list",
+      "date": "2026-10-28",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Lista igrača",
+      "note": "U ovom trenutku prisutan je samo prijavljeni nalog; nema dokaza za akcije uz drugog igrača."
+    },
+    {
+      "file": "moon-online-keyboard",
+      "date": "2026-10-28",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "moon-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "moon-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "severna-online-list",
+      "date": "2026-10-28",
+      "theme": "severna",
+      "title": "Severna maglina — Lista igrača",
+      "note": "Stvarna lista sa prijavljenim nalogom i drugim igračem; vidljive tematske akcije i njihova dostupnost."
+    },
+    {
+      "file": "severna-online-keyboard",
+      "date": "2026-10-28",
+      "theme": "severna",
+      "title": "Severna maglina — Pretraga sa tastaturom",
+      "note": "Polje pretrage ostaje dostupno. Telo liste se prilagođava prostoru iznad tastature."
+    },
+    {
+      "file": "severna-online-filter-empty",
+      "date": "2026-10-28",
+      "theme": "severna",
+      "title": "Severna maglina — Nema rezultata — tastatura",
+      "note": "Lokalni upit zzqa987 pravilno prikazuje tematski PNG i poruku da nema poklapanja."
+    },
+    {
+      "file": "severna-online-filter-empty-no-keyboard",
+      "date": "2026-10-28",
+      "theme": "severna",
+      "title": "Severna maglina — Nema rezultata — puna soba",
+      "note": "Prazno stanje bez preklapanja sa sistemskom navigacijom."
+    },
+    {
+      "file": "neon-settings",
+      "date": "2026-10-28",
+      "theme": "incident",
+      "title": "Neon — prvi pokušaj",
+      "note": "Gate ostaje na prvom snimku; sledeći snimak pokazuje vraćanje na Winter. Ovo je nalaz prelaska teme, ne dokaz greške rasporeda Online sobe."
+    },
+    {
+      "file": "neon-settings-ready",
+      "date": "2026-10-28",
+      "theme": "incident",
+      "title": "Neon — neuspešan prvi izbor",
+      "note": "Posle gate-a ostao je Plavi okean. Ne proglašavati hladni transfer pouzdano trenutnim."
+    },
+    {
+      "file": "neon-settings-retry",
+      "date": "2026-10-28",
+      "theme": "incident",
+      "title": "Neon — ponovljeni izbor uspeva",
+      "note": "Nakon ponavljanja aktivan Neon; pregled njegove sobe potom završen."
+    },
+    {
+      "file": "desert-online-search-cleared",
+      "date": "2026-10-28",
+      "theme": "extra",
+      "title": "Brisanje pretrage",
+      "note": "Pritiskom na native X upit je obrisan i vraćena lista igrača; ništa nije poslato drugim igračima."
+    },
+    {
+      "file": "dark-menu-restored-original",
+      "date": "2026-10-28",
+      "theme": "extra",
+      "title": "Vraćeno početno okruženje",
+      "note": "Zelena, originalnih 1440×3120 / 560dpi; tastatura zatvorena i show_ime_with_hard_keyboard vraćen na 0. Nalog ostaje prijavljen."
+    }
+  ]
+}

@@ -57,6 +57,9 @@ for (const [selector, size] of [['league-tab-soft-clay-icon', 28], ['league-rank
     assert.match(css, new RegExp(`${selector}[\\s\\S]*?${size}px !important;`), `${selector} geometry`);
 }
 assert.match(css, /#winner-modal-overlay \.ql-quarter-champion-medal \{[\s\S]*?width: clamp\(38px, 6vh, 50px\) !important/);
+assert.match(html, /theme-quarterly-league-room\.css\?v=9/, 'Runtime layout correction must invalidate the cached stylesheet');
+assert.match(css, /#league-modal-overlay#league-modal-overlay#league-modal-overlay \.league-summary-card[\s\S]*?grid-template-columns: minmax\(0, 1fr\) minmax\(0, 1fr\) !important/);
+assert.match(css, /#league-modal-overlay#league-modal-overlay#league-modal-overlay \.league-page-dot\s*\{[\s\S]*?width: 44px !important;[\s\S]*?height: 44px !important/);
 for (const selector of ['quarter-winner-title', 'quarter-winner-period', 'quarter-winner-name',
     'quarter-winner-points', 'quarter-winner-message', 'quarter-winner-action']) {
     assert.match(css, new RegExp(`#winner-modal-overlay \\.${selector} \\{[\\s\\S]*?var\\(--theme-card-`),

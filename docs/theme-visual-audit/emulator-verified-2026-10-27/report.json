@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-27",
+  "deployment": "Javni game.js, managers.js, theme-settings-room.js i tri nova CSS fajla vracajuHTTP200 i normalizovano odgovaraju lokalnom HEAD-u na pocetku prolaza. Radni direktorijum je bio cist.",
+  "scope": "Ponovna provera R01/R07–R13: izbor Desert/Moon/Severna, ponovni ulazak u Podesavanja, restart Moon, ponovni topli izbor, Moon/Easter statistika, Easter Top lista i Vatreni niz. Dodatno aktiviranje vec posedovanog Svetlog zlata iz Riznice.",
+  "limits": "Nije pregled svih soba i svih deset tema u ovom prolazu. Nije fizicki S25 test, benchmark praznog HTTP cache-a niti simulacija slabe mreze. Nije pocinjana nova partija radi game panela; njegov put ima regresione testove, ne novi Android snimak.",
+  "safety": "Nisu pokretane nove partije, nagrade, kupovine, nagradne reklame, dueli ili poruke. Automatski test interstitial pri izlasku iz Top liste zatvoren Android back dugmetom. Bez WebView debugger pristupa ili ekstrakcije sesije.",
+  "findings": [
+    {
+      "id": "R01",
+      "status": "Delimicno potvrdjeno.",
+      "result": "Desert/Moon/Severna uspevaju iz prvog izbora u ovom prolazu. Prvi izbori pokazuju loader; ponovni Moon prikaz brzo kompletan. Cache nije brisan; ne tvrdi se trenutna hladna promena."
+    },
+    {
+      "id": "R13",
+      "status": "Potvrdjeno u pregledanim stvarnim scenarijima.",
+      "result": "Tri teme ostaju posle meni/Podesavanja povratka; Moon posle restarta, Light posle izbora iz Riznice. Nema ranijeg vracanja na Desert."
+    },
+    {
+      "id": "R08",
+      "status": "Potvrdjeno na Moon i Easter primerima.",
+      "result": "Uskladjeno podnozje i navigacioni prostori. Ostale teme imaju isti CSS i regresione provere, bez novog pojedinacnog snimka u ovom prolazu."
+    },
+    {
+      "id": "R09",
+      "status": "Potvrdjeno na Moon i Easter H2H.",
+      "result": "Tematsko mastilo umesto opste jarke zelene/crvene; staticki kontrast svih deset paleta ostaje zaseban dokaz."
+    },
+    {
+      "id": "R10",
+      "status": "Potvrdjena prethodna dorada; dodatni tab Riznice je R15.",
+      "result": "Easter glavne tri kartice, redovi Vatrenog niza i skrol sada prate paletu."
+    },
+    {
+      "id": "R11",
+      "status": "Potvrdjeno.",
+      "result": "Easter Top lista pokazuje brojeve4+, prve tri kanonske medalje ostaju."
+    },
+    {
+      "id": "R07",
+      "status": "Dodatno lokalno ispravljeno; nova vizuelna potvrda ceka deploy.",
+      "result": "Kasniji theme-quarterly-league-room.css imao je font shorthand koji je nadjacavao raniju kompaktnu tipografiju. Odgovarajuce pravilo361–480px sada je u kasnijem fajlu; dimenzije i logo ostaju."
+    },
+    {
+      "id": "R12",
+      "status": "Tematska pozadina i mastilo potvrdjeni; dodatna lokalna dorada ceka deploy.",
+      "result": "Nepotpuni PNG delovi u gate-u skrivaju se do decode. Kasno ucitani PNG ne otkriva zastareli gate. Neutralni veo uklanja stari Easter ljubicasti sloj; Green gate koristi postojece meni identitete i nema hue-rotate prebojavanja."
+    },
+    {
+      "id": "R14",
+      "status": "Lokalno ispravljeno; Android potvrda ceka deploy.",
+      "result": "ShopManager.equip je direktno menjao temu pre pripreme PNG. Sada ceka menu i treasury kontrole, close, dukat i video. Poslednji izbor pobedjuje; neuspeh ili promenjeno vlasnistvo cuvaju prethodni kompletan izgled. Regresioni test prolazi."
+    },
+    {
+      "id": "R15",
+      "status": "Lokalno ispravljeno; Android potvrda ceka deploy.",
+      "result": "Easter tabovi koriste postojece tematske povrsine/senke umesto starog ljubicastog. Light naslov i zaglavlje koriste tematske povrsine i ink za citljivost."
+    }
+  ],
+  "validation": [
+    "check:theme-settings-room sa testom dekodiranja gate-a",
+    "check:theme-treasury-final sa testom odlozene primene teme",
+    "check:theme-quarterly-league-final",
+    "check:theme-game-header",
+    "check:js",
+    "check:theme-canonical-assets",
+    "git diff --check"
+  ],
+  "entries": [
+    {
+      "file": "start-ready-original",
+      "title": "Zelena: originalni ekran",
+      "note": "R07 ostaje: dva reda naslova i skraceni poeni lige na oko411px."
+    },
+    {
+      "file": "desert-first-at-1s",
+      "title": "Prvi izbor Desert u ovom prolazu",
+      "note": "Tematski gate, ali delovi nedekodiranih slicica. Nije merenje praznog HTTP cache-a."
+    },
+    {
+      "file": "desert-first-settled",
+      "title": "Desert: kompletna Podesavanja",
+      "note": "Izbor uspeva bez ponavljanja."
+    },
+    {
+      "file": "desert-reopened-settings",
+      "title": "Desert: ponovni ulazak",
+      "note": "Tema se nije vratila na prethodnu."
+    },
+    {
+      "file": "moon-first-at-1s",
+      "title": "Prvi izbor Moon u ovom prolazu",
+      "note": "Pozadina, naslov i paleta pripadaju Moon. Slicice jos nepotpune."
+    },
+    {
+      "file": "moon-first-settled",
+      "title": "Moon: kompletna Podesavanja",
+      "note": "Izbor uspeva bez ponavljanja."
+    },
+    {
+      "file": "moon-reopened-settings",
+      "title": "Moon: ponovni ulazak",
+      "note": "Tema ostaje izabrana."
+    },
+    {
+      "file": "severna-first-at-1s",
+      "title": "Prvi izbor Severna u ovom prolazu",
+      "note": "Odgovarajuca pozadina i mastilo."
+    },
+    {
+      "file": "severna-first-settled",
+      "title": "Severna: kompletna Podesavanja",
+      "note": "Izbor uspeva bez ponavljanja."
+    },
+    {
+      "file": "severna-reopened-settings",
+      "title": "Severna: ponovni ulazak",
+      "note": "Nema ranijeg povratka na Desert."
+    },
+    {
+      "file": "moon-warm-at-250ms",
+      "title": "Ponovni izbor Moon",
+      "note": "Na prvom snimku nakon kratkog cekanja nova tema je kompletna; naziv fajla oznacava podeseni wait250ms, ne ukupno trajanje promene."
+    },
+    {
+      "file": "moon-restart-ready",
+      "title": "Moon: ponovno pokretanje aplikacije",
+      "note": "Prijava i tema su ocuvane."
+    },
+    {
+      "file": "moon-statistics-fixed",
+      "title": "Moon: pregled statistike",
+      "note": "R08: vece podnozje sa44px dodirima i uskladjeni razmaci."
+    },
+    {
+      "file": "moon-h2h-fixed",
+      "title": "Moon: H2H",
+      "note": "R09: tematsko citljivo statusno mastilo."
+    },
+    {
+      "file": "easter-gate-first",
+      "title": "Easter: ucitavanje",
+      "note": "Mastilo i panel su tematski; preostali stari ljubicasti veo i delovi nedekodiranih slika."
+    },
+    {
+      "file": "easter-main-fixed",
+      "title": "Easter: glavni meni",
+      "note": "R10 glavne kartice koriste krem/zalfija povrsine."
+    },
+    {
+      "file": "easter-top-ranks-fixed",
+      "title": "Easter: Top lista",
+      "note": "R11: brojevi4+ sada vidljivi. Prva tri mesta ostaju medalje."
+    },
+    {
+      "file": "easter-statistics-fixed",
+      "title": "Easter: H2H",
+      "note": "Tematsko statusno mastilo i zajednicka navigacija."
+    },
+    {
+      "file": "easter-statistics-overview-fixed",
+      "title": "Easter: pregled statistike",
+      "note": "Zajednicka geometrija, tematske povrsine."
+    },
+    {
+      "file": "easter-fire-rows-fixed",
+      "title": "Easter: Vatreni niz",
+      "note": "R10: redovi i skrol vise nisu lavanda."
+    },
+    {
+      "file": "easter-treasury-theme-catalog",
+      "title": "Easter: teme u Riznici",
+      "note": "R15: aktivni tab jos ima ljubicasti akcenat."
+    },
+    {
+      "file": "light-equipped-from-treasury",
+      "title": "Izbor posedovanog Svetlog zlata",
+      "note": "R14: izgled se primenjuje pre kompletnih slika. Nema kupovine."
+    },
+    {
+      "file": "light-treasury-settled",
+      "title": "Svetlo zlato: dovrsen transfer",
+      "note": "R14 slike stizu naknadno; R15 slabo citljiv naslov na starom tamnom zaglavlju."
+    },
+    {
+      "file": "light-settings-after-treasury",
+      "title": "Svetlo zlato: Podesavanja posle Riznice",
+      "note": "R13: izbor ostaje sacuvan."
+    },
+    {
+      "file": "green-original-final",
+      "title": "Kraj pregleda",
+      "note": "Zelena, prijavljen nalog, originalni1440x3120 /560dpi."
+    }
+  ]
+}

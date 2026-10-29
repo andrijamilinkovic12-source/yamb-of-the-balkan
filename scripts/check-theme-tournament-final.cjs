@@ -72,4 +72,9 @@ assert(room.includes('tourney-champion-finalist-icon-canonical') && room.include
 assert(game.includes('showTournamentFinalCeremony(ceremonyData)') && game.includes('getThemeMedalSource(\'tournament\', \'silver\''));
 assert(!languages.includes('"tourney_finalist_title": "FINALISTA 🥈"'));
 assert(html.includes('theme-tournament-final.css'));
+assert(html.includes('theme-tournament-final.css?v=3'), 'Tournament CSS cache version is stale');
+const finalCss = read('www/theme-tournament-final.css');
+assert(finalCss.includes('grid-template-columns: 68px minmax(0, 1fr)'), 'Champion name needs its own column');
+assert(finalCss.includes('--tourney-readable-ink: var(--theme-card-ink)'), 'Tournament states must use theme ink');
+assert(finalCss.includes('font-size: .9rem !important'), 'Modal actions must retain Green typography');
 console.log(`PASS: ${themes.length} themes × ${roles.length} unique canonical Tournament PNG roles, intro and active-path checks.`);

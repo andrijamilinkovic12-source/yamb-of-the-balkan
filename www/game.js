@@ -815,6 +815,22 @@ class YambApp {
         this.warmQuickSkinChoices();
     }
 
+    prepareTreasuryTheme(theme) {
+        const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        const ducatVersion = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+        const sources = [
+            ...this.getThemeRoomSources(theme, 'treasury'),
+            ...this.getRewardedVideoPackSources(theme, 'treasury'),
+            this.getMainRoomPackSource(theme, 'treasury'),
+            window.themeGameHeader?.asset('close', theme),
+            `${root}/canonical/ducat/ducat-inline-v${ducatVersion}.png`
+        ].filter(Boolean);
+        return Promise.all([
+            this.warmThemePack(theme).critical,
+            this.preloadThemeSources(sources, { concurrency: 6, priority: 'high', timeoutMs: 6000 })
+        ]).then(results => results.every(value => value !== false));
+    }
+
     async switchGameTheme(theme) {
         const token = this.themeSwitchRequestToken = (this.themeSwitchRequestToken || 0) + 1;
         const button = document.querySelector('#game-dropdown-menu button[onclick*="toggleTheme"]');
@@ -2172,8 +2188,9 @@ class YambApp {
         if (!pack) return null;
         // The transition screen must show the same room identities as the menu.
         const featuredRoomIds = ['solo', 'online-random', 'treasury', 'tournament', 'leaderboard'];
+        const greenMenuIcons = theme === 'dark' ? this.getMainMenuIconSources('dark') : [];
         const roomIcons = theme === 'dark'
-            ? pack.icons
+            ? (greenMenuIcons.length ? greenMenuIcons.slice(0, 5) : pack.icons)
             : featuredRoomIds.map(roomId => this.getMainRoomPackSource(theme, roomId, 'menu'));
         const medalAssets = ['collection', 'leaderboard', 'tournament', 'quarterlyLeague', 'powerIndex', 'fireStreak']
             .flatMap(context => ['gold', 'silver', 'bronze'].map(tier => getThemeMedalSource(context, tier, theme)));
@@ -2807,10 +2824,16 @@ class YambApp {
                 iconsEl.replaceChildren();
                 pack.icons.forEach(src => {
                     const icon = document.createElement('img');
-                    icon.src = src;
                     icon.alt = '';
                     icon.setAttribute('aria-hidden', 'true');
                     icon.decoding = 'async';
+                    const revealDecoded = async () => {
+                        try { if (icon.decode) await icon.decode(); } catch (_) { return; }
+                        if (token === this.themeLoadingToken && icon.naturalWidth > 0) icon.dataset.decoded = 'true';
+                    };
+                    icon.onload = revealDecoded;
+                    icon.src = src;
+                    if (icon.complete && icon.naturalWidth > 0) void revealDecoded();
                     iconsEl.appendChild(icon);
                 });
             }

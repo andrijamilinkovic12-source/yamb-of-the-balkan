@@ -1,5 +1,21 @@
 # Turnir — završna provera deset tema
 
+## Stvarni emulator — nastavak 28–29.10.2026.
+
+[62 Android snimka](theme-visual-audit/emulator-tournament-2026-10-29/index.html), [kanonske putanje i granice](theme-visual-audit/emulator-tournament-2026-10-29/report.json), [210 lokalnih slučajeva](theme-visual-audit/emulator-tournament-2026-10-29/local-layout-report.json). U svih deset tema na 360×780 pregledani su Info (već prijavljen nalog, osam učesnika), četvrtfinale, prelazak na finale, detalj istog odigranog četvrtfinalnog meča i prve kartice Dvorane slavnih. Green dodatno polufinale i Put do titule. Intro kadrovi sačuvani su za osam dodatnih tema; konfiguracija trajanja ostaje zajednička, ali screenshotima nije merena u sekundama.
+
+**R21 — lokalno ispravljeno, bez deploya:** rezultat u kartici osvajača smešten je ispod imena kako ga ne bi sužavao na nekoliko slova; širina kartice i avatar ostaju isti. Naslov, razmaci, tabovi i dugmad modala ujednačeni su prema Green tipografiji. Opis i prijava koriste čitljivo tematsko mastilo; popunjene prijave, aktivna navigacija, tabovi, statusne akcije i kartice osvajača koriste postojeće paletne površine. Uklonjeni su nasleđeni Easter ljubičasti rubovi/pastelni tabovi/plavi status, generička siva/zelena/zlatna podloga i senke teksta u detalju meča. Poraženi se razlikuje sekundarnim mastilom, bez zatamnjivanja celog reda. Funkcije navigacije, prijave i mečeva nisu menjane. CSS v3.
+
+Nije bilo potrebe za novim PNG crtežima u snimljenim prikazima. Kanonski pehari sa zvezdom, tabovi, stanja i motivi finaliste odgovaraju temi. Statička provera potvrđuje 14 turnirskih semantičkih uloga po temi; dukat, Indeks moći i X su zasebni deljeni kanonski identiteti. Devet 512px room izvedenica pehara ostaju namerni tehnički izuzetak naspram Green 384px kanonskog PNG, ne novi identitet.
+
+Ciljane provere Turnira i online završnog ekrana prolaze. Izolovani Chromium test stvarnih `TournamentManager`/`ModalManager` renderera i CSS-a sa sintetičkim turnirom prolazi 210 kombinacija (10 tema × 7 stanja × 320×568, 360×780 i 412×915). Proverene su izračunate Green mere/fontovi, bezbedne granice, vidljivi PNG, navigacija 44/10px, prostor za ime i paletno mastilo opisa/prijave. Animacije su isključene radi stabilnog merenja, a offline font može biti fallback; ovo nije nova Android potvrda lokalnih izmena.
+
+**Granice:** nisu sada izazivani prijava/odjava, prazan turnir, prihvatanje pravila, dogovor termina, početak duela, stvarna isplata, nagradna poruka ili završna ceremonija. Nije pregledana svaka istorijska titula, svaki jezik ili fizički S25. Devet izbora tema i vraćanje Zelene uspeli su iz prvog pokušaja, ali pojedini PNG-ovi se pri prvom učitavanju pojavljuju naknadno; ranije lokalne dorade učitavanja i R21 čekaju korisnikov deploy i novu Android potvrdu.
+
+Nema novih partija, kupovina, nagrada, slanja poziva/poruka ili deljenja kartice. Automatski test interstitiali zatvoreni su Android Back kontrolom. Vraćeni su Zelena i originalnih 1440×3120/560dpi; emulator otvoren i prijavljen. Nema commita ili deploya.
+
+## Istorijska provera — 23.10.2026.
+
 Datum: 23.10.2026. Referenca za geometriju je Zelena tema; materijal, oblici ikona i boje ostaju svojstveni svakoj temi.
 
 1. **Intro.** Turnir koristi zajednički `ROOM_INTRO_TIMING`: otvaranje sobe iza uvoda na 2,4 s, uklanjanje uvoda na 3,2 s. CSS animacija koristi isto trajanje. U uvodu je samo kanonski pehar aktivne teme, bez starog tekstualnog sloja.

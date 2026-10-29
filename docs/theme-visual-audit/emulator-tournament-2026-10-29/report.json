@@ -1,0 +1,953 @@
+{
+  "date": "2026-10-29",
+  "startedOn": "2026-10-28",
+  "room": "Turnir",
+  "scope": "Stvarni Android emulator 360×780: u svih deset tema Info sa već prijavljenim nalogom/8 učesnika, četvrtfinale, prelazak na finale, detalj istog odigranog četvrtfinalnog meča i prve kartice Dvorane slavnih. Green dodatno polufinale i Put do titule. Intro kadrovi sačuvani za osam dodatnih tema.",
+  "deployment": "Android snimci prikazuju postojeću objavljenu verziju. R21 i ranije lokalne dorade nisu commitovane niti deployovane.",
+  "findings": {
+    "R21": "Kartica osvajača smešta rezultat ispod imena, uz istu širinu kartice i avatara, da rezultat ne sužava ime na nekoliko slova. Zajednička Green debljina/razmak naslova, 14px tab radius i tipografija modala. Tabovi, aktivna navigacija, popunjene prijave, statusne akcije i kartice osvajača prate površine/ink/akcent teme; uklonjeni stari Easter ljubičasti rubovi, plavi status i generička zelena/siva/zlatna podloga. Opis/oznaka prijave koriste čitljivi muted, poraženi nisu zatamnjeni opacity/filter slojem, a pobednik ostaje označen debljinom i rezultatom. Uklonjene stare zamućujuće tekstualne senke u detalju meča.",
+    "css": "www/theme-tournament-final.css?v=3",
+    "png": "Nema PNG izmene, novih assetsa, promene DNK, pravca ili palete.",
+    "navigation": "Na snimljenim četvrtfinalnim i finalnim stranama sve tri tačke su vidljive, aktivna je cela. Funkcije navigacije nisu menjane."
+  },
+  "inventory": "14 turnirskih semantičkih uloga po temi: pehar, finalista, tri taba, šest stanja i tri turnirske medalje. Dukat, Indeks moći i X su deljeni kanonski identiteti iste teme. Devet tema ima dodatnu tehničku 512px room izvedenicu istog 384px pehara; Green koristi kanonski 384px PNG. To je namerni tehnički izuzetak, ne dodatni identitet. Nisu svih 14 uloga istovremeno na ekranu; medalje različitih takmičenja nisu spajane.",
+  "tests": {
+    "static": "PASS: check:theme-tournament-final — deset tema ×14 različitih kanonskih PNG uloga, intro konfiguracija, tematske putanje i dodatne regresione tvrdnje CSS ugovora.",
+    "runtime": "PASS: 210 izolovanih slučajeva (10 tema ×7 stanja ×320×568/360×780/412×915), stvarni TournamentManager/ModalManager i CSS sa sintetičkim turnirom. Izračunate Green mere/fontovi, safe bounds, ispravni vidljivi PNG, navigacija44/10px, dovoljno prostora za ime i paletni opis/prijava.",
+    "runtimeEvidence": "local-layout-report.json",
+    "online": "PASS: check:online-duel-finish; pet online režima, turnirski uslov revanša, zajedničke nagrade/rekordi. Sintetička regresija, nije nova stvarna isplata.",
+    "fontLimit": "Montserrat je deklarisan; izolovani offline test može koristiti fallback. Animacije su u fixture-u isključene radi stabilnog merenja, pa test ne meri motion ili trajanje intra."
+  },
+  "switching": "Devet izbora posedovanih tema kroz Podešavanja i vraćanje Zelene uspeli su iz prvog pokušaja u ovom prolazu. Tokom prvog učitavanja X i pojedine ikone nisu odmah kompletni; ranija lokalna decode dorada čeka deploy. Ovo nije merenje hladnog mrežnog cache-a.",
+  "safety": "Nema nove partije, prijave/odjave sa turnira, kupovine, nagradne reklame, isplate, deljenja kartice ili slanja poruka/poziva. Otvarani su samo postojeći prikazi i zatvarani informativni modali. Automatski test interstitiali zatvoreni Android Back kontrolom bez klika na oglas. Nije bilo blokirajućeg poziva u ovom prolazu.",
+  "restoration": "Zelena vraćena kroz UI. wm size/density resetovani na originalnih1440×3120/560dpi; emulator ostao otvoren i prijavljen.",
+  "limits": [
+    "Nije nova Android provera prijave/odjave, praznog turnira, prihvatanja pravila, zakazivanja, prihvatanja termina ili pokretanja duela. Ti tokovi nisu pokretani na nalogu.",
+    "Dvorana slavnih prikazana je sa prvim karticama, ne sa svakom istorijskom titulom; Put do titule novim Android dokazom obuhvaćen samo u Zelenoj. Polufinale dodatno samo u Zelenoj.",
+    "Nije sada izazvana šampionska/finalistička ceremonija ili nagradno/grešno obaveštenje; završni online ekran i stvarna isplata nisu novi Android dokaz.",
+    "Nisu merene tačne sekunde intra, fps, hladni transfer, drugi jezik ili fizički Samsung S25.",
+    "Nove lokalne ispravke zahtevaju korisnikov deploy i naknadnu Android potvrdu."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+        "finalist": "www/assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png",
+        "tab-info": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/green-soft-clay/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/green-soft-clay/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/green-soft-clay/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/green-soft-clay/canonical/competition-medals/tournament-gold-v1.png?v=2",
+        "medal-silver": "www/assets/green-soft-clay/canonical/competition-medals/tournament-silver-v1.png?v=2",
+        "medal-bronze": "www/assets/green-soft-clay/canonical/competition-medals/tournament-bronze-v1.png?v=2"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/green-soft-clay/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "562982d5c6297465852a24b38ab4f75d71683a94d164dfc187e5628822146a26"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/green-soft-clay/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "e6a214cdb14ab3b71914939f2fe700c87852321231c4360aabd888e37acfd877"
+          }
+        }
+      ],
+      "roomTrophyDerivative": null,
+      "evidence": [
+        "dark-info.jpg",
+        "dark-bracket.jpg",
+        "dark-final.jpg",
+        "dark-duel.jpg",
+        "dark-hall.jpg"
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+        "finalist": "www/assets/theme-packs/light/canonical/tournament-awards/finalist-silver-v1.png",
+        "tab-info": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/light/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/light/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/light/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/light/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/light/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/light/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/light/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/light/canonical/competition-medals/tournament-gold-v1.png?v=4",
+        "medal-silver": "www/assets/theme-packs/light/canonical/competition-medals/tournament-silver-v1.png?v=4",
+        "medal-bronze": "www/assets/theme-packs/light/canonical/competition-medals/tournament-bronze-v1.png?v=4"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/light/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "fdb274a63af2447c126cd98823c10872412c5e36a013983b2f6f946fb32978a0"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "a84c498bac4f203c0460e384ae4cee3dec19c5b1d8c189e8b07c2e9477e9c5ed"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/light/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "25a44ea2e673389240a9a35a254377202d10b2014ba273b79637e37948709ef2"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-room-v1.png",
+      "evidence": [
+        "light-info.jpg",
+        "light-bracket.jpg",
+        "light-final.jpg",
+        "light-duel.jpg",
+        "light-hall.jpg"
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+        "finalist": "www/assets/theme-packs/medium/canonical/tournament-awards/finalist-silver-v1.png",
+        "tab-info": "www/assets/theme-packs/medium/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/medium/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/medium/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/medium/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/medium/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/medium/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/medium/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/medium/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/medium/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/medium/canonical/competition-medals/tournament-gold-v1.png?v=2",
+        "medal-silver": "www/assets/theme-packs/medium/canonical/competition-medals/tournament-silver-v1.png?v=2",
+        "medal-bronze": "www/assets/theme-packs/medium/canonical/competition-medals/tournament-bronze-v1.png?v=2"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/medium/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "e9c6529cfaf2af26882900c2c37fd5f438eeee7bb3ac3daa91e760fa3d21e801"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "88708adafc84717bbb30c8e3c88477b50b772596162cbd383f8056469b0387c3"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/medium/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "019a2b221293cd36c5e30ab4dfe58acac30b5d73d47aa0b9e5f9a302dc2686bd"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-room-v1.png",
+      "evidence": [
+        "medium-registration.jpg",
+        "medium-bracket.jpg",
+        "medium-final.jpg",
+        "medium-duel.jpg",
+        "medium-hall.jpg",
+        "medium-open.jpg"
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/winter/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/winter/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/winter/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/winter/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/winter/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/winter/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/winter/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/winter/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/winter/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/winter/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "c05b6df92c844ad174454a598b2bf2972ff90d9b9b726875368db25fc13ebef5"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "6d072396680b7c60d7898a4047970364b09f5ebd71cbcb455e1cb79058ee2e40"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/winter/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "5f50ac9cf2542e9cf87e87970c1f1efd5bc349e6d4561d7e2d3908b059c860b2"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "winter-info.jpg",
+        "winter-bracket.jpg",
+        "winter-final-ready.jpg",
+        "winter-duel.jpg",
+        "winter-hall.jpg",
+        "winter-intro.jpg"
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/neon/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/neon/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/neon/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/neon/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/neon/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/neon/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/neon/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/neon/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/neon/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/neon/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/neon/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/neon/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "ac931278ea7edd9bf0037d3c95b5e205267a02ff0425e142f682ee41e92b86bd"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "bfcd2360ab1d565e14f5c96aa4c85e6a841ad5c83c4c993070244f1acf70d2be"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/neon/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "f2019041dda506ccc25c2dc92b2a9c02d42635f0be3bc48da7fc1c43ca89fcf8"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "neon-info.jpg",
+        "neon-bracket.jpg",
+        "neon-final.jpg",
+        "neon-duel.jpg",
+        "neon-hall-ready.jpg",
+        "neon-intro.jpg"
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/amethyst/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/amethyst/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/amethyst/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/amethyst/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/amethyst/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "60a1bb6ab1001090b0ea5dc20484d55fd358a762d46ac4a2e10d41e4346a476d"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "e753a823f7b6225a2839745c94b9746feb350c2a95317e6ca72fa0d7aef1aff8"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/amethyst/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "e7812932209d996cf6f6d8dbb7c32225de7d8ce003d31a2e29d670ff2f3a95f9"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "amethyst-info.jpg",
+        "amethyst-qf.jpg",
+        "amethyst-final.jpg",
+        "amethyst-duel.jpg",
+        "amethyst-bracket.jpg",
+        "amethyst-intro.jpg"
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/easter/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/easter/canonical/tournament-navigation/tab-hall-of-fame-quality-v2.png",
+        "state-register": "www/assets/theme-packs/easter/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/easter/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/easter/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/easter/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/easter/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/easter/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/easter/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/easter/canonical/ducat/ducat-front-v2.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "a854c2f75d8215cefd61029d1c15dd48374de1d49847137cb6ce1c06d0724437"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "11d3aa85dce02e8fb6b0a1d6f2c68ef49ed1d4febd388dd6e9b34fa43e33413f"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/easter/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "17934ed7e43bb032f7828eab66dce464702143fccb98d8587a98e727eb4f40bc"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "easter-info.jpg",
+        "easter-bracket.jpg",
+        "easter-final.jpg",
+        "easter-duel.jpg",
+        "easter-hall-ready.jpg",
+        "easter-intro.jpg"
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/desert/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/desert/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/desert/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/desert/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/desert/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/desert/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/desert/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/desert/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/desert/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/desert/canonical/ducat/ducat-front-v2.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "a03f67f885270f29ec1439abfbadf4a526287688e510365b3984086073061903"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "132bb6e49d4849f4e0df4508a1f85932abca0c9b889a421cc28a19ee774b84bd"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/desert/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "550646d7bdaa74786b389702a1cf0a12e5a48c33a47047813c3db006783b1570"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "desert-info.jpg",
+        "desert-bracket.jpg",
+        "desert-final.jpg",
+        "desert-duel.jpg",
+        "desert-open.jpg",
+        "desert-intro.jpg"
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/moon/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/moon/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/moon/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/moon/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/moon/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/moon/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/moon/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/moon/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/moon/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/moon/canonical/ducat/ducat-front-v1.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "ede8d2c2c45da4569a4f1e9e6620ce5e4036f76eec04631a124c28502be14b34"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "7bc305f573ab38cad1ed64d2cf92c07a864107c5cb2a289c80fe61942fe65aad"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/moon/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "d4baf97e331674f0a73160f70dcc0c2b693aa8b5341c0407b379d34d7b9ca9e2"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "moon-info.jpg",
+        "moon-bracket.jpg",
+        "moon-final.jpg",
+        "moon-duel.jpg",
+        "moon-hall-ready.jpg",
+        "moon-intro.jpg"
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "status": "Osnovni Android prolaz pregledan; R21 lokalno ispravljeno, potvrda čeka deploy.",
+      "pngStatus": "U snimljenim prikazima odgovarajući kanonski pehar sa zvezdom i ikone aktivne teme; nema potrebe za novim PNG crtežima u ovom prolazu.",
+      "turnirSemanticRoles": 14,
+      "roles": {
+        "champion": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+        "finalist": "www/assets/theme-packs/severna/canonical/tournament-awards/finalist-silver-v2.png",
+        "tab-info": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-info-v1.png",
+        "tab-bracket": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-bracket-v1.png",
+        "tab-hall-of-fame": "www/assets/theme-packs/severna/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+        "state-register": "www/assets/theme-packs/severna/canonical/tournament-states/state-register-v1.png",
+        "state-unregister": "www/assets/theme-packs/severna/canonical/tournament-states/state-unregister-v1.png",
+        "state-registration-locked": "www/assets/theme-packs/severna/canonical/tournament-states/state-registration-locked-v1.png",
+        "state-start": "www/assets/theme-packs/severna/canonical/tournament-states/state-start-v1.png",
+        "state-match-active": "www/assets/theme-packs/severna/canonical/tournament-states/state-match-active-v1.png",
+        "state-match-complete": "www/assets/theme-packs/severna/canonical/tournament-states/state-match-complete-v1.png",
+        "medal-gold": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-gold-v2.png",
+        "medal-silver": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-silver-v2.png",
+        "medal-bronze": "www/assets/theme-packs/severna/canonical/competition-medals/tournament-bronze-v2.png"
+      },
+      "sharedCanonical": [
+        {
+          "key": "ducat",
+          "primary": {
+            "file": "www/assets/theme-packs/severna/canonical/ducat/ducat-front-v2.png",
+            "width": 512,
+            "height": 512,
+            "sha256": "f158ff7914836374b01b2c744b73c068e396c81fb1e7d90d992a17ea7f35c9b0"
+          }
+        },
+        {
+          "key": "power-index",
+          "primary": {
+            "file": "www/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "f6ae9223fbe49cbcb7b78c048ccad4dd42383eb7b9fd59db0fb3f281aff06d33"
+          }
+        },
+        {
+          "key": "close",
+          "primary": {
+            "file": "www/assets/theme-packs/severna/canonical/room-controls/close-v1.png",
+            "width": 256,
+            "height": 256,
+            "sha256": "a14d2953b89d5c8ccf4aea6bfdf1381972d18fddf43602cf8ec0756f248660e1"
+          }
+        }
+      ],
+      "roomTrophyDerivative": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-room-v2.png",
+      "evidence": [
+        "severna-info.jpg",
+        "severna-bracket.jpg",
+        "severna-final.jpg",
+        "severna-duel.jpg",
+        "severna-open.jpg",
+        "severna-intro.jpg"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "theme": "dark",
+      "file": "dark-info",
+      "title": "Zelena — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "dark",
+      "file": "dark-bracket",
+      "title": "Zelena — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "dark",
+      "file": "dark-final",
+      "title": "Zelena — Kostur / finale"
+    },
+    {
+      "theme": "dark",
+      "file": "dark-duel",
+      "title": "Zelena — Detalj odigranog meča"
+    },
+    {
+      "theme": "dark",
+      "file": "dark-hall",
+      "title": "Zelena — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "light",
+      "file": "light-info",
+      "title": "Svetlo zlato — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "light",
+      "file": "light-bracket",
+      "title": "Svetlo zlato — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "light",
+      "file": "light-final",
+      "title": "Svetlo zlato — Kostur / finale"
+    },
+    {
+      "theme": "light",
+      "file": "light-duel",
+      "title": "Svetlo zlato — Detalj odigranog meča"
+    },
+    {
+      "theme": "light",
+      "file": "light-hall",
+      "title": "Svetlo zlato — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "medium",
+      "file": "medium-registration",
+      "title": "Trula višnja — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "medium",
+      "file": "medium-bracket",
+      "title": "Trula višnja — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "medium",
+      "file": "medium-final",
+      "title": "Trula višnja — Kostur / finale"
+    },
+    {
+      "theme": "medium",
+      "file": "medium-duel",
+      "title": "Trula višnja — Detalj odigranog meča"
+    },
+    {
+      "theme": "medium",
+      "file": "medium-hall",
+      "title": "Trula višnja — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "winter",
+      "file": "winter-info",
+      "title": "Plavi okean — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "winter",
+      "file": "winter-bracket",
+      "title": "Plavi okean — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "winter",
+      "file": "winter-final-ready",
+      "title": "Plavi okean — Kostur / finale"
+    },
+    {
+      "theme": "winter",
+      "file": "winter-duel",
+      "title": "Plavi okean — Detalj odigranog meča"
+    },
+    {
+      "theme": "winter",
+      "file": "winter-hall",
+      "title": "Plavi okean — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "neon",
+      "file": "neon-info",
+      "title": "Neon Cyber — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "neon",
+      "file": "neon-bracket",
+      "title": "Neon Cyber — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "neon",
+      "file": "neon-final",
+      "title": "Neon Cyber — Kostur / finale"
+    },
+    {
+      "theme": "neon",
+      "file": "neon-duel",
+      "title": "Neon Cyber — Detalj odigranog meča"
+    },
+    {
+      "theme": "neon",
+      "file": "neon-hall-ready",
+      "title": "Neon Cyber — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "amethyst",
+      "file": "amethyst-info",
+      "title": "Kraljevski ametist — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "amethyst",
+      "file": "amethyst-qf",
+      "title": "Kraljevski ametist — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "amethyst",
+      "file": "amethyst-final",
+      "title": "Kraljevski ametist — Kostur / finale"
+    },
+    {
+      "theme": "amethyst",
+      "file": "amethyst-duel",
+      "title": "Kraljevski ametist — Detalj odigranog meča"
+    },
+    {
+      "theme": "amethyst",
+      "file": "amethyst-bracket",
+      "title": "Kraljevski ametist — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "easter",
+      "file": "easter-info",
+      "title": "Vaskršnja — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "easter",
+      "file": "easter-bracket",
+      "title": "Vaskršnja — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "easter",
+      "file": "easter-final",
+      "title": "Vaskršnja — Kostur / finale"
+    },
+    {
+      "theme": "easter",
+      "file": "easter-duel",
+      "title": "Vaskršnja — Detalj odigranog meča"
+    },
+    {
+      "theme": "easter",
+      "file": "easter-hall-ready",
+      "title": "Vaskršnja — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "desert",
+      "file": "desert-info",
+      "title": "Pustinjsko staklo — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "desert",
+      "file": "desert-bracket",
+      "title": "Pustinjsko staklo — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "desert",
+      "file": "desert-final",
+      "title": "Pustinjsko staklo — Kostur / finale"
+    },
+    {
+      "theme": "desert",
+      "file": "desert-duel",
+      "title": "Pustinjsko staklo — Detalj odigranog meča"
+    },
+    {
+      "theme": "desert",
+      "file": "desert-open",
+      "title": "Pustinjsko staklo — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "moon",
+      "file": "moon-info",
+      "title": "Mesečev sjaj — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "moon",
+      "file": "moon-bracket",
+      "title": "Mesečev sjaj — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "moon",
+      "file": "moon-final",
+      "title": "Mesečev sjaj — Kostur / finale"
+    },
+    {
+      "theme": "moon",
+      "file": "moon-duel",
+      "title": "Mesečev sjaj — Detalj odigranog meča"
+    },
+    {
+      "theme": "moon",
+      "file": "moon-hall-ready",
+      "title": "Mesečev sjaj — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "severna",
+      "file": "severna-info",
+      "title": "Severna maglina — Info / prijavljeni učesnici"
+    },
+    {
+      "theme": "severna",
+      "file": "severna-bracket",
+      "title": "Severna maglina — Kostur / četvrtfinale"
+    },
+    {
+      "theme": "severna",
+      "file": "severna-final",
+      "title": "Severna maglina — Kostur / finale"
+    },
+    {
+      "theme": "severna",
+      "file": "severna-duel",
+      "title": "Severna maglina — Detalj odigranog meča"
+    },
+    {
+      "theme": "severna",
+      "file": "severna-open",
+      "title": "Severna maglina — Dvorana slavnih / prve kartice"
+    },
+    {
+      "theme": "winter",
+      "file": "winter-intro",
+      "title": "Plavi okean — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "neon",
+      "file": "neon-intro",
+      "title": "Neon Cyber — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "amethyst",
+      "file": "amethyst-intro",
+      "title": "Kraljevski ametist — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "easter",
+      "file": "easter-intro",
+      "title": "Vaskršnja — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "desert",
+      "file": "desert-intro",
+      "title": "Pustinjsko staklo — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "moon",
+      "file": "moon-intro",
+      "title": "Mesečev sjaj — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "severna",
+      "file": "severna-intro",
+      "title": "Severna maglina — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "medium",
+      "file": "medium-open",
+      "title": "Trula višnja — intro, pehar sa zvezdom"
+    },
+    {
+      "theme": "extra",
+      "file": "dark-semifinal",
+      "title": "Zelena — dodatno polufinale"
+    },
+    {
+      "theme": "extra",
+      "file": "dark-journey",
+      "title": "Zelena — dodatno Put do titule"
+    },
+    {
+      "theme": "extra",
+      "file": "neon-settings",
+      "title": "Prelazak teme — nedostaje X dok se PNG učitava"
+    },
+    {
+      "theme": "extra",
+      "file": "dark-main-restored-original",
+      "title": "Vraćena Zelena i originalna rezolucija"
+    }
+  ]
+}

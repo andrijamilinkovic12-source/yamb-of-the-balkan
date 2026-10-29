@@ -13,4 +13,14 @@ Datum: 23.10.2026. Oba taba su jedna soba. Zelena je referenca za raspored i tip
 
 Ponovljiva provera: npm run check:theme-economy-final. Obuhvata inventar PNG, uklanjanje SVG, paritet geometrije i teksta u prethodnim snimcima, kontrast i testove nagradnog toka.
 
-Granica provere: trenutno nije dostupan Android WebView za novi snimak. Uklanjanje skrivenih SVG elemenata, novi modal i korekcija uske nagradne kartice zahtevaju završnu vizuelnu potvrdu na telefonu; automatizovani testovi ne potvrđuju stvarnu isplatu preko produkcionog oglasa i servera.
+Granica prethodne provere od 23.10: tada nije bio dostupan novi Android snimak. Automatizovani testovi ne potvrđuju stvarnu isplatu preko produkcionog oglasa i servera. Novi vidljivi Android pregled opisan je ispod; modalna i retka nagradna stanja ostaju odvojena.
+
+## Dopuna — stvarni emulator 28.10.2026.
+
+[23 snimka](theme-visual-audit/emulator-economy-2026-10-28/index.html), [procene i kanonske/resolved putanje](theme-visual-audit/emulator-economy-2026-10-28/report.json), [precizna evidencija](theme-visual-audit/emulator-economy-checkpoint-2026-10-28.md).
+
+Oba taba pregledana su u svih deset tema na 360×780. U snimljenim stanjima naslovi, opis, stanje, tabovi i nagradni redovi su čitljivi; kanonski PNG prate svoju temu i raspored Zelene. Nije nađen nov problem koji zahteva izmenu implementacije ili PNG-a ove sobe. Zelena je dodatno pregledana na 320×568 pri normalnoj font skali: stanje i nagradna kartica dostupni su unutrašnjim skrolom, bez horizontalnog izlaska. Ranija 130% font provera nije sada ponovljena; native baner je bio učitan pre promene rezolucije, pa njegov kadar nije test novog 320px pokretanja.
+
+Automatska provera prolazi, uključujući inventar i prethodno sačuvane rasporede. To je zaseban dokaz od novih Android kadrova. Soba nema završni ekran. Nisu pritiskane nagradne kartice niti testirana isplata, nedostupnost oglasa ili greške servera. Status „UČITAVANJE OGLASA” u pojedinim kadrovima ne potvrđuje spremnost videa. Tačno trajanje intra nije mereno screenshotima.
+
+Korisnik je odobrio odbijanje poziva Ivana Ilića, posle čega je prolaz nastavljen. Nisu prihvatani dueli ili pokretane nove partije. Vraćena Zelena i originalna rezolucija/dpi uz očuvanu prijavu. Prethodne lokalne dorade ostaju **necommitovane i neobjavljene**; ova galerija ih ne potvrđuje.

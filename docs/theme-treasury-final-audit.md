@@ -1,5 +1,19 @@
 # Riznica — završna provera deset tema
 
+## Nastavak na emulatoru — 28.10.2026.
+
+[65 Android snimaka](theme-visual-audit/emulator-treasury-2026-10-28/index.html), [aktivne PNG putanje i granice](theme-visual-audit/emulator-treasury-2026-10-28/report.json). U svih deset tema stvarno su otvorena sva četiri taba na 360×780: početne kategorije Trofeja, prva četiri klasična skina, proslave/atmosfera/kosmos u Efektima i različiti delovi kataloga Tema. Severna maglina je dovršena posle prekida. Ovo nije novi vizuelni pregled svake pojedinačne kataloške kartice, kupovina, nagradnih poruka ili živih animacija.
+
+**R20, lokalno, bez deploya:** zaglavlje devet tema koristi njenu postojeću površinu i mastilo; statusne i nagradne podloge prate paletu umesto univerzalne jarke zelene. Green statusi koriste postojeći Clay inset. Naslov zadržava Green težinu850 i razmak.025em, akcije/statusi imaju težinu700; uklonjeni su nasleđeni razmak slova na naslovima kartica i zamućujuće tekstualne senke. CSS v8. Nema nove PNG kreacije ili promene funkcija/dimenzija.
+
+**Aktivni inventar je preciziran:** 116 semantičkih uloga po temi, sada razloženo na **55 tematskih + 61 zajedničku** (48 skinova,10 pregleda tema,3 namerno univerzalne sličice: Ledeno doba, Balkansko veselje i Zmajev dah). Ranijih58+58 ispod je istorijski pregled originala; tri tematska originala više nisu aktivni pregledi. Provera sada prati stvarni `getTreasuryEffectPreviewSource` i quality-resolved putanje, umesto da broji samo fajlove paketa. Vidljivost skinova uz temu zavisi od vlasništva;116 nije broj istovremeno preuzetih PNG.
+
+Ciljana provera Riznice prolazi. Izolovani test `scripts/test-treasury-layout-runtime.cjs` koristi stvarni renderer/CSS, sintetički inventar i blokiranu spoljnu mrežu:120 kombinacija (10tema ×4taba ×320×568/360×780/412×915), izračunate Green mere/tipografiju i vidljivost PNG-a. Offline font može biti Arial fallback; nije zamena za Android potvrdu novih lokalnih izmena. Najniži provereni paletni par4,85:1, nove neprozirne statusne podloge devet tema najmanje6,12:1; ovo nije merenje svakog piksela preko pozadine.
+
+Svih devet direktnih izbora već posedovanih tema iz Riznice uspelo je iz prvog pokušaja; u prvim sekundama i dalje se vide stare/delimične ikone objavljene verzije. To ne potvrđuje trenutno hladno učitavanje. Ranije lokalne dorade R14/R15 i nova R20 čekaju korisnikov deploy i novu Android potvrdu. Nije pokrenuta partija, kupovina ili nagradna reklama niti biran novi skin/efekat. Novi poziv Lidije nestao je sam, bez prihvatanja/odbijanja. Vraćena Zelena i originalnih1440×3120/560dpi, prijava očuvana.
+
+## Istorijska provera — 23.10.2026.
+
 Datum: 23.10.2026.
 
 1. **Intro:** isti `ROOM_INTRO_TIMING` kao u ostalim sobama: sadržaj se otvara iza sloja posle 2,4 s; sloj nestaje posle 3,2 s. CSS animacija Riznice sada traje tačno koliko i taj tajmer, u svih deset tema. Intro ostaje bez teksta i koristi tematski PNG znak sobe.

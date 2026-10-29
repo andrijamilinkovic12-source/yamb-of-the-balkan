@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const { resolve: resolveQuality } = require('../www/theme-quality-assets.js');
 
 const root = path.resolve(__dirname, '..');
 const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
@@ -12,6 +13,7 @@ const html = read('www/index.html');
 const game = read('www/game.js');
 const list = read('www/onlinenumber.js');
 const roomCss = read('www/theme-online-players-room.css');
+const legacyCss = read('www/teme.css');
 const cardCss = read('www/theme-card-surfaces.css');
 const closeCss = read('www/theme-room-close-controls.css');
 const iconMapper = read('www/theme-main-room-icons.js');
@@ -27,6 +29,13 @@ assert(!/\.svg(?:\?|["'])/i.test(html.split('<div id="online-players-overlay"')[
 assert(list.includes("contextClass: 'online-players'") && roomCss.includes('modal-context-online-players'));
 assert(list.includes("className: 'online-players-notice'") && roomCss.includes('.custom-toast.online-players-notice'));
 assert(html.includes('placeholder="Pretraži po imenu..."'));
+assert(!/body\.easter-theme\s+#online-players-body\s+img\s*[,\{]/.test(legacyCss),
+    'Legacy Easter blanket image decoration overrides avatar status and shadows transparent PNGs');
+const clearRule = roomCss.match(/\.online-players-search::-webkit-search-cancel-button\s*\{([^}]+)\}/)?.[1];
+assert(clearRule?.includes('var(--theme-room-close-image)'), 'Search clear must reuse the theme canonical X');
+assert(!/url\(|content:/.test(clearRule), 'Search clear must not add another asset identity or text glyph');
+assert(html.includes('theme-online-players-room.css?v=4') && html.includes('teme.css?v=7.11'),
+    'Online Players visual fixes need new cache versions');
 
 const cssBlock = (source, marker) => {
     const start = source.indexOf(marker);
@@ -53,12 +62,13 @@ for (const theme of themes) {
     const identity = theme === 'dark'
         ? 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png'
         : `${pack}/canonical/online-players-room-identity/online-players-room-v1.png`;
-    const assets = {
+    const sources = {
         identity,
         ...Object.fromEntries(['state', 'search', 'friend', 'spectate', 'duel', 'avatar']
             .map(role => [role, `${pack}/canonical/online-players-internal/${role}-v1.png`])),
         close: `assets/${theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`}/canonical/room-controls/close-v1.png`
     };
+    const assets = Object.fromEntries(Object.entries(sources).map(([role, source]) => [role, resolveQuality(source)]));
     assert.deepEqual(Object.keys(assets), roles);
     assert.equal(new Set(Object.values(assets)).size, 8, `${theme}: duplicated role path`);
     for (const [role, asset] of Object.entries(assets)) {
@@ -66,7 +76,7 @@ for (const theme of themes) {
         assert(bytes.subarray(0, 8).equals(pngSignature), `${theme}/${role}: not PNG`);
         hashes[role].add(crypto.createHash('sha256').update(bytes).digest('hex'));
     }
-    assert(closeCss.includes(assets.close), `${theme}: close X not mapped`);
+    assert(closeCss.includes(sources.close), `${theme}: close X not mapped`);
     if (theme === 'dark') assert(html.includes(identity), 'Green room identity not linked');
     else assert(iconMapper.includes('canonical/${role}-room-identity/${role}-room'),
         `${theme}: room identity mapper missing`);

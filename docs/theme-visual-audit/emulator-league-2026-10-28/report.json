@@ -1,0 +1,1793 @@
+{
+  "date": "2026-10-28",
+  "room": "Kvartalna liga",
+  "scope": "Stvarni Android emulator 360×780: meni, Liga/Majstor, Medalje i Šampioni u svih deset tema. Green Amater/Sva vremena dodatno. Green snimci pre prekida sačuvani; preostalih devet snimljeno posle ponovnog otvaranja.",
+  "deployment": "Android galerija prikazuje postojeću objavljenu aplikaciju, pre novih lokalnih CSS izmena. Bez commita/deploya.",
+  "recovery": "Na početku nastavka emulator na Android Home, ADB i snimci odgovaraju. Aplikacija ručno otvorena preko postojeće ikone; prijava očuvana i UI odgovara. Raniji ANR je stvaran zaseban nalaz nepoznatog uzroka; tokom nastavka nije ponovljen.",
+  "localChanges": {
+    "R18": "Jedna Green geometrija i tipografija za svih deset tema: okvir, rezime u dve kolone, zadržana PNG skala, naslov, rang, 44px navigacija sa 10px vidljivom tačkom; uklonjeno nasleđeno tablet translate pomeranje. Duga imena ne skupljaju avatar.",
+    "R19": "Tabovi uključujući hover/active koriste aktuelne tematske površine, ink i akcent; nadjačana stara Easter/Desert/Severna stanja.",
+    "css": "www/theme-quarterly-league-room.css",
+    "cacheVersion": 9
+  },
+  "tests": {
+    "command": "npm run check:theme-quarterly-league-final",
+    "result": "PASS i posle lokalne CSS dorade: PNG manifest/hashovi, kanonske putanje, kvartali, intro konfiguracija, mere i kontrast paleta.",
+    "runtime": "scripts/test-quarterly-league-layout-runtime.cjs",
+    "runtimeResult": "PASS: 40 lokalnih Chromium kombinacija (10 tema × 320×568, 360×780, 411×891, 768×1024), stvarni renderer sa sintetičkim podacima i bez mreže/naloga. Izračunate mere/fontovi prate Green; tabovi prate paletu; duga imena ne prelaze karticu.",
+    "runtimeEvidence": "local-layout-report.json",
+    "fontLimit": "Montserrat je deklarisan; izolovani offline fixture može koristiti Arial fallback. Pravi Android snimci su zaseban dokaz."
+  },
+  "safety": "Nema nove partije, prihvaćenog duela, nagrade, kupovine ili slanja poruka. Novi blokirajući poziv Lidije Trajković odbijen uz izričito korisnikovo odobrenje. Automatski test interstitiali zatvoreni Android Back kontrolom bez klika na oglas.",
+  "restoration": "Zelena vraćena kroz UI; resetovani wm size/density na originalnih 1440×3120 /560dpi. Emulator otvoren i prijavljen.",
+  "limits": [
+    "Ovo nije pregled svake stranice svih šest rangova u svih deset tema: detaljno je prikazan Majstor, uz Green Amater/Sva vremena. PNG inventar šest rangova je statički proveravan.",
+    "Nema novog Android prikaza šampionskog obaveštenja, nagradne potvrde, prazne/error liste, svih kvartala ili drugog jezika. Nisu menjani datum, profil ili server radi izazivanja tih stanja.",
+    "Screenshoti ne mere tačno trajanje intra, fluidnost ili hladni mrežni transfer. Objavljena verzija je u svih devet novih izbora prvo vratila prethodnu temu.",
+    "Nove lokalne ispravke zahtevaju korisnikov deploy i novu Android potvrdu. Nije fizički Samsung S25 test."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "status": "Referenca pregledana; zajednički lokalni ugovor proveriti posle deploya",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "Zelena je referenca rasporeda; lokalni zajednički ugovor čuva njene mere i dodaje zaštitu dugih imena/tablet granica.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Početna tema; završno vraćanje uspelo.",
+      "evidence": [
+        "dark-main-small-settled.jpg",
+        "dark-league-observed.jpg",
+        "dark-hof-medals.jpg",
+        "dark-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/dark/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/dark/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/dark/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/dark/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/dark/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/dark/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/dark/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/dark/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "light-main.jpg",
+        "light-league-ready.jpg",
+        "light-hof-medals.jpg",
+        "light-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/light/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/light/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/light/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/light/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/light/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/light/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/light/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/light/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/light/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "medium-main.jpg",
+        "medium-league.jpg",
+        "medium-hof-medals.jpg",
+        "medium-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/medium/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/medium/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-hall-of-fame-quality-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/medium/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/medium/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/medium/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/medium/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/medium/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/medium/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/medium/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "winter-main.jpg",
+        "winter-league.jpg",
+        "winter-hof-medals.jpg",
+        "winter-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/winter/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/winter/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/winter/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/winter/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/winter/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/winter/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/winter/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/winter/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/winter/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "neon-main.jpg",
+        "neon-league.jpg",
+        "neon-hof-medals.jpg",
+        "neon-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/neon/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/neon/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/neon/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/neon/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/neon/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/neon/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/neon/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/neon/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/neon/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "amethyst-main.jpg",
+        "amethyst-league.jpg",
+        "amethyst-hof-medals.jpg",
+        "amethyst-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/amethyst/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/amethyst/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "R19: stara stanja tabova nadjačavaju materijal/paletu; lokalno nadjačana za sve teme.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "easter-main.jpg",
+        "easter-league.jpg",
+        "easter-hof-medals.jpg",
+        "easter-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/easter/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/easter/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/easter/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/easter/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-navigation/tab-champions-quality-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/easter/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/easter/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/easter/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/easter/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/easter/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "R19: stara stanja tabova nadjačavaju materijal/paletu; lokalno nadjačana za sve teme.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "desert-main.jpg",
+        "desert-league.jpg",
+        "desert-hof-medals.jpg",
+        "desert-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/desert/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/desert/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/desert/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/desert/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/desert/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/desert/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/desert/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/desert/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/desert/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "Lokalni ugovor proverava aktivno, neaktivno i hover stanje.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "moon-main.jpg",
+        "moon-league-ready.jpg",
+        "moon-hof-medals.jpg",
+        "moon-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/moon/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/moon/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/moon/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/moon/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/moon/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/moon/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/moon/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/moon/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/moon/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "status": "Potrebna dorada — lokalno usklađeno, Android potvrda čeka deploy",
+      "pngIdentityStatus": "U snimljenim prikazima odgovarajući tematski PNG; nema potrebe za novim crtežima u ovom prolazu.",
+      "layoutFinding": "R18: objavljena verzija nema jednake mere i tipografiju rezimea/navigacije kao Zelena.",
+      "tabFinding": "R19: stara stanja tabova nadjačavaju materijal/paletu; lokalno nadjačana za sve teme.",
+      "firstSelection": "Prvi izbor vratio prethodnu temu; ponovljeni izbor uspeo. Nije dokaz stabilnog hladnog prelaska.",
+      "evidence": [
+        "severna-main.jpg",
+        "severna-league-ready.jpg",
+        "severna-hof-medals.jpg",
+        "severna-hof-champions.jpg"
+      ],
+      "masterCount": 13,
+      "productionPngCount": 14,
+      "sharedClose": "Zaseban kanonski room-controls/close-v1.png iste teme; nije uključen u 14 fajlova ligaškog paketa.",
+      "assets": [
+        {
+          "role": "quarterly-league-room",
+          "master": "source-assets/theme-quarterly-league-v2/severna/quarterly-league-room-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png"
+            },
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-hall-of-fame",
+          "master": "source-assets/theme-quarterly-league-v2/severna/tab-hall-of-fame-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-hall-of-fame-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-hall-of-fame-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-medals",
+          "master": "source-assets/theme-quarterly-league-v2/severna/tab-medals-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-medals-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-medals-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "tab-champions",
+          "master": "source-assets/theme-quarterly-league-v2/severna/tab-champions-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-champions-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-navigation/tab-champions-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-amater",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-amater-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-amater-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-amater-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-profi",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-profi-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-profi-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-profi-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-majstor",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-majstor-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-majstor-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-majstor-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-legenda",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-legenda-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-legenda-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-legenda-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-titan",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-titan-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-titan-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-titan-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "rank-alltime",
+          "master": "source-assets/theme-quarterly-league-v2/severna/rank-alltime-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-alltime-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/quarterly-rank-badges/rank-alltime-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-gold",
+          "master": "source-assets/theme-quarterly-league-v2/severna/medal-gold-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-gold-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-gold-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-silver",
+          "master": "source-assets/theme-quarterly-league-v2/severna/medal-silver-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-silver-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-silver-v2.png"
+            }
+          ]
+        },
+        {
+          "role": "medal-bronze",
+          "master": "source-assets/theme-quarterly-league-v2/severna/medal-bronze-master-v2.png",
+          "production": [
+            {
+              "canonical": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-bronze-v2.png",
+              "resolved": "www/assets/theme-packs/severna/canonical/competition-medals/quarterly-league-bronze-v2.png"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "file": "dark-main-small-settled",
+      "theme": "dark",
+      "title": "Zelena — meni"
+    },
+    {
+      "file": "dark-league-observed",
+      "theme": "dark",
+      "title": "Zelena — Liga / Majstor"
+    },
+    {
+      "file": "dark-hof-medals",
+      "theme": "dark",
+      "title": "Zelena — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "dark-hof-champions",
+      "theme": "dark",
+      "title": "Zelena — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "light-main",
+      "theme": "light",
+      "title": "Svetlo zlato — meni"
+    },
+    {
+      "file": "light-league-ready",
+      "theme": "light",
+      "title": "Svetlo zlato — Liga / Majstor"
+    },
+    {
+      "file": "light-hof-medals",
+      "theme": "light",
+      "title": "Svetlo zlato — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "light-hof-champions",
+      "theme": "light",
+      "title": "Svetlo zlato — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "medium-main",
+      "theme": "medium",
+      "title": "Trula višnja — meni"
+    },
+    {
+      "file": "medium-league",
+      "theme": "medium",
+      "title": "Trula višnja — Liga / Majstor"
+    },
+    {
+      "file": "medium-hof-medals",
+      "theme": "medium",
+      "title": "Trula višnja — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "medium-hof-champions",
+      "theme": "medium",
+      "title": "Trula višnja — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "winter-main",
+      "theme": "winter",
+      "title": "Plavi okean — meni"
+    },
+    {
+      "file": "winter-league",
+      "theme": "winter",
+      "title": "Plavi okean — Liga / Majstor"
+    },
+    {
+      "file": "winter-hof-medals",
+      "theme": "winter",
+      "title": "Plavi okean — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "winter-hof-champions",
+      "theme": "winter",
+      "title": "Plavi okean — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "neon-main",
+      "theme": "neon",
+      "title": "Neon Cyber — meni"
+    },
+    {
+      "file": "neon-league",
+      "theme": "neon",
+      "title": "Neon Cyber — Liga / Majstor"
+    },
+    {
+      "file": "neon-hof-medals",
+      "theme": "neon",
+      "title": "Neon Cyber — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "neon-hof-champions",
+      "theme": "neon",
+      "title": "Neon Cyber — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "amethyst-main",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — meni"
+    },
+    {
+      "file": "amethyst-league",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Liga / Majstor"
+    },
+    {
+      "file": "amethyst-hof-medals",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "amethyst-hof-champions",
+      "theme": "amethyst",
+      "title": "Kraljevski ametist — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "easter-main",
+      "theme": "easter",
+      "title": "Vaskršnja — meni"
+    },
+    {
+      "file": "easter-league",
+      "theme": "easter",
+      "title": "Vaskršnja — Liga / Majstor"
+    },
+    {
+      "file": "easter-hof-medals",
+      "theme": "easter",
+      "title": "Vaskršnja — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "easter-hof-champions",
+      "theme": "easter",
+      "title": "Vaskršnja — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "desert-main",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — meni"
+    },
+    {
+      "file": "desert-league",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Liga / Majstor"
+    },
+    {
+      "file": "desert-hof-medals",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "desert-hof-champions",
+      "theme": "desert",
+      "title": "Pustinjsko staklo — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "moon-main",
+      "theme": "moon",
+      "title": "Mesečev sjaj — meni"
+    },
+    {
+      "file": "moon-league-ready",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Liga / Majstor"
+    },
+    {
+      "file": "moon-hof-medals",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "moon-hof-champions",
+      "theme": "moon",
+      "title": "Mesečev sjaj — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "severna-main",
+      "theme": "severna",
+      "title": "Severna maglina — meni"
+    },
+    {
+      "file": "severna-league-ready",
+      "theme": "severna",
+      "title": "Severna maglina — Liga / Majstor"
+    },
+    {
+      "file": "severna-hof-medals",
+      "theme": "severna",
+      "title": "Severna maglina — Dvorana slavnih / Medalje"
+    },
+    {
+      "file": "severna-hof-champions",
+      "theme": "severna",
+      "title": "Severna maglina — Dvorana slavnih / Šampioni"
+    },
+    {
+      "file": "dark-league-amater-ready",
+      "theme": "extra",
+      "title": "Zelena — navigacija na Amater"
+    },
+    {
+      "file": "dark-league-alltime",
+      "theme": "extra",
+      "title": "Zelena — navigacija na Sva vremena"
+    },
+    {
+      "file": "dark-main-restored-original",
+      "theme": "extra",
+      "title": "Završno vraćanje Zelene / originalna rezolucija"
+    },
+    {
+      "file": "android-home-observed",
+      "theme": "extra",
+      "title": "Raniji prekid — Android poruka aplikacija ne odgovara"
+    }
+  ]
+}
