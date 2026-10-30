@@ -8,6 +8,7 @@ const icon = {
     dataset: { leaderboardControl: 'global' },
     isConnected: true,
     src: '',
+    getClientRects() { return [{}]; },
     getAttribute(name) { return name === 'src' ? this.src : null; }
 };
 class PendingImage {

@@ -1,9 +1,23 @@
 {
-  "schemaVersion": 88,
+  "schemaVersion": 89,
   "updatedOn": "2026-10-30",
+  "hiddenRoomLoadingVerification20261030": {
+    "localGameVersion": "6.41",
+    "status": "R37 lokalno, nije objavljeno niti potvrđeno na Androidu.",
+    "evidence": "docs/theme-visual-audit/postdeploy640-2026-10-30/report.json",
+    "change": "Top lista, Online igrači i Pozovi prijatelja automatski obrađuju samo prikazane slike; nema bezuslovne pripreme skrivenih soba pri startu/promeni teme. Otvaranje sobe, class/style promene i dinamičke kartice pokreću povezivanje. Eksplicitni preload ostaje dostupan.",
+    "isolatedProof": "Stvarna tri kontrolera i PNG:14 zahteva/719184B pri startu->0;126 zahteva kroz deset skrivenih tema->0. Deset tema puta četiri aktivna kontejnera=40 prolazi, uključujući deljeno oko i praznu listu u igri, dinamički PowerIndex i inline otvaranje. Nema browser grešaka/404.",
+    "boundary": "Izolovani localhost DOM, bez naloga/socketa. To nije ukupni saobraćaj aplikacije ili dokaz uzroka Android zastoja. Nema novih PNG, promene DNK/stila/palete, dimenzija, tipografije, pravila igre ili ekonomije. Čeka korisnikov commit/deploy i ciljanu native proveru."
+  },
   "preloadRetentionVerification20261030": {
     "localGameVersion": "6.40",
-    "status": "R36 lokalno, ceka korisnikov commit/deploy i ciljanu Android potvrdu. Nije dokaz popravljene brzine ili uzroka ANR-a.",
+    "status": "R36 objavljen v6.40/d38aa6aa na oba servisa. Ciljani Android povratak na Green posle četiri druge teme uspešan, ali prvi izbori Neon/Easter/Moon nisu pouzdani. Brzina/uzrok zastoja ostaju otvoreni.",
+    "postDeploy": {
+      "evidence": "docs/theme-visual-audit/postdeploy640-2026-10-30/report.json",
+      "publicCode": "game.js6.40, header6 i Settings4 HTTP200 na oba servisa, isti sadržaj posle CRLF/LF normalizacije.56 javnih PNG HEAD putanja Neon/Easter sve200. To nije dokaz WebView byte-hasha ili PNG decode na Androidu.",
+      "native": "QA aplikacija ponovo otvorena bez brisanja podataka. Green, Neon, Easter, Light i Moon kompletne Settings kontrole nakon uspešnih izbora. Prvi Neon/Easter/Moon izbor ostavio prethodnu temu; ponovljeni izbori uspeli. Jedan Neon retry bio je neodređen zbog zakašnjelog unosa/kadra. Light i povratakGreen uspeli jednim izborom. Završni Green meni kompletan.",
+      "limits": "Activity COLD TotalTime19194ms nije app-ready vreme; viđeni beli/podložni/nepotpuni kadrovi. Nema potvrde otklonjenog ANR-a ili deset uspešnih prvih izbora. Native keš nije instrumentovan. Prvi emulator privremeno pauziran, zatim resume/status running; drugiGreen meni. Bez nove igre/oglasa/nagradnih dugmadi ili DB pristupa; prikazani saldo12168isti, nije kompletan DB audit."
+    },
     "evidence": "docs/theme-visual-audit/preload-retention-2026-10-30/report.json",
     "baseline": "v6.39/7985cb3928fa9ecd3719d941cf4c692be181dfa1",
     "problems": "Zavrsena themeWarmups priprema ostajala je spremna posle izbacivanja njenih dekodiranih slika iz LRU. LRU je mogao izbaciti i nezavrsen zahtev, pa kasniji poziv pokrene duplo ucitavanje/dekodiranje istog URL-a.",

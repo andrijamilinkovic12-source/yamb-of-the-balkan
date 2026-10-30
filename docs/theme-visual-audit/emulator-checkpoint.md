@@ -1,5 +1,13 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Posle korisnikovog deploya v6.40 — 30.10.2026.
+
+[Objavljene verzije,14kadrova i granice](postdeploy640-2026-10-30/index.html). Oba servisa d38aa6aa/v6.40; samo javni statički HTTP u produkciji. Druga QA aplikacija ponovo otvorena. Activity COLD19194ms, zatim beli/podložni i nepotpuni meni kadrovi; nije meren app-ready trenutak. Prvi Neon izbor vratioGreen, prviEaster ostavioNeon, prviMoon ostavioLight; ponavljanja uspela. Jedan Neon ponovljeni dodir neodređen uz zakašnjenje transporta/kadrova. Light i završni povratakGreen jednim izborom. Pet konačnih Settings tema i kompletan završniGreen meni pregledani; nije deset prvih izbora ili dokaz unutrašnjeg LRU stanja.
+
+Prvi emulator privremeno pauziran radi opterećenja, zatim adb resume/status running; geometrija i podaci nisu brisani. Drugi naGreen meniju. Nema nove partije, bacanja, upisa, poziva, reklame, nagradnog/revanš dugmeta ili DB pristupa. Prikazani Sarin saldo12168isti pre/posle; ne tvrdi se DB provera svih podataka. Startup/ANR i prva priprema ostaju otvoreni.
+
+R37/v6.41 lokalno rasterećuje tri skrivena kontrolera. Izolovano14PNGzahteva/719184B→0 pri startu,126→0kroz skrivene teme;40vidljivih stanja10tema i deljene ikone provereni. Nije još objavljeno ili Android potvrđeno. Nema promene PNG, DNK, paleta ili dimenzija.
+
 ## Nastavak dijagnostike — lokalna R36/v6.40
 
 Ovaj nastavak nema nove radnje na emulatoru, naloge, partije ili nagrade. Na javnom QA meren ograničen uzorak statičkih resursa, a stvarne metode/PNG proverene u izolovanom localhost browseru. Reprodukovana zastarela priprema posle LRU izbacivanja: Green prijavljuje spremno uz18nedostajućih slika; ispravka ih ponovo priprema,0nedostajućih, odmah ponovljen izbor bez nove pripreme. Kontrolisano duplo učitavanje nezavršenog URL-a2→1. Granice završenog keša ostaju64/12Mpiksela, PNG/izgled/dimenzije nisu menjani.

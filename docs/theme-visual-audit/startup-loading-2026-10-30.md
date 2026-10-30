@@ -1,5 +1,11 @@
 # Početno učitavanje — 30.10.2026.
 
+## Aktuelno: v6.40 objavljena; R37/v6.41 lokalna
+
+[Android i lokalni dokazi](postdeploy640-2026-10-30/index.html). Oba servisa d38aa6aa, game.js6.40/header6/Settings4. Uspešan povratakGreen i konačni prikazi pet tema, ali prviNeon/Easter/Moon izbori tražili ponavljanje.56javno proverene PNG putanje sve200. Activity COLD19194msnije vreme spremnog menija; start i uzrok ANR-a nisu zatvoreni. Bez novih partija, reklama/nagradnih dugmadi ili DB pristupa. Oba emulatora vraćena u rad, drugiGreen meni.
+
+Tri dodatna kontrolera automatski su pripremala skrivene sobe: Top lista, Online igrači, Pozovi prijatelja. R37 obrađuje prikazane slike i reaguje na otvaranje sobe/dinamički sadržaj; eksplicitna priprema ostaje. Stvarni lokalni kontroleri/PNG:14zahteva/719184B→0 pri startu,126→0tokom deset skrivenih tema.40vidljivih slučajeva10tema, deljeno oko/prazna lista u igri i dinamičkiPowerIndex prolaze. To nisu ukupni zahtevi aplikacije ili dokaz uzroka Android zastoja. Izgled i dimenzije nisu menjani. **v6.41 je lokalna; čeka korisnikov commit/deploy i ciljanu native proveru.**
+
 ## Dopuna posle korisnikovog deploya v6.39
 
 Oba servisa potvrđena na commitu7985cb39. Javno objavljeni game.js6.39, header6 i Settings4 odgovaraju lokalnom sadržaju posle CRLF/LF normalizacije. [Android snimci, hash-evi i granice](postdeploy639-2026-10-30/index.html).

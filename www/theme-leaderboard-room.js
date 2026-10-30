@@ -33,6 +33,8 @@
     const apply = () => {
         const theme = activeTheme();
         document.querySelectorAll('img[data-leaderboard-control]').forEach(image => {
+            // Hidden rooms must not compete with the selected menu/Settings pack.
+            if (!image.getClientRects().length) return;
             const source = asset(image.dataset.leaderboardControl, theme);
             if (image.getAttribute('src') === source && image.dataset.leaderboardReady === 'true') return;
             image.dataset.leaderboardReady = 'false';
@@ -48,13 +50,16 @@
     };
     window.themeLeaderboard = { asset, activeTheme, preload, apply };
     const start = () => {
-        preload().catch(() => {});
         apply();
-        new MutationObserver(() => { preload().catch(() => {}); apply(); })
+        new MutationObserver(apply)
             .observe(document.body, { attributes: true, attributeFilter: ['class'] });
-        for (const id of ['highscores-screen', 'waiting-screen', 'rules-overlay-ui']) {
+        for (const id of ['highscores-screen', 'waiting-screen', 'rules-overlay-ui', 'game-scene']) {
             const room = document.getElementById(id);
-            if (room) new MutationObserver(apply).observe(room, { childList: true, subtree: true });
+            if (room) {
+                new MutationObserver(apply).observe(room, { childList: true, subtree: true });
+                // Watch room opening, not every animated descendant style.
+                new MutationObserver(apply).observe(room, { attributes: true, attributeFilter: ['class', 'style'] });
+            }
         }
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });

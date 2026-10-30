@@ -1,0 +1,454 @@
+{
+  "at": "2026-10-30T18:25:39.263Z",
+  "scope": "Public QA HEAD only, two themes, four workers, no body/decode or Android timing evidence.",
+  "rows": [
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "179773",
+      "ms": 290
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "146410",
+      "ms": 195
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/menu-resume-buttons/new-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "65095",
+      "ms": 191
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/menu-resume-buttons/resume-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "52686",
+      "ms": 187
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "124086",
+      "ms": 117
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-backgrounds/neon-v4.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "1455263",
+      "ms": 84
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "150864",
+      "ms": 108
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "170147",
+      "ms": 109
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "170544",
+      "ms": 92
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "134654",
+      "ms": 80
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "116795",
+      "ms": 75
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "131328",
+      "ms": 73
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "134816",
+      "ms": 81
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "148453",
+      "ms": 72
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "142936",
+      "ms": 95
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/runtime/menu/treasury-free-v3.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "142925",
+      "ms": 163
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "112172",
+      "ms": 140
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "119962",
+      "ms": 135
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-controls/profile-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "27439",
+      "ms": 107
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-controls/display-theme-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "46924",
+      "ms": 79
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-controls/language-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "36446",
+      "ms": 66
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-controls/terms-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "29866",
+      "ms": 65
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-controls/privacy-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "34617",
+      "ms": 72
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "256526",
+      "ms": 64
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/room-controls/close-v1.png?v=3",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "77613",
+      "ms": 62
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/game-header/sound-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "64680",
+      "ms": 70
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/game-header/music-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "64681",
+      "ms": 66
+    },
+    {
+      "theme": "neon",
+      "source": "assets/theme-packs/neon/canonical/game-header/vibration-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "64092",
+      "ms": 67
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-backgrounds/easter-v6-1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "1849355",
+      "ms": 68
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "102688",
+      "ms": 65
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/menu-resume-buttons/resume-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "65901",
+      "ms": 56
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/menu-resume-buttons/new-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "71152",
+      "ms": 59
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "117524",
+      "ms": 69
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "159494",
+      "ms": 59
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "125888",
+      "ms": 76
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "113907",
+      "ms": 55
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "162501",
+      "ms": 68
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "159481",
+      "ms": 74
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "95640",
+      "ms": 63
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "141571",
+      "ms": 63
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "136329",
+      "ms": 62
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "152594",
+      "ms": 61
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "124803",
+      "ms": 74
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png?v=3",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "129344",
+      "ms": 60
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "101986",
+      "ms": 72
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "127096",
+      "ms": 61
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-controls/profile-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "31145",
+      "ms": 67
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-controls/display-theme-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "54107",
+      "ms": 59
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-controls/language-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "36813",
+      "ms": 53
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-controls/terms-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "29721",
+      "ms": 57
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-controls/privacy-v2.png?v=2",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "33750",
+      "ms": 76
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "259548",
+      "ms": 61
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/room-controls/close-v1.png?v=3",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "61821",
+      "ms": 70
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/game-header/sound-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "52994",
+      "ms": 61
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/game-header/music-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "53807",
+      "ms": 60
+    },
+    {
+      "theme": "easter",
+      "source": "assets/theme-packs/easter/canonical/game-header/vibration-v1.png?v=1",
+      "status": 200,
+      "type": "image/png",
+      "contentLength": "53091",
+      "ms": 64
+    }
+  ]
+}

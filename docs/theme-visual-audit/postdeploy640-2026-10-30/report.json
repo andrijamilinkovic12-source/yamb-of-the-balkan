@@ -1,0 +1,186 @@
+{
+  "date": "2026-10-30",
+  "published": {
+    "checkedAt": "2026-10-30T18:15:03.647Z",
+    "commit": "d38aa6aa35c794e06b98d79fdc4520766c1ddfb4",
+    "scope": "Public static GET only; not proof of the Android loaded version.",
+    "rows": [
+      {
+        "host": "https://yamb-reconnect-qa.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.40",
+            "status": 200,
+            "sha256Normalized": "450da3a4fc12fb57adea48d3fbf6e2575b287c7ac7d99e719c229b77db14e356",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "4",
+            "status": 200,
+            "sha256Normalized": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+            "matchesLocalNormalized": true
+          }
+        ]
+      },
+      {
+        "host": "https://yamb-of-the-balkan.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.40",
+            "status": 200,
+            "sha256Normalized": "450da3a4fc12fb57adea48d3fbf6e2575b287c7ac7d99e719c229b77db14e356",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "4",
+            "status": 200,
+            "sha256Normalized": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+            "matchesLocalNormalized": true
+          }
+        ]
+      }
+    ]
+  },
+  "native": {
+    "app": "com.yamb.balkan.staging",
+    "device": "Duel_QA_Player2/emulator-5556",
+    "geometry": "1440x3120, unchanged",
+    "loadedVersionBoundary": "Public HTML/JS confirm v6.40; QA app force-stopped/reopened. No private WebView instrumentation to prove loaded byte hash.",
+    "start": {
+      "activityStatus": "ok",
+      "launchState": "COLD",
+      "activityTotalMs": 19194,
+      "activityWaitMs": 19222,
+      "limit": "Android activity metrics only, not time to ready menu or cold HTTP/image cache. Visible logo, white, Green backing and later menu; partial background frames occurred. No cache/data clearing."
+    },
+    "themes": [
+      "dark",
+      "neon",
+      "easter",
+      "light",
+      "moon"
+    ],
+    "selections": "Neon initially returned to Green, later repeated attempts applied Neon; one intervening repeated-tap outcome was ambiguous amid delayed native input/frame response. Easter and Moon each remained on the previous theme after the first choice and applied after repeating. Light applied on the first observed choice. Green return applied on one choice after the four other themes.",
+    "return": "Green Settings controls and final complete Green menu visually confirmed. This is targeted five-theme output/revisit evidence, not ten first-choice successes or proof of LRU internals on Android.",
+    "performance": "Slow start and first-choice failures remain OPEN. Native helper/screenshot delays are not app-ready latency. No new ANR dialog observed in inspected frames; no continuous ANR monitoring or established cause.",
+    "restoration": "First emulator temporarily paused to reduce contention, then adb emu avd resume/status confirmed running. Second left in Green main menu. No geometry/data clearing or account switch.",
+    "financialBoundary": "No new game, dice roll, score entry, ad, reward/rematch button, purchase, invitation or database read/write performed for this check. Displayed Sara balance12168 before/after; not a database audit of all profile fields."
+  },
+  "publicPng": {
+    "count": 56,
+    "all200": true,
+    "boundary": "Public QA HEAD only, two themes, four workers, no body/decode or Android timing evidence."
+  },
+  "R37": {
+    "localVersion": "6.41",
+    "status": "LOCAL, not deployed or Android verified",
+    "finding": "Leaderboard, Online Players and Invite Friend controllers automatically loaded/prepared hidden room art at startup and theme changes.",
+    "change": "Automatic apply only targets rendered images; remove unconditional hidden-room preload. Observe room class/style/content changes so opening rooms and dynamically inserted cards still update. Explicit preload APIs retained; shared eye/empty-state instances in game covered.",
+    "before": {
+      "startupPngRequests": 14,
+      "startupPngBytes": 719184,
+      "hiddenThemeChangePngRequests": 126
+    },
+    "after": {
+      "startupPngRequests": 0,
+      "startupPngBytes": 0,
+      "hiddenThemeChangePngRequests": 0,
+      "visibleCases": 40
+    },
+    "tests": "Actual three controllers/production PNG, ten themes x four visible containers=40, dynamic invite insertion, inline display opening, explicit ahead-of-entry preparation and no browser errors. Existing late-theme, canonical room and cache tests pass. Syntax sweep passes.",
+    "boundary": "Three actual controllers, representative hidden/visible DOM and actual PNG in local Edge411x891. No whole app, account/network latency or Android ANR proof. This is not all app traffic or proof that these fourteen requests caused the Android ANR/timeout. No PNG, palette, dimensions, typography, economy or game-rule changes."
+  },
+  "next": "User commit/deploy v6.41, then targeted first/repeated Settings choices and room-entry/shared-eye checks on Android. Initial download timeout/root cause, physical S25, reward and network-flow boundaries remain open.",
+  "images": [
+    {
+      "stem": "qa-deploy640-start",
+      "file": "qa-deploy640-start.jpg",
+      "label": "Snimak posle am-start: aktivnost je otvorena, meni nije potvrđen spremnim."
+    },
+    {
+      "stem": "qa-deploy640-menu-ready",
+      "file": "qa-deploy640-menu-ready.jpg",
+      "label": "Prvi meni ima nepotpuno iscrtanu pozadinu. Kasniji kadar je potpun; ovo nije brz/stabilan prvi kadar."
+    },
+    {
+      "stem": "qa-deploy640-settings",
+      "file": "qa-deploy640-settings.jpg",
+      "label": "Green Podešavanja pre promene."
+    },
+    {
+      "stem": "qa-deploy640-neon",
+      "file": "qa-deploy640-neon.jpg",
+      "label": "Prvi Neon izbor: priprema teme, bez potvrde primene."
+    },
+    {
+      "stem": "qa-deploy640-neon-ready",
+      "file": "qa-deploy640-neon-ready.jpg",
+      "label": "Posle prvog Neon izbora ostala je Green. Naziv fajla nije dokaz uspeha."
+    },
+    {
+      "stem": "qa-deploy640-isolated-state",
+      "file": "qa-deploy640-isolated-state.jpg",
+      "label": "Neon konačno primenjen posle ponovljenih pokušaja; prvi emulator tada privremeno pauziran."
+    },
+    {
+      "stem": "qa-deploy640-easter",
+      "file": "qa-deploy640-easter.jpg",
+      "label": "Prvi Vaskršnji izbor: ekran pripreme. Naredni kadar ostao Neon."
+    },
+    {
+      "stem": "qa-deploy640-easter-followup",
+      "file": "qa-deploy640-easter-followup.jpg",
+      "label": "Naknadni kadar i dalje Neon; prvi pokušaj nije prihvaćen kao uspešan."
+    },
+    {
+      "stem": "qa-deploy640-easter-retry",
+      "file": "qa-deploy640-easter-retry.jpg",
+      "label": "Ponovljeni izbor: Vaskršnja Podešavanja sa njenim PNG."
+    },
+    {
+      "stem": "qa-deploy640-light",
+      "file": "qa-deploy640-light.jpg",
+      "label": "Priprema Svetlog Zlata. Kasniji Windows pregled potvrdio je kompletna Light Podešavanja jednim izborom; taj kasniji kadar nije ovaj PNG."
+    },
+    {
+      "stem": "qa-deploy640-moon",
+      "file": "qa-deploy640-moon.jpg",
+      "label": "Prvi Mesečev izbor: ekran pripreme. Kasniji Windows pregled pokazao je da je ostalo Svetlo Zlato."
+    },
+    {
+      "stem": "qa-deploy640-moon-retry",
+      "file": "qa-deploy640-moon-retry.jpg",
+      "label": "Ponovljeni izbor: Mesečev Sjaj sa njegovim PNG."
+    },
+    {
+      "stem": "qa-deploy640-green-return",
+      "file": "qa-deploy640-green-return.jpg",
+      "label": "Priprema povratka na Green posle četiri druge teme. Kasniji Windows pregled potvrdio Green Podešavanja; sledeći PNG potvrđuje konačni meni."
+    },
+    {
+      "stem": "qa-deploy640-final-menu",
+      "file": "qa-deploy640-final-menu.jpg",
+      "label": "Završni Green meni: sve glavne ikone i pozadina ponovo vidljivi."
+    }
+  ]
+}

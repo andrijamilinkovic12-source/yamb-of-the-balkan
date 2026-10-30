@@ -41,8 +41,8 @@ for (const item of manifest.items) {
 }
 
 let activeTheme = 'dark';
-const header = { src: '', getAttribute(name) { return name === 'src' ? this.src : null; } };
-const roleImage = role => ({ dataset: { inviteRole: role }, src: '', getAttribute(name) { return name === 'src' ? this.src : null; } });
+const header = { src: '', getClientRects() { return [{}]; }, getAttribute(name) { return name === 'src' ? this.src : null; } };
+const roleImage = role => ({ dataset: { inviteRole: role }, src: '', getClientRects() { return [{}]; }, getAttribute(name) { return name === 'src' ? this.src : null; } });
 const send = roleImage('send');
 const empty = roleImage('empty');
 const power = roleImage('power');

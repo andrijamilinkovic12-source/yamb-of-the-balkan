@@ -1,0 +1,914 @@
+{
+  "at": "2026-10-30T18:44:11.087Z",
+  "mode": "after",
+  "baselineRef": "d38aa6aa35c794e06b98d79fdc4520766c1ddfb4",
+  "scope": "Three actual controllers, representative hidden/visible DOM and actual PNG in local Edge411x891. No whole app, account/network latency or Android ANR proof.",
+  "startupPngRequests": 0,
+  "startupPngBytes": 0,
+  "hiddenThemeChangePngRequests": 0,
+  "rows": [
+    {
+      "theme": "dark",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "medium",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "medium",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "medium",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "medium",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "winter",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "winter",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "winter",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "winter",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "neon",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "neon",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "neon",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "neon",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "amethyst",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "amethyst",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "amethyst",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "amethyst",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "easter",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "easter",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "easter",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "easter",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "desert",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "desert",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "desert",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "desert",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "moon",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "moon",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "moon",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "moon",
+      "room": "game-scene",
+      "status": "PASS"
+    },
+    {
+      "theme": "severna",
+      "room": "highscores-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "severna",
+      "room": "online-players-overlay",
+      "status": "PASS"
+    },
+    {
+      "theme": "severna",
+      "room": "waiting-screen",
+      "status": "PASS"
+    },
+    {
+      "theme": "severna",
+      "room": "game-scene",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "phase": "dark-highscores-screen",
+      "source": "/assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1",
+      "bytes": 116808
+    },
+    {
+      "phase": "dark-highscores-screen",
+      "source": "/assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png?v=1",
+      "bytes": 47269
+    },
+    {
+      "phase": "dark-highscores-screen",
+      "source": "/assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png?v=1",
+      "bytes": 38952
+    },
+    {
+      "phase": "dark-highscores-screen",
+      "source": "/assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1",
+      "bytes": 68504
+    },
+    {
+      "phase": "dark-online-players-overlay",
+      "source": "/assets/theme-packs/dark/canonical/online-players-internal/state-quality-v2.png",
+      "bytes": 71566
+    },
+    {
+      "phase": "dark-online-players-overlay",
+      "source": "/assets/theme-packs/dark/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 20957
+    },
+    {
+      "phase": "dark-online-players-overlay",
+      "source": "/assets/theme-packs/dark/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 21077
+    },
+    {
+      "phase": "dark-online-players-overlay",
+      "source": "/assets/theme-packs/dark/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 18456
+    },
+    {
+      "phase": "dark-online-players-overlay",
+      "source": "/assets/theme-packs/dark/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 25223
+    },
+    {
+      "phase": "dark-online-players-overlay",
+      "source": "/assets/theme-packs/dark/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 20349
+    },
+    {
+      "phase": "dark-waiting-screen",
+      "source": "/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 150862
+    },
+    {
+      "phase": "dark-waiting-screen",
+      "source": "/assets/theme-packs/dark/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 48312
+    },
+    {
+      "phase": "dark-waiting-screen",
+      "source": "/assets/theme-packs/dark/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 32371
+    },
+    {
+      "phase": "dark-waiting-screen",
+      "source": "/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 38478
+    },
+    {
+      "phase": "light-highscores-screen",
+      "source": "/assets/theme-packs/light/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 161754
+    },
+    {
+      "phase": "light-highscores-screen",
+      "source": "/assets/theme-packs/light/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 50621
+    },
+    {
+      "phase": "light-highscores-screen",
+      "source": "/assets/theme-packs/light/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 27343
+    },
+    {
+      "phase": "light-highscores-screen",
+      "source": "/assets/theme-packs/light/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 67762
+    },
+    {
+      "phase": "light-online-players-overlay",
+      "source": "/assets/theme-packs/light/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 40011
+    },
+    {
+      "phase": "light-online-players-overlay",
+      "source": "/assets/theme-packs/light/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 17837
+    },
+    {
+      "phase": "light-online-players-overlay",
+      "source": "/assets/theme-packs/light/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 20454
+    },
+    {
+      "phase": "light-online-players-overlay",
+      "source": "/assets/theme-packs/light/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 18760
+    },
+    {
+      "phase": "light-online-players-overlay",
+      "source": "/assets/theme-packs/light/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 23976
+    },
+    {
+      "phase": "light-online-players-overlay",
+      "source": "/assets/theme-packs/light/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 18953
+    },
+    {
+      "phase": "light-waiting-screen",
+      "source": "/assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 236968
+    },
+    {
+      "phase": "light-waiting-screen",
+      "source": "/assets/theme-packs/light/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 41843
+    },
+    {
+      "phase": "light-waiting-screen",
+      "source": "/assets/theme-packs/light/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 39673
+    },
+    {
+      "phase": "light-waiting-screen",
+      "source": "/assets/theme-packs/light/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 93522
+    },
+    {
+      "phase": "medium-highscores-screen",
+      "source": "/assets/theme-packs/medium/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 154718
+    },
+    {
+      "phase": "medium-highscores-screen",
+      "source": "/assets/theme-packs/medium/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 46525
+    },
+    {
+      "phase": "medium-highscores-screen",
+      "source": "/assets/theme-packs/medium/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 29070
+    },
+    {
+      "phase": "medium-highscores-screen",
+      "source": "/assets/theme-packs/medium/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 77752
+    },
+    {
+      "phase": "medium-online-players-overlay",
+      "source": "/assets/theme-packs/medium/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 67939
+    },
+    {
+      "phase": "medium-online-players-overlay",
+      "source": "/assets/theme-packs/medium/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 18805
+    },
+    {
+      "phase": "medium-online-players-overlay",
+      "source": "/assets/theme-packs/medium/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 22591
+    },
+    {
+      "phase": "medium-online-players-overlay",
+      "source": "/assets/theme-packs/medium/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 16699
+    },
+    {
+      "phase": "medium-online-players-overlay",
+      "source": "/assets/theme-packs/medium/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 21874
+    },
+    {
+      "phase": "medium-online-players-overlay",
+      "source": "/assets/theme-packs/medium/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 21915
+    },
+    {
+      "phase": "medium-waiting-screen",
+      "source": "/assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 299202
+    },
+    {
+      "phase": "medium-waiting-screen",
+      "source": "/assets/theme-packs/medium/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 50493
+    },
+    {
+      "phase": "medium-waiting-screen",
+      "source": "/assets/theme-packs/medium/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 63584
+    },
+    {
+      "phase": "medium-waiting-screen",
+      "source": "/assets/theme-packs/medium/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 73161
+    },
+    {
+      "phase": "winter-highscores-screen",
+      "source": "/assets/theme-packs/winter/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 155339
+    },
+    {
+      "phase": "winter-highscores-screen",
+      "source": "/assets/theme-packs/winter/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 49899
+    },
+    {
+      "phase": "winter-highscores-screen",
+      "source": "/assets/theme-packs/winter/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 41959
+    },
+    {
+      "phase": "winter-highscores-screen",
+      "source": "/assets/theme-packs/winter/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 62360
+    },
+    {
+      "phase": "winter-online-players-overlay",
+      "source": "/assets/theme-packs/winter/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 66050
+    },
+    {
+      "phase": "winter-online-players-overlay",
+      "source": "/assets/theme-packs/winter/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 22452
+    },
+    {
+      "phase": "winter-online-players-overlay",
+      "source": "/assets/theme-packs/winter/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 20837
+    },
+    {
+      "phase": "winter-online-players-overlay",
+      "source": "/assets/theme-packs/winter/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 18358
+    },
+    {
+      "phase": "winter-online-players-overlay",
+      "source": "/assets/theme-packs/winter/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 26551
+    },
+    {
+      "phase": "winter-online-players-overlay",
+      "source": "/assets/theme-packs/winter/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 18995
+    },
+    {
+      "phase": "winter-waiting-screen",
+      "source": "/assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 294593
+    },
+    {
+      "phase": "winter-waiting-screen",
+      "source": "/assets/theme-packs/winter/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 47439
+    },
+    {
+      "phase": "winter-waiting-screen",
+      "source": "/assets/theme-packs/winter/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 58188
+    },
+    {
+      "phase": "winter-waiting-screen",
+      "source": "/assets/theme-packs/winter/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 82383
+    },
+    {
+      "phase": "neon-highscores-screen",
+      "source": "/assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 197473
+    },
+    {
+      "phase": "neon-highscores-screen",
+      "source": "/assets/theme-packs/neon/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 58217
+    },
+    {
+      "phase": "neon-highscores-screen",
+      "source": "/assets/theme-packs/neon/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 39357
+    },
+    {
+      "phase": "neon-highscores-screen",
+      "source": "/assets/theme-packs/neon/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 53927
+    },
+    {
+      "phase": "neon-online-players-overlay",
+      "source": "/assets/theme-packs/neon/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 71941
+    },
+    {
+      "phase": "neon-online-players-overlay",
+      "source": "/assets/theme-packs/neon/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 20072
+    },
+    {
+      "phase": "neon-online-players-overlay",
+      "source": "/assets/theme-packs/neon/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 23858
+    },
+    {
+      "phase": "neon-online-players-overlay",
+      "source": "/assets/theme-packs/neon/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 21289
+    },
+    {
+      "phase": "neon-online-players-overlay",
+      "source": "/assets/theme-packs/neon/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 24981
+    },
+    {
+      "phase": "neon-online-players-overlay",
+      "source": "/assets/theme-packs/neon/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 20964
+    },
+    {
+      "phase": "neon-waiting-screen",
+      "source": "/assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 296078
+    },
+    {
+      "phase": "neon-waiting-screen",
+      "source": "/assets/theme-packs/neon/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 52452
+    },
+    {
+      "phase": "neon-waiting-screen",
+      "source": "/assets/theme-packs/neon/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 49595
+    },
+    {
+      "phase": "neon-waiting-screen",
+      "source": "/assets/theme-packs/neon/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 50305
+    },
+    {
+      "phase": "amethyst-highscores-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 186294
+    },
+    {
+      "phase": "amethyst-highscores-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 46853
+    },
+    {
+      "phase": "amethyst-highscores-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 46062
+    },
+    {
+      "phase": "amethyst-highscores-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 76663
+    },
+    {
+      "phase": "amethyst-online-players-overlay",
+      "source": "/assets/theme-packs/amethyst/canonical/online-players-internal/state-quality-v2.png",
+      "bytes": 67296
+    },
+    {
+      "phase": "amethyst-online-players-overlay",
+      "source": "/assets/theme-packs/amethyst/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 19433
+    },
+    {
+      "phase": "amethyst-online-players-overlay",
+      "source": "/assets/theme-packs/amethyst/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 26243
+    },
+    {
+      "phase": "amethyst-online-players-overlay",
+      "source": "/assets/theme-packs/amethyst/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 16735
+    },
+    {
+      "phase": "amethyst-online-players-overlay",
+      "source": "/assets/theme-packs/amethyst/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 22760
+    },
+    {
+      "phase": "amethyst-online-players-overlay",
+      "source": "/assets/theme-packs/amethyst/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 21122
+    },
+    {
+      "phase": "amethyst-waiting-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 214906
+    },
+    {
+      "phase": "amethyst-waiting-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 48339
+    },
+    {
+      "phase": "amethyst-waiting-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 59229
+    },
+    {
+      "phase": "amethyst-waiting-screen",
+      "source": "/assets/theme-packs/amethyst/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 74811
+    },
+    {
+      "phase": "easter-highscores-screen",
+      "source": "/assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 158739
+    },
+    {
+      "phase": "easter-highscores-screen",
+      "source": "/assets/theme-packs/easter/canonical/leaderboard-controls/global-quality-v2.png",
+      "bytes": 55604
+    },
+    {
+      "phase": "easter-highscores-screen",
+      "source": "/assets/theme-packs/easter/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 37015
+    },
+    {
+      "phase": "easter-highscores-screen",
+      "source": "/assets/theme-packs/easter/canonical/leaderboard-controls/empty-loading-quality-v2.png",
+      "bytes": 67655
+    },
+    {
+      "phase": "easter-online-players-overlay",
+      "source": "/assets/theme-packs/easter/canonical/online-players-internal/state-quality-v2.png",
+      "bytes": 56474
+    },
+    {
+      "phase": "easter-online-players-overlay",
+      "source": "/assets/theme-packs/easter/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 16278
+    },
+    {
+      "phase": "easter-online-players-overlay",
+      "source": "/assets/theme-packs/easter/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 24063
+    },
+    {
+      "phase": "easter-online-players-overlay",
+      "source": "/assets/theme-packs/easter/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 17930
+    },
+    {
+      "phase": "easter-online-players-overlay",
+      "source": "/assets/theme-packs/easter/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 22423
+    },
+    {
+      "phase": "easter-online-players-overlay",
+      "source": "/assets/theme-packs/easter/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 21368
+    },
+    {
+      "phase": "easter-waiting-screen",
+      "source": "/assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 192631
+    },
+    {
+      "phase": "easter-waiting-screen",
+      "source": "/assets/theme-packs/easter/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 53808
+    },
+    {
+      "phase": "easter-waiting-screen",
+      "source": "/assets/theme-packs/easter/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 43519
+    },
+    {
+      "phase": "easter-waiting-screen",
+      "source": "/assets/theme-packs/easter/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 65019
+    },
+    {
+      "phase": "desert-highscores-screen",
+      "source": "/assets/theme-packs/desert/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 227409
+    },
+    {
+      "phase": "desert-highscores-screen",
+      "source": "/assets/theme-packs/desert/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 54628
+    },
+    {
+      "phase": "desert-highscores-screen",
+      "source": "/assets/theme-packs/desert/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 55620
+    },
+    {
+      "phase": "desert-highscores-screen",
+      "source": "/assets/theme-packs/desert/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 83321
+    },
+    {
+      "phase": "desert-online-players-overlay",
+      "source": "/assets/theme-packs/desert/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 74218
+    },
+    {
+      "phase": "desert-online-players-overlay",
+      "source": "/assets/theme-packs/desert/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 19864
+    },
+    {
+      "phase": "desert-online-players-overlay",
+      "source": "/assets/theme-packs/desert/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 21099
+    },
+    {
+      "phase": "desert-online-players-overlay",
+      "source": "/assets/theme-packs/desert/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 25673
+    },
+    {
+      "phase": "desert-online-players-overlay",
+      "source": "/assets/theme-packs/desert/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 28767
+    },
+    {
+      "phase": "desert-online-players-overlay",
+      "source": "/assets/theme-packs/desert/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 20029
+    },
+    {
+      "phase": "desert-waiting-screen",
+      "source": "/assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 250108
+    },
+    {
+      "phase": "desert-waiting-screen",
+      "source": "/assets/theme-packs/desert/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 57129
+    },
+    {
+      "phase": "desert-waiting-screen",
+      "source": "/assets/theme-packs/desert/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 63408
+    },
+    {
+      "phase": "desert-waiting-screen",
+      "source": "/assets/theme-packs/desert/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 63281
+    },
+    {
+      "phase": "moon-highscores-screen",
+      "source": "/assets/theme-packs/moon/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 206438
+    },
+    {
+      "phase": "moon-highscores-screen",
+      "source": "/assets/theme-packs/moon/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 48599
+    },
+    {
+      "phase": "moon-highscores-screen",
+      "source": "/assets/theme-packs/moon/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 34784
+    },
+    {
+      "phase": "moon-highscores-screen",
+      "source": "/assets/theme-packs/moon/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 71412
+    },
+    {
+      "phase": "moon-online-players-overlay",
+      "source": "/assets/theme-packs/moon/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 65911
+    },
+    {
+      "phase": "moon-online-players-overlay",
+      "source": "/assets/theme-packs/moon/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 19032
+    },
+    {
+      "phase": "moon-online-players-overlay",
+      "source": "/assets/theme-packs/moon/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 22648
+    },
+    {
+      "phase": "moon-online-players-overlay",
+      "source": "/assets/theme-packs/moon/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 26435
+    },
+    {
+      "phase": "moon-online-players-overlay",
+      "source": "/assets/theme-packs/moon/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 26304
+    },
+    {
+      "phase": "moon-online-players-overlay",
+      "source": "/assets/theme-packs/moon/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 23108
+    },
+    {
+      "phase": "moon-waiting-screen",
+      "source": "/assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 237201
+    },
+    {
+      "phase": "moon-waiting-screen",
+      "source": "/assets/theme-packs/moon/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 48519
+    },
+    {
+      "phase": "moon-waiting-screen",
+      "source": "/assets/theme-packs/moon/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 41381
+    },
+    {
+      "phase": "moon-waiting-screen",
+      "source": "/assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 67992
+    },
+    {
+      "phase": "severna-highscores-screen",
+      "source": "/assets/theme-packs/severna/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2",
+      "bytes": 162777
+    },
+    {
+      "phase": "severna-highscores-screen",
+      "source": "/assets/theme-packs/severna/canonical/leaderboard-controls/global-v2.png?v=2",
+      "bytes": 61645
+    },
+    {
+      "phase": "severna-highscores-screen",
+      "source": "/assets/theme-packs/severna/canonical/leaderboard-controls/local-v2.png?v=2",
+      "bytes": 47573
+    },
+    {
+      "phase": "severna-highscores-screen",
+      "source": "/assets/theme-packs/severna/canonical/leaderboard-controls/empty-loading-v2.png?v=2",
+      "bytes": 74433
+    },
+    {
+      "phase": "severna-online-players-overlay",
+      "source": "/assets/theme-packs/severna/canonical/online-players-internal/state-v1.png?v=2",
+      "bytes": 68017
+    },
+    {
+      "phase": "severna-online-players-overlay",
+      "source": "/assets/theme-packs/severna/canonical/online-players-internal/search-v1.png?v=2",
+      "bytes": 16673
+    },
+    {
+      "phase": "severna-online-players-overlay",
+      "source": "/assets/theme-packs/severna/canonical/online-players-internal/friend-v1.png?v=2",
+      "bytes": 18269
+    },
+    {
+      "phase": "severna-online-players-overlay",
+      "source": "/assets/theme-packs/severna/canonical/online-players-internal/spectate-v1.png?v=2",
+      "bytes": 16446
+    },
+    {
+      "phase": "severna-online-players-overlay",
+      "source": "/assets/theme-packs/severna/canonical/online-players-internal/duel-v1.png?v=2",
+      "bytes": 21617
+    },
+    {
+      "phase": "severna-online-players-overlay",
+      "source": "/assets/theme-packs/severna/canonical/online-players-internal/avatar-v1.png?v=2",
+      "bytes": 21304
+    },
+    {
+      "phase": "severna-waiting-screen",
+      "source": "/assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1",
+      "bytes": 296142
+    },
+    {
+      "phase": "severna-waiting-screen",
+      "source": "/assets/theme-packs/severna/canonical/invite-friend-internal/send-v1.png?v=1",
+      "bytes": 54078
+    },
+    {
+      "phase": "severna-waiting-screen",
+      "source": "/assets/theme-packs/severna/canonical/invite-friend-internal/empty-v1.png?v=1",
+      "bytes": 63086
+    },
+    {
+      "phase": "severna-waiting-screen",
+      "source": "/assets/theme-packs/severna/canonical/statistics-overview/power-index-v1.png?v=1",
+      "bytes": 48863
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-30T18:15:03.647Z",
+  "commit": "d38aa6aa35c794e06b98d79fdc4520766c1ddfb4",
+  "scope": "Public static GET only; not proof of the Android loaded version.",
+  "rows": [
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "status": 200,
+      "resources": [
+        {
+          "file": "game.js",
+          "version": "6.40",
+          "status": 200,
+          "sha256Normalized": "450da3a4fc12fb57adea48d3fbf6e2575b287c7ac7d99e719c229b77db14e356",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-game-header.js",
+          "version": "6",
+          "status": 200,
+          "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-settings-room.js",
+          "version": "4",
+          "status": 200,
+          "sha256Normalized": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+          "matchesLocalNormalized": true
+        }
+      ]
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "status": 200,
+      "resources": [
+        {
+          "file": "game.js",
+          "version": "6.40",
+          "status": 200,
+          "sha256Normalized": "450da3a4fc12fb57adea48d3fbf6e2575b287c7ac7d99e719c229b77db14e356",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-game-header.js",
+          "version": "6",
+          "status": 200,
+          "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-settings-room.js",
+          "version": "4",
+          "status": 200,
+          "sha256Normalized": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+          "matchesLocalNormalized": true
+        }
+      ]
+    }
+  ]
+}

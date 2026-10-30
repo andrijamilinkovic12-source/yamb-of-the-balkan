@@ -1,5 +1,11 @@
 # Vizuelni audit PNG assetsa
 
+## Posle v6.40 i lokalna R37/v6.41 — 30.10.2026.
+
+[14 Android kadrova, javne verzije i lokalno poređenje](postdeploy640-2026-10-30/index.html). Oba servisa na d38aa6aa/v6.40. Povratak na Green posle Neon/Easter/Light/Moon i završni meni kompletni. **Prvi Neon/Easter/Moon izbori nisu pouzdani**, ponovljeni su uspeli; jedan Neon retry neodređen pri zakašnjelim native komandama. Activity COLD19194ms nije app-ready mera. Uzrok sporog starta/ranijeg ANR-a ostaje otvoren.56 javnih PNG HEAD putanja sve200. Nema nove partije, reklame, nagradnog dugmeta ili DB pristupa; prvi emulator vraćen iz pauze, drugiGreen meni.
+
+R37 lokalno odlaže automatski rad tri skrivena kontrolera: Top lista, Online igrači, Pozovi prijatelja. Stvarni kontroleri/PNG u izolovanom browseru:14zahteva/719184B pri startu→0,126zahteva kroz deset skrivenih tema→0.40vidljivih slučajeva10tema, deljeno oko/prazna lista u igri, inline otvaranje, dinamički PowerIndex i eksplicitna priprema prolaze. Nema promene PNG/izgleda/dimenzija. Ovo nije ukupni saobraćaj aplikacije ili dokaz uzroka Android zastoja. **Lokalna v6.41 čeka korisnikov commit/deploy i Android potvrdu.** Istorijski „čeka deploy” R36 odeljci niže opisuju prethodni presek.
+
 ## R36 — zastarela priprema i izbačeni nezavršeni zahtevi, lokalna v6.40
 
 Reprodukovano u v6.39/7985cb39: završena themeWarmups priprema prijavljuje spremno i kada je LRU izbacio njene dekodirane slike. U lokalnom browseru sa stvarnim PNG, posle deset tema Green ima18nedostajućih slika uz spremnu staru pripremu. Posle ispravke ponovo priprema svih18i nedostaje0; odmah ponovljen izbor nema novu Image pripremu. Drugi kontrolisani slučaj: LRU izbacuje nezavršen URL, kasniji poziv stvara2Imagezahteva; sada ostaje1. Dodati proveru preklopljenih izvora i zaštitu da neuspeh stare pripreme ne izbriše novu. Završeni keš i dalje64/12Mpiksela.

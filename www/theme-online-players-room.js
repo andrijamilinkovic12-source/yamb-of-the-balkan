@@ -43,6 +43,8 @@
         if (root.matches?.('img[data-online-role]')) images.push(root);
         root.querySelectorAll?.('img[data-online-role]').forEach(image => images.push(image));
         images.forEach(image => {
+            // Shared eye icons remain live wherever visible, including the game.
+            if (!image.getClientRects().length) return;
             const source = asset(image.dataset.onlineRole);
             if (image.getAttribute('src') === source) return;
             if (ready.has(source)) {
@@ -65,11 +67,15 @@
     window.themeOnlinePlayers = { asset, apply, preload, handleAvatarError, activeTheme };
     const start = () => {
         apply();
-        new MutationObserver(() => {
-            const inGame = document.getElementById('game-scene')?.classList.contains('active');
-            preload(activeTheme(), inGame ? ['spectate'] : ROLES).catch(() => {});
-            apply(document);
-        }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        new MutationObserver(() => apply(document))
+            .observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        for (const id of ['online-players-overlay', 'game-scene', 'waiting-screen']) {
+            const room = document.getElementById(id);
+            if (room) {
+                new MutationObserver(() => apply(room)).observe(room, { childList: true, subtree: true });
+                new MutationObserver(() => apply(room)).observe(room, { attributes: true, attributeFilter: ['class', 'style'] });
+            }
+        }
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
     else start();
