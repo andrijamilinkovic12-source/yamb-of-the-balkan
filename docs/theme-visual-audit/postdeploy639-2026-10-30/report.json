@@ -1,0 +1,208 @@
+{
+  "date": "2026-10-30",
+  "version": "6.39",
+  "commit": "7985cb3928fa9ecd3719d941cf4c692be181dfa1",
+  "published": {
+    "checkedAt": "2026-10-30T12:34:54.784Z",
+    "commit": "7985cb3928fa9ecd3719d941cf4c692be181dfa1",
+    "rows": [
+      {
+        "host": "https://yamb-reconnect-qa.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.39",
+            "status": 200,
+            "sha256": "824d4050482a2a5b8e1c67a590d452eedb04135837d2a90013cca341b05f0d5d",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "status": 200,
+            "sha256": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "4",
+            "status": 200,
+            "sha256": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+            "matchesLocalNormalized": true
+          }
+        ]
+      },
+      {
+        "host": "https://yamb-of-the-balkan.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.39",
+            "status": 200,
+            "sha256": "824d4050482a2a5b8e1c67a590d452eedb04135837d2a90013cca341b05f0d5d",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "status": 200,
+            "sha256": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "4",
+            "status": 200,
+            "sha256": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+            "matchesLocalNormalized": true
+          }
+        ]
+      }
+    ]
+  },
+  "qaEnvironment": "Zasebni APK com.yamb.balkan.staging, staging/reconnect-qa-01; QA baza yamb_reconnect_qa. Original1440×3120/560dpi, geometrija nije menjana. Produkcija samo javni HTML/JS read-only HTTP.",
+  "startup": {
+    "status": "Oporavljen meni; brzina i uzrok zastoja ostaju otvoreni",
+    "observation": "Ponovo pokrenuta samo druga QA aplikacija. am start -W je istekao u pomoćnom procesu (25s budžet komande), pa nema validne Activity launch mere. Naredni kadar je početna podloga, kasniji kadar meni. Nije pritiskano Sačekaj ili ponovljen restart.",
+    "anr": "Pre i odmah posle pokretanja lastanr pokazuje isti prethodni događaj: Oct30,2026 12:06:28PM, FocusEvent(hasFocus=false), čekanje5009ms. Završno čitanje kaže no ANR has occurred since boot. Nema novog potvrđenog ANR događaja u snimljenim stanjima; ne tvrdi se neprekidno praćenje, poznat uzrok ili popravljena brzina.",
+    "limits": "Cache nije brisan. Zakasneli/animacioni/native framebuffer kadrovi i ukupno trajanje ADB komandi nisu precizna vremena spremnosti aplikacije. Nema tvrdnje o trenutnoj promeni tema/skinova ili otklonjenom hladnom startu."
+  },
+  "nativeSettings": {
+    "themes": [
+      "dark",
+      "neon",
+      "easter",
+      "light"
+    ],
+    "status": "Kompletne kontrole vizuelno pregledane; Neon/Easter i vraćanjaGreen jednim izborom",
+    "limits": "Ovo su4teme na v6.39, ne novi native10/10prolaz. Prethodna v6.38 ima zaseban10/10dokaz, lokalni v6.39 kontroleri takođe10/10."
+  },
+  "nativeGame": {
+    "authorization": "Korisnik izričito dozvolio novu praznu Hotseat QA partiju sa Gost_QA, bez bacanja/upisa/završetka/reklame/nagrade.",
+    "status": "Otvorena jedna lokalna partija; Green i Light paneli/meni provereni. Jedna promena teme i jedan izbor skina primenjeni. Table ostale bez upisa, rezultat0.",
+    "skin": "U Light temi izabran dostupan Žadna Glina skin; kockice, dugmad i brojač pratili isti set. Nema kupovine ili provere plaćenog otključavanja.",
+    "exit": "Potvrđen izlazak u meni. Nema završnog panela, regular/technical rezultata ili ručne izmene igre.",
+    "limits": "0bacanja i0upisa. Ne proverava izgled različitih vrednosti kockica, online eye-live, hitni timer, mrežne tokove ili završnu nagradu. Native potvrda dva tematska panela ne zamenjuje ranije lokalne provere deset tema."
+  },
+  "emulatorIsolation": {
+    "observation": "Prvi emulator privremeno pauziran preko emulator console dok je stajao u meniju; posle testa resume/status potvrdio running. Nema gašenja/brisanja podataka ili promene geometrije.",
+    "host": "2,63GB slobodno/15,23GB ukupno RAM-a. Kratak2,03suzorak sa prvim pauziranim: qemu7248 oko0,04CPU-jezgra i1,66GB working set; qemu17952 oko0,62CPU-jezgra i2,42GB. Jedan uzorak nije dokaz uzroka sporog starta.",
+    "restoration": "Oba emulatora ponovo running; prvi je ostao u svom Moon meniju, drugi vraćen na Green meni. Prvi nije ponovo pokretao aplikaciju u ovom prolazu."
+  },
+  "dataBoundary": {
+    "beforeAt": "2026-10-30T12:33:45.061Z",
+    "afterAt": "2026-10-30T17:00:59.661Z",
+    "profilesUnchanged": true,
+    "resultsAndClaimsUnchanged": true,
+    "balances": [
+      {
+        "player": "Andrija Milinković",
+        "balance": 2939,
+        "games": 46
+      },
+      {
+        "player": "Sara Milinkovic",
+        "balance": 12168,
+        "games": 46
+      }
+    ],
+    "latestRegularClaimCount": 2,
+    "dailyClaimed": false,
+    "scope": "Poređenje pre/posle pokriva reload, Settings, odobrenu lokalnu partiju/izlazak i završno vraćanje vizuelne teme. Prethodno automatsko preuzimanje439/675 već je bilo evidentirano pre ovog testa."
+  },
+  "conclusion": "Objavljeni R35 ima ciljanu Android potvrdu prvog ulaska u Settings i panel igre; nema novih runtime izmena u ovom prolazu. Precizno merenje hladnog učitavanja, ponovljen ANR uzrok, fizičkiS25 i druge finansijske/mrežne provere ostaju otvoreni.",
+  "images": [
+    {
+      "stem": "qa-deploy639-before-p0",
+      "label": "Prvi emulator pre pregleda: Mesečev Sjaj, glavni meni.",
+      "file": "qa-deploy639-before-p0.jpg"
+    },
+    {
+      "stem": "qa-deploy639-before-p1",
+      "label": "Drugi emulator pre ponovnog pokretanja: Green meni.",
+      "file": "qa-deploy639-before-p1.jpg"
+    },
+    {
+      "stem": "qa-deploy639-after-restart-p1",
+      "label": "Posle pokretanja: samo početna zelena podloga. Ovo nije spreman meni.",
+      "file": "qa-deploy639-after-restart-p1.jpg"
+    },
+    {
+      "stem": "qa-deploy639-startup-followup-p1",
+      "label": "Meni se oporavio bez novog pritiska. Kadar ima nepotpuno iscrtanu donju pozadinu; nije dokaz brzog ili potpuno stabilnog prvog kadra.",
+      "file": "qa-deploy639-startup-followup-p1.jpg"
+    },
+    {
+      "stem": "qa-deploy639-settings-followup",
+      "label": "Prvi ulazak u Green Podešavanja: kompletne tematske kontrole. Raniji prvi kadar još je prikazivao meni; nije bilo ponovljenog pritiska.",
+      "file": "qa-deploy639-settings-followup.jpg"
+    },
+    {
+      "stem": "qa-deploy639-neon-first",
+      "label": "Prvi izbor Neona: vidljiv ekran pripreme, nije trenutna promena.",
+      "file": "qa-deploy639-neon-first.jpg"
+    },
+    {
+      "stem": "qa-deploy639-neon-ready",
+      "label": "Neon Podešavanja: naziv, PNG i paleta primenjeni jednim izborom.",
+      "file": "qa-deploy639-neon-ready.jpg"
+    },
+    {
+      "stem": "qa-deploy639-easter-ready",
+      "label": "Vaskršnja Podešavanja: naziv, PNG i paleta primenjeni jednim izborom.",
+      "file": "qa-deploy639-easter-ready.jpg"
+    },
+    {
+      "stem": "qa-deploy639-menu-before-hotseat",
+      "label": "Zelena vraćena i Podešavanja zatvorena pre odobrene lokalne partije.",
+      "file": "qa-deploy639-menu-before-hotseat.jpg"
+    },
+    {
+      "stem": "qa-deploy639-game-green",
+      "label": "Odobrena prazna Hotseat partija Sara/Gost_QA: Green panel, table i skin, svi zbirovi0, bez bacanja.",
+      "file": "qa-deploy639-game-green.jpg"
+    },
+    {
+      "stem": "qa-deploy639-game-menu-green",
+      "label": "Green meni igre: tematske kontrole i aktivni skin.",
+      "file": "qa-deploy639-game-menu-green.jpg"
+    },
+    {
+      "stem": "qa-deploy639-game-light-ready",
+      "label": "Jedan izbor u meniju igre primenio Svetlo Zlato, gornji/donji panel i odgovarajući skin. Rezultat ostao0.",
+      "file": "qa-deploy639-game-light-ready.jpg"
+    },
+    {
+      "stem": "qa-deploy639-game-menu-light-ready",
+      "label": "Svetlo Zlato: kompletan meni i osvežen naziv skina nakon otvaranja.",
+      "file": "qa-deploy639-game-menu-light-ready.jpg"
+    },
+    {
+      "stem": "qa-deploy639-skin-picker-light",
+      "label": "Izbor dostupnih skinova: Standard Bela, Žadna Glina i devet drugih tematskih skinova; nije dokaz kupovine.",
+      "file": "qa-deploy639-skin-picker-light.jpg"
+    },
+    {
+      "stem": "qa-deploy639-game-light-jade-skin",
+      "label": "U Svetlom Zlatu izabrana Žadna Glina: kockice, BACAJ/NAJAVA i brojač koriste taj univerzalni skin, tema table ostala Light.",
+      "file": "qa-deploy639-game-light-jade-skin.jpg"
+    },
+    {
+      "stem": "qa-deploy639-after-exit-attempt",
+      "label": "Povratak u Light glavni meni posle potvrde izlaska, bez završetka ili isplate.",
+      "file": "qa-deploy639-after-exit-attempt.jpg"
+    },
+    {
+      "stem": "qa-deploy639-settings-light-ready",
+      "label": "Svetlo Zlato Podešavanja: kompletne tematske PNG kontrole.",
+      "file": "qa-deploy639-settings-light-ready.jpg"
+    },
+    {
+      "stem": "qa-deploy639-final-menu-p1",
+      "label": "Završno stanje drugog emulatora: Zelena, glavni meni; test partija više nije na ekranu.",
+      "file": "qa-deploy639-final-menu-p1.jpg"
+    }
+  ]
+}

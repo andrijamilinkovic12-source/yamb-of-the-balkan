@@ -1,0 +1,1684 @@
+{
+  "date": "2026-10-30",
+  "mode": "after",
+  "baselineCommit": "7985cb3928fa9ecd3719d941cf4c692be181dfa1",
+  "scope": "Isolated Edge/mobile viewport411×891; actual menu methods and production PNGs, localhost image loading/decode with synthetic theme navigation. No YambApp constructor/auth/accounts/socket, full UI audit, network emulation or Android ANR proof. readyMs is local fixture time, not phone/QA-server latency.",
+  "rows": [
+    {
+      "theme": "dark",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 142
+    },
+    {
+      "theme": "light",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 85
+    },
+    {
+      "theme": "medium",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 50
+    },
+    {
+      "theme": "winter",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 82
+    },
+    {
+      "theme": "neon",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 103
+    },
+    {
+      "theme": "amethyst",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 95
+    },
+    {
+      "theme": "easter",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 63
+    },
+    {
+      "theme": "desert",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 92
+    },
+    {
+      "theme": "moon",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 74
+    },
+    {
+      "theme": "severna",
+      "sourceCount": 18,
+      "ready": true,
+      "newImages": 18,
+      "readyMs": 103
+    }
+  ],
+  "revisit": {
+    "newWarmup": true,
+    "ready": true,
+    "missingBefore": 18,
+    "newImages": 18,
+    "readyMs": 1,
+    "missingAfter": 0
+  },
+  "immediateRepeat": {
+    "sameWarmup": true,
+    "newImages": 0
+  },
+  "metrics": {
+    "phase": "dark-revisit",
+    "images": [
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "dark"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "light"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "medium"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "winter"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "neon"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "amethyst"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "easter"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "desert"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "moon"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "severna"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      },
+      {
+        "phase": "dark-revisit"
+      }
+    ],
+    "decodes": [
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 1.9
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 2.6
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 4.3
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-clay-balkan-diorama-v4.png",
+        "ms": 27.1
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png?v=1",
+        "ms": 24.7
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1",
+        "ms": 26.7
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png?v=1",
+        "ms": 48.6
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/runtime/menu/treasury-free-v3.png?v=1",
+        "ms": 68.5
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1",
+        "ms": 70.7
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png?v=1",
+        "ms": 73.7
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1",
+        "ms": 75.9
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png?v=1",
+        "ms": 77.8
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png?v=1",
+        "ms": 79.1
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png?v=1",
+        "ms": 80.9
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png?v=1",
+        "ms": 82.5
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png?v=1",
+        "ms": 84.1
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png?v=1",
+        "ms": 86.2
+      },
+      {
+        "phase": "dark",
+        "source": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png?v=1",
+        "ms": 87.8
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-backgrounds/light-v9.png",
+        "ms": 23.9
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 28.8
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 29
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 20.9
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 17.5
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 8.3
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 10.1
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 18.7
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 19.5
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 16.1
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 17.1
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 18.4
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 19.9
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 21.3
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 22.8
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/runtime/menu/treasury-free-v3.png?v=2",
+        "ms": 23.9
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+        "ms": 25.2
+      },
+      {
+        "phase": "light",
+        "source": "assets/theme-packs/light/runtime/menu/ducats-undo-free-v3.png",
+        "ms": 26
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-backgrounds/medium-v9.png",
+        "ms": 16.8
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 10.7
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 8.2
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 6.8
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 6.7
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 5.3
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 7
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 9.2
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 9.2
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 3.6
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 4.8
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 5.7
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 4.8
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 5.9
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 6.9
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/runtime/menu/treasury-free-v3.png?v=2",
+        "ms": 7.9
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+        "ms": 8.8
+      },
+      {
+        "phase": "medium",
+        "source": "assets/theme-packs/medium/runtime/menu/ducats-undo-free-v3.png",
+        "ms": 9.8
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 4
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-backgrounds/winter-v13.png",
+        "ms": 29.6
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 27.5
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 23.5
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 8.6
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 9.5
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 10.5
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 11.9
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 13.4
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 14.9
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 16.3
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 21.4
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 22.4
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 23.9
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 24.8
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/runtime/menu/treasury-free-v3.png?v=2",
+        "ms": 26.2
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 28
+      },
+      {
+        "phase": "winter",
+        "source": "assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png",
+        "ms": 29.7
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 1.3
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 3.1
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 3.3
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 3.6
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 7.1
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-backgrounds/neon-v4.png",
+        "ms": 21.8
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 23
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 24.8
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 26.6
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 25.5
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 26.7
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 27.8
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 28.8
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 34.7
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 36.1
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/runtime/menu/treasury-free-v3.png?v=2",
+        "ms": 37.2
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 43.1
+      },
+      {
+        "phase": "neon",
+        "source": "assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png?v=2",
+        "ms": 44.3
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-backgrounds/amethyst-v6.png",
+        "ms": 16.9
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 15.4
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 16.1
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 16.9
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 16.2
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 15.5
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 15.1
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 16.2
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 17.5
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 18.5
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 19.2
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 16.3
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 17.3
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 18.7
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 19.6
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png?v=2",
+        "ms": 26.3
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 27.6
+      },
+      {
+        "phase": "amethyst",
+        "source": "assets/theme-packs/amethyst/runtime/menu/ducats-undo-free-v3.png",
+        "ms": 32.6
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-backgrounds/easter-v6-1.png",
+        "ms": 20.6
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 16.7
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 16
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 15.1
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 15.3
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 14.8
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 12.7
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 19
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 19.2
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 20.7
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 16.3
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 18.2
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 19.4
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 20.4
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 21.4
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png?v=3",
+        "ms": 22.3
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 23.3
+      },
+      {
+        "phase": "easter",
+        "source": "assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
+        "ms": 24.6
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-backgrounds/desert-v8-2.png",
+        "ms": 26
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 28
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 28.8
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 29.3
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 30.2
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 22.3
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 23
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 24
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 8.9
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 9.8
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 11.2
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 12.3
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 13.4
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 14.9
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 16.1
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/runtime/menu/treasury-free-v3.png?v=3",
+        "ms": 17.3
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 16.3
+      },
+      {
+        "phase": "desert",
+        "source": "assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png",
+        "ms": 16.9
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-backgrounds/moon-v14.png",
+        "ms": 24.2
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 18.1
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 23.1
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 23.8
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 24.8
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 25.7
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 18.8
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 20.2
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 21.3
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 22.3
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 23.5
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 25.7
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 26.7
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 27.8
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 29.3
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/runtime/menu/treasury-free-v3.png?v=2",
+        "ms": 30.3
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 31.1
+      },
+      {
+        "phase": "moon",
+        "source": "assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png",
+        "ms": 32.1
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-backgrounds/severna-v4.png",
+        "ms": 20.1
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 16.5
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 23
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 22.7
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "ms": 23.5
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+        "ms": 22.5
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+        "ms": 21
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+        "ms": 22.2
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "ms": 23.4
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "ms": 20.7
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+        "ms": 18.2
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "ms": 28.4
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/rules-room-identity/rules-room-menu-v1.png",
+        "ms": 30.2
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "ms": 47.2
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "ms": 58
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/runtime/menu/treasury-free-v3.png?v=3",
+        "ms": 59
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+        "ms": 60
+      },
+      {
+        "phase": "severna",
+        "source": "assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png",
+        "ms": 61
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-clay-balkan-diorama-v4.png",
+        "ms": 0.7
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/menu-resume-buttons/resume-v1.png?v=1",
+        "ms": 0.6
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/menu-resume-buttons/new-v1.png?v=1",
+        "ms": 0.6
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png?v=1",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png?v=1",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png?v=1",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png?v=1",
+        "ms": 0.5
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png?v=1",
+        "ms": 0.6
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/runtime/menu/treasury-free-v3.png?v=1",
+        "ms": 0.7
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1",
+        "ms": 0.7
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png?v=1",
+        "ms": 0.7
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png?v=1",
+        "ms": 0.6
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png?v=1",
+        "ms": 0.6
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png?v=1",
+        "ms": 0.6
+      },
+      {
+        "phase": "dark-revisit",
+        "source": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png?v=1",
+        "ms": 0.6
+      }
+    ]
+  },
+  "retainedEntries": 55,
+  "retainedPixels": 11994064,
+  "errors": []
+}

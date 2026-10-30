@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-30",
+  "mode": "after",
+  "baselineCommit": "7985cb3928fa9ecd3719d941cf4c692be181dfa1",
+  "scope": "Actual YambApp prototype methods with controlled Image callbacks; synthetic LRU/load pressure, not measured network/decode latency or Android ANR proof.",
+  "packRevalidatedAfterEviction": true,
+  "menuRevisitNewImageCount": 1,
+  "changedSourcePrepared": true,
+  "downloadsForPendingUrl": 1,
+  "cacheEntriesAfterSettled": 64,
+  "overlappingSourcesAndOldFailureGuard": "PASS"
+}

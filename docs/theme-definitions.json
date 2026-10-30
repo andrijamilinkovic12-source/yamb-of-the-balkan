@@ -1,14 +1,33 @@
 {
-  "schemaVersion": 86,
+  "schemaVersion": 88,
   "updatedOn": "2026-10-30",
+  "preloadRetentionVerification20261030": {
+    "localGameVersion": "6.40",
+    "status": "R36 lokalno, ceka korisnikov commit/deploy i ciljanu Android potvrdu. Nije dokaz popravljene brzine ili uzroka ANR-a.",
+    "evidence": "docs/theme-visual-audit/preload-retention-2026-10-30/report.json",
+    "baseline": "v6.39/7985cb3928fa9ecd3719d941cf4c692be181dfa1",
+    "problems": "Zavrsena themeWarmups priprema ostajala je spremna posle izbacivanja njenih dekodiranih slika iz LRU. LRU je mogao izbaciti i nezavrsen zahtev, pa kasniji poziv pokrene duplo ucitavanje/dekodiranje istog URL-a.",
+    "change": "Pre upotrebe zavrsene pripreme proveravaju se potrebni quality-resolved URL-ovi i zadrzane dekodirane slike. Nezavrseni image zahtevi ostaju deljeni dok se ne zavrse. Promena potrebnih izvora dopunjava barijeru, a neuspeh zastarele pripreme ne brise noviju. Granice zavrsenog kesa ostaju64slike/12miliona piksela.",
+    "localProof": "Stvarni menu PNG i stvarne metode u izolovanom lokalnom browseru10tema. Pre: posle LRU pritiska povratakGreen prijavljuje spremno uz18slika koje nedostaju. Posle: svih18ponovo pripremljeno, nedostaje0; odmah ponovljen izbor bez novih Image priprema. Kontrolisani nezavrseni URL2ucitavanja->1; novi izvori i zastareli neuspeh provereni. Nema browser gresaka/404.",
+    "networkProof": "Ogranicen javni HTTP uzorak samo QA: testirani CSS/JS koristeBrotli, PNG dugotrajni kes; JS/CSS max-age0. HTML navodi86lokalnih CSS/JS referenci sa3665259B nekompresovanog sadrzaja. To nije broj zahteva izmeren u WebView-u ili dokaz uzroka ANR-a.",
+    "boundary": "Bez novih PNG, promena DNK/stila/palete/dimenzija, pravila igre, ekonomije ili serverskog kesa. Nema nove igre, emulator unosa, naloga, auth sesije, oglasa ili nagrade u ovom nastavku. Lokalna vremena nisu vremena na telefonu."
+  },
   "startupLoadingVerification20261030": {
     "localGameVersion": "6.39",
-    "status": "R35 lokalno, ceka korisnikov commit/deploy i Android potvrdu. ANR i hladno ucitavanje ostaju otvoreni.",
+    "status": "R35 objavljen v6.39/7985cb39 na oba servisa. Ciljana Android potvrda: Settings4teme, Hotseat panel2teme i jedan rucni izbor skina. ANR uzrok i brzina hladnog ucitavanja ostaju otvoreni.",
     "evidence": "docs/theme-visual-audit/startup-loading-2026-10-30.md",
     "change": "Automatsko ucitavanje skrivenih Settings/header kontrola odlozeno do otvaranja prikaza. Eksplicitna prepare/apply priprema ostaje dostupna; trenutni header priprema se tokom citata/cekanja, uz postojecu pripremu sledece teme i skinova. Zakasnela priprema ne sme primeniti temu koja vise nije aktivna. PNG, DNK, stil, palete, dimenzije i ekonomija nisu menjani.",
     "isolatedProof": "Stvarna dva kontrolera i PNG, reprezentativni lokalni browser DOM bez naloga/socketa:17 pocetnih zahteva/1172537B ->0; deset promena teme dok su prikazi skriveni bez PNG zahteva; otvaranje obe sobe10/10tema sa ispravnim PNG i bez browser gresaka. Zakasneli Green header ne prepisuje Neon Settings. Nije merenje ukupnog starta ili stvarne mreze.",
     "nativeProof": "Objavljena v6.38: pri prethodnom dijagnostickom prolazu oba emulatora povezana, Green meni drugog vizuelno potvrdjen. Bez nove partije, oglasa, preuzimanja ili restarta. Poslednji sistemski ANR navodi FocusEvent timeout5009ms; uzrok blokade nije utvrdjen.",
-    "remaining": "Posle deploya proveriti pocetak i prvi ulazak u Settings/igru na Androidu. Ostaju hladni start, prvi/ponovljeni izbor tema/skinova i fizickiS25. Lokalno rasterecenje nije potvrda da je ANR popravljen."
+    "remaining": "Prvi ulazak u Settings/igru ciljano potvrdjen na v6.39. Ostaju precizno merenje hladnog starta, prvi/ponovljeni izbor svih tema/skinova i fizickiS25. Lokalno rasterecenje i ciljani prikazi nisu potvrda da je ANR popravljen.",
+    "postDeploy": {
+      "commit": "7985cb3928fa9ecd3719d941cf4c692be181dfa1",
+      "evidence": "docs/theme-visual-audit/postdeploy639-2026-10-30/report.json",
+      "publicCode": "Oba servisa HTTP200: game.js6.39, theme-game-header.js6, theme-settings-room.js4. Sadrzaj sva tri fajla odgovara lokalnom posle CRLF/LF normalizacije. Produkcija samo javni HTTP.",
+      "native": "Izdvojeni QA APK; original1440x3120/560dpi. Settings: Green, Neon, Easter i Light kompletne tematske kontrole. Uz izricito odobrenje otvorena prazna lokalna Hotseat Sara/Gost_QA; Green->Light panel/meni/skin, zatim u Light izabran dostupan Žadna Glina skin. Kockice, dugmad i brojac prate taj skin. Nema bacanja, upisa ili zavrsetka.",
+      "startupLimits": "am start -W istekao u pomocnom procesu; prvi kadar samo podloga, kasniji meni. Zakasneli/animacioni kadrovi i ADB trajanja nisu merenje app-ready vremena. Cache nije brisan. Nema novog potvrdjenog ANR-a u pregledanim stanjima; uzrok prethodnog nije utvrdjen.",
+      "restoreAndData": "Potvrdjen izlazak iz lokalnog testa; drugi emulator vracen na Green meni. Prvi privremeno pauziran radi izolacije opterecenja, zatim resume/status potvrdio running; oba rade. Read-only QA profili, rezultati i preuzimanja isti pre/posle; salda2939/12168, Daily nepreuzet. Bez oglasa ili nagrade. Ovo nije novi10/10nativeprolaz ili dokaz placene kupovine."
+    }
   },
   "postDeployVerification20261030": {
     "testedCommit": "41d6598f118487ede3ac2f16c552e31b6a487e96",

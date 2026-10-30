@@ -1,5 +1,15 @@
 # Početno učitavanje — 30.10.2026.
 
+## Dopuna posle korisnikovog deploya v6.39
+
+Oba servisa potvrđena na commitu7985cb39. Javno objavljeni game.js6.39, header6 i Settings4 odgovaraju lokalnom sadržaju posle CRLF/LF normalizacije. [Android snimci, hash-evi i granice](postdeploy639-2026-10-30/index.html).
+
+Na QA emulatoru pregledane kompletne Settings kontrole u Green/Neon/Easter/Light. Uz korisnikovo izričito odobrenje otvorena prazna lokalna Hotseat Sara/Gost_QA; Green i Light paneli i meni igre učitani, jedna promena teme i jedan ručni izbor Žadne Gline u Light temi primenjeni. Kockice, BACAJ/NAJAVA i brojač prate skin. Nema bacanja, upisa, završavanja, oglasa ili isplate. Potvrđen izlazak i vraćena Green tema. Read-only poređenje potvrđuje iste QA profile, rezultate i preuzimanja; salda2939/12168.
+
+**Brzina ostaje otvorena.** Komanda am-start-W istekla je, prvi kadar pokazao samo podlogu, kasniji oporavljen meni. Neki kadrovi kasne ili hvataju nepotpuno iscrtavanje/animaciju. Nije čišćen cache ili precizno meren app-ready trenutak. Na početku je zabeležen stari FocusEvent ANR; na kraju nema novog potvrđenog događaja, ali to ne dokazuje da je uzrok otklonjen. Prvi emulator privremeno pauziran, zatim vraćen u rad; oba na kraju running. Ovo je ciljana potvrda primene R35, nije novi native10/10ili provera S25/reklama.
+
+Odeljci niže čuvaju lokalno poređenje i prethodnu v6.38 dijagnostiku.
+
 ## R35 — skrivene kontrole, lokalna v6.39
 
 Objavljena osnova je v6.38/41d6598f. Dva kontrolera su pri pokretanju i promeni teme u meniju učitavala PNG za skrivene Podešavanja i panel igre. Lokalna v6.39 odlaže njihov automatski rad do aktiviranja odgovarajuće sobe. Javne `prepare`/`apply` funkcije i kompletna priprema pri promeni teme ostaju dostupne. Trenutni panel igre priprema se tokom citata/čekanja, pre otvaranja igre; postojeća priprema sledeće teme i skinova ostaje aktivna.

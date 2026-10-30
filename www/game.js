@@ -2663,6 +2663,9 @@ class YambApp {
         let pixels = entries.reduce((sum, [, entry]) => sum + entry.pixels, 0);
         for (const [source, entry] of entries) {
             if (this.themePreloadImages.size <= 64 && pixels <= 12_000_000) break;
+            // Keep unfinished downloads shared with late callers/retries. The
+            // retained cache returns to its bounds as those requests settle.
+            if (!entry.ready) continue;
             this.themePreloadImages.delete(source);
             pixels -= entry.pixels;
         }
@@ -2689,22 +2692,30 @@ class YambApp {
         const pack = this.getThemeLoadingPack(theme);
         if (!pack) return { critical: Promise.resolve(), all: Promise.resolve() };
 
-        const existing = this.themeWarmups.get(theme);
-        if (existing) return existing;
-
         // Startup paket sadrži samo pozadinu, aktivni splash i ikone glavnog
         // menija. Asseti soba se pripremaju tek kada korisnik izabere sobu.
         const criticalSources = this.getThemeStartupSources(theme, pack);
+        const sources = [...new Set(criticalSources.filter(Boolean)
+            .map(source => globalThis.resolveThemeQualityAsset?.(source) || source))];
+        const existing = this.themeWarmups.get(theme);
+        // A resolved promise is not proof that the LRU still retains its decoded
+        // images. Revalidate on return; unfinished requests remain coalesced.
+        if (existing && sources.every(source => existing.sources.includes(source))
+            && (!existing.settled || sources.every(source => this.themePreloadImages?.get(source)?.ready))) {
+            return existing;
+        }
+        const warmup = { sources, settled: false };
         // Fetch the visible pack in one wave; a slow icon must not block later icons.
         const critical = this.preloadThemeSources(criticalSources, {
             concurrency: 24, priority: 'high', timeoutMs: 6000
         }).then(ready => {
-            if (!ready) this.themeWarmups.delete(theme);
+            warmup.settled = true;
+            if (!ready && this.themeWarmups.get(theme) === warmup) this.themeWarmups.delete(theme);
             return ready;
         });
         const all = critical;
 
-        const warmup = { critical, all };
+        Object.assign(warmup, { critical, all });
         this.themeWarmups.set(theme, warmup);
         return warmup;
     }

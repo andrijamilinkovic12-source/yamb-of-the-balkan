@@ -1,5 +1,17 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Nastavak dijagnostike — lokalna R36/v6.40
+
+Ovaj nastavak nema nove radnje na emulatoru, naloge, partije ili nagrade. Na javnom QA meren ograničen uzorak statičkih resursa, a stvarne metode/PNG proverene u izolovanom localhost browseru. Reprodukovana zastarela priprema posle LRU izbacivanja: Green prijavljuje spremno uz18nedostajućih slika; ispravka ih ponovo priprema,0nedostajućih, odmah ponovljen izbor bez nove pripreme. Kontrolisano duplo učitavanje nezavršenog URL-a2→1. Granice završenog keša ostaju64/12Mpiksela, PNG/izgled/dimenzije nisu menjani.
+
+[Dokaz i granice](preload-retention-2026-10-30/index.html). To nije nova native potvrda ili merenje hladnog starta/ANR-a. Čeka korisnikov commit/deploy v6.40 i ciljani povratak na raniju temu posle više promena.
+
+## Posle deploya v6.39/7985cb39 — ciljana R35 potvrda
+
+[18 pregledanih Android snimaka i evidencija](postdeploy639-2026-10-30/index.html). Oba servisa imaju odgovarajući game.js6.39, header6 i Settings4. QA identitet staging/reconnect-qa-01 potvrđen; produkcija samo javni HTTP. Na drugom emulatoru Settings Green/Neon/Easter/Light kompletni. Prazna lokalna Hotseat Sara/Gost_QA izričito odobrena: Green panel, promena u Light, meni i izbor dostupne Žadne Gline u Light temi uspešni; kockice/dugmad/brojač prate skin. Bez bacanja, upisa, završetka, reklame ili nagrade. Potvrđen izlazak, Green vraćen.
+
+am-start-W komanda istekla; naredni kadar samo podloga, kasniji meni. Nema validne mere brzine, cache nije brisan. Novi ANR nije potvrđen u pregledanim stanjima, prethodni uzrok ostaje otvoren. Prvi emulator tokom dela testa pauziran, zatim resume/status vratio running; oba rade, geometrija nije menjana. Read-only profili/rezultati/preuzimanja ostali identični; salda2939/12168, Daily nepreuzet. Novi lokalni test nema završen rezultat. Nema novih runtime izmena u ovom prolazu. Ovo nije novi native10/10prolaz svih panela.
+
 ## Dijagnostika pokretanja — 30.10.2026., lokalna R35
 
 Pri prethodnom prolazu oba emulatora su povezana, drugi prikazuje Green meni. Nema nove partije, oglasa, nagrade ili restarta u tom prolazu. Read-only ANR sažetak: FocusEvent timeout5009ms; uzrok blokade nepoznat. Zbirna gfxinfo statistika sesije ne tretira se kao merenje starta. Host RAM2,18/15,23GB slobodno/ukupno.

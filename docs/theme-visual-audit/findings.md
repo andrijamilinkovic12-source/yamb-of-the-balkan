@@ -1,5 +1,17 @@
 # Vizuelni audit PNG assetsa
 
+## R36 — zastarela priprema i izbačeni nezavršeni zahtevi, lokalna v6.40
+
+Reprodukovano u v6.39/7985cb39: završena themeWarmups priprema prijavljuje spremno i kada je LRU izbacio njene dekodirane slike. U lokalnom browseru sa stvarnim PNG, posle deset tema Green ima18nedostajućih slika uz spremnu staru pripremu. Posle ispravke ponovo priprema svih18i nedostaje0; odmah ponovljen izbor nema novu Image pripremu. Drugi kontrolisani slučaj: LRU izbacuje nezavršen URL, kasniji poziv stvara2Imagezahteva; sada ostaje1. Dodati proveru preklopljenih izvora i zaštitu da neuspeh stare pripreme ne izbriše novu. Završeni keš i dalje64/12Mpiksela.
+
+[Mere pre/posle i ograničenja](preload-retention-2026-10-30/index.html). Svi PNG/metode stvarni, navigacija i pritisak na keš lokalni. Bez naloga, igre, oglasa, emulator unosa ili runtime izmena izgleda. Javni QA uzorak potvrđuje Brotli za tekst i dugotrajni PNG keš; ne dokazuje uzrok ANR-a. Čeka korisnikov commit/deploy i Android potvrdu. Nema tvrdnje da je hladni start ili raniji ANR rešen.
+
+## R35 posle deploya v6.39/7985cb39 — ciljana potvrda
+
+Objavljena sva tri izmenjena klijentska fajla na oba servisa. Na QA Androidu Settings4teme i prazan odobreni Hotseat panel2teme kompletni; jedan izbor teme i jedan univerzalni skin primenjeni. Bez bacanja/upisa/završetka/oglasa/nagrade, identični QA profili i rezultati pre/posle. [Snimci i precizna granica dokaza](postdeploy639-2026-10-30/index.html).
+
+R35 primena ima ciljanu native potvrdu; **performanse/ANR ostaju otvoreni**. am-start-W je istekao, prvo samo podloga pa meni, pojedini kadrovi kasne ili su nepotpuni. Cache nije brisan, nema app-ready merenja. Nema novog potvrđenog ANR-a u pregledanim stanjima; prethodni uzrok nije utvrđen. Prvi emulator privremeno pauziran i potom vraćen u rad, oba running. Formulacije „lokalno/čeka deploy” niže opisuju raniji presek.
+
 ## R35 — skriveni Settings/header PNG pri pokretanju, lokalna v6.39
 
 Dva kontrolera od sada automatski pripremaju slike samo dok je njihov prikaz aktivan; eksplicitna priprema ostaje dostupna. Trenutni panel priprema se tokom citata/čekanja. U izolovanom browser poređenju stvarnih kontrolera i PNG:17zahteva/1.172.537B pri skrivenom meniju→0; otvaranje oba prikaza10/10tema prolazi. Zakašnjeli stari header ne prepisuje novu temu Podešavanja. Nema promene izgleda/dimenzija. [Mere, regresije i granice](startup-loading-2026-10-30.md). Čeka korisnikov commit/deploy i Android potvrdu.

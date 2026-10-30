@@ -56,10 +56,14 @@ app.preloadThemeSources = sources => {
     finishSettings();
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(app.applied, 'light');
-    app.saveSettingAuto('theme', 'neon');
+    const failedSelection = app.saveSettingAuto('theme', 'neon');
     finishMenu(false);
     finishSettings(true);
     await new Promise(resolve => setImmediate(resolve));
+    assert.equal(notices.length, 0, 'The bounded automatic retry is still preparing the theme');
+    finishMenu(false);
+    finishSettings(true);
+    await failedSelection;
     assert.equal(app.applied, 'light', 'An incomplete pack must not replace the visible theme');
     assert.equal(storage.get('yamb_theme'), 'light');
     assert.equal(notices.length, 1, 'The player must be told that the theme did not load');

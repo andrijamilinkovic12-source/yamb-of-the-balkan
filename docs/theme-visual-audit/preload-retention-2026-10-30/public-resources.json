@@ -1,0 +1,277 @@
+{
+  "at": "2026-10-30T17:15:42.515Z",
+  "host": "https://yamb-reconnect-qa.onrender.com",
+  "scope": "Two bounded public static GET passes, concurrency3, Node HTTP client. Not WebView timings, cold Render/phone cache proof, CPU/decode measurement or a signed-in game.",
+  "inventory": {
+    "files": 86,
+    "totalBytes": 3665259,
+    "largest": [
+      {
+        "url": "teme.css?v=7.11",
+        "bytes": 1045216
+      },
+      {
+        "url": "game.js?v=6.39",
+        "bytes": 583774
+      },
+      {
+        "url": "managers.js?v=6.37",
+        "bytes": 214400
+      },
+      {
+        "url": "style.css?v=5.25",
+        "bytes": 191086
+      },
+      {
+        "url": "turnir.js?v=1037",
+        "bytes": 126284
+      },
+      {
+        "url": "languages.js?v=5.27",
+        "bytes": 116644
+      },
+      {
+        "url": "efekti.css?v=3.5",
+        "bytes": 110801
+      },
+      {
+        "url": "kvartalnaliga.js?v=1033",
+        "bytes": 56317
+      },
+      {
+        "url": "dnevniizazov.js?v=3.4",
+        "bytes": 51002
+      },
+      {
+        "url": "theme-effect-previews.css?v=16",
+        "bytes": 47873
+      },
+      {
+        "url": "theme-invite-friend-room.css?v=6",
+        "bytes": 47153
+      },
+      {
+        "url": "socket.io.min.js?v=4.8.3",
+        "bytes": 46822
+      }
+    ]
+  },
+  "rows": [
+    {
+      "pass": 1,
+      "source": "style.css?v=5.25",
+      "status": 200,
+      "headersMs": 409,
+      "bodyCompleteMs": 423,
+      "decodedBodyBytes": 187349,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "/",
+      "status": 200,
+      "headersMs": 560,
+      "bodyCompleteMs": 590,
+      "decodedBodyBytes": 131487,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "teme.css?v=7.11",
+      "status": 200,
+      "headersMs": 407,
+      "bodyCompleteMs": 465,
+      "decodedBodyBytes": 1021523,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "managers.js?v=6.37",
+      "status": 200,
+      "headersMs": 76,
+      "bodyCompleteMs": 94,
+      "decodedBodyBytes": 209866,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "theme-game-header.js?v=6",
+      "status": 200,
+      "headersMs": 59,
+      "bodyCompleteMs": 60,
+      "decodedBodyBytes": 6684,
+      "contentLength": "2206",
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "game.js?v=6.39",
+      "status": 200,
+      "headersMs": 90,
+      "bodyCompleteMs": 128,
+      "decodedBodyBytes": 572281,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "theme-settings-room.js?v=4",
+      "status": 200,
+      "headersMs": 56,
+      "bodyCompleteMs": 57,
+      "decodedBodyBytes": 4259,
+      "contentLength": "1613",
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "assets/green-clay-balkan-diorama-v4.png",
+      "status": 200,
+      "headersMs": 48,
+      "bodyCompleteMs": 333,
+      "decodedBodyBytes": 1864586,
+      "contentLength": "1864586",
+      "contentEncoding": null,
+      "cacheControl": "public, max-age=31536000, immutable",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 1,
+      "source": "assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1",
+      "status": 200,
+      "headersMs": 59,
+      "bodyCompleteMs": 360,
+      "decodedBodyBytes": 1342176,
+      "contentLength": "1342176",
+      "contentEncoding": null,
+      "cacheControl": "public, max-age=31536000, immutable",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "/",
+      "status": 200,
+      "headersMs": 60,
+      "bodyCompleteMs": 74,
+      "decodedBodyBytes": 131487,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "teme.css?v=7.11",
+      "status": 200,
+      "headersMs": 51,
+      "bodyCompleteMs": 114,
+      "decodedBodyBytes": 1021523,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "style.css?v=5.25",
+      "status": 200,
+      "headersMs": 103,
+      "bodyCompleteMs": 143,
+      "decodedBodyBytes": 187349,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "game.js?v=6.39",
+      "status": 200,
+      "headersMs": 63,
+      "bodyCompleteMs": 76,
+      "decodedBodyBytes": 572281,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "managers.js?v=6.37",
+      "status": 200,
+      "headersMs": 54,
+      "bodyCompleteMs": 64,
+      "decodedBodyBytes": 209866,
+      "contentLength": null,
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "theme-game-header.js?v=6",
+      "status": 200,
+      "headersMs": 64,
+      "bodyCompleteMs": 72,
+      "decodedBodyBytes": 6684,
+      "contentLength": "2206",
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "theme-settings-room.js?v=4",
+      "status": 200,
+      "headersMs": 64,
+      "bodyCompleteMs": 65,
+      "decodedBodyBytes": 4259,
+      "contentLength": "1613",
+      "contentEncoding": "br",
+      "cacheControl": "public, max-age=0",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1",
+      "status": 200,
+      "headersMs": 48,
+      "bodyCompleteMs": 223,
+      "decodedBodyBytes": 1342176,
+      "contentLength": "1342176",
+      "contentEncoding": null,
+      "cacheControl": "public, max-age=31536000, immutable",
+      "matchesLocalNormalized": true
+    },
+    {
+      "pass": 2,
+      "source": "assets/green-clay-balkan-diorama-v4.png",
+      "status": 200,
+      "headersMs": 55,
+      "bodyCompleteMs": 426,
+      "decodedBodyBytes": 1864586,
+      "contentLength": "1864586",
+      "contentEncoding": null,
+      "cacheControl": "public, max-age=31536000, immutable",
+      "matchesLocalNormalized": true
+    }
+  ]
+}
