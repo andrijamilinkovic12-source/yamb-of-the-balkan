@@ -25,7 +25,7 @@ const headerCode = read('www/theme-game-header.js');
 let currentTheme = 'dark';
 let startHeader;
 const observers = new Map();
-const scene = { dataset: {}, style: { values: {}, setProperty(key, value) { this.values[key] = value; } } };
+const scene = { classList: { contains: name => name === 'active' }, dataset: {}, style: { values: {}, setProperty(key, value) { this.values[key] = value; } } };
 const buttons = Object.fromEntries(['btn-bacaj', 'btn-najava'].map(id => [id, {
     dataset: {}, textContent: '', attributes: {},
     removeAttribute(key) { delete this.attributes[key]; }
@@ -77,7 +77,7 @@ assert(css.includes('width: 28px;') && css.includes('height: 28px;'));
 const languages = read('www/languages.js');
 assert(!/"game_opponent_(?:turn|choosing)": "🔒"/.test(languages), 'Old emoji lock remains in translations');
 const html = read('www/index.html');
-assert(html.includes('theme-game-header.css?v=6') && html.includes('theme-game-header.js?v=5'));
+assert(html.includes('theme-game-header.css?v=6') && html.includes('theme-game-header.js?v=6'));
 
 (async () => {
     buttons['btn-bacaj'].dataset.opponentLocked = 'game_opponent_turn';

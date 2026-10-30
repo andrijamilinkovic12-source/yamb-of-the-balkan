@@ -1,5 +1,21 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Dijagnostika pokretanja — 30.10.2026., lokalna R35
+
+Pri prethodnom prolazu oba emulatora su povezana, drugi prikazuje Green meni. Nema nove partije, oglasa, nagrade ili restarta u tom prolazu. Read-only ANR sažetak: FocusEvent timeout5009ms; uzrok blokade nepoznat. Zbirna gfxinfo statistika sesije ne tretira se kao merenje starta. Host RAM2,18/15,23GB slobodno/ukupno.
+
+R35 lokalna v6.39 odlaže automatske PNG pripreme skrivenih Settings/header kontrola, uz pripremu trenutnog panela tokom citata/čekanja. Izolovani stvarni kontroleri:17zahteva/1.172.537B→0 na početnom meniju; obe sobe10/10tema prolaze. Nastavak posle prekida dodaje i proverenu zaštitu od zakašnjelog starog headera koji bi prepisao novu temu Podešavanja. To nije native dokaz popravke ANR-a ili brzine skinova. [Dokaz i granice](startup-loading-2026-10-30.md). Čeka korisnikov commit/deploy i Android potvrdu.
+
+## Posle korisnikovog deploya — v6.38, 30.10.2026.
+
+Oba javna servisa potvrđena na v6.38, commit41d6598f; game.js odgovara lokalnom nakon CRLF/LF normalizacije. Produkcija proverena samo javnim HTTP odgovorima. QA staging/reconnect-qa-01 i izdvojeni APK potvrđeni. [14 pregledanih Android kadrova i evidencija](postdeploy-2026-10-30/index.html).
+
+Obe QA aplikacije ponovo pokrenute na originalnih1440×3120/560dpi, bez brisanja podataka. Druga je prikazala app-not-responding dijalog; opcija Sačekaj dovela je do glavnog menija. Uzrok zastoja nije utvrđen. Oba glavna menija potom vizuelno potvrđena. Deset tema izabrano je u Podešavanjima na drugom emulatoru, svaka jednim pritiskom; završni naziv, paleta i PNG kontrole pregledani. Zelena vraćena, Podešavanja zatvorena. Prvi emulator ostaje na Mesečevom Sjaju.
+
+Ovo potvrđuje primenu izbora u ovoj sesiji, ne brzinu hladnog učitavanja: cache nije očišćen, snimci su posle fiksnih14s i interni retry nije praćen. R34 je objavljen i ima10/10 potvrdu izbora; R33 je objavljen, ali novi native tehnički poraz sa nultom kaznom nije ponovljen.
+
+Read-only QA snimci pre11:03:04Z i posle11:33:17Z imaju identične profile, rezultate i preuzimanja: salda2939/12168, prethodni regular claim count2, Daily i dalje nepreuzet. Nema nove partije, oglasa, poziva, revanša ili preuzimanja u ovom pregledu. Ranije automatsko preuzimanje439/675 iz odeljka niže nije novi događaj. [Aktuelni preostali koraci](remaining-work-plan-2026-10-29.md).
+
 ## Ručni izbor teme — QA i lokalna R34,30.10.2026.
 
 R34, lokalno game.jsv6.38: na QA v6.36 prvi izbor Green→Neon ostavio je Green, ponovljeni je uspeo. Tačan spor PNG/HTTP zahtev nije identifikovan. Ručni izbor iz Podešavanja sada ima jedan automatski retry preko postojećeg image/decode cachea; gate čeka oba vidljiva paketa i retry. Konačan neuspeh čuva prethodnu kompletnu temu. Noviji izbor, offline i promena naloga zaštićeni. Nije dokaz ubrzanog prvog preuzimanja ili popravke na Androidu pre deploya. [Native dokaz](theme-switch-2026-10-30/index.html). Zelena/SRB vraćeni na drugom emulatoru; originalna rezolucija nije menjana. Povremeni ADB screenshot failure i Windows capture timeout oporavljeni ponovnom proverom; nema nove partije/poziva/oglasa ili pritiska na nagradu.

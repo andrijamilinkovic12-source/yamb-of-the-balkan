@@ -1,0 +1,224 @@
+{
+  "date": "2026-10-30",
+  "commit": "41d6598f118487ede3ac2f16c552e31b6a487e96",
+  "gameVersion": "6.38",
+  "publicVerification": {
+    "checkedAt": "2026-10-30T11:01:58.517Z",
+    "localCommit": "41d6598f118487ede3ac2f16c552e31b6a487e96",
+    "localGameVersion": "6.38",
+    "results": [
+      {
+        "host": "https://yamb-reconnect-qa.onrender.com",
+        "status": 200,
+        "gameVersion": "6.38",
+        "gameHash": "2c91cf66fb2a0497c0b7384bb2569980cf8dcb3e03bcd91bc7bbbbb16f399cbe",
+        "matchesLocalGame": false,
+        "matchesLocalNormalized": true
+      },
+      {
+        "host": "https://yamb-of-the-balkan.onrender.com",
+        "status": 200,
+        "gameVersion": "6.38",
+        "gameHash": "2c91cf66fb2a0497c0b7384bb2569980cf8dcb3e03bcd91bc7bbbbb16f399cbe",
+        "matchesLocalGame": false,
+        "matchesLocalNormalized": true
+      }
+    ]
+  },
+  "qaIsolation": {
+    "url": "https://yamb-reconnect-qa.onrender.com",
+    "appId": "com.yamb.balkan.staging",
+    "expectedInstance": "reconnect-qa-01",
+    "expectedFirebaseProject": "yamb-reconnect-qa",
+    "health": {
+      "ok": true,
+      "environment": "staging",
+      "instanceId": "reconnect-qa-01",
+      "maintenance": false
+    },
+    "isolatedRuntimeConfirmed": true,
+    "gameVersion": "6.38"
+  },
+  "nativeEnvironment": "Zasebni APK com.yamb.balkan.staging; emulator-5554 i emulator-5556, originalnih 1440×3120/560dpi. Oba prijavljena QA naloga zadržana. Samo QA aplikacije ponovo pokrenute, bez brisanja podataka ili promene geometrije.",
+  "nativeThemeSelection": {
+    "status": "PASS za primenu svih deset izbora u ovoj sesiji",
+    "themes": [
+      {
+        "id": "dark",
+        "name": "Zelena",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "neon",
+        "name": "Neon Cyber",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "easter",
+        "name": "Vaskršnja",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "desert",
+        "name": "Pustinjsko Staklo",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "severna",
+        "name": "Severna Maglina",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "light",
+        "name": "Svetlo Zlato",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "medium",
+        "name": "Trula Višnja",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "winter",
+        "name": "Plavi Okean",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "amethyst",
+        "name": "Kraljevski Ametist",
+        "singleSelectionApplied": true
+      },
+      {
+        "id": "moon",
+        "name": "Mesečev Sjaj",
+        "singleSelectionApplied": true
+      }
+    ],
+    "scope": "Jedan korisnički izbor po temi u Podešavanjima, finalni prikaz vizuelno pregledan. Paleta, naziv i tematske PNG kontrole primenjeni. Zelena vraćena i glavni meni pregledan.",
+    "observationDelayMs": 14000,
+    "limits": "Fiksno čekanje pre snimanja nije merenje brzine. Nije čišćen cache. Nema instrumentacije internog retry ogranka; uspešan pojedinačni izbor nije dokaz da se retry aktivirao. Ovo nije test svih skinova ili menjanja teme tokom igre, niti novo potpuno merenje svih dimenzija."
+  },
+  "fixes": {
+    "R34": "Objavljena v6.38: kompletna readiness i jedan ograničen automatski retry pri ručnom izboru iz Podešavanja. Native potvrda: 10/10 pojedinačnih izbora primenjeno. Interni ogranci imaju ranije lokalne testove, nisu praćeni u WebView-u.",
+    "R33": "Objavljeni game.js sadrži ispravku nulte kazne u dukatima. Ranijih 16 izolovanih handler slučajeva prolazi; novi native tehnički poraz sa nultom kaznom nije odigran."
+  },
+  "startupFinding": {
+    "status": "OPEN",
+    "observation": "Drugi emulator prikazao je Android app-not-responding dijalog. Opcija Sačekaj dovela je do oporavljenog glavnog menija. Prvi meni takođe pregledan posle reload-a.",
+    "limits": "Uzrok nije utvrđen; nema tvrdnje da je hladni start brz ili da je zastoj otklonjen. ADB snimanje je povremeno kasnilo/neuspevalo; takvi kadrovi nisu dokaz stanja aplikacije."
+  },
+  "dataBoundary": {
+    "beforeAt": "2026-10-30T11:03:04.553Z",
+    "afterAt": "2026-10-30T11:33:17.031Z",
+    "profilesUnchanged": true,
+    "resultsAndClaimsUnchanged": true,
+    "balances": [
+      {
+        "player": "Andrija Milinković",
+        "balance": 2939,
+        "games": 46,
+        "lastDaily": "2026-10-29",
+        "lastDailyRewardClaimed": ""
+      },
+      {
+        "player": "Sara Milinkovic",
+        "balance": 12168,
+        "games": 46,
+        "lastDaily": "",
+        "lastDailyRewardClaimed": ""
+      }
+    ],
+    "latestMatchFingerprint": "2666afca44f1",
+    "latestMatchClaimedCount": 2,
+    "note": "Nema nove partije, oglasa, poziva, revanša ili novog preuzimanja. Ranije automatsko preuzimanje 439/675 ostaje istorijski zasebno evidentirano; pre ovog pregleda claim count već je bio 2. Daily nagrada ostaje nepreuzeta. QA baza samo čitana, produkcija proverena samo javnim HTTP odgovorima."
+  },
+  "remaining": [
+    "Native tehnički poraz sa nultom kaznom R33",
+    "Android završni panel posle ranijeg resize pomeranja",
+    "Merenje hladnog starta/prvog učitavanja tema i skinova",
+    "Stvarni revanš/reconnect i poziv na dva uređaja; korisnik je odbio dodatno preuzimanje",
+    "Fizički S25, oglasi i nagrade"
+  ],
+  "images": [
+    {
+      "stem": "qa-deploy638-menu-p1",
+      "label": "Otvoren nalaz: Android prijavljuje da QA aplikacija ne odgovara posle ponovnog pokretanja. Ovo nije uspešan kadar.",
+      "file": "qa-deploy638-menu-p1.jpg"
+    },
+    {
+      "stem": "qa-deploy638-after-wait-p1",
+      "label": "Drugi emulator: glavni meni oporavljen posle opcije Sačekaj; uzrok zastoja nije utvrđen.",
+      "file": "qa-deploy638-after-wait-p1.jpg"
+    },
+    {
+      "stem": "qa-deploy638-after-reload-p0",
+      "label": "Prvi emulator: glavni meni Mesečevog Sjaja posle ponovnog pokretanja QA aplikacije.",
+      "file": "qa-deploy638-after-reload-p0.jpg"
+    },
+    {
+      "stem": "qa-deploy638-dark",
+      "theme": "dark",
+      "label": "Zelena: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-dark.jpg"
+    },
+    {
+      "stem": "qa-deploy638-neon",
+      "theme": "neon",
+      "label": "Neon Cyber: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-neon.jpg"
+    },
+    {
+      "stem": "qa-deploy638-easter",
+      "theme": "easter",
+      "label": "Vaskršnja: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-easter.jpg"
+    },
+    {
+      "stem": "qa-deploy638-desert",
+      "theme": "desert",
+      "label": "Pustinjsko Staklo: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-desert.jpg"
+    },
+    {
+      "stem": "qa-deploy638-severna",
+      "theme": "severna",
+      "label": "Severna Maglina: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-severna.jpg"
+    },
+    {
+      "stem": "qa-deploy638-light",
+      "theme": "light",
+      "label": "Svetlo Zlato: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-light.jpg"
+    },
+    {
+      "stem": "qa-deploy638-medium",
+      "theme": "medium",
+      "label": "Trula Višnja: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-medium.jpg"
+    },
+    {
+      "stem": "qa-deploy638-winter",
+      "theme": "winter",
+      "label": "Plavi Okean: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-winter.jpg"
+    },
+    {
+      "stem": "qa-deploy638-amethyst",
+      "theme": "amethyst",
+      "label": "Kraljevski Ametist: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-amethyst.jpg"
+    },
+    {
+      "stem": "qa-deploy638-moon",
+      "theme": "moon",
+      "label": "Mesečev Sjaj: Podešavanja posle jednog izbora. Zelena je izabrana pri završnom vraćanju.",
+      "file": "qa-deploy638-moon.jpg"
+    },
+    {
+      "stem": "qa-deploy638-final-menu-p1",
+      "label": "Završno stanje drugog emulatora: Zelena i glavni meni, Podešavanja zatvorena.",
+      "file": "qa-deploy638-final-menu-p1.jpg"
+    }
+  ]
+}

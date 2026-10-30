@@ -59,15 +59,22 @@
         const icons = [...document.querySelectorAll('img[data-settings-role], .settings-standard-icon[data-game-header-role]')];
         const roleOf = icon => icon.dataset.settingsRole || icon.dataset.gameHeaderRole;
         await Promise.allSettled(icons.map(icon => preload(asset(roleOf(icon), theme))));
-        if (token !== request) return;
+        if (token !== request || activeTheme() !== theme) return;
         icons.forEach(icon => {
             const src = asset(roleOf(icon), theme);
             if (cache.has(src)) icon.src = src;
         });
     };
     const start = () => {
-        apply();
-        new MutationObserver(apply).observe(document.body, { attributes:true, attributeFilter:['class'] });
+        // Settings owns its shared audio icons; a hidden room does not preload
+        // them during startup or every menu theme change.
+        const room = document.getElementById?.('settings-screen');
+        const applyVisible = () => {
+            if (room?.classList.contains('active')) void apply();
+        };
+        applyVisible();
+        new MutationObserver(applyVisible).observe(document.body, { attributes:true, attributeFilter:['class'] });
+        if (room) new MutationObserver(applyVisible).observe(room, { attributes:true, attributeFilter:['class'] });
     };
     window.themeSettingsRoom = { asset, sources, prepare, apply };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once:true });

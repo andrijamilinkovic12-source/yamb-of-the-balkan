@@ -1,6 +1,29 @@
 {
-  "schemaVersion": 84,
+  "schemaVersion": 86,
   "updatedOn": "2026-10-30",
+  "startupLoadingVerification20261030": {
+    "localGameVersion": "6.39",
+    "status": "R35 lokalno, ceka korisnikov commit/deploy i Android potvrdu. ANR i hladno ucitavanje ostaju otvoreni.",
+    "evidence": "docs/theme-visual-audit/startup-loading-2026-10-30.md",
+    "change": "Automatsko ucitavanje skrivenih Settings/header kontrola odlozeno do otvaranja prikaza. Eksplicitna prepare/apply priprema ostaje dostupna; trenutni header priprema se tokom citata/cekanja, uz postojecu pripremu sledece teme i skinova. Zakasnela priprema ne sme primeniti temu koja vise nije aktivna. PNG, DNK, stil, palete, dimenzije i ekonomija nisu menjani.",
+    "isolatedProof": "Stvarna dva kontrolera i PNG, reprezentativni lokalni browser DOM bez naloga/socketa:17 pocetnih zahteva/1172537B ->0; deset promena teme dok su prikazi skriveni bez PNG zahteva; otvaranje obe sobe10/10tema sa ispravnim PNG i bez browser gresaka. Zakasneli Green header ne prepisuje Neon Settings. Nije merenje ukupnog starta ili stvarne mreze.",
+    "nativeProof": "Objavljena v6.38: pri prethodnom dijagnostickom prolazu oba emulatora povezana, Green meni drugog vizuelno potvrdjen. Bez nove partije, oglasa, preuzimanja ili restarta. Poslednji sistemski ANR navodi FocusEvent timeout5009ms; uzrok blokade nije utvrdjen.",
+    "remaining": "Posle deploya proveriti pocetak i prvi ulazak u Settings/igru na Androidu. Ostaju hladni start, prvi/ponovljeni izbor tema/skinova i fizickiS25. Lokalno rasterecenje nije potvrda da je ANR popravljen."
+  },
+  "postDeployVerification20261030": {
+    "testedCommit": "41d6598f118487ede3ac2f16c552e31b6a487e96",
+    "testedGameVersion": "6.38",
+    "evidence": "docs/theme-visual-audit/postdeploy-2026-10-30/report.json",
+    "publishedCode": "QA i produkcija HTTP200/v6.38; game.js SHA256 2c91cf66fb2a0497c0b7384bb2569980cf8dcb3e03bcd91bc7bbbbb16f399cbe. Odgovara lokalnom posle CRLF/LF normalizacije. Produkcija samo javni HTTP, bez naloga ili baze.",
+    "qaEnvironment": "Staging/reconnect-qa-01; zasebni APK com.yamb.balkan.staging na dva emulatora,1440×3120/560dpi. Obe QA aplikacije ponovo pokrenute bez brisanja podataka ili promene geometrije.",
+    "themeSelection": "Deset tema u Podešavanjima primenjeno jednim izborom po temi. Završni naziv, paleta i PNG kontrole vizuelno pregledani. Zelena vraćena, glavni meni pregledan. Ovo nije nov kompletan audit dimenzija ili tema u aktivnoj igri.",
+    "selectionLimits": "Cache nije brisan. Fiksno čekanje14s pre snimanja nije merenje brzine. Interni retry ogranak nije instrumentovan; raniji lokalni testovi pokrivaju retry/readiness/failure/offline i promenu naloga/izbora.",
+    "R33": "Kod objavljen;16 ranijih izolovanih slučajeva prolazi. Novi native tehnički poraz sa nultom kaznom nije ponovljen.",
+    "R34": "Kod objavljen;10/10 pojedinačnih izbora potvrđeno na QA Androidu u ovoj sesiji.",
+    "startupFinding": "OPEN: drugi emulator prikazao app-not-responding dijalog. Oporavljen opcijom Sačekaj, glavni meni pregledan. Uzrok nepoznat; nema potvrde brzog hladnog starta.",
+    "dataBoundary": "Read-only poređenje11:03:04Z/11:33:17Z: identični profili, rezultati i preuzimanja. Salda2939/12168; prethodni regular claim count2; Daily nepreuzet. Bez nove partije, oglasa, poziva, revanša ili preuzimanja. Ranijih439/675 automatski preuzetih dukata već je postojalo pre ove provere.",
+    "remainingPlan": "docs/theme-visual-audit/remaining-work-plan-2026-10-29.md"
+  },
   "currentQaRuntimeVerification20261029": {
     "testedCommit": "910b816c",
     "testedGameVersion": "6.36",
@@ -11,8 +34,8 @@
     "geometry": "Oba emulatora pokrenuta i QA glavni meniji pregledani,1440×3120/560dpi. Prethodni završni paneli nisu ostali otvoreni posle gašenja uređaja.",
     "random": "Aktivna Android igra svih10tema; stanje zadrzano kroz devet promena u istom mecu. Odvojena puna QA partija sa156 proverenih upisa/78poigracu, server regular/completed_scores, Sara450 pobeda/Andrija293 poraz. Zavrsni paneli uGreen/Moon odgovaraju serveru i staju u safezonu bez skrola; ostalih8zavrsnih tema ima raniji izolovani dokaz, ne deset native punih partija. PowerIndex0/+106 potvrdjen serverom. Drzanje prve kockice, najava, drugo bacanje2/3 i upis potvrdjeni na oba uredjaja.",
     "confirmedFix": "R27 Vaskrsnji kanonski PNG megafona vidljiv u obe table. R32 prava perspektiva tehnicke poruke potvrdjena na QA v6.36.",
-    "pendingLocalFix": "Aktuelni lokalni game.jsv6.38 uključuje R33 (uveden v6.37,16 handler slučajeva) i R34. Nije objavljeno niti potvrđeno na uređaju. Serverova ekonomija i dimenzije nisu menjani.",
-    "status": "15/15 osnovnih sobnih vizuelnih Android prolaza svih deset tema, uz eksplicitne granice prethodnih izvestaja. To nije potvrda svih retkih stanja, native zavrsetaka u svih10tema, reklama/isplata ili reconnect/revans toka. R33/R34 su lokalno v6.38, ceka korisnikov commit/deploy. Hladno ucitavanje, fizickiS25 i ostale odvojene funkcionalne provere ostaju otvoreni.",
+    "pendingLocalFix": "R33/R34 su objavljeni na oba servisa v6.38/41d6598f. R34 ima Android potvrdu deset pojedinačnih izbora u Podešavanjima. R33 ima16 ranijih izolovanih handler slučajeva, ali novi native tehnički poraz sa nultom kaznom nije ponovljen. Serverova ekonomija i dimenzije nisu menjani.",
+    "status": "15/15 osnovnih sobnih vizuelnih Android prolaza svih deset tema, uz eksplicitne granice prethodnih izvestaja. To nije potvrda svih retkih stanja, native zavrsetaka u svih10tema, reklama/isplata ili reconnect/revans toka. R33/R34 objavljeni v6.38; naknadna provera opisana je u postDeployVerification20261030. Hladno ucitavanje, fizickiS25 i ostale odvojene funkcionalne provere ostaju otvoreni.",
     "finishedOn": "2026-10-30",
     "randomEvidence": "docs/theme-visual-audit/random-qa-2026-10-29/report.json",
     "rewardBoundary": "Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.",

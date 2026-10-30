@@ -1,5 +1,17 @@
 # Vizuelni audit PNG assetsa
 
+## R35 — skriveni Settings/header PNG pri pokretanju, lokalna v6.39
+
+Dva kontrolera od sada automatski pripremaju slike samo dok je njihov prikaz aktivan; eksplicitna priprema ostaje dostupna. Trenutni panel priprema se tokom citata/čekanja. U izolovanom browser poređenju stvarnih kontrolera i PNG:17zahteva/1.172.537B pri skrivenom meniju→0; otvaranje oba prikaza10/10tema prolazi. Zakašnjeli stari header ne prepisuje novu temu Podešavanja. Nema promene izgleda/dimenzija. [Mere, regresije i granice](startup-loading-2026-10-30.md). Čeka korisnikov commit/deploy i Android potvrdu.
+
+ANR ostaje otvoren: sistemski sažetak navodi FocusEvent timeout5009ms, ali ne utvrđuje uzrok. Zbirna frame statistika emulatora veoma je loša i nije izolovano merenje starta. Native pregled u prethodnom prolazu ostaje na objavljenoj v6.38; bez nove partije ili nagrade.
+
+## Posle deploya v6.38 — 30.10.2026.
+
+Oba javna servisa odgovaraju v6.38/41d6598f; game.js isti je posle CRLF/LF normalizacije. Na izdvojenom QA Androidu svih deset tema primenjeno jednim izborom u Podešavanjima; Zelena vraćena. R34 ima ovu native potvrdu, bez instrumentacije unutrašnjeg retry ogranka ili merenja brzine. R33 kod je objavljen; native nulta kazna još nije ponovljena. Ranije formulacije „lokalno/čeka deploy” niže opisuju vreme nastanka nalaza. [Dokaz i granice](postdeploy-2026-10-30/index.html).
+
+**Otvoren nalaz pokretanja:** drugi emulator prijavio je da QA aplikacija ne odgovara. Opcija Sačekaj oporavila je glavni meni; uzrok nije utvrđen. Cache nije brisan i ne tvrdi se da je hladni start popravljen. Read-only poređenje potvrđuje nepromenjene QA profile, rezultate i nagrade tokom ovog pregleda. Nema nove partije ili oglasa.
+
 ## Važna dopuna pri ponovnom pokretanju — 30.10.2026.
 
 Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.

@@ -87,7 +87,7 @@
         if (scene) delete scene.dataset.gameLockReady;
         const sources = [...new Set([...images.map(image => asset(image.dataset.gameHeaderRole, theme)), asset('timer', theme), asset('lock', theme)])];
         if (!sources.every(source => ready.has(source))) await Promise.allSettled(sources.map(preload));
-        if (token !== request) return;
+        if (token !== request || activeTheme() !== theme) return;
         images.forEach(image => {
             const source = asset(image.dataset.gameHeaderRole, theme);
             if (ready.has(source)) {
@@ -111,8 +111,15 @@
             const button = document.getElementById(id);
             if (button) new MutationObserver(reconcileActionLocks).observe(button, { childList: true, characterData: true, subtree: true });
         }
-        apply();
-        new MutationObserver(apply).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        // Hidden game controls must not compete with the splash/menu pack.
+        // Explicit prepare/apply remains available before an atomic theme switch.
+        const scene = document.getElementById('game-scene');
+        const applyVisible = () => {
+            if (scene?.classList.contains('active')) void apply();
+        };
+        applyVisible();
+        new MutationObserver(applyVisible).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        if (scene) new MutationObserver(applyVisible).observe(scene, { attributes: true, attributeFilter: ['class'] });
     };
     window.themeGameHeader = { asset, apply, prepare, activeTheme };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });

@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-30",
+  "mode": "before",
+  "baselineRef": "41d6598f118487ede3ac2f16c552e31b6a487e96",
+  "scope": "Isolated Edge/mobile viewport411×891. Real two controllers/PNG files, representative hidden/visible room DOM; no complete app, network latency simulation, Android ANR proof or account.",
+  "startupPngRequests": 17,
+  "startupPngBytes": 1172537,
+  "hiddenThemeChangePngRequests": 0,
+  "rows": [],
+  "errors": [],
+  "requests": [
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 70202
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 33758
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 75285
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 58182
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 74157
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 195989
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 72931
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/game-header/music-v1.png?v=1",
+      "bytes": 74389
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 68689
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1",
+      "bytes": 40077
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1",
+      "bytes": 57344
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/language-v1.png?v=1",
+      "bytes": 47659
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/terms-v1.png?v=1",
+      "bytes": 50701
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1",
+      "bytes": 46345
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 73352
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 74712
+    },
+    {
+      "phase": "startup",
+      "source": "/assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 58765
+    }
+  ]
+}

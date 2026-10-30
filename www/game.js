@@ -809,6 +809,11 @@ class YambApp {
     warmGameSwitchAssets() {
         const unlocked = this.getUnlockedThemeIds();
         const current = localStorage.getItem('yamb_theme') || 'dark';
+        // Prepare the current header during the quote/waiting screen, rather
+        // than competing with the main menu at application startup.
+        if (window.themeGameHeader?.prepare) {
+            void window.themeGameHeader.prepare(current).catch(() => {});
+        }
         const index = Math.max(0, unlocked.indexOf(current));
         const next = unlocked[(index + 1) % unlocked.length];
         if (next && next !== current) this.prepareGameTheme(next);

@@ -27,6 +27,7 @@ vm.runInNewContext(fs.readFileSync('www/theme-settings-room.js', 'utf8'),
     { window, document, Image: PendingImage, MutationObserver });
 
 (async () => {
+    const obsolete = window.themeSettingsRoom.apply();
     active = 'neon';
     const switched = window.themeSettingsRoom.apply();
     for (const image of pending.filter(item => item.source.includes('/neon/'))) image.onload();
@@ -36,8 +37,16 @@ vm.runInNewContext(fs.readFileSync('www/theme-settings-room.js', 'utf8'),
         window.themeGameHeader.asset(image.dataset.gameHeaderRole, 'neon'),
         'Visible Settings audio icon must switch without waiting for hidden header controls');
     for (const image of pending.filter(item => item.source.includes('/easter/'))) image.onload();
+    await obsolete;
     await new Promise(resolve => setImmediate(resolve));
     assert.ok(allImages.every(image => image.src.includes('/neon/')),
         'Late PNG from the previous theme must never replace the selected theme');
+    active = 'light';
+    const hiddenPending = window.themeSettingsRoom.apply();
+    active = 'moon'; // The old room is hidden; no new apply is scheduled there.
+    for (const image of pending.filter(item => item.source.includes('/light/'))) image.onload();
+    await hiddenPending;
+    assert.ok(allImages.every(image => image.src.includes('/neon/')),
+        'A hidden room must not commit artwork for a theme that is no longer active');
     console.log('Settings switch keeps one theme and shares the game-panel PNG.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,0 +1,1147 @@
+{
+  "date": "2026-10-30",
+  "mode": "after",
+  "baselineRef": "41d6598f118487ede3ac2f16c552e31b6a487e96",
+  "scope": "Isolated Edge/mobile viewport411×891. Real two controllers/PNG files, representative hidden/visible room DOM; no complete app, network latency simulation, Android ANR proof or account.",
+  "startupPngRequests": 0,
+  "startupPngBytes": 0,
+  "hiddenThemeChangePngRequests": 0,
+  "rows": [
+    {
+      "theme": "dark",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1",
+        "assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1",
+        "assets/green-soft-clay/canonical/settings-controls/language-v1.png?v=1",
+        "assets/green-soft-clay/canonical/settings-controls/terms-v1.png?v=1",
+        "assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/sound-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/music-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/green-soft-clay/canonical/game-header/exit-v1.png?v=1",
+        "assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/menu-v1.png?v=1",
+        "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/sound-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/vibration-v1.png?v=1",
+        "assets/green-soft-clay/canonical/game-header/music-v1.png?v=1",
+        "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/green-soft-clay/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/light/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/light/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/light/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/light/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/light/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/light/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/light/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/light/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/light/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/light/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/light/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/theme-packs/light/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/light/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/light/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/light/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/light/canonical/room-controls/close-v1.png?v=4"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "medium",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/medium/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/medium/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/medium/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/medium/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/medium/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/medium/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/medium/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "winter",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/winter/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/winter/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/winter/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/winter/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/winter/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/winter/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/winter/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "neon",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/neon/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/neon/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/neon/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/neon/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/neon/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/neon/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/neon/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "amethyst",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/amethyst/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/amethyst/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/amethyst/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/amethyst/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/amethyst/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/amethyst/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/amethyst/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "easter",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/easter/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/easter/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/easter/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/easter/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/easter/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/easter/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png?v=2",
+        "assets/theme-packs/easter/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/easter/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "desert",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/desert/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/desert/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/desert/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/desert/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/desert/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/desert/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png?v=2",
+        "assets/theme-packs/desert/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/desert/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "moon",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/moon/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/moon/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/moon/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/moon/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/moon/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/undo-token/undo-token-inline-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/moon/canonical/room-controls/close-v1.png?v=3"
+      ],
+      "status": "PASS"
+    },
+    {
+      "theme": "severna",
+      "settingsCount": 9,
+      "headerCount": 9,
+      "settings": [
+        "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/settings-controls/profile-v2.png?v=2",
+        "assets/theme-packs/severna/canonical/settings-controls/display-theme-v2.png?v=2",
+        "assets/theme-packs/severna/canonical/settings-controls/language-v2.png?v=2",
+        "assets/theme-packs/severna/canonical/settings-controls/terms-v2.png?v=2",
+        "assets/theme-packs/severna/canonical/settings-controls/privacy-v2.png?v=2",
+        "assets/theme-packs/severna/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/game-header/vibration-v1.png?v=1"
+      ],
+      "header": [
+        "assets/theme-packs/severna/canonical/game-header/exit-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png?v=2",
+        "assets/theme-packs/severna/canonical/game-header/menu-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/game-header/sound-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/game-header/vibration-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/game-header/music-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=1",
+        "assets/theme-packs/severna/canonical/room-controls/close-v1.png?v=4"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "raceChecks": [
+    "PASS: late Green header cannot replace shared Neon Settings icons"
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 33758
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 75285
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 58182
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 74157
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 72931
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/game-header/music-v1.png?v=1",
+      "bytes": 74389
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 68689
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 73352
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 256526
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 27439
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 46924
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 36446
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 29866
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 34617
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 64680
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/game-header/music-v1.png?v=1",
+      "bytes": 64681
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/theme-packs/neon/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 64092
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 74712
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 58765
+    },
+    {
+      "phase": "late-hidden-header",
+      "source": "/assets/green-soft-clay/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 70202
+    },
+    {
+      "phase": "dark-settings",
+      "source": "/assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 195989
+    },
+    {
+      "phase": "dark-settings",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1",
+      "bytes": 40077
+    },
+    {
+      "phase": "dark-settings",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1",
+      "bytes": 57344
+    },
+    {
+      "phase": "dark-settings",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/language-v1.png?v=1",
+      "bytes": 47659
+    },
+    {
+      "phase": "dark-settings",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/terms-v1.png?v=1",
+      "bytes": 50701
+    },
+    {
+      "phase": "dark-settings",
+      "source": "/assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1",
+      "bytes": 46345
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 305378
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 34291
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 44155
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 44506
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 30721
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 35328
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 42987
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/game-header/music-v1.png?v=1",
+      "bytes": 42980
+    },
+    {
+      "phase": "light-settings",
+      "source": "/assets/theme-packs/light/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 42275
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 39319
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 41391
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 42143
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 45521
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 61822
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/room-controls/close-v1.png?v=4",
+      "bytes": 54145
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 45094
+    },
+    {
+      "phase": "light-game",
+      "source": "/assets/theme-packs/light/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 52936
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 291549
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 29849
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 43866
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 33480
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 31700
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 34739
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 63138
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/game-header/music-v1.png?v=1",
+      "bytes": 63456
+    },
+    {
+      "phase": "medium-settings",
+      "source": "/assets/theme-packs/medium/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 62090
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 59456
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 45091
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 63922
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 53593
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 68464
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 68331
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 64064
+    },
+    {
+      "phase": "medium-game",
+      "source": "/assets/theme-packs/medium/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 51306
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 264672
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 32063
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 46156
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 38887
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 26547
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 37318
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 49312
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/game-header/music-v1.png?v=1",
+      "bytes": 49329
+    },
+    {
+      "phase": "winter-settings",
+      "source": "/assets/theme-packs/winter/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 48487
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 45426
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 32690
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 48641
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 41212
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 59116
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 59002
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 51774
+    },
+    {
+      "phase": "winter-game",
+      "source": "/assets/theme-packs/winter/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 51996
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 60832
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 30407
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 63771
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 58355
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 68688
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 77613
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 67254
+    },
+    {
+      "phase": "neon-game",
+      "source": "/assets/theme-packs/neon/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 44770
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 262419
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 30608
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 52752
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 39649
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 38141
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 38710
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 61113
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/game-header/music-v1.png?v=1",
+      "bytes": 61182
+    },
+    {
+      "phase": "amethyst-settings",
+      "source": "/assets/theme-packs/amethyst/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 60352
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 57592
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 29132
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 61196
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 53141
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 59563
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 70541
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 62637
+    },
+    {
+      "phase": "amethyst-game",
+      "source": "/assets/theme-packs/amethyst/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 45041
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 259548
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 31145
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 54107
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 36813
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 29721
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 33750
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 52994
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/game-header/music-v1.png?v=1",
+      "bytes": 53807
+    },
+    {
+      "phase": "easter-settings",
+      "source": "/assets/theme-packs/easter/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 53091
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 49836
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v2.png?v=2",
+      "bytes": 42116
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 52860
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 47143
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 57947
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 61821
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 55936
+    },
+    {
+      "phase": "easter-game",
+      "source": "/assets/theme-packs/easter/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 48869
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 245095
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 33806
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 60460
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 45576
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 40378
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 45239
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 64265
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/game-header/music-v1.png?v=1",
+      "bytes": 64720
+    },
+    {
+      "phase": "desert-settings",
+      "source": "/assets/theme-packs/desert/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 63167
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 61460
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v2.png?v=2",
+      "bytes": 55937
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 66123
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 61891
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 72416
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 75504
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 64294
+    },
+    {
+      "phase": "desert-game",
+      "source": "/assets/theme-packs/desert/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 70235
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 217831
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 29187
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 45000
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 24969
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 27672
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 30574
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 45933
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/game-header/music-v1.png?v=1",
+      "bytes": 45924
+    },
+    {
+      "phase": "moon-settings",
+      "source": "/assets/theme-packs/moon/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 45462
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 42454
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/undo-token/undo-token-inline-v1.png?v=1",
+      "bytes": 37175
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 45829
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 52573
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 58118
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/room-controls/close-v1.png?v=3",
+      "bytes": 56146
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 47747
+    },
+    {
+      "phase": "moon-game",
+      "source": "/assets/theme-packs/moon/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 48293
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png?v=1",
+      "bytes": 257842
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/settings-controls/profile-v2.png?v=2",
+      "bytes": 31521
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/settings-controls/display-theme-v2.png?v=2",
+      "bytes": 50004
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/settings-controls/language-v2.png?v=2",
+      "bytes": 45436
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/settings-controls/terms-v2.png?v=2",
+      "bytes": 29241
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/settings-controls/privacy-v2.png?v=2",
+      "bytes": 29546
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/game-header/sound-v1.png?v=1",
+      "bytes": 43568
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/game-header/music-v1.png?v=1",
+      "bytes": 43074
+    },
+    {
+      "phase": "severna-settings",
+      "source": "/assets/theme-packs/severna/canonical/game-header/vibration-v1.png?v=1",
+      "bytes": 42962
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/game-header/exit-v1.png?v=1",
+      "bytes": 39355
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v2.png?v=2",
+      "bytes": 49706
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/game-header/menu-v1.png?v=1",
+      "bytes": 43023
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/treasury-controls/tab-themes-v1.png?v=1",
+      "bytes": 49590
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/treasury-controls/tab-skins-v1.png?v=1",
+      "bytes": 63794
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/room-controls/close-v1.png?v=4",
+      "bytes": 49828
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/game-header/timer-v1.png?v=1",
+      "bytes": 45524
+    },
+    {
+      "phase": "severna-game",
+      "source": "/assets/theme-packs/severna/canonical/treasury-controls/status-locked-v1.png?v=1",
+      "bytes": 44100
+    }
+  ]
+}
