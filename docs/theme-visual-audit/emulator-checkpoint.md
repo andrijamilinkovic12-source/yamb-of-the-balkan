@@ -1,6 +1,40 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Ručni izbor teme — QA i lokalna R34,30.10.2026.
+
+R34, lokalno game.jsv6.38: na QA v6.36 prvi izbor Green→Neon ostavio je Green, ponovljeni je uspeo. Tačan spor PNG/HTTP zahtev nije identifikovan. Ručni izbor iz Podešavanja sada ima jedan automatski retry preko postojećeg image/decode cachea; gate čeka oba vidljiva paketa i retry. Konačan neuspeh čuva prethodnu kompletnu temu. Noviji izbor, offline i promena naloga zaštićeni. Nije dokaz ubrzanog prvog preuzimanja ili popravke na Androidu pre deploya. [Native dokaz](theme-switch-2026-10-30/index.html). Zelena/SRB vraćeni na drugom emulatoru; originalna rezolucija nije menjana. Povremeni ADB screenshot failure i Windows capture timeout oporavljeni ponovnom proverom; nema nove partije/poziva/oglasa ili pritiska na nagradu.
+
+## Lokalna dopuna — završni panel i tokovi,30.10.2026.
+
+[150lokalnih stanja i20slika](finish-resize-2026-10-30/index.html):10tema,3ishoda,5uzastopnih viewporta, mobilni DPR3.5, animacije uključene. Granice/centar/PNG i bez skrola prolaze, nema nagradnih/revanš zahteva. Android wm/density problem nije ponovljen niti ovim zatvoren; runtime dizajn nije menjan. Handler testovi revanša/reconnecta prolaze. Lokalni Socket.IO test poziva dva klijenta prolazi; početni20srok pokretanja bio je nedovoljan, uz eksplicitno120sčekanje test završen. Podrazumevani rok i produkcioni server ostaju isti. Nema novog native meča, oglasa, nagrade ili poziva pravim nalozima. [Aktuelni plan](remaining-work-plan-2026-10-29.md) sada odvaja zatvorene stavke od preostalih.
+
+## Važna dopuna pri ponovnom pokretanju — 30.10.2026.
+
+Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.
+
+Završni panel posle promene rezolucije ima odvojeni otvoreni nalaz: jedan kasniji kadar drugog uređaja je pomeren/odsečen. Uzrok nije utvrđen. Oba današnja glavna menija pravilno su prikazana; završni panel nije ponovo otvaran novom igrom.
+
+### Nastavak posle prekida — 30.10.2026.
+
+Posle vraćanja rezolucije drugi emulator ima i ispravan i kasniji pomeren/odsečen kadar. Uzrok nije utvrđen. Dimenzije PNG fajla same po sebi nisu dokaz ispravnog rasporeda; potreban ponovljen stabilan prikaz bez promene geometrije. Oba emulatora su pri nastavku bila ugašena i ponovo su pokrenuta bez brisanja podataka. Ranija tvrdnja o ostavljanju završnih panela opisuje stanje prethodne sesije; nije dokaz današnjeg stanja. Nema novih partija, reklama ili preuzimanja nagrada.
+
 ## Dva emulatora posle restarta — 29.10.2026.
+
+### Aktuelni izdvojeni QA — nastavak 29.10.2026.
+
+Korisnik je objavio commit `910b816c` i prebacio QA servis na aktuelnu granu. Read-only health potvrđuje staging/reconnect-qa-01; javni `game.js?v=6.36` odgovara commitu nakon normalizacije CRLF/LF. Zasebni APK `com.yamb.balkan.staging` ima potvrđen QA URL, odvojeni Firebase i bazu `yamb_reconnect_qa`. Korisnik se ručno prijavio na oba uređaja. Test salda na početku: Andrija500, Sara9721. Ne mešati ove profile sa ranijim produkcionim testom.
+
+**Daily: aktivni i završni panel svih10tema završen.** [20 Android snimaka i granice](daily-qa-2026-10-29/index.html). Isti legitimni nepreuzeti izazov ponovo otvaran posle restarta QA aplikacije, bez resetovanja pokušaja. Svaki put šest STOP pritisaka, serverove kockice6/6/2/5/3/1, zbir57. Nema reklame ili preuzimanja. Boje/PNG/fontovi/panel u snimljenim stanjima pregledni; Plavi okean jednom sa dozvoljenim univerzalnim skinom Trule višnje. Oglasi su u QA blokirani, pa sivo dugme dupliranja nije dokaz kvara produkcionog oglasa. Prvi izbor Light/Medium nije uspeo, ponovljeni jeste; hladno učitavanje ostaje otvoren nalaz.
+
+**Priprema test podataka, odvojeno od UI provere:** samo dva proverena QA profila dobila su deset themeID-jeva u inventaru, uz sačuvan snapshot prethodnog stanja. Nekoliko promena activeTheme/activeSkin korišćeno kao početne QA postavke; klijentski sačuvani izbor ih je mogao nadjačati, pa su naredne teme izabrane kroz običan meni. Salda/pokušaji/rezultati nisu ručno menjani. Ove testne pripreme nisu dokaz kupovine ili otključavanja teme u produkciji.
+
+Prvi emulator imao je zaleđen framebuffer; ponovo pokrenut sa SwiftShaderom bez brisanja podataka. Android SystemUI ANR oporavljen opcijomWait. Oba potom privremeno720×1560/280dpi, proporcionalno izvornim1440×3120/560dpi, isti logički viewport ~411×891. Originalne mere treba vratiti po završetku celog nastavka.
+
+**Završna dopuna30.10.2026: osnovni vizuelni pregled15/15**, uz izričite granice pojedinačnih izveštaja. [Random27Androidsnimaka i stvarni regular rezultat](random-qa-2026-10-29/index.html): aktivna igra10tema, zasebna puna partija156upisa, Sara450/Andrija293, potvrđeni PowerIndex+106/0 i server `regular/completed_scores`. Oba završna panela pregledana uGreen/Moon, ostale završne teme imaju raniji izolovani dokaz. Najava, držanje kockice i drugo bacanje stvarno potvrđeni na oba uređaja. R27 Vaskršnji megafon vidljiv u obe table; R32 poruke imaju pravu perspektivu. Ovo nije potvrda svih retkih stanja i svih10nativezavršetaka.
+
+Četiri prethodna QA pokušaja završena istekom tokom čekanja/neobrađenog mrežnog obaveštenja/preskočenih tapova vode se odvojeno; nisu obični završeci ni dokaz pogrešnog serverovog obračuna. Povratak veze i revanš ostaju netestirani. Korisnik je odbio dodatno preuzimanje439/675QAdukata; osnovne iDaily nagrade ostaju nepreuzete, bez reklame. Automatski trofejni bonusi pri završetku su zasebni: AndrijaProrok1500+Krompiruša500, SaraKrompiruša500. Salda nisu ručno menjana. Originalne1440×3120/560dpi i mreža1/1 vraćeni, QA prijave i završni paneli sačuvani bez restarta/nagradne navigacije.
+
+R33 ostaje lokalno v6.37 i čeka korisnikov commit/deploy. Reklame/isplata na telefonu, hladno učitavanje, fizičkiS25 i potvrda svih drugih lokalnih nalaza nisu ovim završeni.
 
 [Objedinjeni plan preostalih provera](remaining-work-plan-2026-10-29.md) razdvaja osnovne preglede, funkcionalne testove i potvrdu posle deploya.
 

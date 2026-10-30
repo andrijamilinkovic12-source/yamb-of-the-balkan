@@ -4,9 +4,10 @@ const {chromium}=require(process.env.YAMB_PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const output=path.join(root,'tmp/online-random-layout-runtime'),index=read('www/index.html');
 const themes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
+const resizeOnly=process.env.YAMB_FINISH_RESIZE_AUDIT==='1';
 const sheets=[...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
 const body=index.slice(index.indexOf('<body'),index.lastIndexOf('</body>')+7).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
-const fixture=`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(f=>`<link rel="stylesheet" href="${f}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:24px;--safe-left:0px;--safe-right:0px}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}</style>${body}`;
+const fixture=`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(f=>`<link rel="stylesheet" href="${f}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:24px;--safe-left:0px;--safe-right:0px}${resizeOnly?'':'*{animation:none!important;transition:none!important;scroll-behavior:auto!important}'}</style>${body}`;
 const languages=read('www/languages.js'),game=read('www/game.js'),online=read('www/onlinenumber.js');
 const cases=[
  {id:'win-close',score:650,guest:625,records:[]},{id:'loss-narrow',score:1250,guest:1325,records:['personal']},
@@ -17,11 +18,43 @@ const cases=[
  {id:'capped',score:6000,guest:5700,records:['personal','weekly','monthly','all_time']}
 ];
 const rows=[],failures=[];
+async function auditFinishResize(page,theme){
+ for(const [state,score,guest] of [['win',650,625],['loss',293,450],['draw',650,650]]){
+  await page.setViewportSize({width:411,height:891});
+  await page.evaluate(async({score,guest})=>{
+   app.myOnlineIndex=0;app.playerName=app.players[0];
+   window.fixtureCase={score,guest,records:[],reward:{baseReward:score,adReward:score*2}};
+   app.gameActive=true;app.initScores();app.allScores[0][KOLONE[0]].Yamb=100;
+   await app.handleGameOver({force:true,onlineResult:{roomId:'room_fixture',matchId:'fixture-resize',duelType:'random',finalResults:app.players.map((name,i)=>({name,score:i?guest:score})),isDraw:score===guest,serverStatsAppliedUids:['fixture-only']}});
+   window.themeSoloResults.sync(true);
+   for(const img of document.querySelectorAll('img[data-theme-src]:not([src])'))img.src=resolveThemeQualityAsset(img.dataset.themeSrc);
+  },{score,guest});
+  await page.evaluate(()=>Promise.all(
+   [...document.querySelectorAll('#game-over-screen img')].map(async i=>{i.loading='eager';await i.decode().catch(()=>{});})
+  ));
+  for(const viewport of [{width:411,height:891},{width:360,height:640},{width:320,height:568},{width:430,height:932},{width:411,height:891}]){
+   await page.setViewportSize(viewport);
+   await page.waitForTimeout(500);
+   const result=await page.evaluate(()=>{
+    const screen=document.getElementById('game-over-screen'),card=screen.querySelector('.modal-box');
+    const r=card.getBoundingClientRect(),s=screen.getBoundingClientRect();
+    const rect=e=>{const b=e.getBoundingClientRect();return {x:b.x,y:b.y,width:b.width,height:b.height,right:b.right,bottom:b.bottom};};
+    const actions=['#btn-ad-double','.game-over-claim-button','#btn-rematch'].map(x=>({selector:x,...rect(screen.querySelector(x))}));
+    const images=[...screen.querySelectorAll('img')].filter(i=>i.getBoundingClientRect().width>0).map(i=>({src:i.getAttribute('src'),loaded:i.complete&&i.naturalWidth>0}));
+    const overflow=[...screen.querySelectorAll('.modal-box,#go-title,#go-msg,#hotseat-result-comment,.hotseat-result-player,.solo-record-panel-grid,.solo-record-panel-footer,#solo-finish-stats,#btn-ad-double,.game-over-claim-button,#btn-rematch')].filter(e=>e.getBoundingClientRect().width&&e.scrollWidth>e.clientWidth+1).map(e=>e.id||e.className);
+    return {card:rect(card),screen:rect(screen),viewport:{width:innerWidth,height:innerHeight,visualWidth:visualViewport.width,visualHeight:visualViewport.height,visualScale:visualViewport.scale},inside:r.left>=11&&r.right<=innerWidth-11&&r.top>=24&&r.bottom<=innerHeight-24+.5,centered:Math.abs((r.left+r.right)/2-innerWidth/2)<1,cardScroll:card.scrollHeight>card.clientHeight+1,screenScroll:screen.scrollHeight>screen.clientHeight+1,actionsInside:actions.every(a=>a.x>=r.left&&a.right<=r.right+.5&&a.y>=r.top&&a.bottom<=r.bottom+.5),actions,images,overflow,title:document.getElementById('go-title').textContent,claimCalls:fixtureEmits.filter(x=>['claim_game_reward','claim_trophy_reward','request_rematch'].includes(x[0])).length};
+   });
+   if(!result.inside||!result.centered||result.cardScroll||result.screenScroll||!result.actionsInside||result.overflow.length||result.images.some(i=>!i.loaded)||result.claimCalls)failures.push(`${theme}/${state}/${viewport.width}x${viewport.height}: resize bounds/scroll/PNG/claim failure`);
+   if(viewport.width===320&&state==='win'||viewport.width===411&&state==='loss')await page.screenshot({path:path.join(output,`${theme}-resize-${state}-${viewport.width}x${viewport.height}.png`)});
+   rows.push({theme,case:'resize-'+state,viewport,...result});
+  }
+ }
+}
 async function main(){
  fs.mkdirSync(output,{recursive:true});
  const browser=await chromium.launch({headless:true,...(process.env.YAMB_CHROMIUM?{executablePath:process.env.YAMB_CHROMIUM}:{})});
  try{
-  const ctx=await browser.newContext();
+ const ctx=await browser.newContext(resizeOnly?{isMobile:true,hasTouch:true,deviceScaleFactor:3.5}:{});
   await ctx.route('**/*',async route=>{
    const u=new URL(route.request().url());if(u.hostname!=='online-random-fixture.local')return route.abort();
    if(u.pathname==='/www/fixture.html')return route.fulfill({contentType:'text/html',body:fixture});
@@ -31,7 +64,7 @@ async function main(){
   });
   const page=await ctx.newPage();const rendererWarnings=[];
   page.on('console',m=>{if(['warning','error'].includes(m.type()))rendererWarnings.push(m.text());});
-  for(const viewport of [{width:320,height:568},{width:360,height:640},{width:360,height:780},{width:412,height:915}]){
+  for(const viewport of (resizeOnly?[{width:411,height:891}]:[{width:320,height:568},{width:360,height:640},{width:360,height:780},{width:412,height:915}])){
    await page.setViewportSize(viewport);const baseline={};
    for(const theme of themes){
     await page.goto('http://online-random-fixture.local/www/fixture.html');
@@ -84,6 +117,7 @@ async function main(){
      document.getElementById('waiting-my-img').src=pic;window.fixturePhoto=pic;
      window.fixtureTop3=[{name:'Andrija Milinković Maksimović',score:4200,photoUrl:pic},{name:'Aleksandar Petrović-Pavlović',score:3900,photoUrl:pic},{name:'Milica Jovanović Đorđević',score:3200,photoUrl:pic}];
     });
+    if(resizeOnly){await auditFinishResize(page,theme);continue;}
     for(const state of ['searching','found','empty','loading']){
      await page.evaluate(state=>{
       if(state==='found')fixtureHandlers.game_start({roomId:'room_fixture',myIndex:0,opponent:'Aleksandar Petrović-Pavlović',oppPhoto:fixturePhoto,oppStats:{h2hRecord:{wins:100,draws:8,losses:17}},duelType:'random'});
@@ -214,8 +248,8 @@ async function main(){
 
    }
   }
-  fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({scope:'Real handleGameOver/createScoreTables/PNG controllers and production CSS, isolated synthetic result/queue acknowledgments; no constructor, account, server, ads or payout. Animations disabled; offline font fallback possible.',failures,rows},null,2)+'\n');
-  assert.equal(failures.length,0,failures.slice(0,35).join('\n'));console.log(`PASS: ${rows.length} Online random theme/result/viewport combinations; Green geometry/type, PNGs, flags, rewards and safe bounds.`);
+  fs.writeFileSync(path.join(output,resizeOnly?'resize-report.json':'report.json'),JSON.stringify({scope:resizeOnly?'Real handleGameOver and production CSS, mobile emulation DPR3.5; win/loss/draw with repeated viewport changes and animations enabled. Synthetic isolated results, no constructor, account, network, ads or payout. Does not reproduce Android wm density changes or prove emulator compositor correctness. Offline font fallback possible.':'Real handleGameOver/createScoreTables/PNG controllers and production CSS, isolated synthetic result/queue acknowledgments; no constructor, account, server, ads or payout. Animations disabled; offline font fallback possible.',failures,rows},null,2)+'\n');
+  assert.equal(failures.length,0,failures.slice(0,35).join('\n'));console.log(resizeOnly?`PASS: ${rows.length} mobile finish resize states; centered safe bounds, no room/card scroll, loaded PNGs and no reward/rematch requests.`:`PASS: ${rows.length} Online random theme/result/viewport combinations; Green geometry/type, PNGs, flags, rewards and safe bounds.`);
  }finally{await browser.close();}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

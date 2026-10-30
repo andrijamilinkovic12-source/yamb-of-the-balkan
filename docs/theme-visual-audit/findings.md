@@ -1,5 +1,11 @@
 # Vizuelni audit PNG assetsa
 
+## Važna dopuna pri ponovnom pokretanju — 30.10.2026.
+
+Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.
+
+Završni panel posle promene rezolucije ima odvojeni otvoreni nalaz: jedan kasniji kadar drugog uređaja je pomeren/odsečen. Uzrok nije utvrđen. Oba današnja glavna menija pravilno su prikazana; završni panel nije ponovo otvaran novom igrom.
+
 Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, kanonski potrošači, dimenzije i alpha uzorci provereni. Delimični pregled na emulatoru je u zasebnoj evidenciji emulator-2026-10-25/index.html; nije potvrđen svaki dinamički prikaz niti fizički Samsung S25.
 
 | Tema | Aktivne putanje | Prihvatljivo | Dorada | Zamena |
@@ -26,9 +32,20 @@ Pregled statičkih PNG u većoj i 28px veličini na površini teme; resolveri, k
 
 ## Aktivni nalazi
 
+### R34 — prvi ručni izbor teme se prekida,30.10.2026.
+
+R34, lokalno game.jsv6.38: na QA v6.36 prvi izbor Green→Neon ostavio je Green, ponovljeni je uspeo. Tačan spor PNG/HTTP zahtev nije identifikovan. Ručni izbor iz Podešavanja sada ima jedan automatski retry preko postojećeg image/decode cachea; gate čeka oba vidljiva paketa i retry. Konačan neuspeh čuva prethodnu kompletnu temu. Noviji izbor, offline i promena naloga zaštićeni. Nije dokaz ubrzanog prvog preuzimanja ili popravke na Androidu pre deploya. [Četiri native snimka i ograničenja](theme-switch-2026-10-30/index.html). Lokalne regresije proveravaju spor početak i uspešan retry, konačan neuspeh bez promene, offline bez dodatnog pokušaja, noviji izbor i promenu naloga. Poseban gate test sprečava prerano skrivanje posle samog menu paketa. Bez novog PNG-a ili promene DNK/palete/dimenzija.
+
+
+### R33 — nulta kazna u dukatima zamenjena PI poenima, QA29.10.2026.
+
+Na objavljenomQA v6.36 tehnički poraz sa `coinPenalty=0`, `penalty=20` prikazivao je u kartici sa dukatom20, dok tekst ispravno kaže−0dukata i−20PowerIndex. Handler je slao `coinPenalty || penalty`, čime su dve različite jedinice pomešane samo u prikazu. Lokalno sada šalje `coinPenalty` i čuva nulu; serverova ekonomija/statistika nisu menjane. `game.js?v=6.37`, proširena regresija16slučajeva (obe uloge×sr/en×server/local×nulti/nenulti dukati). Nije još objavljeno ili potvrđeno na uređaju. Ranija R32 ispravna perspektiva poruke sada je potvrđena na stvarnom QA tehničkom završetku.
+
 ### R32 — pogrešna perspektiva poruke tehničkog poraza, 29.10.2026.
 
 Stvarni kontrolisani Random par Andrija/Sara završio se istekom poteza pre potvrđenog upisa. Server emituje isti pobednički `message` obema stranama; klijent ga je prikazivao i uz PORAZ. Lokalno `game_over_timeout` sada bira postojeće lokalizovane poruke za pobednika/poraženog. Nisu menjani nagrade, kazne, statistika ili trajanje poteza. Osam izolovanih slučajeva stvarnog handlera prolazi, uključujući srpski/engleski i izbegavanje dvostrukog lokalnog obračuna već potvrđenog serverskog rezultata. Čeka deploy i novu Android potvrdu.
+
+Dopuna posle korisnikovog deploya `910b816c`: R32 je potvrđen na stvarnom QA tehničkom završetku v6.36. Poraženi vidi sopstvenu poruku o isteku poteza, pobednik poruku o tehničkoj pobedi. Otvorena naknadna ispravka je R33 iznad; njome se ne menja perspektiva ili serverski obračun.
 
 [Dokazi i posledice testa](two-emulators-2026-10-29/index.html): server je automatski promenio stvarna salda (Sara −1758, Andrija +1775) i statistiku, bez pritiska na preuzimanje. Nije urađeno poništavanje. To je neuspešan test običnog toka, ne dokaz pravilnog normalnog završetka/revanša/dupliranja. Dalji transakcioni testovi zahtevaju aktuelni izolovani QA.
 

@@ -2782,7 +2782,7 @@ class YambApp {
         }, 300);
     }
 
-    prepareThemeLoadingGate(theme, { initialLoad = false, manualSwitch = false } = {}) {
+    prepareThemeLoadingGate(theme, { initialLoad = false, manualSwitch = false, readiness = null } = {}) {
         const gate = document.getElementById('theme-loading-gate');
         if (!gate) return Promise.resolve(false);
 
@@ -2856,7 +2856,7 @@ class YambApp {
         };
 
         const warmup = this.warmThemePack(theme);
-        const preloadPromise = warmup.critical;
+        const preloadPromise = readiness || warmup.critical;
 
         // Pri ulasku u aplikaciju i automatskom vraćanju teme ostaje postojeći
         // splash, bez dodatnog preloading ekrana. Ekran je rezerva samo za
@@ -2865,8 +2865,12 @@ class YambApp {
 
         this.themeLoadingRevealTimer = setTimeout(revealGate, manualSwitch ? 700 : 950);
 
-        preloadPromise.then(() => {
+        preloadPromise.then(ready => {
             if (token !== this.themeLoadingToken) return;
+            if (ready === false) {
+                this.hideThemeLoadingGate({ immediate: true });
+                return;
+            }
             clearTimeout(this.themeLoadingRevealTimer);
 
             // Učitan pack iz cache-a ne sme praviti nepotrebnu loading animaciju.
@@ -6071,20 +6075,34 @@ class YambApp {
             if (themeSelect) themeSelect.blur();
             const token = (this.themeSwitchRequestToken || 0) + 1;
             this.themeSwitchRequestToken = token;
+            const selectionUid = localStorage.getItem('yamb_uid') || '';
+            const isCurrentSelection = () => token === this.themeSwitchRequestToken
+                && (localStorage.getItem('yamb_uid') || '') === selectionUid;
             // Reuse the menu pack already warmed while the previous theme was visible.
             // Settings icons join the barrier only when the Settings screen is visible.
-            const warmup = this.warmThemePack(nextTheme);
             const settingsSources = document.getElementById('settings-screen')?.classList.contains('active')
                 ? (window.themeSettingsRoom?.sources?.(nextTheme) || []) : [];
             // The Settings controller owns its decoded images. Do not create a
             // second set of Image objects for the same visible pack in parallel.
-            const settingsPackReady = settingsSources.length && window.themeSettingsRoom?.prepare
-                ? window.themeSettingsRoom.prepare(nextTheme, { timeoutMs: 6000 }).then(() => true, () => false)
-                : this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
-            this.prepareThemeLoadingGate(nextTheme, { manualSwitch: true });
-            Promise.all([warmup.critical, settingsPackReady]).then(([menuReady, decodedSettingsReady]) => {
-                if (token !== this.themeSwitchRequestToken) return;
-                if (menuReady === false || decodedSettingsReady === false) {
+            const preparePacks = () => {
+                const warmup = this.warmThemePack(nextTheme);
+                const settingsPackReady = settingsSources.length && window.themeSettingsRoom?.prepare
+                    ? window.themeSettingsRoom.prepare(nextTheme, { timeoutMs: 6000 }).then(() => true, () => false)
+                    : this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
+                return Promise.all([warmup.critical, settingsPackReady]);
+            };
+            const readiness = preparePacks().then(result => {
+                // A timeout leaves the existing download/decode in progress.
+                // Reuse it once instead of requiring the player to select again.
+                if (result.some(ready => ready === false) && isCurrentSelection()
+                    && globalThis.navigator?.onLine !== false) return preparePacks();
+                return result;
+            }).then(result => isCurrentSelection() && result.every(ready => ready !== false));
+            // The gate covers both visible packs and the bounded retry.
+            this.prepareThemeLoadingGate(nextTheme, { manualSwitch: true, readiness });
+            return readiness.then(ready => {
+                if (!isCurrentSelection()) return false;
+                if (!ready) {
                     this.hideThemeLoadingGate({ immediate: true });
                     const english = (localStorage.getItem('yamb_lang') || 'sr').startsWith('en');
                     window.showNotification?.(
@@ -6092,7 +6110,7 @@ class YambApp {
                         english ? 'Check the connection and try again.' : 'Proveri vezu i pokušaj ponovo.',
                         { className: 'settings-theme-load-toast' }
                     );
-                    return;
+                    return false;
                 }
                 this.rememberManualThemeSelection(nextTheme);
                 localStorage.setItem('yamb_theme', nextTheme);
@@ -6100,8 +6118,8 @@ class YambApp {
                 if (themeSelect) themeSelect.value = nextTheme;
                 if (this.socket && this.socket.connected) this.emitPlayerData();
                 if (document.getElementById('main-menu')?.classList.contains('active')) this.scheduleNextMenuThemeWarmup();
+                return true;
             });
-            return;
         }
         else if (type === 'language') {
             const nextLanguage = value === 'en' ? 'en' : (value === 'sr' ? 'sr' : null);
@@ -7582,7 +7600,9 @@ class YambApp {
                     winnerName: data.winnerName || 'Protivnik',
                     loserName: data.loserName || this.playerName,
                     rewardAmount: winnerReward,
-                    penaltyAmount: coinPenalty || penalty,
+                    // Zero ducats is a valid server penalty; Power Index points
+                    // are a separate unit and must never replace that amount.
+                    penaltyAmount: coinPenalty,
                     // The room-wide server message describes the winner's perspective.
                     // Render the losing player's own localized timeout explanation.
                     message: (gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak

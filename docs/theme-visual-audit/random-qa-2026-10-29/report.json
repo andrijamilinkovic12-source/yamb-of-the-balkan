@@ -1,0 +1,406 @@
+{
+  "date": "2026-10-30",
+  "testedCommit": "910b816c",
+  "testedGameVersion": "6.36",
+  "environment": "Zasebni Android APK com.yamb.balkan.staging, staging/reconnect-qa-01, odvojeni Firebase i Mongo yamb_reconnect_qa. Dva korisnikova QA naloga; nema produkcionog testa u ovom nastavku.",
+  "geometry": "720×1560 / 280 dpi tokom igre; proporcionalno originalnim1440×3120 / 560 dpi, isti logički viewport oko411×891 CSS px. Nije fizički Samsung S25.",
+  "method": "Isključivo native Android tap/swipe/screenshot i obični klijentski/serverovi potezi. Nema CDP, izvršavanja JS u aplikaciji, čitanja tokena, menjanja rezultata ili soket injekcije.",
+  "inventory": "Ranije proverene23 osnovne PNG uloge po temi,230 quality-resolved putanja. Kanonski dukat/video/PowerIndex/medalje koriste se deljeno. Nema novih PNG crteža ili promene postojećih dimenzija.",
+  "outcome": "Svih deset tema pregledano je u aktivnoj Android igri. Posebna puna QA partija završena je sa156 potvrđenih upisa: Sara450, Andrija293. Oba završna panela i serverov regular/completed_scores zapis imaju iste poene i ispravnu perspektivu. Bez reklame ili preuzimanja obične nagrade. VAŽNA DOPUNA: Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.",
+  "activeThemesReviewed": 10,
+  "nativeOrdinaryFinishVerified": true,
+  "confirmed": [
+    "Tematska tabla, gornji/donji panel, kockice, dugmad, kanonske ikone i čitljiva imena u deset tema. Zelena je referenca za geometriju.",
+    "Stanje partije ostalo je sačuvano kroz devet običnih promena teme u istom meču.",
+    "Vaskršnji kanonski PNG megafona vidljiv je u obe table na objavljenoj v6.36 (R27).",
+    "Objavljena R32 poruka tehničkog završetka odgovara ulozi igrača.",
+    "Puna obična partija: svih6kolona/78polja po igraču. Provera vidljivog poteza, praznog polja, kockice i prelaska poteza pre nastavka. Native prvo bacanje, zadržavanje prve kockice, izbor najave, drugo bacanje i upis potvrđeni na oba uređaja.",
+    "Oba završna panela: TI/PROTIVNIK, PORAZ/POBEDA,293/450, potvrđeni PowerIndex0/+106, najjača kolona i nagradna/preuzmi/revanš dugmad u bezbednom prostoru. Nije preuzeta osnovna ili reklamna nagrada."
+  ],
+  "incidents": [
+    "Dva početna QA pokušaja završena su istekom poteza tokom prekida/čekanja testa.",
+    "Treći meč je potvrdio upise i promene tema do testa mreže. Posle kratkog isključivanja mreže ostao je modal Niste povezani na server; test je nastavio tapove iza njega. Server beleži turn_timeout u2026-10-29T22:51:23.292Z. Najava/drugo bacanje u tom pokušaju nisu potvrđeni. Kasniji restart aplikacije desio se posle tehničkog završetka, pa nije dokaz neuspeha povratka u živu partiju.",
+    "Četvrti ubrzani pokušaj preskočio je neke neizvršene upise i stao na upozorenju o redosledu. Nije dokaz pravilnog običnog završetka.",
+    "Novi običan meč koristi proveru vidljivog poteza, praznog polja, bačene kockice i promene igrača pre nastavka. Nema dodatnih promena teme ili mreže.",
+    "Posle vraćanja rezolucije drugi emulator ima i ispravan i kasniji pomeren/odsečen kadar. Uzrok nije utvrđen. Dimenzije PNG fajla same po sebi nisu dokaz ispravnog rasporeda; potreban ponovljen stabilan prikaz bez promene geometrije."
+  ],
+  "pendingFix": "R33: nula dukata u velikoj kaznenoj kartici ne sme postati20 PowerIndex poena. Lokalno v6.37,16 regresionih slučajeva prolazi; nije još objavljeno.",
+  "remaining": [
+    "Povratak veze uz nastavak istog meča ostaje otvoren. Kratko isključivanje mreže i pokušaj restarta posle već završenog meča nisu dovoljan dokaz.",
+    "Revanš, stvarna reklama, dupliranje i preuzimanje nagrade nisu testirani ovim native prolazom. Revanš automatski preuzima osnovnu nagradu; nije kliknut u testu bez preuzimanja.",
+    "Svih deset završnih tema i mali/srednji/veliki rasporedi imaju raniji izolovani dokaz, ali se to ne predstavlja kao deset stvarno odigranih Android završetaka.",
+    "Hladno učitavanje tema i fizički Samsung S25 ostaju odvojene provere.",
+    "Korisnik je odbio preuzimanje; restart je ipak aktivirao postojeći automatski recovery. To nije potvrda ručnog preuzimanja ili reklame. Revanš i uspešan reconnect ostaju neprovereni."
+  ],
+  "images": [
+    {
+      "theme": "severna",
+      "source": "qa-random3-04-free-r4-p0-rolled.png",
+      "label": "Aktivna igra — Severna maglina",
+      "file": "qa-random3-04-free-r4-p0-rolled.jpg",
+      "themeName": "Severna maglina"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-random3-theme-6-board.png",
+      "label": "Aktivna igra posle promene — Zelena",
+      "file": "qa-random3-theme-6-board.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "light",
+      "source": "qa-random3-theme-13-board.png",
+      "label": "Aktivna igra posle promene — Svetlo zlato",
+      "file": "qa-random3-theme-13-board.jpg",
+      "themeName": "Svetlo zlato"
+    },
+    {
+      "theme": "medium",
+      "source": "qa-random3-theme-20-board.png",
+      "label": "Aktivna igra posle promene — Trula višnja",
+      "file": "qa-random3-theme-20-board.jpg",
+      "themeName": "Trula višnja"
+    },
+    {
+      "theme": "winter",
+      "source": "qa-random3-theme-27-board.png",
+      "label": "Aktivna igra posle promene — Plavi okean",
+      "file": "qa-random3-theme-27-board.jpg",
+      "themeName": "Plavi okean"
+    },
+    {
+      "theme": "neon",
+      "source": "qa-random3-theme-34-board.png",
+      "label": "Aktivna igra posle promene — Neon Cyber",
+      "file": "qa-random3-theme-34-board.jpg",
+      "themeName": "Neon Cyber"
+    },
+    {
+      "theme": "amethyst",
+      "source": "qa-random3-theme-41-board.png",
+      "label": "Aktivna igra posle promene — Kraljevski ametist",
+      "file": "qa-random3-theme-41-board.jpg",
+      "themeName": "Kraljevski ametist"
+    },
+    {
+      "theme": "easter",
+      "source": "qa-random3-theme-48-board.png",
+      "label": "Aktivna igra — Vaskršnja, kanonski megafon prve table",
+      "file": "qa-random3-theme-48-board.jpg",
+      "themeName": "Vaskršnja"
+    },
+    {
+      "theme": "easter",
+      "source": "qa-random3-49-up-r2-p0-written.png",
+      "label": "Vaskršnja — kanonski megafon druge table",
+      "file": "qa-random3-49-up-r2-p0-written.jpg",
+      "themeName": "Vaskršnja"
+    },
+    {
+      "theme": "desert",
+      "source": "qa-random3-theme-55-board.png",
+      "label": "Aktivna igra — Pustinjsko staklo, prikazana druga tabla",
+      "file": "qa-random3-theme-55-board.jpg",
+      "themeName": "Pustinjsko staklo"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random3-theme-62-board.png",
+      "label": "Aktivna igra posle promene — Mesečev sjaj",
+      "file": "qa-random3-theme-62-board.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random3-65-announce-r0-p0-announced.png",
+      "label": "Granica testa: modal o prekidu veze, najava tada nije potvrđena",
+      "file": "qa-random3-65-announce-r0-p0-announced.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "severna",
+      "source": "resume-primary-now.png",
+      "label": "Tehnički poraz: ispravna R32 poruka i R33 greška iznosa na objavljenoj verziji; nova ispravka je još lokalna",
+      "file": "resume-primary-now.jpg",
+      "themeName": "Severna maglina"
+    },
+    {
+      "theme": "dark",
+      "source": "resume-secondary-now.png",
+      "label": "Druga perspektiva tehničkog rezultata — pobeda",
+      "file": "resume-secondary-now.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random5-0391-p0-move130-rolled-rolled.png",
+      "label": "Puna partija: prvo bacanje pre najave",
+      "file": "qa-random5-0391-p0-move130-rolled-rolled.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random5-0393-p0-move130-announced-announced.png",
+      "label": "Puna partija: zadržana prva kockica i označena najava",
+      "file": "qa-random5-0393-p0-move130-announced-announced.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random5-0394-p0-move130-second-roll-second-roll.png",
+      "label": "Puna partija: ista zadržana kockica, drugo bacanje2/3",
+      "file": "qa-random5-0394-p0-move130-second-roll-second-roll.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-random5-0400-p1-move131-second-roll-second-roll.png",
+      "label": "Drugi uređaj: najava i drugo bacanje2/3",
+      "file": "qa-random5-0400-p1-move131-second-roll-second-roll.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random5-0474-p0-final-board.png",
+      "label": "Završena tabla: isti293/450 i Dalje",
+      "file": "qa-random5-0474-p0-final-board.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-random5-0475-p1-final-board.png",
+      "label": "Završena tabla na drugom uređaju:293/450",
+      "file": "qa-random5-0475-p1-final-board.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-random5-finish-p0.png",
+      "label": "Običan završni panel: Andrijin PORAZ293/450, PowerIndex0, bez preuzimanja",
+      "file": "qa-random5-finish-p0.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-random5-finish-p1.png",
+      "label": "Običan završni panel: Sarina POBEDA450/293, PowerIndex+106, bez preuzimanja",
+      "file": "qa-random5-finish-p1.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-final-original-p0-settled.png",
+      "label": "Sačuvan završni panel posle vraćanja originalne rezolucije; osnovna nagrada nepreuzeta",
+      "file": "qa-final-original-p0-settled.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-final-original-p1-settled.png",
+      "label": "Otvoren nalaz: posle promene rezolucije drugi emulator prikazuje pomeren i odsečen panel. Uzrok (aplikacija ili emulator) nije potvrđen; ovo nije uspešan raspored.",
+      "file": "qa-final-original-p1-settled.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-final-original-p1.png",
+      "label": "Raniji ispravan kadar na originalnih1440×3120; kasniji pomereni kadar evidentiran zasebno.",
+      "file": "qa-final-original-p1.jpg",
+      "themeName": "Zelena"
+    },
+    {
+      "theme": "moon",
+      "source": "qa-resume-oct30-emulator-5554.png",
+      "label": "Nastavak30.10 — QA glavni meni posle ponovnog pokretanja; saldo uključuje automatski preuzetu osnovnu nagradu.",
+      "file": "qa-resume-oct30-emulator-5554.jpg",
+      "themeName": "Mesečev sjaj"
+    },
+    {
+      "theme": "dark",
+      "source": "qa-resume-oct30-emulator-5556.png",
+      "label": "Nastavak30.10 — QA glavni meni posle ponovnog pokretanja; saldo uključuje automatski preuzetu osnovnu nagradu.",
+      "file": "qa-resume-oct30-emulator-5556.jpg",
+      "themeName": "Zelena"
+    }
+  ],
+  "reviewDate": "2026-10-30",
+  "startedOn": "2026-10-29",
+  "timeZone": "Europe/Belgrade",
+  "nativeResultPanelsReviewed": [
+    "moon",
+    "dark"
+  ],
+  "observedMoves": 156,
+  "regularServerVerification": {
+    "economyEligible": true,
+    "finishedAt": "2026-10-29T23:30:44.453Z",
+    "isDraw": false,
+    "loserCoinPenalty": 0,
+    "mode": "random",
+    "penaltyPoints": 0,
+    "reason": "completed_scores",
+    "resultType": "regular",
+    "startedAt": "2026-10-29T23:10:34.918Z",
+    "statsComplete": true,
+    "verification": "server",
+    "winnerReward": 0,
+    "matchFingerprint": "2666afca44f1",
+    "participants": [
+      {
+        "name": "Andrija Milinković",
+        "score": 293,
+        "result": "loss",
+        "playerIndex": 0,
+        "uidFingerprint": "667254ccad9d"
+      },
+      {
+        "name": "Sara Milinkovic",
+        "score": 450,
+        "result": "win",
+        "playerIndex": 1,
+        "uidFingerprint": "89680e182b74"
+      }
+    ],
+    "statsAppliedCount": 2,
+    "rewardClaimedCount": 2,
+    "profiles": [
+      {
+        "playerName": "Andrija Milinković",
+        "wins": 11,
+        "losses": 35,
+        "games": 46,
+        "highscore": 293,
+        "balance": 2939,
+        "unlockedTrophies": [
+          "first_play",
+          "apprentice",
+          "prophet",
+          "potato"
+        ],
+        "claimedTrophyRewards": [
+          "prophet",
+          "potato"
+        ],
+        "lastDaily": "2026-10-29",
+        "lastDailyRewardClaimed": "",
+        "penaltyPoints": 680,
+        "leagueData": {
+          "year": 2026,
+          "quarter": 4,
+          "baselineScore": 0,
+          "quarterlyScore": 293
+        },
+        "uidFingerprint": "667254ccad9d",
+        "recentPowerIndexDeltas": [
+          {
+            "matchFingerprint": "2666afca44f1",
+            "gain": 0
+          }
+        ]
+      },
+      {
+        "playerName": "Sara Milinkovic",
+        "wins": 35,
+        "losses": 11,
+        "games": 46,
+        "highscore": 450,
+        "balance": 12168,
+        "unlockedTrophies": [
+          "first_play",
+          "apprentice",
+          "potato"
+        ],
+        "claimedTrophyRewards": [
+          "potato"
+        ],
+        "lastDaily": "",
+        "lastDailyRewardClaimed": "",
+        "penaltyPoints": 220,
+        "leagueData": {
+          "year": 2026,
+          "quarter": 4,
+          "baselineScore": 0,
+          "quarterlyScore": 10443
+        },
+        "uidFingerprint": "89680e182b74",
+        "recentPowerIndexDeltas": [
+          {
+            "matchFingerprint": "2666afca44f1",
+            "gain": 106
+          }
+        ]
+      }
+    ]
+  },
+  "rewardPresentation": {
+    "primary": {
+      "score": 293,
+      "base": 439,
+      "advertisedDouble": 878,
+      "powerIndex": 0
+    },
+    "secondary": {
+      "score": 450,
+      "base": 675,
+      "advertisedDouble": 1350,
+      "powerIndex": 106
+    },
+    "claimed": true,
+    "adsBlockedInQa": true,
+    "claimMechanism": "Automatic pending-reward recovery on app startup; no reward button or ad"
+  },
+  "qaOnlyConsequences": {
+    "technicalAttempts": 4,
+    "before": {
+      "primary": 500,
+      "secondary": 9721
+    },
+    "afterTechnicalAttempts": {
+      "primary": 500,
+      "secondary": 10993
+    },
+    "technicalWinnerRewardEach": 318,
+    "loserDucatsEach": 0,
+    "loserPowerIndexPenaltyEach": 20,
+    "regularBalancesBeforeClaim": {
+      "primary": 500,
+      "secondary": 10993
+    },
+    "productionReadOrWritten": false,
+    "note": "Tehnički serverov obračun je automatski, bez zahteva za nagradu. Dugme Preuzmi i izađi korišćeno je samo za zatvaranje već obračunatih tehničkih panela. Daily i obična partija nisu preuzeti. Posle otvaranja običnog završnog panela postojeći TrophyManager automatski je dodelio zasebne trofejne nagrade: Prorok1500+Krompiruša500 Andriji, Krompiruša500 Sari. To nisu osnovne439/675 ili reklamne nagrade; regular rewardClaimedCount ostaje0.",
+    "afterAutomaticTrophies": {
+      "primary": 2500,
+      "secondary": 11493
+    },
+    "automaticTrophyRewards": {
+      "primary": {
+        "prophet": 1500,
+        "potato": 500
+      },
+      "secondary": {
+        "potato": 500
+      }
+    }
+  },
+  "approval": "Korisnik odbio preuzimanje. Nije kliknuto, ali postojeći automatski recovery pri ponovnom pokretanju ipak je dodelio osnovne nagrade; posledica prijavljena korisniku.",
+  "finalDeviceState": "Oba emulatora pokrenuta i QA glavni meniji pregledani,1440×3120/560dpi. Prethodni završni paneli nisu ostali otvoreni posle gašenja uređaja.",
+  "originalResolutionScreensVerified": "Oba native PNG su1440×3120, wm bez overridea; prvi panel čitljiv, drugi ima kasniji pomeren kadar. Vizuelna ispravnost oba uređaja posle resizea nije potvrđena.",
+  "resume20261030": {
+    "emulators": "Oba device, boot_completed=1, original1440×3120/560dpi; oba QA glavna menija vizuelno potvrđena. Prvo učitavanje je bilo sporo.",
+    "automaticRecovery": "Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.",
+    "regularRewardClaimedCount": 2,
+    "baseRewardAmounts": [
+      439,
+      675
+    ],
+    "balances": [
+      2939,
+      12168
+    ],
+    "ads": 0,
+    "newMatches": 0,
+    "dailyClaimed": false,
+    "code": "www/game.js:4623 i10698–10712",
+    "geometryFinding": "Raniji pomereni završni panel ostaje otvoren resize nalaz; glavni meni posle ponovnog pokretanja nije dokaz ispravljenog završnog panela."
+  }
+}

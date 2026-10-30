@@ -1,0 +1,242 @@
+{
+  "at": "2026-10-30T09:18:40.436Z",
+  "database": "yamb_reconnect_qa",
+  "mode": "read-only",
+  "productionReadOrWritten": false,
+  "networkTestDiagnostics": [],
+  "profiles": [
+    {
+      "playerName": "Andrija Milinković",
+      "wins": 11,
+      "losses": 35,
+      "games": 46,
+      "highscore": 293,
+      "balance": 2939,
+      "unlockedTrophies": [
+        "first_play",
+        "apprentice",
+        "prophet",
+        "potato"
+      ],
+      "claimedTrophyRewards": [
+        "prophet",
+        "potato"
+      ],
+      "lastDaily": "2026-10-29",
+      "lastDailyRewardClaimed": "",
+      "penaltyPoints": 680,
+      "leagueData": {
+        "year": 2026,
+        "quarter": 4,
+        "baselineScore": 0,
+        "quarterlyScore": 293
+      },
+      "uidFingerprint": "667254ccad9d",
+      "recentPowerIndexDeltas": [
+        {
+          "matchFingerprint": "2666afca44f1",
+          "gain": 0
+        }
+      ]
+    },
+    {
+      "playerName": "Sara Milinkovic",
+      "wins": 35,
+      "losses": 11,
+      "games": 46,
+      "highscore": 450,
+      "balance": 12168,
+      "unlockedTrophies": [
+        "first_play",
+        "apprentice",
+        "potato"
+      ],
+      "claimedTrophyRewards": [
+        "potato"
+      ],
+      "lastDaily": "",
+      "lastDailyRewardClaimed": "",
+      "penaltyPoints": 220,
+      "leagueData": {
+        "year": 2026,
+        "quarter": 4,
+        "baselineScore": 0,
+        "quarterlyScore": 10443
+      },
+      "uidFingerprint": "89680e182b74",
+      "recentPowerIndexDeltas": [
+        {
+          "matchFingerprint": "2666afca44f1",
+          "gain": 106
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "economyEligible": true,
+      "finishedAt": "2026-10-29T23:30:44.453Z",
+      "isDraw": false,
+      "loserCoinPenalty": 0,
+      "mode": "random",
+      "penaltyPoints": 0,
+      "reason": "completed_scores",
+      "resultType": "regular",
+      "startedAt": "2026-10-29T23:10:34.918Z",
+      "statsComplete": true,
+      "verification": "server",
+      "winnerReward": 0,
+      "matchFingerprint": "2666afca44f1",
+      "participants": [
+        {
+          "name": "Andrija Milinković",
+          "score": 293,
+          "result": "loss",
+          "playerIndex": 0,
+          "uidFingerprint": "667254ccad9d"
+        },
+        {
+          "name": "Sara Milinkovic",
+          "score": 450,
+          "result": "win",
+          "playerIndex": 1,
+          "uidFingerprint": "89680e182b74"
+        }
+      ],
+      "statsAppliedCount": 2,
+      "rewardClaimedCount": 2
+    },
+    {
+      "economyEligible": false,
+      "finishedAt": "2026-10-29T23:00:59.943Z",
+      "isDraw": false,
+      "loserCoinPenalty": 0,
+      "mode": "random",
+      "penaltyPoints": 20,
+      "reason": "turn_timeout",
+      "resultType": "technical",
+      "startedAt": "2026-10-29T22:56:57.619Z",
+      "statsComplete": true,
+      "verification": "server",
+      "winnerReward": 318,
+      "matchFingerprint": "750a0098a20c",
+      "participants": [
+        {
+          "name": "Sara Milinkovic",
+          "score": null,
+          "result": "win",
+          "playerIndex": 0,
+          "uidFingerprint": "89680e182b74"
+        },
+        {
+          "name": "Andrija Milinković",
+          "score": null,
+          "result": "loss",
+          "playerIndex": 1,
+          "uidFingerprint": "667254ccad9d"
+        }
+      ],
+      "statsAppliedCount": 2,
+      "rewardClaimedCount": 0
+    },
+    {
+      "economyEligible": false,
+      "finishedAt": "2026-10-29T22:51:23.292Z",
+      "isDraw": false,
+      "loserCoinPenalty": 0,
+      "mode": "random",
+      "penaltyPoints": 20,
+      "reason": "turn_timeout",
+      "resultType": "technical",
+      "startedAt": "2026-10-29T22:32:07.700Z",
+      "statsComplete": true,
+      "verification": "server",
+      "winnerReward": 318,
+      "matchFingerprint": "8f8c3a4655ad",
+      "participants": [
+        {
+          "name": "Sara Milinkovic",
+          "score": null,
+          "result": "win",
+          "playerIndex": 0,
+          "uidFingerprint": "89680e182b74"
+        },
+        {
+          "name": "Andrija Milinković",
+          "score": null,
+          "result": "loss",
+          "playerIndex": 1,
+          "uidFingerprint": "667254ccad9d"
+        }
+      ],
+      "statsAppliedCount": 2,
+      "rewardClaimedCount": 0
+    },
+    {
+      "economyEligible": false,
+      "finishedAt": "2026-10-29T22:27:53.105Z",
+      "isDraw": false,
+      "loserCoinPenalty": 0,
+      "mode": "random",
+      "penaltyPoints": 20,
+      "reason": "turn_timeout",
+      "resultType": "technical",
+      "startedAt": "2026-10-29T22:19:29.981Z",
+      "statsComplete": true,
+      "verification": "server",
+      "winnerReward": 318,
+      "matchFingerprint": "be3917355a50",
+      "participants": [
+        {
+          "name": "Sara Milinkovic",
+          "score": null,
+          "result": "win",
+          "playerIndex": 0,
+          "uidFingerprint": "89680e182b74"
+        },
+        {
+          "name": "Andrija Milinković",
+          "score": null,
+          "result": "loss",
+          "playerIndex": 1,
+          "uidFingerprint": "667254ccad9d"
+        }
+      ],
+      "statsAppliedCount": 2,
+      "rewardClaimedCount": 0
+    },
+    {
+      "economyEligible": false,
+      "finishedAt": "2026-10-29T22:13:05.454Z",
+      "isDraw": false,
+      "loserCoinPenalty": 0,
+      "mode": "random",
+      "penaltyPoints": 20,
+      "reason": "turn_timeout",
+      "resultType": "technical",
+      "startedAt": "2026-10-29T22:09:18.774Z",
+      "statsComplete": true,
+      "verification": "server",
+      "winnerReward": 318,
+      "matchFingerprint": "55f286025e61",
+      "participants": [
+        {
+          "name": "Sara Milinkovic",
+          "score": null,
+          "result": "win",
+          "playerIndex": 0,
+          "uidFingerprint": "89680e182b74"
+        },
+        {
+          "name": "Andrija Milinković",
+          "score": null,
+          "result": "loss",
+          "playerIndex": 1,
+          "uidFingerprint": "667254ccad9d"
+        }
+      ],
+      "statsAppliedCount": 2,
+      "rewardClaimedCount": 0
+    }
+  ]
+}

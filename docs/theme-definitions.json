@@ -1,6 +1,56 @@
 {
-  "schemaVersion": 82,
-  "updatedOn": "2026-10-29",
+  "schemaVersion": 84,
+  "updatedOn": "2026-10-30",
+  "currentQaRuntimeVerification20261029": {
+    "testedCommit": "910b816c",
+    "testedGameVersion": "6.36",
+    "environment": "Zasebni APK com.yamb.balkan.staging na dva emulatora; staging/reconnect-qa-01, odvojeni Firebase i Mongo yamb_reconnect_qa. Korisnik je obavio prijave. Nema novog produkcionog testa, CDP pristupa ili citanja privatne sesije.",
+    "dailyEvidence": "docs/theme-visual-audit/daily-qa-2026-10-29/report.json",
+    "daily": "Aktivni i zavrsni Android panel svih deset tema: sest STOP pritisaka, serverove kockice [6,6,2,5,3,1], rezultat57. Isti nepreuzeti izazov legitimno ponovo otvoren, bez resetovanja pokusaja, reklame ili preuzimanja. Skin Trule visnje u Plavom okeanu je namerni univerzalni izuzetak. Ranijih150 izolovanih prikaza ostaje dopunski dokaz.",
+    "testData": "Na dva proverena QA profila dodat samo inventar deset tema, uz snapshot. Pocetne activeTheme/activeSkin postavke i njihovo nadjacavanje sacuvanim klijentskim izborom posebno evidentirani. Nema rucne izmene salda, Daily rezultata ili pokusaja. Ovo nije dokaz kupovine u produkciji.",
+    "geometry": "Oba emulatora pokrenuta i QA glavni meniji pregledani,1440×3120/560dpi. Prethodni završni paneli nisu ostali otvoreni posle gašenja uređaja.",
+    "random": "Aktivna Android igra svih10tema; stanje zadrzano kroz devet promena u istom mecu. Odvojena puna QA partija sa156 proverenih upisa/78poigracu, server regular/completed_scores, Sara450 pobeda/Andrija293 poraz. Zavrsni paneli uGreen/Moon odgovaraju serveru i staju u safezonu bez skrola; ostalih8zavrsnih tema ima raniji izolovani dokaz, ne deset native punih partija. PowerIndex0/+106 potvrdjen serverom. Drzanje prve kockice, najava, drugo bacanje2/3 i upis potvrdjeni na oba uredjaja.",
+    "confirmedFix": "R27 Vaskrsnji kanonski PNG megafona vidljiv u obe table. R32 prava perspektiva tehnicke poruke potvrdjena na QA v6.36.",
+    "pendingLocalFix": "Aktuelni lokalni game.jsv6.38 uključuje R33 (uveden v6.37,16 handler slučajeva) i R34. Nije objavljeno niti potvrđeno na uređaju. Serverova ekonomija i dimenzije nisu menjani.",
+    "status": "15/15 osnovnih sobnih vizuelnih Android prolaza svih deset tema, uz eksplicitne granice prethodnih izvestaja. To nije potvrda svih retkih stanja, native zavrsetaka u svih10tema, reklama/isplata ili reconnect/revans toka. R33/R34 su lokalno v6.38, ceka korisnikov commit/deploy. Hladno ucitavanje, fizickiS25 i ostale odvojene funkcionalne provere ostaju otvoreni.",
+    "finishedOn": "2026-10-30",
+    "randomEvidence": "docs/theme-visual-audit/random-qa-2026-10-29/report.json",
+    "rewardBoundary": "Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.",
+    "resizeFollowup": "Posle vraćanja rezolucije drugi emulator ima i ispravan i kasniji pomeren/odsečen kadar. Uzrok nije utvrđen. Dimenzije PNG fajla same po sebi nisu dokaz ispravnog rasporeda; potreban ponovljen stabilan prikaz bez promene geometrije.",
+    "resume20261030": {
+      "emulators": "Oba device, boot_completed=1, original1440×3120/560dpi; oba QA glavna menija vizuelno potvrđena. Prvo učitavanje je bilo sporo.",
+      "automaticRecovery": "Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.",
+      "regularRewardClaimedCount": 2,
+      "baseRewardAmounts": [
+        439,
+        675
+      ],
+      "balances": [
+        2939,
+        12168
+      ],
+      "ads": 0,
+      "newMatches": 0,
+      "dailyClaimed": false,
+      "code": "www/game.js:4623 i10698–10712",
+      "geometryFinding": "Raniji pomereni završni panel ostaje otvoren resize nalaz; glavni meni posle ponovnog pokretanja nije dokaz ispravljenog završnog panela."
+    },
+    "followup20261030": {
+      "evidence": "docs/theme-visual-audit/finish-resize-2026-10-30/report.json",
+      "resize": "PASS150 lokalnih stanja,10tema x3ishoda x5uzastopnih viewporta, animacije uključene; bez skrola, vanjskih zahteva ili isplate. Nije Android wm/density test. Pomereni Android kadar nije ponovljen i ostaje otvoren.",
+      "functional": "PASS lokalni stvarni handler testovi revanša/oporavka veze i lokalni Socket.IO test poziva dva klijenta; bez baze/naloga/produkcije. Nije native dokaz tih tokova.",
+      "plan": "docs/theme-visual-audit/remaining-work-plan-2026-10-29.md",
+      "themeSwitch": {
+        "evidence": "docs/theme-visual-audit/theme-switch-2026-10-30/report.json",
+        "observedThemes": [
+          "dark",
+          "neon"
+        ],
+        "localFix": "R34, lokalno game.jsv6.38: na QA v6.36 prvi izbor Green→Neon ostavio je Green, ponovljeni je uspeo. Tačan spor PNG/HTTP zahtev nije identifikovan. Ručni izbor iz Podešavanja sada ima jedan automatski retry preko postojećeg image/decode cachea; gate čeka oba vidljiva paketa i retry. Konačan neuspeh čuva prethodnu kompletnu temu. Noviji izbor, offline i promena naloga zaštićeni. Nije dokaz ubrzanog prvog preuzimanja ili popravke na Androidu pre deploya.",
+        "tests": "PASS: retry/readiness/failure/offline/newest selection/account change; gate decode; cache/sync; Settings room/switch/picker; game quick skins/header/action lock; check-js."
+      }
+    }
+  },
   "dualEmulatorRuntimeVerification20261029": {
     "evidence": "docs/theme-visual-audit/two-emulators-2026-10-29/report.json",
     "scope": "Dva ponovo pokrenuta Android emulatora, sacuvane prijave Andrije i Sare. Produkciona aplikacija com.yamb.balkan, originalnih 1440x3120/560dpi. Nema CDP, citanja tokena ili privatne sesije.",

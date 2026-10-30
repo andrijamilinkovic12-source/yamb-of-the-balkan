@@ -124,5 +124,60 @@ app.socket = { connected: false };
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(storage.get('yamb_theme'), 'light', 'Failed Settings artwork must preserve the previous complete theme');
     assert.equal(app.appliedTheme, 'light');
+
+    // A slow first request must finish on a bounded automatic retry, while
+    // keeping the old complete theme and the loading gate until both packs decode.
+    let menuAttempts = 0, settingsAttempts = 0, releaseRetry, gateReadiness;
+    const retrySettings = new Promise(resolve => { releaseRetry = resolve; });
+    app.warmThemePack = () => ({ critical: Promise.resolve(++menuAttempts > 1) });
+    context.window.themeSettingsRoom.prepare = () => ++settingsAttempts === 1
+        ? Promise.reject(new Error('Settings artwork timeout')) : retrySettings;
+    app.prepareThemeLoadingGate = (_, options) => { gateReadiness = options.readiness; };
+    const retrySelection = app.saveSettingAuto('theme', 'moon');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(menuAttempts, 2);assert.equal(settingsAttempts, 2);
+    assert.equal(storage.get('yamb_theme'), 'light');
+    let gateSettled = false;gateReadiness.then(() => { gateSettled = true; });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(gateSettled, false, 'Gate must cover the late visible Settings pack');
+    releaseRetry();assert.equal(await retrySelection, true);
+    assert.equal(storage.get('yamb_theme'), 'moon');
+    assert.equal(app.appliedTheme, 'moon');
+
+    let notices = 0;
+    context.window.showNotification = () => { notices++; };
+    menuAttempts = 0;
+    app.warmThemePack = () => ({ critical: Promise.resolve((++menuAttempts, false)) });
+    context.window.themeSettingsRoom.prepare = () => Promise.resolve();
+    assert.equal(await app.saveSettingAuto('theme', 'neon'), false);
+    assert.equal(menuAttempts, 2, 'Permanent failure must stop after one retry');
+    assert.equal(notices, 1, 'Report final failure once, not once per attempt');
+    assert.equal(storage.get('yamb_theme'), 'moon');
+
+    context.navigator = { onLine: false };menuAttempts = 0;
+    assert.equal(await app.saveSettingAuto('theme', 'neon'), false);
+    assert.equal(menuAttempts, 1, 'Known offline state must not add a pointless retry');
+    delete context.navigator;
+
+    let releaseObsolete;let obsoleteAttempts = 0;
+    const obsoletePack = new Promise(resolve => { releaseObsolete = resolve; });
+    app.warmThemePack = theme => ({ critical: theme === 'neon'
+        ? (++obsoleteAttempts, obsoletePack) : Promise.resolve(true) });
+    const obsoleteSelection = app.saveSettingAuto('theme', 'neon');
+    assert.equal(await app.saveSettingAuto('theme', 'light'), true);
+    releaseObsolete(false);
+    assert.equal(await obsoleteSelection, false);
+    assert.equal(obsoleteAttempts, 1, 'Superseded choice must not retry');
+    assert.equal(storage.get('yamb_theme'), 'light', 'Late retry cannot overwrite a newer choice');
+
+    let releaseAccount;const accountPack = new Promise(resolve => { releaseAccount = resolve; });
+    storage.set('yamb_uid', 'account-a');
+    app.warmThemePack = () => ({ critical: accountPack });
+    const accountSelection = app.saveSettingAuto('theme', 'neon');
+    storage.set('yamb_uid', 'account-b');storage.set('yamb_theme', 'dark');
+    releaseAccount(true);
+    assert.equal(await accountSelection, false);
+    assert.equal(storage.get('yamb_theme'), 'dark', 'Pending choice cannot cross an account change');
+    console.log('Settings theme retry: slow packs, shared readiness gate, bounded failure, offline, superseded selection and account change OK.');
     console.log('In-game theme switch waits for visible decoded PNGs, then changes theme; special assets exist.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -78,7 +78,9 @@ async function checkInviteAcceptanceGuard() {
   const clients = [];
   try {
     let ready = false;
-    for (let i = 0; i < 200; i++) {
+    const startupTimeoutMs = Math.max(20000, Math.min(120000, Number(process.env.YAMB_QA_SERVER_START_TIMEOUT_MS) || 20000));
+    const startupDeadline = Date.now() + startupTimeoutMs;
+    while (Date.now() < startupDeadline) {
       if (child.exitCode !== null) throw new Error(`Server exited: ${child.exitCode}`);
       try { if (await health(port)) { ready = true; break; } } catch (_) {}
       await new Promise(resolve => setTimeout(resolve, 100));

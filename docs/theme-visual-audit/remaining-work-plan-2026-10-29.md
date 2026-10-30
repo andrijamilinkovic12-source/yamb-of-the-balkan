@@ -1,98 +1,33 @@
-# Plan završetka provere tema i soba
+# Preostale provere tema i soba
 
-Datum preseka: 29.10.2026. Izvor: [checkpoint](emulator-checkpoint.md), [dva emulatora](two-emulators-2026-10-29/report.json) i raniji sobni izveštaji. Ovo je plan, ne potvrda da su naredne radnje izvršene.
+Aktuelni presek: 30.10.2026. Ovaj presek zamenjuje staru listu13/15. Istorija pokušaja i posledica ostaje u [checkpointu](emulator-checkpoint.md).
 
-## Polazno stanje
+## Potvrđeno
 
-- Osnovni Android pregled svih deset tema: **13/15 soba**, uz ograničenja pojedinačnih izveštaja.
-- Pozovi prijatelja: osnovni domaćin vizuelno pregledan u svih deset tema; stvarni poziv, prihvatanje i pokretanje duela nisu time potvrđeni.
-- Online random: lokalni renderer svih deset tema proveren; stvarno uparivanje dva sopstvena naloga uspelo, ali test nije obavio potvrđen potez pre isteka. Običan meč i završetak ostaju otvoreni.
-- Dnevni izazov: ponovni ulazak svih deset tema proveren; aktivna igra/završni panel stvarno provereni u Truloj višnji, rezultat 56, bez reklame/preuzimanja. Preostalih devet tema nema taj Android dokaz.
-- Lokalne izmene, uključujući R22–R32, čekaju objavu i potvrdu na uređaju. Stariji snimci nisu dokaz novog koda.
-- Postojeći izdvojeni QA odgovara kao staging/reconnect-qa-01, ali klijent v5.49 je stariji od lokalne verzije. Ne koristiti ga kao potvrdu aktuelnog dizajna pre ažuriranja.
-- Nisu potrebne nove sobe ili automatska izrada novih PNG-ova. Nove slike praviti samo za konkretno utvrđenu neusaglašenost.
+| Oblast | Potvrđen obuhvat | Granica dokaza |
+| --- | --- | --- |
+| Osnovni pregled soba | 15/15 osnovnih vizuelnih prolaza kroz deset tema, prema pojedinačnim izveštajima | Nije potvrda svakog retkog stanja, oglasa ili isplate. |
+| Dnevni izazov | Aktivna igra i završni panel10/10tema, šest STOP pritisaka, rezultat57, bez resetovanja pokušaja | Nagrada nije preuzeta. Prava reklama nije proverena. [Android dokaz](daily-qa-2026-10-29/index.html). |
+| Online Random | Aktivna igra10/10tema; odvojena puna partija156upisa, Sara450/Andrija293, regular/completed_scores, PI+106/0 | Pravi završni paneliGreen/Moon; ostale završne teme imaju izolovani lokalni dokaz. [Android pregled](random-qa-2026-10-29/index.html). |
+| Završni panel pri promeni veličine | 150lokalnih stanja:10tema×pobeda/poraz/remi×5uzastopnih viewporta; centar/granice, PNG, bez sobnog/kartičnog skrola ili nagradnih/revanš zahteva | Mobilna Chromium emulacija DPR3.5, animacije uključene; nije Android wm/density ili fizičkiS25. [Mere i20lokalnih snimaka](finish-resize-2026-10-30/index.html). |
+| Revanš i oporavak veze — lokalno | Provere stvarnih serverovih/klijentskih handlera prolaze; turnirski revanš samo posle remija, perspektive i zaštite obračuna | Sintetički događaji/stanja; nije uspešan stvarni prekid/povratak veze ili revanš na dva uređaja. |
+| Poziv prijatelju — lokalno | Dva localhost Socket.IO klijenta: slanje, prihvatanje, zajednički meč, odbijanje/zauzetost, nedostupan igrač, otkazivanje i zaštita duplih poziva | Server bez Mongo/Firebase podataka i pravih naloga. Nije stvarni poziv na dva prijavljena emulatora. |
+| Objavljene popravke | R27 Vaskršnji megafon obe table i R32 perspektiva tehničkog rezultata potvrđeni na QA v6.36/910b816c | Ostale ranije nalaze potvrđivati ciljano prema pojedinačnim izveštajima. |
 
-## 1. Pripremiti aktuelno izdvojeno test okruženje
+## Posledica ponovnog pokretanja
 
-- [ ] Sačuvati sadašnje lokalne izmene i evidentirati tačnu reviziju predviđenu za test. Commit/deploy ostaju u dogovoru sa korisnikom; ovaj plan ih ne izvršava.
-- [ ] Pripremiti aktuelnu QA verziju servera i Android klijenta, uz postojeći odvojeni app ID, Firebase i bazu. Proveriti izolaciju pre instalacije/igre; ne prepisivati produkcioni paket ili naloge.
-- [ ] Na oba emulatora potvrditi verziju i koristiti odvojene test profile. Prijavu obavlja korisnik ako bude potrebna.
-- [ ] Unapred pripremiti redosled poteza i snimanja da tokom meča nema duge pripreme koja troši tajmer.
-- [ ] Pripremiti odgovarajuće QA podatke/stanja za Daily i završne prikaze, bez resetovanja produkcionih pokušaja ili zaobilaženja pravila u produkciji.
+Korisnik je odbio dodatno preuzimanje QA nagrada. Nagradno dugme, reklama i revanš nisu pritisnuti. Postojeći recoverPendingGameRewards je pri otvaranju aplikacija automatski preuzeo osnovnih439/675dukata. Server potvrđuje dva preuzimanja, salda2939/12168. Daily ostaje nepreuzet. Raniji zapisi claim=0 opisuju prethodnu sesiju.
 
-Završeno kada: oba uređaja koriste proverenu aktuelnu QA verziju, a test rezultati ne menjaju stvarne profile. Nema CDP pristupa, čitanja tokena ili privatne sesije.
+To je odvojeno od automatskih trofejnih bonusa (Andrija2000/Sara500) i četiri ranija tehnička QA rezultata. Nema ručne izmene salda ili produkcionog testa. Postojeće pravilo automatskog oporavka nije menjano.
 
-## 2. Dovršiti Online random
+## Sledeći koraci
 
-- [ ] Dva sopstvena test naloga: traženje, uparivanje, ispravna imena i statusi, intro i ulazak u igru.
-- [ ] Potvrditi bacanje, izbor kockica, najavu i validan upis; oba uređaja pokazuju isti rezultat i pravog igrača na potezu.
-- [ ] Na emulatoru pregledati svih deset tema: čekaonicu, obe table, kontrolne panele, PNG, tipografiju, kontrast, dimenzije i završni prikaz. Tema određuje materijal/boje, Zelena geometriju; ne traži se deset identičnih punih partija ako je zajednička funkcija već potvrđena.
-- [ ] Kontrolisani prekid/povratak veze: tajmer, obaveštenje i PNG, oporavak stanja bez duplog poteza ili obračuna.
-- [ ] Običan završetak iz obe perspektive: pobeda/poraz/remi, poeni, rekordi i Indeks moći, bez skrola ili ulaska u safe zonu. Koristiti pripremljene legitimne QA scenarije; ne izmišljati da su svi ishodi odigrani.
-- [ ] Revanš: zahtev, prihvatanje, odbijanje/odustajanje i nova partija bez zaglavljivanja. Turnirski izuzetak proveriti odvojeno: revanš samo posle remija.
-- [ ] Tehnički završetak: ispravna perspektiva R32 poruke i jednokratan obračun na QA profilima; običan završetak i tehnički rezultat voditi odvojeno.
+1. **R33/R34 posle korisnikovog commita/deploya.** Aktuelni lokalni game.jsv6.38 uključuje R34 automatski retry/readiness ručnog izbora iz Podešavanja i R33, koji čuva nultu kaznu u dukatima umesto da prikaže20PI kao dukate. Svih16 izolovanih handler slučajeva prolazi. Objavljeni QA još nije dokaz nove ispravke. Commit/deploy obavlja korisnik.
+2. **Odsečen završni panel na Androidu.** Posle promene rezolucije drugi emulator dao je ispravan, pa pomeren/odsečen kadar. Lokalnih150stanja nije ponovilo pomeranje. Uzrok nije utvrđen; CSS nije menjan naslepo i nalaz nije zatvoren kao popravljen. Glavni meniji posle pokretanja pregledani su na1440×3120/560dpi. Ne menjati dimenzije tokom vremenski ograničenog meča radi snimanja.
+3. **Prvo učitavanje tema i skinova.** [Native Green→Neon prvi neuspeh i uspešan ponovljeni izbor](theme-switch-2026-10-30/index.html) potvrđeni su; R34 ostaje lokalno, bez tvrdnje o brzini svih tema/skinova. Izmeriti hladni start i prvi/ponovljeni izbor, PNG nedostatke, vraćanje prethodne teme i kašnjenje skinova/dugmadi. Uspešan ponovljeni izbor nije dokaz brzog prvog učitavanja.
+4. **Stvarni revanš i povratak veze.** Ostaju neprovereni na dva uređaja. Korisnik je odbio dodatni test koji preuzima nagradu; zato ga ne ponavljati automatski niti tretirati kao čekanje odobrenja. Lokalni handler testovi vode se odvojeno. Budući test mora računati i automatski recovery nagrade pri pokretanju.
+5. **Stvarni poziv iz Pozovi prijatelja.** Osnovni izgled10/10tema i lokalni Socket.IO tok potvrđeni. Slanje/prihvatanje/odbijanje i ulazak u isti duel na dva prijavljena emulatora ostaju zasebna provera. Link za deljenje ostaje skriven.
+6. **Fizički SamsungS25 i test oglasi.** Safezone/tastatura, uspešna i nedostupna reklama, povratak, osnovna nagrada posle neuspeha oglasa, tačan množilac i zaštita od duplog obračuna. Pokriti Solo/Hotseat/online/Daily prema različitim pravilima. Lokalni odgovori i emulator nisu dokaz SDK/server isplate na telefonu.
+7. **Retka sobna stanja i zatvaranje evidencije.** Prema pojedinačnim izveštajima potvrditi nepokrivene tabove, guest/prazne/grešne liste, obaveštenja i ranije dorade na objavljenoj verziji. Novi PNG samo za utvrđenu neusaglašenost. Sačuvati kanonske identitete, dimenzije i DNK svake teme.
 
-Završeno kada: deset tema ima osnovni Android dokaz, a stvarna sinhronizacija/oporavak/završetak imaju zaseban funkcionalni dokaz.
-
-## 3. Dopuniti funkcionalni test Pozovi prijatelja
-
-- [ ] Domaćin šalje poziv drugom test nalogu; drugi uređaj dobija ispravnog pošiljaoca i akcije.
-- [ ] Prihvatanje pokreće isti duel na oba uređaja, sa pravim imenima, pravilima i zajedničkim završnim ekranom.
-- [ ] Odbijanje, otkazivanje, zauzet/offline igrač i dupli klik ne ostavljaju blokiran prozor ili dupli meč.
-- [ ] Guest prikaz, obaveštenja i tastatura/pretraga na uskom ekranu; lista prijatelja ostaje vodoravna, cela soba se ne skroluje vertikalno.
-- [ ] Deljenje linka ostaje skriveno prema postojećoj odluci. Ne uvoditi novu opciju deljenja.
-
-Završeno kada: osnovni vizuelni pregled ostaje 10/10, a stvarni poziv i ulazak u duel imaju novi dokaz. Ovo nije ponavljanje celog već završenog sobnog pregleda.
-
-## 4. Dovršiti aktivni i završni Dnevni izazov
-
-- [ ] Aktivna igra i završni panel u: Zelenoj, Svetlom zlatu, Plavom okeanu, Neon Cyberu, Kraljevskom ametistu, Vaskršnjoj, Pustinjskom staklu, Mesečevom sjaju i Severnoj maglini.
-- [ ] Trulu višnju ponovo kratko proveriti na aktuelnoj verziji posle lokalnih izmena; njen raniji rezultat 56 ostaje istorijski dokaz.
-- [ ] Proveriti šest zaustavljanja, računanje rezultata, promene stanja, završni PNG i kanonski dukat/video; preglednost fontova, kontrast i safe zonu.
-- [ ] Proveriti ponovno otvaranje i dozvoljen izlazak bez zaglavljivanja; ponovni ulazak ne sme pogrešno dati novi pokušaj/nagradu.
-- [ ] Prvo učitavanje završne slike ne ostavlja trajno prazno mesto. Pravi obračun nagrade proverava se u narednoj tački.
-
-Završeno kada: aktivni/završni i ponovni prikaz imaju dokaz svih deset tema. Produkcioni dnevni pokušaji se ne resetuju radi ponavljanja testa.
-
-## 5. Nagradne funkcije na fizičkom telefonu
-
-- [ ] Na Samsungu S25 proveriti stvarni Android oglasni tok sa test oglasima: učitana reklama, potvrđena nagrada i povratak u aplikaciju.
-- [ ] Preuzimanje osnovne nagrade i izlazak rade i kad reklama nije dostupna, ne učita se, čeka ili bude zatvorena bez potvrde nagrade.
-- [ ] Uspešna nagradna reklama: iznos/množilac prate važeća pravila i ostvarene rekorde; stanje dugmeta i salda odgovaraju serverovoj potvrdi.
-- [ ] Dupli klik, kasni callback, ponovni ulazak i prekid veze ne daju dvostruku isplatu niti blokiraju završni ekran.
-- [ ] Rekordi pripadaju prijavljenom nalogu, ne zbiru svih naloga telefona. Prikaz rekorda/Indeksa moći razlikuje potvrđene i nepotvrđene vrednosti.
-- [ ] Pokriti Solo, Hotseat, zajednički online završetak i Daily prema njihovim različitim pravilima. Hotseat lokalni gost se ne tretira kao drugi prijavljeni nalog sa svojim novčanikom.
-- [ ] Na svim temama proveriti ispravan dukat/video/PNG i kontrast; zajedničku reklamnu funkciju ne dokazivati nepotrebnim višestrukim gledanjem oglasa za svaku temu.
-
-Završeno kada: potvrđena stvarna SDK/server integracija i jednokratna isplata na test profilima. Izolovani test odgovori i emulator snimci nisu zamena za ovaj dokaz.
-
-## 6. Potvrditi lokalne dorade i brzinu posle objave
-
-- [ ] Evidentirati tačan commit/deploy i verziju stvarno učitanu na uređaju. Korisnik određuje trenutak produkcionog commita/deploya.
-- [ ] Hotseat: obe table/pager, dimenzije, tipografija, guest/izlazni prozori i završetak.
-- [ ] Vaskršnji megafon: vidljiv u obe table i posle promene teme, sa ispravnim kanonskim PNG.
-- [ ] Daily mere/fontovi/kontrast i priprema X; Solo potvrda rezultata/rekorda i završna obaveštenja.
-- [ ] Random: naslov pronađenog protivnika, svih deset tematskih prikaza, oporavak tajmera, R32 poruka i završna dugmad.
-- [ ] Pozovi prijatelja: širine, profili/statistika, kratki ekran, kontrast, modal i pretraga.
-- [ ] Ranije neobjavljene sobne nalaze iz checkpointa potvrditi ciljano, uključujući Riznicu/Turnir/Ligu i ostale evidentirane dorade; ne računati prethodni snimak kao dokaz popravke.
-- [ ] Hladno otvaranje aplikacije/sobe, prvi izbor svake teme i ponovljeni izbor: izmeriti trajanje, uspeh, nedostajuće/stare PNG i povratak na prethodnu temu. Isto za promenu posedovanog skina tokom igre i odgovarajuću dugmad/brojač.
-- [ ] Proveriti da efekti ne blokiraju učitavanje/unos; poznate greške prvo ponoviti, pa popravljati. Zabeležiti uređaj/mrežu i rezultate, bez neproverenog obećanja trenutnog učitavanja.
-- [ ] S25: native tastatura, duga imena i safe zone; lokalne mere malih/srednjih/velikih ekrana ostaju dopunski dokaz. Ne tvrditi da su fizički testirani uređaji koje nemamo.
-
-Završeno kada: svaka planirana ispravka ima dokaz sa objavljene verzije ili jasan otvoren nalaz. Regresije pokretati ciljano prema promenama.
-
-## 7. Zatvoriti evidenciju
-
-- [ ] Po sobi i temi ažurirati: provereno stanje, verziju, uređaj/veličinu, snimak i rezultat; posebno označiti lokalni simulirani i stvarni Android test.
-- [ ] U registar i definiciju tema upisati samo stvarne nove putanje/izuzetke ako bude PNG zamena. Kanonski identitet povezati na svim aktivnim mestima; ne menjati funkcije ili geometriju bez konkretnog razloga.
-- [ ] Iz ranijih izveštaja izdvojiti retka nepokrivena stanja (obaveštenja/nagrade, guest, prazne/grešne liste, drugi tabovi i slično) i zatvoriti primenljive stavke ciljanim proverama. Ako nisu proverena, ostaju izričito otvorena.
-- [ ] Napredak 13/15 povećati tek kada Random i Daily ispune svoje osnovne kriterijume za svih deset tema. **15/15 osnovnih pregleda ne znači automatski da su reklame, svi ishodi i sve transakcije testirani.**
-- [ ] Završni izveštaj razdvaja: završen izgled/inventar, potvrđene funkcije, objavljene/potvrđene popravke i preostala ograničenja.
-
-## Odvojeno: posledice prethodnog produkcionog test-meča
-
-Sara: −1758 dukata i prikazana kazna −20 Indeksa moći. Andrija: +1775 dukata i +1775 poena lige. Server je menjao i statistiku/H2H; sve vrednosti nisu dodatno proverene. Nije urađeno poništavanje. Ako korisnik želi poništavanje, prvo pripremiti pregled tačno tog meča i svih knjiženja, zatim posebno odobren i jednokratan korektivni postupak. Ne vraćati cela salda na staru vrednost jer bi se time mogle izgubiti kasnije legitimne promene.
-
-## Redosled sledećih radnji
-
-Aktuelni izdvojeni QA → Online random → stvarni poziv prijatelju → Daily devet tema i kratka potvrda Trule višnje → telefon/reklame/nagrade → potvrda objavljenih dorada i učitavanja → završna evidencija. Lokalna priprema i ciljane provere mogu teći pre produkcionog deploya; potvrda na produkcionoj verziji čeka korisnikov dogovoreni deploy.
+Svaku stavku zatvoriti konkretnim dokazom: verzija, uređaj/viewport, stanje, rezultat i ograničenje. Osnovnih15/15 ne znači da su sve funkcije iznad proverene.

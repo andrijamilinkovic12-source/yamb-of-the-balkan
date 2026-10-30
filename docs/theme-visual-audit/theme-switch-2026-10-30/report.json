@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-30",
+  "environment": "Zasebni QA APK com.yamb.balkan.staging, emulator-5556,1440×3120/560dpi, objavljeni klijent v6.36/910b816c.",
+  "observed": "Prvi izbor Green→Neon nije primenjen; ponovljeni jeste. Zelena vraćena. Nema nove igre, poziva, oglasa ili pritiska na nagradu.",
+  "limits": "Ovo nisu precizna merenja trajanja učitavanja. ADB/native framebuffer je povremeno kasnio ili nije mogao da snimi kadar; neuspešne snimke ne tumačiti kao stanje aplikacije. Tačan spor PNG/HTTP zahtev nije identifikovan. Nije proveren prvi izbor svih deset tema, fizički telefon ili skin u aktivnoj igri.",
+  "localFix": "R34/game.jsv6.38: pri ručnom izboru iz Podešavanja jedan automatski ponovni pokušaj koristi postojeći image/decode cache. Gate čeka oba vidljiva paketa i retry; konačan neuspeh čuva prethodnu kompletnu temu. Noviji izbor, offline stanje i promena naloga zaštićeni. Nije deployovano niti ovim Android snimcima potvrđeno. Vreme prvog preuzimanja nije ovim dokazano smanjeno.",
+  "tests": [
+    "test-game-theme-switch-preload.js: spor paket, jedan retry, trajni neuspeh, offline, noviji izbor i promena naloga",
+    "test-theme-loading-decode.cjs: gate čeka kompletnu readiness, ne skriva se prerano i zatvara se pri konačnom neuspehu",
+    "test-theme-preload-cache.cjs i test-theme-selection-sync.cjs",
+    "Settings room/switch/picker i game quick skins/header states/action lock",
+    "check-js.js"
+  ],
+  "images": [
+    {
+      "file": "qa-theme-switch-oct30-settings-initial.jpg",
+      "label": "Početni izbor: Zelena aktivna, Neon dostupan."
+    },
+    {
+      "file": "qa-theme-switch-oct30-neon-settled.jpg",
+      "label": "Posle prvog izbora Neona ostala je Zelena."
+    },
+    {
+      "file": "qa-theme-switch-oct30-neon-retry-settled.jpg",
+      "label": "Posle ponovljenog izbora primenjen Neon i njegovi PNG kontrolni elementi."
+    },
+    {
+      "file": "qa-theme-switch-oct30-green-restore-settled.jpg",
+      "label": "Vraćena Zelena tema i sačuvan srpski jezik."
+    }
+  ]
+}

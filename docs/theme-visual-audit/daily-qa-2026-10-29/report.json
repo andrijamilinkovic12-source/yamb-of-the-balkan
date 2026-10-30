@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-29",
+  "testedCommit": "910b816c",
+  "testedGameVersion": "6.36",
+  "environment": "Isključivo com.yamb.balkan.staging / yamb-reconnect-qa / odvojeni Firebase i yamb_reconnect_qa. Javna verzija odgovara lokalnom commitu nakon normalizacije CRLF/LF.",
+  "devices": "Dva emulatora pokrenuta/prijavljena. Daily pregled svih10tema na prvom; Green ranije1440x3120/560dpi, zatim proporcionalnih720x1560/280dpi, isti logički viewport ~411x891. Nije fizički S25.",
+  "testData": "Na oba proverena QA profila dodat isključivo inventar tema za pregled, uz snapshot prethodnog stanja. Nekoliko početnih activeTheme/activeSkin QA postavki evidentirano; sačuvani klijentski izbor ih može nadjačati, pa je većina izbora stvarno obavljena u meniju. Nema resetovanja Daily pokušaja, izmene rezultata ili salda radi pregleda.",
+  "daily": "Isti nepreuzeti dnevni izazov legitimno ponovo otvoren nakon restartovanja QA aplikacije. Svih10tema: šest native STOP pritisaka, serverove kockice6/6/2/5/3/1 i rezultat57. Bez reklame, klika naPreuzmi ili potvrde isplate.",
+  "inventory": "Raniji statički popis:6semantičkih PNGuloga po temi; dukat/video kanonski, skinovi deljeni. Ovaj prolaz ne stvara nove PNGcrteže i ne menja njihove putanje.",
+  "skinException": "Plavi okean pregledan sa namerno dozvoljenim univerzalnim skinom Trule višnje. Ostale kasnije teme sa svojim skinovima; time se ne tvrdi Android dekodiranje svih mogućih48skinova u Daily sobi.",
+  "observations": [
+    "Primary GPU framebuffer stale: restarted with SwiftShader, no data cleared",
+    "System UI ANR resolved with Wait",
+    "First Light selection stayed Green; second succeeded",
+    "Windows right-edge native pointer offset: use exact Android taps for X",
+    "First Medium selection stayed Light; retry succeeded",
+    "Initial QA server activeTheme fixture is superseded by saved client preference; remaining themes selected through normal UI"
+  ],
+  "remaining": [
+    "Nagradna reklama/uvećanje/isplata i njene greške nisu testirane. QA oglasi su blokirani, pa je dupliranje sivo i ne predstavlja kvar produkcionog oglasa.",
+    "Na emulatoru nije ponovljen svaki mali/srednji/veliki fizički uređaj. Raniji150izolovanih renderer slučajeva ostaje dopunski dokaz, ne zamena za Android.",
+    "Hladna promena tema ostaje nalaz: prviLight iMedium pokušaji ostavili prethodnu temu, ponovljeni uspeli. Nije dokazano trenutno učitavanje niti precizno trajanje intra.",
+    "Daily nema standardni vidljivi izlaz sa završetka bez preuzimanja. Radi ovog nepodizanja nagrade korišćen je restart QA aplikacije; povratak preko dugmetaPreuzmi nije ovim potvrđen."
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-dark-active.png",
+      "complete": "qa-daily-dark-complete-small.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-light-active.png",
+      "complete": "qa-daily-light-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-medium-opening-delay.png",
+      "complete": "qa-daily-medium-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "skin": "theme_dark_cherry (intentional cross-theme universal skin)",
+      "active": "qa-daily-winter-active.png",
+      "complete": "qa-daily-winter-complete-cross-skin.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "skin": "theme_neon_cyber",
+      "active": "qa-daily-neon-active.png",
+      "complete": "qa-daily-neon-complete-settled.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevski ametist",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-amethyst-active.png",
+      "complete": "qa-daily-amethyst-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-easter-active.png",
+      "complete": "qa-daily-easter-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-desert-resume.png",
+      "complete": "qa-daily-desert-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-moon-active.png",
+      "complete": "qa-daily-moon-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "serial": "emulator-5554",
+      "dice": [
+        6,
+        6,
+        2,
+        5,
+        3,
+        1
+      ],
+      "reward": 57,
+      "claim": false,
+      "active": "qa-daily-severna-active.png",
+      "complete": "qa-daily-severna-complete.png",
+      "status": "Aktivni i završni Android panel pregledani; bez nove potrebe za PNG zamenom u tim stanjima.",
+      "geometry": "Green raspored i zajednička tipografija; tematske površine/ikone/kontrast. Panel staje iznad navigacije, bez skrola."
+    }
+  ]
+}

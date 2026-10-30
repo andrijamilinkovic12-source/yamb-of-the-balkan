@@ -1,6 +1,28 @@
 # Završna provera — Online Random
 
-## Najnoviji Android pokušaj — 29.10.2026.
+## Važna dopuna pri ponovnom pokretanju — 30.10.2026.
+
+Nastavak30.10: oba emulatora su bila ugašena; ponovo pokrenuta bez brisanja podataka, QA aplikacije otvorene i oba glavna menija pregledana. Postojeći recoverPendingGameRewards pri autentikaciji automatski je preuzeo439/675 osnovnih dukata iz prethodne sesije (runtimeId se promenio), iako korisnik nije odobrio preuzimanje. Nije bilo klika na nagradno dugme, reklame, dupliranja, revanša ili nove partije. Server potvrđuje rewardClaimedCount=2, salda2939/12168; Daily ostaje nepreuzet. Prethodni zapisi claim=0 opisuju stanje pre ponovnog pokretanja. Produkcija nije korišćena; salda nisu ručno menjana.
+
+Završni panel posle promene rezolucije ima odvojeni otvoreni nalaz: jedan kasniji kadar drugog uređaja je pomeren/odsečen. Uzrok nije utvrđen. Oba današnja glavna menija pravilno su prikazana; završni panel nije ponovo otvaran novom igrom.
+
+### Nastavak posle prekida — 30.10.2026.
+
+Posle vraćanja rezolucije drugi emulator ima i ispravan i kasniji pomeren/odsečen kadar. Uzrok nije utvrđen. Dimenzije PNG fajla same po sebi nisu dokaz ispravnog rasporeda; potreban ponovljen stabilan prikaz bez promene geometrije. Oba emulatora su pri nastavku bila ugašena i ponovo su pokrenuta bez brisanja podataka. Ranija tvrdnja o ostavljanju završnih panela opisuje stanje prethodne sesije; nije dokaz današnjeg stanja. Nema novih partija, reklama ili preuzimanja nagrada.
+
+## Aktuelni izdvojeni QA — nastavak 29–30.10.2026.
+
+Korisnik je objavio `910b816c`; javni klijent v6.36 potvrđen je na oba zasebna QA APK-a. [27 stvarnih Android snimaka, uključujući otvoreni resize nalaz i nastavak](theme-visual-audit/random-qa-2026-10-29/index.html) odvajaju pregled izgleda od potvrde običnog završetka. Aktivna igra je pregledana u svih deset tema kroz promene unutar iste partije; stanje upisa ostalo je sačuvano. R27 Vaskršnji megafon vidi se u obe table, R32 tehnička poruka odgovara ulozi.
+
+**Puna obična partija potvrđena:**156 upisa, po78 za svakog igrača; svih šest kolona. Server i oba uređaja pokazuju Sara450/Andrija293, `regular/completed_scores`, oba statistička obračuna potvrđena, PowerIndex+106/0. Zadržavanje prve kockice, označena najava, drugo bacanje2/3 i upis stvarno su pregledani na oba uređaja. Završni paneliGreen/Moon imaju prave perspektive i staju u safezonu bez sobnog skrola. Ostale završne teme imaju raniji izolovani dokaz; ovo nije deset fizički završenih partija. [Serverova potvrda bez privatne sesije](theme-visual-audit/random-qa-2026-10-29/server-verification.json).
+
+Četiri prethodna QA pokušaja nisu običan završetak: dva su istekla tokom čekanja, treći posle prekida mreže i neobrađenog obaveštenja „Niste povezani na server“, četvrti zbog neizvršenih preskočenih tapova i upozorenja o redosledu. Ovi problemi testnog postupka ne predstavljaju potvrdu greške serverovog obračuna. Povratak u živu partiju nije potvrđen tim pokušajima. Produkcioni profili nisu korišćeni.
+
+**Granica nagrade:** korisnik je odbio preuzimanje439/675QAdukata i dodatni test revanša/veze. `rewardClaimedCount=0`, Daily nagrada takođe ostaje nepreuzeta. Postojeći TrophyManager je pri završetku automatski dodelio Prorok1500+Krompiruša500 Andriji i Krompiruša500 Sari; to su odvojene trofejne nagrade. Četiri tehnička pokušaja automatski su ranije dala Sari4×318, Andriji0dukata kazne i4×20PI kazne. Nema ručne izmene salda. Oba emulatora vraćena na1440×3120/560dpi, mreža1/1, prijave i nepreuzeti završni paneli sačuvani bez restarta aplikacije.
+
+R33 je nova lokalna ispravka prikaza: `coinPenalty=0` ne zamenjuje se PI kaznom20 u velikoj kartici dukata. `game.js?v=6.37`,16 izolovanih slučajeva prolazi; nije još objavljeno. Ekonomija, pravila, dimenzije i PNG fajlovi nisu menjani. Stvarne reklame/isplate, revanš i kontrolisani reconnect ostaju zasebno otvoreni.
+
+## Raniji Android pokušaj na produkciji — 29.10.2026.
 
 [Kontrolisani par na dva emulatora](theme-visual-audit/two-emulators-2026-10-29/index.html) uspešno je upario korisnikove naloge Saru i Andriju, ali test nije potvrdio potez pre isteka vremena. Prvi kadrovi table već prikazuju 12/8 sekundi. Uzrok potrošenog vremena nije izmeren. **Običan meč, njegov završetak, nagradna reklama, dupliranje, revanš i reconnect ostaju neprovereni na Androidu.** Nije izvršen novi prolaz svih deset tema.
 
