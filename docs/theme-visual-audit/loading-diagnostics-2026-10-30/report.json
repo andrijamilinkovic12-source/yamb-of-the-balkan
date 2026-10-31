@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-30",
+  "status": "local-not-committed-or-deployed",
+  "localGameVersion": "6.42",
+  "publishedGameVersion": "6.41",
+  "nativeTestThisTurn": false,
+  "applicationPngChanged": false,
+  "browser": {
+    "scope": "Isolated Edge 411x891; intercepted QA origin served entirely from local files. Actual PNG/decode and menu/Settings methods, no app constructor/account/socket/network server. Not Android latency or ANR proof.",
+    "rows": [
+      {
+        "theme": "dark",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "light",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "medium",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "winter",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "neon",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "amethyst",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "easter",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "desert",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "moon",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      },
+      {
+        "theme": "severna",
+        "ready": true,
+        "readyRecords": 28,
+        "failures": 0
+      }
+    ],
+    "retainedDiagnosticRecords": 200,
+    "errors": []
+  },
+  "packMetadata": {
+    "scope": "Current local methods, canonical path resolver, original menu DOM sources and PNG metadata. Read-only, no constructor/account/network/device or timing proof.",
+    "rows": [
+      {
+        "theme": "dark",
+        "menuBytes": 3529894,
+        "settingsBytes": 732944,
+        "totalBytes": 4262838,
+        "totalPixels": 4801000
+      },
+      {
+        "theme": "light",
+        "menuBytes": 3886105,
+        "settingsBytes": 676766,
+        "totalBytes": 4562871,
+        "totalPixels": 4800512
+      },
+      {
+        "theme": "medium",
+        "menuBytes": 4189005,
+        "settingsBytes": 722198,
+        "totalBytes": 4911203,
+        "totalPixels": 4800512
+      },
+      {
+        "theme": "winter",
+        "menuBytes": 3851791,
+        "settingsBytes": 651773,
+        "totalBytes": 4503564,
+        "totalPixels": 4800512
+      },
+      {
+        "theme": "neon",
+        "menuBytes": 3698909,
+        "settingsBytes": 702884,
+        "totalBytes": 4401793,
+        "totalPixels": 4801000
+      },
+      {
+        "theme": "amethyst",
+        "menuBytes": 3562067,
+        "settingsBytes": 715467,
+        "totalBytes": 4277534,
+        "totalPixels": 4801000
+      },
+      {
+        "theme": "easter",
+        "menuBytes": 3937254,
+        "settingsBytes": 666797,
+        "totalBytes": 4604051,
+        "totalPixels": 4801000
+      },
+      {
+        "theme": "desert",
+        "menuBytes": 4041669,
+        "settingsBytes": 738210,
+        "totalBytes": 4779879,
+        "totalPixels": 4800512
+      },
+      {
+        "theme": "moon",
+        "menuBytes": 3483571,
+        "settingsBytes": 568698,
+        "totalBytes": 4052269,
+        "totalPixels": 4800512
+      },
+      {
+        "theme": "severna",
+        "menuBytes": 3871624,
+        "settingsBytes": 623022,
+        "totalBytes": 4494646,
+        "totalPixels": 4801000
+      }
+    ]
+  },
+  "losslessProbe": {
+    "applied": false,
+    "at": "2026-10-30T20:09:36.707Z",
+    "rows": [
+      {
+        "source": "assets/theme-backgrounds/easter-v6-1.png",
+        "beforeBytes": 1849355,
+        "afterBytes": 1774612,
+        "identicalRGBA": true,
+        "sha256RGBA": "5aa126121862fc40db112d779726a2deaa3ec504231575dba842f4f13b2080d8"
+      },
+      {
+        "source": "assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "beforeBytes": 162501,
+        "afterBytes": 105340,
+        "identicalRGBA": true,
+        "sha256RGBA": "8c757fdaa8f1909557eb2aa0fb16cce98a533ff0f65c2a83bf9d08361540c04d"
+      },
+      {
+        "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png?v=1",
+        "beforeBytes": 259548,
+        "afterBytes": 171146,
+        "identicalRGBA": true,
+        "sha256RGBA": "6e1a43e6eeb5d219c9e707e9a42fd6b8666e67b3a01811df7bd825276f5c7f57"
+      },
+      {
+        "source": "assets/theme-packs/easter/canonical/game-header/sound-v1.png?v=1",
+        "beforeBytes": 52994,
+        "afterBytes": 53032,
+        "identicalRGBA": true,
+        "sha256RGBA": "d93f908d7dc53285d13f0d737c80a5e6d9b0257cf91cc9f1acfeefa11b5311bc"
+      }
+    ]
+  },
+  "tests": [
+    "QA-only recorder and redaction, controlled waiting-load/decode timeout, shared retry, error/fallback and collector parser: PASS",
+    "Preload cache/retention, decode gate, Settings switch/retry, in-game readiness, account selection isolation: PASS",
+    "Actual PNG browser:10themes x28ready,0failures: PASS",
+    "Actual menu retention:10themes, Green revisit18reprepared,0missing, immediate repeat0new images: PASS",
+    "Hidden header/Settings:startup0requests, hidden changes0requests,10visible themes: PASS",
+    "Hidden three room controllers:startup0requests, hidden changes0requests,40visible cases: PASS"
+  ],
+  "limits": [
+    "Isolated browser and synthetic callbacks; not native timing/ANR proof.",
+    "Native collector was not run. QA deploy is required for native events.",
+    "No game/account/auth/socket/ads/rewards/DB or emulator operation this turn."
+  ]
+}

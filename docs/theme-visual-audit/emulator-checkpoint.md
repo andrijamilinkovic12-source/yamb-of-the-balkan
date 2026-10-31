@@ -1,5 +1,17 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## Lokalna v6.42 — bez novog emulator prolaza
+
+Korisnik potvrđuje da prethodnu evidenciju nije komitovao/deployovao. Pripremljena [QA dijagnostika učitavanja](loading-diagnostics-2026-10-30/README.md), lokalni testovi deset tema i regresije prolaze. Nema PNG izmene ili nove igre/oglasa/nagrade/DB pristupa. Emulatori u ovom nastavku nisu korišćeni; poslednje stvarno potvrđeno stanje je iz v6.41 odeljka. Prva Vaskršnja i startup/ANR ostaju otvoreni; za novi native zapis potrebna je korisnikova objava v6.42.
+
+## Posle deploya v6.41 — 30.10.2026.
+
+[23 pregledana Android kadra i javni hash-evi](postdeploy641-2026-10-30/index.html). Oba servisa429cec22, game6.41/leaderboard4/onlinePlayers6/invite4/header6/Settings4 odgovaraju lokalnom sadržaju. Druga izdvojena QA aplikacija ponovo otvorena; prvi emulator uMoon meniju privremeno pauziran, zatim adb resume/status potvrdio running. Geometrija/podaci/keš nisu brisani. Drugi ostavljen na kompletnomGreen meniju.
+
+**R37 ciljana native potvrda:** tri sobeGreen/Neon: Top lista oba taba, Online igrači header/search/sopstveni red, Pozovi prijatelja dinamički friend/search/send/PowerIndex. Nema novih zelenih ikona u prikazanom Neonu. Drugi igrač nije bio naOnline listi dok je prvi emulator pauziran, pa oko/duel uz drugog igrača nisu provereni. Nema slanja poziva. Ovo nije10/10nativeprolaz ili merenje skrivenog saobraćaja.
+
+**Prvi izbor ostaje otvoren:** Neon iMoon uspeli prvim izborom; prviEaster ostavioNeon, ponovljeni uspeo. PovratakNeon i završniGreen jednim izborom. ActivityCOLD13476msnije vreme spremnog menija; sačuvan keš i drugačije opterećenje sprečavaju pouzdano poređenje sa6.40. Prelazni/nepotpuni kadrovi ostaju; uzrokANR-a nije utvrđen. Hotseat nije ponudio sačuvani nastavak; unos za novu partiju otkazan prekoX bez imena/potvrde. Nema nove partije, bacanja/upisa, oglasa, nagradnih/revanš dugmadi ili DB pristupa; vizuelni saldo12168isti pre/posle, nije puni DB audit. Promena skinova u aktivnoj partiji ostaje otvorena. Nema novih runtime izmena.
+
 ## Posle korisnikovog deploya v6.40 — 30.10.2026.
 
 [Objavljene verzije,14kadrova i granice](postdeploy640-2026-10-30/index.html). Oba servisa d38aa6aa/v6.40; samo javni statički HTTP u produkciji. Druga QA aplikacija ponovo otvorena. Activity COLD19194ms, zatim beli/podložni i nepotpuni meni kadrovi; nije meren app-ready trenutak. Prvi Neon izbor vratioGreen, prviEaster ostavioNeon, prviMoon ostavioLight; ponavljanja uspela. Jedan Neon ponovljeni dodir neodređen uz zakašnjenje transporta/kadrova. Light i završni povratakGreen jednim izborom. Pet konačnih Settings tema i kompletan završniGreen meni pregledani; nije deset prvih izbora ili dokaz unutrašnjeg LRU stanja.

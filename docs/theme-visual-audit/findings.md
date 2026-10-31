@@ -1,5 +1,15 @@
 # Vizuelni audit PNG assetsa
 
+## R38 — lokalna v6.42, merenje faze učitavanja
+
+[Dijagnostika i granice](loading-diagnostics-2026-10-30/README.md). QA-only javni PNG timing load/decode/timeout/ready; bez promene rokova/retry/LRU ili PNG. Kontrolisani kvarovi i stvarni lokalni PNG10tema×28prolaze; retention i odlaganje skrivenih kontrola/soba ostaju ispravni. Produkcioni recorder isključen. Nema commita/deploya ili novih native radnji; prviEaster i uzrokANR-a ostaju otvoreni. R38 je dijagnostička priprema, nije potvrđena popravka.
+
+## R37 posle objave v6.41/429cec22 — ciljana potvrda
+
+[23 Android kadra i granice dokaza](postdeploy641-2026-10-30/index.html). Oba javna servisa odgovaraju aktuelnom sadržaju šest proverenih JS fajlova. Tri izmenjene sobe imaju odgovarajuće PNG uGreen/Neon: Top lista oba taba; Online igrači header/search/sopstveni red; Pozovi prijatelja dinamičke kartice i deljeniPowerIndex/friend/search/send. To nisu svi native prikazi10tema ili dokaz nultih skrivenih zahteva naAndroidu.
+
+Neon/Moon prvi izbor i povratakNeon/Green uspeli. **PrviEaster izbor i dalje neuspešan**, ponovljeni uspeo. ActivityCOLD13476msnije app-ready vreme ili validno poređenje sa6.40. Nema novog potvrđenog uzrokaANR-a. Hotseat ponudio unos za novu partiju, otkazano; skinovi u aktivnoj igri nisu provereni. Oba emulatora u radu, drugiGreen meni, prikazani saldo12168isti; bez nove partije, oglasa, nagradnih dugmadi ili DB pristupa. Nema novih runtime izmena; istorijske „čeka deploy” napomene niže opisuju ranije preseke.
+
 ## Posle v6.40 i lokalna R37/v6.41 — 30.10.2026.
 
 [14 Android kadrova, javne verzije i lokalno poređenje](postdeploy640-2026-10-30/index.html). Oba servisa na d38aa6aa/v6.40. Povratak na Green posle Neon/Easter/Light/Moon i završni meni kompletni. **Prvi Neon/Easter/Moon izbori nisu pouzdani**, ponovljeni su uspeli; jedan Neon retry neodređen pri zakašnjelim native komandama. Activity COLD19194ms nije app-ready mera. Uzrok sporog starta/ranijeg ANR-a ostaje otvoren.56 javnih PNG HEAD putanja sve200. Nema nove partije, reklame, nagradnog dugmeta ili DB pristupa; prvi emulator vraćen iz pauze, drugiGreen meni.

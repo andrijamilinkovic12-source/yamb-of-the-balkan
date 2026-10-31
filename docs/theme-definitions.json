@@ -1,13 +1,30 @@
 {
-  "schemaVersion": 89,
+  "schemaVersion": 91,
   "updatedOn": "2026-10-30",
+  "themeLoadingDiagnostics20261030": {
+    "localGameVersion": "6.42",
+    "publishedGameVersion": "6.41",
+    "status": "Lokalno, bez commita/deploya. QA-only dijagnostika čeka prvi native zapis; prviEaster/startup/ANR nisu zatvoreni.",
+    "evidence": "docs/theme-visual-audit/loading-diagnostics-2026-10-30/report.json",
+    "documentation": "docs/theme-visual-audit/loading-diagnostics-2026-10-30/README.md",
+    "change": "Pasivno prati javne PNG load/decode faze, rok i konačnu spremnost u deljenom preloaderu i Podešavanjima. Samo QA host, 200 memorijskih zapisa, bez query/hash/nalog podataka. Retry, LRU, rokovi, PNG i dimenzije ne menjaju se.",
+    "localProof": "Kontrolisani timeout/load/decode/retry/error/fallback i privatnost PASS. Stvarni PNG Edge411x891:10tema×28spremnih PNG,0grešaka; retention i skrivene kontrole/sobe regresije PASS. Svi browser odgovori su lokalni; nema naloga ili stvarnog QA poziva.",
+    "boundary": "Nema nove native sesije, partije, oglasa, preuzimanja, DB pristupa ili primenjene PNG kompresije. Utvrditi konkretnu fazu neuspeha tek nakon korisnikove objave. Nije dokaz popravljenog ANR-a ili ubrzanja."
+  },
   "hiddenRoomLoadingVerification20261030": {
     "localGameVersion": "6.41",
-    "status": "R37 lokalno, nije objavljeno niti potvrđeno na Androidu.",
+    "status": "R37 objavljen v6.41/429cec22 na oba servisa; ciljana Android potvrda tri sobe u Green/Neon. Prvi izbor Vaskršnje i dalje traži ponavljanje; brzina/ANR nisu zatvoreni.",
+    "postDeploy": {
+      "evidence": "docs/theme-visual-audit/postdeploy641-2026-10-30/report.json",
+      "publicCode": "Oba servisa HTTP200, šest klijentskih fajlova odgovara lokalnom posle CRLF/LF normalizacije: game6.41, leaderboard4, onlinePlayers6, invite4, header6, Settings4. QA aplikacija ponovo otvorena; nije čitan privatni WebView byte-hash.",
+      "nativeRooms": "Green/Neon: Top lista globalni i lokalni tab, Online igrači zaglavlje/pretraga/sopstveni red, Pozovi prijatelja dinamičke kartice i PowerIndex/friend/search/send PNG. Bez slanja poziva. Ovo nije10/10nativeprolaz ili merenje skrivenih zahteva; oko uz drugog igrača nije bilo u prikazanoj listi.",
+      "themeChoices": "Neon iMoon primenjeni prvim izborom. PrviEaster ostavioNeon, drugiEaster uspeo. PovratakNeon i završniGreen jednim izborom; kompletni Settings/menu PNG. Keš nije brisan, nije potvrda hladnog transfera ili uzrokaANR-a.",
+      "remaining": "ActivityCOLD13476ms nije vreme spremnog menija ili validno poređenje brzine sa prethodnim prolazom. Prelazni/nepotpuni kadrovi i prviEaster neuspeh ostaju otvoreni. Hotseat ponudio unos za novu partiju, otkazano; aktivna promena skinova nije proverena. Nema nove partije/reklame/nagradnog dugmeta ili DB pristupa. Saldo12168vizuelno isti; nije puni DB audit. Prvi emulator vraćen iz pauze u running; drugiGreen meni. Nema novih runtime izmena u ovom prolazu."
+    },
     "evidence": "docs/theme-visual-audit/postdeploy640-2026-10-30/report.json",
     "change": "Top lista, Online igrači i Pozovi prijatelja automatski obrađuju samo prikazane slike; nema bezuslovne pripreme skrivenih soba pri startu/promeni teme. Otvaranje sobe, class/style promene i dinamičke kartice pokreću povezivanje. Eksplicitni preload ostaje dostupan.",
     "isolatedProof": "Stvarna tri kontrolera i PNG:14 zahteva/719184B pri startu->0;126 zahteva kroz deset skrivenih tema->0. Deset tema puta četiri aktivna kontejnera=40 prolazi, uključujući deljeno oko i praznu listu u igri, dinamički PowerIndex i inline otvaranje. Nema browser grešaka/404.",
-    "boundary": "Izolovani localhost DOM, bez naloga/socketa. To nije ukupni saobraćaj aplikacije ili dokaz uzroka Android zastoja. Nema novih PNG, promene DNK/stila/palete, dimenzija, tipografije, pravila igre ili ekonomije. Čeka korisnikov commit/deploy i ciljanu native proveru."
+    "boundary": "Izolovani localhost DOM, bez naloga/socketa. To nije ukupni saobraćaj aplikacije ili dokaz uzroka Android zastoja. Nema novih PNG, promene DNK/stila/palete, dimenzija, tipografije, pravila igre ili ekonomije. Objavljene izmene imaju ciljanu potvrdu u postDeploy; preostale granice ostaju otvorene."
   },
   "preloadRetentionVerification20261030": {
     "localGameVersion": "6.40",

@@ -22,6 +22,12 @@ To je odvojeno od automatskih trofejnih bonusa (Andrija2000/Sara500) i četiri r
 
 ## Sledeći koraci
 
+**Lokalna v6.42, još neobjavljena:** završena [priprema QA-only PNG dijagnostike](loading-diagnostics-2026-10-30/README.md). Testovi load/decode/timeout/retry i stvarnih PNG deset tema prolaze. Nema primenjene kompresije ili nove emulator sesije. Posle korisnikovog commita/deploya prikupiti namenski QA zapis prvog/ponovljenog Easter izbora; ne zatvarati startup/ANR bez uzroka i native dokaza. Donji v6.41 presek ostaje poslednji objavljeni dokaz.
+
+**Aktuelno — v6.41/429cec22 objavljena:** šest javnih klijentskih fajlova potvrđeno na oba servisa. R37 ima ciljanu native potvrdu tri sobe uGreen/Neon, uključujući oba Top lista taba i dinamičke invite ikone. [23 kadra i granice](postdeploy641-2026-10-30/index.html). Neon/Moon prvi izbor i povratakNeon/Green uspeli; **prviEaster i dalje traži ponavljanje**. Hladni transfer/start iANR ostaju otvoreni; Activity13476msnije app-ready mera. Hotseat nije ponudio nastavak, unos za novu partiju otkazan; aktivni skin test ostaje otvoren. Nema novog meča/oglasa/nagrade/DB pristupa ili runtime izmene. Oba emulatora rade, drugiGreen meni.
+
+Sledeća prioritetna provera: razdvojiti prvi transfer/decode od opterećenja Android emulatora i potvrditi aktivnu promenu skinova kada postoji dozvoljena test partija. Ne otvarati novi duel ili preuzimati nagrade radi ove provere. Raniji lokalniR37 odeljak niže čuva istoriju; više ne čeka objavu.
+
 **Aktuelno — lokalna R37/v6.41:** tri skrivena sobna kontrolera odlažu automatske PNG zahteve do prikaza sobe. Izolovano14zahteva/719184B→0 i126→0kroz skrivene teme;40vidljivih stanja10tema, deljene ikone i dinamičke kartice prolaze. Čeka korisnikov commit/deploy i ciljanu native proveru prvih izbora/sobnih otvaranja. [Dokazi](postdeploy640-2026-10-30/index.html).
 
 **Objavljena v6.40/d38aa6aa:** oba servisa potvrđena. QA pregled konačno prikazaoGreen/Neon/Easter/Light/Moon i uspešan povratakGreen posle četiri druge teme. **PrviNeon/Easter/Moon izbori nisu pouzdani**; ponovljeni uspeli. ActivityCOLD19194ms i nepotpuni kadrovi nisu app-ready mera ili dokaz uzrokaANR-a. Nema nove partije/oglasa/nagrade/DBpristupa; oba emulatora u radu, drugiGreen meni. Lokalna R36 nije poništena, ali ova sesija ne potvrđuje njene unutrašnje LRU vrednosti na Androidu. Odeljak „lokalnaR36” ispod čuva raniji presek.

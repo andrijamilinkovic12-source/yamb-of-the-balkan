@@ -1,5 +1,15 @@
 # Početno učitavanje — 30.10.2026.
 
+## Lokalna v6.42 — dijagnostika, još bez objave
+
+[Pripremljeni zapis i provere](loading-diagnostics-2026-10-30/README.md): QA-only PNG load/decode/timeout/ready, bez podataka naloga; retry i rokovi isti. Stvarni lokalni PNG: 10 tema × 28 spremnih slika, bez grešaka, plus retention/skrivene kontrole regresije PASS. Vaskršnja paket 4.604.051 B; probna lossless kompresija nije primenjena. Prvi Easter i ANR ostaju otvoreni. Nema novih emulator radnji, commita ili deploya. Objavljena osnova i dalje v6.41; odeljci niže čuvaju istoriju.
+
+## Posle objave v6.41 — ciljana native potvrda, prviEaster ostaje otvoren
+
+[Javne verzije i23Android kadra](postdeploy641-2026-10-30/index.html). Oba servisa429cec22, šest JS fajlova potvrđeno. Tri sobeGreen/Neon prikazuju svojePNG pri otvaranju: Top lista oba taba, Online igrači header/search/sopstveni red, Pozovi prijatelja dinamičke kartice iPowerIndex/friend/search/send. Native mrežni zahtevi nisu instrumentovani, pa lokalnih14→0i126→0ostaju izolovane mere.
+
+Neon/Moon prvi izbor i povratakNeon/Green uspešni. PrviEaster ostavioNeon; ponovljeni uspeo. Keš nije brisan. ActivityCOLD13476msnije app-ready vreme niti validna mera ubrzanja u odnosu na6.40; prvi emulator bio pauziran tokom ovog pregleda i potom vraćenrunning. Prelazni/nepotpuni kadrovi i uzrokANR-a ostaju otvoreni. Hotseat unos za novu partiju otkazan; aktivni skin test nije izvršen. Bez nove partije, oglasa/nagradnog dugmeta, DB pristupa ili runtime izmene; drugiGreen meni, prikazani saldo12168isti.
+
 ## Aktuelno: v6.40 objavljena; R37/v6.41 lokalna
 
 [Android i lokalni dokazi](postdeploy640-2026-10-30/index.html). Oba servisa d38aa6aa, game.js6.40/header6/Settings4. Uspešan povratakGreen i konačni prikazi pet tema, ali prviNeon/Easter/Moon izbori tražili ponavljanje.56javno proverene PNG putanje sve200. Activity COLD19194msnije vreme spremnog menija; start i uzrok ANR-a nisu zatvoreni. Bez novih partija, reklama/nagradnih dugmadi ili DB pristupa. Oba emulatora vraćena u rad, drugiGreen meni.

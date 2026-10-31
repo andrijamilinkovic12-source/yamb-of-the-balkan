@@ -5,6 +5,7 @@
     const roles = ['room','profile','sound','music','vibration','display-theme','language','terms','privacy'];
     const shared = new Set(['sound','music','vibration']);
     const cache = new Map();
+    const pendingTraces = new Map();
     let request = 0;
     const activeTheme = () => window.themeGameHeader?.activeTheme?.() || 'dark';
     const asset = (role, theme = activeTheme()) => {
@@ -19,18 +20,25 @@
     const sources = theme => [...new Set(roles.map(role => asset(role, theme)))];
     const preload = src => {
         if (cache.has(src)) return cache.get(src);
+        const trace = window.themeLoadingDiagnostics?.start(src, 'settings');
+        if (trace) pendingTraces.set(src, trace);
         const promise = new Promise((resolve, reject) => {
             const img = new Image();
             let settled = false;
             img.onload = async () => {
                 if (settled) return;
                 settled = true;
-                try { if (img.decode) await img.decode(); } catch (_) { /* onload is sufficient. */ }
+                trace?.loaded();
+                try { if (img.decode) await img.decode(); } catch (_) { trace?.decodeFallback(); /* onload is sufficient. */ }
+                trace?.ready(img.naturalWidth, img.naturalHeight);
+                pendingTraces.delete(src);
                 resolve(img);
             };
             img.onerror = error => {
                 if (settled) return;
                 settled = true;
+                trace?.error();
+                pendingTraces.delete(src);
                 reject(error);
             };
             img.fetchPriority = 'high';
@@ -49,7 +57,10 @@
         let timer;
         return Promise.race([
             loading,
-            new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Settings artwork timeout')), timeoutMs); })
+            new Promise((_, reject) => { timer = setTimeout(() => {
+                visibleSources.forEach(src => pendingTraces.get(src)?.timeout(timeoutMs));
+                reject(new Error('Settings artwork timeout'));
+            }, timeoutMs); })
         ]).finally(() => clearTimeout(timer));
     };
     const apply = async () => {

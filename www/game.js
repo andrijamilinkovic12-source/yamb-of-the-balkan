@@ -2619,7 +2619,8 @@ class YambApp {
         let entry = this.themePreloadImages.get(src);
         if (!entry) {
             const img = new Image();
-            entry = { image: img, ready: false, pixels: 0, usedAt: Date.now() };
+            entry = { image: img, ready: false, pixels: 0, usedAt: Date.now(),
+                trace: window.themeLoadingDiagnostics?.start(src, 'theme-preloader') };
             entry.promise = new Promise(resolve => {
                 let settled = false, decoding = false;
                 const finish = success => {
@@ -2627,6 +2628,8 @@ class YambApp {
                     settled = true;
                     entry.ready = success;
                     entry.pixels = success ? img.naturalWidth * img.naturalHeight : 0;
+                    if (success) entry.trace?.ready(img.naturalWidth, img.naturalHeight);
+                    else entry.trace?.error();
                     if (!success && this.themePreloadImages.get(src) === entry) this.themePreloadImages.delete(src);
                     resolve(success);
                 };
@@ -2635,8 +2638,9 @@ class YambApp {
                 img.onload = async () => {
                     if (settled || decoding) return;
                     decoding = true;
+                    entry.trace?.loaded();
                     try { if (typeof img.decode === 'function') await img.decode(); }
-                    catch (_) { /* A loaded image remains a usable fallback. */ }
+                    catch (_) { entry.trace?.decodeFallback(); /* A loaded image remains a usable fallback. */ }
                     finish(true);
                 };
                 img.onerror = () => finish(false);
@@ -2654,7 +2658,7 @@ class YambApp {
         let timer;
         return Promise.race([
             entry.promise,
-            new Promise(resolve => { timer = setTimeout(() => resolve(false), timeoutMs); })
+            new Promise(resolve => { timer = setTimeout(() => { entry.trace?.timeout(timeoutMs); resolve(false); }, timeoutMs); })
         ]).finally(() => clearTimeout(timer));
     }
 

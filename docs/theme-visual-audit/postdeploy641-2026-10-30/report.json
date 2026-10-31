@@ -1,0 +1,310 @@
+{
+  "date": "2026-10-30",
+  "version": "6.41",
+  "commit": "429cec221fae3d415581dbff2148a6f0c4ce1a43",
+  "published": {
+    "at": "2026-10-30T19:15:08.211Z",
+    "commit": "429cec221fae3d415581dbff2148a6f0c4ce1a43",
+    "scope": "Public HTML/JS GET only; not proof of loaded Android byte hashes.",
+    "rows": [
+      {
+        "host": "https://yamb-reconnect-qa.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.41",
+            "expectedVersion": "6.41",
+            "status": 200,
+            "sha256Normalized": "450da3a4fc12fb57adea48d3fbf6e2575b287c7ac7d99e719c229b77db14e356",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-leaderboard-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-online-players-room.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-invite-friend-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+            "matchesLocalNormalized": true
+          }
+        ]
+      },
+      {
+        "host": "https://yamb-of-the-balkan.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.41",
+            "expectedVersion": "6.41",
+            "status": 200,
+            "sha256Normalized": "450da3a4fc12fb57adea48d3fbf6e2575b287c7ac7d99e719c229b77db14e356",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-leaderboard-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-online-players-room.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-invite-friend-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "fbc11918456086e13fd3665c08dfe9a310f2c1de022378c0630281144f7bf79c",
+            "matchesLocalNormalized": true
+          }
+        ]
+      }
+    ]
+  },
+  "nativeScope": "Separate com.yamb.balkan.staging on emulator-5556; ordinary visible native screenshots and taps only. No private WebView/CDP/session inspection. Public files verified and QA app force-stopped/reopened, not an Android byte-hash proof. Original1440x3120 geometry unchanged; image/HTTP cache and app data not cleared.",
+  "startup": {
+    "activityStatus": "ok",
+    "launchState": "COLD",
+    "activityTotalMs": 13476,
+    "activityWaitMs": 13523,
+    "scope": "Android Activity launch only; not time to ready menu or cold network/image cache. One uncontrolled sample cannot establish improvement over v6.40. First emulator was paused for this run; earlier runs had different contention. Partial/transitional frames remained. ANR cause still unproven; no new ANR dialog in inspected frames, no continuous monitoring."
+  },
+  "themeChoices": [
+    {
+      "from": "dark",
+      "to": "neon",
+      "attempts": 1,
+      "result": "complete Settings"
+    },
+    {
+      "from": "neon",
+      "to": "easter",
+      "attempts": 1,
+      "result": "failed; retained Neon"
+    },
+    {
+      "from": "neon",
+      "to": "easter",
+      "attempts": 2,
+      "result": "complete Settings after repeated choice"
+    },
+    {
+      "from": "easter",
+      "to": "moon",
+      "attempts": 1,
+      "result": "complete Settings"
+    },
+    {
+      "from": "moon",
+      "to": "neon",
+      "attempts": 1,
+      "result": "complete Settings on return"
+    },
+    {
+      "from": "neon",
+      "to": "dark",
+      "attempts": 1,
+      "result": "complete Settings and final main menu"
+    }
+  ],
+  "R37": {
+    "status": "Targeted native visible-room confirmation; not all ten Android themes or proof of zero hidden network requests on Android",
+    "themes": [
+      "dark",
+      "neon"
+    ],
+    "rooms": [
+      "Top lista",
+      "Online igrači",
+      "Pozovi prijatelja"
+    ],
+    "leaderboard": "Global/local tab controls and headers loaded with the selected theme; canonical podium medals visible. No score changes.",
+    "onlinePlayers": "Selected theme room/search icons and self row loaded. Only the signed-in player was listed while first emulator paused; friend/duel/eye controls beside another player and live-eye activation were not tested.",
+    "invite": "Selected theme header/friend/search/send/PowerIndex PNG visible in dynamically rendered host/rival/friend cards. Other test profile offline. No friend request, invitation, match or share-link action.",
+    "localEvidence": "Earlier isolated comparison:14PNG/719184B->0startup,126->0during hidden-theme changes,40visible cases across10themes. Those counts are local evidence, not native traffic measurements."
+  },
+  "skinBoundary": "Hotseat mode click offered new-player-name input, not a saved-game continuation. Input canceled through X without entering/confirming a name. No new game, dice roll or score entry. Active-game theme/skin speed, dice/buttons/counter readiness remain unverified in this run.",
+  "financialBoundary": "No ad, reward/rematch button, purchase, game completion, invitation or DB read/write. Displayed Sara balance12168before/after; not a complete profile/server accounting audit.",
+  "restoration": "First emulator observed at Moon main menu before pause; adb emu avd resume/status confirmed running at end. Second left on complete Green main menu. No geometry/data clearing or account switching.",
+  "runtimeChanges": "None in this run. Only verification scripts, definitions, registry metadata and evidence updated; no new PNG/CSS/JS app behavior or version bump.",
+  "open": [
+    "First Vaskršnja theme selection still required a second user choice",
+    "Precise startup/first download and cause of previous ANR",
+    "Active-game skin/theme readiness: no saved Hotseat continuation offered",
+    "Shared eye/live timer under actual online gameplay",
+    "Prior Android finish-panel geometry case, two-device invite/reconnect/rematch and physical S25 ads/rewards remain separate"
+  ],
+  "images": [
+    {
+      "file": "qa-deploy641-before.jpg",
+      "source": "qa-deploy641-before.png",
+      "label": "Drugi QA emulator pre ponovnog otvaranja: Green meni, saldo12168."
+    },
+    {
+      "file": "qa-deploy641-start.jpg",
+      "source": "qa-deploy641-start.png",
+      "label": "Prvi sačuvani kadar posle Android Activity otvaranja; Activity mera nije vreme do spremnog menija."
+    },
+    {
+      "file": "qa-deploy641-menu.jpg",
+      "source": "qa-deploy641-menu.png",
+      "label": "Naknadni meni ima nepotpuno iscrtan donji deo pozadine. Ne označava se kao potpuno stabilan prvi kadar."
+    },
+    {
+      "file": "qa-deploy641-green-leaderboard-ready.jpg",
+      "source": "qa-deploy641-green-leaderboard-ready.png",
+      "label": "Green Top lista: globalni tab, zaglavlje, kontrole i medalje."
+    },
+    {
+      "file": "qa-deploy641-green-leaderboard-local.jpg",
+      "source": "qa-deploy641-green-leaderboard-local.png",
+      "label": "Green Top lista: lokalni tab i njegova ikona."
+    },
+    {
+      "file": "qa-deploy641-green-online-ready.jpg",
+      "source": "qa-deploy641-green-online-ready.png",
+      "label": "Green Online igrači: ikona sobe, pretraga i sopstveni red. Nema drugog reda/aktivnog oka u ovoj listi."
+    },
+    {
+      "file": "qa-deploy641-green-invite-ready.jpg",
+      "source": "qa-deploy641-green-invite-ready.png",
+      "label": "Green Pozovi prijatelja: dinamičke kartice, friend/search/send i Indeks moći; bez slanja poziva."
+    },
+    {
+      "file": "qa-deploy641-neon-first.jpg",
+      "source": "qa-deploy641-neon-first.png",
+      "label": "Prvi Neon izbor: još je vidljiv ekran pripreme."
+    },
+    {
+      "file": "qa-deploy641-neon-result.jpg",
+      "source": "qa-deploy641-neon-result.png",
+      "label": "Bez ponovljenog izbora: kompletna Neon Podešavanja."
+    },
+    {
+      "file": "qa-deploy641-easter-first.jpg",
+      "source": "qa-deploy641-easter-first.png",
+      "label": "Prvi Vaskršnji izbor: priprema, konačan uspeh još nije potvrđen."
+    },
+    {
+      "file": "qa-deploy641-easter-result.jpg",
+      "source": "qa-deploy641-easter-result.png",
+      "label": "Ishod prvog Vaskršnjeg izbora: ostao Neon. Nalaz prvog učitavanja ostaje otvoren."
+    },
+    {
+      "file": "qa-deploy641-easter-retry.jpg",
+      "source": "qa-deploy641-easter-retry.png",
+      "label": "Ponovljeni izbor: kompletna Vaskršnja Podešavanja."
+    },
+    {
+      "file": "qa-deploy641-moon-first.jpg",
+      "source": "qa-deploy641-moon-first.png",
+      "label": "Prvi Mesečev izbor: ekran pripreme."
+    },
+    {
+      "file": "qa-deploy641-moon-result.jpg",
+      "source": "qa-deploy641-moon-result.png",
+      "label": "Bez ponovljenog izbora: kompletna Podešavanja Mesečevog Sjaja."
+    },
+    {
+      "file": "qa-deploy641-neon-return.jpg",
+      "source": "qa-deploy641-neon-return.png",
+      "label": "Jedan povratni izbor posle Easter/Moon: ponovo kompletan Neon."
+    },
+    {
+      "file": "qa-deploy641-neon-leaderboard.jpg",
+      "source": "qa-deploy641-neon-leaderboard.png",
+      "label": "Neon Top lista: globalni tab sa njegovim kanonskim PNG."
+    },
+    {
+      "file": "qa-deploy641-neon-leaderboard-local.jpg",
+      "source": "qa-deploy641-neon-leaderboard-local.png",
+      "label": "Neon Top lista: lokalni tab; nema zelenih kontrolnih ikona."
+    },
+    {
+      "file": "qa-deploy641-neon-online.jpg",
+      "source": "qa-deploy641-neon-online.png",
+      "label": "Neon Online igrači: zaglavlje i search PNG; samo sopstveni red."
+    },
+    {
+      "file": "qa-deploy641-neon-invite.jpg",
+      "source": "qa-deploy641-neon-invite.png",
+      "label": "Neon Pozovi prijatelja: sopstveni friend/search/send/PowerIndex PNG u dinamičkim karticama."
+    },
+    {
+      "file": "qa-deploy641-hotseat-choice-ready.jpg",
+      "source": "qa-deploy641-hotseat-choice-ready.png",
+      "label": "Hotseat nije ponudio nastavak; otvorio je unos za novu partiju. Ime nije uneseno niti potvrđeno."
+    },
+    {
+      "file": "qa-deploy641-hotseat-cancel.jpg",
+      "source": "qa-deploy641-hotseat-cancel.png",
+      "label": "Unos je otkazan preko X, vraćen Neon meni. Nema nove partije ili skin testa u igri."
+    },
+    {
+      "file": "qa-deploy641-green-return-result.jpg",
+      "source": "qa-deploy641-green-return-result.png",
+      "label": "Jednim povratnim izborom ponovo kompletna Green Podešavanja."
+    },
+    {
+      "file": "qa-deploy641-final-menu.jpg",
+      "source": "qa-deploy641-final-menu.png",
+      "label": "Završni kompletan Green meni; prikazani saldo i dalje12168."
+    }
+  ]
+}
