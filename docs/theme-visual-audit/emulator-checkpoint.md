@@ -1,5 +1,15 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## 31.10.2026 — native v6.42 i lokalni R39
+
+[Izveštaj](postdeploy642-2026-10-31/index.html). Oba servisa2b531195 imaju6.42/Settings5/diagnostics1i još četiri odgovarajuća kontrolera. Oba emulatora povezana; prvi samo statusrunning, nije pauziran. Druga QA aplikacija force-stop/otvorena bez brisanja keša/podataka/geometrije. am-start istek25s, zatim vidljiv gradijent pa kompletanGreenmeni; nije app-ready mera.1,42GBslobodnood15,23GB.
+
+GreenPodešavanja otvorena. PrviEaster izbor nije primenjen:28PNGuspešno završe, poslednji18052ms, ali oba6s prozora ranije isteknu.36Easter timeoutdogađaja(24waiting-load/12decode),0PNGgrešaka. PonovljenEaster prikaže kompletnaPodešavanja bez novihPNGtimingdogađaja. Green vraćen jednim izborom. Poslednja dva native screencap prenosa istekla su; svežComputerUseizborprozorai screenshot potvrdio kompletan završniGreenmeni/saldo12168. Nije pravljen zamenski nativePNG.
+
+Namenski prefiks Console na ovomWebView-u nije pronađen prvobitnim uskimtagfilterom; currentQAPID+tačanprefiks prekoinfo-tagova daje validne događaje. Collector popravljen lokalno, nikada ne čuva sirovi log. Nema CDP/privatnogstorage/noveigre/oglasa/nagradnih dugmadi/DBpristupa. Prikazani saldo12168isti u pregledanim menijima; nije DBaudit.
+
+Lokalna6.43daje postojećem poslu duži24s retry posle prvih6s. Reprodukcija18s i zaštite prolaze; nema PNG/izgleda/dimenzija izmene. Čeka korisnikov commit/deploy i native potvrdu. Ne označavati sporost/startup/ANR kao otklonjene.
+
 ## Lokalna v6.42 — bez novog emulator prolaza
 
 Korisnik potvrđuje da prethodnu evidenciju nije komitovao/deployovao. Pripremljena [QA dijagnostika učitavanja](loading-diagnostics-2026-10-30/README.md), lokalni testovi deset tema i regresije prolaze. Nema PNG izmene ili nove igre/oglasa/nagrade/DB pristupa. Emulatori u ovom nastavku nisu korišćeni; poslednje stvarno potvrđeno stanje je iz v6.41 odeljka. Prva Vaskršnja i startup/ANR ostaju otvoreni; za novi native zapis potrebna je korisnikova objava v6.42.

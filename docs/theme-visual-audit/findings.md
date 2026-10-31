@@ -1,5 +1,11 @@
 # Vizuelni audit PNG assetsa
 
+## R39 — prerano odustajanje, 31.10.2026.
+
+[Objavljena6.42/nativenalaz i lokalna6.43](postdeploy642-2026-10-31/index.html). JedanEaster izbor:6+6s isteknu, poslednjiod28PNGspreman18052ms.0PNGgrešaka;36timeoutdogađaja24load/12decode. Drugiizbor uspe bez novihdogađaja; Green vraćen. Time je potvrđen razlog potrebe za drugim izborom u sesiji. Razlog samog kašnjenja/ANR-a nije dokazan.
+
+Lokalno6.43zadržava prvi6s pokušaj, drugi daje24s istim deljenim zahtevima. Reprodukcija sa stvarnim metodima/virtuelnim18s završetkom:pre odbije,posle primeni iz prvog izbora,0duplihImage. Konačan neuspeh30s,offline6s,kasna spremnost/promena naloga i postojeće regresije PASS. StvarniPNG10tema u lokalnombrowseru PASS. Nije ubrzanje i još nema objave/nativepotvrde. PNG/palete/dimenzije ne menjaju se.
+
 ## R38 — lokalna v6.42, merenje faze učitavanja
 
 [Dijagnostika i granice](loading-diagnostics-2026-10-30/README.md). QA-only javni PNG timing load/decode/timeout/ready; bez promene rokova/retry/LRU ili PNG. Kontrolisani kvarovi i stvarni lokalni PNG10tema×28prolaze; retention i odlaganje skrivenih kontrola/soba ostaju ispravni. Produkcioni recorder isključen. Nema commita/deploya ili novih native radnji; prviEaster i uzrokANR-a ostaju otvoreni. R38 je dijagnostička priprema, nije potvrđena popravka.

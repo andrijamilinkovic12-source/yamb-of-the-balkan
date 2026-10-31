@@ -1,0 +1,67 @@
+{
+  "scope": "Isolated Edge 411x891; intercepted QA origin served entirely from local files. Actual PNG/decode and menu/Settings methods, no app constructor/account/socket/network server. Not Android latency or ANR proof.",
+  "rows": [
+    {
+      "theme": "dark",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "light",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "medium",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "winter",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "neon",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "amethyst",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "easter",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "desert",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "moon",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    },
+    {
+      "theme": "severna",
+      "ready": true,
+      "readyRecords": 28,
+      "failures": 0
+    }
+  ],
+  "retainedDiagnosticRecords": 200,
+  "errors": []
+}

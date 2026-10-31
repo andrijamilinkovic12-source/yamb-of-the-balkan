@@ -2692,7 +2692,7 @@ class YambApp {
             .then(results => results.every(Boolean));
     }
 
-    warmThemePack(theme) {
+    warmThemePack(theme, { timeoutMs = 6000 } = {}) {
         const pack = this.getThemeLoadingPack(theme);
         if (!pack) return { critical: Promise.resolve(), all: Promise.resolve() };
 
@@ -2711,7 +2711,7 @@ class YambApp {
         const warmup = { sources, settled: false };
         // Fetch the visible pack in one wave; a slow icon must not block later icons.
         const critical = this.preloadThemeSources(criticalSources, {
-            concurrency: 24, priority: 'high', timeoutMs: 6000
+            concurrency: 24, priority: 'high', timeoutMs
         }).then(ready => {
             warmup.settled = true;
             if (!ready && this.themeWarmups.get(theme) === warmup) this.themeWarmups.delete(theme);
@@ -6104,18 +6104,20 @@ class YambApp {
                 ? (window.themeSettingsRoom?.sources?.(nextTheme) || []) : [];
             // The Settings controller owns its decoded images. Do not create a
             // second set of Image objects for the same visible pack in parallel.
-            const preparePacks = () => {
-                const warmup = this.warmThemePack(nextTheme);
+            const preparePacks = (timeoutMs = 6000) => {
+                const warmup = this.warmThemePack(nextTheme, { timeoutMs });
                 const settingsPackReady = settingsSources.length && window.themeSettingsRoom?.prepare
-                    ? window.themeSettingsRoom.prepare(nextTheme, { timeoutMs: 6000 }).then(() => true, () => false)
-                    : this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs: 6000 });
+                    ? window.themeSettingsRoom.prepare(nextTheme, { timeoutMs }).then(() => true, () => false)
+                    : this.preloadThemeSources(settingsSources, { concurrency: 4, priority: 'high', timeoutMs });
                 return Promise.all([warmup.critical, settingsPackReady]);
             };
             const readiness = preparePacks().then(result => {
                 // A timeout leaves the existing download/decode in progress.
-                // Reuse it once instead of requiring the player to select again.
+                // Native QA showed valid PNGs finishing at ~18s, after both 6s
+                // windows had expired. Give the shared work one longer retry;
+                // readiness still commits immediately when both packs finish.
                 if (result.some(ready => ready === false) && isCurrentSelection()
-                    && globalThis.navigator?.onLine !== false) return preparePacks();
+                    && globalThis.navigator?.onLine !== false) return preparePacks(24000);
                 return result;
             }).then(result => isCurrentSelection() && result.every(ready => ready !== false));
             // The gate covers both visible packs and the bounded retry.

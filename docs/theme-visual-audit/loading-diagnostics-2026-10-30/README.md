@@ -1,5 +1,7 @@
 # Lokalna dijagnostika učitavanja — v6.42
 
+**Dopuna31.10:** v6.42je objavljena/potvrđena. [Native zapis](../postdeploy642-2026-10-31/index.html) pokazuje prvih6+6sisteklihpre završetka poslednjegEasterPNG-a18052ms. Lokalna6.43ispravlja prerano odustajanje jednim dužimretry-em; nije još objavljena. Collector sada koristi isti trenutniQAPIDi tačanprefiks prekoinfo-tagova, jer početniCapacitor/Consolefilter nije pronalazio događaje na ovomWebView-u. Donji tekst čuva originalnu pripremu.
+
 Status: lokalno, bez commita ili deploya. Poslednja potvrđena javna verzija ostaje v6.41/429cec22. Ovo je priprema za utvrđivanje uzroka prvog neuspešnog izbora Vaskršnje teme i sporog pokretanja; nije potvrda da su ti problemi popravljeni.
 
 ## Šta je promenjeno

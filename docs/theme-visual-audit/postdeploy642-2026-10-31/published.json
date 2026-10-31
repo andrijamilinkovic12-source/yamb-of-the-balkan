@@ -1,0 +1,131 @@
+{
+  "at": "2026-10-31T10:10:42.548Z",
+  "commit": "2b531195b274c55373ae2f591973e8b2f19cec65",
+  "scope": "Public HTML/JS GET only; not proof of loaded Android byte hashes.",
+  "rows": [
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "status": 200,
+      "resources": [
+        {
+          "file": "game.js",
+          "version": "6.42",
+          "expectedVersion": "6.42",
+          "status": 200,
+          "sha256Normalized": "854151718bb0a853d0d44a73a2cffa40e2fddcdf93485718198b53760a400acf",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-leaderboard-room.js",
+          "version": "4",
+          "expectedVersion": "4",
+          "status": 200,
+          "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-online-players-room.js",
+          "version": "6",
+          "expectedVersion": "6",
+          "status": 200,
+          "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-invite-friend-room.js",
+          "version": "4",
+          "expectedVersion": "4",
+          "status": 200,
+          "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-game-header.js",
+          "version": "6",
+          "expectedVersion": "6",
+          "status": 200,
+          "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-settings-room.js",
+          "version": "5",
+          "expectedVersion": "5",
+          "status": 200,
+          "sha256Normalized": "13283cacd264c6d4ce7de2d315cb96dff1f3f11a27340ec1b0e81207c1125348",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-loading-diagnostics.js",
+          "version": "1",
+          "expectedVersion": "1",
+          "status": 200,
+          "sha256Normalized": "d760216c06877bf7a4deaa746dc1c816c4fad68ca06a550614d3ea8a1dc68cc4",
+          "matchesLocalNormalized": true
+        }
+      ]
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "status": 200,
+      "resources": [
+        {
+          "file": "game.js",
+          "version": "6.42",
+          "expectedVersion": "6.42",
+          "status": 200,
+          "sha256Normalized": "854151718bb0a853d0d44a73a2cffa40e2fddcdf93485718198b53760a400acf",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-leaderboard-room.js",
+          "version": "4",
+          "expectedVersion": "4",
+          "status": 200,
+          "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-online-players-room.js",
+          "version": "6",
+          "expectedVersion": "6",
+          "status": 200,
+          "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-invite-friend-room.js",
+          "version": "4",
+          "expectedVersion": "4",
+          "status": 200,
+          "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-game-header.js",
+          "version": "6",
+          "expectedVersion": "6",
+          "status": 200,
+          "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-settings-room.js",
+          "version": "5",
+          "expectedVersion": "5",
+          "status": 200,
+          "sha256Normalized": "13283cacd264c6d4ce7de2d315cb96dff1f3f11a27340ec1b0e81207c1125348",
+          "matchesLocalNormalized": true
+        },
+        {
+          "file": "theme-loading-diagnostics.js",
+          "version": "1",
+          "expectedVersion": "1",
+          "status": 200,
+          "sha256Normalized": "d760216c06877bf7a4deaa746dc1c816c4fad68ca06a550614d3ea8a1dc68cc4",
+          "matchesLocalNormalized": true
+        }
+      ]
+    }
+  ]
+}

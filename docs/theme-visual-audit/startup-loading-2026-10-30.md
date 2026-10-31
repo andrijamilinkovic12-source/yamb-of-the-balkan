@@ -1,5 +1,11 @@
 # Početno učitavanje — 30.10.2026.
 
+## 31.10.2026 — objavljena6.42, lokalna6.43
+
+[Native timing i slike](postdeploy642-2026-10-31/index.html). Oba servisa2b531195/6.42, sedam javnih fajlova odgovara lokalnoj objavljenoj osnovi. QA prviEaster odustane posle6+6s;28slika konačno spremno, poslednja18052ms.36timeoutdogađaja:24preonload/12decode. PonovljenEaster uspešan bez novihPNGdogađaja; Green vraćen jednim izborom. To objašnjava drugi izbor u ovoj sesiji, ne uzrok dugog transfera/JS/decode/ANR-a. Računar1,42/15,23GBslobodno; oba emulatora rade, nisu pauzirani. am-start komanda istekla, zatim gradijent pa meni; nema app-ready mere.
+
+**LokalnaR39/v6.43:** isti prvi6s pokušaj, jedan24s retry za već pokrenuti posao. Stvarni metod sa kontrolisanim18s završetkom sada primeni iz prvog izbora; prethodna6.42odbije na12s. Granice greške/offline/naloga i lokalniPNG10tema prolaze. Ovo produžava toleranciju, ne ubrzava PNG. Još nije objavljeno ili native potvrđeno. Nema PNG/dimenzija izmene, nove igre/oglasa/nagrade/DB pristupa.
+
 ## Lokalna v6.42 — dijagnostika, još bez objave
 
 [Pripremljeni zapis i provere](loading-diagnostics-2026-10-30/README.md): QA-only PNG load/decode/timeout/ready, bez podataka naloga; retry i rokovi isti. Stvarni lokalni PNG: 10 tema × 28 spremnih slika, bez grešaka, plus retention/skrivene kontrole regresije PASS. Vaskršnja paket 4.604.051 B; probna lossless kompresija nije primenjena. Prvi Easter i ANR ostaju otvoreni. Nema novih emulator radnji, commita ili deploya. Objavljena osnova i dalje v6.41; odeljci niže čuvaju istoriju.

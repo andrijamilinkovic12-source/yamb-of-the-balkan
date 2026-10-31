@@ -1,0 +1,243 @@
+{
+  "date": "2026-10-31",
+  "publishedVersion": "6.42",
+  "localVersion": "6.43-not-published",
+  "published": {
+    "at": "2026-10-31T10:10:42.548Z",
+    "commit": "2b531195b274c55373ae2f591973e8b2f19cec65",
+    "scope": "Public HTML/JS GET only; not proof of loaded Android byte hashes.",
+    "rows": [
+      {
+        "host": "https://yamb-reconnect-qa.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.42",
+            "expectedVersion": "6.42",
+            "status": 200,
+            "sha256Normalized": "854151718bb0a853d0d44a73a2cffa40e2fddcdf93485718198b53760a400acf",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-leaderboard-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-online-players-room.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-invite-friend-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "5",
+            "expectedVersion": "5",
+            "status": 200,
+            "sha256Normalized": "13283cacd264c6d4ce7de2d315cb96dff1f3f11a27340ec1b0e81207c1125348",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-loading-diagnostics.js",
+            "version": "1",
+            "expectedVersion": "1",
+            "status": 200,
+            "sha256Normalized": "d760216c06877bf7a4deaa746dc1c816c4fad68ca06a550614d3ea8a1dc68cc4",
+            "matchesLocalNormalized": true
+          }
+        ]
+      },
+      {
+        "host": "https://yamb-of-the-balkan.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.42",
+            "expectedVersion": "6.42",
+            "status": 200,
+            "sha256Normalized": "854151718bb0a853d0d44a73a2cffa40e2fddcdf93485718198b53760a400acf",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-leaderboard-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-online-players-room.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-invite-friend-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "5",
+            "expectedVersion": "5",
+            "status": 200,
+            "sha256Normalized": "13283cacd264c6d4ce7de2d315cb96dff1f3f11a27340ec1b0e81207c1125348",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-loading-diagnostics.js",
+            "version": "1",
+            "expectedVersion": "1",
+            "status": 200,
+            "sha256Normalized": "d760216c06877bf7a4deaa746dc1c816c4fad68ca06a550614d3ea8a1dc68cc4",
+            "matchesLocalNormalized": true
+          }
+        ]
+      }
+    ]
+  },
+  "scope": "Separate QA APK emulator-5556. Visible Android screenshots/taps and dedicated public PNG timing prefix, current QA PID only. No CDP/WebView evaluation/private storage/account API/DB. Cache/data/geometry unchanged.",
+  "startup": "am start -W exceeded25s command deadline. Later gradient then full menu observed. No valid Activity TotalTime or precise app-ready measurement. No new ANR dialog in reviewed frames; not continuous monitoring or proof of ANR repair.",
+  "host": {
+    "freeMemoryGB": 1.42,
+    "totalMemoryGB": 15.23,
+    "bothEmulatorsConnected": true,
+    "firstAvdStatus": "running",
+    "firstAvdPausedThisTurn": false,
+    "boundary": "One host snapshot; memory pressure is a possible contributor, not causal proof."
+  },
+  "nativeThemeChoices": [
+    {
+      "from": "dark",
+      "to": "easter",
+      "userSelections": 1,
+      "result": "failed; retained dark"
+    },
+    {
+      "from": "dark",
+      "to": "easter",
+      "userSelections": 2,
+      "result": "success on repeated selection; diagnostic event count remained103"
+    },
+    {
+      "from": "easter",
+      "to": "dark",
+      "userSelections": 1,
+      "result": "success, complete Settings; final main menu restored"
+    }
+  ],
+  "easterTiming": {
+    "readyPngCount": 28,
+    "timeoutEvents": 36,
+    "timeoutByPhase": {
+      "waiting-load": 24,
+      "decode": 12
+    },
+    "latestReadyMs": 18052,
+    "latestMenuReadyMs": 18052,
+    "latestSettingsReadyMs": 8123,
+    "pendingAfterFinalCapture": [],
+    "errors": 0,
+    "finding": "Two6s readiness windows expire while valid shared work is still pending. Menu PNGs finish as late as18052ms; first selection has already rejected. A repeated selection uses prepared images. This explains the repeat-choice failure in this session, not why the whole WebView/startup is slow.",
+    "limits": "waiting-load includes dispatch/onload scheduling, not pure network time. decodeMs includes promise/event-loop scheduling, not CPU-only decoder work. Preserved cache, QA console overhead, memory contention and one session prevent a clean performance benchmark."
+  },
+  "collectorFix": "Original Capacitor/Console-only tag filter returned0. Same current-PID exact-prefix filter with all info tags found39valid events; collector now accepts the dedicated prefix across tags and still exports only allowed PNG fields. No raw logcat saved.",
+  "restoration": "Green Settings confirmed in saved native frame. Close tapped once; two later native screencap commands timed out, so no fabricated final native PNG. Fresh Computer Use window selection and screenshot of Duel_QA_Player2:5556 confirmed complete Green main menu and12168balance. No extra input through Windows UI, no screenshot payload re-saved.",
+  "localFix": "R39/v6.43: first6s attempt retained, one retry gets24s to finish existing shared requests. No second user click needed for the controlled18s case. Ready assets commit immediately; no fixed30s sleep. Permanent timeout stays bounded, offline adds no retry, stale account/selection cannot commit. This extends tolerance; it does not accelerate downloads/decode or fix ANR. Not committed/deployed or Android-confirmed.",
+  "tests": [
+    "Actual methods with virtual clock: v6.42 rejects at12s when PNGs finish at18s; local6.43 applies at18s with12same Image objects: PASS",
+    "Permanent timeout30s, late completion cannot apply, offline6s, account change: PASS",
+    "Cache/retention, Settings retry, decode readiness, in-game preload and account selection regressions: PASS",
+    "Actual local PNG Edge411x891:10themes×28ready,0failure. Retention Green revisit18reprepared/0missing/immediate repeat0new: PASS"
+  ],
+  "safety": "No new game, dice/score entry, ad, reward/rematch click, purchase, invitation or DB access. Displayed balance12168before/after; not full accounting audit. First emulator not manipulated beyond status read; no pause. No native geometry/cache/data clearing.",
+  "remaining": [
+    "Publish local6.43 and confirm first Easter selection without second tap on QA",
+    "Underlying transfer/decode/startup delay and Android ANR cause",
+    "Active-game skin speed, prior finish-panel geometry case, physical S25 ads/rewards, two-device invite/reconnect/rematch"
+  ],
+  "images": [
+    {
+      "file": "qa-deploy642-initial.jpg",
+      "source": "qa-deploy642-initial.png",
+      "label": "Početni Green QA meni, prikazani saldo12168."
+    },
+    {
+      "file": "qa-deploy642-after-launch-timeout.jpg",
+      "source": "qa-deploy642-after-launch-timeout.png",
+      "label": "Posle isteka roka am start -W sačuvan samo početni zeleni gradijent. Nije app-ready merenje."
+    },
+    {
+      "file": "qa-deploy642-start-later.jpg",
+      "source": "qa-deploy642-start-later.png",
+      "label": "Kasnije potpuno prikazan Green meni bez dodatnog restarta."
+    },
+    {
+      "file": "qa-deploy642-settings-settled.jpg",
+      "source": "qa-deploy642-settings-settled.png",
+      "label": "Green Podešavanja i njihove PNG kontrole."
+    },
+    {
+      "file": "qa-deploy642-picker-settled.jpg",
+      "source": "qa-deploy642-picker-settled.png",
+      "label": "Izbor tema pre prvog Easter odabira."
+    },
+    {
+      "file": "qa-deploy642-easter-first.jpg",
+      "source": "qa-deploy642-easter-first.png",
+      "label": "Jedan Easter izbor: priprema još vidljiva na sačuvanom kadru."
+    },
+    {
+      "file": "qa-deploy642-easter-first-result.jpg",
+      "source": "qa-deploy642-easter-first-result.png",
+      "label": "Konačan prvi ishod: zadržana Zelena tema; priprema odustala pre konačne spremnosti."
+    },
+    {
+      "file": "qa-deploy642-easter-retry.jpg",
+      "source": "qa-deploy642-easter-retry.png",
+      "label": "Ponovljen Easter izbor uspešan; prethodno pripremljene slike, bez novih timing događaja."
+    },
+    {
+      "file": "qa-deploy642-return-green.jpg",
+      "source": "qa-deploy642-return-green.png",
+      "label": "Jednim izborom vraćena Zelena tema."
+    }
+  ]
+}

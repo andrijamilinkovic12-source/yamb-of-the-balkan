@@ -32,7 +32,9 @@ function main() {
     };
     const pid = run(['shell', 'pidof', 'com.yamb.balkan.staging']).trim();
     if (!/^\d+$/.test(pid)) throw Error('QA process is not running');
-    const events = parseEvents(run(['logcat', '-d', `--pid=${pid}`, '-e', '\\[YAMB_THEME_LOAD\\]', 'Capacitor/Console:I', '*:S']));
+    // Some WebView builds forward console.info via chromium rather than the
+    // Capacitor tag. Keep the QA PID and exact diagnostic prefix as filters.
+    const events = parseEvents(run(['logcat', '-d', `--pid=${pid}`, '-e', '\\[YAMB_THEME_LOAD\\]', '*:I']));
     const directory = path.resolve('tmp/qa-theme-loading');
     fs.mkdirSync(directory, { recursive: true });
     const target = path.join(directory, `${serial}-${Date.now()}.json`);

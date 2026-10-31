@@ -1,10 +1,20 @@
 {
-  "schemaVersion": 91,
-  "updatedOn": "2026-10-30",
+  "schemaVersion": 92,
+  "updatedOn": "2026-10-31",
+  "themeSelectionDeadlineVerification20261031": {
+    "publishedGameVersion": "6.42",
+    "localGameVersion": "6.43",
+    "status": "R38 dijagnostika objavljena/potvrđena. R39 duži deljeni retry lokalno; nije komitovan/deployovan/native potvrđen. Brzina/startup/ANR ostaju otvoreni.",
+    "evidence": "docs/theme-visual-audit/postdeploy642-2026-10-31/report.json",
+    "native": "Oba servisa2b531195,7javnihJSfajlova odgovara6.42. QA prviEaster neuspešan, ostajeGreen;28PNGpostanu spremni, poslednji18052ms.36timeoutdogađaja:24waiting-load/12decode. PonovljenEaster uspešan bez novihPNGtimingdogađaja; povratakGreen jednim izborom. Keš nije brisan; nije native10/10ili dokaz uzroka sporog transfera/ANR-a.",
+    "localChange": "Prvi6s pokušaj ostaje, postojeći deljeni zahtevi dobijaju jedan24s retry umesto drugog6s. Spremnost se primeni odmah kada oba paketa završe; nema fiksnog30s čekanja. Offline i zaštita aktuelnog izbora/naloga ostaju. Nije ubrzanje preuzimanja/dekodiranja, već uklanjanje prerane predaje u proveravanom slučaju.",
+    "localProof": "Stvarne metode sa virtuelnim vremenom:6.42odbije na12s,6.43primeni na18s bez drugog izbora/novihImageobjekata. Konačan neuspeh30s, kasni rezultat ne primenjuje, offline6s, promena naloga PASS. Keš/retention/Settings/menu/in-game/selection regresije i stvarniPNG10tema×28u izolovanomEdge PASS.",
+    "boundaries": "Samo QA native UI i namenski javniPNGprefiks trenutnog procesa; bez CDP/privatnogstorage/noveigre/reklame/nagrade/DB.1,42GBslobodnood15,23GBna računaru; mogući doprinos opterećenja nije dokazan uzrok. PNG/DNK/palete/dimenzije ne menjaju se."
+  },
   "themeLoadingDiagnostics20261030": {
     "localGameVersion": "6.42",
-    "publishedGameVersion": "6.41",
-    "status": "Lokalno, bez commita/deploya. QA-only dijagnostika čeka prvi native zapis; prviEaster/startup/ANR nisu zatvoreni.",
+    "publishedGameVersion": "6.42",
+    "status": "R38 objavljen na oba servisa2b531195; prvi nativePNGzapis potvrđen31.10.2026. Detalji i lokalniR39u themeSelectionDeadlineVerification20261031. Brzina/startup/ANR nisu zatvoreni.",
     "evidence": "docs/theme-visual-audit/loading-diagnostics-2026-10-30/report.json",
     "documentation": "docs/theme-visual-audit/loading-diagnostics-2026-10-30/README.md",
     "change": "Pasivno prati javne PNG load/decode faze, rok i konačnu spremnost u deljenom preloaderu i Podešavanjima. Samo QA host, 200 memorijskih zapisa, bez query/hash/nalog podataka. Retry, LRU, rokovi, PNG i dimenzije ne menjaju se.",

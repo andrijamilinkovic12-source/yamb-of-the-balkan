@@ -1,6 +1,6 @@
 # Preostale provere tema i soba
 
-Aktuelni presek: 30.10.2026. Ovaj presek zamenjuje staru listu13/15. Istorija pokušaja i posledica ostaje u [checkpointu](emulator-checkpoint.md).
+Aktuelni presek: 31.10.2026. Ovaj presek zamenjuje staru listu13/15. Istorija pokušaja i posledica ostaje u [checkpointu](emulator-checkpoint.md).
 
 ## Potvrđeno
 
@@ -21,6 +21,8 @@ Korisnik je odbio dodatno preuzimanje QA nagrada. Nagradno dugme, reklama i reva
 To je odvojeno od automatskih trofejnih bonusa (Andrija2000/Sara500) i četiri ranija tehnička QA rezultata. Nema ručne izmene salda ili produkcionog testa. Postojeće pravilo automatskog oporavka nije menjano.
 
 ## Sledeći koraci
+
+**31.10 — objavljena6.42, lokalna6.43:** [nativePNGtiming](postdeploy642-2026-10-31/index.html) dokazuje da prviEaster odustane pre uspešne spremnosti svih28slika(18052ms); drugi izbor uspe bez novogučitavanja. LokalniR39daje postojećem poslu jedan duži retry6+24s, kontrolisana reprodukcija/regresije/PNG10tema prolaze. Čeka korisnikov commit/deploy i potvrdu prvog izbora; ovo ne rešava samo trajanje transfera/decode/starta niti dokazuje uzrokANR-a. Stare oznake „neobjavljena6.42” niže su istorija. Ostale funkcionalne provere ostaju otvorene.
 
 **Lokalna v6.42, još neobjavljena:** završena [priprema QA-only PNG dijagnostike](loading-diagnostics-2026-10-30/README.md). Testovi load/decode/timeout/retry i stvarnih PNG deset tema prolaze. Nema primenjene kompresije ili nove emulator sesije. Posle korisnikovog commita/deploya prikupiti namenski QA zapis prvog/ponovljenog Easter izbora; ne zatvarati startup/ANR bez uzroka i native dokaza. Donji v6.41 presek ostaje poslednji objavljeni dokaz.
 
