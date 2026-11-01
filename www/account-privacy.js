@@ -111,6 +111,8 @@
             await showStatus(api, result);
         } catch (error) {
             if (/cancel|12501|popup-closed/i.test(error?.message || '')) return;
+            const safeCode = String(error?.code || 'unknown');
+            console.warn('[Account deletion] Request failed:', /^[A-Za-z0-9_/-]{1,80}$/.test(safeCode) ? safeCode : 'unknown');
             await notice(error?.code === 'recent_sign_in_required' ? strings().recent
                 : accepted || api.savedReceipt() ? strings().uncertain : strings().unavailable);
         } finally {
