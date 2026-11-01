@@ -1,0 +1,669 @@
+{
+  "date": "2026-10-31",
+  "finding": "R40",
+  "status": "Locally fixed; deployment and native confirmation of the new controller are pending.",
+  "publishedBaseline": {
+    "game": "6.43",
+    "skinController": 3,
+    "commit": "829a45b11c9b2865756e0a57b8cfd7992249e459"
+  },
+  "local": {
+    "game": "6.43 unchanged",
+    "skinController": 4,
+    "change": "Pin visible, selected and pending skin packs. Evict only ready unprotected PNGs in a coalesced next task. Readiness uses retained decoded entries; settled cap96. In-flight cache may temporarily exceed96."
+  },
+  "controlled": {
+    "before": {
+      "date": "2026-10-31",
+      "mode": "before",
+      "baseline": "829a45b11c9b2865756e0a57b8cfd7992249e459",
+      "scope": "Actual controller and48skin catalog with synthetic Image load/decode completion and120Image cache pressure, no app/account/network/device latency proof.",
+      "skins": 48,
+      "concurrentWarmSkins": 14,
+      "imagesBeforeRetry": 120,
+      "firstActivation": false,
+      "settledCacheEntries": 96
+    },
+    "after": {
+      "date": "2026-10-31",
+      "mode": "after",
+      "baseline": "829a45b11c9b2865756e0a57b8cfd7992249e459",
+      "scope": "Actual controller and48skin catalog with synthetic Image load/decode completion and120Image cache pressure, no app/account/network/device latency proof.",
+      "skins": 48,
+      "concurrentWarmSkins": 14,
+      "imagesBeforeRetry": 120,
+      "firstActivation": true,
+      "settledCacheEntries": 96
+    }
+  },
+  "browser": {
+    "date": "2026-10-31",
+    "status": "pass",
+    "pressurePacks": 14,
+    "initialDistinctImages": 120,
+    "distinctPngRequests": 384,
+    "rows": [
+      {
+        "id": "default",
+        "active": "default",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "classic_red",
+        "active": "classic_red",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "classic_blue",
+        "active": "classic_blue",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "classic_black",
+        "active": "classic_black",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "bronze_antique",
+        "active": "bronze_antique",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "bronze_patina",
+        "active": "bronze_patina",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "bronze_steampunk",
+        "active": "bronze_steampunk",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "bronze_spartan",
+        "active": "bronze_spartan",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "bronze_rose",
+        "active": "bronze_rose",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "bronze_forge",
+        "active": "bronze_forge",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "silver_classic",
+        "active": "silver_classic",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "silver_brushed",
+        "active": "silver_brushed",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "silver_moonlight",
+        "active": "silver_moonlight",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "silver_knight",
+        "active": "silver_knight",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "silver_titanium",
+        "active": "silver_titanium",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "silver_chrome",
+        "active": "silver_chrome",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "gold_classic",
+        "active": "gold_classic",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "gold_rose",
+        "active": "gold_rose",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "gold_ancient",
+        "active": "gold_ancient",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "gold_midas",
+        "active": "gold_midas",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "wood",
+        "active": "wood",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "marble",
+        "active": "marble",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "pearl",
+        "active": "pearl",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "carbon",
+        "active": "carbon",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "obsidian",
+        "active": "obsidian",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "leather",
+        "active": "leather",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "neon_blue",
+        "active": "neon_blue",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "neon_pink",
+        "active": "neon_pink",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "neon_green",
+        "active": "neon_green",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "stealth",
+        "active": "stealth",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "glass_clear",
+        "active": "glass_clear",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "glass_ruby",
+        "active": "glass_ruby",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "glass_emerald",
+        "active": "glass_emerald",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "glass_sapphire",
+        "active": "glass_sapphire",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "green_clay",
+        "active": "green_clay",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_light_gold",
+        "active": "theme_light_gold",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_dark_cherry",
+        "active": "theme_dark_cherry",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_blue_ocean",
+        "active": "theme_blue_ocean",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_neon_cyber",
+        "active": "theme_neon_cyber",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_royal_amethyst",
+        "active": "theme_royal_amethyst",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_easter",
+        "active": "theme_easter",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_desert",
+        "active": "theme_desert",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_moonlight",
+        "active": "theme_moonlight",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "theme_northern_nebula",
+        "active": "theme_northern_nebula",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "magma",
+        "active": "magma",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "galaxy",
+        "active": "galaxy",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "retro",
+        "active": "retro",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      },
+      {
+        "id": "hologram",
+        "active": "hologram",
+        "face": true,
+        "counters": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "controls": true
+      }
+    ],
+    "errors": [],
+    "boundary": "Fresh isolated desktop Edge; real PNG decode, skin controller, equip method and counter. Synthetic local inventory/all themes unlocked, dice renderer and closed picker stubbed. All routes fulfilled from allowlisted local PNGs. No native/network latency, account/payment or gameplay/reward proof."
+  },
+  "native": {
+    "device": "emulator-5556 / Duel_QA_Player2",
+    "physical": "1440x3120 /560dpi unchanged",
+    "app": "com.yamb.balkan.staging",
+    "scope": "Existing authorization used for a new empty local Hotseat with Gost_QA. No saved continuation was offered. Green theme throughout; active skin green_clay →theme_neon_cyber →theme_light_gold →green_clay. At each final observed frame dice/button/counter artwork agrees.",
+    "limitations": "Published controllerv3, not localv4. Delayed screenshots are not timing, frame-atomicity, cold-cache, all48skin, purchased-entitlement or physicalS25 proof. No dice values/rolls, so counter0 is the only native counter state.",
+    "final": "Exited via normal saved-local-game confirmation; Green main menu, visual balance12168, original skin restored. No rolls, entries, game finish, ad, reward button, purchase, invitation, DB or private-session access.",
+    "screenshots": [
+      {
+        "file": "qa-skin-check-game-start.jpg",
+        "caption": "Početno: Žadna glina, prazna QA Hotseat partija"
+      },
+      {
+        "file": "qa-skin-check-owned-picker.jpg",
+        "caption": "Dostupni skinovi: početni izbor Žadna glina"
+      },
+      {
+        "file": "qa-skin-check-neon-selected.jpg",
+        "caption": "Neon: kockice, dugmad i brojač; tabla ostaje zelena"
+      },
+      {
+        "file": "qa-skin-check-gold-selected.jpg",
+        "caption": "Svetlo zlato: kockice, dugmad i brojač"
+      },
+      {
+        "file": "qa-skin-check-green-restored.jpg",
+        "caption": "Vraćen početni skin, bez bacanja i upisa"
+      },
+      {
+        "file": "qa-skin-check-final-menu.jpg",
+        "caption": "Kraj: Zelena i glavni meni, saldo12168"
+      }
+    ]
+  },
+  "tests": [
+    "check:skin-action-buttons (includes deterministic retention regression)",
+    "check:skin-roll-counter",
+    "test-game-quick-skins.js",
+    "test-skin-preload-browser.cjs (allowlisted local PNG routes only)",
+    "node --check www/skin-action-buttons.js",
+    "git diff --check"
+  ],
+  "next": "After user commit/deploy, verify skin-action-buttons.js?v=4 and the concurrent/return skin scenario in native QA. PhysicalS25 cold loading, startup/ANR, real ads/rewards and previously restricted rematch remain separate open items."
+}

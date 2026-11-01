@@ -1,0 +1,334 @@
+{
+  "date": "2026-10-31",
+  "version": "6.43",
+  "published": {
+    "at": "2026-10-31T16:39:16.163Z",
+    "commit": "829a45b11c9b2865756e0a57b8cfd7992249e459",
+    "scope": "Public HTML/JS GET only; not proof of loaded Android byte hashes.",
+    "rows": [
+      {
+        "host": "https://yamb-reconnect-qa.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.43",
+            "expectedVersion": "6.43",
+            "status": 200,
+            "sha256Normalized": "e0738e31059a7b3cb541a513f1f2f708d5931f1bdb575066eafbfdb38dd11519",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-leaderboard-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-online-players-room.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-invite-friend-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "5",
+            "expectedVersion": "5",
+            "status": 200,
+            "sha256Normalized": "13283cacd264c6d4ce7de2d315cb96dff1f3f11a27340ec1b0e81207c1125348",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-loading-diagnostics.js",
+            "version": "1",
+            "expectedVersion": "1",
+            "status": 200,
+            "sha256Normalized": "d760216c06877bf7a4deaa746dc1c816c4fad68ca06a550614d3ea8a1dc68cc4",
+            "matchesLocalNormalized": true
+          }
+        ]
+      },
+      {
+        "host": "https://yamb-of-the-balkan.onrender.com",
+        "status": 200,
+        "resources": [
+          {
+            "file": "game.js",
+            "version": "6.43",
+            "expectedVersion": "6.43",
+            "status": 200,
+            "sha256Normalized": "e0738e31059a7b3cb541a513f1f2f708d5931f1bdb575066eafbfdb38dd11519",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-leaderboard-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "6a864581154f3841dae3370ecebd91c9a0a0cef7159a0ec02628fff4081b59c7",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-online-players-room.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "34853056349c4b0ee701da73107b5c7ce860c08137217e61d77f2ef36620b52b",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-invite-friend-room.js",
+            "version": "4",
+            "expectedVersion": "4",
+            "status": 200,
+            "sha256Normalized": "0164212d9e088a1d60400e277f5c952b59951281955c0204b0e8c5e4e35bd4f5",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-game-header.js",
+            "version": "6",
+            "expectedVersion": "6",
+            "status": 200,
+            "sha256Normalized": "88f8871966ad12efe16e117c6141d59f3edc9cdd7026e4c183bfdeb1c1ce5fc0",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-settings-room.js",
+            "version": "5",
+            "expectedVersion": "5",
+            "status": 200,
+            "sha256Normalized": "13283cacd264c6d4ce7de2d315cb96dff1f3f11a27340ec1b0e81207c1125348",
+            "matchesLocalNormalized": true
+          },
+          {
+            "file": "theme-loading-diagnostics.js",
+            "version": "1",
+            "expectedVersion": "1",
+            "status": 200,
+            "sha256Normalized": "d760216c06877bf7a4deaa746dc1c816c4fad68ca06a550614d3ea8a1dc68cc4",
+            "matchesLocalNormalized": true
+          }
+        ]
+      }
+    ]
+  },
+  "result": "NOT FIXED: published longer retry is active but first Easter selection still fails when valid PNGs complete after the final deadline. Do not close R39/native loading failure.",
+  "scope": "Separate QA app emulator-5556; native screenshots and taps, dedicated PNG prefix from current QA PID, public static HTTP only. Preserved cache/data/1440x3120 geometry. No CDP/private WebView storage/auth/account API/DB. Not a cold-cache or all-ten-theme native benchmark.",
+  "startup": "QA force-stopped/reopened without am-start-W timing. Initial gradient then complete menu.19initialPNGready,0initialtimeouts,max4733ms relative to each PNG start; not total app-ready time. Later Settings/room preloading adds its own events. No new ANR dialog in inspected frames; not continuous monitoring.",
+  "firstEaster": {
+    "userSelections": 1,
+    "result": "failed, retained Green",
+    "readyPngs": 28,
+    "maxReadyMs": 37158,
+    "timeoutEvents": 41,
+    "timeoutByBudget": {
+      "6000": 26,
+      "24000": 15
+    },
+    "timeoutByPhase": {
+      "waiting-load": 32,
+      "decode": 9
+    },
+    "pngErrors": 0,
+    "pendingAfterLastCapture": 0,
+    "slowest": [
+      {
+        "asset": "/assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
+        "consumer": "settings",
+        "event": "ready",
+        "phase": "decode",
+        "id": 53,
+        "elapsedMs": 37158,
+        "loadMs": 37074,
+        "decodeMs": 84,
+        "width": 512,
+        "height": 512
+      },
+      {
+        "asset": "/assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "consumer": "theme-preloader",
+        "event": "ready",
+        "phase": "decode",
+        "id": 44,
+        "elapsedMs": 37103,
+        "loadMs": 37051,
+        "decodeMs": 53,
+        "width": 384,
+        "height": 384
+      },
+      {
+        "asset": "/assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "consumer": "theme-preloader",
+        "event": "ready",
+        "phase": "decode",
+        "id": 46,
+        "elapsedMs": 37098,
+        "loadMs": 37046,
+        "decodeMs": 52,
+        "width": 384,
+        "height": 384
+      },
+      {
+        "asset": "/assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
+        "consumer": "theme-preloader",
+        "event": "ready",
+        "phase": "decode",
+        "id": 48,
+        "elapsedMs": 37054,
+        "loadMs": 37017,
+        "decodeMs": 37,
+        "width": 384,
+        "height": 384
+      },
+      {
+        "asset": "/assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+        "consumer": "theme-preloader",
+        "event": "ready",
+        "phase": "decode",
+        "id": 43,
+        "elapsedMs": 37020,
+        "loadMs": 36973,
+        "decodeMs": 47,
+        "width": 384,
+        "height": 384
+      }
+    ],
+    "conclusion": "24000ms retry events prove longer published path executed. Final ready37158ms exceeds6+24s allowance. Local18s case remains valid but did not cover this slower native run. Waiting-load dominates late assets, including callback scheduling; not proof of server latency alone."
+  },
+  "warmRetry": {
+    "result": "complete Easter Settings after one repeated selection",
+    "diagnosticEventCountBefore": 104,
+    "diagnosticEventCountAfter": 104,
+    "firstEmulator": "temporarily paused during warm retry only",
+    "boundary": "Warm retry changes both cache and host contention. It is not a controlled causal comparison or proof that pausing fixes first selection."
+  },
+  "host": {
+    "freeMemoryGB": 1.31,
+    "totalMemoryGB": 15.23,
+    "cpuLoadPercent": 54,
+    "emulatorWorkingSetGB": 4.99,
+    "boundary": "Single host snapshot, not proven cause."
+  },
+  "emulatorNetwork": {
+    "reportedDownloadBitsPerSecond": 0,
+    "reportedUploadBitsPerSecond": 0,
+    "minimumLatencyMs": 0,
+    "maximumLatencyMs": 0,
+    "changed": false,
+    "boundary": "Raw emulator console status; not interpreted as a broken link. Built-in speed help lists full/5g as no-limit. No networking setting was changed."
+  },
+  "publicPngProbe": {
+    "at": "2026-10-31T16:48:50.013Z",
+    "scope": "Public QA PNG GET from host; not Android WebView/cache/decoder timing.",
+    "rows": [
+      {
+        "asset": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+        "status": 200,
+        "bytes": 117524,
+        "elapsedMs": 1452,
+        "matchesLocal": true
+      },
+      {
+        "asset": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
+        "status": 200,
+        "bytes": 129344,
+        "elapsedMs": 1358,
+        "matchesLocal": true
+      },
+      {
+        "asset": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
+        "status": 200,
+        "bytes": 259548,
+        "elapsedMs": 1353,
+        "matchesLocal": true
+      },
+      {
+        "asset": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+        "status": 200,
+        "bytes": 101986,
+        "elapsedMs": 1326,
+        "matchesLocal": true
+      }
+    ]
+  },
+  "restoration": "First emulator observed Android home, paused with avd stop for warm retry, then avd start/status confirmed running. Second returned to Green and main menu. No new game, roll/score entry, ad/reward/rematch button, purchase, invitation or DB access. Displayed balance12168unchanged, not full accounting audit.",
+  "codeChanges": "None. Only evidence, audit scripts and registry/definition metadata in this turn. No new version, PNG, CSS, dimension, palette, game rule or economic change.",
+  "next": "Investigate actual WebView resource queue/transfer/event-loop/rendering and host contention with controlled measurements. Do not keep increasing timeout or report speed/ANR fixed. Active-game skins and other remaining functional checks are separate.",
+  "images": [
+    {
+      "file": "qa-deploy643-after-open.jpg",
+      "source": "qa-deploy643-after-open.png",
+      "label": "Početni gradijent posle otvaranja QA aplikacije; nije precizno mereno vreme spremnog menija."
+    },
+    {
+      "file": "qa-deploy643-menu-ready.jpg",
+      "source": "qa-deploy643-menu-ready.png",
+      "label": "Kasnije kompletan Green meni, saldo12168."
+    },
+    {
+      "file": "qa-deploy643-settings-ready.jpg",
+      "source": "qa-deploy643-settings-ready.png",
+      "label": "Kompletna Green Podešavanja pre promene teme."
+    },
+    {
+      "file": "qa-deploy643-picker-green.jpg",
+      "source": "qa-deploy643-picker-green.png",
+      "label": "Izbor tema sa delom još neučitanih preview slika."
+    },
+    {
+      "file": "qa-deploy643-easter-first.jpg",
+      "source": "qa-deploy643-easter-first.png",
+      "label": "Prvi i jedini Easter izbor: prikaz pripreme, konačan uspeh nije potvrđen."
+    },
+    {
+      "file": "qa-deploy643-easter-first-result.jpg",
+      "source": "qa-deploy643-easter-first-result.png",
+      "label": "Prvi izbor nije uspeo; zadržana Zelena tema."
+    },
+    {
+      "file": "qa-deploy643-first-emulator-state.jpg",
+      "source": "qa-deploy643-first-emulator-state.png",
+      "label": "Prvi emulator na Android početnom ekranu pre privremene pauze."
+    },
+    {
+      "file": "qa-deploy643-easter-warm-retry.jpg",
+      "source": "qa-deploy643-easter-warm-retry.png",
+      "label": "Ponovljen izbor po završetku PNG-ova: prelazni kadar samo sa Easter pozadinom."
+    },
+    {
+      "file": "qa-deploy643-easter-warm-ready.jpg",
+      "source": "qa-deploy643-easter-warm-ready.png",
+      "label": "Konačna Easter Podešavanja posle ponovljenog izbora."
+    },
+    {
+      "file": "qa-deploy643-return-green.jpg",
+      "source": "qa-deploy643-return-green.png",
+      "label": "Povratak na Zelenu temu jednim izborom."
+    },
+    {
+      "file": "qa-deploy643-final-menu.jpg",
+      "source": "qa-deploy643-final-menu.png",
+      "label": "Završni Green meni; oba emulatora ponovo u radu."
+    }
+  ]
+}

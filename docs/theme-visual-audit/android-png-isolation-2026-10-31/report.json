@@ -1,0 +1,206 @@
+{
+  "date": "2026-10-31",
+  "appVersion": "6.43-unchanged",
+  "scope": "Same28EasterPNG,4,604,051B,18menu+10Settings. Isolated Chrome page, anonymous cross-origin public QA images, generated metrics sent only to local loopback fixture. No account/game/socket/private API or CDP. One sample per condition, not controlled causal benchmark.",
+  "cases": [
+    {
+      "file": "desktop-local-1793466901892.json",
+      "label": "Desktop lokalni — validacija fixture-a",
+      "android": false,
+      "mode": "local",
+      "totalMs": 246.8,
+      "ready": 28,
+      "maxLoadMs": 187.9,
+      "maxDecodeMs": 131.8,
+      "maxLagMs": 87.8,
+      "maxTaskMs": 0,
+      "resourceTransferBytes": 4612451,
+      "failures": []
+    },
+    {
+      "file": "android-local-1793467416130.json",
+      "label": "Android lokalni, dva AVD-a, prvo Chrome pokretanje/ANR",
+      "android": true,
+      "mode": "local",
+      "totalMs": 60410.9,
+      "ready": 27,
+      "maxLoadMs": 59206.7,
+      "maxDecodeMs": 4886.5,
+      "maxLagMs": 3244.4,
+      "maxTaskMs": 2137,
+      "resourceTransferBytes": 4612450,
+      "failures": [
+        {
+          "source": "assets/theme-backgrounds/easter-v6-1.png",
+          "status": "error"
+        }
+      ]
+    },
+    {
+      "file": "android-local-1793467732808.json",
+      "label": "Android lokalni, jedan AVD, pre hladnog starta",
+      "android": true,
+      "mode": "local",
+      "totalMs": 40076.2,
+      "ready": 28,
+      "maxLoadMs": 34696.1,
+      "maxDecodeMs": 25253.5,
+      "maxLagMs": 940.8,
+      "maxTaskMs": 539,
+      "resourceTransferBytes": 4612451,
+      "failures": []
+    },
+    {
+      "file": "android-local-1793467948064.json",
+      "label": "Android lokalni, jedan AVD, posle hladnog starta/foreground",
+      "android": true,
+      "mode": "local",
+      "totalMs": 3076.1,
+      "ready": 28,
+      "maxLoadMs": 2703.3,
+      "maxDecodeMs": 455,
+      "maxLagMs": 918.7,
+      "maxTaskMs": 784,
+      "resourceTransferBytes": 4612451,
+      "failures": []
+    },
+    {
+      "file": "android-qa-1793468025435.json",
+      "label": "Android QA, prvi izmereni prolaz posle hladnog starta",
+      "android": true,
+      "mode": "qa",
+      "totalMs": 24815,
+      "ready": 28,
+      "maxLoadMs": 24706.2,
+      "maxDecodeMs": 188.9,
+      "maxLagMs": 19.1,
+      "maxTaskMs": 0,
+      "resourceTransferBytes": 0,
+      "failures": []
+    },
+    {
+      "file": "desktop-qa-1793468194158.json",
+      "label": "Desktop QA, svež browser kontekst",
+      "android": false,
+      "mode": "qa",
+      "totalMs": 569.3,
+      "ready": 28,
+      "maxLoadMs": 558.9,
+      "maxDecodeMs": 84.3,
+      "maxLagMs": 36.7,
+      "maxTaskMs": 0,
+      "resourceTransferBytes": 0,
+      "failures": []
+    },
+    {
+      "file": "android-qa-1793468251842.json",
+      "label": "Android QA, ponovljeni prolaz, već pripremljene slike",
+      "android": true,
+      "mode": "qa",
+      "totalMs": 363.5,
+      "ready": 28,
+      "maxLoadMs": 230.5,
+      "maxDecodeMs": 164.8,
+      "maxLagMs": 26.9,
+      "maxTaskMs": 0,
+      "resourceTransferBytes": 0,
+      "failures": []
+    }
+  ],
+  "findings": [
+    "An independent local Chrome test with no game code or Render image route also ANRed and took60s with27/28ready. Therefore the earlier slowdown cannot be attributed solely to game code or Render.",
+    "OneAVD before cold boot still took40s. Same local PNG test after cold boot and foreground activation took3.076s with28/28ready. This supports an environment contribution but does not isolate RAM, GPU, process age or foreground as the sole cause.",
+    "First measured QA image run after recovery took24.815s with maxload24.706s/maxdecode0.189s/maxlag19.1ms/0longtask. The remaining wait was mainly before onload in this fixture. This is not proof of server-side delay alone.",
+    "Fresh desktop QA fixture0.569s; repeated Android QA fixture0.364s. Cache partition/context/process differ. transferSize0for remote images may reflect TAO restrictions; it is not proof of a network-free cache hit.",
+    "After recovery, actualQAapp firstEaster choice succeeded with28PNGreadyby1967ms/0timeout. Existing WebView cache remained intact. It does not supersede earlier37s failure or prove cold loading/S25 speed repaired."
+  ],
+  "environment": [
+    {
+      "stage": "After initial independentChromeANR",
+      "freeHostGB": 0.76,
+      "totalHostGB": 15.23,
+      "cpuLoadPercent": 22,
+      "emulatorWorkingSetGB": 4.1,
+      "avdCount": 2
+    },
+    {
+      "stage": "After stopping unused firstAVD",
+      "freeHostGB": 1.92,
+      "totalHostGB": 15.23,
+      "avdCount": 1
+    },
+    {
+      "stage": "Recovery",
+      "avd": "Duel_QA_Player2",
+      "port": 5556,
+      "flags": [
+        "-no-snapshot-load",
+        "-no-boot-anim"
+      ],
+      "foregroundActivated": true,
+      "dataCleared": false,
+      "gpuOrGeometryChanged": false
+    }
+  ],
+  "appCheck": {
+    "from": "dark",
+    "to": "easter",
+    "userSelections": 1,
+    "result": "completeEasterSettings",
+    "readyPngs": 28,
+    "maxPngReadyMs": 1967,
+    "timeouts": 0,
+    "scope": "Per-PNGreadiness,notend-to-endtransitiontiming. Cache preserved,onecoldbootedAVDforeground;notcoldnetwork."
+  },
+  "fixtureSafety": "Only28allowlistedPNG paths and schema-filtered local results. ForeignOrigin/invalidschema/arbitraryfiles/extra-field tests PASS. First server automatically expired; intermediateQA retry hadANR/no completed result and is not counted as measuredQA latency. Second server automatically exited too. No server remains from this run.",
+  "restoration": "Chrome force-stopped, QAapp reopened without new game/ad/reward/rematch input. First unusedAVD restarted with original name/port/default settings. Second returnedGreenmenu. Displayedbalance12168unchanged;notcompleteDBaccountingaudit. No DB/session/auth/private-storage reads or writes. Login handoff completed by user, no authentication automation.",
+  "changes": "Only local diagnostic scripts and evidence. No appJS/CSS/PNGversion/style/palette/dimension/economic changes or deployment. No claim of fully resolvedANR/coldloading.",
+  "next": [
+    "Use stable/coldbooted singleAVD foreground for performance checks; two devices only for actualduel scenarios",
+    "Measure first vs repeated ownedtheme/skin transfer on physicalS25, with cache conditions recorded",
+    "Separate visibleSettings requirements from hiddenmenu/room work in a measured fixture before a new runtime optimization; do not increase timeout again blindly",
+    "Other pending functional checks retain their prior limits"
+  ],
+  "images": [
+    {
+      "file": "qa-png-isolation-after-handoff.jpg",
+      "source": "qa-png-isolation-after-handoff.png",
+      "label": "Odvojeni Chrome lokalni test:27/28iANR. Bez koda igre i bezQAserverPNGputanje."
+    },
+    {
+      "file": "qa-png-isolation-local-one-vm.jpg",
+      "source": "qa-png-isolation-local-one-vm.png",
+      "label": "Jedan emulator pre hladnog starta:28/28,40,076s."
+    },
+    {
+      "file": "qa-png-isolation-local-cold.jpg",
+      "source": "qa-png-isolation-local-cold.png",
+      "label": "Posle hladnog starta istogAVD-a i foreground prozora:28/28,3,076s."
+    },
+    {
+      "file": "qa-png-isolation-qa-cold.jpg",
+      "source": "qa-png-isolation-qa-cold.png",
+      "label": "Prvi izmereni javniQA prolaz posle hladnogstarta:28/28,24,815s."
+    },
+    {
+      "file": "qa-png-isolation-qa-warm.jpg",
+      "source": "qa-png-isolation-qa-warm.png",
+      "label": "Ponovljeni javniQA prolaz:28/28,0,364s."
+    },
+    {
+      "file": "qa-png-isolation-app-return.jpg",
+      "source": "qa-png-isolation-app-return.png",
+      "label": "Povratak postojećeQAaplikacije,Greenmeni,saldo12168."
+    },
+    {
+      "file": "qa-png-isolation-app-easter-first.jpg",
+      "source": "qa-png-isolation-app-easter-first.png",
+      "label": "JedanEasterizbor uQAaplikaciji uspešan;28PNGreadydo1967ms,0timeout. SačuvanWebViewkeš."
+    },
+    {
+      "file": "qa-png-isolation-final-menu.jpg",
+      "source": "qa-png-isolation-final-menu.png",
+      "label": "Po završetku vraćenGreenmeni;saldo12168isti."
+    }
+  ]
+}

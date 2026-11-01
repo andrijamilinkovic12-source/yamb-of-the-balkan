@@ -1,5 +1,23 @@
 # Vizuelni audit PNG assetsa
 
+## R40 — izabrani skin izgubi PNG paket tokom paralelne pripreme
+
+[Dokazi i šest native kadrova](skin-retention-2026-10-31/index.html). Lokalno reprodukovano:14paketa/120PNG, keš izbaci nedovršene slike izabranog skina; priprema uspe, ali aktivacija vrati false i ostavi prethodna dugmad. Ispravka zadržava vidljivi/izabrani/nedovršene pakete, proverava dekodiranu spremnost i vraća završeni keš na≤96. Tri dugmeta i četiri brojača svih48skinova provereni stvarnim PNG u izolovanom Edge-u; retry koristi7spremnih slika. Jedna nova regresiona provera uključena u redovni check:skin-action-buttons.
+
+Native QA v6.43/controller3: prazna odobrena Hotseat sa Gost_QA, tri izbora Žadna glina→Neon→Svetlo zlato→Žadna glina vizuelno usklađena; Green tabla ostaje. Samo brojač0, bez bacanja/upisa, završetka ili nagrada. **Nova controller4 još nije objavljena i nema native potvrdu.** Ne proglašavati ovu reprodukciju dokazom uzroka sporog transfera/ANR-a ili trenutnog prelaska na telefonu. Dimenzije, PNG, DNK/palete i pravila nagrada ne menjaju se.
+
+## R39 dopuna — nezavisniChromezastoj i oporavak QA okruženja
+
+[Izolovana merenja](android-png-isolation-2026-10-31/index.html): isti28PNGbezigre/Rendera izazovuChromeANR/60s27ready;jedanAVD40s;poslehladnogstarta+foreground-a3,076s28ready. InicijalniAndroidQA24,815s(maxload24,706/maxdecode0,189),ponovljeni0,364s;desktopQA0,569s. To je dokaz da okruženje utiče i da neuspeh nije isključivo kodigre, ali ne izoluje RAM/GPU/mrežujedanuzrok.
+
+U samojneizmenjenoj6.43QAaplikaciji,posleoporavka,jedanEasterizbor uspešan,28PNGreadydo1967ms/0timeout. Sačuvankeš,nijehladnitransferiliukupnaanimacija. Nezatvarati raniji37sneuspeh/ANR/S25naosnovuovogjednogtoplijegprolaza. Nema novihapp/PNGizmena ili ponovnogpovećanjaroka.
+
+## R39 posle objave6.43 — native neuspeh ostaje otvoren
+
+[Dokaz](postdeploy643-2026-10-31/index.html): oba servisa829a45b1,7JSfajlova.24sretry se izvrši, ali prviEaster ipak zadržiGreen:poslednjiod28PNGready37158ms.41Eastertimeout(26prvih6s/15retry24s),0PNGgrešaka;topliponovljenizboruspebeznovihdogađaja. Prvobitni18sfixture je validan samo za taj slučaj. R39nije konačno rešenje; nema nove runtime izmene ili povećanja roka.
+
+Četiri javnaPNG-a imaju ispravan sadržaj/200za~1,3–1,5sna računaru; to ne dokazuje WebView/Androidputanju. Host1,31GBslobodnood15,23GB/CPU54%. Prvi emulator sa Androidhome privremeno pauziran tokom toplogretry-a, zatimrunning;keš+opterećenjenisu kontrolisani. Istražiti stvarniWebViewresourcequeue/transfer/JS/render. Startup/ANR/skinoviostajuotvoreni.
+
 ## R39 — prerano odustajanje, 31.10.2026.
 
 [Objavljena6.42/nativenalaz i lokalna6.43](postdeploy642-2026-10-31/index.html). JedanEaster izbor:6+6s isteknu, poslednjiod28PNGspreman18052ms.0PNGgrešaka;36timeoutdogađaja24load/12decode. Drugiizbor uspe bez novihdogađaja; Green vraćen. Time je potvrđen razlog potrebe za drugim izborom u sesiji. Razlog samog kašnjenja/ANR-a nije dokazan.

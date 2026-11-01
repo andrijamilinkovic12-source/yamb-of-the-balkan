@@ -1,10 +1,39 @@
 {
-  "schemaVersion": 92,
+  "schemaVersion": 95,
   "updatedOn": "2026-10-31",
+  "skinRetentionVerification20261031": {
+    "finding": "R40",
+    "gameVersion": "6.43 unchanged",
+    "publishedSkinController": 3,
+    "localSkinController": 4,
+    "status": "Lokalno ispravljeno; korisnikov commit/deploy i native potvrda nove v4 još nisu izvršeni. Raniji problem hladnog učitavanja i startup/ANR ostaje otvoren.",
+    "evidence": "docs/theme-visual-audit/skin-retention-2026-10-31/report.json",
+    "cause": "Kontrolisano120PNG/14paralelnih paketa: stari keš izbaci izabrani nedovršeni paket. prepare uspe, activatePrepared vrati false, dugmad ostanu prethodna. Ovo je dokaz konkretnog lokalnog slučaja, ne potvrđen uzrok ranijeg kašnjenja na telefonu.",
+    "change": "Zadržava vidljivi, izabrani i nezavršene pakete. Spremnost proverava stvarne dekodirane unose. U sledećem zadatku uklanja samo spremne nezaštićene PNG do96unosa; nezavršeni zahtevi privremeno mogu preći granicu. Nema novih PNG, izmena DNK, paleta, dimenzija, prava kupovine ili nagrada.",
+    "localProof": "Pre ispravke reprodukovan neuspeh aktivacije. Posle: aktivacija uspe, aktivni skin ostaje zadržan, keš posle završetka≤96; retry jednog neuspešnog PNG koristi ostalih7. Izolovani Edge sa stvarnim controller/equip/counter kodom:48skinova/144dugmeta/192brojača, paralelna priprema14paketa PASS. Lokalni sintetički inventar, bez naloga; renderer kockica i zatvorenog pickera su fixture zamene.",
+    "nativeProof": "Objavljena v3: nova ranije odobrena prazna Hotseat QA/Gost_QA, Zelena tema. Žadna glina→Neon Cyber→Svetlo zlato→Žadna glina: kockice, oba dugmeta i brojač0 vizuelno usklađeni na konačnim kadrovima. Nema bacanja/upisa/završetka/oglasa/nagrade/kupovine. Nije mera kašnjenja, cold-cache, native48ili potvrda lokalne v4.",
+    "next": "Posle korisnikove objave proveriti skin-action-buttons.js?v=4 i povratak/promenu skinova u native QA. Hladno mrežno učitavanje na fizičkomS25 i ostale funkcionalne granice vode se odvojeno."
+  },
+  "androidPngIsolationVerification20261031": {
+    "appVersion": "6.43-unchanged",
+    "evidence": "docs/theme-visual-audit/android-png-isolation-2026-10-31/report.json",
+    "status": "Izolovano28PNGmerenje završeno. NezavisniChromeANR i uticaj okruženja potvrđeni; posle hladnogstarta/foreground-a jedanEasterizbor uQAaplikaciji uspešan sa sačuvanimkešom. Hladno mrežno učitavanje/S25/ukupanANRuzrok ostaju otvoreni.",
+    "samples": "Desktoplocal246,8ms;AndroidlocaldvaAVD60410,9ms27/28+ANR;jedanAVDprehladnogstarta40076,2ms28/28;poslehladnogstarta3076,1ms28/28. InicijalniAndroidQA24815ms28/28,maxload24706,2ms/maxdecode188,9ms. DesktopQA569,3ms;ponovljeniAndroidQA363,5ms. Pojedinačni,različiti uslovi;nisu kontrolisano poređenje jednog faktora.",
+    "nativeApp": "Posle oporavka istog5556AVD-a, jedanGreen->Easterodabir uspešan;28PNGreadydo1967ms,0timeout. Nijeend-to-endvremeanimacije;WebViewkešnije brisan. Prethodni37sneuspeh ostaje istorijski dokaz.",
+    "boundaries": "Chromeprvinalogkorak uradio korisnik;neautomatizovanoauth. Nema igre/reklame/nagrade/DB/CDP/privatnogstorage. GPU/rezolucija/podacinisu menjani;istiAVDhladnostartovan,prvivraćen,drugiGreenmeni. Privremeni serveri ugašeni. Samo skripte/evidencija,bezapp/PNG/CSSizmena ili noveobjave.",
+    "next": "Performanse proveravati u stabilnomjednomAVD/foregroundokruženju i fizičkomS25uzodvojeno prvo/ponovljenoučitavanje. Ne povećavatirokponovonaslepo;prioritetizacijuvidljivihSettingsnaspramskrivenihmenu/roomassetaprvopotvrditi merenjem."
+  },
   "themeSelectionDeadlineVerification20261031": {
-    "publishedGameVersion": "6.42",
+    "publishedGameVersion": "6.43",
     "localGameVersion": "6.43",
-    "status": "R38 dijagnostika objavljena/potvrđena. R39 duži deljeni retry lokalno; nije komitovan/deployovan/native potvrđen. Brzina/startup/ANR ostaju otvoreni.",
+    "status": "R39objavljen6.43/829a45b1. Raniji37sneuspeh ostaje;posleoporavkaemulatoranoviEasterizboruspe sa28PNGdo1967ms/sačuvanimkešom. VidetiandroidPngIsolationVerification20261031. Hladnomrežnoučitavanje/startup/ANRnisu potpuno zatvoreni; nema nove runtime izmene.",
+    "postDeploy643": {
+      "evidence": "docs/theme-visual-audit/postdeploy643-2026-10-31/report.json",
+      "native": "QA prviEaster odabir izvršen jednom; duži24000msretry potvrđen timing zapisima, ipak zadržanGreen.28PNGzavrši, poslednji37158ms;41Easter timeoutdogađaj(26rok6000/15rok24000),0PNGgrešaka. Ponovljenizbor izkeša uspešan;brojdogađaja104ostaje104. Keš/podaci/geometrija nisu brisani. Nije10/10nativeili cold-cachemera.",
+      "publicFiles": "Oba servisa imaju sedam odgovarajućih javnihJSfajlova:game6.43,Settings5,diagnostics1,leaderboard4,onlinePlayers6,invite4,header6. Četiri javnaQA PNG-a vrate200/isti sadržaj za1326–1452msna računaru; nije WebView performansmera.",
+      "host": "1,31GBslobodnood15,23GB,CPU54%,emulatori4,99GBworking-set. Prvi emulator potvrđeno Androidhome,privremeno pauziran tokom toplogretry-a,zatim vraćenrunning. DrugiGreenmeni. Topliretry+promenaopterećenjanisu kontrolisan dokazuzroka.",
+      "boundary": "Nema nove igre,reklame,nagrade,revanša,poziva,CDP/privatnogstorageiliDBpristupa. PNG/palete/dimenzije/runtime nisu menjani. Ne produžavati rok ponovo bez merenja stvarnog uskog grla; istražiti WebView queue/transfer/JS/render i opterećenje."
+    },
     "evidence": "docs/theme-visual-audit/postdeploy642-2026-10-31/report.json",
     "native": "Oba servisa2b531195,7javnihJSfajlova odgovara6.42. QA prviEaster neuspešan, ostajeGreen;28PNGpostanu spremni, poslednji18052ms.36timeoutdogađaja:24waiting-load/12decode. PonovljenEaster uspešan bez novihPNGtimingdogađaja; povratakGreen jednim izborom. Keš nije brisan; nije native10/10ili dokaz uzroka sporog transfera/ANR-a.",
     "localChange": "Prvi6s pokušaj ostaje, postojeći deljeni zahtevi dobijaju jedan24s retry umesto drugog6s. Spremnost se primeni odmah kada oba paketa završe; nema fiksnog30s čekanja. Offline i zaštita aktuelnog izbora/naloga ostaju. Nije ubrzanje preuzimanja/dekodiranja, već uklanjanje prerane predaje u proveravanom slučaju.",

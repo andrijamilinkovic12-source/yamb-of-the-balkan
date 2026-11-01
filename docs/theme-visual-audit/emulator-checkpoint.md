@@ -1,5 +1,35 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## R40 — skin keš lokalno ispravljen, native normalan izbor pregledan
+
+[Galerija i precizni rezultati](skin-retention-2026-10-31/index.html). Oba emulatora povezana; korišćen samo5556/Sara u QA. Pošto nije ponuđen sačuvan nastavak, iskorišćeno ranije odobrenje za novu praznu Hotseat/Gost_QA. Zelena tema, početni Žadna glina; preko tri tačke izabrani Neon Cyber, Svetlo zlato i vraćena Žadna glina. Na konačnim kadrovima sva tri skina imaju usklađene kockice, BACAJ/NAJAVA i brojač0. Nema bacanja, upisa, završetka, nagradnog dugmeta, reklame ili kupovine. Izlazak potvrđen normalnim UI; početni skin/Greenmeni i saldo12168 vraćeni, geometrija1440×3120/560dpi i prijava očuvani. Prvi emulator ostao netaknut.
+
+**Nova lokalna promena:** kontrolisana priprema14paketa/120PNG reprodukuje gubitak izabranog nedovršenog paketa u starom kešu. Priprema prijavi uspeh, aktivacija ne uspe. Controller v4 štiti aktivni/izabrani/nedovršene pakete, proverava dekodirane unose i ograničava završen keš na96. Stvarni PNG48skinova/3dugmeta/4brojača i ponavljanje posle greške prolaze u lokalnim testovima. Redovna provera dopunjena regresionim testom. App glavni JS ostaje6.43, PNG/DNK/palete/dimenzije ne menjaju se.
+
+**Granice:** native kadrovi su objavljeni controller3, ne dokaz nove v4. Nisu merene milisekunde/frame-atomicity ili hladna mreža, nema native48skinova, brojača1–3ili novih kupovina. Korisnikov commit/deploy i potvrda nove v4 tek slede. Prethodni spor prviEaster/ANR i fizičkiS25 ostaju otvoreni. Bez CDP/private-storage/DB ili slanja poziva.
+
+## IzolovaniPNG završeni — bez app izmene, sačuvan keš, oporavljen emulator
+
+[Sedam merenja i nativekadri](android-png-isolation-2026-10-31/index.html). NezavisniChrome+lokalni28PNG27/28za60,411s+ANR;jedanAVDpreoporavka40,076s. IstiAVDhladnostartovan bez brisanjapodataka,foreground:lokalno28/28za3,076s;QAinicijalno24,815s(maxload24,706/maxdecode0,189),ponovljeno0,364s. Desktopkontrolelokalno0,247/QA0,569s. Različiti uslovi/pojedinačni uzorci,nije izolovan dokaz jednoguzroka ili S25popravke.
+
+QAaplikacija posle oporavka:jedanGreen->Easterizbor uspešan,28PNGreadydo1967ms/0timeout,sačuvanWebViewkeš. Greenvraćen/završnimenisaldo12168isti. Nema nove igre/oglasa/nagrade/CDP/DB/sessionpristupa. Kodigre/palete/dimenzije/PNGnisu menjani. Prethodni37sneuspeh ostaje. Dva nezavisna ChromeANR-a pokazuju da se svi zastoji ne smeju pripisati samo igri/Renderu.
+
+PrviAVD(Easter_QA_10GB)bioAndroidhome,privremeno ugašen radiRAM-a,ponovo startovan na5554/default. DrugiDuel_QA_Player2na5556sa-no-snapshot-load/-no-boot-anim,bezGPU/geometrijepodesavanja;oba devices/bootcomplete1potvrđeni. Chromezatvoren,oba lokalna servera automatski exit0. Ručni Chromeprvinalogkorak završio korisnik,bez automatizovane prijave. Nema novog deploya; hladnomrežnoučitavanje/skinovi/S25iostalegranicе ostaju.
+
+## Izolovani PNG test — ručni Chrome korak, nije još Android rezultat
+
+[Priprema i nastavak](android-png-isolation-2026-10-31/README.md). Lokalni server28EasterPNG/4.604.051B, local/QA režimi; desktopfixture i schema/scope zaštite PASS. Drugi5556Greenmeni potvrđen/saldo12168;QAforce-stop radi izolacije, otvorenpostojećiChrome. Chromeprvi ekranzaizbornaloga blokira test. Korisnik zamoljen da ručno izabereUsewithoutanaccount, bezContinueas/prijave. Nije automatizovan authdialog; pitanje još bezodgovora. NemaAndroidtestrezultata,novepartije/oglasa/nagrade/DB/CDP ili runtimeizmene. Prviemulatornijemenjan. Serverephemeran12min;pri nastavku proveriti/restartovati i upotrebitiaktuelniport. Poslednji643nativefailureostajeotvoren.
+
+## Kasnija objava6.43/829a45b1 — R39 još nije zatvoren
+
+[Javni fajlovi, PNGtiming i kadrovi](postdeploy643-2026-10-31/index.html). Oba servisa potvrđena na6.43/sedamJSfajlova. DrugaQAaplikacija force-stop/otvorena, keš/podaci/geometrija sačuvani. Početni gradijent pa Greenmeni;19početnihPNGready/0timeout/max4733msodpojedinačnogstarta, nijeapp-readymera. GreenPodešavanja i izbor tema otvoreni.
+
+**PrviEaster ponovo neuspešan.**24sretry je aktivan, ali28PNGzavrši tekdo37158ms.41Easter timeoutdogađaj:26rok6s/15rok24s;32waiting-load/9decode,0PNGerror. KonačanprviishodGreen. Kasniji ponovljeniEasteruspe,104događajaostaje104, kompletnaPodešavanja. Greenvraćenjednimizborom. Neproglašavati18slokalnitestpotvrdomsvihnativekašnjenja.
+
+Host1,31/15,23GBslobodno,CPU54%,emulatorworking-set4,99GB. Prvi5554bioAndroidhome;privremenoavdstop za vreme toplogretry-a, potomavdstart/statusrunning. Ovo menja i keš i opterećenje, pa nije dokazanuzrok. ČetirijavnaQA PNG-a200/istiSHAza1326–1452msna računaru, neAndroidmera. Emulatormrežastatusrawdown/up0,latency0;ništaanetworknije menjano.
+
+Nema nove igre, oglasa, nagradnog/revanšdugmeta, poziva iliDBpristupa. Nema CDP/privatnogstorage. Saldo12168vizuelnoisti, nijeobračunskiDBaudit. Nema novihapp/PNG/CSSizmena, rok nije ponovo povećan. Prikaz i stvarna brzina ostaju otvoreni; sledeće meriti ukupniWebViewposao umesto dodatnogretryroka.
+
 ## 31.10.2026 — native v6.42 i lokalni R39
 
 [Izveštaj](postdeploy642-2026-10-31/index.html). Oba servisa2b531195 imaju6.42/Settings5/diagnostics1i još četiri odgovarajuća kontrolera. Oba emulatora povezana; prvi samo statusrunning, nije pauziran. Druga QA aplikacija force-stop/otvorena bez brisanja keša/podataka/geometrije. am-start istek25s, zatim vidljiv gradijent pa kompletanGreenmeni; nije app-ready mera.1,42GBslobodnood15,23GB.

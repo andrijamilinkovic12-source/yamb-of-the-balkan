@@ -25,7 +25,7 @@ const context = vm.createContext({
     localStorage: { getItem: key => storage.get(key) || null },
     Image: InstantImage,
     Promise,
-    console
+    console, setTimeout, clearTimeout
 });
 vm.runInContext(`const SHOP_DATA = ${JSON.stringify({ SKINS: dice.skins })}`, context);
 vm.runInContext(fs.readFileSync(path.join(root, 'www/skin-action-buttons-data.js'), 'utf8'), context);

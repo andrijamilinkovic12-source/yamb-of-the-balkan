@@ -1,0 +1,34 @@
+{
+  "at": "2026-10-31T16:48:50.013Z",
+  "scope": "Public QA PNG GET from host; not Android WebView/cache/decoder timing.",
+  "rows": [
+    {
+      "asset": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "status": 200,
+      "bytes": 117524,
+      "elapsedMs": 1452,
+      "matchesLocal": true
+    },
+    {
+      "asset": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
+      "status": 200,
+      "bytes": 129344,
+      "elapsedMs": 1358,
+      "matchesLocal": true
+    },
+    {
+      "asset": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
+      "status": 200,
+      "bytes": 259548,
+      "elapsedMs": 1353,
+      "matchesLocal": true
+    },
+    {
+      "asset": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+      "status": 200,
+      "bytes": 101986,
+      "elapsedMs": 1326,
+      "matchesLocal": true
+    }
+  ]
+}

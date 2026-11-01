@@ -1,5 +1,21 @@
 # Početno učitavanje — 30.10.2026.
 
+## R40 — odvojena greška zadržavanja skin PNG paketa
+
+[Dokaz](skin-retention-2026-10-31/index.html). Pod paralelnom pripremom14skinova/120PNG stari keš izbacuje izabrani paket pre završetka; prepare uspe, aktivacija dugmadi ne uspe. Lokalni controller4 zadržava aktivni/izabrani/nedovršene pakete i vraća završen keš na≤96. VM reprodukcija pre/posle i stvarni PNG u izolovanom Edge-u za48skinova/144dugmeta/192brojača PASS. Nema novih PNG ili promene dimenzija. Native objavljeni controller3: tri normalna izbora u praznoj odobrenoj Hotseat partiji vizuelno usklađena, brojač0; Žadna glina vraćena i izašlo uGreenmeni bez igranja/nagrada. **Nova v4 čeka commit/deploy i native potvrdu.** Ova konkretna reprodukcija ne zatvara spor prvi transfer, ANR ili S25.
+
+## Izolovani AndroidPNG — značajan uticaj okruženja, novo cached potvrđivanje
+
+[Tabela i dokazi](android-png-isolation-2026-10-31/index.html). Chrome+lokalniPNGbezigre/Rendera takođeANR:27/28za60,411s. JedanAVD40,076s;istiAVDhladnostartovan/foreground,bezbrisanjapodataka:lokalno3,076s. QAinicijalno24,815s,ponovljeno0,364s;desktopQA0,569s. U QAinicijalnomprolazu dominantanload24,706s,decode≤0,189s. To nisu identični uslovi/ponovljeni statistički uzorci; ne zaključivati jedanuzrok ili trajno popravljenu mrežu/ANR.
+
+Stvarna6.43QAappposleoporavka:jedanEasterizboruspešan,28PNGdo1967ms,0timeout,sačuvankeš. Nema novogruntimepatcha/deploya. Oba emulatoravraćena,Chromei testserverizatvoreni,Greenmeni/saldo12168isti. Za dalju proveru koristiti stabilnoQAokruženje i fizičkiS25,odvojiti hladno od ponovljenog učitavanja; ne produžavatirokponovonaslepo.
+
+## Kasnija objava6.43 — nije rešila prviEaster u novom prolazu
+
+[Native zapis](postdeploy643-2026-10-31/index.html). Oba servisa829a45b1,svi7JSfajlova potvrđeni. PrviEaster odustane iako je duži24sretry aktivan:poslednjiod28PNGready37158ms.41Eastertimeout,0PNGgrešaka. Topli ponovljeni izbor uspe bez novihdogađaja;Greenvraćen. Nije povećavanrokponovo; nema novihruntime/PNGizmena.
+
+Na računaru četiri javnaQA PNG-a200/isti sadržajza1326–1452ms, nijeAndroid/WebViewmera. Host1,31/15,23GBslobodno,CPU54%,emulatori4,99GBworking-set. Prvi neaktivni emulator pauziran samo za topliretry pa vraćenrunning; to nije kontrolisan dokaz uzroka. Početni gradijent ostaje, ne merimo app-ready vreme. **R39/brzina/startup/ANR ostaju otvoreni.** Sledeće meriti ukupni WebView posao i stvarnu resource putanju, ne samo povećavati toleranciju.
+
 ## 31.10.2026 — objavljena6.42, lokalna6.43
 
 [Native timing i slike](postdeploy642-2026-10-31/index.html). Oba servisa2b531195/6.42, sedam javnih fajlova odgovara lokalnoj objavljenoj osnovi. QA prviEaster odustane posle6+6s;28slika konačno spremno, poslednja18052ms.36timeoutdogađaja:24preonload/12decode. PonovljenEaster uspešan bez novihPNGdogađaja; Green vraćen jednim izborom. To objašnjava drugi izbor u ovoj sesiji, ne uzrok dugog transfera/JS/decode/ANR-a. Računar1,42/15,23GBslobodno; oba emulatora rade, nisu pauzirani. am-start komanda istekla, zatim gradijent pa meni; nema app-ready mere.
