@@ -1,0 +1,159 @@
+{
+  "date": "2026-11-01",
+  "finding": "R41",
+  "status": "Lossless PNG optimization applied locally; commit/deploy and Android/phone performance confirmation pending.",
+  "compression": {
+    "assets": 280,
+    "changed": 138,
+    "beforeBytes": 44850648,
+    "afterBytes": 36573939,
+    "savedPercent": 18.45,
+    "themes": [
+      {
+        "theme": "dark",
+        "assets": 28,
+        "changed": 2,
+        "beforeBytes": 4262838,
+        "afterBytes": 4118763,
+        "savedPercent": 3.38
+      },
+      {
+        "theme": "light",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4562871,
+        "afterBytes": 3446070,
+        "savedPercent": 24.48
+      },
+      {
+        "theme": "medium",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4911203,
+        "afterBytes": 3809763,
+        "savedPercent": 22.43
+      },
+      {
+        "theme": "winter",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4503564,
+        "afterBytes": 3539794,
+        "savedPercent": 21.4
+      },
+      {
+        "theme": "neon",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4401793,
+        "afterBytes": 3667581,
+        "savedPercent": 16.68
+      },
+      {
+        "theme": "amethyst",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4277534,
+        "afterBytes": 3519118,
+        "savedPercent": 17.73
+      },
+      {
+        "theme": "easter",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4604051,
+        "afterBytes": 3882647,
+        "savedPercent": 15.67
+      },
+      {
+        "theme": "desert",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4779879,
+        "afterBytes": 3807289,
+        "savedPercent": 20.35
+      },
+      {
+        "theme": "moon",
+        "assets": 28,
+        "changed": 16,
+        "beforeBytes": 4052269,
+        "afterBytes": 3194018,
+        "savedPercent": 21.18
+      },
+      {
+        "theme": "severna",
+        "assets": 28,
+        "changed": 15,
+        "beforeBytes": 4494646,
+        "afterBytes": 3588896,
+        "savedPercent": 20.15
+      }
+    ],
+    "evidence": "compression.json"
+  },
+  "pixelProof": {
+    "rawRgba": "Identical for every candidate;138changed files revalidated before apply, dimensions/alpha/color and relevant metadata equal.",
+    "browser": "280decoded PNG;138before-after browser canvas pixels identical. Fresh isolated desktop Edge, local allowlisted routes only. See browser.json."
+  },
+  "nativeBeforeOptimization": {
+    "app": "QA game6.43/controller4",
+    "device": "emulator-5556;both AVD running;1440x3120/560dpi unchanged",
+    "host": {
+      "freeGiB": 2.25,
+      "totalGiB": 15.23,
+      "cpuPercent": 72
+    },
+    "cachedState": "Persistent WebView/image cache retained. First Easter selection in this process, not empty network cache.",
+    "firstEaster": {
+      "ready": 28,
+      "timeouts": 0,
+      "maxPngElapsedMs": 5111,
+      "maxLoadMs": 5051,
+      "maxDecodeMs": 122,
+      "selection": "One click, ultimately applied. Initial1sframe still Green; settled frame Easter. Not a full transition wall-clock measurement."
+    },
+    "repeatEaster": {
+      "beforeEvents": 80,
+      "afterEvents": 80,
+      "selection": "One click, applied; no new diagnostic events, consistent with retained prepared PNGs."
+    },
+    "globalStartupTimeouts": 1,
+    "boundary": "The one existing global timeout predates this Easter test; not an Easter timeout. No cache/data reset, gameplay, ad, reward, purchase, invitation, DB or private-session access. Green restored, visual balance12168. Native frames and timings PRECEDE optimized PNG deployment."
+  },
+  "tests": {
+    "pass": [
+      "Raw RGBA/metadata equality for280candidate PNGs;138smaller files applied",
+      "Browser280PNGdecode/138pixel-equal pairs",
+      "check:theme-settings-room (stale assertion upgraded to already-published JSv5)",
+      "theme-preload-cache/retention, slow-readiness and in-game switch tests",
+      "tournament-star routing/manifests",
+      "Canonical registry/use-map after refresh"
+    ],
+    "knownExistingFailure": "check-theme-performance.js stops on legacy Green Treasury text/class assertion. Its three input source texts managers.js/teme.css/config.js are unchanged from HEAD; unrelated to PNG encoding. Do not report the full test suite as green."
+  },
+  "delivery": "No new artwork, recoloring, resize, path, palette, identity, gameplay or cache/timeout policy change. Existing URL caches remain visually correct; smaller transfer is for cache misses after deployment. Master files untouched; byte hashes/lengths updated only for matching active delivery paths, not untouched aliases. Decoded pixel memory unchanged.",
+  "remaining": "Measure physicalS25 cold loading after user deployment; earlier37sEaster/ANR and occasional finish clipping remain open. Friend invitation, reconnect/rematch and real reward tests remain separate with prior restrictions.",
+  "screenshots": [
+    {
+      "file": "qa-loading-nov01-before.jpg",
+      "caption": "Početni Green meni"
+    },
+    {
+      "file": "qa-loading-nov01-easter-settled.jpg",
+      "caption": "Prvi izbor Vaskršnje: uspešan"
+    },
+    {
+      "file": "qa-loading-nov01-green-between.jpg",
+      "caption": "Povratak na Zelenu"
+    },
+    {
+      "file": "qa-loading-nov01-easter-repeat.jpg",
+      "caption": "Ponovljeni izbor Vaskršnje: bez novih PNG događaja"
+    },
+    {
+      "file": "qa-loading-nov01-final-menu.jpg",
+      "caption": "Vraćen Green meni, saldo12168"
+    }
+  ]
+}

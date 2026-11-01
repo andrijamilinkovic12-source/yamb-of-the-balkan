@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedOn": "2026-10-31",
+  "generatedOn": "2026-11-01",
   "scope": "Aktivni ponavljani semantički PNG identiteti u 15 soba i podprikazima; univerzalni skinovi i zajednički efekat Ledeno doba su izuzeti.",
   "evidence": "Putanje, PNG potpisi, dimenzije, SHA-256, kodski potrošači i aktivni resolveri. Vizuelna ocena kompozita zahteva zaseban pregled.",
   "themes": [
@@ -2268,7 +2268,7 @@
               "file": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa"
+              "sha256": "1fa2f006bddf8d8831d4eb3f4cdd6e3ba94249b6a53d406abd785ad5e805a685"
             }
           ],
           "sites": [
@@ -3145,7 +3145,7 @@
             "file": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
             "width": 384,
             "height": 384,
-            "sha256": "70d920d37d6036e0c7b7f85b48b8763c2dba189d2ca92421ce5189eaf6622c39"
+            "sha256": "0697c5e0a4685e7702aa56da63971632fce282ed0b15ceea67e522c7e1f37791"
           },
           "variants": [
             {
@@ -4290,7 +4290,7 @@
               "file": "www/assets/theme-packs/light/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "1e748768d6f2dcb8b7eb0a1bd560583a46fdf7667e1ba25bbb94f6205b11cf7b"
+              "sha256": "956967e3d3ea1b9ae9098c534197ad8a81b04775972f275a1b8f99d2110f6c33"
             }
           ],
           "sites": [
@@ -4324,7 +4324,7 @@
               "file": "www/assets/theme-packs/light/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "d41b290410e83420273c39c0d834ad01712a766c816faa143b44fdd3f4b10db5"
+              "sha256": "6198cc98a8169eb3476039dc7e3e43b574cafeff164ada333bac8a814217a7a5"
             }
           ],
           "sites": [
@@ -4358,7 +4358,7 @@
               "file": "www/assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "8457a52818b76da83969a78edc68a51eeb4d3651d2c1cc77b1f3e66c94223100"
+              "sha256": "8945493cf60563052511f1da66487bb86a265753b90463e0d9f6bd9f2dd4df36"
             }
           ],
           "sites": [
@@ -4392,7 +4392,7 @@
               "file": "www/assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "cb277a68eecec026c01501f10c2732738dfc7cab506db142e13c38a1e073a5af"
+              "sha256": "8788ea0b1bb4cddb34fd227cb89da0a3ecad3cc098f54565fde2c34d19833245"
             }
           ],
           "sites": [
@@ -4426,7 +4426,7 @@
               "file": "www/assets/theme-packs/light/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "6214a961c97c25a895661ace3ba1d0da6aeb647201124cb052a119cf2a834a8c"
+              "sha256": "8336607055e3b184e453d97efe998536ed6ce25aca6d3d7afb30dad8a6c27e6a"
             }
           ],
           "sites": [
@@ -4460,7 +4460,7 @@
               "file": "www/assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "92498d68e2e1c624f401355a1fc761ea34c8c380e7e98e129d769a35ab6ca2c4"
+              "sha256": "701d50e7902ab4531b58abf6a7b88fdb1dff341fc9a693bdcb9f34e2b6649c2b"
             }
           ],
           "sites": [
@@ -4528,7 +4528,7 @@
               "file": "www/assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "79e7dc9bab3d2de51070d16f07c463c59799cf10b921ffef4ab58697c031657d"
+              "sha256": "c20fe624364d3a5618aee60bfa7190096c08b343d13e18534c53481b9c577151"
             }
           ],
           "sites": [
@@ -4597,7 +4597,7 @@
               "file": "www/assets/theme-packs/light/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "69684e1c3165c2ffe9bc1599a8c903094de7a52bab3d2a95349f38b4c08b5278"
+              "sha256": "6c2f5d3beaa4adc4c188e21615880bbe46237ccf3f64138b655e1981702cb54b"
             }
           ],
           "sites": [
@@ -4624,14 +4624,14 @@
             "file": "www/assets/theme-packs/light/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "5f803ee11b0a3b749130aa588e876e8dac7a85e3884bc495b6460c978f3d7407"
+            "sha256": "e71e69d85cdabc4c1f5d6f1946db3ca527d05560d20e5581b421fd49dc219eff"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/light/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "a1ef71c82e175557c46a8f3f67ff07a5590f8524c89a1a78f16be96d55c4a361"
+              "sha256": "d3145278013f106d51d2f0b417d364399862f269c1323d5c53ef7552f699eee6"
             }
           ],
           "sites": [
@@ -4665,7 +4665,7 @@
               "file": "www/assets/theme-packs/light/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "5d18605366ea49d7c507dae1033e0809b41e8a89caec5140d18bedce3b78db50"
+              "sha256": "6fda184224408696db859d6c56e3efe3ea5575e7226ac5e37b9e8737e7197073"
             }
           ],
           "sites": [
@@ -4699,7 +4699,7 @@
               "file": "www/assets/theme-packs/light/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "0582b39537421c907c1e871676579d42f397f65b6de81e4ef11fc929438f3889"
+              "sha256": "cf7e6675e2ceb69bae79523c70f0940ac581d36ddf3001e1c76be1089c087fd1"
             }
           ],
           "sites": [
@@ -4734,7 +4734,7 @@
               "file": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "70d920d37d6036e0c7b7f85b48b8763c2dba189d2ca92421ce5189eaf6622c39"
+              "sha256": "0697c5e0a4685e7702aa56da63971632fce282ed0b15ceea67e522c7e1f37791"
             }
           ],
           "sites": [
@@ -4768,7 +4768,7 @@
               "file": "www/assets/theme-packs/light/runtime/menu/ducats-undo-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "943958721f499f20815e77d2ce5b17c3342fce1be8bd458aeefb14cfd9367ced"
+              "sha256": "a4a19629214b08038a0fe77e12f5b8054d2f2c8c2c3157e2f340b9761932af3b"
             }
           ],
           "sites": [
@@ -5542,7 +5542,7 @@
             "file": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
             "width": 384,
             "height": 384,
-            "sha256": "a4ea3a11772dbd8e26631e3a148ec7722e0cdd6345310ff17b3a544c29aebbc8"
+            "sha256": "656a572b72921921290cd7e16fdf557fa3bc15edfc5f8105c7eaf4816b9a260d"
           },
           "variants": [
             {
@@ -6687,7 +6687,7 @@
               "file": "www/assets/theme-packs/medium/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "6fdaf9d63c4d903729bd7278d662dd8ae05bbf33eb91303c3c034b7e18c17202"
+              "sha256": "c1503982b8f547b60b9548fc9fa16da699b2e8d114a562cec6b6998660bc348a"
             }
           ],
           "sites": [
@@ -6721,7 +6721,7 @@
               "file": "www/assets/theme-packs/medium/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "1eaeeca79e4d1c2cd08461e517fc43a63c72b753cce285280977063c3dd49c3d"
+              "sha256": "5dcdda3b02b66ae13390f2d4d91c1185e58a63e71d273d81e5d14bcc36acc93d"
             }
           ],
           "sites": [
@@ -6755,7 +6755,7 @@
               "file": "www/assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "61479856bd101d6f5357d77966c7f45d3e8afa42c826e3f2532206633b7cedae"
+              "sha256": "f44363eda29f5c15fba93a81ce3453e501e33977b98530beaf258b6e2f0c3f54"
             }
           ],
           "sites": [
@@ -6789,7 +6789,7 @@
               "file": "www/assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "5477ef19ec2b81772877530754a7b0a6e0cd54e843c2984b5245742ce2771054"
+              "sha256": "2d6861b9aef5ffd72badcc22e2a36b11d63d5d2d309dd2ca96e8d717a9ccaf0b"
             }
           ],
           "sites": [
@@ -6823,7 +6823,7 @@
               "file": "www/assets/theme-packs/medium/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "cfb03cefe764b891f538bbf5fe8e91a24355b3f7eca3850c9aebcc01b1764373"
+              "sha256": "4f48d62e9feec83fcb6404743049b16cb3d002a285e5537da0fcbc4e1fd89a59"
             }
           ],
           "sites": [
@@ -6857,7 +6857,7 @@
               "file": "www/assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "f05fc7609b851fd8032859230e012f416d55dd5e34beb1e210c6e7d81c988c9f"
+              "sha256": "123e4a3de6a49517594ed33665e1772f1e3b1c8e12734c70e3765c60c90da9d1"
             }
           ],
           "sites": [
@@ -6925,7 +6925,7 @@
               "file": "www/assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "5ef815cc52725c6b8be616a51015c1ea1732855c50d4d85a5d0dd13e352de096"
+              "sha256": "439947ece4a9b6b50716fd8bae3bbfd710fee130ce0d729058ad94369c6b8e41"
             }
           ],
           "sites": [
@@ -6994,7 +6994,7 @@
               "file": "www/assets/theme-packs/medium/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "12237f4d2dceaea955ca3a7ebbb27623f4aad7896f39ebb64a643160fe4aa8d1"
+              "sha256": "c7708ea460d36e55038a00784d761303a8fb6411a9239eda48ed46592ff0bbf1"
             }
           ],
           "sites": [
@@ -7021,14 +7021,14 @@
             "file": "www/assets/theme-packs/medium/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "85d17c23879da18782fc25f4f1127834de54db1ba68f352edcf37490d2b366a5"
+            "sha256": "abd8fd0854f2933a8a158820217405f0d68717f9d4cfba7a25f3098c3a513486"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/medium/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "04d0ec804bb38104d9e28bbefe114ea3ee48b5b57e4f2c4acd2d2048ef2be96c"
+              "sha256": "79e924358dc1ca8aec5d13e4f231e9769ca11b4dc6f5055a7a39815948ca291f"
             }
           ],
           "sites": [
@@ -7062,7 +7062,7 @@
               "file": "www/assets/theme-packs/medium/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "1ee82dfb64def3a7159a1498264d23ab85c89e026f1754e2b429dea86628956d"
+              "sha256": "62facebe66b5ed52635eeb5411d257549c7e9fc56d4420e178571e56c522181f"
             }
           ],
           "sites": [
@@ -7096,7 +7096,7 @@
               "file": "www/assets/theme-packs/medium/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "77d2638fc2d4340f325343592e111d01948a08efcd5e7c23edb80e56475bb5ea"
+              "sha256": "27b2c1b29d764caf4e2e2ac396ba9330731be43dc3a36d0d7cc23a8cec1155e0"
             }
           ],
           "sites": [
@@ -7131,7 +7131,7 @@
               "file": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "a4ea3a11772dbd8e26631e3a148ec7722e0cdd6345310ff17b3a544c29aebbc8"
+              "sha256": "656a572b72921921290cd7e16fdf557fa3bc15edfc5f8105c7eaf4816b9a260d"
             }
           ],
           "sites": [
@@ -7165,7 +7165,7 @@
               "file": "www/assets/theme-packs/medium/runtime/menu/ducats-undo-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "acdb1373c9b523ee63b1f2397d2bac8915a83a58c0845d0f8044485e18e7cf0c"
+              "sha256": "e0bc942434983d5dd0195a69fd52ff5b54a3618bb8b04d75f2d028188b7b315c"
             }
           ],
           "sites": [
@@ -7939,7 +7939,7 @@
             "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c"
+            "sha256": "4de04ecabbed8c992d64e882bce28882556124afef9f912594a5720b0ab74f49"
           },
           "variants": [
             {
@@ -9084,7 +9084,7 @@
               "file": "www/assets/theme-packs/winter/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "6a4c6578bf7caf4df4784b0f7563e829106e978705f23a9c8e2b595f01db82f5"
+              "sha256": "1e3fd38a334b654fb5628a735d0c4c7fce94ad14b82f279f813c277c33cc7158"
             }
           ],
           "sites": [
@@ -9118,7 +9118,7 @@
               "file": "www/assets/theme-packs/winter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "04e66fb6a423938d64a271cd495b59c10eda0fc3134b5feb2f3b5fe068c2cc78"
+              "sha256": "d22bd2238fbcb35082559491cfc7b23fdba3a8145f84c93f5c287a8767a24046"
             }
           ],
           "sites": [
@@ -9152,7 +9152,7 @@
               "file": "www/assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "311195e9f94efdd3817d9d3299618bcdc58d3173eef878a97fd614ed74fe666a"
+              "sha256": "94f7bc8e1fba4e1e7e9e22fb0d3c6df4a3e26bcf5c7da056534907973e48fe5c"
             }
           ],
           "sites": [
@@ -9186,7 +9186,7 @@
               "file": "www/assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "17fced36ad6a090008302d98498371dcd1aeece160f6d310b8c835af8ae84224"
+              "sha256": "1e494a47ae920fd7a4bf88172bdcff7430d900d7aeacbd3dedcac50d827f01ab"
             }
           ],
           "sites": [
@@ -9220,7 +9220,7 @@
               "file": "www/assets/theme-packs/winter/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "42b821f49dff63b2c985714a5d81c413cd1bc25ccf670de0a662871d40b204a0"
+              "sha256": "09389f2e924abca32a1c8211544f79f8ccf3a84b1132dbca4cfe572240b89974"
             }
           ],
           "sites": [
@@ -9254,7 +9254,7 @@
               "file": "www/assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "9b92f6c44d0640258ec8b802d751961d4e47805bc4ddae71207d4d5e1ca5a812"
+              "sha256": "99ec5a4d8044b74fd7599512404638e7566691618f8cecd1fc28b0a7213308ec"
             }
           ],
           "sites": [
@@ -9322,7 +9322,7 @@
               "file": "www/assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "8b641fdf07b834d820338c5eb94297e7c7e3354bab04b2a675ebd233ddfefed3"
+              "sha256": "e612356a487b99d05b743cc9e98da35f43e681911a6158d1e0ae22fa4217d99c"
             }
           ],
           "sites": [
@@ -9391,7 +9391,7 @@
               "file": "www/assets/theme-packs/winter/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "a340eba0896b8cfbd0445371f17645a6e4df7b1cc19b5fe9a0acb3cd9ff1475b"
+              "sha256": "d5199628954c709a005e0632c9b29ba011b48331632d20499af22b3a8f4d2bcf"
             }
           ],
           "sites": [
@@ -9418,14 +9418,14 @@
             "file": "www/assets/theme-packs/winter/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "54a0c99a9b259bd37f4852327366dd8e842451cae55719464c01ace84bc22ddb"
+            "sha256": "4731dc28937378850d5406b15737d60eccd4558e2f86b39a8b4189ae40ef8fa0"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/winter/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "f0845f0a789ada7095605ac64c23f4935c619570b5c5d75d4e1c1539c861853f"
+              "sha256": "1bc3cfc0590a8c0627b09b979425f3c115b5eb4cc79e02b1091a32a8e4e525c5"
             }
           ],
           "sites": [
@@ -9459,7 +9459,7 @@
               "file": "www/assets/theme-packs/winter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "b224d89142ad413568d7d312f40f91e7b065690824dd53cba85f2a02fcd44aa4"
+              "sha256": "3e2dc067c5ec0bef532175b1e9a52c648d29760f0bffc8316147e56cb8ab52dd"
             }
           ],
           "sites": [
@@ -9493,7 +9493,7 @@
               "file": "www/assets/theme-packs/winter/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "037edfee722a7c06c889ba739bff5e5f19be2389a7d5440c08819c4720a59794"
+              "sha256": "c188792dc342ad7bc42b310dab5cf8f5fdc783373a41e2a6b85db0d0a4f997ea"
             }
           ],
           "sites": [
@@ -9528,7 +9528,7 @@
               "file": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c"
+              "sha256": "4de04ecabbed8c992d64e882bce28882556124afef9f912594a5720b0ab74f49"
             }
           ],
           "sites": [
@@ -9562,7 +9562,7 @@
               "file": "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png",
               "width": 384,
               "height": 384,
-              "sha256": "f5ae8b887524e0007e9737d2b460119ce0e8eadeeee0d6f4253ca1a1d0001d56"
+              "sha256": "2d73b77f409d4ad91fccfb04b2cd4f5b6c4996aeb7fcacea5aea10d02e72c1a7"
             }
           ],
           "sites": [
@@ -10336,7 +10336,7 @@
             "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8"
+            "sha256": "ea3819d0d2136e48f03f02a5bb2b090a970aecf7708996db315af3fab91e2273"
           },
           "variants": [
             {
@@ -11481,7 +11481,7 @@
               "file": "www/assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "7366cdfb1b6efbf2be00dee0c8bcfecc689a5dd3df3358ce23d4b77fb232d864"
+              "sha256": "cf7d36dd0d8402ba910e80ef2ea40881fc882db4edc24f0580f2ca71ac51891a"
             }
           ],
           "sites": [
@@ -11515,7 +11515,7 @@
               "file": "www/assets/theme-packs/neon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "0217f3a948c61df38872af34ab9f38f5e3b7c4023a37c9a769598f9fc79456b6"
+              "sha256": "7531c848bc1e17f7f7be53c4591e579d39f285b28036f665e51911d96a96d2ea"
             }
           ],
           "sites": [
@@ -11549,7 +11549,7 @@
               "file": "www/assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "94c3acc9033de9f03c71133eae70d728fe68f4df258f54cba06b1607e6fb2f38"
+              "sha256": "da9aed0e45bec4e41fe46ab494e541856aa86824cf041d4b04aa875f21319a56"
             }
           ],
           "sites": [
@@ -11583,7 +11583,7 @@
               "file": "www/assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "c1269c14eea9453a66bf50088c050a25eb1fd8ac81c84fb4d8549d650e448718"
+              "sha256": "691bb5e54be559f99bb65fbeae3a41886894ec14151b7828dea258647ba17e1d"
             }
           ],
           "sites": [
@@ -11617,7 +11617,7 @@
               "file": "www/assets/theme-packs/neon/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "ecc4662ac37319cdd06ca4615b204d65e02c1909cc3369bf983cd8f7a319a84b"
+              "sha256": "deeb575dea623ee590540c84eb8d22b43f3422cdfe423959ac7e3183791455dc"
             }
           ],
           "sites": [
@@ -11651,7 +11651,7 @@
               "file": "www/assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "2ec9b78a0e38d3e98414422d30f3ce7f6e7e1998cf657471915fd44bb635e0bd"
+              "sha256": "f24b9ddfe025a432b6c4b730866d585880705563d14a469d5374a4c4ef4213ca"
             }
           ],
           "sites": [
@@ -11719,7 +11719,7 @@
               "file": "www/assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "8b97a8950c3a7bab7b26ad4789de95eaf919fd4f3fe76ea054021f685d51a80b"
+              "sha256": "cc12ad412db9cf39cf0cc3ed85e3cfd9ecbf4914982b726334466318f46dadfc"
             }
           ],
           "sites": [
@@ -11788,7 +11788,7 @@
               "file": "www/assets/theme-packs/neon/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "89335c116c08f4bd1f6b46f40d0d6d16fdc92d288c86da9a32f03a5a9ffc74f6"
+              "sha256": "16e08667d47dc0212087f0acc630a2b7fb121a320ac7caf502a772a1920b8dc4"
             }
           ],
           "sites": [
@@ -11815,14 +11815,14 @@
             "file": "www/assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "c48aa72f674f24b8ef6864c611d8c81b70b97a07069ab2bb9dbb5f95e07835c5"
+            "sha256": "f0684da8c67b0eeac0c997cb1cb42871c57db645bdf79851ab4b342966d8767b"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/neon/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "dd97a8cbb018d61d84359bb85eb62face174bb9c7e6ae740424367c08f670b99"
+              "sha256": "53b703c2d03118787a592e412bf9ddf1b40dfb2b6ba05a31f85338d53a7dd045"
             }
           ],
           "sites": [
@@ -11856,7 +11856,7 @@
               "file": "www/assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "c61e9b11930625f10b0cd5608d5f77f4a2c440de33ebec87ef0b2a452ec4e373"
+              "sha256": "7a80f430e2fdb709b6f0c4a4b6c434cfe8d039a95785858c9fcd328cae5a8ae4"
             }
           ],
           "sites": [
@@ -11890,7 +11890,7 @@
               "file": "www/assets/theme-packs/neon/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "765e82e4b4eb20a921702a50704967a19ac4a148b81f906331e002521945d64b"
+              "sha256": "c58b9b8f919e6ac72efddefb8fa47f51181ae2410f06523c843c7dff55cde933"
             }
           ],
           "sites": [
@@ -11925,7 +11925,7 @@
               "file": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8"
+              "sha256": "ea3819d0d2136e48f03f02a5bb2b090a970aecf7708996db315af3fab91e2273"
             }
           ],
           "sites": [
@@ -11959,7 +11959,7 @@
               "file": "www/assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "0c25ada894d0bafa598346ead29671e74d16394ab8514033744ee2b6c299c3a3"
+              "sha256": "f5887567c4e845d76989e3413653f4b26105b6833728ac6f0e67e856cd058b8e"
             }
           ],
           "sites": [
@@ -12733,7 +12733,7 @@
             "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73"
+            "sha256": "bab93191c3b8994e5c042e0f38a67407e757cd916063b420ba6d1ad0574191ec"
           },
           "variants": [
             {
@@ -13878,7 +13878,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "81469b39c075bed6b0509f08cc001d0c992d058f95bee9569719acc7fced719e"
+              "sha256": "3b625b50ea771313ddf67eab192970ae20526d062d375630f8f7bae2a0406401"
             }
           ],
           "sites": [
@@ -13912,7 +13912,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "3276229db3b4a91b911ffba224edc59dfba60b7a075f4a05c216263b26f48f2b"
+              "sha256": "b37587eb811720c46b893dd6c53ab52b367ac76aca022e777e72987994fc8156"
             }
           ],
           "sites": [
@@ -13946,7 +13946,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "168fee2f95eb3d688b1e6c5c8d2043734ff4c1190c7b7c07d381413c885fa69d"
+              "sha256": "f3e53663439a0f830a8b853dffcc07896b2550791a69b404e9a8190088fa303a"
             }
           ],
           "sites": [
@@ -13980,7 +13980,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "baa39ea45c0e9dca6e5faa7cfaf1bea3674eff627f748b17ce6efbe0a41acaa7"
+              "sha256": "19587c5663e3a2c4a88ec7bd043efdf5f373d9d94c4a0128527cba136a95f866"
             }
           ],
           "sites": [
@@ -14014,7 +14014,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "a60715215ce91de579a92fb31f77fea552a2844264d91d4d6f45b4e5967a28aa"
+              "sha256": "398eccf11fe9d54295fcaa16e94495a8998d96ae41dce272882a5a75c9216ee6"
             }
           ],
           "sites": [
@@ -14048,7 +14048,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "aec6009c73886e5d66180fa29d9103cbc0930b18af6cf52ed932bd35c7ee90ee"
+              "sha256": "bcf866664355f2ee005c6bb336fa804a1cca8b9ed76322114a3c628bced353b1"
             }
           ],
           "sites": [
@@ -14116,7 +14116,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "fb98f312594a35d0b0e61685b804d501e2af8bead6aeef7cd52b75f90c6985d6"
+              "sha256": "7fb1882b93dbe3275e95e62591ca946bfa50a35dc459fb84d98f024bde3f678b"
             }
           ],
           "sites": [
@@ -14185,7 +14185,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "7654ff48886bd6a14bdcae575401179e0ee72488835ea30737424d13e4e8e6d7"
+              "sha256": "45c0d6365d295f1ceae0c612eb7dca027fd0be9c35b9f3d5ccf902277765ef81"
             }
           ],
           "sites": [
@@ -14212,14 +14212,14 @@
             "file": "www/assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "5f6571f0b67ceb6fdc53c11cfb30dd04c69af0551d980524593308e1a5bb0ea3"
+            "sha256": "1e171e6881a65ff323abe881553afbf6b2d617d7a36bddb4a72c8eb644dd3ec0"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "8ca14127d37dd31a13636d40924f257b2ac408a6e6aa4bc4b8a716755ae7aa67"
+              "sha256": "b6450c9cb033608615a1e8055190b21f21a4fe83b21f07fa4f9a4cf84ef4dfd4"
             }
           ],
           "sites": [
@@ -14253,7 +14253,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "1d74e3608f57cab9d803557a5f4e0dbbf5d58475198911f8443cfb496677957d"
+              "sha256": "e1345449e673dfae333020466908e5eebee8cb1ee78287eadfec5cca3b1026e8"
             }
           ],
           "sites": [
@@ -14287,7 +14287,7 @@
               "file": "www/assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "a312ad168a0ade3e1493e83b772c22d56b45f07ca70cbd9f31853f692dddf52f"
+              "sha256": "691d59e105d1024b87c7f6fcdd908b794d64f66d5f5ef799b8f43e7525827f39"
             }
           ],
           "sites": [
@@ -14322,7 +14322,7 @@
               "file": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73"
+              "sha256": "bab93191c3b8994e5c042e0f38a67407e757cd916063b420ba6d1ad0574191ec"
             }
           ],
           "sites": [
@@ -14356,7 +14356,7 @@
               "file": "www/assets/theme-packs/amethyst/runtime/menu/ducats-undo-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "7b39fbc535e57b66af855e4827e81b37856a478b36e2fcf44cfb020a95b2cd86"
+              "sha256": "dd435d4fb2d09e7ca929a7102015a80872dd029cf15c65b23f9ac8c052eb836a"
             }
           ],
           "sites": [
@@ -15130,7 +15130,7 @@
             "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541"
+            "sha256": "0a70a520b3b63eedd8b0e373b7d25e99af37bbb4d3089fc5fcf52bc81563612e"
           },
           "variants": [
             {
@@ -16275,7 +16275,7 @@
               "file": "www/assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "7f3381ff22ce5ea77212e4dbcf4720cfd367c6ba5b0ef444a77cb44dd2170ddd"
+              "sha256": "6a3463a5039b067a0c12e6a59402a484b6757b3b98a0942f54d3e96f13ec4ae6"
             }
           ],
           "sites": [
@@ -16309,7 +16309,7 @@
               "file": "www/assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "eedb3921bf884c16a2406a740b6c654b1d32a7110a99430b6e19d2e1f6f2bb43"
+              "sha256": "4d51afa5e370de469bf65a5287f5b8a6dd7ceed3493b89322e52c0ca6542fa5d"
             }
           ],
           "sites": [
@@ -16343,7 +16343,7 @@
               "file": "www/assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "189b119e79fd97f9313cb00ae855b895c3004b9b7823008fafd815c3abdfe8c0"
+              "sha256": "0d7a8bd1009214d2f9b6337c88bd7f6d25e0c62f748fd26dcdd8a9b6486df0f6"
             }
           ],
           "sites": [
@@ -16377,7 +16377,7 @@
               "file": "www/assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "485a381847dac55180a965ef30e27c2a7e86f3127c29e98945e74acee4eb9a81"
+              "sha256": "931ca6c9ec7b3ee5fa179bfb7cf608a01898d15e4a828c58c21ba5df98388289"
             }
           ],
           "sites": [
@@ -16411,7 +16411,7 @@
               "file": "www/assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "e749e4f415a45f3895a753ab40863037f90aaa24aa58e1a9f3fc2b0d2cb27ae0"
+              "sha256": "e66b9881f2c46057eac50833e9fff3eb4c2396b68aea89e7cd6f429514f586ec"
             }
           ],
           "sites": [
@@ -16445,7 +16445,7 @@
               "file": "www/assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "52496e818c69ad737b57aaca826125d5718ff49845a1b7764f57bf3559e36016"
+              "sha256": "aa70389ce0897ef433134d156bb398855b64e3e79bff1978886946f0737771d3"
             }
           ],
           "sites": [
@@ -16513,7 +16513,7 @@
               "file": "www/assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "c029d3d01670d77823b76770cff13a5937d6474d5b4933de1fdeb6f6dceb8d6c"
+              "sha256": "7253c42d9a38db16faa02bcda943fc0ff745ce89fd5c554191294029deb3251c"
             }
           ],
           "sites": [
@@ -16582,7 +16582,7 @@
               "file": "www/assets/theme-packs/easter/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "e11d21fca66acf61cd9538cbb7694e35334053c90cf1e56cbab621f2855a44c6"
+              "sha256": "a5b61785767ab7ac24dd5d42c277ceb499195eb765c5ae4b910b46bc7e4af633"
             }
           ],
           "sites": [
@@ -16609,14 +16609,14 @@
             "file": "www/assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "0cc403f59a5e70753829f64e4a8e472ea890805af4533d1221cd421786ccdd85"
+            "sha256": "b1804da4e1b1b10d115bd44a45c82ceba801b62b92ef86f75b482cbc647d9b4d"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "cef397cd036f45ac4d885aada8b74430a4374ece1a53c2ac50af2084f0d1df1b"
+              "sha256": "eb9277faab910cf1e9973177fb1ba9e9f977bab91b3eae715f3497374148a0d0"
             }
           ],
           "sites": [
@@ -16650,7 +16650,7 @@
               "file": "www/assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "c44efe4ca29647ce12541a966faf6500d4688663f68d8de09b680ade842dd34d"
+              "sha256": "20476c36223114be6d6f37f800b02f858f8dda16c2b01d82f16f20a815eb515f"
             }
           ],
           "sites": [
@@ -16684,7 +16684,7 @@
               "file": "www/assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "7c0d602250237984fd1669f91ad3dc27e69d1bc9e9557ea4151caead0b535e0b"
+              "sha256": "9afa829a5f7db35f24bf2e0680486bd5cc4ede5d28fcf6a2fae6404b46d67c8b"
             }
           ],
           "sites": [
@@ -16719,7 +16719,7 @@
               "file": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541"
+              "sha256": "0a70a520b3b63eedd8b0e373b7d25e99af37bbb4d3089fc5fcf52bc81563612e"
             }
           ],
           "sites": [
@@ -16753,7 +16753,7 @@
               "file": "www/assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "8ac9d8fbd76720a4e4b988dfe2c5425de652f49ca729eca9a167b3c89eacb1c2"
+              "sha256": "94af8a9dbfb4b911fd937a61b55010ece7592a77fa2f587009db9c7ca13e8742"
             }
           ],
           "sites": [
@@ -17527,7 +17527,7 @@
             "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268"
+            "sha256": "59d18aab42dc8e8896fb8159bf7aaa43ac441aafe75b711fa947b80384d31368"
           },
           "variants": [
             {
@@ -18672,7 +18672,7 @@
               "file": "www/assets/theme-packs/desert/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "9c5848908332c75106133fd36d84561d4628abca5eaf2ac190c25ebd2bb985bb"
+              "sha256": "73ec280a50858e30d78f57607793951e621145dba484b4f9aebd12f856f1f931"
             }
           ],
           "sites": [
@@ -18706,7 +18706,7 @@
               "file": "www/assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "50f3f0b2fa1bf1d1b2bb3e81c593cf9894240bde36402fa1a4c31f807f10b8b5"
+              "sha256": "45b797f2a23b1f9194ab6d12153185d7516f03d31504d1c0aac92d03e5a3cc75"
             }
           ],
           "sites": [
@@ -18740,7 +18740,7 @@
               "file": "www/assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "4cd5f33946ab707bccb0f52ca17ecec85b5799d72cbbf488eee5cfb9f25e149a"
+              "sha256": "3bdb921106b9f1d5e69aed01b6bced9eed57d72d942bd9c334eca7657faf3238"
             }
           ],
           "sites": [
@@ -18774,7 +18774,7 @@
               "file": "www/assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "78e13979fa1f463a2a842f381b33b325caff981603874a110f942f22dddd4351"
+              "sha256": "48ef352fc5ffa812969bfe90605c8ecc4333ada8415d09c983b38b10cd552730"
             }
           ],
           "sites": [
@@ -18808,7 +18808,7 @@
               "file": "www/assets/theme-packs/desert/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "bf46ae9d9e4d3e390567adfbc1f238227c51b557143b63454b98d6e73f226a15"
+              "sha256": "9f7f415f6a921ca807a7289fd437cf1171b6744c1bee65ef78fc159622e60b17"
             }
           ],
           "sites": [
@@ -18842,7 +18842,7 @@
               "file": "www/assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "02d435138a1c1569a333df0cf20c60d07230e93cfce4c601d3ccb9637d799451"
+              "sha256": "7a4b0309a9abfa6fbedc9503a8de25131bb0c2fabeebda8c70842a0d52daa578"
             }
           ],
           "sites": [
@@ -18910,7 +18910,7 @@
               "file": "www/assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "e3848e46b11ce07110362c5cc74f776ecd9fe9b6f22e5c4ca4db13f3c9953b28"
+              "sha256": "7a501057954f5eb3eeac5a5efc0834113f79ee7bee200fcf937d8bb4bda135f3"
             }
           ],
           "sites": [
@@ -18979,7 +18979,7 @@
               "file": "www/assets/theme-packs/desert/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "d13bd5db2152a44834c0eac50116b83b23b4c66ce9ed3af613975a73b5ab417e"
+              "sha256": "b296b69c41060b039cac75a68555103f7aa62a8987aa5cfaea62d90c93896039"
             }
           ],
           "sites": [
@@ -19006,14 +19006,14 @@
             "file": "www/assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "8c1c51397525aaa4995ca254b5e1e804e97b4f69cec81f8e9d0d3d2b8ec1eca0"
+            "sha256": "bd347f593f8fb6ef33f0edc780ebf701b953bd6abc339722a6dbd1bef9929fa7"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/desert/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "a028dda17763a01532f4d20bcd7f480cea4eb4b2c2b0e3fd7e4ff1014067a273"
+              "sha256": "9a7e953f1f2eb8b03bd617d54661855e15cbd8e4018f142e2e10f580430261c5"
             }
           ],
           "sites": [
@@ -19047,7 +19047,7 @@
               "file": "www/assets/theme-packs/desert/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "0660a67319653e59d55e3a749371ac0517b660483a5c089b07975ad8a3f336ff"
+              "sha256": "b86e726023737a06e1dd149fb5422246b0352966975943e0ac87320eb69911e6"
             }
           ],
           "sites": [
@@ -19081,7 +19081,7 @@
               "file": "www/assets/theme-packs/desert/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "6b2ab9902f798f8f120293c09985f90bd0f59f56012b75c03e95e2d4f41c0571"
+              "sha256": "5c73278a6c7fd98003755e5a9c0f10580fb21edb77344780cf909b030d331319"
             }
           ],
           "sites": [
@@ -19116,7 +19116,7 @@
               "file": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268"
+              "sha256": "59d18aab42dc8e8896fb8159bf7aaa43ac441aafe75b711fa947b80384d31368"
             }
           ],
           "sites": [
@@ -19150,7 +19150,7 @@
               "file": "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png",
               "width": 384,
               "height": 384,
-              "sha256": "632d2006e8bc6142597557d85fcf04a5e6a905c4d5f61c2ef3163dc97cadb6af"
+              "sha256": "9c337dbec4c25c3f8820222e787ae3e8eb18a5e3517a55160ba3c9da13ab5822"
             }
           ],
           "sites": [
@@ -19924,7 +19924,7 @@
             "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33"
+            "sha256": "db2b976d6d997e07910e993ac12dcefb61c2a1a412d68217f39f7cd004955eeb"
           },
           "variants": [
             {
@@ -21069,7 +21069,7 @@
               "file": "www/assets/theme-packs/moon/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "b5fcdb8ab529832c28e0201285935a3dc9786254d849650d5368b7ebfeb7a386"
+              "sha256": "dc7c7a84230138489ba34e4a3fbebfc8d8511baa14c9bbdd7d6497f8b602e22d"
             }
           ],
           "sites": [
@@ -21103,7 +21103,7 @@
               "file": "www/assets/theme-packs/moon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "b48590208314087f1069733539a591261ed6651db124206ca1289b3c86e99342"
+              "sha256": "b2953449bed876c4c2179a8c39bf15fa2265d9e9624146cb90f58a62313adce3"
             }
           ],
           "sites": [
@@ -21137,7 +21137,7 @@
               "file": "www/assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "8a5044d07b17c69dbbe3de1713991bea58a416f0826b7861252747019e35570f"
+              "sha256": "c58fe32eb396d28d2f429b9d123c73081444748057b9f9a3a8d1f1b82d148aa5"
             }
           ],
           "sites": [
@@ -21171,7 +21171,7 @@
               "file": "www/assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "7184019bf1ab0cb96bb9c256fb89c72ba38d06edbd4b4d3edd0caf1524082c30"
+              "sha256": "60fb5fe7861933d8927795952c2bdfd706c8dba1f59a938e2d3ed60dd7116563"
             }
           ],
           "sites": [
@@ -21205,7 +21205,7 @@
               "file": "www/assets/theme-packs/moon/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "67fecba1319501cfbe869218d44344ee3d91ab04460921340beb5f23483559d0"
+              "sha256": "6e281fb2a60fd3259eb6c3ecae20d1855700ee03aaadd7ef47cce8dcc1b844a9"
             }
           ],
           "sites": [
@@ -21239,7 +21239,7 @@
               "file": "www/assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "df48644ca742438d95cf5288742d41496bdd524c5ad7316a48619107f0c6ed45"
+              "sha256": "c0c0458b25fca17002f1d2767d3bacae2ec6747e0c13cdb75182b71503158e0c"
             }
           ],
           "sites": [
@@ -21307,7 +21307,7 @@
               "file": "www/assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "3f44572de843d3dcaf8929e39b0786850f0ad30a815d2f6ec5de775246e3d5c9"
+              "sha256": "69e18ec5efe7fb68d6c6472b8bbae23b9a4c0fb40878e12997457474b123219e"
             }
           ],
           "sites": [
@@ -21376,7 +21376,7 @@
               "file": "www/assets/theme-packs/moon/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "5b5613729aee2673dd393c9a2b31f5d107222845cc21a3c8b1344c3c3c67f919"
+              "sha256": "5c0f95c702d6d01dd0677e7a2a7f10576ad318fc5d6d4c27e269aef49930a712"
             }
           ],
           "sites": [
@@ -21403,14 +21403,14 @@
             "file": "www/assets/theme-packs/moon/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "144183e42d74225fb5f031aab86503cdb4468f60d234cc72f075040c2dd26db2"
+            "sha256": "6abe5021d63ad88696c6c9e61556d0244d3a5213a76f49a3483c9988deb4311d"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/moon/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "9d7b266ba676b15d7914ba24be30fcc3975ab4958cd133f2677dfb4c47af6d37"
+              "sha256": "9be2f95b82a44df1c1cce9b6096510388c016af5da8be2635b3b787397756bc8"
             }
           ],
           "sites": [
@@ -21444,7 +21444,7 @@
               "file": "www/assets/theme-packs/moon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "6054f6e40b6435b8efcd93fc6f6295d96156c4a7b69b156514557e0e98ee15d5"
+              "sha256": "18d3c737fdee6b477d686e5667fedcc427d15239ee7284f82b5d40506a6fbe40"
             }
           ],
           "sites": [
@@ -21478,7 +21478,7 @@
               "file": "www/assets/theme-packs/moon/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "5aaf042df746ebd3022ca84f23937bf495a428c9b17f77453f8a2d5d86729aaa"
+              "sha256": "766089a0e7fa7e28a49232999cfe547b65af3979d0ac6704cd5ca0ebb70c04f7"
             }
           ],
           "sites": [
@@ -21513,7 +21513,7 @@
               "file": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33"
+              "sha256": "db2b976d6d997e07910e993ac12dcefb61c2a1a412d68217f39f7cd004955eeb"
             }
           ],
           "sites": [
@@ -21547,7 +21547,7 @@
               "file": "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png",
               "width": 384,
               "height": 384,
-              "sha256": "52ad5e453c7f58c739093522d43360cae240868b723203a01bf3e2eb7096952e"
+              "sha256": "d92a1cebc0294959b47b9b327ffcf34eabbf5cdd10e3419bc00563b9331c4d14"
             }
           ],
           "sites": [
@@ -22321,7 +22321,7 @@
             "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
             "width": 384,
             "height": 384,
-            "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104"
+            "sha256": "557d1ca327bcc6e865ef09fa2e9778820faa5aa964ad27abbec50128c5728ffd"
           },
           "variants": [
             {
@@ -23466,7 +23466,7 @@
               "file": "www/assets/theme-packs/severna/canonical/solo-room-identity/solo-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "2c2a6b2467ca5b25d508d9d9d1e86a05b52005ed3f14416976e658586b9eb662"
+              "sha256": "a643326f0a9b80a09af9cc32409176464aa69bb68cfcbf0beb0022f791a11af7"
             }
           ],
           "sites": [
@@ -23500,7 +23500,7 @@
               "file": "www/assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "d831efb77b55e6e69a48b4fa4afd3815fbaa6a5215812aa36c7d2c5f0583ee43"
+              "sha256": "95921d452153f5876fd0ef9a28a45e830253dd243b35d8b8fb2eb1ffa4e3f59f"
             }
           ],
           "sites": [
@@ -23534,7 +23534,7 @@
               "file": "www/assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "9b3e71f2d314427cf5163340a66f838c2fba1e901ed48a7f832891bd06dccc4a"
+              "sha256": "25bd3f5c0ea736705262051636ac473f3d80fde970ae3b03d9c73b849f601ed4"
             }
           ],
           "sites": [
@@ -23568,7 +23568,7 @@
               "file": "www/assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "378814109f577e144a6a90fe9f0e9f17acfe7ecd16e2c73b3dc8dc2bbcec7510"
+              "sha256": "84e7ab41ef04b0148683440535aff8498fa0d4c14d2bd0a4098b7961faaf5463"
             }
           ],
           "sites": [
@@ -23602,7 +23602,7 @@
               "file": "www/assets/theme-packs/severna/canonical/daily-room-identity/daily-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "68d4999d56991215eb4994f0ac22bb195a9cf9e91293e65b7578bf517af7cad1"
+              "sha256": "888581e86ed7dc0bf12eefce8b8dcb9d8368670d6c6aea60cf2effe37cac0f34"
             }
           ],
           "sites": [
@@ -23636,7 +23636,7 @@
               "file": "www/assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "ac5e9b22880f4290a97091dc99bd5e418ff6a07966f0b0b8b32eeb5923c8c8dc"
+              "sha256": "6001b96f514ac9d144b87a132cf14e4a0e33d960748dc525bbce6da8b372d264"
             }
           ],
           "sites": [
@@ -23704,7 +23704,7 @@
               "file": "www/assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "6fada5acb9fe8ffae683b7e0d2439786fb4199f957ab33e345fcabb009a63e0b"
+              "sha256": "426f44c422829b6455a0e77cc3f60a0bf5b0122e18d201019b116046c35e5e2e"
             }
           ],
           "sites": [
@@ -23773,7 +23773,7 @@
               "file": "www/assets/theme-packs/severna/canonical/rules-room-identity/rules-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "cc7103ccb55be7108f2d0f445bac44ab8866c587507810c24a5e4ac66a4d08ee"
+              "sha256": "a9ad596186d4ac5c280d2962a4078b45cc34fdd19ebeb4d834ce7403ef4cec1e"
             }
           ],
           "sites": [
@@ -23800,14 +23800,14 @@
             "file": "www/assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png",
             "width": 512,
             "height": 512,
-            "sha256": "476289d9ccf2fd667db56cc24e30b0f0386a1d60ae3f5e450f4c1332daa89d39"
+            "sha256": "980c4b7f93de12b460c3a415ec54b249cfa6ea5d7a1882502939a92d5f5bfc09"
           },
           "variants": [
             {
               "file": "www/assets/theme-packs/severna/canonical/settings-room-identity/settings-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "0d1f0e85e55a168e5ddd3c86cf971be198f698140a5cdee905c8ca88ffea7625"
+              "sha256": "20ebb00c68bba869c16861162a8960d2612ab1eafbd59a2f4ce614b46ce72bab"
             }
           ],
           "sites": [
@@ -23841,7 +23841,7 @@
               "file": "www/assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-menu-v1.png",
               "width": 384,
               "height": 384,
-              "sha256": "7ccbfc4131a3fdd6c6bcdca3840e9c14c1327854d599f9cea915045b80fa9c20"
+              "sha256": "e7413f4c7b69d0367e49ac932d7c6bc4b80c4b70c9c046960080377f5472ffe0"
             }
           ],
           "sites": [
@@ -23875,7 +23875,7 @@
               "file": "www/assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
               "width": 384,
               "height": 384,
-              "sha256": "71eadc35761e5c179f55dfab166b57ec00f0536999f0846dd7bc51d7cd936a54"
+              "sha256": "c63fdd7cc63fd28264eacd65c3c3404cd807ee66d524f287aec8d13e55714fd9"
             }
           ],
           "sites": [
@@ -23910,7 +23910,7 @@
               "file": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
               "width": 384,
               "height": 384,
-              "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104"
+              "sha256": "557d1ca327bcc6e865ef09fa2e9778820faa5aa964ad27abbec50128c5728ffd"
             }
           ],
           "sites": [
@@ -23944,7 +23944,7 @@
               "file": "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png",
               "width": 384,
               "height": 384,
-              "sha256": "e90033963671ab6849ba08c657a95860b40195f0c605c28dcbf2cd66b83cd617"
+              "sha256": "4b2d4c71099fecab556eadb511c2ed0544e3a4bc29c2e93a803220483a5e13a5"
             }
           ],
           "sites": [

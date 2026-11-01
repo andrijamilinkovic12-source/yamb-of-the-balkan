@@ -1,5 +1,25 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## 1.11 — test samo poziva, R42 lokalno ispravljen
+
+[Dokazi i granice](invite-startup-2026-11-01/README.md). Oba QA naloga prijavljena; Andrija5554/Moon i Sara5556/Green, originalnih1440×3120/560dpi. Korisnik izričito ograničio: „Proveri samo poziv, bez ulaska u duel“. Dva početna Sara→Andrija pokušaja daju potvrdu slanja, bez modala kod primaoca posle svežeg starta. Obrnuti smer daje Sarin modal; odbijen. Posle Andrijinog prvog otvaranja sobe i povratka u meni Sara→Andrija daje modal; takođe odbijen. Na snimcima nije potvrđen pošiljaočev toast o odbijanju. Oba menija/salda2939/12168 očuvana; nema prihvatanja, duela, bacanja, rezultata, oglasa, preuzimanja ili revanša. Nema DB/CDP/private-session pristupa. Novo pokretanje primary aplikacije usporeno, am-start timeout nije dokaz uzroka zastoja.
+
+**R42:** lokalna6.44 registruje pet postojećih room-invite handlera odmah pri stvaranju socketa, uz po jedan handler kroz ponovni game setup. Regresija pre izmene pada na nedostajućem incoming_room_invite listeneru; startup/decline/busy/status i stvarni lokalni Socket.IO testovi posle prolaze. PNG mapa8uloga×10tema prolazi. Stari objavljeni6.43 ostaje na emulatorima; snimci reprodukuju problem i ne predstavljaju primenu novog koda. **Bez commita/deploya; izmene akumulirati za kasniju zajedničku objavu.** Ne ponavljati zahtev za stvarni duel/tehnički rezultat, koje je korisnik isključio iz ovog koraka.
+
+## 1.11 — merenje i lokalna losslessPNG optimizacija R41
+
+[Dokazi](startup-lossless-2026-11-01/index.html). Oba emulatora ostala povezana, korišćen samo5556QA. GreenSettings→Easter jednim izborom uspe; svih28PNGready,0Eastertimeout,max5111ms(load5051/decode122),zbirni početni dijagnostički timeout1postojao pre provere. PovratakGreen, ponovljeniEasteruspe bez novihdogađaja80→80. Keš/podaci/geometrija nisu brisani, nije cold-cache/end-to-endS25. Host2,25GBslobodno/15,23GB/CPU72%. VraćenGreenmeni/saldo12168;bezigre/reklame/nagrade/kupovine/poziva/DB/CDP.
+
+Posle native merenja lokalno komprimovano138od280startup/menu/SettingsPNG kroz10tema,ukupno18,45%manje bajtova. Svaki RGBApiksel,metapodaci,dimenzija/alphaisti;280browserdecode/138canvasjednakosti PASS. Hashovi/bytesregistara osveženi samo po odgovarajućim aktivnim putanjama. Nova kompresija nije deployovana; kadrovi ne potvrđuju ubrzanje. Masteri/DNK/izgled/URL/retrykode ne menjaju se. Settingssuite/cache/retention/switch/tournamentstarprolaze, stari performancecheckerima nezavisan GreenTreasurytext/classassertbaselinefail. Sledećeposleobjave proveriti javnePNGhashove i stvarni transfer; raniji37s/ANR/S25/retke funkcije nisu zatvoreni.
+
+## 1.11.2026 — oba emulatora pokrenuta, R40 posle objave pregledan
+
+[Nova galerija i granice provere](skin-postdeploy-2026-11-01/index.html). Easter_QA_10GB:5554 i Duel_QA_Player2:5556 bootcomplete1/ADBdevice i Windows prozori potvrđeni, bez wipe-a/geometrijskih izmena. Prvi Androidhome, bez otvaranja naloga. Drugi QA otvoren normalnim MainActivity; prijava sačuvana, Green/saldo12168. Početni kadar je gradijent, sledeći kompletan meni; Activity5377msnije mera app-ready/brzine.
+
+Commitede76cb5 sa controller4 je objavljen na oba servisa; javni game6.43, skin-controller4 i counter1 HTTP200/hash jednaki lokalnom. Na drugom nije ponuđen sačuvan nastavak: iskorišćeno ranije odobrenje za praznu Hotseat/Gost_QA. Green tema, Žadna glina→Neon→Vaskrs→Neon→Žadna glina; četiri pojedinačna odabira uspešna, kockice, BACAJ/NAJAVA i brojač0 usklađeni na konačnim kadrovima. Normalan izlazak, Greenmeni/12168 vraćen. Bez bacanja, upisa, završetka, reklame, nagradnog/revanšdugmeta, kupovine, poziva, DB/CDP/private-storage.
+
+Ovo je ciljani native dokaz posle objave, ne14paralelnih paketa/120PNG reprodukcija, native48skinova, brojači1–3, prava kupljenog skina, hladna mreža/S25 ili merenje svake animacione sličice. Publichash ne čita loaded bytes Androida. R40više ne čeka commit/deploy; raniji hladni transfer/startup/ANR, povremeni odsečeni završni panel i druge funkcionalne granice ostaju otvorene. Ovaj nastavak menja samo evidenciju, bez novog app/PNG/CSSpatcha.
+
 ## R40 — skin keš lokalno ispravljen, native normalan izbor pregledan
 
 [Galerija i precizni rezultati](skin-retention-2026-10-31/index.html). Oba emulatora povezana; korišćen samo5556/Sara u QA. Pošto nije ponuđen sačuvan nastavak, iskorišćeno ranije odobrenje za novu praznu Hotseat/Gost_QA. Zelena tema, početni Žadna glina; preko tri tačke izabrani Neon Cyber, Svetlo zlato i vraćena Žadna glina. Na konačnim kadrovima sva tri skina imaju usklađene kockice, BACAJ/NAJAVA i brojač0. Nema bacanja, upisa, završetka, nagradnog dugmeta, reklame ili kupovine. Izlazak potvrđen normalnim UI; početni skin/Greenmeni i saldo12168 vraćeni, geometrija1440×3120/560dpi i prijava očuvani. Prvi emulator ostao netaknut.

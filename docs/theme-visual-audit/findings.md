@@ -1,5 +1,21 @@
 # Vizuelni audit PNG assetsa
 
+## R42 — poziv prijatelju izostane posle svežeg pokretanja
+
+[Native reprodukcija i lokalni testovi](invite-startup-2026-11-01/README.md). Na objavljenoj6.43 Sara→Andrija daje potvrdu slanja, bez modala kod sveže pokrenutog primaoca. Andrija→Sara modal primljen/odbijen; potom i Sara→Andrija radi nakon što je Andrija prethodno otvorio sobu. Nije prihvaćen nijedan poziv ili započet duel. Salda2939/12168 nepromenjena; oba emulatora vraćena u meni. Potvrda odbijanja kod pošiljaoca nije uhvaćena na snimcima.
+
+Uzrok potvrđen regresijom stvarnog startup metoda: pet room-invite događaja bilo je vezano samo za naknadni setupSocketListeners. Isti handleri sada se idempotentno postavljaju odmah pri stvaranju socketa. Pre izmene startup test pada; posle startup/rebind/decline/busy/status i localhost integracija, kao i mapiranje PNG10tema, prolaze. **Lokalna6.44 nije commitovana/objavljena**; nova native potvrda čeka kasniju zajedničku objavu. Nema izmene servera, pravila nagrada, paleta/DNK, PNG ili dimenzija. Prihvatanje, tehnički rezultat i revanš isključeni su korisnikovim zahtevom za ovaj korak, ne čekaju ponovno odobrenje.
+
+## R41 — početni PNG paketi smanjeni bez promene piksela
+
+[Rezultati po temi, kontrolne sume i native kadrovi](startup-lossless-2026-11-01/index.html). Lokalno138od280PNG u početnim/menu/Settingspaketima10tema smanjeno sa44.850.648na36.573.939B(18,45%). Bez resamplinga/quantizacije/recoloringa; masteri netaknuti. Svaki RGBApiksel/metapodaci/dimenzija/providnost jednaki, browser280decode i138jednakih pre/poslecanvasparova PASS. Runtimehash/bytes evidencija ažurirana po putanji. PNG identiteti i URL ostaju; postojeći stari cache vizuelno ispravan. DecodedRAMisti, nema promene loader/retry politike.
+
+Native PRE kompresije: prviEaster28ready/0timeout,max5111ms,load5051/decode122ms; ponovljeni izbor80→80PNGdogađaja. Jedan raniji globalni timeout ne pripada tomEasterizboru. Keš sačuvan, nije cold-cache/S25/end-to-end benchmark; CPU72%. Green/saldo12168vraćen, bez igranja/nagrada. Nova kompresija **nije commitovana/objavljena**; mrežni efekat mora se meriti posle deploya. Settingsregresije i kanonske provere prolaze; postojeći check-theme-performance staje na zastarelom GreenTreasury tekst/classassertu, čiji su managers/teme/config izvori jednakiHEAD-u. Nije nova PNG regresija i ceo test suite nije proglašen zelenim.
+
+## 1.11 — R40 objavljen; normalan native izbor i povratak potvrđeni
+
+[Devet kadrova i javni fajlovi](skin-postdeploy-2026-11-01/index.html). Oba servisa controller4/game6.43/counter1 odgovaraju commituede76cb5. Oba emulatora ponovo pokrenuta; drugi QA: prazna odobrena Hotseat, Žadna glina→Neon→Vaskrs→Neon→Žadna glina, kockice/dugmad/brojač0 usklađeni. Greenmeni/12168 vraćen; bez bacanja/upisa/završetka/nagrada. Nema nove app izmene, samo evidencija. **R40 ne čeka više commit/deploy.** Ranija kontrolisana14paketa/120PNG reprodukcija ostaje lokalni dokaz; native11dostupnih skinova ne izaziva isti pritisak. Hladno učitavanje/ANR/S25 i ostale funkcionalne provere ostaju otvoreni. Prethodni status ispod je istorija31.10.
+
 ## R40 — izabrani skin izgubi PNG paket tokom paralelne pripreme
 
 [Dokazi i šest native kadrova](skin-retention-2026-10-31/index.html). Lokalno reprodukovano:14paketa/120PNG, keš izbaci nedovršene slike izabranog skina; priprema uspe, ali aktivacija vrati false i ostavi prethodna dugmad. Ispravka zadržava vidljivi/izabrani/nedovršene pakete, proverava dekodiranu spremnost i vraća završeni keš na≤96. Tri dugmeta i četiri brojača svih48skinova provereni stvarnim PNG u izolovanom Edge-u; retry koristi7spremnih slika. Jedna nova regresiona provera uključena u redovni check:skin-action-buttons.

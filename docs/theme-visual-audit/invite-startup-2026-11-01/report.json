@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-01",
+  "finding": "R42",
+  "status": "local_fix_verified_not_committed_not_deployed",
+  "publishedClient": "6.43",
+  "localClient": "6.44",
+  "permission": "Proveri samo poziv, bez ulaska u duel",
+  "native": {
+    "devices": [
+      "emulator-5554 / Andrija / Moon",
+      "emulator-5556 / Sara / Green"
+    ],
+    "geometry": "1440x3120 / 560dpi unchanged",
+    "initialSaraToAndrija": "Sender confirmation observed twice; recipient modal absent on captured frames before receiver ever opened a friend room in this app session.",
+    "reverseAndrijaToSara": "Recipient modal observed; cancel tapped and recipient returned to menu.",
+    "SaraToAndrijaAfterReceiverOpenedRoom": "Recipient modal now observed and cancelled, with unchanged published client. Corroborates listener initialization defect.",
+    "hostDeclineToast": "Not captured. Do not mark actual sender-side decline notification as verified.",
+    "accepted": 0,
+    "matchesStarted": 0,
+    "rolls": 0,
+    "adOrRewardButtons": 0,
+    "finalVisibleBalances": {
+      "Andrija": 2939,
+      "Sara": 12168
+    },
+    "finalState": "Both QA main menus; no modal or hosted waiting room remains."
+  },
+  "cause": "initSocketConnection registered incoming_challenge but not incoming_room_invite/status events. The latter were installed only by setupSocketListeners during later game/room entry.",
+  "fix": "Idempotent setupRoomInviteListeners registers the same five existing invitation handlers immediately when the socket is created and when game listeners are set up. No reward/server/acceptance behavior change.",
+  "tests": {
+    "before": "New startup regression fails on published source: incoming_room_invite listener missing.",
+    "after": "npm run check:theme-invite-friend-room PASS: ten-theme PNG mapping, actual startup method, one handler per event across repeat/full setup, decline without join, busy response, themed status notices; isolated localhost integration send/accept/decline/expiry guard/duplicate/offline/busy/cancelled host.",
+    "isolation": "Local integration server has no Mongo or Firebase credentials; synthetic clients only. No real QA match accepted."
+  },
+  "boundaries": [
+    "Native screenshots show published 6.43, not local fix 6.44.",
+    "Native reception/decline viewed in Green and Moon; static room assets verified for all ten themes.",
+    "No real acceptance, duel, technical result, rematch, reconnect or reward test: excluded by user.",
+    "No private storage/session/CDP/DB access, no commit or deploy.",
+    "First sandboxed localhost test did not reach health check; same isolated test with localhost permission passed before and after fix."
+  ],
+  "screenshots": [
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-send-stable.png",
+      "sha256": "63f41aadd79f498680ac4f9a55505aa27af7b445e90746af52c32a1d7810346b",
+      "preview": "qa-invite-nov01-send-stable.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-receipt-later.png",
+      "sha256": "a36b12e5410c5698c3ebe42bf3bc7a7f152b8833b8d5bf68cd662388cd259bda",
+      "preview": "qa-invite-nov01-receipt-later.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-reverse-received.png",
+      "sha256": "6a9616d48494bf4b9817413cff64e25dc57bbc4818635651246bf57a61e7fc59",
+      "preview": "qa-invite-nov01-reverse-received.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-declined.png",
+      "sha256": "35f90880e40a8740db7e24428fc66d47f010b974131b0f1a29932d4734ffa98a",
+      "preview": "qa-invite-nov01-declined.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-after-room-received.png",
+      "sha256": "e70a3abb6938548fb1beac027a2b86b2f57507086803ddfb877f38b232fe3d6c",
+      "preview": "qa-invite-nov01-after-room-received.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-after-room-declined.png",
+      "sha256": "8bde1e2353cc311d8831597034317d9e7ebc9a9c6a82b12cc47b2e5603e4d8c7",
+      "preview": "qa-invite-nov01-after-room-declined.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-final-andrija-menu.png",
+      "sha256": "e501ab7b31b41596d2fb3d65b436aa4f9cc1030744f42cf8a4ed03b14a72e578",
+      "preview": "qa-invite-nov01-final-andrija-menu.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/qa-invite-nov01-final-sara-settled.png",
+      "sha256": "674d1b3760a77544c2c0e575c803383991af231c18fb6a744605051d04c810f0",
+      "preview": "qa-invite-nov01-final-sara-settled.jpg",
+      "scope": "Native visible UI screenshot; JPEG preview resized without content edits"
+    }
+  ]
+}

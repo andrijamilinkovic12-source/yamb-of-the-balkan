@@ -13,7 +13,10 @@
   },
   "master": {
     "path": "green-statistics-room-master-v1.png",
-    "size": [1254, 1254],
+    "size": [
+      1254,
+      1254
+    ],
     "bytes": 601843,
     "sha256": "a6b66b766925133dd68cce4c290087770d602b633960d082cc42b90ac1a498ea",
     "approvedSource": "source-assets/green-soft-clay-hires/statistics-free-v2.png",
@@ -31,13 +34,28 @@
         "Green Statistics room-on-demand package"
       ],
       "displaySizes": [
-        [34, 34],
-        [45, 45],
-        ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"],
-        ["responsive-inline", "responsive-inline"]
+        [
+          34,
+          34
+        ],
+        [
+          45,
+          45
+        ],
+        [
+          "clamp(210px, 34vmin, 290px)",
+          "clamp(210px, 34vmin, 290px)"
+        ],
+        [
+          "responsive-inline",
+          "responsive-inline"
+        ]
       ],
       "runtime": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png",
-      "runtimeSize": [512, 512],
+      "runtimeSize": [
+        512,
+        512
+      ],
       "runtimeBytes": 99726,
       "runtimeSha256": "1b410b9c5af60dfa552122a9eb2ba70abb05bb4f3fdfc4acd7ed0868679611f0",
       "activeRuntime": "www/assets/green-soft-clay/statistics-free-v2.png",
@@ -52,11 +70,23 @@
         "Green main-menu Statistics button",
         "Green startup preload collected from the active main-menu DOM"
       ],
-      "displaySizes": [[52, 52], [46, 46]],
+      "displaySizes": [
+        [
+          52,
+          52
+        ],
+        [
+          46,
+          46
+        ]
+      ],
       "runtime": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
-      "runtimeSize": [384, 384],
-      "runtimeBytes": 60928,
-      "runtimeSha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa",
+      "runtimeSize": [
+        384,
+        384
+      ],
+      "runtimeBytes": 60173,
+      "runtimeSha256": "1fa2f006bddf8d8831d4eb3f4cdd6e3ba94249b6a53d406abd785ad5e805a685",
       "activeRuntime": "www/assets/green-soft-clay/runtime/menu/statistics-free-v2.png",
       "activeRuntimeSha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa",
       "expectedCanonicalReferences": 2,
@@ -68,10 +98,16 @@
       "id": "statistics-pro-v1",
       "status": "rejected-orphan",
       "source": "source-assets/green-soft-clay-hires/statistics-pro-v1.png",
-      "sourceSize": [1254, 1254],
+      "sourceSize": [
+        1254,
+        1254
+      ],
       "sourceSha256": "9d218e445b401c788dfcd0e0fd2dbb732e34006ab8cfc10c0f8139a4ea073c1e",
       "runtime": "www/assets/green-soft-clay/statistics-pro-v1.png",
-      "runtimeSize": [512, 512],
+      "runtimeSize": [
+        512,
+        512
+      ],
       "runtimeSha256": "6d90b2ede4d24444469d9f017793a226ce96bf60e80bff9e0db3a5fa8330762d",
       "activeReferences": 0,
       "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",

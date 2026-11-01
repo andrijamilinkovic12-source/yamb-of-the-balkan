@@ -4510,6 +4510,8 @@ class YambApp {
                     timeout: 20000,
                     autoConnect: true
                 });
+                // Friend invitations must also arrive in a freshly opened main menu.
+                this.setupRoomInviteListeners();
                 this.bindConnectionDiagnosticListeners();
 
                 this.socket.on('connect', async () => {
@@ -7387,6 +7389,98 @@ class YambApp {
         }
     }
 
+    setupRoomInviteListeners() {
+        if (!this.socket) return;
+        this.socket.off('incoming_room_invite');
+        this.socket.off('room_invite_accepted');
+        this.socket.off('room_invite_declined');
+        this.socket.off('room_invite_busy');
+        this.socket.off('room_invite_expired');
+
+        const showRoomInviteStatus = (key, fallback, data = {}, options = {}) => {
+            const safeName = this.escapeHtml(data.targetName || data.name || getFallbackPlayerName());
+            const text = (gt(key) || fallback).replace('{0}', safeName);
+            const title = gt('alert_invite_title') || "POZIVNICA";
+            if (typeof window.showNotification === 'function') {
+                const theme = localStorage.getItem('yamb_theme') || 'dark';
+                window.showNotification(title, text, {
+                    icon: this.getMainRoomPackSource(theme, 'invite')
+                        || 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
+                    className: 'invite-room-toast',
+                    ...options
+                });
+            } else {
+                this.modal.alert(text, title);
+            }
+        };
+
+        this.socket.on('room_invite_accepted', (data = {}) => {
+            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data);
+        });
+
+        this.socket.on('room_invite_declined', (data = {}) => {
+            showRoomInviteStatus('room_invite_declined', 'Igrač {0} je odbio pozivnicu.', data);
+        });
+
+        this.socket.on('room_invite_busy', (data = {}) => {
+            showRoomInviteStatus('room_invite_busy', 'Igrač {0} je trenutno zauzet.', data);
+        });
+
+        this.socket.on('room_invite_expired', (data = {}) => {
+            showRoomInviteStatus('room_invite_expired', 'Igrač {0} nije odgovorio na pozivnicu.', data);
+        });
+
+        this.socket.on('incoming_room_invite', async (data) => {
+            let realHostName = data.hostName;
+            let hostSocketId = data.hostSocketId || null;
+            const inviteId = data.inviteId || '';
+            const expiresAt = data.expiresAt || 0;
+            const sendRoomInviteResponse = (payload = {}) => {
+                if (!this.socket || !this.socket.connected) return Promise.resolve({ ok: false, reason: 'sys_no_conn' });
+                return this.emitSocketAck('room_invite_response', {
+                    hostSocketId,
+                    roomId: data.roomId,
+                    inviteId,
+                    ...payload
+                }, 2500);
+            };
+
+            if (data.hostName && data.hostName.includes('|||')) {
+                const parts = data.hostName.split('|||');
+                realHostName = parts[0];
+                hostSocketId = hostSocketId || parts[1];
+            }
+
+            if (this.isDoNotDisturbActive()) {
+                sendRoomInviteResponse({ accepted: false, busy: true });
+                return;
+            }
+
+            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || getFallbackPlayerName()));
+            const accepted = await this.modal.confirm(msg);
+
+            if (accepted && expiresAt && Date.now() > expiresAt) {
+                this.modal.alert(gt('room_invite_expired_self') || 'Istekao je rok za odgovor na pozivnicu.', gt('modal_title_info') || "INFO");
+                return;
+            }
+
+            if (accepted) {
+                const response = await sendRoomInviteResponse({ accepted: true });
+                if (!response.ok && response.reason !== 'err_friend_timeout') {
+                    this.showServerNotice(response.reason || 'err_server_conn', 'err_title');
+                    return;
+                }
+                this.inviteDetected = true;
+                this.currentHostingRoomId = null;
+                this.navigateTo('splash-screen');
+                setTimeout(() => { this.joinPrivateGame(this.playerName, data.roomId); }, 800);
+            } else {
+                sendRoomInviteResponse({ accepted: false });
+                this.setInviteBusyState(false);
+            }
+        });
+    }
+
     setupSocketListeners(nickname) { 
         if(!this.socket) return;
         
@@ -7406,11 +7500,6 @@ class YambApp {
         this.socket.off('friend_req_declined'); 
         this.socket.off('friends_list_data');
         this.socket.off('search_results');
-        this.socket.off('incoming_room_invite');
-        this.socket.off('room_invite_accepted');
-        this.socket.off('room_invite_declined');
-        this.socket.off('room_invite_busy');
-        this.socket.off('room_invite_expired');
         
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
@@ -8262,88 +8351,7 @@ class YambApp {
             await this.handleFriendSearchResults(results);
         });
 
-        const showRoomInviteStatus = (key, fallback, data = {}, options = {}) => {
-            const safeName = this.escapeHtml(data.targetName || data.name || getFallbackPlayerName());
-            const text = (gt(key) || fallback).replace('{0}', safeName);
-            const title = gt('alert_invite_title') || "POZIVNICA";
-            if (typeof window.showNotification === 'function') {
-                const theme = localStorage.getItem('yamb_theme') || 'dark';
-                window.showNotification(title, text, {
-                    icon: this.getMainRoomPackSource(theme, 'invite')
-                        || 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
-                    className: 'invite-room-toast',
-                    ...options
-                });
-            } else {
-                this.modal.alert(text, title);
-            }
-        };
-
-        this.socket.on('room_invite_accepted', (data = {}) => {
-            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data);
-        });
-
-        this.socket.on('room_invite_declined', (data = {}) => {
-            showRoomInviteStatus('room_invite_declined', 'Igrač {0} je odbio pozivnicu.', data);
-        });
-
-        this.socket.on('room_invite_busy', (data = {}) => {
-            showRoomInviteStatus('room_invite_busy', 'Igrač {0} je trenutno zauzet.', data);
-        });
-
-        this.socket.on('room_invite_expired', (data = {}) => {
-            showRoomInviteStatus('room_invite_expired', 'Igrač {0} nije odgovorio na pozivnicu.', data);
-        });
-
-        this.socket.on('incoming_room_invite', async (data) => {
-            let realHostName = data.hostName;
-            let hostSocketId = data.hostSocketId || null;
-            const inviteId = data.inviteId || '';
-            const expiresAt = data.expiresAt || 0;
-            const sendRoomInviteResponse = (payload = {}) => {
-                if (!this.socket || !this.socket.connected) return Promise.resolve({ ok: false, reason: 'sys_no_conn' });
-                return this.emitSocketAck('room_invite_response', {
-                    hostSocketId,
-                    roomId: data.roomId,
-                    inviteId,
-                    ...payload
-                }, 2500);
-            };
-            
-            if (data.hostName && data.hostName.includes('|||')) {
-                const parts = data.hostName.split('|||');
-                realHostName = parts[0];
-                hostSocketId = hostSocketId || parts[1];
-            }
-
-            if (this.isDoNotDisturbActive()) {
-                sendRoomInviteResponse({ accepted: false, busy: true });
-                return;
-            }
-
-            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || getFallbackPlayerName()));
-            const accepted = await this.modal.confirm(msg);
-
-            if (accepted && expiresAt && Date.now() > expiresAt) {
-                this.modal.alert(gt('room_invite_expired_self') || 'Istekao je rok za odgovor na pozivnicu.', gt('modal_title_info') || "INFO");
-                return;
-            }
-            
-            if (accepted) {
-                const response = await sendRoomInviteResponse({ accepted: true });
-                if (!response.ok && response.reason !== 'err_friend_timeout') {
-                    this.showServerNotice(response.reason || 'err_server_conn', 'err_title');
-                    return;
-                }
-                this.inviteDetected = true;
-                this.currentHostingRoomId = null;
-                this.navigateTo('splash-screen');
-                setTimeout(() => { this.joinPrivateGame(this.playerName, data.roomId); }, 800);
-            } else {
-                sendRoomInviteResponse({ accepted: false });
-                this.setInviteBusyState(false);
-            }
-        });
+        this.setupRoomInviteListeners();
 
         this.setupOnlineRecoveryListeners();
     }

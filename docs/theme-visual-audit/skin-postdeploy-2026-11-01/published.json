@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-01",
+  "commit": "ede76cb5a16ae4b89c8720287e6f3d198eb5bc3c",
+  "scope": "Public static HTML/JS GET only, no authentication or app APIs; not Android loaded-byte proof.",
+  "rows": [
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "http": 200,
+      "files": [
+        {
+          "file": "game.js",
+          "version": "6.43",
+          "expectedVersion": "6.43",
+          "http": 200,
+          "matchesLocal": true,
+          "sha256Normalized": "e0738e31059a7b3cb541a513f1f2f708d5931f1bdb575066eafbfdb38dd11519"
+        },
+        {
+          "file": "skin-action-buttons.js",
+          "version": "4",
+          "expectedVersion": "4",
+          "http": 200,
+          "matchesLocal": true,
+          "sha256Normalized": "5255b198fd648e695b61f1df523df9fe56a95f2d43613a7e3b036adfa4949d7c"
+        },
+        {
+          "file": "skin-roll-counter.js",
+          "version": "1",
+          "expectedVersion": "1",
+          "http": 200,
+          "matchesLocal": true,
+          "sha256Normalized": "3fc731dbb5de7a0404539e52c7f98b622064ab811d8069a1bfbc76f90114da06"
+        }
+      ]
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "http": 200,
+      "files": [
+        {
+          "file": "game.js",
+          "version": "6.43",
+          "expectedVersion": "6.43",
+          "http": 200,
+          "matchesLocal": true,
+          "sha256Normalized": "e0738e31059a7b3cb541a513f1f2f708d5931f1bdb575066eafbfdb38dd11519"
+        },
+        {
+          "file": "skin-action-buttons.js",
+          "version": "4",
+          "expectedVersion": "4",
+          "http": 200,
+          "matchesLocal": true,
+          "sha256Normalized": "5255b198fd648e695b61f1df523df9fe56a95f2d43613a7e3b036adfa4949d7c"
+        },
+        {
+          "file": "skin-roll-counter.js",
+          "version": "1",
+          "expectedVersion": "1",
+          "http": 200,
+          "matchesLocal": true,
+          "sha256Normalized": "3fc731dbb5de7a0404539e52c7f98b622064ab811d8069a1bfbc76f90114da06"
+        }
+      ]
+    }
+  ]
+}

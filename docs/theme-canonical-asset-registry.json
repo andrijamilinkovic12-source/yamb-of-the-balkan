@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-10-31",
-  "definitionSchemaVersion": 95,
+  "updatedOn": "2026-11-01",
+  "definitionSchemaVersion": 97,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
@@ -27,19 +27,19 @@
     "supplementaryPacks": 28
   },
   "sourceSha256": {
-    "themeDefinitions": "4867b72cb55317a95965eeb4fa14022c234f819c7a2d702c0b3b1dd6bce8b64a",
+    "themeDefinitions": "4774856efd49852e733b1097ea6f4885b0c91f2990a16b0cbcf16e295fb3f88a",
     "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
-    "greenRegistry": "c268f8627b5b332a49828e877d98a6219004bcc5696045f28b6b0d54ad8134f0",
+    "greenRegistry": "eae2fb3dc838cf6a0ff444c05a8b8875f8f8c06f793e62180a0578fc8f0407a2",
     "criticalEconomyRefresh": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9",
-    "economyCompositeRefresh": "447506bd58287255c484fe7ad2dcd094ea31d9fe4c7d56c8840ce9ac07cbe5d6",
+    "economyCompositeRefresh": "c02f4cc32528ba3a0b06862de1ad0d458e41c4d7fc591994c0d6b6e27ed32b6b",
     "leaderboardMedalsRefresh": "eff44f19559e8bd032b312291f753fd0f6476fbca934ea69877a3658e90ce7f1",
     "quarterlyLeagueRefresh": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd",
     "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab",
     "blackHoleEffect": "4e619bd8f43cf08b3283f2055e09ac2b33dbe67cab16d1cf1ffc647cc149d145",
     "supernovaEffect": "ba2fcf571d6945cccaf94905b17b94bbeab2c9f60f37746daf8d193244566def",
     "liveStage": "7d41ec9fbefaf55185f13a266d1d74cbf3c807f5ea93f42963dd6afba17ad465",
-    "tournamentStar": "cf1b95b5f4e6d7e58ea62d84793b012444e6beb6ff5557ab4d495dec08b7e709",
+    "tournamentStar": "2a5f087ff49d53e699c8ab21b08cc7ad1541f37eb96f47403c21c89866cb3ae2",
     "qualityRefresh": "f43b4b1344ca98e27c42e0d00135f9f50cfbf66bf0d3679931bccebd0eed9684"
   },
   "baseline": {
@@ -441,7 +441,7 @@
     },
     {
       "path": "source-assets/theme-economy-canonical-v4/manifest.json",
-      "sha256": "447506bd58287255c484fe7ad2dcd094ea31d9fe4c7d56c8840ce9ac07cbe5d6"
+      "sha256": "c02f4cc32528ba3a0b06862de1ad0d458e41c4d7fc591994c0d6b6e27ed32b6b"
     },
     {
       "path": "source-assets/theme-economy-critical-v2/manifest.json",
@@ -517,7 +517,7 @@
     },
     {
       "path": "source-assets/theme-settings-room-v2/manifest.json",
-      "sha256": "d6f0cbb2c76c71ac1e94ddb2f20fe4d98feae614bb0f549c108737ecf8ba5c7e"
+      "sha256": "2f25c1d29f3ff0036dcee91563412b61294b1b7d19265d3beaac6a93362ddacf"
     },
     {
       "path": "source-assets/theme-solo-record-icons-v1/manifest.json",
@@ -533,7 +533,7 @@
     },
     {
       "path": "source-assets/theme-tournament-star-v2/manifest.json",
-      "sha256": "cf1b95b5f4e6d7e58ea62d84793b012444e6beb6ff5557ab4d495dec08b7e709"
+      "sha256": "2a5f087ff49d53e699c8ab21b08cc7ad1541f37eb96f47403c21c89866cb3ae2"
     }
   ],
   "visualAuditReport": "docs/theme-visual-audit/report.json",
@@ -1522,7 +1522,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
-            "sha256": "70d920d37d6036e0c7b7f85b48b8763c2dba189d2ca92421ce5189eaf6622c39"
+            "sha256": "0697c5e0a4685e7702aa56da63971632fce282ed0b15ceea67e522c7e1f37791"
           }
         ],
         "onlinePlayerActions": [
@@ -2086,7 +2086,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
-            "sha256": "a4ea3a11772dbd8e26631e3a148ec7722e0cdd6345310ff17b3a544c29aebbc8"
+            "sha256": "656a572b72921921290cd7e16fdf557fa3bc15edfc5f8105c7eaf4816b9a260d"
           }
         ],
         "onlinePlayerActions": [
@@ -2659,7 +2659,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "c4ff5b87083c3f30fb0f7c9921fc7d0e674f9e0909695f03641ba2a190b08a8c",
+            "sha256": "4de04ecabbed8c992d64e882bce28882556124afef9f912594a5720b0ab74f49",
             "supersedes": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/winter/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"
@@ -3240,7 +3240,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "39f10009ebf57e2e85bbee314fd1a4e9225f3ac4bf8eda341d39f06e5709c3c8",
+            "sha256": "ea3819d0d2136e48f03f02a5bb2b090a970aecf7708996db315af3fab91e2273",
             "supersedes": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/neon/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"
@@ -3819,7 +3819,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "51bcb09c25f7399c2f87285402596a337f66e051ca46f18c1648c7fc94d75e73",
+            "sha256": "bab93191c3b8994e5c042e0f38a67407e757cd916063b420ba6d1ad0574191ec",
             "supersedes": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/amethyst/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"
@@ -4431,7 +4431,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "27188afcf5863c42c27a6a4fb3108396b87146916f5f241e4ae40fbc69fec541",
+            "sha256": "0a70a520b3b63eedd8b0e373b7d25e99af37bbb4d3089fc5fcf52bc81563612e",
             "supersedes": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/easter/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"
@@ -5043,7 +5043,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "b390f66d9004c69e8473ff929bfc53714a3f0b5d57604c078f36d75643f95268",
+            "sha256": "59d18aab42dc8e8896fb8159bf7aaa43ac441aafe75b711fa947b80384d31368",
             "supersedes": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/desert/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"
@@ -5627,7 +5627,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "b9579be6ac020897681a1f900a601b6c6ae4e5c566e5837c10e62882bc96da33",
+            "sha256": "db2b976d6d997e07910e993ac12dcefb61c2a1a412d68217f39f7cd004955eeb",
             "supersedes": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/moon/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"
@@ -6241,7 +6241,7 @@
             "slotId": "canonical/tournament-awards/champion-trophy-v1",
             "status": "file-present",
             "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
-            "sha256": "e0940d68837d84e036ed4f4cffd2536d3223cd881cc7d3e6bbccd8c6296e8104",
+            "sha256": "557d1ca327bcc6e865ef09fa2e9778820faa5aa964ad27abbec50128c5728ffd",
             "supersedes": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
             "masterPath": "source-assets/theme-tournament-star-v2/severna/champion-trophy-master-v2.png",
             "sourceManifest": "source-assets/theme-tournament-star-v2/manifest.json"

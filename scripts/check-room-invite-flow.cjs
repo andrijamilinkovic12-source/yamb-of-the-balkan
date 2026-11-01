@@ -34,7 +34,7 @@ const health = port => new Promise((resolve, reject) => {
 async function checkInviteAcceptanceGuard() {
   const source = fs.readFileSync(path.resolve(__dirname, '../www/game.js'), 'utf8');
   const start = source.indexOf("this.socket.on('incoming_room_invite', async (data) => {");
-  const end = source.indexOf("\n        this.setupOnlineRecoveryListeners();", start);
+  const end = source.indexOf("\n    }", start);
   assert.ok(start > 0 && end > start, 'incoming invite handler missing');
   const register = new Function('gt', 'getFallbackPlayerName', 'setTimeout', `return function () { ${source.slice(start, end)} }`)(
     () => '', () => 'Igrač', callback => callback()

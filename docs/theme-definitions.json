@@ -1,18 +1,34 @@
 {
-  "schemaVersion": 95,
-  "updatedOn": "2026-10-31",
+  "schemaVersion": 98,
+  "updatedOn": "2026-11-01",
+  "startupLosslessPngVerification20261101": {
+    "finding": "R41",
+    "evidence": "docs/theme-visual-audit/startup-lossless-2026-11-01/report.json",
+    "status": "Lokalno primenjena kompresija138od280početnih/menu/SettingsPNG kroz10tema; još nije commitovana ili objavljena. Nije nova izrada ili izmena izgleda.",
+    "bytes": "44850648→36573939B,18,45%manje. Paketi po28PNG; po temi3,38–24,48%manje. Originalni masteri ne menjaju se.",
+    "identityProof": "Svi kandidati imaju identične RGBApiksele, dimenzije, alpha i relevantne metapodatke.138promenjenih fajlova ponovo provereno pre primene; izolovani Edge280decode/138potpuno jednakih canvasparova PASS. Kanonske putanje i izgled ostaju isti; bytehash/veličine ažurirani samo uz odgovarajuće aktivne fajlove, ne uz neizmenjene alias-fajlove.",
+    "nativeBeforeOptimization": "Objavljena6.43/controller4: prviEasteruovoj sesiji uspe28ready/0timeout/max5111ms,maxload5051/decode122ms; ponovljeni izbor80→80događaja. Keš sačuvan, oba emulatora running, host2,25/15,23GBslobodno/CPU72%. Jedan globalni startup timeout postojao preEasterprovere. Greenmeni/12168vraćen. Ovo je PREdeploya kompresije i nije end-to-end/cold-cache/S25mera.",
+    "boundaries": "Nema promene PNGformata, palete/DNK, pravca/stila, kanonskih identiteta, providnosti, dimenzija, prava kupovine, animacija, logike nagrada ili timeouta. Manje bajtova za mrežni cachemiss tek posle deploya; decodedpixelRAM isti. Postojeći cache sa starim PNG ostaje vizuelno tačan. Raniji37s/ANR i fizičkiS25 nisu zatvoreni.",
+    "next": "Posle korisnikovog commita/deploya proveriti nove javne PNG kontrolne sume i merenje hladnijeg učitavanja na stabilnom Android/S25. Ne povećavati rokove naslepo."
+  },
   "skinRetentionVerification20261031": {
     "finding": "R40",
     "gameVersion": "6.43 unchanged",
-    "publishedSkinController": 3,
+    "publishedSkinController": 4,
     "localSkinController": 4,
-    "status": "Lokalno ispravljeno; korisnikov commit/deploy i native potvrda nove v4 još nisu izvršeni. Raniji problem hladnog učitavanja i startup/ANR ostaje otvoren.",
+    "status": "Objavljeno ede76cb5 na oba servisa; 1.11.2026. ciljani native izbor i povratak skinova uspešan. Raniji problem hladnog učitavanja i startup/ANR ostaje otvoren. Prethodni nativeProof ispod opisuje staru v3 sesiju.",
     "evidence": "docs/theme-visual-audit/skin-retention-2026-10-31/report.json",
     "cause": "Kontrolisano120PNG/14paralelnih paketa: stari keš izbaci izabrani nedovršeni paket. prepare uspe, activatePrepared vrati false, dugmad ostanu prethodna. Ovo je dokaz konkretnog lokalnog slučaja, ne potvrđen uzrok ranijeg kašnjenja na telefonu.",
     "change": "Zadržava vidljivi, izabrani i nezavršene pakete. Spremnost proverava stvarne dekodirane unose. U sledećem zadatku uklanja samo spremne nezaštićene PNG do96unosa; nezavršeni zahtevi privremeno mogu preći granicu. Nema novih PNG, izmena DNK, paleta, dimenzija, prava kupovine ili nagrada.",
     "localProof": "Pre ispravke reprodukovan neuspeh aktivacije. Posle: aktivacija uspe, aktivni skin ostaje zadržan, keš posle završetka≤96; retry jednog neuspešnog PNG koristi ostalih7. Izolovani Edge sa stvarnim controller/equip/counter kodom:48skinova/144dugmeta/192brojača, paralelna priprema14paketa PASS. Lokalni sintetički inventar, bez naloga; renderer kockica i zatvorenog pickera su fixture zamene.",
     "nativeProof": "Objavljena v3: nova ranije odobrena prazna Hotseat QA/Gost_QA, Zelena tema. Žadna glina→Neon Cyber→Svetlo zlato→Žadna glina: kockice, oba dugmeta i brojač0 vizuelno usklađeni na konačnim kadrovima. Nema bacanja/upisa/završetka/oglasa/nagrade/kupovine. Nije mera kašnjenja, cold-cache, native48ili potvrda lokalne v4.",
-    "next": "Posle korisnikove objave proveriti skin-action-buttons.js?v=4 i povratak/promenu skinova u native QA. Hladno mrežno učitavanje na fizičkomS25 i ostale funkcionalne granice vode se odvojeno."
+    "next": "R40 više ne čeka objavu. Hladno mrežno učitavanje/startup na stabilnom Android i fizičkomS25, završni panel/safezone i stvarne online/reward provere ostaju odvojene.",
+    "postDeploy20261101": {
+      "evidence": "docs/theme-visual-audit/skin-postdeploy-2026-11-01/report.json",
+      "public": "Produkcija i QA: game6.43, skin-controller4 i counter1 HTTP200, normalizovani hashovi jednaki lokalnom commituede76cb5. Ne proverava loaded bytes Androida.",
+      "native": "Oba emulatora bootcomplete1/ADBdevice. Drugi QA, nova ranije odobrena prazna Hotseat/Gost_QA: Žadna glina→Neon→Vaskrs→Neon→Žadna glina. Kockice, dugmad i brojač0 usklađeni na konačnim kadrovima. Green i početni skin vraćeni, glavni meni/saldo12168. Prvi Androidhome, prijava danas nije proverena.",
+      "boundary": "Nema bacanja/upisa/završetka/oglasa/nagradnog dugmeta/kupovine/poziva/DB/private-storage/CDP. Native inventar11skinova ne ponavlja14paketa/120PNG lokalni pritisak; nije native48, paidentitlement, brojač1–3, cold-cache, frame-atomicity ili S25 dokaz. Runtime/PNG/CSS/DNK/palete/dimenzije danas nisu menjani."
+    }
   },
   "androidPngIsolationVerification20261031": {
     "appVersion": "6.43-unchanged",
@@ -1887,5 +1903,13 @@
     "refreshManifest": "source-assets/theme-quality-refresh-v2/manifest.json",
     "runtimeMapping": "www/theme-quality-assets.js",
     "refreshProcedure": "Svaki PNG koji zahteva doradu/zamenu dobija zaseban image_gen master i verzionisani produkcioni PNG. Tek posle vizuelne provere novi fajl ulazi u zajednički lookup koji koriste stvarni resolveri i preloaderi, bez naknadnog DOM prebojavanja. Video-nagrada koristi postojeći kanonski video PNG iste teme, bez zasebnih ilustracija sa dukatima. Izvorne PNG putanje ostaju samo istorija i ne prepisuju se."
+  },
+  "roomInviteStartupVerification20261101": {
+    "finding": "R42",
+    "evidence": "docs/theme-visual-audit/invite-startup-2026-11-01/report.json",
+    "status": "Lokalno ispravljen prijem poziva odmah posle pokretanja; game6.44. Bez commita/deploya prema korisnikovoj odluci.",
+    "native": "Objavljena6.43: Sara→Andrija nema modala posle svežeg starta; Andrija→Sara modal primljen/odbijen. Posle otvaranja sobe na Andrijinom nalogu i Sara→Andrija modal primljen/odbijen. Oba menija, salda2939/12168 nepromenjena.",
+    "verification": "Nova regresija pre izmene pada zbog odsutnog incoming_room_invite listenera; posle izmene startup/idempotency/decline/busy/status i localhost integracija PASS. Sobno mapiranje osamPNGuloga×10tema PASS.",
+    "boundaries": "Nema ulaska u stvarni duel, bacanja, rezultata, reklame, preuzimanja, revanša ili produkcione izmene. Native potvrda nove6.44 čeka kasniju zajedničku objavu; ne tražiti deploy posle svake ispravke. Izgled/DNK/palete/dimenzije i postojeća logika nagrada ne menjaju se."
   }
 }

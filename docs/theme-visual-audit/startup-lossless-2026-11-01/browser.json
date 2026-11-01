@@ -1,0 +1,1687 @@
+{
+  "date": "2026-11-01",
+  "status": "pass",
+  "scope": "Fresh isolated Edge; allowlisted local PNGs only.280decoded/138before-after canvas pixel equal. Not network/device timing.",
+  "results": [
+    {
+      "source": "assets/green-clay-balkan-diorama-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-controls/profile-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-controls/language-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-controls/terms-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/settings-controls/privacy-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/green-soft-clay/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/light-v9.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/runtime/menu/ducats-undo-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/light/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/medium-v9.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/runtime/menu/ducats-undo-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/medium/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/winter-v13.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/winter/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/neon-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/neon/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/amethyst-v6.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/runtime/menu/ducats-undo-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/amethyst/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/easter-v6-1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/easter/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/desert-v8-2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/desert/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/moon-v14.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/moon/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-backgrounds/severna-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/menu-resume-buttons/resume-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/menu-resume-buttons/new-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/leaderboard-room-identity/leaderboard-room-menu-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png",
+      "decoded": true,
+      "changed": true,
+      "browserPixelsEqual": true
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-controls/profile-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/game-header/sound-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/game-header/music-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/game-header/vibration-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-controls/display-theme-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-controls/language-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-controls/terms-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/settings-controls/privacy-v2.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    },
+    {
+      "source": "assets/theme-packs/severna/canonical/room-controls/close-v1.png",
+      "decoded": true,
+      "changed": false,
+      "browserPixelsEqual": null
+    }
+  ]
+}

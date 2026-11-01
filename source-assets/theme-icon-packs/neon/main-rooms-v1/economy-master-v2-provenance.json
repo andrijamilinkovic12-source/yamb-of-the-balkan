@@ -16,12 +16,18 @@
   "outputs": [
     {
       "path": "www/assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
-      "size": [384, 384],
-      "sha256": "0c25ada894d0bafa598346ead29671e74d16394ab8514033744ee2b6c299c3a3"
+      "size": [
+        384,
+        384
+      ],
+      "sha256": "f5887567c4e845d76989e3413653f4b26105b6833728ac6f0e67e856cd058b8e"
     },
     {
       "path": "www/assets/theme-packs/neon/ducats-undo-free-v3.png",
-      "size": [512, 512],
+      "size": [
+        512,
+        512
+      ],
       "sha256": "3176db0a4a2991c3110bf840aaf8ae34c9820e429320d7b70a17f6ccdac8a89f"
     }
   ],

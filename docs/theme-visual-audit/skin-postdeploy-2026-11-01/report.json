@@ -1,0 +1,74 @@
+{
+  "date": "2026-11-01",
+  "finding": "R40",
+  "commit": "ede76cb5a16ae4b89c8720287e6f3d198eb5bc3c",
+  "published": "published.json",
+  "status": "Published skin controller4 confirmed on both hosts; targeted native skin switching passed in observed states.",
+  "devices": [
+    {
+      "serial": "emulator-5554",
+      "avd": "Easter_QA_10GB",
+      "bootCompleted": true,
+      "final": "Android home; QA app/account not opened this turn"
+    },
+    {
+      "serial": "emulator-5556",
+      "avd": "Duel_QA_Player2",
+      "bootCompleted": true,
+      "final": "QA Green main menu, login preserved, visual balance12168"
+    }
+  ],
+  "native": {
+    "package": "com.yamb.balkan.staging",
+    "geometry": "1440x3120/560dpi preserved",
+    "scope": "No saved Hotseat continuation was offered. Used earlier authorization for new empty Gost_QA test. Green theme throughout; green_clay→theme_neon_cyber→theme_easter→theme_neon_cyber→green_clay. Each choice made once; observed resulting dice, roll/announce buttons and counter0 agree. Standard exit confirmation used.",
+    "boundary": "No dice rolls, score entries, game finish, ad/reward/rematch buttons, purchases, invitations, DB or private storage/CDP. Delayed native screenshots are not a millisecond timing or frame-atomicity measurement. Native inventory has11available skins, so14-pack/120PNG eviction pressure remains the earlier isolated local proof. This is not native48skins, paid purchase entitlement, counter1–3, cold-cache or physicalS25 proof. Public JS hashes do not inspect Android loaded bytes."
+  },
+  "remaining": [
+    "Cold startup/first theme and skin loading on stable Android and physicalS25; earlier37sEaster/ANR observations remain open.",
+    "Intermittent Android finish-panel clipping and physicalS25 safezone/keyboard.",
+    "Real friend invitation/acceptance and shared online game on two QA devices.",
+    "Actual two-device reconnect/rematch; user declined a rematch test that would claim rewards, so do not execute it automatically.",
+    "Physical-phone AdMob and reward payout/multiplier/exactly-once checks for Solo/Hotseat/online/Daily.",
+    "Rare room/empty/error/notification states according to individual reports."
+  ],
+  "screenshots": [
+    {
+      "file": "qa-nov01-primary-ready.jpg",
+      "caption": "Prvi emulator: Android početni ekran"
+    },
+    {
+      "file": "qa-nov01-menu-ready.jpg",
+      "caption": "QA glavni meni: sačuvana prijava, saldo12168"
+    },
+    {
+      "file": "qa-nov01-game-ready.jpg",
+      "caption": "Prazna QA Hotseat: Žadna glina"
+    },
+    {
+      "file": "qa-nov01-skin-picker.jpg",
+      "caption": "Dostupni skinovi: početna Žadna glina"
+    },
+    {
+      "file": "qa-nov01-neon-first.jpg",
+      "caption": "Prvi izbor Neon skina"
+    },
+    {
+      "file": "qa-nov01-easter.jpg",
+      "caption": "Vaskršnji skin"
+    },
+    {
+      "file": "qa-nov01-neon-return.jpg",
+      "caption": "Povratak na Neon"
+    },
+    {
+      "file": "qa-nov01-green-restored.jpg",
+      "caption": "Vraćena početna Žadna glina"
+    },
+    {
+      "file": "qa-nov01-final-menu.jpg",
+      "caption": "Kraj: Zelena i glavni meni, saldo12168"
+    }
+  ],
+  "changes": "Evidence/documentation only this turn; runtime, PNG, palettes, dimensions and reward rules unchanged."
+}

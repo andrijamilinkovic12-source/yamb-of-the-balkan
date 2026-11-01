@@ -284,7 +284,7 @@
       "role": "privacy",
       "master": "source-assets/theme-settings-room-v2/masters/moon/privacy-master-v2.png",
       "production": "www/assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png",
-      "sha256": "68e62ef576dcaf1d1fffb0387e1eccfab40021ce42ba2f168a80f2de00324eab"
+      "sha256": "34d162cb8e78c6d56ce5e8fb5243b051a7fca7f0adc5bc78ae44b29fff7330c2"
     },
     {
       "theme": "severna",
