@@ -1,5 +1,15 @@
 # Vizuelni audit PNG assetsa
 
+## 1.11 — dodatni Android dokaz završnog sadržaja, bez app izmene
+
+[Izolovana provera](native-finish-2026-11-01/README.md):90/90unutrašnjih layout/PNGprovera i konačne4/4promene istog panela sa roditeljskim granicama. DirektniMoon i konačniSeverna/Moon prikazi celi. Prvo pomeranje u testeru objašnjeno njegovim redosledom čitanja innerWidth i menjanja iframewidth/left; ispravljen samo tester, neuspešni međukorak sačuvan. Ne pripisivati to ranijem stvarnom WebViewkvaru. Produkcioni izvori/palete/dimenzije nisu menjani, nema nove izmene za deploy. FizičkiS25, hladno učitavanje i SDKnagrade ostaju prema prethodnom obuhvatu.
+
+## 1.11 — R41 objavljen, R42 sveži prijem potvrđen
+
+[Post-deploy dokazi6.44](postdeploy644-2026-11-01/README.md). Oba servisa commit0f48fdce/javniJSjednak lokalnom;138optimizovanihPNG×2servisa=276HTTP200/hashPASS. Obe QA aplikacije ponovo pokrenute, Andrija samo u meniju: prvi Sara→Andrija poziv primljen pre otvaranja sobe, odbijen bez duela. Salda2939/12168 i početne teme sačuvani; pošiljaočev toast odbijanja nije uhvaćen. **R42 cilj svežeg prijema potvrđen; R41 ne čeka više objavu.**
+
+NativeprviEaster28ready/0timeout/max5928ms,load5888/decode79; ponovljeni izbor72→72događaja, bez dodatne pripreme. Cache sačuvan, publichash ne čita Androidkeš. Nije dokazan speedup u odnosu na ranijih5111ms ili trenutno učitavanje/S25; startup/ANR i završni panel ostaju prema ranijim granicama. Nema nove app izmene, igre, oglasa, isplate, commita ili deploya u ovom nastavku. Donji statusi „lokalno/neobjavljeno“ su istorijski.
+
 ## R42 — poziv prijatelju izostane posle svežeg pokretanja
 
 [Native reprodukcija i lokalni testovi](invite-startup-2026-11-01/README.md). Na objavljenoj6.43 Sara→Andrija daje potvrdu slanja, bez modala kod sveže pokrenutog primaoca. Andrija→Sara modal primljen/odbijen; potom i Sara→Andrija radi nakon što je Andrija prethodno otvorio sobu. Nije prihvaćen nijedan poziv ili započet duel. Salda2939/12168 nepromenjena; oba emulatora vraćena u meni. Potvrda odbijanja kod pošiljaoca nije uhvaćena na snimcima.

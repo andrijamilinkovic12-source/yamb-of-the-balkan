@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-01",
+  "files": [
+    {
+      "file": "www/game.js",
+      "sha256": "2d8888d2badd7cecebb338f7e9f6231233538b913018c9cf98147cbeddb375e5"
+    },
+    {
+      "file": "www/index.html",
+      "sha256": "2464ed8ff0bb642aa618eafbc8fa8df707a0d1406d1f60075cb4c20eca6ac486"
+    },
+    {
+      "file": "www/style.css",
+      "sha256": "42a86bf04a6bcc5110d76468092a79e28c027c61471c400f77601214de1a2ab4"
+    },
+    {
+      "file": "www/theme-finish-compact.css",
+      "sha256": "8607cd9b4db95e39da71d6eb388bd69d98cbda04e1b10f7b307256f34de2a28d"
+    }
+  ]
+}

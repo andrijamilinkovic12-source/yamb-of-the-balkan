@@ -1,0 +1,492 @@
+{
+  "android": true,
+  "sameDocument": true,
+  "viewport": {
+    "width": 434,
+    "height": 812,
+    "dpr": 3.5
+  },
+  "scope": "Inert actual production-renderer DOM and CSS in Android Chrome same-origin iframes, three content viewport sizes, safe-top/bottom24px fixture. Not the authenticated app WebView or Android wm/density changes. No game APIs, ads, rewards or account.",
+  "rows": [
+    {
+      "id": 1,
+      "theme": "moon",
+      "state": "win",
+      "width": 411,
+      "height": 731,
+      "card": {
+        "x": 12.000000953674316,
+        "y": 47.70982360839844,
+        "width": 387.14288330078125,
+        "height": 635.71875,
+        "right": 399.14288425445557,
+        "bottom": 683.4285736083984
+      },
+      "screen": {
+        "x": 0,
+        "y": 0,
+        "width": 411.14288330078125,
+        "height": 731.1428833007812,
+        "right": 411.14288330078125,
+        "bottom": 731.1428833007812
+      },
+      "viewport": {
+        "width": 411,
+        "height": 731,
+        "dpr": 3.5,
+        "visualWidth": 411,
+        "visualHeight": 731,
+        "visualScale": 1
+      },
+      "inside": true,
+      "centered": true,
+      "cardScroll": false,
+      "screenScroll": false,
+      "actionsInside": true,
+      "actions": [
+        {
+          "selector": "#btn-ad-double",
+          "x": 30.571430206298828,
+          "y": 505.857177734375,
+          "width": 350.0000305175781,
+          "height": 54.71428680419922,
+          "right": 380.57146072387695,
+          "bottom": 560.5714645385742
+        },
+        {
+          "selector": ".game-over-claim-button",
+          "x": 30.571430206298828,
+          "y": 566.5714721679688,
+          "width": 350.0000305175781,
+          "height": 55.000003814697266,
+          "right": 380.57146072387695,
+          "bottom": 621.571475982666
+        },
+        {
+          "selector": "#btn-rematch",
+          "x": 30.571430206298828,
+          "y": 627.5714721679688,
+          "width": 350.0000305175781,
+          "height": 44.000003814697266,
+          "right": 380.57146072387695,
+          "bottom": 671.571475982666
+        }
+      ],
+      "images": [
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/weekly-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/all_time-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/online-random-rematch/rematch-icon-v1.png?v=1",
+          "loaded": true
+        }
+      ],
+      "overflow": [],
+      "outer": {
+        "layoutWidth": 412,
+        "visualWidth": 412,
+        "visualScale": 1,
+        "scrollWidth": 412,
+        "frameLeft": 0.5,
+        "frameRight": 411.5000305175781,
+        "frameBottom": 771.0000610351562,
+        "height": 771
+      },
+      "parentInside": true,
+      "pass": true
+    },
+    {
+      "id": 2,
+      "theme": "moon",
+      "state": "win",
+      "width": 360,
+      "height": 640,
+      "card": {
+        "x": 12.000000953674316,
+        "y": 120.52232360839844,
+        "width": 336,
+        "height": 398.9508972167969,
+        "right": 348.0000009536743,
+        "bottom": 519.4732208251953
+      },
+      "screen": {
+        "x": 0,
+        "y": 0,
+        "width": 360.0000305175781,
+        "height": 640,
+        "right": 360.0000305175781,
+        "bottom": 640
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640,
+        "dpr": 3.5,
+        "visualWidth": 360,
+        "visualHeight": 640,
+        "visualScale": 1
+      },
+      "inside": true,
+      "centered": true,
+      "cardScroll": false,
+      "screenScroll": false,
+      "actionsInside": true,
+      "actions": [
+        {
+          "selector": "#btn-ad-double",
+          "x": 20.85714340209961,
+          "y": 398.90179443359375,
+          "width": 318.2857360839844,
+          "height": 54.71428680419922,
+          "right": 339.142879486084,
+          "bottom": 453.61608123779297
+        },
+        {
+          "selector": ".game-over-claim-button",
+          "x": 20.85714340209961,
+          "y": 456.6160888671875,
+          "width": 157.6428680419922,
+          "height": 55.000003814697266,
+          "right": 178.5000114440918,
+          "bottom": 511.61609268188477
+        },
+        {
+          "selector": "#btn-rematch",
+          "x": 181.50001525878906,
+          "y": 462.1160888671875,
+          "width": 157.6428680419922,
+          "height": 44.000003814697266,
+          "right": 339.14288330078125,
+          "bottom": 506.11609268188477
+        }
+      ],
+      "images": [
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/weekly-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/all_time-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/online-random-rematch/rematch-icon-v1.png?v=1",
+          "loaded": true
+        }
+      ],
+      "overflow": [],
+      "outer": {
+        "layoutWidth": 412,
+        "visualWidth": 412,
+        "visualScale": 1,
+        "scrollWidth": 412,
+        "frameLeft": 26.000001907348633,
+        "frameRight": 386.00003242492676,
+        "frameBottom": 680,
+        "height": 771
+      },
+      "parentInside": true,
+      "pass": true
+    },
+    {
+      "id": 3,
+      "theme": "moon",
+      "state": "win",
+      "width": 320,
+      "height": 568,
+      "card": {
+        "x": 12.000000953674316,
+        "y": 85.92411041259766,
+        "width": 296,
+        "height": 396.15179443359375,
+        "right": 308.0000009536743,
+        "bottom": 482.0759048461914
+      },
+      "screen": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "right": 320,
+        "bottom": 568
+      },
+      "viewport": {
+        "width": 320,
+        "height": 568,
+        "dpr": 3.5,
+        "visualWidth": 320,
+        "visualHeight": 568,
+        "visualScale": 1
+      },
+      "inside": true,
+      "centered": true,
+      "cardScroll": false,
+      "screenScroll": false,
+      "actionsInside": true,
+      "actions": [
+        {
+          "selector": "#btn-ad-double",
+          "x": 20.85714340209961,
+          "y": 361.5044860839844,
+          "width": 278.2857360839844,
+          "height": 54.71428680419922,
+          "right": 299.142879486084,
+          "bottom": 416.2187728881836
+        },
+        {
+          "selector": ".game-over-claim-button",
+          "x": 20.85714340209961,
+          "y": 419.2187805175781,
+          "width": 137.6428680419922,
+          "height": 55.000003814697266,
+          "right": 158.5000114440918,
+          "bottom": 474.2187843322754
+        },
+        {
+          "selector": "#btn-rematch",
+          "x": 161.5,
+          "y": 424.7187805175781,
+          "width": 137.6428680419922,
+          "height": 44.000003814697266,
+          "right": 299.1428680419922,
+          "bottom": 468.7187843322754
+        }
+      ],
+      "images": [
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/weekly-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/all_time-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/online-random-rematch/rematch-icon-v1.png?v=1",
+          "loaded": true
+        }
+      ],
+      "overflow": [],
+      "outer": {
+        "layoutWidth": 412,
+        "visualWidth": 412,
+        "visualScale": 1,
+        "scrollWidth": 412,
+        "frameLeft": 46.000003814697266,
+        "frameRight": 366.00000381469727,
+        "frameBottom": 608,
+        "height": 771
+      },
+      "parentInside": true,
+      "pass": true
+    },
+    {
+      "id": 4,
+      "theme": "moon",
+      "state": "win",
+      "width": 411,
+      "height": 731,
+      "card": {
+        "x": 12.000000953674316,
+        "y": 47.70982360839844,
+        "width": 387.14288330078125,
+        "height": 635.71875,
+        "right": 399.14288425445557,
+        "bottom": 683.4285736083984
+      },
+      "screen": {
+        "x": 0,
+        "y": 0,
+        "width": 411.14288330078125,
+        "height": 731.1428833007812,
+        "right": 411.14288330078125,
+        "bottom": 731.1428833007812
+      },
+      "viewport": {
+        "width": 411,
+        "height": 731,
+        "dpr": 3.5,
+        "visualWidth": 411,
+        "visualHeight": 731,
+        "visualScale": 1
+      },
+      "inside": true,
+      "centered": true,
+      "cardScroll": false,
+      "screenScroll": false,
+      "actionsInside": true,
+      "actions": [
+        {
+          "selector": "#btn-ad-double",
+          "x": 30.571430206298828,
+          "y": 505.857177734375,
+          "width": 350.0000305175781,
+          "height": 54.71428680419922,
+          "right": 380.57146072387695,
+          "bottom": 560.5714645385742
+        },
+        {
+          "selector": ".game-over-claim-button",
+          "x": 30.571430206298828,
+          "y": 566.5714721679688,
+          "width": 350.0000305175781,
+          "height": 55.000003814697266,
+          "right": 380.57146072387695,
+          "bottom": 621.571475982666
+        },
+        {
+          "selector": "#btn-rematch",
+          "x": 30.571430206298828,
+          "y": 627.5714721679688,
+          "width": 350.0000305175781,
+          "height": 44.000003814697266,
+          "right": 380.57146072387695,
+          "bottom": 671.571475982666
+        }
+      ],
+      "images": [
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/weekly-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/monthly-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/all_time-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-record-icons/personal-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/statistics-overview/power-index-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-score-mark-quality-v2.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/ducat/ducat-inline-v1.png",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/solo-results/finish-claim-v1.png?v=1",
+          "loaded": true
+        },
+        {
+          "source": "assets/theme-packs/moon/canonical/online-random-rematch/rematch-icon-v1.png?v=1",
+          "loaded": true
+        }
+      ],
+      "overflow": [],
+      "outer": {
+        "layoutWidth": 434,
+        "visualWidth": 412,
+        "visualScale": 1,
+        "scrollWidth": 434,
+        "frameLeft": 23.000001907348633,
+        "frameRight": 434.00003242492676,
+        "frameBottom": 771.0000610351562,
+        "height": 812
+      },
+      "parentInside": false,
+      "pass": false
+    }
+  ]
+}

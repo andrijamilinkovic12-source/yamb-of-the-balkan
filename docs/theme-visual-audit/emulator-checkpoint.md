@@ -1,5 +1,17 @@
 # Emulator — delimična vizuelna provera, 25.10.2026.
 
+## 1.11 — nastavak bez telefona, izolovan Android završni panel
+
+[Dokazi](native-finish-2026-11-01/README.md). S25 nije povezan; korisnik izabrao nastavak bez njega. AndroidChrome5556: inertni DOM iz stvarnoghandleGameOver i produkcioniCSS/PNG,90/90unutrašnjih provera(10tema×3ishoda×3veličine). Konačne4/4promene istogMoonpanela bez navigacije, uključujući granice roditelja. DirektniMoon i stabilniSeverna/Moon kadrovi pregledani. Nije nova prava partija, WebView ili fizičkiS25provera.
+
+U samom testeru otkriveno privremeno širenje layoutviewporta pri povećanju iframewidthprečitanja innerWidth/starog leftpomaka. Headerograničenje nije bilo dovoljno; neuspeh3/4sačuvan. Tester sada prvo čuva visualViewportwidth i poništava left, pa menja širinu; konačno412layout/visual/scrollwidthi4/4PASS. **Nema produkcioneCSS/appizmene ili tvrdnje da je ovo uzrok ranijeg pravog WebViewodsecanja.** Sačuvani rezultati/skripte su lokalni test alati. Originalna geometrija/keš očuvani, QAmenijiAndrijaMoon2939/SaraGreen12168;bezduela/oglasa/nagrada/DB/CDP. Lokalni testserveri završeni. S25/učitavanje/SDKgranice ostaju.
+
+## 1.11 — objavljena6.44, ciljani R41/R42 prolaz
+
+[Rezultati i snimci](postdeploy644-2026-11-01/README.md). Oba postojeća emulatora povezana. QA aplikacije force-stop/start bez wipe-a; ActivityCOLD8205/9619msnije app-ready. MoonAndrija ostao u svežem meniju, bez ulaska u sobu: prvi poziv od GreenSare primljen i odbijen. Prazna hosting soba zatvorena; oba menija, salda2939/12168. Nijedan stvarni duel, tehnički rezultat, bacanje/upis, reklama ili nagradno dugme. Pošiljaočev toast odbijanja nije snimljen. **Prijem posle svežeg starta R42 potvrđen.**
+
+Oba servisa na0f48fdce/game6.44; javniJSjednak lokalnom i svih138komprimovanihPNG na oba servisa276/276HTTP200/hashPASS. Prvi izborVaskrsna5556uovojappsesiji uspe28ready/0timeout/max5928ms(load5888/decode79). Greenpovratak, ponovljeniEasteruspebeznovihPNGdogađaja72→72, konačnoGreenmeni. Keš/geometrija očuvani; ne tvrditi cold-cache/S25speedup ili poređenje s ranijih5111ms. Nema novog runtimepatcha; samo evidencija. Raniji odsečeni završni panel i SDK/telefonske provere nisu zatvoreni. R41/R42više ne čekaju deploy.
+
 ## 1.11 — test samo poziva, R42 lokalno ispravljen
 
 [Dokazi i granice](invite-startup-2026-11-01/README.md). Oba QA naloga prijavljena; Andrija5554/Moon i Sara5556/Green, originalnih1440×3120/560dpi. Korisnik izričito ograničio: „Proveri samo poziv, bez ulaska u duel“. Dva početna Sara→Andrija pokušaja daju potvrdu slanja, bez modala kod primaoca posle svežeg starta. Obrnuti smer daje Sarin modal; odbijen. Posle Andrijinog prvog otvaranja sobe i povratka u meni Sara→Andrija daje modal; takođe odbijen. Na snimcima nije potvrđen pošiljaočev toast o odbijanju. Oba menija/salda2939/12168 očuvana; nema prihvatanja, duela, bacanja, rezultata, oglasa, preuzimanja ili revanša. Nema DB/CDP/private-session pristupa. Novo pokretanje primary aplikacije usporeno, am-start timeout nije dokaz uzroka zastoja.

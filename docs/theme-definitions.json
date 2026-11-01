@@ -1,15 +1,22 @@
 {
-  "schemaVersion": 98,
+  "schemaVersion": 101,
   "updatedOn": "2026-11-01",
   "startupLosslessPngVerification20261101": {
     "finding": "R41",
     "evidence": "docs/theme-visual-audit/startup-lossless-2026-11-01/report.json",
-    "status": "Lokalno primenjena kompresija138od280početnih/menu/SettingsPNG kroz10tema; još nije commitovana ili objavljena. Nije nova izrada ili izmena izgleda.",
+    "status": "138optimizovanihPNG objavljeno na oba servisa;276/276HTTP200/hashprovera PASS. NativeEasterprviizbor28ready/0timeout/max5928ms; ponovljeniizborbeznovihPNGdogađaja. Ubrzanje/S25 nije dokazano.",
     "bytes": "44850648→36573939B,18,45%manje. Paketi po28PNG; po temi3,38–24,48%manje. Originalni masteri ne menjaju se.",
     "identityProof": "Svi kandidati imaju identične RGBApiksele, dimenzije, alpha i relevantne metapodatke.138promenjenih fajlova ponovo provereno pre primene; izolovani Edge280decode/138potpuno jednakih canvasparova PASS. Kanonske putanje i izgled ostaju isti; bytehash/veličine ažurirani samo uz odgovarajuće aktivne fajlove, ne uz neizmenjene alias-fajlove.",
     "nativeBeforeOptimization": "Objavljena6.43/controller4: prviEasteruovoj sesiji uspe28ready/0timeout/max5111ms,maxload5051/decode122ms; ponovljeni izbor80→80događaja. Keš sačuvan, oba emulatora running, host2,25/15,23GBslobodno/CPU72%. Jedan globalni startup timeout postojao preEasterprovere. Greenmeni/12168vraćen. Ovo je PREdeploya kompresije i nije end-to-end/cold-cache/S25mera.",
     "boundaries": "Nema promene PNGformata, palete/DNK, pravca/stila, kanonskih identiteta, providnosti, dimenzija, prava kupovine, animacija, logike nagrada ili timeouta. Manje bajtova za mrežni cachemiss tek posle deploya; decodedpixelRAM isti. Postojeći cache sa starim PNG ostaje vizuelno tačan. Raniji37s/ANR i fizičkiS25 nisu zatvoreni.",
-    "next": "Posle korisnikovog commita/deploya proveriti nove javne PNG kontrolne sume i merenje hladnijeg učitavanja na stabilnom Android/S25. Ne povećavati rokove naslepo."
+    "next": "Nema više čekanja objave R41/R42. Preostaje stabilno cold-cache/S25 merenje i stvarni mobilni završni panel/SDK provere, prema postojećim ograničenjima; ne ponavljati osnovne sobne prolaze.",
+    "postDeploy": {
+      "evidence": "docs/theme-visual-audit/postdeploy644-2026-11-01/report.json",
+      "pngChecks": 276,
+      "pngPassed": 276,
+      "cachePreserved": true,
+      "speedupProven": false
+    }
   },
   "skinRetentionVerification20261031": {
     "finding": "R40",
@@ -1907,9 +1914,36 @@
   "roomInviteStartupVerification20261101": {
     "finding": "R42",
     "evidence": "docs/theme-visual-audit/invite-startup-2026-11-01/report.json",
-    "status": "Lokalno ispravljen prijem poziva odmah posle pokretanja; game6.44. Bez commita/deploya prema korisnikovoj odluci.",
+    "status": "Objavljena6.44 na oba servisa; sveži prijem Sara→Andrija pre otvaranja sobe potvrđen na QA Androidu. Poziv odbijen, bez duela ili promene salda.",
     "native": "Objavljena6.43: Sara→Andrija nema modala posle svežeg starta; Andrija→Sara modal primljen/odbijen. Posle otvaranja sobe na Andrijinom nalogu i Sara→Andrija modal primljen/odbijen. Oba menija, salda2939/12168 nepromenjena.",
     "verification": "Nova regresija pre izmene pada zbog odsutnog incoming_room_invite listenera; posle izmene startup/idempotency/decline/busy/status i localhost integracija PASS. Sobno mapiranje osamPNGuloga×10tema PASS.",
-    "boundaries": "Nema ulaska u stvarni duel, bacanja, rezultata, reklame, preuzimanja, revanša ili produkcione izmene. Native potvrda nove6.44 čeka kasniju zajedničku objavu; ne tražiti deploy posle svake ispravke. Izgled/DNK/palete/dimenzije i postojeća logika nagrada ne menjaju se."
+    "boundaries": "Nema ulaska u stvarni duel, bacanja, rezultata, reklame, preuzimanja, revanša ili produkcione izmene. Native potvrda nove6.44 čeka kasniju zajedničku objavu; ne tražiti deploy posle svake ispravke. Izgled/DNK/palete/dimenzije i postojeća logika nagrada ne menjaju se.",
+    "postDeploy": {
+      "evidence": "docs/theme-visual-audit/postdeploy644-2026-11-01/report.json",
+      "commit": "0f48fdcece2a19940ec59a5d0c531b507ab4dcc1",
+      "freshReception": "PASS",
+      "senderDeclineToast": "Not captured; not marked visually confirmed",
+      "noRealDuel": true
+    }
+  },
+  "nativeFinishIsolationVerification20261101": {
+    "evidence": "docs/theme-visual-audit/native-finish-2026-11-01/report.json",
+    "status": "AndroidChromeizolovaniprikaz:90/90proverasadržaja(10tema×3ishoda×3veličine) i konačne4/4promeneistogMoonpanela sa proverom roditeljskihgranica. Nema nove app izmene.",
+    "boundary": "InertniDOMizstvarnoghandleGameOver,stvarniCSS/PNG; bez konstruktora/naloga/servera/reklama/nagrada. Nije stvarniWebViewzavršetak,S25,Androidwm/density ili dokaz popravljene ranije povremene greške.",
+    "fixtureCorrection": "Pomeranje roditeljskogtestiframea pri povećanju širine ispravljeno samo u testeru, posle neuspele probe; nije menjana aplikacija.",
+    "final": "QAmeniji/početne teme; Sara12168/Andrija2939. S25/SDK provere ostaju odvojene."
+  },
+  "finalReviewHandoff20261101": {
+    "summary": "docs/theme-visual-audit/final-handoff-2026-11-01.md",
+    "userDecision": "Korisnik lično samostalno testira oba zadatka na telefonu.",
+    "basicRoomPasses": "15/15 kroz deset tema, u zabeleženim stanjima",
+    "userOwnedChecks": [
+      "Stvarni S25 prikaz/safezone/povremeno odsecanje završnog panela i prvo/ponovljeno učitavanje",
+      "Stvarne SDK reklame i nagrade: uspeh/neuspeh/nedostupnost, osnovna nagrada, množilac i zaštita od duplog preuzimanja"
+    ],
+    "phoneResults": "Not yet verified; user will report results.",
+    "scopeExceptions": "Stvarni revanš i prekid/povratak veze u duelu nisu izvršeni; ranije isključeni iz testa. Lokalni handler testovi su odvojeni.",
+    "lastRuntime": "6.44/0f48fdce confirmed published; subsequent work is local test tooling and evidence only",
+    "continuation": "Ne ponavljati isti osnovni audit ili tražiti povezivanje telefona bez novog nalaza ili korisnikovog zahteva. Nije naložen novi commit/deploy."
   }
 }

@@ -1,0 +1,119 @@
+{
+  "date": "2026-11-01",
+  "commit": "0f48fdcece2a19940ec59a5d0c531b507ab4dcc1",
+  "gameVersion": "6.44",
+  "scope": "Targeted post-deploy confirmation of R41 public PNG compression and R42 fresh-start invite reception. No app implementation changes.",
+  "public": {
+    "js": "published.json",
+    "pngs": "published-pngs.json",
+    "changedPngs": 138,
+    "hosts": 2,
+    "checks": 276,
+    "passed": 276
+  },
+  "native": {
+    "qaDevices": [
+      "emulator-5554 / Andrija / Moon",
+      "emulator-5556 / Sara / Green"
+    ],
+    "geometry": "1440x3120 / 560dpi unchanged",
+    "restart": "Both QA apps force-stopped/reopened with data/cache/login preserved; primary only main menu before receiving invite.",
+    "activityLaunch": {
+      "Andrija": {
+        "status": "ok",
+        "launchState": "COLD",
+        "totalTime": 8205,
+        "waitTime": 8212
+      },
+      "Sara": {
+        "status": "ok",
+        "launchState": "COLD",
+        "totalTime": 9619,
+        "waitTime": 9644
+      }
+    },
+    "invite": "Sara→Andrija received on first test after fresh primary app startup, before opening any primary room. Recipient modal cancelled; no join.",
+    "senderDeclineStatus": "No decline toast captured in reviewed frame; not confirmed visually.",
+    "accepted": 0,
+    "matchesStarted": 0,
+    "rolls": 0,
+    "adOrRewardButtons": 0,
+    "visibleBalances": {
+      "Andrija": 2939,
+      "Sara": 12168
+    },
+    "final": "Primary Moon main menu, secondary Green main menu; no waiting host room left."
+  },
+  "themeProbe": {
+    "theme": "easter",
+    "firstSelection": "Applied with one selection in the new QA app session.",
+    "ready": 28,
+    "timeouts": 0,
+    "maxReadyMs": 5928,
+    "maxLoadMs": 5888,
+    "maxDecodeMs": 79,
+    "repeat": "Green→Easter→Green→Easter→Green; repeat applied, total diagnostic events72→72.",
+    "cache": "Preserved throughout; not a cold-cache comparison or proof Android fetched optimized bytes.",
+    "boundary": "No causal speedup established. Earlier before-compression session max5111ms and this5928ms have uncontrolled cache/load; cannot infer regression or improvement. Activity launch timings are not app-ready. S25, first-use throughput and intermittent finish-panel clipping remain unresolved.",
+    "diagnosticEventCounts": [
+      42,
+      70,
+      72,
+      72
+    ],
+    "files": [
+      "emulator-5556-1793538186747.json",
+      "emulator-5556-1793538279343.json",
+      "emulator-5556-1793538378020.json",
+      "emulator-5556-1793538444960.json"
+    ]
+  },
+  "boundaries": [
+    "No real duel acceptance, technical result, rematch, disconnect, score or reward test; user restriction preserved.",
+    "Public hashes do not inspect Android session/private storage or prove which cached PNG bytes Android used.",
+    "No cache/data clearing, CDP, authentication automation, private logs, DB access, commit or deploy by agent.",
+    "No new runtime fix in this turn. Documentation/evidence only."
+  ],
+  "screenshots": [
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-andrija-ready.png",
+      "sha256": "5c844f9510ae32cf2e7bd24ce26a3c688bf8ac7dc5aa6a55f817c0d2f23a3dc1",
+      "preview": "post644-andrija-ready.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-sara-ready.png",
+      "sha256": "7257c762ad08cbd83593b04bcfe21a97d7fa4769c07b0a6c47b6c59b9fded497",
+      "preview": "post644-sara-ready.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-andrija-incoming.png",
+      "sha256": "f0ef24992c9c64e3af613d10dce43d2016fa973acbaf290fe8ca9f4f98e40e9c",
+      "preview": "post644-andrija-incoming.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-andrija-declined.png",
+      "sha256": "e6f4b77de38973a12d694b0f0590631aaaf6ed96e97989cdaec7bf2318053480",
+      "preview": "post644-andrija-declined.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-sara-decline-status.png",
+      "sha256": "7b4216701c6fc8d207f75cc315cf3a1128b90278c718c772bde677ace734084e",
+      "preview": "post644-sara-decline-status.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-easter-applied.png",
+      "sha256": "c1b59d95e7c6c87024a831aed6b3e95f5085fa419992de757fddccbe9d68bace",
+      "preview": "post644-easter-applied.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-easter-repeat.png",
+      "sha256": "b416ddd511e50ef9d081ceea52ac627694a9c7996b86c2d96997bbecf0b30ac6",
+      "preview": "post644-easter-repeat.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/post644-finish-menu.png",
+      "sha256": "94f7ac0c9fcc1ac9335501f15b13609b625be774409e806d61c406f00ebc54ff",
+      "preview": "post644-finish-menu.jpg"
+    }
+  ]
+}

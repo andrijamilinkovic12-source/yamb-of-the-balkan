@@ -1,0 +1,2493 @@
+{
+  "date": "2026-11-01",
+  "scope": "One public GET per changed PNG per host, concurrency4; no authentication or app APIs. HTTP timing is desktop-only, not Android/phone or cold-cache performance.",
+  "changedPngs": 138,
+  "checked": 276,
+  "passed": 276,
+  "rows": [
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 60173,
+      "sha256": "1fa2f006bddf8d8831d4eb3f4cdd6e3ba94249b6a53d406abd785ad5e805a685",
+      "matchesExpected": true,
+      "elapsedMs": 132
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 83399,
+      "sha256": "956967e3d3ea1b9ae9098c534197ad8a81b04775972f275a1b8f99d2110f6c33",
+      "matchesExpected": true,
+      "elapsedMs": 170
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 95155,
+      "sha256": "6198cc98a8169eb3476039dc7e3e43b574cafeff164ada333bac8a814217a7a5",
+      "matchesExpected": true,
+      "elapsedMs": 131
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109647,
+      "sha256": "8945493cf60563052511f1da66487bb86a265753b90463e0d9f6bd9f2dd4df36",
+      "matchesExpected": true,
+      "elapsedMs": 96
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109494,
+      "sha256": "8336607055e3b184e453d97efe998536ed6ce25aca6d3d7afb30dad8a6c27e6a",
+      "matchesExpected": true,
+      "elapsedMs": 201
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 89037,
+      "sha256": "8788ea0b1bb4cddb34fd227cb89da0a3ecad3cc098f54565fde2c34d19833245",
+      "matchesExpected": true,
+      "elapsedMs": 214
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/light-v9.png",
+      "http": 200,
+      "bytes": 1319247,
+      "sha256": "635dd38a213b1e0cc5b0aadd879cb5520cb90ee748650b3db3ed1a08fdf1d378",
+      "matchesExpected": true,
+      "elapsedMs": 484
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 76087,
+      "sha256": "701d50e7902ab4531b58abf6a7b88fdb1dff341fc9a693bdcb9f34e2b6649c2b",
+      "matchesExpected": true,
+      "elapsedMs": 56
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 77423,
+      "sha256": "c20fe624364d3a5618aee60bfa7190096c08b343d13e18534c53481b9c577151",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81667,
+      "sha256": "6c2f5d3beaa4adc4c188e21615880bbe46237ccf3f64138b655e1981702cb54b",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 86964,
+      "sha256": "6fda184224408696db859d6c56e3efe3ea5575e7226ac5e37b9e8737e7197073",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 111360,
+      "sha256": "d3145278013f106d51d2f0b417d364399862f269c1323d5c53ef7552f699eee6",
+      "matchesExpected": true,
+      "elapsedMs": 94
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/green-clay-balkan-diorama-v4.png",
+      "http": 200,
+      "bytes": 1721266,
+      "sha256": "3751e15700ae2d88b5024ea220a02afc23158500338f5b40dda2b0b246e35b07",
+      "matchesExpected": true,
+      "elapsedMs": 697
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 112030,
+      "sha256": "cf7e6675e2ceb69bae79523c70f0940ac581d36ddf3001e1c76be1089c087fd1",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+      "http": 200,
+      "bytes": 84391,
+      "sha256": "0697c5e0a4685e7702aa56da63971632fce282ed0b15ceea67e522c7e1f37791",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 104671,
+      "sha256": "a4a19629214b08038a0fe77e12f5b8054d2f2c8c2c3157e2f340b9761932af3b",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 185279,
+      "sha256": "e71e69d85cdabc4c1f5d6f1946db3ca527d05560d20e5581b421fd49dc219eff",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 89679,
+      "sha256": "c1503982b8f547b60b9548fc9fa16da699b2e8d114a562cec6b6998660bc348a",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 128932,
+      "sha256": "5dcdda3b02b66ae13390f2d4d91c1185e58a63e71d273d81e5d14bcc36acc93d",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 131519,
+      "sha256": "f44363eda29f5c15fba93a81ce3453e501e33977b98530beaf258b6e2f0c3f54",
+      "matchesExpected": true,
+      "elapsedMs": 66
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 110161,
+      "sha256": "2d6861b9aef5ffd72badcc22e2a36b11d63d5d2d309dd2ca96e8d717a9ccaf0b",
+      "matchesExpected": true,
+      "elapsedMs": 104
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 110270,
+      "sha256": "123e4a3de6a49517594ed33665e1772f1e3b1c8e12734c70e3765c60c90da9d1",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 141394,
+      "sha256": "4f48d62e9feec83fcb6404743049b16cb3d002a285e5537da0fcbc4e1fd89a59",
+      "matchesExpected": true,
+      "elapsedMs": 93
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/medium-v9.png",
+      "http": 200,
+      "bytes": 1420762,
+      "sha256": "25fd9a61e299847c9ce609f35dbfa414667dc782189614eede47fd15a07b5a73",
+      "matchesExpected": true,
+      "elapsedMs": 241
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 112494,
+      "sha256": "79e924358dc1ca8aec5d13e4f231e9769ca11b4dc6f5055a7a39815948ca291f",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 99804,
+      "sha256": "439947ece4a9b6b50716fd8bae3bbfd710fee130ce0d729058ad94369c6b8e41",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 93311,
+      "sha256": "c7708ea460d36e55038a00784d761303a8fb6411a9239eda48ed46592ff0bbf1",
+      "matchesExpected": true,
+      "elapsedMs": 75
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 102637,
+      "sha256": "62facebe66b5ed52635eeb5411d257549c7e9fc56d4420e178571e56c522181f",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+      "http": 200,
+      "bytes": 76771,
+      "sha256": "656a572b72921921290cd7e16fdf557fa3bc15edfc5f8105c7eaf4816b9a260d",
+      "matchesExpected": true,
+      "elapsedMs": 44
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 85781,
+      "sha256": "e0bc942434983d5dd0195a69fd52ff5b54a3618bb8b04d75f2d028188b7b315c",
+      "matchesExpected": true,
+      "elapsedMs": 53
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 113733,
+      "sha256": "27b2c1b29d764caf4e2e2ac396ba9330731be43dc3a36d0d7cc23a8cec1155e0",
+      "matchesExpected": true,
+      "elapsedMs": 77
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 198651,
+      "sha256": "abd8fd0854f2933a8a158820217405f0d68717f9d4cfba7a25f3098c3a513486",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 66462,
+      "sha256": "1e3fd38a334b654fb5628a735d0c4c7fce94ad14b82f279f813c277c33cc7158",
+      "matchesExpected": true,
+      "elapsedMs": 57
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 80506,
+      "sha256": "d22bd2238fbcb35082559491cfc7b23fdba3a8145f84c93f5c287a8767a24046",
+      "matchesExpected": true,
+      "elapsedMs": 99
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 102659,
+      "sha256": "94f7bc8e1fba4e1e7e9e22fb0d3c6df4a3e26bcf5c7da056534907973e48fe5c",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109136,
+      "sha256": "1e494a47ae920fd7a4bf88172bdcff7430d900d7aeacbd3dedcac50d827f01ab",
+      "matchesExpected": true,
+      "elapsedMs": 94
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/winter-v13.png",
+      "http": 200,
+      "bytes": 1538512,
+      "sha256": "c558a5899e865838f4df5fd9c28a2ce3bc5ef924296bb344c75717cf92cfb211",
+      "matchesExpected": true,
+      "elapsedMs": 190
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 115214,
+      "sha256": "09389f2e924abca32a1c8211544f79f8ccf3a84b1132dbca4cfe572240b89974",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 82094,
+      "sha256": "99ec5a4d8044b74fd7599512404638e7566691618f8cecd1fc28b0a7213308ec",
+      "matchesExpected": true,
+      "elapsedMs": 90
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81930,
+      "sha256": "e612356a487b99d05b743cc9e98da35f43e681911a6158d1e0ae22fa4217d99c",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78945,
+      "sha256": "d5199628954c709a005e0632c9b29ba011b48331632d20499af22b3a8f4d2bcf",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 98007,
+      "sha256": "1bc3cfc0590a8c0627b09b979425f3c115b5eb4cc79e02b1091a32a8e4e525c5",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81896,
+      "sha256": "3e2dc067c5ec0bef532175b1e9a52c648d29760f0bffc8316147e56cb8ab52dd",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 77127,
+      "sha256": "c188792dc342ad7bc42b310dab5cf8f5fdc783373a41e2a6b85db0d0a4f997ea",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 71215,
+      "sha256": "4de04ecabbed8c992d64e882bce28882556124afef9f912594a5720b0ab74f49",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 101926,
+      "sha256": "2d73b77f409d4ad91fccfb04b2cd4f5b6c4996aeb7fcacea5aea10d02e72c1a7",
+      "matchesExpected": true,
+      "elapsedMs": 54
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 161826,
+      "sha256": "4731dc28937378850d5406b15737d60eccd4558e2f86b39a8b4189ae40ef8fa0",
+      "matchesExpected": true,
+      "elapsedMs": 66
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 102471,
+      "sha256": "cf7d36dd0d8402ba910e80ef2ea40881fc882db4edc24f0580f2ca71ac51891a",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 118823,
+      "sha256": "7531c848bc1e17f7f7be53c4591e579d39f285b28036f665e51911d96a96d2ea",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 111459,
+      "sha256": "da9aed0e45bec4e41fe46ab494e541856aa86824cf041d4b04aa875f21319a56",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 114308,
+      "sha256": "deeb575dea623ee590540c84eb8d22b43f3422cdfe423959ac7e3183791455dc",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 85554,
+      "sha256": "f24b9ddfe025a432b6c4b730866d585880705563d14a469d5374a4c4ef4213ca",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 110275,
+      "sha256": "691bb5e54be559f99bb65fbeae3a41886894ec14151b7828dea258647ba17e1d",
+      "matchesExpected": true,
+      "elapsedMs": 111
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/neon-v4.png",
+      "http": 200,
+      "bytes": 1354212,
+      "sha256": "9ab84f4149bc56d287c0fe97a583c3fd3a379e8947af7cbafb9e0d1adc82dbec",
+      "matchesExpected": true,
+      "elapsedMs": 226
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 97158,
+      "sha256": "16e08667d47dc0212087f0acc630a2b7fb121a320ac7caf502a772a1920b8dc4",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 87352,
+      "sha256": "cc12ad412db9cf39cf0cc3ed85e3cfd9ecbf4914982b726334466318f46dadfc",
+      "matchesExpected": true,
+      "elapsedMs": 75
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 117410,
+      "sha256": "53b703c2d03118787a592e412bf9ddf1b40dfb2b6ba05a31f85338d53a7dd045",
+      "matchesExpected": true,
+      "elapsedMs": 69
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 93955,
+      "sha256": "7a80f430e2fdb709b6f0c4a4b6c434cfe8d039a95785858c9fcd328cae5a8ae4",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 106946,
+      "sha256": "c58b9b8f919e6ac72efddefb8fa47f51181ae2410f06523c843c7dff55cde933",
+      "matchesExpected": true,
+      "elapsedMs": 49
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 82046,
+      "sha256": "ea3819d0d2136e48f03f02a5bb2b090a970aecf7708996db315af3fab91e2273",
+      "matchesExpected": true,
+      "elapsedMs": 48
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 83986,
+      "sha256": "f5887567c4e845d76989e3413653f4b26105b6833728ac6f0e67e856cd058b8e",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 196606,
+      "sha256": "f0684da8c67b0eeac0c997cb1cb42871c57db645bdf79851ab4b342966d8767b",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 90795,
+      "sha256": "3b625b50ea771313ddf67eab192970ae20526d062d375630f8f7bae2a0406401",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 107156,
+      "sha256": "b37587eb811720c46b893dd6c53ab52b367ac76aca022e777e72987994fc8156",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 114384,
+      "sha256": "f3e53663439a0f830a8b853dffcc07896b2550791a69b404e9a8190088fa303a",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 85484,
+      "sha256": "19587c5663e3a2c4a88ec7bd043efdf5f373d9d94c4a0128527cba136a95f866",
+      "matchesExpected": true,
+      "elapsedMs": 54
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 119507,
+      "sha256": "398eccf11fe9d54295fcaa16e94495a8998d96ae41dce272882a5a75c9216ee6",
+      "matchesExpected": true,
+      "elapsedMs": 54
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/amethyst-v6.png",
+      "http": 200,
+      "bytes": 1245880,
+      "sha256": "baca297caab6402d5356e9c196b8d67e054f568c396d35d17e7286acdaf4121a",
+      "matchesExpected": true,
+      "elapsedMs": 161
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 88754,
+      "sha256": "bcf866664355f2ee005c6bb336fa804a1cca8b9ed76322114a3c628bced353b1",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 79398,
+      "sha256": "7fb1882b93dbe3275e95e62591ca946bfa50a35dc459fb84d98f024bde3f678b",
+      "matchesExpected": true,
+      "elapsedMs": 57
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 95428,
+      "sha256": "45c0d6365d295f1ceae0c612eb7dca027fd0be9c35b9f3d5ccf902277765ef81",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 103116,
+      "sha256": "b6450c9cb033608615a1e8055190b21f21a4fe83b21f07fa4f9a4cf84ef4dfd4",
+      "matchesExpected": true,
+      "elapsedMs": 52
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 91680,
+      "sha256": "e1345449e673dfae333020466908e5eebee8cb1ee78287eadfec5cca3b1026e8",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 114669,
+      "sha256": "691d59e105d1024b87c7f6fcdd908b794d64f66d5f5ef799b8f43e7525827f39",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 76801,
+      "sha256": "bab93191c3b8994e5c042e0f38a67407e757cd916063b420ba6d1ad0574191ec",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 94176,
+      "sha256": "dd435d4fb2d09e7ca929a7102015a80872dd029cf15c65b23f9ac8c052eb836a",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 174271,
+      "sha256": "1e171e6881a65ff323abe881553afbf6b2d617d7a36bddb4a72c8eb644dd3ec0",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 77200,
+      "sha256": "6a3463a5039b067a0c12e6a59402a484b6757b3b98a0942f54d3e96f13ec4ae6",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 104724,
+      "sha256": "4d51afa5e370de469bf65a5287f5b8a6dd7ceed3493b89322e52c0ca6542fa5d",
+      "matchesExpected": true,
+      "elapsedMs": 74
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 94845,
+      "sha256": "0d7a8bd1009214d2f9b6337c88bd7f6d25e0c62f748fd26dcdd8a9b6486df0f6",
+      "matchesExpected": true,
+      "elapsedMs": 77
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 82083,
+      "sha256": "931ca6c9ec7b3ee5fa179bfb7cf608a01898d15e4a828c58c21ba5df98388289",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/easter-v6-1.png",
+      "http": 200,
+      "bytes": 1774612,
+      "sha256": "b9e98fedf5d7fc6da4df1323dfbc117e37514c5ce852a31887f52a01089c0609",
+      "matchesExpected": true,
+      "elapsedMs": 206
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 105340,
+      "sha256": "e66b9881f2c46057eac50833e9fff3eb4c2396b68aea89e7cd6f429514f586ec",
+      "matchesExpected": true,
+      "elapsedMs": 84
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81513,
+      "sha256": "a5b61785767ab7ac24dd5d42c277ceb499195eb765c5ae4b910b46bc7e4af633",
+      "matchesExpected": true,
+      "elapsedMs": 52
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 95289,
+      "sha256": "7253c42d9a38db16faa02bcda943fc0ff745ce89fd5c554191294029deb3251c",
+      "matchesExpected": true,
+      "elapsedMs": 87
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 103353,
+      "sha256": "eb9277faab910cf1e9973177fb1ba9e9f977bab91b3eae715f3497374148a0d0",
+      "matchesExpected": true,
+      "elapsedMs": 57
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 80931,
+      "sha256": "20476c36223114be6d6f37f800b02f858f8dda16c2b01d82f16f20a815eb515f",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 98737,
+      "sha256": "9afa829a5f7db35f24bf2e0680486bd5cc4ede5d28fcf6a2fae6404b46d67c8b",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 106822,
+      "sha256": "aa70389ce0897ef433134d156bb398855b64e3e79bff1978886946f0737771d3",
+      "matchesExpected": true,
+      "elapsedMs": 193
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 72764,
+      "sha256": "0a70a520b3b63eedd8b0e373b7d25e99af37bbb4d3089fc5fcf52bc81563612e",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 90658,
+      "sha256": "94af8a9dbfb4b911fd937a61b55010ece7592a77fa2f587009db9c7ca13e8742",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 171146,
+      "sha256": "b1804da4e1b1b10d115bd44a45c82ceba801b62b92ef86f75b482cbc647d9b4d",
+      "matchesExpected": true,
+      "elapsedMs": 83
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 74368,
+      "sha256": "73ec280a50858e30d78f57607793951e621145dba484b4f9aebd12f856f1f931",
+      "matchesExpected": true,
+      "elapsedMs": 115
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 73432,
+      "sha256": "3bdb921106b9f1d5e69aed01b6bced9eed57d72d942bd9c334eca7657faf3238",
+      "matchesExpected": true,
+      "elapsedMs": 56
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78306,
+      "sha256": "45b797f2a23b1f9194ab6d12153185d7516f03d31504d1c0aac92d03e5a3cc75",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 92627,
+      "sha256": "48ef352fc5ffa812969bfe90605c8ecc4333ada8415d09c983b38b10cd552730",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/desert-v8-2.png",
+      "http": 200,
+      "bytes": 1530444,
+      "sha256": "4d6e8185c33f806eda948965152a5b8c35785dd7b807e7a8262931e06c3b0c48",
+      "matchesExpected": true,
+      "elapsedMs": 199
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 67196,
+      "sha256": "7a4b0309a9abfa6fbedc9503a8de25131bb0c2fabeebda8c70842a0d52daa578",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 74561,
+      "sha256": "b296b69c41060b039cac75a68555103f7aa62a8987aa5cfaea62d90c93896039",
+      "matchesExpected": true,
+      "elapsedMs": 50
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 79515,
+      "sha256": "7a501057954f5eb3eeac5a5efc0834113f79ee7bee200fcf937d8bb4bda135f3",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 91392,
+      "sha256": "9a7e953f1f2eb8b03bd617d54661855e15cbd8e4018f142e2e10f580430261c5",
+      "matchesExpected": true,
+      "elapsedMs": 56
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 115544,
+      "sha256": "9f7f415f6a921ca807a7289fd437cf1171b6744c1bee65ef78fc159622e60b17",
+      "matchesExpected": true,
+      "elapsedMs": 133
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 79772,
+      "sha256": "b86e726023737a06e1dd149fb5422246b0352966975943e0ac87320eb69911e6",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 127089,
+      "sha256": "5c73278a6c7fd98003755e5a9c0f10580fb21edb77344780cf909b030d331319",
+      "matchesExpected": true,
+      "elapsedMs": 54
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 91437,
+      "sha256": "59d18aab42dc8e8896fb8159bf7aaa43ac441aafe75b711fa947b80384d31368",
+      "matchesExpected": true,
+      "elapsedMs": 56
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 133244,
+      "sha256": "9c337dbec4c25c3f8820222e787ae3e8eb18a5e3517a55160ba3c9da13ab5822",
+      "matchesExpected": true,
+      "elapsedMs": 60
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 77419,
+      "sha256": "dc7c7a84230138489ba34e4a3fbebfc8d8511baa14c9bbdd7d6497f8b602e22d",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 87038,
+      "sha256": "b2953449bed876c4c2179a8c39bf15fa2265d9e9624146cb90f58a62313adce3",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 90508,
+      "sha256": "c58fe32eb396d28d2f429b9d123c73081444748057b9f9a3a8d1f1b82d148aa5",
+      "matchesExpected": true,
+      "elapsedMs": 79
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 89690,
+      "sha256": "60fb5fe7861933d8927795952c2bdfd706c8dba1f59a938e2d3ed60dd7116563",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/moon-v14.png",
+      "http": 200,
+      "bytes": 1229460,
+      "sha256": "d3a3ade71417de88ffae1fedddadd63123d0174942468ced4483fff26483e496",
+      "matchesExpected": true,
+      "elapsedMs": 166
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 154170,
+      "sha256": "bd347f593f8fb6ef33f0edc780ebf701b953bd6abc339722a6dbd1bef9929fa7",
+      "matchesExpected": true,
+      "elapsedMs": 184
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 69182,
+      "sha256": "69e18ec5efe7fb68d6c6472b8bbae23b9a4c0fb40878e12997457474b123219e",
+      "matchesExpected": true,
+      "elapsedMs": 54
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 71702,
+      "sha256": "c0c0458b25fca17002f1d2767d3bacae2ec6747e0c13cdb75182b71503158e0c",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109898,
+      "sha256": "6e281fb2a60fd3259eb6c3ecae20d1855700ee03aaadd7ef47cce8dcc1b844a9",
+      "matchesExpected": true,
+      "elapsedMs": 92
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 80469,
+      "sha256": "5c0f95c702d6d01dd0677e7a2a7f10576ad318fc5d6d4c27e269aef49930a712",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 65227,
+      "sha256": "18d3c737fdee6b477d686e5667fedcc427d15239ee7284f82b5d40506a6fbe40",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 83314,
+      "sha256": "766089a0e7fa7e28a49232999cfe547b65af3979d0ac6704cd5ca0ebb70c04f7",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 81830,
+      "sha256": "db2b976d6d997e07910e993ac12dcefb61c2a1a412d68217f39f7cd004955eeb",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 84515,
+      "sha256": "9be2f95b82a44df1c1cce9b6096510388c016af5da8be2635b3b787397756bc8",
+      "matchesExpected": true,
+      "elapsedMs": 113
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png",
+      "http": 200,
+      "bytes": 30194,
+      "sha256": "34d162cb8e78c6d56ce5e8fb5243b051a7fca7f0adc5bc78ae44b29fff7330c2",
+      "matchesExpected": true,
+      "elapsedMs": 48
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 90544,
+      "sha256": "d92a1cebc0294959b47b9b327ffcf34eabbf5cdd10e3419bc00563b9331c4d14",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 140368,
+      "sha256": "6abe5021d63ad88696c6c9e61556d0244d3a5213a76f49a3483c9988deb4311d",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 99769,
+      "sha256": "95921d452153f5876fd0ef9a28a45e830253dd243b35d8b8fb2eb1ffa4e3f59f",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 100985,
+      "sha256": "25bd3f5c0ea736705262051636ac473f3d80fde970ae3b03d9c73b849f601ed4",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78738,
+      "sha256": "a643326f0a9b80a09af9cc32409176464aa69bb68cfcbf0beb0022f791a11af7",
+      "matchesExpected": true,
+      "elapsedMs": 87
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 115120,
+      "sha256": "888581e86ed7dc0bf12eefce8b8dcb9d8368670d6c6aea60cf2effe37cac0f34",
+      "matchesExpected": true,
+      "elapsedMs": 75
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 107999,
+      "sha256": "84e7ab41ef04b0148683440535aff8498fa0d4c14d2bd0a4098b7961faaf5463",
+      "matchesExpected": true,
+      "elapsedMs": 85
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 82941,
+      "sha256": "6001b96f514ac9d144b87a132cf14e4a0e33d960748dc525bbce6da8b372d264",
+      "matchesExpected": true,
+      "elapsedMs": 77
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-backgrounds/severna-v4.png",
+      "http": 200,
+      "bytes": 1447727,
+      "sha256": "b7d3ba5f84b45e7bba34e1c52d0721c263f79cd1d4be236b62e4500e05481856",
+      "matchesExpected": true,
+      "elapsedMs": 193
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 93935,
+      "sha256": "a9ad596186d4ac5c280d2962a4078b45cc34fdd19ebeb4d834ce7403ef4cec1e",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 96050,
+      "sha256": "20ebb00c68bba869c16861162a8960d2612ab1eafbd59a2f4ce614b46ce72bab",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78801,
+      "sha256": "e7413f4c7b69d0367e49ac932d7c6bc4b80c4b70c9c046960080377f5472ffe0",
+      "matchesExpected": true,
+      "elapsedMs": 50
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 92675,
+      "sha256": "426f44c422829b6455a0e77cc3f60a0bf5b0122e18d201019b116046c35e5e2e",
+      "matchesExpected": true,
+      "elapsedMs": 109
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 108501,
+      "sha256": "c63fdd7cc63fd28264eacd65c3c3404cd807ee66d524f287aec8d13e55714fd9",
+      "matchesExpected": true,
+      "elapsedMs": 52
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 114255,
+      "sha256": "4b2d4c71099fecab556eadb511c2ed0544e3a4bc29c2e93a803220483a5e13a5",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 86723,
+      "sha256": "557d1ca327bcc6e865ef09fa2e9778820faa5aa964ad27abbec50128c5728ffd",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 161455,
+      "sha256": "980c4b7f93de12b460c3a415ec54b249cfa6ea5d7a1882502939a92d5f5bfc09",
+      "matchesExpected": true,
+      "elapsedMs": 57
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 60173,
+      "sha256": "1fa2f006bddf8d8831d4eb3f4cdd6e3ba94249b6a53d406abd785ad5e805a685",
+      "matchesExpected": true,
+      "elapsedMs": 111
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 83399,
+      "sha256": "956967e3d3ea1b9ae9098c534197ad8a81b04775972f275a1b8f99d2110f6c33",
+      "matchesExpected": true,
+      "elapsedMs": 95
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109647,
+      "sha256": "8945493cf60563052511f1da66487bb86a265753b90463e0d9f6bd9f2dd4df36",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 95155,
+      "sha256": "6198cc98a8169eb3476039dc7e3e43b574cafeff164ada333bac8a814217a7a5",
+      "matchesExpected": true,
+      "elapsedMs": 85
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 89037,
+      "sha256": "8788ea0b1bb4cddb34fd227cb89da0a3ecad3cc098f54565fde2c34d19833245",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109494,
+      "sha256": "8336607055e3b184e453d97efe998536ed6ce25aca6d3d7afb30dad8a6c27e6a",
+      "matchesExpected": true,
+      "elapsedMs": 94
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 77423,
+      "sha256": "c20fe624364d3a5618aee60bfa7190096c08b343d13e18534c53481b9c577151",
+      "matchesExpected": true,
+      "elapsedMs": 76
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 76087,
+      "sha256": "701d50e7902ab4531b58abf6a7b88fdb1dff341fc9a693bdcb9f34e2b6649c2b",
+      "matchesExpected": true,
+      "elapsedMs": 111
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81667,
+      "sha256": "6c2f5d3beaa4adc4c188e21615880bbe46237ccf3f64138b655e1981702cb54b",
+      "matchesExpected": true,
+      "elapsedMs": 70
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/light-v9.png",
+      "http": 200,
+      "bytes": 1319247,
+      "sha256": "635dd38a213b1e0cc5b0aadd879cb5520cb90ee748650b3db3ed1a08fdf1d378",
+      "matchesExpected": true,
+      "elapsedMs": 448
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 111360,
+      "sha256": "d3145278013f106d51d2f0b417d364399862f269c1323d5c53ef7552f699eee6",
+      "matchesExpected": true,
+      "elapsedMs": 74
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/green-clay-balkan-diorama-v4.png",
+      "http": 200,
+      "bytes": 1721266,
+      "sha256": "3751e15700ae2d88b5024ea220a02afc23158500338f5b40dda2b0b246e35b07",
+      "matchesExpected": true,
+      "elapsedMs": 490
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 86964,
+      "sha256": "6fda184224408696db859d6c56e3efe3ea5575e7226ac5e37b9e8737e7197073",
+      "matchesExpected": true,
+      "elapsedMs": 79
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 112030,
+      "sha256": "cf7e6675e2ceb69bae79523c70f0940ac581d36ddf3001e1c76be1089c087fd1",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 104671,
+      "sha256": "a4a19629214b08038a0fe77e12f5b8054d2f2c8c2c3157e2f340b9761932af3b",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+      "http": 200,
+      "bytes": 84391,
+      "sha256": "0697c5e0a4685e7702aa56da63971632fce282ed0b15ceea67e522c7e1f37791",
+      "matchesExpected": true,
+      "elapsedMs": 81
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 89679,
+      "sha256": "c1503982b8f547b60b9548fc9fa16da699b2e8d114a562cec6b6998660bc348a",
+      "matchesExpected": true,
+      "elapsedMs": 57
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/light/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 185279,
+      "sha256": "e71e69d85cdabc4c1f5d6f1946db3ca527d05560d20e5581b421fd49dc219eff",
+      "matchesExpected": true,
+      "elapsedMs": 94
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 128932,
+      "sha256": "5dcdda3b02b66ae13390f2d4d91c1185e58a63e71d273d81e5d14bcc36acc93d",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 131519,
+      "sha256": "f44363eda29f5c15fba93a81ce3453e501e33977b98530beaf258b6e2f0c3f54",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 141394,
+      "sha256": "4f48d62e9feec83fcb6404743049b16cb3d002a285e5537da0fcbc4e1fd89a59",
+      "matchesExpected": true,
+      "elapsedMs": 70
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 110161,
+      "sha256": "2d6861b9aef5ffd72badcc22e2a36b11d63d5d2d309dd2ca96e8d717a9ccaf0b",
+      "matchesExpected": true,
+      "elapsedMs": 84
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/medium-v9.png",
+      "http": 200,
+      "bytes": 1420762,
+      "sha256": "25fd9a61e299847c9ce609f35dbfa414667dc782189614eede47fd15a07b5a73",
+      "matchesExpected": true,
+      "elapsedMs": 218
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 110270,
+      "sha256": "123e4a3de6a49517594ed33665e1772f1e3b1c8e12734c70e3765c60c90da9d1",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 99804,
+      "sha256": "439947ece4a9b6b50716fd8bae3bbfd710fee130ce0d729058ad94369c6b8e41",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 93311,
+      "sha256": "c7708ea460d36e55038a00784d761303a8fb6411a9239eda48ed46592ff0bbf1",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 112494,
+      "sha256": "79e924358dc1ca8aec5d13e4f231e9769ca11b4dc6f5055a7a39815948ca291f",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 102637,
+      "sha256": "62facebe66b5ed52635eeb5411d257549c7e9fc56d4420e178571e56c522181f",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 113733,
+      "sha256": "27b2c1b29d764caf4e2e2ac396ba9330731be43dc3a36d0d7cc23a8cec1155e0",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+      "http": 200,
+      "bytes": 76771,
+      "sha256": "656a572b72921921290cd7e16fdf557fa3bc15edfc5f8105c7eaf4816b9a260d",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 85781,
+      "sha256": "e0bc942434983d5dd0195a69fd52ff5b54a3618bb8b04d75f2d028188b7b315c",
+      "matchesExpected": true,
+      "elapsedMs": 75
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/medium/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 198651,
+      "sha256": "abd8fd0854f2933a8a158820217405f0d68717f9d4cfba7a25f3098c3a513486",
+      "matchesExpected": true,
+      "elapsedMs": 84
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 66462,
+      "sha256": "1e3fd38a334b654fb5628a735d0c4c7fce94ad14b82f279f813c277c33cc7158",
+      "matchesExpected": true,
+      "elapsedMs": 69
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 102659,
+      "sha256": "94f7bc8e1fba4e1e7e9e22fb0d3c6df4a3e26bcf5c7da056534907973e48fe5c",
+      "matchesExpected": true,
+      "elapsedMs": 76
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109136,
+      "sha256": "1e494a47ae920fd7a4bf88172bdcff7430d900d7aeacbd3dedcac50d827f01ab",
+      "matchesExpected": true,
+      "elapsedMs": 84
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 80506,
+      "sha256": "d22bd2238fbcb35082559491cfc7b23fdba3a8145f84c93f5c287a8767a24046",
+      "matchesExpected": true,
+      "elapsedMs": 117
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/winter-v13.png",
+      "http": 200,
+      "bytes": 1538512,
+      "sha256": "c558a5899e865838f4df5fd9c28a2ce3bc5ef924296bb344c75717cf92cfb211",
+      "matchesExpected": true,
+      "elapsedMs": 193
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 115214,
+      "sha256": "09389f2e924abca32a1c8211544f79f8ccf3a84b1132dbca4cfe572240b89974",
+      "matchesExpected": true,
+      "elapsedMs": 66
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81930,
+      "sha256": "e612356a487b99d05b743cc9e98da35f43e681911a6158d1e0ae22fa4217d99c",
+      "matchesExpected": true,
+      "elapsedMs": 66
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 82094,
+      "sha256": "99ec5a4d8044b74fd7599512404638e7566691618f8cecd1fc28b0a7213308ec",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78945,
+      "sha256": "d5199628954c709a005e0632c9b29ba011b48331632d20499af22b3a8f4d2bcf",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 98007,
+      "sha256": "1bc3cfc0590a8c0627b09b979425f3c115b5eb4cc79e02b1091a32a8e4e525c5",
+      "matchesExpected": true,
+      "elapsedMs": 70
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 77127,
+      "sha256": "c188792dc342ad7bc42b310dab5cf8f5fdc783373a41e2a6b85db0d0a4f997ea",
+      "matchesExpected": true,
+      "elapsedMs": 50
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81896,
+      "sha256": "3e2dc067c5ec0bef532175b1e9a52c648d29760f0bffc8316147e56cb8ab52dd",
+      "matchesExpected": true,
+      "elapsedMs": 63
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 71215,
+      "sha256": "4de04ecabbed8c992d64e882bce28882556124afef9f912594a5720b0ab74f49",
+      "matchesExpected": true,
+      "elapsedMs": 69
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 101926,
+      "sha256": "2d73b77f409d4ad91fccfb04b2cd4f5b6c4996aeb7fcacea5aea10d02e72c1a7",
+      "matchesExpected": true,
+      "elapsedMs": 81
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/winter/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 161826,
+      "sha256": "4731dc28937378850d5406b15737d60eccd4558e2f86b39a8b4189ae40ef8fa0",
+      "matchesExpected": true,
+      "elapsedMs": 75
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 102471,
+      "sha256": "cf7d36dd0d8402ba910e80ef2ea40881fc882db4edc24f0580f2ca71ac51891a",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 118823,
+      "sha256": "7531c848bc1e17f7f7be53c4591e579d39f285b28036f665e51911d96a96d2ea",
+      "matchesExpected": true,
+      "elapsedMs": 85
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 111459,
+      "sha256": "da9aed0e45bec4e41fe46ab494e541856aa86824cf041d4b04aa875f21319a56",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 110275,
+      "sha256": "691bb5e54be559f99bb65fbeae3a41886894ec14151b7828dea258647ba17e1d",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/neon-v4.png",
+      "http": 200,
+      "bytes": 1354212,
+      "sha256": "9ab84f4149bc56d287c0fe97a583c3fd3a379e8947af7cbafb9e0d1adc82dbec",
+      "matchesExpected": true,
+      "elapsedMs": 192
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 85554,
+      "sha256": "f24b9ddfe025a432b6c4b730866d585880705563d14a469d5374a4c4ef4213ca",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 87352,
+      "sha256": "cc12ad412db9cf39cf0cc3ed85e3cfd9ecbf4914982b726334466318f46dadfc",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 114308,
+      "sha256": "deeb575dea623ee590540c84eb8d22b43f3422cdfe423959ac7e3183791455dc",
+      "matchesExpected": true,
+      "elapsedMs": 89
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 97158,
+      "sha256": "16e08667d47dc0212087f0acc630a2b7fb121a320ac7caf502a772a1920b8dc4",
+      "matchesExpected": true,
+      "elapsedMs": 51
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 117410,
+      "sha256": "53b703c2d03118787a592e412bf9ddf1b40dfb2b6ba05a31f85338d53a7dd045",
+      "matchesExpected": true,
+      "elapsedMs": 60
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 93955,
+      "sha256": "7a80f430e2fdb709b6f0c4a4b6c434cfe8d039a95785858c9fcd328cae5a8ae4",
+      "matchesExpected": true,
+      "elapsedMs": 59
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 106946,
+      "sha256": "c58b9b8f919e6ac72efddefb8fa47f51181ae2410f06523c843c7dff55cde933",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 82046,
+      "sha256": "ea3819d0d2136e48f03f02a5bb2b090a970aecf7708996db315af3fab91e2273",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 196606,
+      "sha256": "f0684da8c67b0eeac0c997cb1cb42871c57db645bdf79851ab4b342966d8767b",
+      "matchesExpected": true,
+      "elapsedMs": 62
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 83986,
+      "sha256": "f5887567c4e845d76989e3413653f4b26105b6833728ac6f0e67e856cd058b8e",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 90795,
+      "sha256": "3b625b50ea771313ddf67eab192970ae20526d062d375630f8f7bae2a0406401",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 107156,
+      "sha256": "b37587eb811720c46b893dd6c53ab52b367ac76aca022e777e72987994fc8156",
+      "matchesExpected": true,
+      "elapsedMs": 56
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 114384,
+      "sha256": "f3e53663439a0f830a8b853dffcc07896b2550791a69b404e9a8190088fa303a",
+      "matchesExpected": true,
+      "elapsedMs": 60
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 85484,
+      "sha256": "19587c5663e3a2c4a88ec7bd043efdf5f373d9d94c4a0128527cba136a95f866",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 88754,
+      "sha256": "bcf866664355f2ee005c6bb336fa804a1cca8b9ed76322114a3c628bced353b1",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 119507,
+      "sha256": "398eccf11fe9d54295fcaa16e94495a8998d96ae41dce272882a5a75c9216ee6",
+      "matchesExpected": true,
+      "elapsedMs": 94
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 79398,
+      "sha256": "7fb1882b93dbe3275e95e62591ca946bfa50a35dc459fb84d98f024bde3f678b",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/amethyst-v6.png",
+      "http": 200,
+      "bytes": 1245880,
+      "sha256": "baca297caab6402d5356e9c196b8d67e054f568c396d35d17e7286acdaf4121a",
+      "matchesExpected": true,
+      "elapsedMs": 225
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 103116,
+      "sha256": "b6450c9cb033608615a1e8055190b21f21a4fe83b21f07fa4f9a4cf84ef4dfd4",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 95428,
+      "sha256": "45c0d6365d295f1ceae0c612eb7dca027fd0be9c35b9f3d5ccf902277765ef81",
+      "matchesExpected": true,
+      "elapsedMs": 85
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 91680,
+      "sha256": "e1345449e673dfae333020466908e5eebee8cb1ee78287eadfec5cca3b1026e8",
+      "matchesExpected": true,
+      "elapsedMs": 74
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 114669,
+      "sha256": "691d59e105d1024b87c7f6fcdd908b794d64f66d5f5ef799b8f43e7525827f39",
+      "matchesExpected": true,
+      "elapsedMs": 69
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 76801,
+      "sha256": "bab93191c3b8994e5c042e0f38a67407e757cd916063b420ba6d1ad0574191ec",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 94176,
+      "sha256": "dd435d4fb2d09e7ca929a7102015a80872dd029cf15c65b23f9ac8c052eb836a",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/amethyst/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 174271,
+      "sha256": "1e171e6881a65ff323abe881553afbf6b2d617d7a36bddb4a72c8eb644dd3ec0",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 77200,
+      "sha256": "6a3463a5039b067a0c12e6a59402a484b6757b3b98a0942f54d3e96f13ec4ae6",
+      "matchesExpected": true,
+      "elapsedMs": 70
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 94845,
+      "sha256": "0d7a8bd1009214d2f9b6337c88bd7f6d25e0c62f748fd26dcdd8a9b6486df0f6",
+      "matchesExpected": true,
+      "elapsedMs": 66
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 104724,
+      "sha256": "4d51afa5e370de469bf65a5287f5b8a6dd7ceed3493b89322e52c0ca6542fa5d",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 105340,
+      "sha256": "e66b9881f2c46057eac50833e9fff3eb4c2396b68aea89e7cd6f429514f586ec",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 106822,
+      "sha256": "aa70389ce0897ef433134d156bb398855b64e3e79bff1978886946f0737771d3",
+      "matchesExpected": true,
+      "elapsedMs": 69
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 82083,
+      "sha256": "931ca6c9ec7b3ee5fa179bfb7cf608a01898d15e4a828c58c21ba5df98388289",
+      "matchesExpected": true,
+      "elapsedMs": 98
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 95289,
+      "sha256": "7253c42d9a38db16faa02bcda943fc0ff745ce89fd5c554191294029deb3251c",
+      "matchesExpected": true,
+      "elapsedMs": 74
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 103353,
+      "sha256": "eb9277faab910cf1e9973177fb1ba9e9f977bab91b3eae715f3497374148a0d0",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 81513,
+      "sha256": "a5b61785767ab7ac24dd5d42c277ceb499195eb765c5ae4b910b46bc7e4af633",
+      "matchesExpected": true,
+      "elapsedMs": 91
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/easter-v6-1.png",
+      "http": 200,
+      "bytes": 1774612,
+      "sha256": "b9e98fedf5d7fc6da4df1323dfbc117e37514c5ce852a31887f52a01089c0609",
+      "matchesExpected": true,
+      "elapsedMs": 306
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 80931,
+      "sha256": "20476c36223114be6d6f37f800b02f858f8dda16c2b01d82f16f20a815eb515f",
+      "matchesExpected": true,
+      "elapsedMs": 81
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 72764,
+      "sha256": "0a70a520b3b63eedd8b0e373b7d25e99af37bbb4d3089fc5fcf52bc81563612e",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 98737,
+      "sha256": "9afa829a5f7db35f24bf2e0680486bd5cc4ede5d28fcf6a2fae6404b46d67c8b",
+      "matchesExpected": true,
+      "elapsedMs": 85
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
+      "http": 200,
+      "bytes": 90658,
+      "sha256": "94af8a9dbfb4b911fd937a61b55010ece7592a77fa2f587009db9c7ca13e8742",
+      "matchesExpected": true,
+      "elapsedMs": 80
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/easter/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 171146,
+      "sha256": "b1804da4e1b1b10d115bd44a45c82ceba801b62b92ef86f75b482cbc647d9b4d",
+      "matchesExpected": true,
+      "elapsedMs": 84
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 74368,
+      "sha256": "73ec280a50858e30d78f57607793951e621145dba484b4f9aebd12f856f1f931",
+      "matchesExpected": true,
+      "elapsedMs": 84
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78306,
+      "sha256": "45b797f2a23b1f9194ab6d12153185d7516f03d31504d1c0aac92d03e5a3cc75",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 73432,
+      "sha256": "3bdb921106b9f1d5e69aed01b6bced9eed57d72d942bd9c334eca7657faf3238",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 115544,
+      "sha256": "9f7f415f6a921ca807a7289fd437cf1171b6744c1bee65ef78fc159622e60b17",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/desert-v8-2.png",
+      "http": 200,
+      "bytes": 1530444,
+      "sha256": "4d6e8185c33f806eda948965152a5b8c35785dd7b807e7a8262931e06c3b0c48",
+      "matchesExpected": true,
+      "elapsedMs": 206
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 92627,
+      "sha256": "48ef352fc5ffa812969bfe90605c8ecc4333ada8415d09c983b38b10cd552730",
+      "matchesExpected": true,
+      "elapsedMs": 108
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 67196,
+      "sha256": "7a4b0309a9abfa6fbedc9503a8de25131bb0c2fabeebda8c70842a0d52daa578",
+      "matchesExpected": true,
+      "elapsedMs": 83
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 79515,
+      "sha256": "7a501057954f5eb3eeac5a5efc0834113f79ee7bee200fcf937d8bb4bda135f3",
+      "matchesExpected": true,
+      "elapsedMs": 62
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 74561,
+      "sha256": "b296b69c41060b039cac75a68555103f7aa62a8987aa5cfaea62d90c93896039",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 79772,
+      "sha256": "b86e726023737a06e1dd149fb5422246b0352966975943e0ac87320eb69911e6",
+      "matchesExpected": true,
+      "elapsedMs": 62
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 91392,
+      "sha256": "9a7e953f1f2eb8b03bd617d54661855e15cbd8e4018f142e2e10f580430261c5",
+      "matchesExpected": true,
+      "elapsedMs": 100
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 127089,
+      "sha256": "5c73278a6c7fd98003755e5a9c0f10580fb21edb77344780cf909b030d331319",
+      "matchesExpected": true,
+      "elapsedMs": 81
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 133244,
+      "sha256": "9c337dbec4c25c3f8820222e787ae3e8eb18a5e3517a55160ba3c9da13ab5822",
+      "matchesExpected": true,
+      "elapsedMs": 58
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 91437,
+      "sha256": "59d18aab42dc8e8896fb8159bf7aaa43ac441aafe75b711fa947b80384d31368",
+      "matchesExpected": true,
+      "elapsedMs": 82
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/desert/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 154170,
+      "sha256": "bd347f593f8fb6ef33f0edc780ebf701b953bd6abc339722a6dbd1bef9929fa7",
+      "matchesExpected": true,
+      "elapsedMs": 67
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 87038,
+      "sha256": "b2953449bed876c4c2179a8c39bf15fa2265d9e9624146cb90f58a62313adce3",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 77419,
+      "sha256": "dc7c7a84230138489ba34e4a3fbebfc8d8511baa14c9bbdd7d6497f8b602e22d",
+      "matchesExpected": true,
+      "elapsedMs": 77
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 90508,
+      "sha256": "c58fe32eb396d28d2f429b9d123c73081444748057b9f9a3a8d1f1b82d148aa5",
+      "matchesExpected": true,
+      "elapsedMs": 89
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/moon-v14.png",
+      "http": 200,
+      "bytes": 1229460,
+      "sha256": "d3a3ade71417de88ffae1fedddadd63123d0174942468ced4483fff26483e496",
+      "matchesExpected": true,
+      "elapsedMs": 173
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 89690,
+      "sha256": "60fb5fe7861933d8927795952c2bdfd706c8dba1f59a938e2d3ed60dd7116563",
+      "matchesExpected": true,
+      "elapsedMs": 85
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 109898,
+      "sha256": "6e281fb2a60fd3259eb6c3ecae20d1855700ee03aaadd7ef47cce8dcc1b844a9",
+      "matchesExpected": true,
+      "elapsedMs": 81
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 71702,
+      "sha256": "c0c0458b25fca17002f1d2767d3bacae2ec6747e0c13cdb75182b71503158e0c",
+      "matchesExpected": true,
+      "elapsedMs": 61
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 69182,
+      "sha256": "69e18ec5efe7fb68d6c6472b8bbae23b9a4c0fb40878e12997457474b123219e",
+      "matchesExpected": true,
+      "elapsedMs": 60
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 80469,
+      "sha256": "5c0f95c702d6d01dd0677e7a2a7f10576ad318fc5d6d4c27e269aef49930a712",
+      "matchesExpected": true,
+      "elapsedMs": 53
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 84515,
+      "sha256": "9be2f95b82a44df1c1cce9b6096510388c016af5da8be2635b3b787397756bc8",
+      "matchesExpected": true,
+      "elapsedMs": 66
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 65227,
+      "sha256": "18d3c737fdee6b477d686e5667fedcc427d15239ee7284f82b5d40506a6fbe40",
+      "matchesExpected": true,
+      "elapsedMs": 57
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 83314,
+      "sha256": "766089a0e7fa7e28a49232999cfe547b65af3979d0ac6704cd5ca0ebb70c04f7",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 81830,
+      "sha256": "db2b976d6d997e07910e993ac12dcefb61c2a1a412d68217f39f7cd004955eeb",
+      "matchesExpected": true,
+      "elapsedMs": 64
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 140368,
+      "sha256": "6abe5021d63ad88696c6c9e61556d0244d3a5213a76f49a3483c9988deb4311d",
+      "matchesExpected": true,
+      "elapsedMs": 65
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 90544,
+      "sha256": "d92a1cebc0294959b47b9b327ffcf34eabbf5cdd10e3419bc00563b9331c4d14",
+      "matchesExpected": true,
+      "elapsedMs": 95
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/moon/canonical/settings-controls/privacy-v2.png",
+      "http": 200,
+      "bytes": 30194,
+      "sha256": "34d162cb8e78c6d56ce5e8fb5243b051a7fca7f0adc5bc78ae44b29fff7330c2",
+      "matchesExpected": true,
+      "elapsedMs": 55
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78738,
+      "sha256": "a643326f0a9b80a09af9cc32409176464aa69bb68cfcbf0beb0022f791a11af7",
+      "matchesExpected": true,
+      "elapsedMs": 68
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 99769,
+      "sha256": "95921d452153f5876fd0ef9a28a45e830253dd243b35d8b8fb2eb1ffa4e3f59f",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "http": 200,
+      "bytes": 100985,
+      "sha256": "25bd3f5c0ea736705262051636ac473f3d80fde970ae3b03d9c73b849f601ed4",
+      "matchesExpected": true,
+      "elapsedMs": 71
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "http": 200,
+      "bytes": 107999,
+      "sha256": "84e7ab41ef04b0148683440535aff8498fa0d4c14d2bd0a4098b7961faaf5463",
+      "matchesExpected": true,
+      "elapsedMs": 56
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "http": 200,
+      "bytes": 82941,
+      "sha256": "6001b96f514ac9d144b87a132cf14e4a0e33d960748dc525bbce6da8b372d264",
+      "matchesExpected": true,
+      "elapsedMs": 87
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "http": 200,
+      "bytes": 92675,
+      "sha256": "426f44c422829b6455a0e77cc3f60a0bf5b0122e18d201019b116046c35e5e2e",
+      "matchesExpected": true,
+      "elapsedMs": 74
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "http": 200,
+      "bytes": 115120,
+      "sha256": "888581e86ed7dc0bf12eefce8b8dcb9d8368670d6c6aea60cf2effe37cac0f34",
+      "matchesExpected": true,
+      "elapsedMs": 102
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "http": 200,
+      "bytes": 93935,
+      "sha256": "a9ad596186d4ac5c280d2962a4078b45cc34fdd19ebeb4d834ce7403ef4cec1e",
+      "matchesExpected": true,
+      "elapsedMs": 92
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "http": 200,
+      "bytes": 96050,
+      "sha256": "20ebb00c68bba869c16861162a8960d2612ab1eafbd59a2f4ce614b46ce72bab",
+      "matchesExpected": true,
+      "elapsedMs": 125
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "http": 200,
+      "bytes": 78801,
+      "sha256": "e7413f4c7b69d0367e49ac932d7c6bc4b80c4b70c9c046960080377f5472ffe0",
+      "matchesExpected": true,
+      "elapsedMs": 120
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-backgrounds/severna-v4.png",
+      "http": 200,
+      "bytes": 1447727,
+      "sha256": "b7d3ba5f84b45e7bba34e1c52d0721c263f79cd1d4be236b62e4500e05481856",
+      "matchesExpected": true,
+      "elapsedMs": 345
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
+      "http": 200,
+      "bytes": 108501,
+      "sha256": "c63fdd7cc63fd28264eacd65c3c3404cd807ee66d524f287aec8d13e55714fd9",
+      "matchesExpected": true,
+      "elapsedMs": 89
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v2.png",
+      "http": 200,
+      "bytes": 86723,
+      "sha256": "557d1ca327bcc6e865ef09fa2e9778820faa5aa964ad27abbec50128c5728ffd",
+      "matchesExpected": true,
+      "elapsedMs": 73
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/canonical/settings-room-identity/settings-room-v1.png",
+      "http": 200,
+      "bytes": 161455,
+      "sha256": "980c4b7f93de12b460c3a415ec54b249cfa6ea5d7a1882502939a92d5f5bfc09",
+      "matchesExpected": true,
+      "elapsedMs": 72
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "source": "assets/theme-packs/severna/runtime/menu/ducats-undo-free-v4.png",
+      "http": 200,
+      "bytes": 114255,
+      "sha256": "4b2d4c71099fecab556eadb511c2ed0544e3a4bc29c2e93a803220483a5e13a5",
+      "matchesExpected": true,
+      "elapsedMs": 78
+    }
+  ]
+}

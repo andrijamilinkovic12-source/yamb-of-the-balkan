@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-01",
+  "commit": "0f48fdcece2a19940ec59a5d0c531b507ab4dcc1",
+  "appVersion": "6.44 unchanged",
+  "scope": "Isolated inert production-renderer DOM and real CSS/PNG in Android Chrome; not the authenticated app WebView, real result, or physical S25.",
+  "userDirection": "Nastavi za sada bez telefona",
+  "device": "emulator-5556, original1440x3120/560dpi; Chrome viewport412x771/DPR3.5",
+  "batch": {
+    "file": "android-1793544032820.json",
+    "contentChecks": 90,
+    "passed": 90,
+    "themes": 10,
+    "outcomes": 3,
+    "sizes": [
+      "411x731",
+      "360x640",
+      "320x568"
+    ],
+    "limitation": "Fresh child navigation per case. Assertions cover child geometry, scroll and visible PNGs; this initial run did not assert parent iframe bounds."
+  },
+  "sameDocument": {
+    "file": "android-1793545040903.json",
+    "checks": 4,
+    "passed": 4,
+    "theme": "moon",
+    "state": "win",
+    "sequence": [
+      "411x731",
+      "360x640",
+      "320x568",
+      "411x731"
+    ],
+    "noChildNavigation": true,
+    "parentAndChildBounds": true,
+    "outerViewportStayed": "412x771, visual scale1, scrollWidth412"
+  },
+  "fixtureCorrection": {
+    "history": [
+      "android-1793544474846.json",
+      "android-1793544771397.json"
+    ],
+    "cause": "At increasing iframe width, the harness read innerWidth after mutating width while the previous left offset remained. Temporary overflow expanded Android Chrome layout viewport to434/visual412 and left the harness shifted. Header constraint alone was insufficient.",
+    "fix": "Snapshot visualViewport.width before writes, reset iframe left to0 before growing width, then center against the saved visual width. Add parent viewport/scroll/bounds assertions.",
+    "result": "Parent frame and rendered card now fit the actual viewport; final4/4 includes parent bounds. No application CSS changed. This fixture defect is not claimed as cause of the earlier authenticated-app clipping."
+  },
+  "visual": {
+    "directMoon": "Whole inert Moon win card and reward/rematch buttons visible directly at top level.",
+    "stableFinal": "Severna draw small viewport and Moon same-document final viewport captured. Not a screenshot for every one of90cases.",
+    "transitions": "Intermediate captures may be blank/loading; not marked as stable visual passes.",
+    "fonts": "External font requests blocked by local CSP; fallback possible."
+  },
+  "safety": {
+    "realGames": 0,
+    "realClaims": 0,
+    "ads": 0,
+    "rematches": 0,
+    "productionChanges": 0,
+    "appFilesChanged": 0,
+    "cacheOrGeometryChanged": false,
+    "privateSessionOrDatabaseAccess": false
+  },
+  "finalVisibleBalances": {
+    "Sara": 12168,
+    "Andrija": 2939
+  },
+  "remaining": "Physical S25 safezone/first load/SDK rewards remain. Earlier intermittent real WebView clipping not reproduced in this isolated test and not marked fixed. No re-run of all basic rooms requested.",
+  "screenshots": [
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/native-finish-probe-complete.png",
+      "sha256": "5820d08e21e7a4d78c093392e03b0ea35ef533030a9410f192d37bf9439ba7c2",
+      "preview": "native-finish-probe-complete.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/native-finish-direct-moon.png",
+      "sha256": "2fa08a7fc6155cd419c012356de00630c85ea72dacd8af71e4ec452b0f485922",
+      "preview": "native-finish-direct-moon.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/native-finish-fixed-complete.png",
+      "sha256": "626cc01bfa401c2dff381e5287d3aab4cbc5d3f1859ba35677ce156b0ac2d026",
+      "preview": "native-finish-fixed-complete.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/native-finish-final-probe-complete.png",
+      "sha256": "87981c5a106cf6d26c679350f6f9c7acf1d433c2422d5c5e2aafdd42e59cd0b6",
+      "preview": "native-finish-final-probe-complete.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/native-finish-restored-qa.png",
+      "sha256": "52254af101255996fd0322e4310f2c6a0b67f3df19afbb56fb69ebfee633ce68",
+      "preview": "native-finish-restored-qa.jpg"
+    },
+    {
+      "source": "tmp/two-emulator-qa-2026-10-29/screens/native-finish-primary-unchanged.png",
+      "sha256": "9864b4d41f03c38dad7efb01abda99261b3fdf9e634ed9b12df8da7db44b4c9c",
+      "preview": "native-finish-primary-unchanged.jpg"
+    }
+  ]
+}

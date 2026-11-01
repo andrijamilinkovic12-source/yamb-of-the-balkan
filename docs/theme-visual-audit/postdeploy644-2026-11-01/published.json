@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-01",
+  "commit": "0f48fdcece2a19940ec59a5d0c531b507ab4dcc1",
+  "scope": "Public HTML/JS GET only. Not Android loaded-byte verification.",
+  "rows": [
+    {
+      "host": "https://yamb-reconnect-qa.onrender.com",
+      "http": 200,
+      "version": "6.44",
+      "gameHttp": 200,
+      "matchesLocal": true,
+      "sha256": "f72266304f005916c3f8480b3942d08375a4d39871fe8040b2b7bd78af86f99b",
+      "startupInviteBinding": true
+    },
+    {
+      "host": "https://yamb-of-the-balkan.onrender.com",
+      "http": 200,
+      "version": "6.44",
+      "gameHttp": 200,
+      "matchesLocal": true,
+      "sha256": "f72266304f005916c3f8480b3942d08375a4d39871fe8040b2b7bd78af86f99b",
+      "startupInviteBinding": true
+    }
+  ]
+}

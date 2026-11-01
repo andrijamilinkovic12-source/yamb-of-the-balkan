@@ -2,6 +2,8 @@
 
 Aktuelni presek: 1.11.2026. Ovaj presek zamenjuje staru listu13/15. Istorija pokušaja i posledica ostaje u [checkpointu](emulator-checkpoint.md).
 
+**Konačna predaja1.11:** [presek celog chata](final-handoff-2026-11-01.md). Korisnik lično preuzima oba telefonska testa: stvarni prikaz/učitavanje i reklame/nagrade. Ne čekati ponovno povezivanje telefona ili stalno ponavljati osnovne15/15prolaze. Telefonski rezultati su neprovereni dok ih korisnik ne potvrdi; nisu proglašeni uspešnim. Revanš/reconnect ostaju raniji izuzetak obuhvata. Poslednja implementacija6.44objavljena, kasniji dodatak su testovi/evidencija bez novog produkcionog deploy zahteva.
+
 ## Potvrđeno
 
 | Oblast | Potvrđen obuhvat | Granica dokaza |
@@ -21,6 +23,12 @@ Korisnik je odbio dodatno preuzimanje QA nagrada. Nagradno dugme, reklama i reva
 To je odvojeno od automatskih trofejnih bonusa (Andrija2000/Sara500) i četiri ranija tehnička QA rezultata. Nema ručne izmene salda ili produkcionog testa. Postojeće pravilo automatskog oporavka nije menjano.
 
 ## Sledeći koraci
+
+**Nastavak bezS25 — završen ograničeni Android prikaz:** [dokaz](native-finish-2026-11-01/README.md).90/90unutrašnjih layout/PNGprovera i4/4promene istog panela sa roditeljskim granicama; direktanMoonvizuelnoceo. Testniiframeje imao sopstveno širenje viewporta i to je ispravljeno samo u testeru, bez apppatcha. Ne ponavljati ovaj isti izolovani prolaz niti ga opisivati kao rešeno ranije WebViewodsecanje. S25nije povezan; korisnik tražio nastavak beztelefona. Preostale stvarne granice ostaju telefonsko/hladnoučitavanje, praviWebView/safezone iSDKnagrade. Nema novog produkcionog deploya za ovaj pregled.
+
+**Najnoviji presek — posle korisnikove objave6.44/0f48fdce:** [dokaz](postdeploy644-2026-11-01/README.md). **R41/R42objavljeni i ciljana potvrda završena:** oba javnaJSista,276/276optimizovanihPNGhashprovera, sveži QA primalac dobija prvi poziv pre otvaranja sobe. Poziv odbijen bez duela; salda ista. Ne tražiti novu objavu ili ponavljati ovu potvrdu. Pošiljaočev toast odbijanja nije uhvaćen i nije vizuelno potvrđen.
+
+PrviEasteruovojappsesiji28ready/0timeout/max5928ms, ponovljeni izbor72→72događaja. **Učitavanje i mobilni prikaz još nisu potpuno zatvoreni:** cache nije brisan, nije cold-cache/S25speedup; raniji povremeno odsečeni završni panel ostaje. Preostale dve praktične celine: (1) stabilno telefonsko/cold-cache učitavanje i granice završnog panela; (2) fizičkiS25SDKreklame/nagrade. Stvarni revanš/reconnect/tehnički ishod isključeni su iz sadašnjeg testa i ne čekaju ponovnu dozvolu. Ovaj nastavak menja samo evidenciju, bez novog koda za deploy. Donji „čekaobjavu“ odeljci su istorija.
 
 **Aktuelni dogovor — bez pojedinačnih deploya i širenja obuhvata.** Korisnik želi da se lokalne ispravke prikupe, jer su produkcioni igrači aktivni. Ne tražiti commit/deploy posle svake izmene. R41 kompresija i R42 prijem poziva ostaju u jednom lokalnom paketu. Ranije detaljne beleške ispod su istorija, nisu novi zadaci ili zahtev da se ponavljaju svi prolazi.
 
@@ -56,7 +64,7 @@ Sledeća prioritetna provera: razdvojiti prvi transfer/decode od opterećenja An
 2. **Odsečen završni panel na Androidu.** Posle promene rezolucije drugi emulator dao je ispravan, pa pomeren/odsečen kadar. Lokalnih150stanja nije ponovilo pomeranje. Uzrok nije utvrđen; CSS nije menjan naslepo i nalaz nije zatvoren kao popravljen. Glavni meniji posle pokretanja pregledani su na1440×3120/560dpi. Ne menjati dimenzije tokom vremenski ograničenog meča radi snimanja.
 3. **Pokretanje i prvo učitavanje tema/skinova.** [Raniji neuspeh Green→Neon na v6.36](theme-switch-2026-10-30/index.html) ostaje istorijski dokaz. Posle objave v6.38 svih deset izbora radi u testiranoj sesiji, bez drugog korisničkog pritiska; cache nije brisan i fiksno čekanje14s pre snimanja nije mera brzine. Drugi emulator je pri pokretanju QA aplikacije prikazao app-not-responding dijalog i oporavio se opcijom Sačekaj. Uzrok nije utvrđen; nalaz ostaje otvoren. Izmeriti hladni start i prvi/ponovljeni izbor, PNG nedostatke, konačan neuspeh i kašnjenje skinova/dugmadi.
 4. **Stvarni revanš i povratak veze.** Ostaju neprovereni na dva uređaja. Korisnik je odbio dodatni test koji preuzima nagradu; zato ga ne ponavljati automatski niti tretirati kao čekanje odobrenja. Lokalni handler testovi vode se odvojeno. Budući test mora računati i automatski recovery nagrade pri pokretanju.
-5. **Pozovi prijatelja — ciljana potvrda R42 posle zajedničke objave.** Stvarni pozivi primljeni/odbijeni u oba smera, uz reprodukovan problem svežeg starta i lokalnu ispravku6.44. Posle kasnije objave proveriti samo svež prijem i status odbijanja. Prihvatanje i ulazak u duel isključeni su iz ovog koraka odlukom korisnika. Link za deljenje ostaje skriven.
+5. **Pozovi prijatelja — R42 sveži prijem potvrđen na objavljenoj6.44.** Prvi poziv primljen pre ulaska primaoca u sobu i odbijen bez duela. Pošiljaočev toast nije uhvaćen; lokalni test statusa prolazi. Prihvatanje/ulazak u duel isključeni su iz ovog koraka odlukom korisnika. Link za deljenje ostaje skriven. Nema novog čekanja deploya za ovu ispravku.
 6. **Fizički SamsungS25 i test oglasi.** Safezone/tastatura, uspešna i nedostupna reklama, povratak, osnovna nagrada posle neuspeha oglasa, tačan množilac i zaštita od duplog obračuna. Pokriti Solo/Hotseat/online/Daily prema različitim pravilima. Lokalni odgovori i emulator nisu dokaz SDK/server isplate na telefonu.
 7. **Retka sobna stanja i zatvaranje evidencije.** Prema pojedinačnim izveštajima potvrditi nepokrivene tabove, guest/prazne/grešne liste, obaveštenja i ranije dorade na objavljenoj verziji. Novi PNG samo za utvrđenu neusaglašenost. Sačuvati kanonske identitete, dimenzije i DNK svake teme.
 
