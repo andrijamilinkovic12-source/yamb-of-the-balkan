@@ -263,3 +263,19 @@ body .custom-toast.settings-theme-load-toast :is(.toast-title,.toast-msg) {
     color:var(--settings-picker-ink) !important;
     text-shadow:none !important;
 }
+.settings-delete-account {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 11px 14px;
+    min-height: 46px;
+    border: 1px solid #f1a5aa;
+    border-radius: 12px;
+    color: #ffe4e6;
+    background: #5a1821;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+.settings-delete-account:disabled { opacity: .5; cursor: default; }
+.settings-delete-account:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }

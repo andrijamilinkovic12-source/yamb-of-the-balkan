@@ -4511,6 +4511,7 @@ class YambApp {
                     autoConnect: true
                 });
                 // Friend invitations must also arrive in a freshly opened main menu.
+                this.socket.on('account_deletion_started', data => window.yambAccountPrivacy?.handleStarted(data));
                 this.setupRoomInviteListeners();
                 this.bindConnectionDiagnosticListeners();
 

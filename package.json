@@ -9,6 +9,7 @@
     "start": "node server.js",
     "qa:green": "node scripts/serve-green-qa.js",
     "check:js": "node scripts/check-js.js",
+    "check:account-deletion": "node scripts/test-account-deletion.cjs && node scripts/test-account-deletion-ui.cjs && node scripts/test-account-deletion-runtime.cjs",
     "check:ad-consent": "node scripts/check-ad-consent.js",
     "check:ad-reward-flow": "node scripts/check-ad-reward-flow.js && node scripts/check-offline-undo-reward.js && node scripts/check-online-players-ad-exit.js",
     "check:game-rules": "node scripts/check-game-rules.js",

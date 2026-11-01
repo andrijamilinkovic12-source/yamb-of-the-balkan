@@ -134,7 +134,7 @@
     <link rel="stylesheet" href="theme-game-header.css?v=6">
     <link rel="stylesheet" href="theme-quote-contrast.css?v=1">
     <link rel="stylesheet" href="theme-daily-room.css?v=4">
-    <link rel="stylesheet" href="theme-settings-room.css?v=4">
+    <link rel="stylesheet" href="theme-settings-room.css?v=5">
     <link rel="stylesheet" href="theme-statistics-room.css?v=5">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=9">
     <link rel="stylesheet" href="theme-online-random-room.css?v=4">
@@ -147,7 +147,7 @@
     <link rel="stylesheet" href="theme-tournament-final.css?v=3">
     <link rel="stylesheet" href="theme-tournament-registration-rules.css?v=1">
     
-    <script src="languages.js?v=5.27"></script>
+    <script src="languages.js?v=5.28"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -1070,6 +1070,7 @@
                     </div>
                     <button id="btn-google-logout" class="btn-menu btn-secondary settings-logout-btn" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
                 </div>
+                <button id="delete-account-button" class="settings-delete-account" type="button" onclick="window.yambAccountPrivacy?.begin()" data-lang="settings_delete_account" disabled>Obriši nalog</button>
             </div>
 
             <div class="settings-section">
@@ -1679,10 +1680,12 @@
     <script src="vracanjeupisa.js?v=1.8"></script>
     <script src="globalchat.js?v=1.10"></script>
     <script src="appCheck.js?v=1.0"></script>
-    <script src="auth.js?v=1015"></script>
+    <script src="auth.js?v=1016"></script>
+    <script src="account-deletion-client.js?v=1"></script>
+    <script src="account-privacy.js?v=1"></script>
     <script src="pushNotifications.js?v=1.1"></script>
     <script src="theme-invite-friend-room.js?v=4"></script>
-    <script src="game.js?v=6.44"></script>
+    <script src="game.js?v=6.45"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>

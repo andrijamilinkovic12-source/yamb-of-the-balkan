@@ -15,6 +15,7 @@ const root = path.resolve(__dirname, '..');
 const generatedConfigPath = path.join(root, 'android', 'app', 'src', 'main', 'assets', 'capacitor.config.json');
 const generatedPluginsPath = path.join(root, 'android', 'app', 'src', 'main', 'assets', 'capacitor.plugins.json');
 const androidManifestPath = path.join(root, 'android', 'app', 'src', 'main', 'AndroidManifest.xml');
+const androidStringsPath = path.join(root, 'android', 'app', 'src', 'main', 'res', 'values', 'strings.xml');
 const generatedGradlePaths = [
     'android/app/capacitor.build.gradle',
     'android/capacitor-cordova-android-plugins/build.gradle',
@@ -79,6 +80,12 @@ async function main() {
         productionGoogleServices.toString('utf8'),
         buildEnv
     );
+    const stagingClient = JSON.parse(stagingGoogleServices.toString('utf8')).client.find(client =>
+        client.client_info?.android_client_info?.package_name === applicationId);
+    const stagingWebClientId = stagingClient?.oauth_client?.find(client => client.client_type === 3)?.client_id;
+    if (!/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/.test(stagingWebClientId || '')) {
+        throw new Error('Staging Google prijava nema odgovarajući Web OAuth client ID.');
+    }
 
     await verifyRemoteRuntime(serverUrl, instanceId, firebaseProjectId);
     run(process.execPath, [path.join(root, 'scripts', 'check-js.js')]);
@@ -92,6 +99,7 @@ async function main() {
         ? fs.readFileSync(generatedPluginsPath)
         : null;
     const originalAndroidManifest = fs.readFileSync(androidManifestPath);
+    const originalAndroidStrings = fs.readFileSync(androidStringsPath);
     const previousGradleFiles = generatedGradlePaths.map(filePath =>
         fs.existsSync(filePath) ? fs.readFileSync(filePath) : null
     );
@@ -119,6 +127,18 @@ async function main() {
         fs.writeFileSync(androidManifestPath, manifestText.replaceAll(productionLinkHost, stagingLinkHost), 'utf8');
 
         fs.writeFileSync(productionGoogleServicesPath, stagingGoogleServices);
+        // This explicit source resource overrides the generated Google Services
+        // value. A QA JSON alone would otherwise leave Google's token audience
+        // pointing at production. Restore all original resources in finally.
+        const resourceValues = { app_name: 'Yamb QA', title_activity_main: 'Yamb QA',
+            package_name: applicationId, custom_url_scheme: applicationId, default_web_client_id: stagingWebClientId };
+        let stagingStrings = originalAndroidStrings.toString('utf8');
+        for (const [name, value] of Object.entries(resourceValues)) {
+            const pattern = new RegExp('(<string name="' + name + '">)[^<]*(</string>)');
+            if (!pattern.test(stagingStrings)) throw new Error('Nedostaje Android resource: ' + name);
+            stagingStrings = stagingStrings.replace(pattern, (_match, before, after) => before + value + after);
+        }
+        fs.writeFileSync(androidStringsPath, stagingStrings);
 
         const gradleCommand = process.platform === 'win32' ? 'cmd.exe' : './gradlew';
         const gradleArgs = process.platform === 'win32'
@@ -139,8 +159,8 @@ async function main() {
             serverUrl,
             firebaseProjectId,
             applicationId,
-            versionCode: 111,
-            versionName: '12.1',
+            versionCode: Number(fs.readFileSync(path.join(root, 'android/app/build.gradle'), 'utf8').match(/versionCode\s+(\d+)/)?.[1]),
+            versionName: fs.readFileSync(path.join(root, 'android/app/build.gradle'), 'utf8').match(/versionName\s+"([^"]+)"/)?.[1],
             apk: path.basename(outputApkPath),
             sha256
         };
@@ -150,6 +170,7 @@ async function main() {
     } finally {
         fs.writeFileSync(productionGoogleServicesPath, productionGoogleServices);
         fs.writeFileSync(androidManifestPath, originalAndroidManifest);
+        fs.writeFileSync(androidStringsPath, originalAndroidStrings);
         generatedGradlePaths.forEach((filePath, index) => {
             if (previousGradleFiles[index]) fs.writeFileSync(filePath, previousGradleFiles[index]);
             else if (fs.existsSync(filePath)) fs.rmSync(filePath);

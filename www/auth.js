@@ -154,6 +154,12 @@ async function resolveFirebaseAuthUser(signInResult = null) {
 function setYambAuthState(user, options = {}) {
     const normalized = normalizeFirebaseAuthUser(user);
     const previousState = window.yambAuthState || {};
+    // An offline Firebase session must not restore a locally deleted identity.
+    if (normalized && localStorage.getItem('yamb_deletion_disabled_uid') === normalized.uid) {
+        Promise.resolve(window.Capacitor?.Plugins?.FirebaseAuthentication?.signOut?.()).catch(() => {});
+        return setYambAuthState(null, options);
+    }
+    if (normalized && localStorage.getItem('yamb_deletion_disabled_uid')) localStorage.removeItem('yamb_deletion_disabled_uid');
 
     if (!normalized) {
         localStorage.removeItem('yamb_uid');
@@ -371,6 +377,7 @@ function osveziAuthUI(user) {
             nameInput.style.opacity = '1';
         }
     }
+    window.yambAccountPrivacy?.updateControls();
 }
 
 // --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
@@ -586,6 +593,7 @@ function readAccountLocalSnapshot(uid) {
 }
 
 function saveAccountLocalSnapshot(uid) {
+    if (window.yambAccountDeletionInProgress) return null;
     if (!uid) return false;
 
     const stats = getFullLocalStats();
@@ -668,6 +676,7 @@ function formatCloudSyncFailureDetails(result = null) {
 }
 
 async function syncLoggedInProfileToCloud(user, options = {}) {
+    if (window.yambAccountDeletionInProgress) return false;
     const uid = user?.uid || localStorage.getItem('yamb_uid');
     if (!uid) {
         rememberCloudSyncResult({ ok: false, reason: 'missing_uid' });
