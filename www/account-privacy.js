@@ -61,7 +61,10 @@
                 }
             } catch (error) { storageError = error; }
             try { await window.Capacitor?.Plugins?.PushNotifications?.unregister?.(); } catch (_) {}
-            try { await window.Capacitor?.Plugins?.FirebaseAnalytics?.resetAnalyticsData?.(); } catch (_) {}
+            try {
+                if (window.yambAnalyticsPrivacy) await window.yambAnalyticsPrivacy.clear();
+                else await window.Capacitor?.Plugins?.FirebaseAnalytics?.resetAnalyticsData?.();
+            } catch (_) {}
             try { await window.Capacitor?.Plugins?.FirebaseAuthentication?.signOut?.(); } catch (_) {}
             if (typeof osveziAuthUI === 'function') osveziAuthUI(null);
             app?.navigateTo('splash-screen');
@@ -73,7 +76,9 @@
 
     async function showStatus(api, receipt) {
         const result = await api.poll(receipt);
-        await notice(result.state === 'complete' ? strings().complete : strings().pending);
+        await notice(result.state === 'complete'
+            ? strings().complete + (result.analytics?.state === 'submitted' ? '\n\n' + strings().analyticsSubmitted : '')
+            : strings().pending);
     }
 
     async function begin() {

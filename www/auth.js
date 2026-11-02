@@ -110,10 +110,17 @@ function normalizeFirebaseAuthUser(user) {
     const uid = String(user.uid || user.id || user.userId || '').trim();
     if (!uid || uid === 'undefined' || uid === 'null') return null;
 
+    // A missing provider name must not publish the private login email or
+    // reuse a name left behind by another account on the same device.
+    const rememberedName = localStorage.getItem('yamb_uid') === uid
+        ? String(localStorage.getItem('yamb_player_name') || '').trim() : '';
+    const publicFallback = rememberedName && !/^[^\s@]+@[^\s@]+$/.test(rememberedName)
+        ? rememberedName : _t('hs_player', "Igrač");
+
     return {
         ...user,
         uid,
-        displayName: user.displayName || user.name || user.email || localStorage.getItem('yamb_player_name') || _t('hs_player', "Igrač"),
+        displayName: user.displayName || user.name || publicFallback,
         photoUrl: user.photoUrl || user.photoURL || user.imageUrl || user.photo || '',
         email: user.email || ''
     };
@@ -180,6 +187,7 @@ function setYambAuthState(user, options = {}) {
             checkingLogin: !!options.checkingLogin,
             updatedAt: Date.now()
         };
+        void window.yambAnalyticsPrivacy?.identityChanged();
         return null;
     }
 
@@ -209,6 +217,7 @@ function setYambAuthState(user, options = {}) {
         restoreFailedReason: null,
         updatedAt: Date.now()
     };
+    void window.yambAnalyticsPrivacy?.identityChanged();
 
     return normalized;
 }

@@ -121,6 +121,45 @@ async function run() {
     await retry.service.work();
     assert.equal(retry.rows[0].state, 'complete');
 
+    // Google acceptance is a durable, independently retryable stage, not proof
+    // of completed erasure at Google. Game/Auth cleanup cannot skip a failure.
+    let providerFails = true;
+    let snapshots = 0;
+    const providerCalls = [];
+    const analytics = harness({ analytics: {
+        async snapshot() { snapshots++; return { propertyId: '123456', appInstanceIds: ['test_instance_12345678'] }; },
+        async submit(id, plan, acks, acknowledge) {
+            assert.equal(id, uid);
+            assert.equal(plan.propertyId, '123456');
+            if (!acks.includes('user-selector')) {
+                providerCalls.push('user');
+                await acknowledge({ key: 'user-selector', requestedAt: new Date() });
+            }
+            if (providerFails) throw Object.assign(new Error('private provider message'), { code: 'analytics_deletion_unavailable' });
+            providerCalls.push('instance');
+            await acknowledge({ key: 'instance-selector', requestedAt: new Date() });
+        },
+        async eraseRegistry() { providerCalls.push('erase-registry'); }
+    } });
+    const analyticReceipt = await analytics.service.request('verified-test-token', 'DELETE');
+    await analytics.service.work();
+    assert.equal(analytics.rows[0].state, 'pending');
+    assert.deepEqual(analytics.rows[0].analyticsAcknowledged, ['user-selector']);
+    assert.equal(analytics.rows[0].analyticsPlan.appInstanceIds[0], 'test_instance_12345678');
+    assert.equal(analytics.calls.some(call => ['erase-data', 'delete-auth'].includes(call[0])), false);
+    assert.deepEqual((await analytics.service.status(analyticReceipt.jobId, analyticReceipt.receipt)).analytics, { state: 'pending' });
+    // Simulate an ordinary later-stage failure and another process restart.
+    providerFails = false;
+    analytics.rows[0].nextAttemptAt = new Date(0);
+    await analytics.service.work();
+    assert.equal(snapshots, 1, 'retry must keep the original immutable installation snapshot');
+    assert.deepEqual(providerCalls, ['user', 'instance', 'erase-registry']);
+    assert.equal(analytics.rows[0].state, 'complete');
+    assert.equal(analytics.rows[0].uid, undefined);
+    assert.equal(analytics.rows[0].analyticsPlan, undefined);
+    assert.equal(analytics.rows[0].analyticsAcknowledged, undefined);
+    assert.deepEqual((await analytics.service.status(analyticReceipt.jobId, analyticReceipt.receipt)).analytics, { state: 'submitted' });
+
     // Exercise real Mongoose 8 hooks with an isolated stub collection.
     const mongo = new Mongoose();
     h.service.installWriteGuards(mongo);

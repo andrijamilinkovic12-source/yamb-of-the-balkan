@@ -14,7 +14,22 @@ function storage(values = {}) {
     const data = new Map(Object.entries(values));
     return { data, getItem: key => data.get(key) ?? null, setItem: (key, value) => data.set(key, String(value)), removeItem: key => data.delete(key) };
 }
-function pageHarness() {
+{
+    const source = fs.readFileSync('www/auth.js', 'utf8');
+    const normalizerSource = source.match(/function normalizeFirebaseAuthUser\(user\) \{[\s\S]*?\n\}/)[0];
+    const normalize = values => vm.runInNewContext(normalizerSource + '\nnormalizeFirebaseAuthUser', {
+        localStorage: storage(values), _t: () => 'Igrač'
+    });
+    const privateUser = { uid, email: 'private-login@example.invalid' };
+    const missingName = normalize({})(privateUser);
+    assert.equal(missingName.displayName, 'Igrač', 'a private login email must not become the public player name');
+    assert.equal(missingName.email, privateUser.email, 'the private authentication email remains available for account management');
+    assert.equal(normalize({ yamb_uid: other, yamb_player_name: 'Other player' })(privateUser).displayName, 'Igrač', 'a previous account name must not leak into the new account');
+    assert.equal(normalize({ yamb_uid: uid, yamb_player_name: privateUser.email })(privateUser).displayName, 'Igrač', 'legacy cached email fallbacks must not remain public');
+    assert.equal(normalize({ yamb_uid: uid, yamb_player_name: 'My nickname' })(privateUser).displayName, 'My nickname');
+    assert.equal(normalize({})({ ...privateUser, displayName: 'Google name' }).displayName, 'Google name');
+}
+function pageHarness(analyticsState) {
     const ids = ['deletion-message', 'deletion-login', 'deletion-account', 'deletion-check', 'deletion-continue', 'deletion-change', 'deletion-final', 'deletion-cancel', 'deletion-agree', 'deletion-email', 'deletion-review', 'deletion-review-email'];
     const elements = Object.fromEntries(ids.map(id => [id, { hidden: id !== 'deletion-message', disabled: false, checked: false, textContent: '', dataset: {}, handlers: {}, addEventListener(event, handler) { this.handlers[event] = handler; }, focus() {} }]));
     const document = { documentElement: {}, getElementById: id => elements[id], querySelectorAll: () => [] };
@@ -25,7 +40,7 @@ function pageHarness() {
     const client = {
         savedReceipt: () => saved,
         request: async token => { assert.equal(token, 'test-only-token'); requests++; saved = receipt; return receipt; },
-        poll: async () => { if (state === 'error') throw new Error('simulated failure'); if (state === 'complete') saved = null; return { state }; }
+        poll: async () => { if (state === 'error') throw new Error('simulated failure'); if (state === 'complete') saved = null; return { state, ...(analyticsState ? { analytics: { state: analyticsState } } : {}) }; }
     };
     const user = { uid, email: '<sample>@example.invalid', getIdToken: async () => 'test-only-token' };
     const auth = { signIn: async () => user, signOut: async () => {}, reauthenticate: async () => ({ ...user, uid: verifiedUid }) };
@@ -120,6 +135,15 @@ function nativeHarness(choices = [true, true], selectedUid = uid) {
     page.setState('complete');
     await page.click('deletion-check');
     assert.equal(page.elements['deletion-message'].textContent, translations.en.complete);
+    const analyticsPage = pageHarness('submitted');
+    await analyticsPage.click('deletion-login');
+    analyticsPage.elements['deletion-agree'].checked = true;
+    await analyticsPage.click('deletion-continue');
+    await analyticsPage.click('deletion-final');
+    analyticsPage.setState('complete');
+    await analyticsPage.click('deletion-check');
+    assert.equal(analyticsPage.elements['deletion-message'].textContent, translations.en.complete + '\n\n' + translations.en.analyticsSubmitted,
+        'web completion must distinguish game cleanup from asynchronous Google processing');
 
     const cancelled = nativeHarness([false]);
     await cancelled.window.yambAccountPrivacy.begin();

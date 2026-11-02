@@ -11,7 +11,7 @@
             safeTitle: 'Tvoj Google nalog ostaje aktivan', safeText: 'Briše se samo nalog u igri Yamb of the Balkan. Gmail, Google fotografije i ostale Google usluge ostaju nepromenjeni.',
             removedTitle: 'Šta se briše', removed: 'Profil i profilna slika, sačuvana statistika i napredak, Dukati i inventar, prijateljstva, tokeni obaveštenja, poruke povezane sa nalogom i rezervne kopije profila koje čuva igra.',
             retainedTitle: 'Šta može ostati', retained: 'Rezultati zajedničkih partija mogu ostati u istoriji drugih igrača bez tvog imena, slike i identifikatora naloga. Stariji tehnički zapisi o prekidima veze mogu ostati do 30 dana. Minimalni zapis sa kriptografskim otiskom starog identifikatora čuva se do 90 dana radi sprečavanja vraćanja obrisanih podataka. Potvrda zahteva dostupna je 30 dana nakon završetka.',
-            provider: 'Podaci koje Google samostalno obrađuje za svoje usluge podležu Google politici privatnosti i kontrolama na tvom Google nalogu. Detalje o servisima i čuvanju podataka pogledaj u politici privatnosti igre.',
+            provider: 'Za Analytics podatke povezane sa nalogom šaljemo poseban zahtev Google-u, koji ga obrađuje naknadno. Stariji Analytics podaci koji nisu bili povezani sa nalogom ne mogu se naknadno pouzdano pripisati nalogu i podležu rokovima čuvanja. Tvoj Google nalog ostaje aktivan. Detalje i korisničke kontrole pogledaj u politici privatnosti igre.',
             stepsTitle: 'Potvrdi brisanje', steps: 'Prijavi se istim Google nalogom koji koristiš u igri. Proveri prikazanu adresu, pa potvrdi da želiš trajno brisanje.',
             login: 'Prijavi se pomoću Google-a', change: 'Promeni nalog', agree: 'Razumem da trajno gubim nalog u igri, Dukate, inventar i napredak i da se brisanje ne može poništiti.',
             continue: 'Nastavi', review: 'Poslednja potvrda', reviewText: 'Trajno će biti obrisan nalog u igri za ovu Google adresu:',
@@ -19,7 +19,8 @@
             loading: 'Proveravamo dostupnost usluge…', ready: 'Brisanje se pokreće tek nakon tvoje potvrde.',
             unavailable: 'Automatsko brisanje trenutno nije dostupno. Pokušaj kasnije ili kontaktiraj podršku ispod.',
             pending: 'Zahtev je primljen. Brisanje je u toku i nastavlja se na serveru. Možeš se vratiti na ovu stranicu i proveriti status.',
-            complete: 'Nalog u igri i povezani podaci su obrisani. Tvoj Google nalog ostaje aktivan.',
+            complete: 'Nalog u igri i njegovi podaci na serveru igre su obrisani. Tvoj Google nalog ostaje aktivan.',
+            analyticsSubmitted: 'Google-u je poslat zahtev za brisanje povezanih Analytics podataka. Google ga obrađuje odvojeno; ova potvrda ne znači da je njihova obrada već završena.',
             error: 'Nismo mogli da potvrdimo rezultat. Ako je zahtev već primljen, obrada se nastavlja. Proveri status ili kontaktiraj podršku.',
             authError: 'Google prijava nije uspela. Koristi pregledač telefona ili računara i dozvoli iskačući prozor za prijavu.',
             recent: 'Potrebna je nova Google prijava. Prijavi se ponovo na isti nalog, pa potvrdi brisanje.',
@@ -31,7 +32,7 @@
             safeTitle: 'Your Google account remains active', safeText: 'Only your Yamb of the Balkan game account is deleted. Gmail, Google Photos and other Google services remain unchanged.',
             removedTitle: 'What is deleted', removed: 'Your profile and profile picture, saved statistics and progress, Dukati and inventory, friendships, notification tokens, associated messages, and profile backups maintained by the game.',
             retainedTitle: 'What may remain', retained: 'Shared match results may remain in other players’ history without your name, picture or account ID. Older connection diagnostics may remain for up to 30 days. A minimal record containing a cryptographic hash of the old identifier is kept for up to 90 days to prevent deleted data from being restored. The request receipt is available for 30 days after completion.',
-            provider: 'Data Google independently processes for its own services is subject to Google’s privacy policy and your Google Account controls. See the game’s privacy policy for details about service providers and retention.',
+            provider: 'We submit a separate request to Google for Analytics data linked to the account; Google processes it afterwards. Older Analytics data that were not associated with an account cannot reliably be attributed afterwards and remain subject to retention periods. Your Google account remains active. See the game’s privacy policy for details and user controls.',
             stepsTitle: 'Confirm account deletion', steps: 'Sign in with the same Google account you use in the game. Check the displayed address, then confirm that you want permanent deletion.',
             login: 'Sign in with Google', change: 'Change account', agree: 'I understand that I permanently lose my game account, Dukati, inventory and progress, and that deletion cannot be undone.',
             continue: 'Continue', review: 'Final confirmation', reviewText: 'The game account for this Google address will be permanently deleted:',
@@ -39,7 +40,8 @@
             loading: 'Checking service availability…', ready: 'Deletion starts only after you confirm.',
             unavailable: 'Automatic deletion is currently unavailable. Please try later or contact support below.',
             pending: 'Your request was received. Deletion is in progress and continues on the server. You can return to this page to check its status.',
-            complete: 'Your game account and associated data have been deleted. Your Google account remains active.',
+            complete: 'Your game account and its data on the game server have been deleted. Your Google account remains active.',
+            analyticsSubmitted: 'A request to delete linked Analytics data has been submitted to Google. Google processes it separately; this confirmation does not mean that its processing has already finished.',
             error: 'We could not confirm the result. If the request was already received, processing continues. Check its status or contact support.',
             authError: 'Google sign-in failed. Use your phone or computer browser and allow the sign-in pop-up.',
             recent: 'A new Google sign-in is required. Sign in again to the same account, then confirm deletion.',
@@ -61,6 +63,7 @@
         let user = null;
         let busy = false;
         let completed = false;
+        const completionText = result => text.complete + (result.analytics?.state === 'submitted' ? '\n\n' + text.analyticsSubmitted : '');
         const show = (message, state = '') => {
             el('deletion-message').textContent = message;
             el('deletion-message').dataset.state = state;
@@ -81,7 +84,7 @@
             try {
                 const result = await client.poll();
                 completed = result.state === 'complete';
-                show(completed ? text.complete : text.pending, completed ? 'complete' : 'pending');
+                show(completed ? completionText(result) : text.pending, completed ? 'complete' : 'pending');
             } catch (_) { show(text.error, 'error'); }
             finally { busy = false; refresh(); }
         }
@@ -135,7 +138,7 @@
                 await auth.signOut().catch(() => {});
                 const result = await client.poll(receipt);
                 completed = result.state === 'complete';
-                show(completed ? text.complete : text.pending, completed ? 'complete' : 'pending');
+                show(completed ? completionText(result) : text.pending, completed ? 'complete' : 'pending');
             } catch (error) {
                 const authenticationError = /auth\/|identity_changed|sign_in_required/.test(error.code || error.message || '');
                 show(error.code === 'recent_sign_in_required' ? text.recent : authenticationError && !accepted ? text.authError : text.error, 'error');

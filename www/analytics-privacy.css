@@ -1,0 +1,7 @@
+.analytics-choice-dialog { width: min(90vw, 480px); max-height: 85vh; overflow: auto; box-sizing: border-box; border: 1px solid #777; border-radius: 16px; padding: 24px; color: #f4f4f4; background: #20252b; font-family: system-ui, sans-serif; }
+.analytics-choice-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.analytics-choice-dialog h2 { margin: 0 0 12px; font-size: 1.3rem; }
+.analytics-choice-dialog p { line-height: 1.5; }
+.analytics-choice-dialog a { color: #9ed8ff; }
+.analytics-choice-actions { display: grid; gap: 12px; margin: 20px 0 12px; }
+.analytics-choice-dialog button { padding: 12px; min-height: 44px; font: inherit; cursor: pointer; border: 1px solid #aaa; border-radius: 8px; color: #fff; background: #353e48; }

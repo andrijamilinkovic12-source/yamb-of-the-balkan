@@ -7,6 +7,7 @@ const vm = require('node:vm');
 const { Mongoose } = require('mongoose');
 const { MongoMemoryServer } = require('../tmp/account-deletion-tests/node_modules/mongodb-memory-server-core');
 const { createAccountDeletion, hash } = require('../lib/account-deletion');
+const { createAnalyticsPrivacy } = require('../lib/analytics-privacy');
 const root = path.resolve(__dirname, '..');
 const uid = 'test_account_to_remove_12345';
 const keep = 'test_account_to_keep_678901';
@@ -21,16 +22,30 @@ const keep = 'test_account_to_keep_678901';
         await mongoose.connect(server.getUri(), { serverSelectionTimeoutMS: 3000 });
         assert.equal(new URL(server.getUri()).hostname, '127.0.0.1');
         const authCalls = [];
+        const analyticsCalls = [];
+        const testAuth = {
+            verifyIdToken: async token => ({ uid: token === 'keep-token' ? keep : uid, auth_time: Date.now() / 1000, firebase: { sign_in_provider: 'google.com' } }),
+            updateUser: async id => authCalls.push(['disable', id]),
+            revokeRefreshTokens: async id => authCalls.push(['revoke', id]),
+            deleteUser: async id => authCalls.push(['delete', id])
+        };
+        const analytics = createAnalyticsPrivacy({
+            enabled: true, getDb: () => mongoose.connection.db, getAuth: () => testAuth,
+            guardWrite: value => service.guardWrite(value),
+            provider: { propertyId: '12345678', async submit(values, acknowledge) {
+                analyticsCalls.push(values);
+                await acknowledge({ key: 'test-google-ack', requestedAt: new Date() });
+            } }
+        });
         const service = createAccountDeletion({
             enabled: true, getDb: () => mongoose.connection.db, getModels: () => mongoose.models,
             monitorId: id => 'monitor-' + id,
-            getAuth: () => ({
-                verifyIdToken: async () => ({ uid, auth_time: Date.now() / 1000, firebase: { sign_in_provider: 'google.com' } }),
-                updateUser: async id => authCalls.push(['disable', id]),
-                revokeRefreshTokens: async id => authCalls.push(['revoke', id]),
-                deleteUser: async id => authCalls.push(['delete', id])
-            })
+            getAuth: () => testAuth, analytics
         });
+        await analytics.register('delete-token', 'delete_instance_12345678');
+        await analytics.register('delete-token', 'second_instance_12345678');
+        await analytics.register('keep-token', 'keep_instance_1234567890');
+        await assert.rejects(analytics.register('keep-token', 'delete_instance_12345678'), { code: 'analytics_identity_conflict' });
         service.installWriteGuards(mongoose);
         const source = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
         const start = source.indexOf('// --- MODELI PODATAKA ---');
@@ -99,6 +114,16 @@ const keep = 'test_account_to_keep_678901';
         assert.equal((await service.status(receipt.jobId, receipt.receipt)).state, 'complete');
         const completeJob = await mongoose.connection.db.collection('accountdeletionjobs').findOne({ _id: receipt.jobId });
         assert.equal(completeJob.uid, undefined);
+        assert.equal(completeJob.analyticsPlan, undefined);
+        assert.equal(completeJob.analyticsAcknowledged, undefined);
+        assert.equal(completeJob.analyticsState, 'submitted');
+        assert.equal(analyticsCalls.length, 1);
+        assert.equal(analyticsCalls[0].uid, hash(uid));
+        assert.deepEqual(analyticsCalls[0].appInstanceIds.sort(), ['delete_instance_12345678', 'second_instance_12345678']);
+        const registrations = await mongoose.connection.db.collection('analyticsinstallations').find().toArray();
+        assert.equal(registrations.length, 1);
+        assert.equal(registrations[0].uid, keep, 'another player\'s Analytics installation must survive');
+        await assert.rejects(analytics.register('delete-token', 'late_instance_123456789'), { code: 'account_deleted' });
         assert(completeJob.expiresAt instanceof Date);
         assert.equal(await M.UserProfile.countDocuments({ firebaseUid: uid }), 0);
         assert.equal(await M.UserProfileBackup.countDocuments({ firebaseUid: uid }), 0);

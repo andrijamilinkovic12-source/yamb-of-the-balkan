@@ -17,6 +17,8 @@ const {
     createAccountDeletion, scrubEmbedded: scrubDeletedAccountReferences,
     referenceHashes: deletionReferenceHashes, hash: deletionIdentityHash
 } = require('./lib/account-deletion');
+const { createAnalyticsDeletion } = require('./lib/analytics-deletion');
+const { createAnalyticsPrivacy } = require('./lib/analytics-privacy');
 const {
     getServerRuntimeDescriptor,
     validateStagingFirebaseRuntime
@@ -36,6 +38,30 @@ let firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY || process.env.FIREBASE
 const FIREBASE_APP_CHECK_ENFORCE = /^(?:1|true|yes|on)$/i.test(String(process.env.FIREBASE_APP_CHECK_ENFORCE || '').trim());
 // Deployment is deliberately opt-in until isolated account-deletion QA passes.
 const ACCOUNT_DELETION_ENABLED = /^(?:1|true)$/i.test(process.env.ACCOUNT_DELETION_ENABLED || '');
+const ANALYTICS_PRIVACY_ENABLED = /^(?:1|true)$/i.test(process.env.ANALYTICS_PRIVACY_ENABLED || '');
+let analyticsGoogleAuth = null;
+if (ANALYTICS_PRIVACY_ENABLED && !ACCOUNT_DELETION_ENABLED) {
+    throw new Error('Account deletion must be enabled before account-linked Analytics.');
+}
+if (SERVER_RUNTIME.environment === 'production' && ACCOUNT_DELETION_ENABLED && !ANALYTICS_PRIVACY_ENABLED) {
+    throw new Error('Production account deletion requires the reviewed Analytics deletion integration.');
+}
+const analyticsProvider = ANALYTICS_PRIVACY_ENABLED ? createAnalyticsDeletion({
+    propertyId: process.env.ANALYTICS_PROPERTY_ID,
+    productionPropertyId: '527510324', environment: SERVER_RUNTIME.environment,
+    getAccessToken: async () => {
+        if (!analyticsGoogleAuth) throw new Error('analytics_credentials_unavailable');
+        const token = await analyticsGoogleAuth.getAccessToken();
+        return token;
+    }
+}) : null;
+const analyticsPrivacy = createAnalyticsPrivacy({
+    enabled: ANALYTICS_PRIVACY_ENABLED,
+    getDb: () => mongoose.connection.readyState === 1 ? mongoose.connection.db : null,
+    getAuth: () => firebaseAuth,
+    guardWrite: values => accountDeletion.guardWrite(values),
+    provider: analyticsProvider
+});
 if (SERVER_RUNTIME.environment === 'production' && process.env.FIREBASE_AUTH_EMULATOR_HOST) {
     throw new Error('Firebase Authentication emulator must never be used in production.');
 }
@@ -44,6 +70,7 @@ if (ACCOUNT_DELETION_ENABLED && process.env.ACCOUNT_DELETION_SINGLE_INSTANCE !==
 }
 const accountDeletion = createAccountDeletion({
     enabled: ACCOUNT_DELETION_ENABLED,
+    analytics: ANALYTICS_PRIVACY_ENABLED ? analyticsPrivacy : null,
     getDb: () => mongoose.connection.readyState === 1 ? mongoose.connection.db : null,
     getAuth: () => firebaseAuth,
     getModels: () => mongoose.models,
@@ -135,6 +162,13 @@ try {
     if (serviceAccount || hasDefaultCredentials) {
         const firebaseApp = getApps().length ? getApp() : initializeApp(appOptions);
         firebaseAuth = getAuth(firebaseApp);
+        if (ANALYTICS_PRIVACY_ENABLED) {
+            const { GoogleAuth } = require('google-auth-library');
+            analyticsGoogleAuth = new GoogleAuth({
+                ...(serviceAccount ? { credentials: serviceAccount } : {}),
+                scopes: ['https://www.googleapis.com/auth/analytics.edit']
+            });
+        }
         firebaseAppCheck = getAppCheck(firebaseApp);
         firebaseMessaging = SERVER_RUNTIME.environment === 'staging' || process.env.FIREBASE_AUTH_EMULATOR_HOST ? null : getMessaging(firebaseApp);
         if (stagingProjectIdOnlyAuth) firebaseAdminCredentialSource = 'staging_project_id_only';
@@ -1019,6 +1053,7 @@ if (SERVER_RUNTIME.environment !== 'production') {
     }
 }
 accountDeletion.mount(app, deletionWebFirebaseConfig);
+analyticsPrivacy.mount(app);
 
 // --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; 

@@ -1125,6 +1125,7 @@
                 <span role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><img class="settings-theme-icon" data-settings-role="privacy" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_privacy_label">Privatnost</span></span>
             </div>
             <button id="ad-privacy-options" type="button" class="settings-ad-privacy-options" onclick="window.adMobGlobal?.showPrivacyOptions()" data-lang="settings_ad_privacy_options" hidden>Izbori privatnosti za oglase</button>
+            <button id="analytics-privacy-options" type="button" class="settings-ad-privacy-options" onclick="window.yambAnalyticsPrivacy?.openChoices()" hidden>Analitika korišćenja: isključena</button>
             </div>
         </div>
         <div id="settings-theme-overlay" class="settings-theme-overlay" hidden>
@@ -1680,9 +1681,11 @@
     <script src="vracanjeupisa.js?v=1.8"></script>
     <script src="globalchat.js?v=1.10"></script>
     <script src="appCheck.js?v=1.0"></script>
-    <script src="auth.js?v=1016"></script>
-    <script src="account-deletion-client.js?v=1"></script>
-    <script src="account-privacy.js?v=1"></script>
+    <script src="auth.js?v=1018"></script>
+    <script src="account-deletion-client.js?v=2"></script>
+    <link rel="stylesheet" href="analytics-privacy.css?v=1">
+    <script src="analytics-privacy.js?v=1"></script>
+    <script src="account-privacy.js?v=2"></script>
     <script src="pushNotifications.js?v=1.1"></script>
     <script src="theme-invite-friend-room.js?v=4"></script>
     <script src="game.js?v=6.45"></script>
