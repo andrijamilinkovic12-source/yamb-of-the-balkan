@@ -1,6 +1,7 @@
 // server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ORPHAN SOCKET SYNC FIX + GRACE PERIOD STABILITY + STATE DESYNC FIX
 
-require('dotenv').config(); 
+require('dotenv').config(process.env.YAMB_RUNTIME_ENV === 'test' && process.env.YAMB_TEST_ENV_FILE
+    ? { path: process.env.YAMB_TEST_ENV_FILE } : undefined);
 
 const express = require('express');
 const http = require('http');
@@ -12,6 +13,12 @@ const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
 const powerIndexCore = require('./www/powerIndexCore');
+const {
+    createAccountDeletion, scrubEmbedded: scrubDeletedAccountReferences,
+    referenceHashes: deletionReferenceHashes, hash: deletionIdentityHash
+} = require('./lib/account-deletion');
+const { createAnalyticsDeletion } = require('./lib/analytics-deletion');
+const { createAnalyticsPrivacy } = require('./lib/analytics-privacy');
 const {
     getServerRuntimeDescriptor,
     validateStagingFirebaseRuntime
@@ -29,6 +36,48 @@ let firebaseAdminProjectId = null;
 let firebaseAdminCredentialSource = 'none';
 let firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY || process.env.FIREBASE_API_KEY || '';
 const FIREBASE_APP_CHECK_ENFORCE = /^(?:1|true|yes|on)$/i.test(String(process.env.FIREBASE_APP_CHECK_ENFORCE || '').trim());
+// Deployment is deliberately opt-in until isolated account-deletion QA passes.
+const ACCOUNT_DELETION_ENABLED = /^(?:1|true)$/i.test(process.env.ACCOUNT_DELETION_ENABLED || '');
+const ANALYTICS_PRIVACY_ENABLED = /^(?:1|true)$/i.test(process.env.ANALYTICS_PRIVACY_ENABLED || '');
+let analyticsGoogleAuth = null;
+if (ANALYTICS_PRIVACY_ENABLED && !ACCOUNT_DELETION_ENABLED) {
+    throw new Error('Account deletion must be enabled before account-linked Analytics.');
+}
+if (SERVER_RUNTIME.environment === 'production' && ACCOUNT_DELETION_ENABLED && !ANALYTICS_PRIVACY_ENABLED) {
+    throw new Error('Production account deletion requires the reviewed Analytics deletion integration.');
+}
+const analyticsProvider = ANALYTICS_PRIVACY_ENABLED ? createAnalyticsDeletion({
+    propertyId: process.env.ANALYTICS_PROPERTY_ID,
+    productionPropertyId: '527510324', environment: SERVER_RUNTIME.environment,
+    getAccessToken: async () => {
+        if (!analyticsGoogleAuth) throw new Error('analytics_credentials_unavailable');
+        const token = await analyticsGoogleAuth.getAccessToken();
+        return token;
+    }
+}) : null;
+const analyticsPrivacy = createAnalyticsPrivacy({
+    enabled: ANALYTICS_PRIVACY_ENABLED,
+    getDb: () => mongoose.connection.readyState === 1 ? mongoose.connection.db : null,
+    getAuth: () => firebaseAuth,
+    guardWrite: values => accountDeletion.guardWrite(values),
+    provider: analyticsProvider
+});
+if (SERVER_RUNTIME.environment === 'production' && process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+    throw new Error('Firebase Authentication emulator must never be used in production.');
+}
+if (ACCOUNT_DELETION_ENABLED && process.env.ACCOUNT_DELETION_SINGLE_INSTANCE !== 'true') {
+    throw new Error('Account deletion requires a confirmed single server instance; multi-instance deployment needs distributed write coordination.');
+}
+const accountDeletion = createAccountDeletion({
+    enabled: ACCOUNT_DELETION_ENABLED,
+    analytics: ANALYTICS_PRIVACY_ENABLED ? analyticsPrivacy : null,
+    getDb: () => mongoose.connection.readyState === 1 ? mongoose.connection.db : null,
+    getAuth: () => firebaseAuth,
+    getModels: () => mongoose.models,
+    monitorId: uid => monitorActivityId(uid),
+    beforeDelete: (uid, replacement) => prepareRuntimeForAccountDeletion(uid, replacement)
+});
+accountDeletion.installWriteGuards(mongoose);
 
 function getFirebaseCredentialSource() {
     if (process.env.FIREBASE_SERVICE_ACCOUNT) return 'FIREBASE_SERVICE_ACCOUNT';
@@ -113,8 +162,15 @@ try {
     if (serviceAccount || hasDefaultCredentials) {
         const firebaseApp = getApps().length ? getApp() : initializeApp(appOptions);
         firebaseAuth = getAuth(firebaseApp);
+        if (ANALYTICS_PRIVACY_ENABLED) {
+            const { GoogleAuth } = require('google-auth-library');
+            analyticsGoogleAuth = new GoogleAuth({
+                ...(serviceAccount ? { credentials: serviceAccount } : {}),
+                scopes: ['https://www.googleapis.com/auth/analytics.edit']
+            });
+        }
         firebaseAppCheck = getAppCheck(firebaseApp);
-        firebaseMessaging = stagingProjectIdOnlyAuth ? null : getMessaging(firebaseApp);
+        firebaseMessaging = SERVER_RUNTIME.environment === 'staging' || process.env.FIREBASE_AUTH_EMULATOR_HOST ? null : getMessaging(firebaseApp);
         if (stagingProjectIdOnlyAuth) firebaseAdminCredentialSource = 'staging_project_id_only';
         console.log(`✅ Firebase Admin Auth spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}; Messaging: ${firebaseMessaging ? 'aktivan' : 'isključen'}).`);
     } else {
@@ -392,6 +448,14 @@ app.use(
         lastModified: true
     })
 );
+if (SERVER_RUNTIME.environment === 'staging') {
+    for (const file of ['delete-account.html', 'privacy.html', 'privacy_en.html', 'terms.html', 'terms_en.html']) {
+        app.get('/' + file, (_req, res) => {
+            res.set('Cache-Control', 'no-store');
+            res.sendFile(path.join(__dirname, 'qa', 'account-privacy-site', file));
+        });
+    }
+}
 app.use(express.static(path.join(__dirname, 'www')));
 
 // ==================================================================
@@ -680,7 +744,9 @@ const MatchResultSubmissionDiagnostic = mongoose.model('MatchResultSubmissionDia
 // Ne čuva IP adresu; automatski se briše nakon 30 dana.
 const DisconnectDiagnosticSchema = new mongoose.Schema({
     eventId: { type: String, unique: true, required: true },
-    occurredAt: { type: Date, default: Date.now, index: true },
+    uid: { type: String, default: '', index: true },
+    opponentUid: { type: String, default: '', index: true },
+    occurredAt: { type: Date, default: Date.now },
     resolvedAt: { type: Date, default: null },
     roomId: { type: String, default: '' },
     mode: { type: String, default: '' },
@@ -977,6 +1043,17 @@ const AdMobRewardVerificationSchema = new mongoose.Schema({
     raw: { type: Object, default: {} }
 });
 const AdMobRewardVerification = mongoose.model('AdMobRewardVerification', AdMobRewardVerificationSchema);
+accountDeletion.protectModelBatches(mongoose.models);
+let deletionWebFirebaseConfig = require('./www/account-deletion-firebase.json');
+if (SERVER_RUNTIME.environment !== 'production') {
+    deletionWebFirebaseConfig = process.env.ACCOUNT_DELETION_FIREBASE_WEB_CONFIG_JSON
+        ? JSON.parse(process.env.ACCOUNT_DELETION_FIREBASE_WEB_CONFIG_JSON) : null;
+    if (deletionWebFirebaseConfig && deletionWebFirebaseConfig.projectId !== firebaseAdminProjectId) {
+        throw new Error('Account-deletion Web config must belong to the staging Firebase project.');
+    }
+}
+accountDeletion.mount(app, deletionWebFirebaseConfig);
+analyticsPrivacy.mount(app);
 
 // --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; 
@@ -2714,6 +2791,8 @@ function createDisconnectDiagnostic(socket, roomId, state, playerId, source, soc
     const clientSnapshot = options.clientSnapshot || socket.clientConnectionDiagnosticSnapshot || {};
     const record = {
         eventId,
+        uid: String(playerId),
+        opponentUid: String(opponent?.uid || ''),
         occurredAt,
         roomId: String(roomId).substring(0, 160),
         mode: String(getOnlineDuelType(roomId) || '').substring(0, 32),
@@ -5597,6 +5676,9 @@ function advanceTournamentBracket(round, index, winnerObj) {
     }
     saveTournamentToDb();
     scheduleTournamentAutoReset();
+    if (ACCOUNT_DELETION_ENABLED) queueMicrotask(() => {
+        settleDeletedTournamentParticipants().catch(() => console.error('[Account deletion] Tournament settlement needs retry.'));
+    });
 }
 
 // ==================================================================
@@ -7887,6 +7969,7 @@ async function verifyFirebaseSocketToken(socket, token) {
     if (!firebaseAuth) {
         const fallbackResult = await verifyFirebaseTokenViaRest(token);
         if (fallbackResult.ok) {
+            if (await accountDeletion.isBlocked(fallbackResult.uid)) return { ok: false, reason: 'account_deleted', uid: fallbackResult.uid, permanent: true };
             bindVerifiedPlayerSocket(socket, fallbackResult.uid);
             console.warn(`✅ Firebase token potvrđen preko REST fallback-a za uid=${fallbackResult.uid}`);
             return fallbackResult;
@@ -7906,6 +7989,7 @@ async function verifyFirebaseSocketToken(socket, token) {
             return { ok: false, reason: 'invalid_firebase_token' };
         }
 
+        if (await accountDeletion.isBlocked(decoded.uid)) return { ok: false, reason: 'account_deleted', uid: decoded.uid, permanent: true };
         bindVerifiedPlayerSocket(socket, decoded.uid);
         return { ok: true, uid: decoded.uid };
     } catch (err) {
@@ -7915,6 +7999,7 @@ async function verifyFirebaseSocketToken(socket, token) {
         if (shouldUseFirebaseRestTokenFallback(err)) {
             const fallbackResult = await verifyFirebaseTokenViaRest(token);
             if (fallbackResult.ok) {
+                if (await accountDeletion.isBlocked(fallbackResult.uid)) return { ok: false, reason: 'account_deleted', uid: fallbackResult.uid, permanent: true };
                 bindVerifiedPlayerSocket(socket, fallbackResult.uid);
                 console.warn(`✅ Firebase token potvrđen preko REST fallback-a za uid=${fallbackResult.uid}`);
                 return fallbackResult;
@@ -10098,8 +10183,122 @@ function clearSpectatingRoom(socket, options = {}) {
     return previousRoomId;
 }
 
+let deletionTournamentSettlementRunning = false;
+function isDeletedTournamentPlayer(player) {
+    return /^deleted_[a-f0-9-]{36}$/.test(String(player?.id || ''));
+}
+
+async function settleDeletedTournamentParticipants() {
+    if (deletionTournamentSettlementRunning || tournamentState.status !== 'active') return;
+    deletionTournamentSettlementRunning = true;
+    try {
+        for (const round of ['qf', 'sf', 'f']) {
+            for (const [index, match] of (tournamentState.bracket[round] || []).entries()) {
+                if (!match || match.winnerId || !match.p1 || !match.p2) continue;
+                const removed = [match.p1, match.p2].filter(isDeletedTournamentPlayer);
+                if (!removed.length) continue;
+                match.prizeAwards = match.prizeAwards || {};
+                removed.forEach(player => { match.prizeAwards[player.id] = true; });
+                if (removed.length === 2) {
+                    match.winnerId = match.p1.id;
+                    match.prizesAwarded = true;
+                    match.statsRecorded = true;
+                    setTournamentMatchResult(match, 'technical', 1, 0, { reason: 'account_deleted' });
+                    advanceTournamentBracket(round, index, match.p1);
+                } else {
+                    const winner = isDeletedTournamentPlayer(match.p1) ? match.p2 : match.p1;
+                    await applyTournamentTechnicalWinner(`tourney_${round}_${index}_account_deletion`, winner.id, 'account_deleted');
+                }
+            }
+        }
+    } finally { deletionTournamentSettlementRunning = false; }
+}
+
+async function prepareRuntimeForAccountDeletion(uid, replacement) {
+    const references = value => deletionReferenceHashes(value).has(deletionIdentityHash(uid));
+    const sockets = [...io.sockets.sockets.values()].filter(socket => socket.verifiedUid === uid || socket.playerId === uid);
+
+    // End live rooms before disconnecting their sockets, so the ordinary
+    // disconnect handler cannot create a new grace session for this account.
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (!references(state)) continue;
+        state.gameFinished = true;
+        io.to(roomId).emit('force_cancel_online', { roomId, reason: 'account_deleted' });
+        cleanupOnlineRoom(roomId);
+    }
+    // Ordinary recovery keeps an expired ghost for timeout adjudication. A
+    // deletion must also remove that expired session, without resuming a room.
+    if (disconnectTimers[uid]) clearTimeout(disconnectTimers[uid]);
+    if (ghostSessions[uid]?.diagnosticConfirmTimer) clearTimeout(ghostSessions[uid].diagnosticConfirmTimer);
+    delete disconnectTimers[uid];
+    delete ghostSessions[uid];
+    recentLifecycleGraceByUid.delete(uid);
+    if (waitingPlayer && references(waitingPlayer)) waitingPlayer = null;
+    for (const [roomId, room] of Object.entries(privateRooms)) if (references(room)) delete privateRooms[roomId];
+    for (const store of [pendingGameRewards, pendingGameRewardsByUid, chatBans, globalChatRateLimits,
+        globalChatReportLimits, pendingChallenges, pendingRoomInvites, pendingTournamentDuelInvites]) {
+        for (const [key, value] of Object.entries(store)) {
+            if (key !== uid && !references(value)) continue;
+            if (value?.timeoutId) clearTimeout(value.timeoutId);
+            delete store[key];
+        }
+    }
+    for (const store of [recentEndedOnlineRooms, recentServerTechnicalResults]) {
+        for (const [key, value] of store) if (key === uid || references(value)) store.delete(key);
+    }
+
+    if (tournamentState.status === 'registration') {
+        tournamentState.players = tournamentState.players.filter(player => player.id !== uid);
+        removePlayerFromTournamentBracket(uid);
+    }
+    tournamentState = scrubDeletedAccountReferences(tournamentState, uid, replacement);
+    for (const round of ['qf', 'sf', 'f']) for (const match of tournamentState.bracket[round] || []) {
+        if (!match) continue;
+        const removed = [match.p1, match.p2].filter(isDeletedTournamentPlayer);
+        if (!removed.length) continue;
+        match.prizeAwards = match.prizeAwards || {};
+        removed.forEach(player => { match.prizeAwards[player.id] = true; });
+        if (removed.some(player => player.id === match.winnerId)) match.statsRecorded = true;
+    }
+    await settleDeletedTournamentParticipants();
+    // Unlike the ordinary best-effort save, this write must succeed before a
+    // deletion job can finish; otherwise the durable job will retry it.
+    await mongoose.model('TournamentState').findOneAndUpdate({}, tournamentState, { upsert: true });
+
+    globalChatHistory = globalChatHistory.filter(message => message.senderUid !== uid && message.senderId !== uid);
+    await globalChatSaveQueue.catch(() => {});
+    delete onlinePlayers[uid];
+    for (const socket of sockets) {
+        clearChallengesForSocket(socket.id);
+        clearPendingRoomInvitesForSocket(socket.id);
+        clearPendingTournamentDuelInvitesForSocket(socket.id);
+        socket.emit('account_deletion_started', { uid });
+        delete registeredSockets[socket.id];
+        delete playerRooms[socket.id];
+        socket.verifiedUid = null;
+        socket.playerId = null;
+        socket.playerName = '';
+        socket.photoUrl = '';
+        socket.playerStats = null;
+        socket.disconnect(true);
+    }
+    io.emit('global_chat_history', globalChatHistory);
+    io.emit('tourney_state_update', tournamentState);
+}
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
+
+    socket.use(async (_packet, next) => {
+        if (!ACCOUNT_DELETION_ENABLED || !socket.verifiedUid) return next();
+        try {
+            if (await accountDeletion.isBlocked(socket.verifiedUid)) {
+                socket.emit('account_deletion_started', { uid: socket.verifiedUid });
+                return next(new Error('account_deleted'));
+            }
+            next();
+        } catch (_) { next(new Error('account_deletion_check_unavailable')); }
+    });
 
     let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
     if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
@@ -10303,6 +10502,7 @@ io.on('connection', (socket) => {
             reason: appCheckResult.ok ? null : appCheckResult.reason
         };
         if (typeof ack === 'function') ack(result);
+        if (result.reason === 'account_deleted') socket.emit('account_deletion_started', { uid: result.uid });
         if (!result.ok) socket.emit('auth_required', result);
     });
 
@@ -15129,7 +15329,7 @@ scheduleGlobalChatWeeklyReset();
 // ==================================================================
 const SERVER_URL = 'https://yamb-of-the-balkan.onrender.com'; 
 
-setInterval(() => {
+if (SERVER_RUNTIME.environment === 'production') setInterval(() => {
     https.get(SERVER_URL, (res) => {
         if (res.statusCode === 200) {
             console.log('☕ Self-ping uspešan: Server je budan.');
@@ -15140,7 +15340,13 @@ setInterval(() => {
 }, 10 * 60 * 1000); 
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+if (ACCOUNT_DELETION_ENABLED) {
+    const deletionWorker = setInterval(() => {
+        accountDeletion.work().catch(() => console.error('[Account deletion] Worker unavailable.'));
+    }, 15000);
+    deletionWorker.unref();
+}
+server.listen(PORT, SERVER_RUNTIME.environment === 'test' ? '127.0.0.1' : undefined, () => {
     console.log(`🚀 Yamb Server sluša na portu ${PORT}`);
     if (MAINTENANCE_MODE) {
         console.log('🛠️ MAINTENANCE_MODE je uključen: igrači vide YotB ekran održavanja.');

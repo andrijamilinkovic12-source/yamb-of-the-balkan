@@ -1,0 +1,43 @@
+'use strict';
+const assert = require('node:assert/strict');
+const { createAnalyticsDeletion } = require('../lib/analytics-deletion');
+const uid = 'disposable_test_identity_1234567';
+const appInstanceId = 'test_instance_aaaaaaaaaaaaaaaaaaaa';
+const config = { environment: 'staging', propertyId: '123456789', productionPropertyId: '527510324' };
+(async () => {
+    const calls = [];
+    const acknowledgements = [];
+    let failNext = false;
+    const service = createAnalyticsDeletion({ ...config, getAccessToken: async () => 'test-only-access-token', fetch: async (url, request) => {
+        calls.push({ url, request });
+        if (failNext) { failNext = false; return { ok: false, status: 503 }; }
+        return { ok: true, json: async () => ({ deletionRequestTime: '2026-11-02T12:00:00Z' }) };
+    } });
+    assert.throws(() => createAnalyticsDeletion({ ...config, propertyId: config.productionPropertyId }), { code: 'analytics_production_property_forbidden' });
+    assert.throws(() => createAnalyticsDeletion({ ...config, environment: 'production' }), { code: 'analytics_property_mismatch' });
+    assert.throws(() => createAnalyticsDeletion({ ...config, propertyId: '../bad' }), { code: 'analytics_property_required' });
+    await assert.rejects(service.submit({ uid: 'bad/identity' }), { code: 'analytics_identity_invalid' });
+    await assert.rejects(service.submit({ uid, appInstanceIds: ['\ninvalid'] }), { code: 'analytics_identity_invalid' });
+    assert.equal(calls.length, 0, 'invalid identities must not reach any external service');
+    const result = await service.submit({ uid, appInstanceIds: [appInstanceId, appInstanceId] }, async ack => acknowledgements.push(ack));
+    assert.equal(result.state, 'submitted', 'provider acceptance must not be represented as completed erasure');
+    assert.equal(result.identifierCount, 2);
+    assert.equal(calls.length, 2);
+    assert(calls.every(call => call.url === 'https://analyticsadmin.googleapis.com/v1alpha/properties/123456789:submitUserDeletion'));
+    assert.deepEqual(calls.map(call => JSON.parse(call.request.body)), [{ userId: uid }, { appInstanceId }]);
+    assert(calls.every(call => call.request.signal instanceof AbortSignal));
+    assert(acknowledgements.every(ack => /^[a-f0-9]{64}$/.test(ack.key) && ack.requestedAt instanceof Date));
+    await service.submit({ uid, appInstanceIds: [appInstanceId], acknowledged: acknowledgements.map(a => a.key) });
+    assert.equal(calls.length, 2, 'persisted acknowledgements prevent repeat requests');
+    failNext = true;
+    await assert.rejects(service.submit({ uid, appInstanceIds: [appInstanceId], acknowledged: [acknowledgements[0].key] }), { code: 'analytics_deletion_unavailable' });
+    const resumed = await service.submit({ uid, appInstanceIds: [appInstanceId], acknowledged: [acknowledgements[0].key] });
+    assert.equal(resumed.newlySubmitted, 1, 'a partial retry must submit only unacknowledged identifiers');
+    const denied = createAnalyticsDeletion({ ...config, getAccessToken: async () => 'test-token', fetch: async () => ({ ok: false, status: 403, json: () => { throw Error('must not inspect provider error content'); } }) });
+    await assert.rejects(denied.submit({ uid }), error => error.code === 'analytics_deletion_access_denied' && !error.message.includes(uid));
+    const unavailable = createAnalyticsDeletion({ ...config, getAccessToken: async () => { throw Error('private credential detail'); } });
+    await assert.rejects(unavailable.submit({ uid }), error => error.code === 'analytics_credentials_unavailable' && !error.message.includes('private'));
+    const malformed = createAnalyticsDeletion({ ...config, getAccessToken: async () => 'test-token', fetch: async () => ({ ok: true, json: async () => ({}) }) });
+    await assert.rejects(malformed.submit({ uid }), { code: 'analytics_deletion_invalid_response' });
+    console.log('Analytics deletion adapter passed: isolated property, validated identifiers, fixed API destination, bounded requests, per-identifier retry and honest submitted status. No live Google request was made.');
+})().catch(error => { console.error(error); process.exitCode = 1; });

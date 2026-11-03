@@ -5,6 +5,15 @@ firebase-service-account*.json
 service-account*.json
 *.service-account.json
 
+# Android signing keys and credentials stay local.
+/Yamb-of-the-Balkan
+*.jks
+*.keystore
+*.p12
+*.pfx
+keystore.properties
+signing.properties
+
 # Local render, emulator, QA and downloaded tool workspace
 tmp/
 

@@ -15,6 +15,7 @@ const root = path.resolve(__dirname, '..');
 const generatedConfigPath = path.join(root, 'android', 'app', 'src', 'main', 'assets', 'capacitor.config.json');
 const generatedPluginsPath = path.join(root, 'android', 'app', 'src', 'main', 'assets', 'capacitor.plugins.json');
 const androidManifestPath = path.join(root, 'android', 'app', 'src', 'main', 'AndroidManifest.xml');
+const androidStringsPath = path.join(root, 'android', 'app', 'src', 'main', 'res', 'values', 'strings.xml');
 const generatedGradlePaths = [
     'android/app/capacitor.build.gradle',
     'android/capacitor-cordova-android-plugins/build.gradle',
@@ -22,7 +23,10 @@ const generatedGradlePaths = [
     'android/capacitor.settings.gradle'
 ].map(relativePath => path.join(root, relativePath));
 const productionGoogleServicesPath = path.join(root, 'android', 'app', 'google-services.json');
-const sourceApkPath = path.join(root, 'android', 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
+const minified = process.argv.includes('--minified');
+const variant = minified ? 'qaMinified' : 'debug';
+const gradleTask = minified ? 'assembleQaMinified' : 'assembleDebug';
+const sourceApkPath = path.join(root, 'android', 'app', 'build', 'outputs', 'apk', variant, `app-${variant}.apk`);
 const outputDir = path.join(root, 'tmp', 'reconnect-staging');
 
 function run(command, args, cwd = root, env = process.env) {
@@ -79,6 +83,12 @@ async function main() {
         productionGoogleServices.toString('utf8'),
         buildEnv
     );
+    const stagingClient = JSON.parse(stagingGoogleServices.toString('utf8')).client.find(client =>
+        client.client_info?.android_client_info?.package_name === applicationId);
+    const stagingWebClientId = stagingClient?.oauth_client?.find(client => client.client_type === 3)?.client_id;
+    if (!/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/.test(stagingWebClientId || '')) {
+        throw new Error('Staging Google prijava nema odgovarajući Web OAuth client ID.');
+    }
 
     await verifyRemoteRuntime(serverUrl, instanceId, firebaseProjectId);
     run(process.execPath, [path.join(root, 'scripts', 'check-js.js')]);
@@ -92,6 +102,7 @@ async function main() {
         ? fs.readFileSync(generatedPluginsPath)
         : null;
     const originalAndroidManifest = fs.readFileSync(androidManifestPath);
+    const originalAndroidStrings = fs.readFileSync(androidStringsPath);
     const previousGradleFiles = generatedGradlePaths.map(filePath =>
         fs.existsSync(filePath) ? fs.readFileSync(filePath) : null
     );
@@ -119,17 +130,30 @@ async function main() {
         fs.writeFileSync(androidManifestPath, manifestText.replaceAll(productionLinkHost, stagingLinkHost), 'utf8');
 
         fs.writeFileSync(productionGoogleServicesPath, stagingGoogleServices);
+        // This explicit source resource overrides the generated Google Services
+        // value. A QA JSON alone would otherwise leave Google's token audience
+        // pointing at production. Restore all original resources in finally.
+        const resourceValues = { app_name: 'Yamb QA', title_activity_main: 'Yamb QA',
+            package_name: applicationId, custom_url_scheme: applicationId, default_web_client_id: stagingWebClientId };
+        let stagingStrings = originalAndroidStrings.toString('utf8');
+        for (const [name, value] of Object.entries(resourceValues)) {
+            const pattern = new RegExp('(<string name="' + name + '">)[^<]*(</string>)');
+            if (!pattern.test(stagingStrings)) throw new Error('Nedostaje Android resource: ' + name);
+            stagingStrings = stagingStrings.replace(pattern, (_match, before, after) => before + value + after);
+        }
+        fs.writeFileSync(androidStringsPath, stagingStrings);
 
         const gradleCommand = process.platform === 'win32' ? 'cmd.exe' : './gradlew';
         const gradleArgs = process.platform === 'win32'
-            ? ['/d', '/s', '/c', 'gradlew.bat', 'assembleDebug']
-            : ['assembleDebug'];
+            ? ['/d', '/s', '/c', 'gradlew.bat', gradleTask]
+            : [gradleTask];
+        if (process.argv.includes('--offline')) gradleArgs.push('--offline');
         run(gradleCommand, gradleArgs, path.join(root, 'android'), buildEnv);
-        if (!fs.existsSync(sourceApkPath)) throw new Error('Gradle nije napravio očekivani debug APK.');
+        if (!fs.existsSync(sourceApkPath)) throw new Error(`Gradle nije napravio očekivani ${variant} APK.`);
 
         fs.mkdirSync(outputDir, { recursive: true });
         const safeInstanceId = instanceId.replace(/[^a-z0-9_-]/gi, '-');
-        const outputApkPath = path.join(outputDir, `yamb-reconnect-${safeInstanceId}.apk`);
+        const outputApkPath = path.join(outputDir, `yamb-reconnect-${safeInstanceId}${minified ? '-minified' : ''}.apk`);
         fs.copyFileSync(sourceApkPath, outputApkPath);
         const sha256 = crypto.createHash('sha256').update(fs.readFileSync(outputApkPath)).digest('hex');
         const manifest = {
@@ -139,17 +163,25 @@ async function main() {
             serverUrl,
             firebaseProjectId,
             applicationId,
-            versionCode: 111,
-            versionName: '12.1',
+            variant,
+            minified,
+            versionCode: Number(fs.readFileSync(path.join(root, 'android/app/build.gradle'), 'utf8').match(/versionCode\s+(\d+)/)?.[1]),
+            versionName: fs.readFileSync(path.join(root, 'android/app/build.gradle'), 'utf8').match(/versionName\s+"([^"]+)"/)?.[1],
             apk: path.basename(outputApkPath),
             sha256
         };
-        fs.writeFileSync(path.join(outputDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+        fs.writeFileSync(path.join(outputDir, minified ? 'manifest-minified.json' : 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+        if (minified) {
+            const mappingPath = path.join(root, 'android/app/build/outputs/mapping/qaMinified/mapping.txt');
+            if (!fs.existsSync(mappingPath)) throw new Error('Minifikovani QA APK nema R8 mapping.');
+            fs.copyFileSync(mappingPath, path.join(outputDir, `yamb-reconnect-${safeInstanceId}-minified-mapping.txt`));
+        }
         console.log(`Staging APK je spreman: ${outputApkPath}`);
         console.log(`SHA-256: ${sha256}`);
     } finally {
         fs.writeFileSync(productionGoogleServicesPath, productionGoogleServices);
         fs.writeFileSync(androidManifestPath, originalAndroidManifest);
+        fs.writeFileSync(androidStringsPath, originalAndroidStrings);
         generatedGradlePaths.forEach((filePath, index) => {
             if (previousGradleFiles[index]) fs.writeFileSync(filePath, previousGradleFiles[index]);
             else if (fs.existsSync(filePath)) fs.rmSync(filePath);

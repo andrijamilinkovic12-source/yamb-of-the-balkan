@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Brisanje naloga i povezanih podataka iz igre Yamb of the Balkan. Delete your Yamb of the Balkan game account.">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Brisanje naloga | Yamb of the Balkan</title>
+    <link rel="icon" href="Logo_aplikacije.png">
+    <link rel="stylesheet" href="account-deletion.css?v=1">
+</head>
+<body>
+    <header>
+        <a class="brand" href="index.html" data-page="home"><img src="Logo_aplikacije.png" alt="">YAMB OF THE BALKAN</a>
+        <nav aria-label="Jezik / Language"><a href="delete-account.html?lang=sr" lang="sr">Srpski</a><a href="delete-account.html?lang=en" lang="en">English</a></nav>
+    </header>
+    <main>
+        <p class="eyebrow">Yamb of the Balkan</p>
+        <h1 data-text="heading">Brisanje naloga</h1>
+        <p class="lead" data-text="intro">Obriši svoj nalog i povezane podatke iz igre Yamb of the Balkan, čak i ako igra više nije instalirana.</p>
+        <section class="panel notice">
+            <h2 data-text="safeTitle">Tvoj Google nalog ostaje aktivan</h2>
+            <p data-text="safeText">Briše se samo nalog u igri Yamb of the Balkan. Gmail, Google fotografije i ostale Google usluge ostaju nepromenjeni.</p>
+        </section>
+        <section class="panel" aria-labelledby="deletion-form-title">
+            <h2 id="deletion-form-title" data-text="stepsTitle">Potvrdi brisanje</h2>
+            <p data-text="steps">Prijavi se istim Google nalogom koji koristiš u igri. Proveri prikazanu adresu, pa potvrdi da želiš trajno brisanje.</p>
+            <p id="deletion-message" class="status" role="status" aria-live="polite" data-text="loading">Proveravamo dostupnost usluge…</p>
+            <button id="deletion-login" type="button" data-text="login" hidden>Prijavi se pomoću Google-a</button>
+            <div id="deletion-account" hidden>
+                <p id="deletion-email" class="email"></p>
+                <button id="deletion-change" type="button" class="secondary" data-text="change">Promeni nalog</button>
+                <label class="agreement"><input id="deletion-agree" type="checkbox"><span data-text="agree">Razumem da trajno gubim nalog u igri, Dukate, inventar i napredak i da se brisanje ne može poništiti.</span></label>
+                <button id="deletion-continue" type="button" class="secondary" data-text="continue" disabled>Nastavi</button>
+            </div>
+            <section id="deletion-review" class="review" aria-labelledby="deletion-review-title" hidden>
+                <h2 id="deletion-review-title" data-text="review">Poslednja potvrda</h2>
+                <p data-text="reviewText">Trajno će biti obrisan nalog u igri za ovu Google adresu:</p>
+                <p id="deletion-review-email" class="email"></p>
+                <div class="actions"><button id="deletion-final" type="button" class="danger" data-text="final">Trajno obriši nalog u igri</button><button id="deletion-cancel" type="button" class="secondary" data-text="cancel">Odustani</button></div>
+            </section>
+            <button id="deletion-check" type="button" class="secondary" data-text="check" hidden>Proveri status zahteva</button>
+            <noscript><p>Za automatsko brisanje potreban je JavaScript. Za pomoć piši na andrija.milinkovic12@gmail.com. Automatic deletion requires JavaScript; contact the same address for assistance.</p></noscript>
+        </section>
+        <section class="panel data-grid">
+            <div><h2 data-text="removedTitle">Šta se briše</h2><p data-text="removed">Profil i profilna slika, sačuvana statistika i napredak, Dukati i inventar, prijateljstva, tokeni obaveštenja, poruke povezane sa nalogom i rezervne kopije profila koje čuva igra.</p></div>
+            <div><h2 data-text="retainedTitle">Šta može ostati</h2><p data-text="retained">Rezultati zajedničkih partija mogu ostati u istoriji drugih igrača bez tvog imena, slike i identifikatora naloga. Stariji tehnički zapisi o prekidima veze mogu ostati do 30 dana. Minimalni bezbednosni zapis čuva se do 90 dana.</p></div>
+        </section>
+        <p class="small" data-text="provider">Podaci koje Google samostalno obrađuje za svoje usluge podležu Google politici privatnosti i kontrolama na tvom Google nalogu. Detalje pogledaj u politici privatnosti igre.</p>
+        <section class="panel"><h2 data-text="support">Potrebna ti je pomoć?</h2><p data-text="supportText">Za pitanja ili pomoć pri brisanju kontaktiraj:</p><a href="mailto:andrija.milinkovic12@gmail.com">andrija.milinkovic12@gmail.com</a></section>
+    </main>
+    <footer><nav><a href="index.html" data-page="home" data-text="home">Početna</a><a href="privacy.html" data-page="privacy" data-text="privacy">Politika privatnosti</a><a href="terms.html" data-page="terms" data-text="terms">Uslovi korišćenja</a></nav><p class="small" data-text="rights">Yamb of the Balkan</p></footer>
+    <script src="account-deletion-client.js?v=2"></script>
+    <script src="account-deletion-page.js?v=2"></script>
+    <script src="account-deletion-web.js?v=1"></script>
+</body>
+</html>

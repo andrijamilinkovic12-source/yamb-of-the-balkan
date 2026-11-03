@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Najbolja Yamb igra sa autentičnim balkanskim pravilima za vaš mobilni uređaj. Igrajte solo, duele ili turnire!">
+    <meta property="og:title" content="Yamb of the Balkan - Zvanična Igra">
+    <meta property="og:description" content="Zavrti kockice, dominiraj ligom i postani Yamb šampion Balkana!">
+    <meta property="og:image" content="YAMB OF THE BALKAN - Cover.png">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/png" href="Logo_aplikacije.png">
+
+    <title>Yamb of the Balkan - Zvanični sajt</title>
+
+    <style>
+        /* Omogućava glatko skrolovanje do sekcija na klik */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* CSS Varijable za Dark Green temu i Glassmorphism */
+        :root {
+            --bg-dark: #071a12;
+            --bg-gradient: linear-gradient(135deg, #071a12 0%, #0f3826 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --text-main: #e8f5e9;
+            --text-muted: #a5d6a7;
+            --accent-green: #4caf50;
+            --accent-hover: #81c784;
+            --gold-main: #FFD700; /* Zlatna za selektovanu karticu */
+            --pure-white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism klasa za višekratnu upotrebu */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Glavni Meni (Navigacija) */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(7, 26, 18, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-icon {
+            width: 150px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+
+        .text-white { color: var(--pure-white); }
+        .text-green { color: var(--accent-green); }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-green);
+        }
+
+        /* Stilovi za odabir jezika */
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 1px solid var(--glass-border);
+            padding-left: 20px;
+            margin-left: 10px;
+        }
+
+        .lang-flag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 20px;
+            border-radius: 3px;
+            overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0.5;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .lang-flag:hover {
+            transform: scale(1.15);
+            opacity: 0.8;
+        }
+
+        .lang-flag.active {
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow: 0 0 8px var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .lang-flag img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Glavna sekcija (Hero & Cover) */
+        main {
+            flex: 1;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .app-link {
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .app-icon-large {
+            width: 80px;
+            height: 80px;
+            background: var(--glass-bg);
+            border: 2px solid rgba(76, 175, 80, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .app-icon-large:hover {
+            transform: scale(1.05);
+        }
+
+        .app-icon-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-image {
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 14px;
+        }
+
+        .cover-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 14px;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Sekcija za funkcionalnosti */
+        .features-section {
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .features-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--accent-green);
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+
+        /* Aktivna kartica koja je trenutno otvorena */
+        .feature-card.active-card {
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Stilovi za blokove sa detaljima - display: none za dinamiku */
+        .rules-container {
+            display: none;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .rules-container h3 {
+            color: var(--pure-white);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rules-container h3:first-child {
+            margin-top: 0;
+        }
+
+        .rules-container h4 {
+            color: var(--accent-green);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .rules-container p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .rules-container ul {
+            list-style-type: none;
+            padding-left: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .rules-container li {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 10px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .rules-container li strong {
+            color: var(--accent-green);
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        /* Kontakt Forma */
+        .contact-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--pure-white);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .contact-form input::placeholder, .contact-form textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: var(--accent-green);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+        }
+
+        .contact-form button {
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        /* Footer i dugmad na dnu (CTA) */
+        .bottom-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 4rem 0 2rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .bottom-cta {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .btn-download, .btn-facebook {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-download {
+            background: var(--accent-green);
+            color: var(--pure-white);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-download:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn-facebook {
+            background: #1877F2; /* Facebook zvanična plava boja */
+            color: var(--pure-white);
+            box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+        }
+
+        .btn-facebook:hover {
+            background: #166fe5;
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(24, 119, 242, 0.6);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 5%;
+            border-top: 1px solid var(--glass-border);
+            margin-top: auto;
+        }
+
+        .footer-links {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* ========================================= */
+        /* OPTIMIZACIJA ZA MOBILNE TELEFONE (ISPOD 768px) */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            /* Glavna navigacija */
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 1rem;
+            }
+
+            /* Slaganje slike i teksta logotipa jedno ispod drugog */
+            .logo-container {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                gap: 8px; /* Mali razmak između slike i teksta */
+            }
+
+            /* Manja ikonica da bi sve lepo stalo */
+            .logo-icon {
+                width: 80px;
+            }
+
+            /* Tekst logotipa sada ima punu širinu i može lepo da se centrira */
+            .logo-text {
+                font-size: 1.3rem;
+                display: block;
+            }
+
+            /* Meni ispod logotipa */
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            /* Smanjivanje glavnih naslova */
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .features-section h2 {
+                font-size: 1.6rem;
+            }
+
+            /* Smanjivanje unutrašnjeg prostora na karticama */
+            .features-section {
+                padding: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo-container" title="Povratak na vrh">
+            <div class="logo-icon">
+                <img src="Logo_green 2.png" alt="Yamb Logo">
+            </div>
+            <span class="logo-text"><span class="text-white">YAMB OF THE</span>&nbsp;<span class="text-green">BALKAN</span></span>
+        </a>
+        <ul>
+            <li><a href="#pocetna">Početna</a></li>
+            <li><a href="#o-igrici">O Aplikaciji</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
+            <li><a href="privacy.html">Politika Privatnosti</a></li>
+
+            <li class="language-switcher">
+                <a href="index.html" class="lang-flag active" title="Srpski jezik">
+                    <img src="https://flagcdn.com/w40/rs.png" alt="SRB">
+                </a>
+
+                <a href="en.html" class="lang-flag" title="English language">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="ENG">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="pocetna" class="hero-section">
+
+            <a href="https://play.google.com/store/apps/details?id=com.yamb.balkan" target="_blank" class="app-link" title="Preuzmi Yamb of the Balkan sa Google Play-a">
+                <div class="app-icon-large">
+                    <img src="Logo_aplikacije.png" alt="Yamb of the Balkan App Icon">
+                </div>
+            </a>
+
+            <h1><span class="text-white">YAMB OF THE</span> <span class="text-green">BALKAN</span></h1>
+            <p>Najbolja Yamb igra sa autentičnim balkanskim pravilima za vaš mobilni uređaj. Bacajte kockice, popunjavajte kolone i takmičite se za najbolji rezultat!</p>
+
+            <div class="glass-panel cover-image">
+                <img src="YAMB OF THE BALKAN - Cover.png" alt="Cover slika aplikacije">
+            </div>
+        </section>
+
+        <section id="o-igrici" class="glass-panel features-section">
+            <h2>Kako funkcioniše aplikacija?</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Aplikacija omogućava igračima da igraju klasični Yamb, prate svoju statistiku i komuniciraju sa drugim igračima. Odaberite sekciju ispod za više detalja o svakoj funkcionalnosti.
+            </p>
+
+            <div class="features-grid">
+
+                <div class="glass-panel feature-card clickable active-card" onclick="showSection('pravila-igre', this)" title="Klikni da pročitaš detaljna pravila">
+                    <h3>🎲 Autentična Pravila</h3>
+                    <p>Igrajte po dobro poznatim balkanskim pravilima sa standardnim kolonama (Dole, Gore, Slobodna, Najava) i obaveznim poljima.<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('google-integracija', this)" title="Saznaj više o bezbednosti">
+                    <h3>🔐 Google Integracija</h3>
+                    <p>Koristimo Google autentifikaciju za bezbedno prijavljivanje, kako bi se vaši rezultati i napredak trajno sačuvali na vašem nalogu.<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('osnovna-statistika', this)" title="Saznaj više o praćenju statistike">
+                    <h3>📊 Praćenje Statistike</h3>
+                    <p>Detaljan uvid u vaš napredak! Pratite svoj indeks moći, odnos pobeda i poraza, osvojene trofeje i još mnogo toga.<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('top-liste-detalji', this)" title="Saznaj više o rangiranju">
+                    <h3>🏆 Top Liste</h3>
+                    <p>Pratite svoj plasman na globalnim nedeljnim, mesečnim i All-Time listama, ili obarajte sopstvene lokalne rekorde!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('multiplayer-detalji', this)" title="Pogledaj detalje o duelima">
+                    <h3>🌍 Multiplayer & Dueli</h3>
+                    <p>Brzo uskočite u partiju sa nasumičnim igračima sa mreže, ili organizujte privatne duele i gradite istoriju okršaja sa prijateljima!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('takmicenja', this)" title="Saznaj više o takmičenjima">
+                    <h3>⚔️ Takmičenja</h3>
+                    <p>Pokažite svoje veštine u Kvartalnoj ligi ili se borite za pehar na nedeljnim Turnirima na ispadanje protiv drugih igrača!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('online-igraci-detalji', this)" title="Saznaj više o online interakciji">
+                    <h3>🟢 Online Igrači</h3>
+                    <p>Pratite ko je trenutno u igri, sklapajte nova prijateljstva, gledajte tuđe mečeve (Spectate) ili direktno izazovite rivale na duel!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('chat-detalji', this)" title="Saznaj više o chatu">
+                    <h3>💬 Chat i Komunikacija</h3>
+                    <p>Dopisujte se sa drugim igračima u Globalnom chatu ili tokom duela, uz stroga pravila za sigurno i prijatno okruženje.<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('dukati-detalji', this)" title="Saznaj kako da zaradiš dukate">
+                    <h3>💰 Ekonomija i Dukati</h3>
+                    <p>Saznajte kako da zaradite dukate kroz partije, dnevne izazove i turnire, i na šta sve možete da ih potrošite!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('riznica-detalji', this)" title="Zaviri u Riznicu">
+                    <h3>💎 Riznica</h3>
+                    <p>Pregledajte osvojene trofeje i trošite dukate na unikatne kockice, spektakularne Yamb efekte i nove estetske teme!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('podesavanja-detalji', this)" title="Prilagodi aplikaciju svojim potrebama">
+                    <h3>⚙️ Podešavanja</h3>
+                    <p>Upravljajte svojim profilom, zvučnim efektima, vibracijom, vizuelnim temama i birajte jezik aplikacije na jednom mestu.<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('server-detalji', this)" title="Saznaj više o serveru i bezbednosti">
+                    <h3>🖥️ Server Podrška</h3>
+                    <p>Saznajte kako naš server čuva vaše podatke u Cloud-u, organizuje mečeve, moderira chat i osigurava fer igru bez varanja.<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+
+                <div class="glass-panel feature-card clickable" onclick="showSection('reklame-detalji', this)" title="Podržite razvoj igre">
+                    <h3>📺 Reklame i Održavanje</h3>
+                    <p>Saznajte kako gledanjem kratkih reklama možete osvojiti vredne nagrade, popuste i direktno podržati dalji razvoj ove igre!<br><br><span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">[Klikni za detalje ▼]</span></p>
+                </div>
+            </div>
+
+            <div class="rules-container" id="pravila-igre">
+                <h3>🎯 Cilj Igre</h3>
+                <p>Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.</p>
+
+                <h3>📊 Kolone u Igri</h3>
+                <ul>
+                    <li><strong>↓ NADOLE:</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
+                    <li><strong>↑ NAGORE:</strong> Popunjava se redom od Yamba do broja 1.</li>
+                    <li><strong>⇅ SREDINA:</strong> Popunjava se od sredine ka krajevima (od polja MAX i MIN ka 1 i Yambu).</li>
+                    <li><strong>S SLOBODNA:</strong> Može se popunjavati bilo kojim redosledom u toku igre.</li>
+                    <li><strong>R RUČNO:</strong> Popunjava se isključivo nakon PRVOG bacanja kockica.</li>
+                    <li><strong>📢 NAJAVA:</strong> Morate izričito najaviti željeno polje odmah nakon prvog bacanja.</li>
+                </ul>
+
+                <h3>🏆 Bodovanje i Sekcije</h3>
+
+                <h4>1. SEKCIJA (Polja od 1 do 6)</h4>
+                <p>Sabiraju se samo odgovarajući brojevi. Ukoliko je zbir u ovoj sekciji ≥ 60, ostvarujete <strong>bonus od +30 poena</strong>.</p>
+
+                <h4>2. SEKCIJA (MIN - MAX)</h4>
+                <p>Računa se po formuli: <em>(Max - Min) * Broj jedinica</em> (iz prve sekcije). Ako je rezultat ovog obračuna ≥ 60, dobijate <strong>bonus od +40 poena</strong>.</p>
+
+                <h4>3. SEKCIJA (KOMBINACIJE)</h4>
+                <ul>
+                    <li><strong>TRILING (3 iste):</strong> Donosi zbir kockica + 20 poena bonusa.</li>
+                    <li><strong>FUL (3 iste + 2 iste):</strong> Donosi zbir kockica + 30 poena bonusa. <br><em>*Napomena: 5 istih kockica (Yamb) se takođe može upisati kao Ful, jer igra to automatski prepoznaje i tretira kao 3 iste i 2 iste kockice.</em></li>
+                    <li><strong>POKER (4 iste):</strong> Donosi zbir kockica + 40 poena bonusa.</li>
+                    <li><strong>YAMB (5 istih):</strong> Donosi zbir kockica + 50 poena bonusa.</li>
+                    <li><strong>KENTA (5 u nizu):</strong> Predstavlja niz od 5 uzastopnih brojeva (1, 2, 3, 4, 5 ili 2, 3, 4, 5, 6). Boduje se zavisno od toga iz kog bacanja je dobijena: iz 1. bacanja vredi 66, iz 2. bacanja 56, a iz 3. bacanja 46 poena.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="google-integracija">
+                <h3>🔐 Google Integracija i Bezbednost</h3>
+                <p>Yamb of the Balkan koristi bezbednu Google Sign-In tehnologiju kako bi vam pružio najbolje moguće igračko iskustvo, bez muke oko pamćenja novih lozinki.</p>
+
+                <h4>☁️ Čuvanje u Oblaku (Cloud Save)</h4>
+                <p>Zahvaljujući povezivanju sa vašim Google nalogom, vaš napredak nikada neće biti izgubljen. Na našim sigurnim serverima automatski se čuva vaša kompletna statistika (uključujući Indeks moći i vatreni niz), lista zaključenih prijateljstava, H2H kartice međusobnih duela, osvojeni dukati i trofeji, kao i trenutno stanje u Kvartalnoj ligi i na turnirima. Pored toga, trajno se pamti i ceo vaš inventar (kupljeni efekti, skinovi za kockice i teme), kao i poslednja podešavanja aplikacije. Čak i ako promenite telefon, dovoljno je da se ponovo prijavite i nastavljate tačno tamo gde ste stali!</p>
+
+                <h4>🛡️ Koji podaci se prikupljaju i zašto?</h4>
+                <p>Vaša privatnost nam je na prvom mestu. Prilikom prijave, aplikacija traži pristup <strong>samo najosnovnijim podacima</strong> sa vašeg Google profila:</p>
+                <ul>
+                    <li><strong>Ime i Prezime:</strong> Koristimo ga isključivo kako bismo generisali vaše ime u igri i prikazali ga na rang listama.</li>
+                    <li><strong>Email adresa:</strong> Služi kao jedinstveni identifikator vašeg naloga. Ne šaljemo spam poruke.</li>
+                    <li><strong>Profilna slika (Avatar):</strong> Koristi se za vizuelni prikaz vašeg profila tokom multiplayer mečeva.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="osnovna-statistika">
+                <h3>📊 Praćenje Statistike</h3>
+                <p>Yamb of the Balkan beleži svaki vaš potez. Evo šta sve pratimo u sekciji statistike:</p>
+
+                <h4>📈 Osnovna Statistika</h4>
+                <ul>
+                    <li><strong>⚡ Indeks moći (Power Index):</strong> Glavni pokazatelj vašeg uspeha koji analizira sve vaše rezultate i veštinu.</li>
+                    <li><strong>🏆 Rekord:</strong> Vaš lični najbolji rezultat ikada ostvaren u bilo kom modu igre.</li>
+                    <li><strong>🎮 Ukupno partija:</strong> Zbir svih odigranih mečeva u svim modovima igre.</li>
+                    <li><strong>⚖️ Odnos Pobeda/Poraza (W/L Ratio):</strong> Prikazuje vašu ukupnu efikasnost u direktnim okršajima. Ova statistika beleži isključivo mečeve u online Random duelima, duelima sa prijateljima, Turnirima, kao i lokalnom modu za dva igrača. <em>Napomena: Ukoliko protivnik napusti partiju ili mu istekne vreme (Anti-Troll tajmer), vama se automatski upisuje pobeda, ali samo u online modovima (Random, Prijatelji, Turnir). U lokalnom modu (Dva igrača) pobeda se beleži isključivo ako se partija regularno privede kraju.</em></li>
+                    <li><strong>🔥 Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u online duelima i turnirima.</li>
+                    <li><strong>📈 Prosek:</strong> Prosečan broj poena po partiji na osnovu svih odigranih mečeva.</li>
+                    <li><strong>🏅 Trofeji:</strong> Kolekcija specijalnih dostignuća koje ste otključali svojim igrama.</li>
+                    <li><strong>💰 Stanje (Dukati):</strong> Prikazuje trenutnu količinu osvojenih dukata kojima raspolažete.</li>
+                    <li><strong>🌟 All-Time PTS:</strong> Ukupan broj poena koje ste osvojili od instalacije igre.</li>
+                    <li><strong>⚔️ Rival:</strong> Prijatelj sa kojim ste ukrstili kockice najviše puta.</li>
+                </ul>
+
+                <h4>⚔️ Međusobni Dueli (H2H)</h4>
+                <p>Ko je zaista bolji? Ova sekcija pruža detaljan pregled istorije okršaja sa konkretnim igračima. <strong>Za svakog rivala koji postane prijatelj, formira se posebna H2H kartica</strong>:</p>
+                <ul>
+                    <li><strong>🏆 Najveća Pobeda:</strong> Vaš najviši ostvareni rezultat (u poenima) protiv tog specifičnog rivala.</li>
+                    <li><strong>👑 Najveća Razlika:</strong> Prikazuje najdominantniju pobedu i maksimalnu bodovnu razliku ostvarenu protiv rivala.</li>
+                    <li><strong>💔 Najteži Poraz:</strong> Najveća bodovna razlika kojom vas je ovaj rival ikada savladao.</li>
+                    <li><strong>🔥 Vatreni Niz:</strong> Vaš najduži niz uzastopnih pobeda ostvaren isključivo protiv ovog igrača.</li>
+                    <li><strong>🎯 Tvoj Prosek:</strong> Prosečan broj poena koji ostvarujete u mečevima sa ovim konkretnim rivalom.</li>
+                    <li><strong>⚖️ Odnos Pobeda i Poraza:</strong> Prikazuje vaš odnos pobeda i poraza sa konkretnim rivalom izražen u procentima.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="top-liste-detalji">
+                <h3>🏆 Top Liste i Rangiranje</h3>
+                <p>Yamb of the Balkan precizno beleži svaki vaš vrhunski rezultat i omogućava vam da svoje umeće uporedite sa najboljim igračima, ali i da pratite sopstveni napredak!</p>
+
+                <h4>🌍 Globalne Top Liste</h4>
+                <p>Pokažite svima svoje veštine! Naša globalna tabela se redovno ažurira i rangira igrače na osnovu njihovog apsolutno najboljeg ostvarenog skora. Uvek možete pratiti svoj plasman u tri prestižne kategorije:</p>
+                <ul>
+                    <li><strong>Nedeljna lista:</strong> Borba za vrh se resetuje svake nedelje. Prikazuje najbolje rezultate ostvarene u tekućoj nedelji, čineći trku uvek dinamičnom!</li>
+                    <li><strong>Mesečna lista:</strong> Prikazuje najupornije i najuspešnije igrače koji su dominirali tokom celog meseca.</li>
+                    <li><strong>Sva vremena (All-Time):</strong> Večna lista apsolutno najboljih rezultata od postanka igre. Rezervisana samo za istinske majstore Yamba!</li>
+                </ul>
+
+                <h4>👤 Lokalna Lista (Vaši Rekordi)</h4>
+                <p>Ako više volite da se takmičite isključivo sami sa sobom, na raspolaganju vam je vaša lična, lokalna top lista. Ona funkcioniše kao vaš privatni dnevnik uspeha – pažljivo beleži i sortira sve vaše najbolje partije ikada odigrane sa vašeg naloga. Idealno za praćenje ličnog razvoja i sjajna motivacija da uvek iznova nadmašite sopstveni rekord!</p>
+            </div>
+
+            <div class="rules-container" id="multiplayer-detalji">
+                <h3>🌍 Multiplayer & Dueli</h3>
+                <p>Ukrstite kockice sa igračima širom Balkana, ali i celog sveta, kroz dva uzbudljiva online moda:</p>
+
+                <h4>🎲 Klasični Multiplayer</h4>
+                <p>Brzo uskočite u partiju sa nasumično odabranim protivnikom koji je trenutno na mreži i testirajte svoje veštine. Takođe, sistem vam dozvoljava da direktno izazovete bilo kog igrača sa kojim komunicirate u globalnom chatu, čak i ako niste zvanično povezani kao prijatelji.</p>
+
+                <h4>🤝 Dueli sa Prijateljima</h4>
+                <p>Organizujte privatne mečeve i gradite istoriju okršaja sa svojim poznanicima! Ova opcija zahteva da prvo sklopite prijateljstvo unutar aplikacije. Prijatelja možete dodati na dva načina:</p>
+                <ul>
+                    <li><strong>Preko liste igrača:</strong> Pronađite igrača u listi trenutno aktivnih (online) korisnika i pošaljite zahtev jednostavnim klikom na znak "+".</li>
+                    <li><strong>Direktnim pozivom:</strong> Unutar opcije "Pozovi prijatelja" precizno unesite Google ime vašeg prijatelja i pošaljite mu zahtev.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="takmicenja">
+                <h3>⚔️ Takmičenja</h3>
+                <p>Pored standardnih partija i duela, Yamb of the Balkan nudi i organizovana takmičenja za najambicioznije igrače.</p>
+
+                <h4>🏆 TURNIRI</h4>
+                <ul>
+                    <li><strong>Sistem takmičenja:</strong> Nedeljni turnir se sastoji od 8 igrača. Igra se na ispadanje (nokaut sistem): četvrtfinale, polufinale i finale. Svaki duel se igra na jednu dobijenu partiju.</li>
+                    <li><strong>Prijava i kotizacija:</strong> Prijava košta 2500 dukata. Povraćaj dukata i odjava mogući su samo dok traje faza prikupljanja igrača. Kada se prijavi svih 8 igrača, turnir počinje i odustajanje nije moguće.</li>
+                    <li><strong>Zakazivanje mečeva:</strong> Termini nisu fiksni! Protivnici u kosturu sami predlažu i prihvataju termin odigravanja meča kroz aplikaciju. Kada oba igrača potvrde termin, meč se može pokrenuti. Turnir od momenta početka može najduže trajati 7 dana.</li>
+                    <li><strong>Nagrade:</strong> Pobednik celog turnira dobija ogromno povećanje Indeksa Moći (PI) i biće zauvek upisan u Dvoranu slavnih, a tu su i bogate nagrade u dukatima!</li>
+                </ul>
+
+                <h4>🏅 KVARTALNA LIGA</h4>
+                <ul>
+                    <li><strong>Koncept lige:</strong> Kvartalna liga je sezonsko takmičenje koje traje 3 meseca (kvartal). Svaka završena partija (solo ili online) donosi poene koji se sabiraju i određuju vaš rang.</li>
+                    <li><strong>Rangovi:</strong> Napredujete kroz rangove: <strong>Amater, Profi, Majstor, Legenda i Titan.</strong> Prelazak u viši rang zavisi isključivo od ukupnog broja sakupljenih poena u trenutnom kvartalu.</li>
+                    <li><strong>Nagrade:</strong> Na kraju svakog kvartala, uloženi trud se i te kako isplati! Najbolje plasirani igrači osvajaju izuzetno vredne nagrade u dukatima, koje mogu iskoristiti za dalje unapređenje svog profila.</li>
+                    <li><strong>Kraj sezone i Dvorana slavnih:</strong> Pored dukata, najbolja 3 igrača na kraju ciklusa upisuju se u Dvoranu slavnih (osvajaju medalje), dok prvoplasirani nosi prestižnu titulu Šampiona ciklusa. Nakon toga, poeni se arhiviraju u 'Sva Vremena', a nova borba kreće od nule.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="online-igraci-detalji">
+                <h3>🟢 Online Igrači i Interakcija</h3>
+                <p>Aplikacija vam u svakom trenutku prikazuje tačan broj igrača koji su trenutno na mreži. Pored imena i avatara svakog aktivnog korisnika, dostupne su vam tri uzbudljive opcije:</p>
+
+                <ul>
+                    <li><strong>➕ Dodaj prijatelja:</strong> Proširite svoj krug rivala! Pošaljite zahtev željenom igraču – ako je online, prijateljstvo se može odmah sklopiti, a ako trenutno nije u igri, zahtev će ga čekati u opciji "Pozovi prijatelja".</li>
+                    <li><strong>👁️ Gledaj partiju (Spectate):</strong> Posmatranje tuđih mečeva može biti neverovatno zabavno i korisno. Ovo je savršen način da novi igrači vizuelno shvate pravila, dok iskusni majstori mogu analizirati tuđe poteze i unaprediti svoju logiku za popunjavanje kolona.</li>
+                    <li><strong>⚔️ Bitka (Izazov):</strong> Vidite nekoga na listi i želite da odmerite snage? Klikom na ikonicu za bitku direktno izazivate igrača na duel, bez obzira na to da li ste već prijatelji ili je u pitanju potpuno nepoznat protivnik!</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="chat-detalji">
+                <h3>💬 Chat i Komunikacija</h3>
+                <p>Yamb of the Balkan podstiče zdravo rivalstvo i druženje. Zato vam nudimo dve opcije za dopisivanje, uz nultu toleranciju na neprimereno ponašanje:</p>
+
+                <ul>
+                    <li><strong>🌍 Globalni Chat:</strong> Dostupan iz glavnog menija, ovaj chat povezuje sve igrače na serveru. Pre prvog ulaska dobijate obaveštenje o pravilima (koja morate potvrditi opcijom "U redu" ili odustati klikom na "Otkaži"): strogo je zabranjeno vređanje na rasnoj, verskoj, nacionalnoj, polnoj ili bilo kojoj drugoj osnovi. Upotreba vulgarnosti povlači isključenje sa servera! Pored druženja, ima i korisnu funkciju – jednostavnim <strong>klikom na ime igrača</strong> u chatu, možete ga direktno izazvati na međusobni duel!</li>
+                    <li><strong>🎮 Duel Chat (U partiji):</strong> Bilo da igrate protiv nasumično odabranog protivnika ili ste u duelu sa prijateljem ("Pozovi prijatelja"), na raspolaganju vam je privatni chat za razgovor sa vašim trenutnim rivalom. Sva stroga pravila ponašanja i međusobnog poštovanja važe i u ovom chatu.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="dukati-detalji">
+                <h3>💰 Dukati i Ekonomija</h3>
+                <p>Dukati su glavna valuta u Yamb of the Balkan. Neophodni su vam za prijavu na elitne turnire, kao i za kupovinu svih kozmetičkih dodataka u igri. Postoji mnogo načina da ih zaradite:</p>
+
+                <ul>
+                    <li><strong>🎲 Igranje partija:</strong> Svaka završena partija (u bilo kom modu) donosi vam onoliko dukata koliko ste osvojili poena. Ovu zaradu na kraju meča možete i <strong>duplirati</strong> gledanjem kratke AdMob sponzorisane reklame!</li>
+                    <li><strong>🎁 Dnevni izazov:</strong> Okušajte sreću svaki dan! Pred vama je 6 kockica – prve četiri se sabiraju, peta kockica množi taj zbir, a šesta kockica množi celokupan prethodni rezultat. Uz malo sreće, ovo je idealna prilika za neverovatno brzu zaradu!</li>
+                    <li><strong>🎬 Nagrade u Riznici:</strong> Kad god vam zatrebaju dodatni dukati, uđite u Riznicu i pogledajte reklamu kako biste odmah preuzeli bonus od 500 dukata.</li>
+                    <li><strong>🏆 Turniri i Kvartalna liga:</strong> Najuporniji i najbolji igrači osvajaju najviše! Pobednici nedeljnih Turnira, kao i igrači koji na kraju ciklusa Kvartalne lige zauzmu prva tri mesta, automatski se nagrađuju ogromnim količinama dukata za svoj uspeh.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="riznica-detalji">
+                <h3>💎 Riznica (Prodavnica i Trofeji)</h3>
+                <p>Riznica je vaše centralno mesto za personalizaciju igre. Ovde možete pregledati svoja dostignuća i trošiti teško zarađene dukate kako biste Yamb iskustvo učinili potpuno vašim.</p>
+
+                <ul>
+                    <li><strong>🏆 Trofeji:</strong> Pratite svoj napredak! Ovde se nalazi pregled svih specijalnih dostignuća koje ste otključali svojim igrama, kao i onih koji tek čekaju da budu osvojeni.</li>
+                    <li><strong>🎲 Kockice (Skinovi):</strong> Dosadio vam je standardni izgled kockica? Iskoristite dukate da kupite nove, unikatne setove i igrajte sa stilom.</li>
+                    <li><strong>✨ Efekti:</strong> Kupuju se dukatima i aktiviraju se <strong>isključivo kada u partiji dobijete Yamb</strong> (5 istih kockica). Učinite taj pobednički trenutak još spektakularnijim!</li>
+                    <li><strong>🎨 Teme:</strong> Promenite celokupan izgled aplikacije. Četiri standardne teme su vam odmah besplatno dostupne (<em>Zelena, Svetlo Zlato, Trula Višnja i Plavi Okean</em>), dok se ostale ekskluzivne teme mogu otključati dukatima.</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="podesavanja-detalji">
+                <h3>⚙️ Podešavanja</h3>
+                <p>Prilagodite Yamb of the Balkan svojim željama kroz jednostavan meni za podešavanja. U njemu vam je na raspolaganju nekoliko ključnih segmenata:</p>
+
+                <ul>
+                    <li><strong>👤 Profil i Nalog:</strong> Pregled vašeg povezanog Google naloga (ime i prezime se automatski preuzimaju i ne mogu se ručno menjati). Ovde vam je dostupna i opcija za bezbednu odjavu (Logout).</li>
+                    <li><strong>🎵 Zvuk i Haptika:</strong> Kontrolišite zvučne efekte i vibraciju. Napomena: haptika (vibracija) je primenjena isključivo tokom aktivnog igranja partija, kako bi se pojačao taktilni osećaj bacanja kockica.</li>
+                    <li><strong>🎨 Prikaz i Jezik:</strong> Odaberite željeni vizuelni identitet igre menjanjem tema (možete birati standardne teme, ili one koje ste otključali dukatima u Riznici). Takođe, ovde možete birati između dva podržana jezika: Srpskog i Engleskog.</li>
+                    <li><strong>📜 Pravna dokumenta:</strong> Brzi pristup našim bitnim pravilima - Politici privatnosti (Privacy Policy) i Uslovima korišćenja (Terms of Service).</li>
+                </ul>
+            </div>
+
+            <div class="rules-container" id="server-detalji">
+                <h3>🖥️ Server Podrška i Bezbednost</h3>
+                <p>Iza Yamb of the Balkan stoji moćan i stabilan server dizajniran da vam pruži besprekorno i pošteno multiplayer iskustvo. Evo šta sve naš server kontroliše i obezbeđuje u pozadini:</p>
+
+                <ul>
+                    <li><strong>🛡️ Anti-Cheat i Fer Igra:</strong> Server aktivno nadgleda svaku partiju, rezultate i stanje vaših dukata, sprečavajući manipulacije i hakerske pokušaje. Validacija nagrada (poput Dnevnog izazova) vrši se direktno na serveru. Ugrađen je i "Anti-Troll" tajmer koji automatski dodeljuje pobedu vama ukoliko protivnik namerno odugovlači potez!</li>
+                    <li><strong>☁️ Cloud Save i Sinhronizacija:</strong> Sva vaša podešavanja, statistika (uključujući H2H istoriju), trofeji i inventar iz Riznice se bezbedno čuvaju i trenutno sinhronizuju sa bazom podataka.</li>
+                    <li><strong>⚖️ Pametna Moderacija:</strong> Server koristi napredni filter za prepoznavanje i sankcionisanje vulgarnosti u globalnom chatu i korisničkim imenima. Igrači koji krše pravila automatski dobijaju restrikcije, čime garantujemo zdravo okruženje.</li>
+                    <li><strong>🔌 Stabilnost Konekcije (Grace Period):</strong> Svesni smo da mobilni internet može biti nestabilan. Ukoliko vam pukne veza usred napetog duela, server aktivira "Grace period" od 30 sekundi – daje vam vremena da se vratite i nastavite partiju pre nego što dodeli pobedu protivniku.</li>
+                    <li><strong>🏆 Mozak Operacije:</strong> Upravlja spajanjem igrača (Matchmaking), sistemom zahteva za prijateljstvo, radom Kvartalne Lige, Dvoranom slavnih i asinhronim zakazivanjem Turnira.</li>
+                </ul>
+                <p style="color: var(--accent-green); font-weight: bold; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+                    🛠️ Na održavanju servera, optimizaciji i novim bezbednosnim korekcijama se radi svakodnevno, kako bi igra ostala maksimalno stabilna, fer i u potpunosti bezbedna za sve korisnike!
+                </p>
+            </div>
+
+            <div class="rules-container" id="reklame-detalji">
+                <h3>📺 Reklame i Održavanje (AdMob)</h3>
+                <p>Kako bi Yamb of the Balkan ostao besplatan i nastavio da se razvija, aplikacija koristi sistem reklama. Trudili smo se da ih pažljivo pozicioniramo kako ne bi kvarile vizuelni doživljaj i ometale vas tokom napetih partija.</p>
+
+                <ul>
+                    <li><strong>⏳ Kratke reklame (Interstitial):</strong> Prikazuju se povremeno prilikom zatvaranja globalnog chata ili nakon izlaska iz pregleda tuđih partija. One su nam ključne za pokrivanje troškova brzih servera i održavanje igre živom.</li>
+                    <li><strong>🎁 Reklame za nagradu (Rewarded Ads):</strong> Ove reklame gledate isključivo kada vi to izaberete, a donose vam sjajne benefite! Možete ih iskoristiti za <strong>dupliranje osvojenih dukata</strong> na kraju partije ili Dnevnog izazova, kao i za ostvarivanje <strong>ekskluzivnih popusta od 20%</strong> pri kupovini predmeta u Riznici.</li>
+                </ul>
+                <p style="color: var(--accent-green); font-weight: bold; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+                    🤝 Hvala vam što razumevanjem za reklame pomažete da Yamb of the Balkan ostane besplatan za sve igrače!
+                </p>
+            </div>
+
+        </section>
+
+        <section id="kontakt" class="glass-panel features-section" style="margin-top: 3rem;">
+            <h2>Kontaktirajte nas</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Imate pitanje vezano za igru, predlog za novu funkcionalnost ili ste naišli na problem? Pošaljite nam poruku i odgovorićemo u najkraćem roku!
+            </p>
+
+            <div class="contact-form-container">
+                <form action="https://formsubmit.co/andrija.milinkovic12@gmail.com" method="POST" class="contact-form">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_subject" value="Novi mail sa Yamb of the Balkan sajta!">
+
+                    <input type="text" name="Ime" placeholder="Vaše ime (u igri ili pravo)" required>
+                    <input type="email" name="Email" placeholder="Vaša email adresa" required>
+                    <textarea name="Poruka" placeholder="Napišite vašu poruku ovde..." rows="5" required></textarea>
+
+                    <button type="submit" class="btn-download">
+                        ✉️ Pošalji poruku
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <div class="bottom-cta">
+            <a href="https://play.google.com/store/apps/details?id=com.yamb.balkan" target="_blank" class="btn-download">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M3,2.5V21.5C3,21.8 3.1,22 3.3,22.1L13.8,11.5L3.3,1.9C3.1,2 3,2.2 3,2.5M14.9,10.4L18.1,7.2L4.6,0.3C4.2,0.1 3.9,0.1 3.6,0.2L14.9,10.4M15.5,10.9L19.4,14.4C19.8,14.6 19.8,15.1 19.4,15.3L15.5,18.8L14.9,18.2L11,14.3L15.5,10.9M14.3,13.6L10.4,17.5L4.1,23.6C4.4,23.8 4.7,23.8 5.1,23.6L14.3,13.6Z"/>
+                </svg>
+                Preuzmi besplatno na Google Play-u
+            </a>
+
+            <a href="https://www.facebook.com/profile.php?id=61588191682382" target="_blank" class="btn-facebook">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.8c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.45-9.9c0-5.53-4.5-10.02-10-10.02Z"/>
+                </svg>
+                Pratite nas na Facebook-u
+            </a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="delete-account.html?lang=sr">Brisanje naloga</a>
+            <a href="privacy.html">Privacy Policy (Politika privatnosti)</a>
+            <a href="terms.html">Terms of Service (Uslovi korišćenja)</a>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Yamb of the Balkan. Sva prava zadržana.
+        </div>
+    </footer>
+
+    <script>
+        function showSection(sectionId, element) {
+            // 1. Sakrij sve sekcije sa detaljima
+            const sections = document.querySelectorAll('.rules-container');
+            sections.forEach(sec => {
+                sec.style.display = 'none';
+            });
+
+            // 2. Ukloni "active" klasu sa svih kartica
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach(card => {
+                card.classList.remove('active-card');
+            });
+
+            // 3. Dodaj "active" klasu na kliknutu karticu
+            if (element) {
+                element.classList.add('active-card');
+            }
+
+            // 4. Pronađi ciljanu sekciju i prikaži je
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.style.display = 'block';
+
+                // 5. Glatko skroluj do sekcije, uzimajući u obzir visinu navigacije (sticky nav)
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const targetPosition = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Prikazati prvu sekciju "Pravila igre" po učitavanju sajta kako prostor ne bi bio prazan
+        // Klasa "active-card" je već ručno dodata u HTML za prvu karticu.
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pravila-igre').style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>

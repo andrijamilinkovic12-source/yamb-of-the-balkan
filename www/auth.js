@@ -110,10 +110,17 @@ function normalizeFirebaseAuthUser(user) {
     const uid = String(user.uid || user.id || user.userId || '').trim();
     if (!uid || uid === 'undefined' || uid === 'null') return null;
 
+    // A missing provider name must not publish the private login email or
+    // reuse a name left behind by another account on the same device.
+    const rememberedName = localStorage.getItem('yamb_uid') === uid
+        ? String(localStorage.getItem('yamb_player_name') || '').trim() : '';
+    const publicFallback = rememberedName && !/^[^\s@]+@[^\s@]+$/.test(rememberedName)
+        ? rememberedName : _t('hs_player', "Igrač");
+
     return {
         ...user,
         uid,
-        displayName: user.displayName || user.name || user.email || localStorage.getItem('yamb_player_name') || _t('hs_player', "Igrač"),
+        displayName: user.displayName || user.name || publicFallback,
         photoUrl: user.photoUrl || user.photoURL || user.imageUrl || user.photo || '',
         email: user.email || ''
     };
@@ -154,6 +161,12 @@ async function resolveFirebaseAuthUser(signInResult = null) {
 function setYambAuthState(user, options = {}) {
     const normalized = normalizeFirebaseAuthUser(user);
     const previousState = window.yambAuthState || {};
+    // An offline Firebase session must not restore a locally deleted identity.
+    if (normalized && localStorage.getItem('yamb_deletion_disabled_uid') === normalized.uid) {
+        Promise.resolve(window.Capacitor?.Plugins?.FirebaseAuthentication?.signOut?.()).catch(() => {});
+        return setYambAuthState(null, options);
+    }
+    if (normalized && localStorage.getItem('yamb_deletion_disabled_uid')) localStorage.removeItem('yamb_deletion_disabled_uid');
 
     if (!normalized) {
         localStorage.removeItem('yamb_uid');
@@ -174,6 +187,7 @@ function setYambAuthState(user, options = {}) {
             checkingLogin: !!options.checkingLogin,
             updatedAt: Date.now()
         };
+        void window.yambAnalyticsPrivacy?.identityChanged();
         return null;
     }
 
@@ -203,6 +217,7 @@ function setYambAuthState(user, options = {}) {
         restoreFailedReason: null,
         updatedAt: Date.now()
     };
+    void window.yambAnalyticsPrivacy?.identityChanged();
 
     return normalized;
 }
@@ -371,6 +386,7 @@ function osveziAuthUI(user) {
             nameInput.style.opacity = '1';
         }
     }
+    window.yambAccountPrivacy?.updateControls();
 }
 
 // --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
@@ -586,6 +602,7 @@ function readAccountLocalSnapshot(uid) {
 }
 
 function saveAccountLocalSnapshot(uid) {
+    if (window.yambAccountDeletionInProgress) return null;
     if (!uid) return false;
 
     const stats = getFullLocalStats();
@@ -668,6 +685,7 @@ function formatCloudSyncFailureDetails(result = null) {
 }
 
 async function syncLoggedInProfileToCloud(user, options = {}) {
+    if (window.yambAccountDeletionInProgress) return false;
     const uid = user?.uid || localStorage.getItem('yamb_uid');
     if (!uid) {
         rememberCloudSyncResult({ ok: false, reason: 'missing_uid' });

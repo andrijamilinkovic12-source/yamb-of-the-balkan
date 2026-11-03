@@ -72,7 +72,7 @@ for (const id of ['setting-name','setting-sound','setting-music','setting-vibrat
     assert.ok(settings.includes(`id="${id}"`), `Missing functional Settings control ${id}`);
 for (const role of ['sound','music','vibration'])
     assert.ok(text('www/theme-game-header.js').includes(`['setting-${role}', '${role}']`));
-assert.ok(html.includes('theme-settings-room.css?v=4'));
+assert.ok(html.includes('theme-settings-room.css?v=5'));
 assert.ok(html.includes('theme-settings-room.js?v=5'));
 assert.ok(html.includes('theme-settings-picker.js?v=2'));
 assert.ok(settings.includes('id="settings-theme-trigger"'));
