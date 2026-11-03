@@ -48,12 +48,12 @@ function pageHarness(analyticsState) {
     return { elements, controller, click: id => elements[id].handlers.click(), requests: () => requests, setState: value => { state = value; }, setVerifiedUid: value => { verifiedUid = value; } };
 }
 
-function nativeHarness(choices = [true, true], selectedUid = uid) {
+function nativeHarness(choices = [true, true], selectedUid = uid, pendingReceipt = false) {
     const localStorage = storage({ yamb_uid: uid, yamb_lang: 'en', yamb_stats: 'private-stats', ['yamb_account_snapshot_' + uid]: 'own-snapshot', ['yamb_account_snapshot_' + other]: 'other-snapshot' });
     const savedGames = new Map([['yamb_saved_game_' + uid + '_1', { private: true }], ['yamb_saved_game_' + other + '_1', { preserve: true }], ['yamb_ultimate_scores', [{ uid }, { uid: other }]]]);
     const messages = [];
     let requests = 0, signIns = 0, signOuts = 0, reloads = 0;
-    const elements = { 'delete-account-button': { disabled: true, textContent: '' } };
+    const elements = { 'delete-account-button': { disabled: true, textContent: '' }, 'deletion-status-button': { hidden: true, disabled: false, textContent: '' } };
     const document = { getElementById: id => elements[id], addEventListener() {} };
     const auth = {
         signInWithGoogle: async () => { signIns++; return { user: { uid: selectedUid, email: 'test@example.invalid' } }; },
@@ -61,10 +61,10 @@ function nativeHarness(choices = [true, true], selectedUid = uid) {
         signOut: async () => { signOuts++; }
     };
     class FakeClient {
-        savedReceipt() { return null; }
+        savedReceipt() { return pendingReceipt ? receipt : null; }
         async config() { return { enabled: true }; }
         async request(token) { assert.equal(token, 'test-only-token'); requests++; return receipt; }
-        async poll() { return { state: 'complete' }; }
+        async poll() { pendingReceipt = false; return { state: 'complete' }; }
     }
     const window = {
         YambAccountDeletionClient: { Client: FakeClient, text },
@@ -81,7 +81,7 @@ function nativeHarness(choices = [true, true], selectedUid = uid) {
         prikaziObavestenje: async message => messages.push(message),
         saveAccountLocalSnapshot: id => localStorage.setItem('yamb_account_snapshot_' + id, 'preserved-before-account-change')
     });
-    return { window, localStorage, savedGames, messages, counts: () => ({ requests, signIns, signOuts, reloads }) };
+    return { window, localStorage, savedGames, messages, elements, counts: () => ({ requests, signIns, signOuts, reloads }) };
 }
 
 (async () => {
@@ -177,5 +177,14 @@ function nativeHarness(choices = [true, true], selectedUid = uid) {
     assert.equal(remote.counts().requests, 0);
     assert.equal(remote.counts().signOuts, 1);
     assert(remote.messages.includes(text.en.received));
+    const signedOutPending = nativeHarness([], uid, true);
+    signedOutPending.localStorage.removeItem('yamb_uid');
+    signedOutPending.window.yambAccountPrivacy.updateControls();
+    assert.equal(signedOutPending.elements['deletion-status-button'].hidden, false, 'pending deletion status must be accessible without recreating an account');
+    await signedOutPending.window.yambAccountPrivacy.begin();
+    assert.equal(signedOutPending.counts().requests, 0);
+    assert.equal(signedOutPending.counts().signIns, 0);
+    assert.equal(signedOutPending.counts().signOuts, 0);
+    assert.equal(signedOutPending.elements['deletion-status-button'].hidden, true, 'completed receipts should no longer show the status control');
     console.log('Account deletion UI checks passed: explicit confirmation, cancel, identity mismatch, safe text rendering, pending/failure/success, private receipts and account-specific device cleanup.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

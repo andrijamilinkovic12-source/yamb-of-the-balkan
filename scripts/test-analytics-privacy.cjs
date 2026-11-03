@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 const { createAnalyticsPrivacy } = require('../lib/analytics-privacy');
-const { createController, mount } = require('../www/analytics-privacy');
+const { createController, mount, privacyUrl } = require('../www/analytics-privacy');
 const { hash } = require('../lib/account-deletion');
 const uid = 'analytics_test_user_123456789';
 const other = 'analytics_test_other_12345678';
@@ -93,6 +93,10 @@ function clientHarness() {
     } };
 }
 async function clientChecks() {
+    assert.equal(privacyUrl(new URL('https://yamb-reconnect-qa.onrender.com'), 'sr'), 'https://yamb-reconnect-qa.onrender.com/privacy.html');
+    assert.equal(privacyUrl(new URL('https://yamb-reconnect-qa.onrender.com'), 'en'), 'https://yamb-reconnect-qa.onrender.com/privacy_en.html');
+    assert.equal(privacyUrl(new URL('https://yamb-of-the-balkan.onrender.com'), 'en'), 'https://www.yambofthebalkan.com/privacy_en.html');
+    assert.equal(privacyUrl(new URL('https://other.invalid'), 'sr'), 'https://www.yambofthebalkan.com/privacy.html');
     const legacyCalls = [];
     mount({ Capacitor: {
         isNativePlatform: () => true, isPluginAvailable: () => false,

@@ -13,10 +13,17 @@
 
     function updateControls() {
         const button = document.getElementById('delete-account-button');
-        if (!button) return;
         const hasReceipt = !!client().savedReceipt();
-        button.textContent = hasReceipt ? strings().status : strings().label;
-        button.disabled = busy || (!hasReceipt && !localStorage.getItem('yamb_uid'));
+        if (button) {
+            button.textContent = hasReceipt ? strings().status : strings().label;
+            button.disabled = busy || (!hasReceipt && !localStorage.getItem('yamb_uid'));
+        }
+        const signedOutStatus = document.getElementById('deletion-status-button');
+        if (signedOutStatus) {
+            signedOutStatus.hidden = !hasReceipt;
+            signedOutStatus.disabled = busy;
+            signedOutStatus.textContent = strings().status;
+        }
     }
 
     async function clearLocalAccount(uid, purge = true) {

@@ -64,6 +64,11 @@
             login: 'Sign in to the game before choosing analytics.'
         }
     };
+    function privacyUrl(location, language) {
+        const origin = location.hostname === 'yamb-reconnect-qa.onrender.com'
+            ? 'https://yamb-reconnect-qa.onrender.com' : 'https://www.yambofthebalkan.com';
+        return origin + (language === 'en' ? '/privacy_en.html' : '/privacy.html');
+    }
     function mount(win) {
         const native = win.Capacitor?.Plugins?.AnalyticsPrivacy;
         const auth = win.Capacitor?.Plugins?.FirebaseAuthentication;
@@ -82,7 +87,8 @@
             return;
         }
         if (!auth) return;
-        const strings = () => text[win.localStorage.getItem('yamb_lang') === 'en' ? 'en' : 'sr'];
+        const language = () => win.localStorage.getItem('yamb_lang') === 'en' ? 'en' : 'sr';
+        const strings = () => text[language()];
         const currentUid = () => win.yambAuthState?.isLoggedIn ? win.yambAuthState.uid : null;
         const client = new win.YambAccountDeletionClient.Client(typeof SERVER_URL === 'string' ? SERVER_URL : win.location.origin);
         function render(state) {
@@ -103,7 +109,7 @@
             dialog.setAttribute('aria-labelledby', 'analytics-choice-title');
             const heading = win.document.createElement('h2'); heading.id = 'analytics-choice-title'; heading.textContent = t.heading;
             const body = win.document.createElement('p'); body.textContent = t.description;
-            const policy = win.document.createElement('a'); policy.href = 'https://www.yambofthebalkan.com/privacy.html'; policy.target = '_blank'; policy.rel = 'noopener'; policy.textContent = t.policy;
+            const policy = win.document.createElement('a'); policy.href = privacyUrl(win.location, language()); policy.target = '_blank'; policy.rel = 'noopener'; policy.textContent = t.policy;
             const actions = win.document.createElement('div'); actions.className = 'analytics-choice-actions';
             for (const granted of [false, true]) {
                 const button = win.document.createElement('button'); button.type = 'button'; button.textContent = granted ? t.allow : t.decline;
@@ -124,5 +130,5 @@
             void (status.isActive ? controller.sync() : controller.pause());
         });
     }
-    return { createController, mount, text };
+    return { createController, mount, text, privacyUrl };
 });

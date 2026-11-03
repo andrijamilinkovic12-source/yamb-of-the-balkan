@@ -4,4 +4,6 @@
 .analytics-choice-dialog p { line-height: 1.5; }
 .analytics-choice-dialog a { color: #9ed8ff; }
 .analytics-choice-actions { display: grid; gap: 12px; margin: 20px 0 12px; }
+#deletion-status-button[hidden] { display: none !important; }
+#deletion-status-button { margin-top: 8px; padding: 10px 16px; font-size: .85rem; }
 .analytics-choice-dialog button { padding: 12px; min-height: 44px; font: inherit; cursor: pointer; border: 1px solid #aaa; border-radius: 8px; color: #fff; background: #353e48; }

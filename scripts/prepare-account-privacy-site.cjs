@@ -59,7 +59,7 @@ function legalPage(kind, lang, sections) {
     return `<!doctype html>
 <html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="${title} — Yamb of the Balkan"><title>${title} | Yamb of the Balkan</title><link rel="icon" href="Logo_aplikacije.png"><link rel="stylesheet" href="account-deletion.css?v=1"></head>
 <body><header><a class="brand" href="${home}"><img src="Logo_aplikacije.png" alt="">YAMB OF THE BALKAN</a><nav aria-label="Language"><a href="${kind}.html" lang="sr">Srpski</a><a href="${kind}_en.html" lang="en">English</a></nav></header>
-<main><p class="eyebrow">Yamb of the Balkan</p><h1>${title}</h1><p class="small">${en ? 'Updated: 1 November 2026' : 'Ažurirano: 1. novembar 2026.'}</p>${body}</main>
+<main><p class="eyebrow">Yamb of the Balkan</p><h1>${title}</h1><p class="small">${en ? 'Updated: 3 November 2026' : 'Ažurirano: 3. novembar 2026.'}</p>${body}</main>
 <footer><nav><a href="${home}">${en ? 'Home' : 'Početna'}</a><a href="privacy${suffix}.html">${en ? 'Privacy policy' : 'Politika privatnosti'}</a><a href="terms${suffix}.html">${en ? 'Terms of service' : 'Uslovi korišćenja'}</a><a href="delete-account.html?lang=${lang}">${en ? 'Delete account' : 'Brisanje naloga'}</a></nav><p class="small">Yamb of the Balkan</p></footer></body></html>\n`;
 }
 for (const lang of ['sr', 'en']) {
