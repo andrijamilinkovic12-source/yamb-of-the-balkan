@@ -171,7 +171,7 @@ assert(serverSource.includes('stagingProjectIdOnlyAuth ? { projectId: firebaseAd
 assert(serverSource.includes("require('firebase-admin/app')"), 'Server mora koristiti modularni Firebase Admin App API');
 assert(serverSource.includes("require('firebase-admin/auth')"), 'Server mora koristiti modularni Firebase Admin Auth API');
 assert(serverSource.includes("require('firebase-admin/messaging')"), 'Server mora koristiti modularni Firebase Admin Messaging API');
-assert(serverSource.includes('firebaseMessaging = stagingProjectIdOnlyAuth ? null : getMessaging(firebaseApp)'), 'Keyless staging mora isključiti Firebase Messaging');
+assert(serverSource.includes("firebaseMessaging = SERVER_RUNTIME.environment === 'staging' || process.env.FIREBASE_AUTH_EMULATOR_HOST ? null : getMessaging(firebaseApp)"), 'Staging i Auth emulator moraju isključiti Firebase Messaging');
 assert(serverSource.includes('environment: SERVER_RUNTIME.environment'), 'Health endpoint ne potvrđuje runtime okruženje');
 assert(serverSource.includes('instanceId: SERVER_RUNTIME.instanceId'), 'Health endpoint ne potvrđuje staging instancu');
 assert(managersSource.includes("Staging/local runtime: AdMob je isključen."), 'Staging klijent ne blokira produkcione oglase');

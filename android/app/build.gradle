@@ -21,8 +21,16 @@ android {
     
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        // Exercise the release optimizer against the isolated QA server.
+        // The local debug key signs QA only; production signing is unchanged.
+        qaMinified {
+            initWith release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
         }
         // Local packaged-web QA only; normal debug and release keep server.url.
         qaLocal {

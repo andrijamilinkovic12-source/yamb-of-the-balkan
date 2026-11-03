@@ -1,6 +1,7 @@
 package com.yamb.balkan;
 
 import android.os.Bundle;
+import androidx.core.view.WindowCompat;
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
@@ -12,6 +13,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(AdConsentPlugin.class);
         registerPlugin(AnalyticsPrivacyPlugin.class);
         super.onCreate(savedInstanceState);
+        WindowCompat.enableEdgeToEdge(getWindow());
     }
 
     @Override
