@@ -8449,7 +8449,11 @@ class YambApp {
                 const isTournamentRecovery = data.tournament === true || this.isTournamentOnlineDuel(responseRoomId, data);
                 if (isTournamentRecovery) {
                     localStorage.setItem('yamb_active_online_room', responseRoomId);
-                    this.resumeOnlineGame(responseRoomId, { autoTournamentRecovery: true });
+                    this.resumeOnlineGame(responseRoomId, {
+                        autoTournamentRecovery: true,
+                        coldStartRecovery: true,
+                        recoveryGraceRemainingMs: data.disconnectGraceRemainingMs
+                    });
                     return;
                 }
 
@@ -8457,7 +8461,10 @@ class YambApp {
                 try {
                     const zeliNastavak = await this.modal.confirm(gt('online_recovery_prompt') || "Imate prekinut online duel! Da li želite da se vratite u igru?");
                     if (zeliNastavak) {
-                        this.resumeOnlineGame(data.roomId);
+                        this.resumeOnlineGame(data.roomId, {
+                            coldStartRecovery: true,
+                            recoveryGraceRemainingMs: data.disconnectGraceRemainingMs
+                        });
                     } else {
                         localStorage.removeItem('yamb_active_online_room');
                         if (this.socket && this.socket.connected) {
@@ -11236,6 +11243,85 @@ class YambApp {
         }
     }
 
+    async confirmColdStartOnlineResume(roomId, options = {}) {
+        const remainingMs = Number(options.recoveryGraceRemainingMs);
+        const retryWindowMs = Number.isFinite(remainingMs) && remainingMs > 0
+            ? Math.min(300000, Math.max(5000, remainingMs + 3000))
+            : 30000;
+        const stopAt = Date.now() + retryWindowMs;
+        const appPlugin = window.Capacitor?.Plugins?.App;
+        this.appLifecycleEpisodeId = `${this.appLifecycleSessionId}-${++this.appLifecycleEpisodeCounter}`;
+
+        while (Date.now() < stopAt && this.isOnlineRecoveryEventRelevant(roomId)) {
+            if (!this.socket?.connected) {
+                this.initSocketConnection();
+            } else {
+                let authResult;
+                try {
+                    authResult = await this.authenticateSocketIdentity();
+                } catch (error) {
+                    console.warn('Povratak u online sobu čeka ponovnu prijavu:', error);
+                }
+                if (authResult?.ok && this.isOnlineRecoveryEventRelevant(roomId)) {
+                    let nativeVerified = false;
+                    let nativeActive = this.nativeAppActive;
+                    if (appPlugin && typeof appPlugin.getState === 'function') {
+                        try {
+                            const state = await appPlugin.getState();
+                            nativeActive = state?.isActive;
+                            nativeVerified = nativeActive === true;
+                            this.nativeAppActive = nativeActive;
+                        } catch (_) {
+                            nativeActive = null;
+                        }
+                    }
+                    const visible = document.visibilityState === 'visible';
+                    if (visible && (nativeVerified || !appPlugin) &&
+                        this.socket?.connected && this.isOnlineRecoveryEventRelevant(roomId)) {
+                        const resumeSocket = this.socket;
+                        const payload = {
+                            roomId,
+                            lifecycleEpisodeId: this.appLifecycleEpisodeId,
+                            lifecycleSeq: ++this.appLifecycleSequence,
+                            nativeVerified,
+                            nativeActive: typeof nativeActive === 'boolean' ? nativeActive : null,
+                            visibilityState: document.visibilityState || '',
+                            ...this.getConnectionDiagnosticSnapshot()
+                        };
+                        const result = await new Promise(resolve => {
+                            let settled = false;
+                            const timer = setTimeout(() => {
+                                if (!settled) { settled = true; resolve({ ok: false, reason: 'resume_ack_timeout' }); }
+                            }, 2500);
+                            resumeSocket.emit('online_app_resumed', payload, response => {
+                                if (settled) return;
+                                settled = true;
+                                clearTimeout(timer);
+                                resolve(response || { ok: false, reason: 'empty_resume_ack' });
+                            });
+                        });
+                        if (result.ok && this.socket === resumeSocket && this.isOnlineRecoveryEventRelevant(roomId)) {
+                            try {
+                                await this.requestOnlineStateSync(roomId);
+                            } catch (error) {
+                                console.warn('Povratak je potvrđen; ponavljam sinhronizaciju table:', error);
+                                resumeSocket.emit('request_state_sync', { roomId });
+                            }
+                            return true;
+                        }
+                        if (result.reason === 'disconnect_grace_expired' || result.reason === 'room_mismatch') break;
+                    }
+                }
+            }
+            await new Promise(resolve => setTimeout(resolve, 700));
+        }
+
+        if (this.socket?.connected && this.isOnlineRecoveryEventRelevant(roomId)) {
+            this.socket.emit('check_room_status', { roomId });
+        }
+        return false;
+    }
+
     resumeOnlineGame(roomId, options = {}) {
         this.onlineMode = true;
         this.gameActive = true;
@@ -11272,6 +11358,16 @@ class YambApp {
         // 1. DODATO: Palimo "uši" klijenta da bi mogao da čuje odgovor servera!
         this.setupSocketListeners(this.playerName || getFallbackPlayerName());
         
+        if (options.coldStartRecovery === true) {
+            void this.confirmColdStartOnlineResume(roomId, options).catch(error => {
+                console.warn('Povratak u online partiju nije završen:', error);
+                if (this.socket?.connected && this.isOnlineRecoveryEventRelevant(roomId)) {
+                    this.socket.emit('check_room_status', { roomId });
+                }
+            });
+            return;
+        }
+
         // 2. DODATO: Šaljemo serveru koji je roomId za slučaj da postoji mikro-delay
         const doSync = () => {
             this.requestOnlineStateSync(this.roomId);
