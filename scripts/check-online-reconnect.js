@@ -298,6 +298,25 @@ async function run() {
     assert.strictEqual(terminalAlertCount, 4, 'Zatvoren turnirski status mora prikazati završnu poruku');
     assert.strictEqual(terminalCancelCount, 3, 'Zatvoren turnirski status mora ukloniti aktivnu staru sobu');
 
+    const coldPromptResumes = [];
+    terminalApp.gameActive = false;
+    terminalApp.roomId = null;
+    terminalApp.isTournamentOnlineDuel = roomId => roomId.startsWith('tourney_');
+    terminalApp.modal.confirm = async () => true;
+    terminalApp.resumeOnlineGame = (roomId, options) => coldPromptResumes.push({ roomId, options });
+    terminalStorage.set('yamb_active_online_room', 'duel_cold_prompt');
+    await terminalHandlers.room_status_result({ roomId: 'duel_cold_prompt', active: true,
+        disconnectGraceRemainingMs: 17000 });
+    assert.strictEqual(coldPromptResumes[0]?.roomId, 'duel_cold_prompt');
+    assert.strictEqual(coldPromptResumes[0]?.options.coldStartRecovery, true,
+        'Potvrđen povratak iz menija mora pokrenuti hladni foreground handshake');
+    assert.strictEqual(coldPromptResumes[0]?.options.recoveryGraceRemainingMs, 17000);
+    terminalStorage.set('yamb_active_online_room', 'tourney_cold_prompt');
+    await terminalHandlers.room_status_result({ roomId: 'tourney_cold_prompt', active: true,
+        tournament: true, disconnectGraceRemainingMs: 220000 });
+    assert.strictEqual(coldPromptResumes[1]?.options.coldStartRecovery, true,
+        'Automatski turnirski povratak mora koristiti isti potvrđeni handshake');
+
     // A closed room must leave the screen before reward/profile network work.
     const menuEvents = [];
     const menuElement = { classList: { remove() {}, add() {} }, style: {} };
@@ -527,7 +546,7 @@ async function run() {
         console: { log() {}, warn() {} },
         MONGO_URI: '', DISCONNECT_GRACE_MS: 30000, TOURNAMENT_DISCONNECT_GRACE_MS: 300000,
         LIFECYCLE_PROVISIONAL_MS: 2000, LIFECYCLE_FLAP_MERGE_MS: 5000,
-        ghostSessions: lifecycleGhostSessions, disconnectTimers: {}, roomState: {}, playerRooms: {},
+        ghostSessions: lifecycleGhostSessions, disconnectTimers: {}, roomState: {}, playerRooms: {}, onlinePlayers: {},
         recentLifecycleGraceByUid: lifecycleMarkers,
         parseTournamentRoomId: id => id.startsWith('tourney_'),
         isLocalRoomId: id => id.startsWith('local_'),
@@ -564,7 +583,7 @@ async function run() {
     };
     vm.createContext(serverSandbox);
     for (const name of ['isTournamentRoomId', 'getDisconnectGraceMs', 'rememberRoomPresence',
-        'hasForegroundEvidenceForBackgroundGhost',
+        'hasForegroundEvidenceForBackgroundGhost', 'getParticipantIndexForSocketOrUid', 'lifecycleResumeMatchesGhost',
         'resolveDisconnectDiagnostic', 'clearDisconnectGraceForUid', 'clearDisconnectGraceForRoom',
         'scheduleDisconnectGraceTimeout', 'beginReconnectGraceForSocket']) {
         vm.runInContext(extractServerFunction(serverSource, name), serverSandbox);
@@ -779,7 +798,8 @@ async function run() {
         socket: newSocket
     };
     vm.createContext(reboundSandbox);
-    for (const name of ['hasForegroundEvidenceForBackgroundGhost', 'bindVerifiedPlayerSocket', 'reattachSocketToRoomByUid']) {
+    for (const name of ['hasForegroundEvidenceForBackgroundGhost', 'getParticipantIndexForSocketOrUid',
+        'lifecycleResumeMatchesGhost', 'bindVerifiedPlayerSocket', 'reattachSocketToRoomByUid']) {
         vm.runInContext(extractServerFunction(serverSource, name), reboundSandbox);
     }
     assert.strictEqual(reboundSandbox.bindVerifiedPlayerSocket(newSocket, reboundUid), true);
@@ -807,13 +827,100 @@ async function run() {
     assert.strictEqual(reboundSandbox.hasForegroundEvidenceForBackgroundGhost(backgroundGhost, { nativeActive: true, visibilityState: 'visible' }), false);
     assert.strictEqual(reboundSandbox.hasForegroundEvidenceForBackgroundGhost(backgroundGhost, { nativeVerified: true, nativeActive: false }), false);
     assert.strictEqual(reboundSandbox.hasForegroundEvidenceForBackgroundGhost(backgroundGhost, { nativeVerified: true, nativeActive: true }), true);
+    backgroundGhost.clientSnapshot = { lifecycleEpisodeId: 'old-webview-3', lifecycleSeq: 20, nativeActive: false };
+    assert.strictEqual(reboundSandbox.lifecycleResumeMatchesGhost(backgroundGhost, { id: 'socket-impostor' },
+        reboundUid, 'room-rebound', { lifecycleEpisodeId: 'new-webview-1', lifecycleSeq: 1,
+            nativeVerified: true, nativeActive: true }), false,
+    'Samo trenutno verifikovani zamenski socket sme preći granicu nove WebView sesije');
+    assert.strictEqual(reboundSandbox.lifecycleResumeMatchesGhost(backgroundGhost, { id: 'socket-old' },
+        reboundUid, 'room-rebound', { lifecycleEpisodeId: 'new-webview-1', lifecycleSeq: 1,
+            nativeVerified: true, nativeActive: true }), false,
+    'Zastareli događaj sa starog socketa ne sme oporaviti partiju');
     vm.runInContext(serverSource.slice(backgroundHandlerStart, handlerEnd), reboundSandbox);
-    reboundHandlers.online_app_resumed({ roomId: 'room-rebound', visibilityState: 'visible', nativeActive: true });
+    reboundHandlers.online_app_resumed({ roomId: 'room-rebound', visibilityState: 'visible', nativeActive: true,
+        lifecycleEpisodeId: 'new-webview-1', lifecycleSeq: 1 });
     assert.strictEqual(reboundSandbox.ghostSessions[reboundUid], backgroundGhost, 'Resume bez native potvrde ne sme prebaciti igrača');
-    reboundHandlers.online_app_resumed({ roomId: 'room-rebound', nativeVerified: true, nativeActive: true });
+    let coldResumeAck = null;
+    reboundHandlers.online_app_resumed({ roomId: 'room-rebound', nativeVerified: true, nativeActive: true,
+        lifecycleEpisodeId: 'new-webview-1', lifecycleSeq: 1 }, response => { coldResumeAck = response; });
+    assert.strictEqual(coldResumeAck?.ok, true, 'Nova WebView sesija mora dobiti potvrdu serverskog povratka');
     assert.strictEqual(reboundClearCount, 1, 'Tek potvrđen foreground sme poništiti grace');
     assert.strictEqual(reboundSandbox.roomState['room-rebound'].players[0], 'socket-rebound');
     assert.strictEqual(reboundEvents.filter(event => event === 'room:opponent_connection_restored').length, 1);
+    reboundSandbox.ghostSessions[reboundUid] = {
+        roomId: 'room-rebound', oldSocketId: 'socket-old', source: 'app_backgrounded',
+        nativeConfirmed: true, deadlineAt: Date.now() - 1,
+        clientSnapshot: { lifecycleEpisodeId: 'old-webview-4', lifecycleSeq: 10 }
+    };
+    let expiredColdAck = null;
+    reboundHandlers.online_app_resumed({ roomId: 'room-rebound', nativeVerified: true, nativeActive: true,
+        lifecycleEpisodeId: 'new-webview-2', lifecycleSeq: 1 }, response => { expiredColdAck = response; });
+    assert.strictEqual(expiredColdAck?.reason, 'disconnect_grace_expired', 'Istekli grejs ne sme biti produžen ponovnim otvaranjem');
+    assert.strictEqual(reboundClearCount, 1, 'Istekli grejs ne sme biti poništen');
+    assert.strictEqual(reboundEvents.filter(event => event === 'room:opponent_connection_restored').length, 1,
+        'Protivnik ne sme dobiti lažan drugi oporavak');
+
+    const coldClientEvents = [];
+    const coldClientSandbox = {
+        Date, Number, Math, Promise, setTimeout, clearTimeout,
+        document: { visibilityState: 'visible' },
+        window: { Capacitor: { Plugins: { App: { async getState() { return { isActive: true }; } } } } }
+    };
+    vm.createContext(coldClientSandbox);
+    vm.runInContext(extractClassMethod(gameSource, 'confirmColdStartOnlineResume')
+        .replace('async confirmColdStartOnlineResume(', 'async function confirmColdStartOnlineResume('), coldClientSandbox);
+    const coldClient = {
+        socket: { connected: true, emit(event, payload, ack) {
+            coldClientEvents.push({ event, payload });
+            if (event === 'online_app_resumed') ack({ ok: true, roomId: 'room-rebound' });
+        } },
+        roomId: 'room-rebound', gameActive: true, onlineMode: true, isSpectator: false,
+        appLifecycleSessionId: 'new-webview', appLifecycleEpisodeCounter: 0, appLifecycleSequence: 0,
+        isOnlineRecoveryEventRelevant(roomId) { return this.gameActive && this.roomId === roomId; },
+        async authenticateSocketIdentity() { coldClientEvents.push({ event: 'auth' }); return { ok: true }; },
+        getConnectionDiagnosticSnapshot() { return { connectionType: '4g' }; },
+        async requestOnlineStateSync(roomId) { coldClientEvents.push({ event: 'sync', roomId }); return { ok: true }; }
+    };
+    assert.strictEqual(await coldClientSandbox.confirmColdStartOnlineResume.call(coldClient, 'room-rebound',
+        { recoveryGraceRemainingMs: 20000 }), true);
+    assert.strictEqual(coldClientEvents.filter(item => item.event === 'online_app_resumed').length, 1);
+    assert.strictEqual(coldClientEvents.find(item => item.event === 'online_app_resumed').payload.nativeVerified, true);
+    assert.strictEqual(coldClientEvents.find(item => item.event === 'online_app_resumed').payload.lifecycleEpisodeId, 'new-webview-1');
+    assert.strictEqual(coldClientEvents.filter(item => item.event === 'sync').length, 1,
+        'Klijent sme tražiti stanje tek posle potvrđenog povratka u sobu');
+    coldClientEvents.length = 0;
+    coldClient.socket.emit = (event, payload, ack) => {
+        coldClientEvents.push({ event, payload });
+        if (event === 'online_app_resumed') ack({ ok: false, reason: 'disconnect_grace_expired' });
+    };
+    assert.strictEqual(await coldClientSandbox.confirmColdStartOnlineResume.call(coldClient, 'room-rebound',
+        { recoveryGraceRemainingMs: 1000 }), false);
+    assert.strictEqual(coldClientEvents.filter(item => item.event === 'sync').length, 0,
+        'Klijent ne sme tražiti stanje kada server odbije istekli grejs');
+    assert.strictEqual(coldClientEvents.filter(item => item.event === 'check_room_status').length, 1,
+        'Odbijen povratak mora ponovo proveriti konačno stanje sobe');
+
+    let simulatedNow = 0;
+    const hiddenClientEvents = [];
+    const hiddenClientSandbox = {
+        Date: { now() { simulatedNow += 1000; return simulatedNow; } },
+        Number, Math, Promise,
+        setTimeout(callback) { callback(); return 1; }, clearTimeout() {},
+        document: { visibilityState: 'visible' },
+        window: { Capacitor: { Plugins: { App: { async getState() { return { isActive: false }; } } } } }
+    };
+    vm.createContext(hiddenClientSandbox);
+    vm.runInContext(extractClassMethod(gameSource, 'confirmColdStartOnlineResume')
+        .replace('async confirmColdStartOnlineResume(', 'async function confirmColdStartOnlineResume('), hiddenClientSandbox);
+    const hiddenClient = {
+        ...coldClient, appLifecycleEpisodeCounter: 0,
+        socket: { connected: true, emit(event) { hiddenClientEvents.push(event); } }
+    };
+    assert.strictEqual(await hiddenClientSandbox.confirmColdStartOnlineResume.call(hiddenClient, 'room-rebound',
+        { recoveryGraceRemainingMs: 1000 }), false);
+    assert(!hiddenClientEvents.includes('online_app_resumed'),
+        'Vidljiv WebView bez potvrđenog nativnog foreground stanja ne sme vratiti partiju');
+    assert(hiddenClientEvents.includes('check_room_status'));
     assert(serverSource.includes('state.technicalTimeoutInProgress || state.disconnectResolutionInProgress || state.menuExitInProgress'), 'Regularni rezultat nije zaštićen od paralelnog tehničkog ishoda');
     assert(serverSource.includes('state.completionSettlementPromise || state.disconnectResolutionInProgress || state.menuExitInProgress'), 'Timeout poteza nije zaštićen od paralelnog konačnog ishoda');
     assert(serverSource.includes('if (state) state.menuExitInProgress = true;'), 'Napuštanje menija ne zaključava konačni ishod pre asinhronog upisa');
@@ -1246,7 +1353,7 @@ async function run() {
     assert.strictEqual(syncedDrop.opponentReconnectNoticeVisible, true, 'Autoritativni sync duzeg prekida mora odmah biti vidljiv');
     syncedDrop.clearOpponentReconnectGraceCountdown();
 
-    console.log('Online reconnect checks passed: all modes and entry paths, foreground recovery, native background guard, lifecycle and settlement races, per-turn anti-stall budget, timer top-up guard, stale room/timer/event guards, same-socket diagnostic resolution, cleanup outcomes, mutual disconnect fairness, tournament bracket replay, network diagnostics, and reconnect UI.');
+    console.log('Online reconnect checks passed: all modes and entry paths, cold WebView relaunch, foreground recovery, native background guard, lifecycle and settlement races, per-turn anti-stall budget, timer top-up guard, stale room/timer/event guards, same-socket diagnostic resolution, cleanup outcomes, mutual disconnect fairness, tournament bracket replay, network diagnostics, and reconnect UI.');
 }
 
 run().catch(error => {

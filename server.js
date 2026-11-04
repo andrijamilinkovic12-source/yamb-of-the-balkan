@@ -6896,6 +6896,25 @@ function hasForegroundEvidenceForBackgroundGhost(ghost, data = {}) {
     return data.visibilityState === 'visible' && data.nativeActive !== false;
 }
 
+function lifecycleResumeMatchesGhost(ghost, socket, uid, roomId, data = {}) {
+    if (!ghost || ghost.roomId !== roomId) return true;
+    const previousEpisode = String(ghost.clientSnapshot?.lifecycleEpisodeId || '');
+    const incomingEpisode = String(data.lifecycleEpisodeId || '');
+    const previousSeq = Math.max(0, toSafeInt(ghost.clientSnapshot?.lifecycleSeq, 0));
+    const incomingSeq = Math.max(0, toSafeInt(data.lifecycleSeq, 0));
+    const sameEpisode = !previousEpisode || !incomingEpisode || previousEpisode === incomingEpisode;
+    const validOrder = !previousSeq || !incomingSeq || incomingSeq >= previousSeq;
+    if (sameEpisode && validOrder) return true;
+
+    // A relaunched WebView has a new lifecycle sequence. Only the current,
+    // Firebase-verified replacement socket for this room may cross that boundary.
+    const state = roomState[roomId];
+    return !!(ghost.oldSocketId !== socket.id && uid &&
+        onlinePlayers[uid] === socket.id && getSocketUid(socket.id) === uid &&
+        getParticipantIndexForSocketOrUid(state, socket.id, uid) !== -1 &&
+        hasForegroundEvidenceForBackgroundGhost(ghost, data));
+}
+
 function bindVerifiedPlayerSocket(socket, playerId) {
     if (typeof playerId !== 'string' || playerId.length < 20) return false;
 
@@ -10413,20 +10432,15 @@ io.on('connection', (socket) => {
         rememberClientConnectionDiagnosticSnapshot(socket, data);
         const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
         const ghost = uid && ghostSessions[uid];
-        const ghostEpisodeId = String(ghost?.clientSnapshot?.lifecycleEpisodeId || '');
-        const incomingEpisodeId = String(data.lifecycleEpisodeId || '');
-        const ghostLifecycleSeq = Math.max(0, toSafeInt(ghost?.clientSnapshot?.lifecycleSeq, 0));
-        const incomingLifecycleSeq = Math.max(0, toSafeInt(data.lifecycleSeq, 0));
-        const lifecycleEpisodeMatches = !ghostEpisodeId || !incomingEpisodeId || ghostEpisodeId === incomingEpisodeId;
-        const lifecycleOrderValid = !ghostLifecycleSeq || !incomingLifecycleSeq || incomingLifecycleSeq >= ghostLifecycleSeq;
         if (ghost && Date.now() >= toSafeInt(ghost.deadlineAt, Number.MAX_SAFE_INTEGER)) {
             ghost.deadlineExpiredAt = ghost.deadlineExpiredAt || Date.now();
             socket.emit('force_cancel_online', { roomId, reason: 'disconnect_grace_expired' });
             return;
         }
         if (ghost?.roomId === roomId && !hasForegroundEvidenceForBackgroundGhost(ghost, data)) return;
+        if (!lifecycleResumeMatchesGhost(ghost, socket, uid, roomId, data)) return;
         if (ghost?.roomId === roomId && ghost.oldSocketId !== socket.id) {
-            if (!data.foreground || !lifecycleEpisodeMatches || !lifecycleOrderValid ||
+            if (!data.foreground ||
                 !reattachSocketToRoomByUid(socket, roomId, { confirmedForeground: true })) return;
             emitAuthoritativeRoomState(socket, roomId);
             return;
@@ -10434,7 +10448,7 @@ io.on('connection', (socket) => {
         if (!rememberRoomPresence(roomId, socket)) return;
         // Only explicit foreground evidence from the actual player repairs a missed resume.
         // Legacy tournament heartbeats may run in the background and must not cancel grace.
-        if (data.foreground === true && lifecycleEpisodeMatches && lifecycleOrderValid && ghost?.source === 'app_backgrounded' &&
+        if (data.foreground === true && ghost?.source === 'app_backgrounded' &&
             ghost.roomId === roomId && ghost.oldSocketId === socket.id && socket.connected) {
             if (clearDisconnectGraceForUid(uid, roomId)) {
                 io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
@@ -10443,29 +10457,44 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('online_app_resumed', (data = {}) => {
-        if (data.roomId && playerRooms[socket.id] && data.roomId !== playerRooms[socket.id]) return;
+    socket.on('online_app_resumed', (data = {}, ack) => {
+        const reply = (payload) => { if (typeof ack === 'function') ack(payload); };
+        if (data.roomId && playerRooms[socket.id] && data.roomId !== playerRooms[socket.id]) {
+            reply({ ok: false, reason: 'room_mismatch' });
+            return;
+        }
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
         const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
-        if (!uid || !roomId) return;
+        if (!uid || !roomId) {
+            reply({ ok: false, reason: 'auth_or_room_missing' });
+            return;
+        }
 
         const ghost = ghostSessions[uid];
-        const ghostEpisodeId = String(ghost?.clientSnapshot?.lifecycleEpisodeId || '');
-        const incomingEpisodeId = String(data.lifecycleEpisodeId || '');
-        const ghostLifecycleSeq = Math.max(0, toSafeInt(ghost?.clientSnapshot?.lifecycleSeq, 0));
-        const incomingLifecycleSeq = Math.max(0, toSafeInt(data.lifecycleSeq, 0));
-        if (ghostEpisodeId && incomingEpisodeId && ghostEpisodeId !== incomingEpisodeId) return;
-        if (ghostLifecycleSeq && incomingLifecycleSeq && incomingLifecycleSeq < ghostLifecycleSeq) return;
         if (ghost && Date.now() >= toSafeInt(ghost.deadlineAt, Number.MAX_SAFE_INTEGER)) {
             ghost.deadlineExpiredAt = ghost.deadlineExpiredAt || Date.now();
             socket.emit('force_cancel_online', { roomId, reason: 'disconnect_grace_expired' });
+            reply({ ok: false, reason: 'disconnect_grace_expired' });
             return;
         }
-        if (ghost?.roomId === roomId && !hasForegroundEvidenceForBackgroundGhost(ghost, data)) return;
+        if (ghost?.roomId === roomId && !hasForegroundEvidenceForBackgroundGhost(ghost, data)) {
+            reply({ ok: false, reason: 'foreground_not_verified' });
+            return;
+        }
+        if (!lifecycleResumeMatchesGhost(ghost, socket, uid, roomId, data)) {
+            reply({ ok: false, reason: 'stale_lifecycle' });
+            return;
+        }
         const reboundFromBackground = !!(ghost?.roomId === roomId && ghost.oldSocketId !== socket.id);
         if (reboundFromBackground) {
-            if (!reattachSocketToRoomByUid(socket, roomId, { confirmedForeground: true })) return;
-        } else if (!rememberRoomPresence(roomId, socket)) return;
+            if (!reattachSocketToRoomByUid(socket, roomId, { confirmedForeground: true })) {
+                reply({ ok: false, reason: 'room_reattach_failed' });
+                return;
+            }
+        } else if (!rememberRoomPresence(roomId, socket)) {
+            reply({ ok: false, reason: 'room_not_active' });
+            return;
+        }
 
         rememberClientConnectionDiagnosticSnapshot(socket, data);
         const restored = reboundFromBackground ? false : clearDisconnectGraceForUid(uid, roomId);
@@ -10476,6 +10505,9 @@ io.on('connection', (socket) => {
         const state = roomState[roomId];
         if (state && !state.gameFinished && playerRooms[socket.id] === roomId) {
             emitAuthoritativeRoomState(socket, roomId);
+            reply({ ok: true, roomId });
+        } else {
+            reply({ ok: false, reason: 'room_not_active' });
         }
     });
 
