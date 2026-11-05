@@ -317,6 +317,20 @@ async function run() {
     assert.strictEqual(coldPromptResumes[1]?.options.coldStartRecovery, true,
         'Automatski turnirski povratak mora koristiti isti potvrđeni handshake');
 
+    terminalApp.gameActive = true;
+    terminalApp.roomId = 'duel_cold_closed';
+    terminalStorage.set('yamb_active_online_room', terminalApp.roomId);
+    await terminalHandlers.room_status_result({ roomId: terminalApp.roomId, active: false });
+    assert.strictEqual(terminalCancelCount, 3, 'Neaktivan status ne sme zatvoriti već nastavljenu partiju');
+    terminalApp.coldStartRecoveryRoomId = terminalApp.roomId;
+    const lateConfirmation = terminalHandlers.room_status_result({ roomId: terminalApp.roomId, active: false });
+    assert.strictEqual(terminalCancelCount, 4, 'Zatvorena soba mora prekinuti nepotvrđeni povratak');
+    assert.strictEqual(terminalAlertCount, 5, 'Istek posle potvrde povratka mora odmah prikazati obaveštenje');
+    assert.strictEqual(terminalApp.coldStartRecoveryRoomId, '', 'Zatvorena soba više ne sme da se oporavlja');
+    assert.strictEqual(terminalStorage.has('yamb_active_online_room'), false);
+    resolveTerminalRefresh();
+    await lateConfirmation;
+
     // A closed room must leave the screen before reward/profile network work.
     const menuEvents = [];
     const menuElement = { classList: { remove() {}, add() {} }, style: {} };
@@ -859,6 +873,13 @@ async function run() {
     assert.strictEqual(reboundClearCount, 1, 'Istekli grejs ne sme biti poništen');
     assert.strictEqual(reboundEvents.filter(event => event === 'room:opponent_connection_restored').length, 1,
         'Protivnik ne sme dobiti lažan drugi oporavak');
+    delete reboundSandbox.ghostSessions[reboundUid];
+    delete reboundSandbox.roomState['room-rebound'];
+    let closedColdAck = null;
+    reboundHandlers.online_app_resumed({ roomId: 'room-rebound', nativeVerified: true, nativeActive: true },
+        response => { closedColdAck = response; });
+    assert.strictEqual(closedColdAck?.reason, 'room_closed', 'Potvrda posle zatvaranja sobe mora vratiti konačni odgovor');
+    assert.strictEqual(reboundClearCount, 1, 'Zatvorena soba ne sme pokrenuti još jedan oporavak');
 
     const coldClientEvents = [];
     const coldClientSandbox = {
@@ -874,7 +895,7 @@ async function run() {
             coldClientEvents.push({ event, payload });
             if (event === 'online_app_resumed') ack({ ok: true, roomId: 'room-rebound' });
         } },
-        roomId: 'room-rebound', gameActive: true, onlineMode: true, isSpectator: false,
+        roomId: 'room-rebound', coldStartRecoveryRoomId: 'room-rebound', gameActive: true, onlineMode: true, isSpectator: false,
         appLifecycleSessionId: 'new-webview', appLifecycleEpisodeCounter: 0, appLifecycleSequence: 0,
         isOnlineRecoveryEventRelevant(roomId) { return this.gameActive && this.roomId === roomId; },
         async authenticateSocketIdentity() { coldClientEvents.push({ event: 'auth' }); return { ok: true }; },
@@ -888,15 +909,19 @@ async function run() {
     assert.strictEqual(coldClientEvents.find(item => item.event === 'online_app_resumed').payload.lifecycleEpisodeId, 'new-webview-1');
     assert.strictEqual(coldClientEvents.filter(item => item.event === 'sync').length, 1,
         'Klijent sme tražiti stanje tek posle potvrđenog povratka u sobu');
+    assert.strictEqual(coldClient.coldStartRecoveryRoomId, '', 'Potvrđen povratak više ne čeka ishod provere sobe');
     coldClientEvents.length = 0;
+    coldClient.coldStartRecoveryRoomId = 'room-rebound';
     coldClient.socket.emit = (event, payload, ack) => {
         coldClientEvents.push({ event, payload });
-        if (event === 'online_app_resumed') ack({ ok: false, reason: 'disconnect_grace_expired' });
+        if (event === 'online_app_resumed') ack({ ok: false, reason: 'room_closed' });
     };
     assert.strictEqual(await coldClientSandbox.confirmColdStartOnlineResume.call(coldClient, 'room-rebound',
         { recoveryGraceRemainingMs: 1000 }), false);
     assert.strictEqual(coldClientEvents.filter(item => item.event === 'sync').length, 0,
         'Klijent ne sme tražiti stanje kada server odbije istekli grejs');
+    assert.strictEqual(coldClientEvents.filter(item => item.event === 'online_app_resumed').length, 1,
+        'Definitivno zatvorena soba ne sme ponavljati pokušaj povratka');
     assert.strictEqual(coldClientEvents.filter(item => item.event === 'check_room_status').length, 1,
         'Odbijen povratak mora ponovo proveriti konačno stanje sobe');
 

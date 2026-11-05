@@ -10477,6 +10477,11 @@ io.on('connection', (socket) => {
             reply({ ok: false, reason: 'disconnect_grace_expired' });
             return;
         }
+        const state = roomState[roomId];
+        if (!state || state.gameFinished) {
+            reply({ ok: false, reason: 'room_closed' });
+            return;
+        }
         if (ghost?.roomId === roomId && !hasForegroundEvidenceForBackgroundGhost(ghost, data)) {
             reply({ ok: false, reason: 'foreground_not_verified' });
             return;
@@ -10502,7 +10507,6 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
         }
 
-        const state = roomState[roomId];
         if (state && !state.gameFinished && playerRooms[socket.id] === roomId) {
             emitAuthoritativeRoomState(socket, roomId);
             reply({ ok: true, roomId });
