@@ -134,7 +134,7 @@
     <link rel="stylesheet" href="theme-game-header.css?v=6">
     <link rel="stylesheet" href="theme-quote-contrast.css?v=1">
     <link rel="stylesheet" href="theme-daily-room.css?v=4">
-    <link rel="stylesheet" href="theme-settings-room.css?v=5">
+    <link rel="stylesheet" href="theme-settings-room.css?v=6">
     <link rel="stylesheet" href="theme-statistics-room.css?v=5">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=9">
     <link rel="stylesheet" href="theme-online-random-room.css?v=4">
@@ -1042,7 +1042,7 @@
         </style>
     </div>
 
-    <div id="settings-screen" class="screen">
+    <div id="settings-screen" class="screen settings-fit">
         <div class="hs-card modal-box settings-shell">
             <div class="chat-header global-chat-header settings-card-header">
                 <div class="global-chat-title-group">
@@ -1069,31 +1069,33 @@
                             <span id="auth-user-info" data-lang="settings_not_logged_in" class="settings-account-name">Niste prijavljeni</span>
                         </div>
                     </div>
-                    <button id="btn-google-logout" class="btn-menu btn-secondary settings-logout-btn" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
+                    <div class="settings-account-actions">
+                        <button id="btn-google-logout" class="btn-menu btn-secondary settings-logout-btn" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
+                        <button id="delete-account-button" class="settings-delete-account" type="button" onclick="window.yambAccountPrivacy?.begin()" data-lang="settings_delete_account" disabled>Obriši nalog</button>
+                    </div>
                 </div>
-                <button id="delete-account-button" class="settings-delete-account" type="button" onclick="window.yambAccountPrivacy?.begin()" data-lang="settings_delete_account" disabled>Obriši nalog</button>
             </div>
 
-            <div class="settings-section">
+            <div class="settings-section settings-audio-section">
                 <span class="settings-section-title" data-lang="settings_sound_haptics">Zvuk i Haptika</span>
                 
-                <div class="settings-row">
+                <label class="settings-row">
                     <span class="settings-row-label settings-row-label-with-icon"><span data-lang="settings_sound">Zvučni efekti</span></span>
                     <input type="checkbox" id="setting-sound" class="settings-checkbox" onchange="app.saveSettingAuto('sound', this.checked)">
-                </div>
+                </label>
 
-                <div class="settings-row">
+                <label class="settings-row">
                     <span class="settings-row-label settings-row-label-with-icon"><span data-lang="settings_music">Muzika</span></span>
                     <input type="checkbox" id="setting-music" class="settings-checkbox" onchange="app.saveSettingAuto('music', this.checked)">
-                </div>
+                </label>
 
-                <div class="settings-row">
+                <label class="settings-row">
                     <span class="settings-row-label settings-row-label-with-icon"><span data-lang="set_vibration">Vibracija</span></span>
                     <input type="checkbox" id="setting-vibration" class="settings-checkbox" onchange="app.saveSettingAuto('vibration', this.checked)">
-                </div>
+                </label>
             </div>
 
-            <div class="settings-section settings-section-last">
+            <div class="settings-section settings-section-last settings-display-section">
                 <span class="settings-section-title settings-section-title-with-icons"><img class="settings-theme-icon" data-settings-role="display-theme" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_display_lang">Prikaz i Jezik</span><img class="settings-theme-icon" data-settings-role="language" alt="" aria-hidden="true" decoding="async"></span>
                 
                 <select id="setting-theme" class="modal-input settings-input settings-select" tabindex="-1" aria-hidden="true" onchange="app.saveSettingAuto('theme', this.value)">
@@ -1120,6 +1122,7 @@
                 </div>
             </div>
 
+            <div class="settings-privacy-footer">
             <div class="settings-legal-row">
                 <span role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link"><img class="settings-theme-icon" data-settings-role="terms" alt="" aria-hidden="true" decoding="async"><span data-lang="settings_terms_label">Uslovi</span></span>
                 <span class="settings-legal-divider">|</span>
@@ -1127,6 +1130,7 @@
             </div>
             <button id="ad-privacy-options" type="button" class="settings-ad-privacy-options" onclick="window.adMobGlobal?.showPrivacyOptions()" data-lang="settings_ad_privacy_options" hidden>Izbori privatnosti za oglase</button>
             <button id="analytics-privacy-options" type="button" class="settings-ad-privacy-options" onclick="window.yambAnalyticsPrivacy?.openChoices()" hidden>Analitika korišćenja: isključena</button>
+            </div>
             </div>
         </div>
         <div id="settings-theme-overlay" class="settings-theme-overlay" hidden>

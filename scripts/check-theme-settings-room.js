@@ -72,7 +72,7 @@ for (const id of ['setting-name','setting-sound','setting-music','setting-vibrat
     assert.ok(settings.includes(`id="${id}"`), `Missing functional Settings control ${id}`);
 for (const role of ['sound','music','vibration'])
     assert.ok(text('www/theme-game-header.js').includes(`['setting-${role}', '${role}']`));
-assert.ok(html.includes('theme-settings-room.css?v=5'));
+assert.ok(html.includes('theme-settings-room.css?v=6'));
 assert.ok(html.includes('theme-settings-room.js?v=5'));
 assert.ok(html.includes('theme-settings-picker.js?v=2'));
 assert.ok(settings.includes('id="settings-theme-trigger"'));
@@ -84,17 +84,17 @@ assert.ok(settingsCss.includes('background:var(--theme-room-close-image) center 
     'Theme picker must use the canonical themed close PNG');
 assert.ok(settingsCss.includes('flex:0 0 44px; width:44px; height:44px'),
     'Theme picker close target must be 44 CSS px');
-for (const [selector, declaration] of [
-    ['#settings-screen .settings-section-title', 'font-size:clamp(.98rem,3.6vw,1.08rem)'],
-    ['#settings-screen .settings-row-label', 'font-size:.9rem'],
-    ['#settings-screen .settings-header-title', 'font-size:clamp(1.05rem,4.2vw,1.22rem)']
-]) assert.ok(settingsCss.includes(selector) && settingsCss.includes(declaration),
-    `Settings type scale must match Green: ${selector}`);
+for (const declaration of ['font-size:.82rem !important','font-size:.72rem !important','font-size:1.05rem !important'])
+    assert.ok(settingsCss.includes(declaration), 'Shared compact Settings type scale missing');
+assert.ok(settings.includes('class="screen settings-fit"') && settings.includes('settings-account-actions') &&
+    settings.includes('settings-privacy-footer'), 'Settings additions must use the shared one-screen layout');
+assert.equal((settings.match(/<label class="settings-row">/g) || []).length, 3,
+    'The full sound/music/vibration tiles must toggle their associated control');
 assert.ok(settingsCss.includes('padding:max(16px,env(safe-area-inset-top))') &&
     settingsCss.includes('max(16px,env(safe-area-inset-bottom))'),
     'Theme picker must respect phone safe areas');
-assert.ok(text('www/style.css').includes('#settings-screen .settings-card-body') &&
-    text('www/style.css').includes('overflow-y: auto;'), 'Settings content must remain reachable on short screens');
+assert.ok(settingsCss.includes('#settings-screen#settings-screen.settings-fit .settings-shell .settings-card-body') &&
+    settingsCss.includes('gap:8px !important; overflow:hidden'), 'Main Settings body must use the compact one-screen layout');
 const introConfig = text('www/config.js');
 const introGame = text('www/game.js');
 assert.ok(/ROOM_INTRO_TIMING\s*=\s*Object\.freeze\(\{\s*openAtMs:\s*2400,\s*durationMs:\s*3200\s*\}\)/.test(introConfig));

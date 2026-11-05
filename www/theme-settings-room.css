@@ -279,3 +279,114 @@ body .custom-toast.settings-theme-load-toast :is(.toast-title,.toast-msg) {
 }
 .settings-delete-account:disabled { opacity: .5; cursor: default; }
 .settings-delete-account:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Account/privacy additions share the existing room, without a scrolling body.
+   Geometry is identical across all ten materials; palette tokens stay themed. */
+#settings-screen#settings-screen#settings-screen.settings-fit .settings-shell { border-width:1px !important; }
+#settings-screen#settings-screen.settings-fit {
+    padding-top:max(10px,var(--safe-top,0px),env(safe-area-inset-top,0px));
+    padding-bottom:max(12px,var(--safe-bottom,0px),env(safe-area-inset-bottom,0px));
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-card-header {
+    flex:0 0 52px; min-height:52px !important; padding:4px 12px;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-card-body {
+    display:flex; flex-direction:column; justify-content:space-evenly;
+    padding:10px 12px !important; gap:8px !important; overflow:hidden;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-section {
+    flex:0 0 auto; padding-bottom:8px !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-section-last { padding-bottom:0 !important; }
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-section-title {
+    font-family:'Montserrat',sans-serif !important; font-size:.82rem !important;
+    line-height:1.25 !important; font-weight:800 !important; letter-spacing:0 !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell :is(.settings-header-title,.settings-section-title,.settings-row-label,.settings-account-name,.settings-legal-link) {
+    color:var(--settings-picker-ink) !important; text-shadow:none !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-header-title {
+    font-family:'Montserrat',sans-serif !important; font-size:1.05rem !important;
+    font-weight:850 !important; line-height:1.2 !important; letter-spacing:.025em !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-input {
+    min-height:40px !important; height:40px; padding:7px 10px !important; margin-top:6px !important;
+    font-family:'Montserrat',sans-serif !important; font-size:.9rem !important;
+    font-weight:700 !important; text-shadow:none !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-account-card {
+    display:grid; grid-template-columns:minmax(0,1fr); gap:4px;
+    margin-top:6px !important; padding:6px 8px !important; min-height:0 !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-account-info { justify-content:center; }
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-account-name {
+    font-family:'Montserrat',sans-serif !important; font-size:.82rem !important;
+    font-weight:800 !important; line-height:1.2 !important;
+}
+#settings-screen#settings-screen.settings-fit :is(.settings-avatar,.settings-avatar-fallback) { width:26px; height:26px; }
+#settings-screen#settings-screen.settings-fit .settings-account-actions {
+    display:flex; justify-content:center; align-items:center; gap:8px; min-width:0;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell :is(.settings-logout-btn,.settings-delete-account) {
+    width:auto; max-width:none; min-height:36px; margin:0; padding:6px 12px;
+    border-radius:10px; font-family:'Montserrat',sans-serif; font-size:.75rem;
+    font-weight:800; line-height:1.2; transform:none !important;
+    color:var(--settings-picker-ink) !important; background:var(--settings-picker-raised) !important;
+    border:1px solid var(--settings-picker-line) !important;
+    box-shadow:inset 0 1px 0 color-mix(in srgb,var(--settings-picker-ink) 16%,transparent),0 2px 4px #0002 !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-delete-account {
+    border-style:dashed !important; text-decoration:underline; text-underline-offset:3px;
+}
+#settings-screen#settings-screen.settings-fit .settings-audio-section {
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:6px; row-gap:6px;
+}
+#settings-screen#settings-screen.settings-fit .settings-audio-section >.settings-section-title { grid-column:1/-1; }
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-audio-section .settings-row {
+    display:flex; flex-direction:column; justify-content:center; gap:2px;
+    min-height:70px !important; margin:0 !important; padding:4px !important; cursor:pointer;
+}
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-row-label {
+    font-family:'Montserrat',sans-serif !important; font-size:.72rem !important;
+    font-weight:800 !important; line-height:1.2 !important; letter-spacing:0 !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-row-label-with-icon {
+    gap:3px; min-height:28px; justify-content:center; text-align:center;
+}
+#settings-screen#settings-screen.settings-fit .settings-standard-icon { width:20px; height:20px; flex-basis:20px; }
+#settings-screen#settings-screen.settings-fit .settings-checkbox {
+    width:32px; height:28px; margin:0; transform:none;
+}
+#settings-screen#settings-screen.settings-fit .settings-display-section {
+    display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:8px; row-gap:6px;
+}
+#settings-screen#settings-screen.settings-fit .settings-display-section >.settings-section-title { grid-column:1/-1; }
+#settings-screen#settings-screen.settings-fit .settings-theme-trigger { height:44px; min-height:44px; margin:0; padding:3px 8px; gap:6px; }
+#settings-screen#settings-screen.settings-fit .settings-theme-trigger-copy strong { font-size:.76rem; }
+#settings-screen#settings-screen.settings-fit .settings-language-row { gap:4px; margin:0; }
+#settings-screen#settings-screen.settings-fit .settings-shell .settings-language-btn {
+    min-height:44px !important; padding:5px !important; font-size:.72rem !important;
+}
+#settings-screen#settings-screen.settings-fit .settings-privacy-footer {
+    display:grid; flex:0 0 auto; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 8px;
+}
+#settings-screen#settings-screen.settings-fit .settings-legal-row {
+    grid-column:1/-1; align-items:center; margin:0; padding:0; min-height:30px;
+}
+#settings-screen#settings-screen.settings-fit .settings-legal-link { min-height:30px; font-size:.72rem; }
+#settings-screen#settings-screen.settings-fit .settings-ad-privacy-options {
+    min-width:0; width:100%; min-height:44px; margin:0; padding:4px;
+    color:var(--settings-picker-ink) !important; font-family:'Montserrat',sans-serif;
+    font-size:.72rem; font-weight:700; line-height:1.25; text-wrap:balance;
+    border-radius:8px;
+}
+#settings-screen#settings-screen.settings-fit .settings-ad-privacy-options:focus-visible {
+    outline:2px solid var(--settings-picker-accent); outline-offset:-2px;
+}
+@media (max-height:700px) {
+    #settings-screen#settings-screen.settings-fit .settings-shell .settings-card-body { padding:6px 10px !important; gap:5px !important; }
+    #settings-screen#settings-screen.settings-fit .settings-shell .settings-card-header { flex-basis:46px; min-height:46px !important; }
+    #settings-screen#settings-screen.settings-fit .settings-shell .settings-section { padding-bottom:5px !important; }
+    #settings-screen#settings-screen.settings-fit .settings-shell .settings-audio-section .settings-row { min-height:62px !important; }
+    #settings-screen#settings-screen.settings-fit .settings-shell .settings-section-title { font-size:.76rem !important; }
+}
