@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '..');
 const www = path.join(root, 'www');
 const greenRoot = path.join(www, 'assets', 'green-soft-clay');
 const output = path.join(root, 'docs', 'theme-asset-role-catalog.json');
-const background = 'assets/green-clay-balkan-diorama-v4.png';
+const background = 'assets/green-clay-balkan-diorama-v5.png';
 
 function walk(directory) {
     return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {

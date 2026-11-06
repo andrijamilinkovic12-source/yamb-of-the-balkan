@@ -58,7 +58,7 @@ vm.runInNewContext(fs.readFileSync('www/theme-settings-picker.js','utf8'),
 
 const picker = window.themeSettingsPicker;
 for (const theme of ids)
-    assert.equal(picker.previewSource(theme), `assets/treasury-theme-previews/${theme}-v1.png`);
+    assert.equal(picker.previewSource(theme), `assets/treasury-theme-previews/${theme}-v${theme === 'dark' ? 2 : 1}.png`);
 picker.open();
 assert.equal(syncCount, 1);
 assert.equal(elements['settings-theme-overlay'].hidden, false);

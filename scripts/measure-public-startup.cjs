@@ -5,7 +5,7 @@ const html=fs.readFileSync(path.join(root,'www/index.html'),'utf8');
 const refs=[...html.matchAll(/(?:src|href)="([^"\s]+\.(?:js|css)(?:\?[^"\s]*)?)"/g)].map(x=>x[1]).filter(x=>!/^https?:/.test(x)&&fs.existsSync(path.join(root,'www',x.split('?')[0])));
 const inventory=[...new Set(refs)].map(url=>({url,bytes:fs.statSync(path.join(root,'www',url.split('?')[0])).size}));
 const versioned=file=>refs.find(x=>x.split('?')[0]===file)||file;
-const samples=['',versioned('teme.css'),versioned('style.css'),versioned('game.js'),versioned('managers.js'),versioned('theme-game-header.js'),versioned('theme-settings-room.js'),'assets/green-clay-balkan-diorama-v4.png','assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'];
+const samples=['',versioned('teme.css'),versioned('style.css'),versioned('game.js'),versioned('managers.js'),versioned('theme-game-header.js'),versioned('theme-settings-room.js'),'assets/green-clay-balkan-diorama-v5.png','assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'];
 async function main(){
  const rows=[];
  for(let pass=1;pass<=2;pass++){

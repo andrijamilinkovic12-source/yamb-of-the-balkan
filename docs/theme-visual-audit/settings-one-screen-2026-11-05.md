@@ -1,5 +1,7 @@
 # Podešavanja: jedan ekran posle dodataka za nalog i analitiku
 
+Naknadna dorada: oba dugmeta naloga prikazuju velika slova. OBRIŠI NALOG koristi obrnut svetli/tamni par palete teme, pa se jasno razlikuje od odjave. Minimalni kontrast novog para je 7,55:1. Footer sada automatski centrira jedinu vidljivu opciju preko cele širine; ako su prisutne obe opcije, svaka je centrirana u svojoj polovini. Provera je proširena na **320/320 PASS**: prethodnih 80 kombinacija × oba privacy dugmeta / samo analitika isključena / uključena / čeka povezivanje. Koriste se stvarni tekstovi iz analytics-privacy.js; saglasnosti i funkcije naloga nisu menjane. Ova dorada još nije komitovana ni objavljena; prethodni raspored je već objavljen commitom 5f5f3314.
+
 Osnovna soba u svih deset tema koristi isti kompaktan raspored. Profil i dve akcije naloga su u zajedničkoj kartici; brisanje je sekundarna, manja akcija u paleti tekuće teme. Zvuk, muzika i vibracija su tri kartice u jednom redu, sa celom površinom kartice kao labelom prekidača. Izbor teme i jezici dele sledeći red. Uslovi, privatnost, privatnost oglasa i analitika su u podnožju.
 
 Kanonski PNG, logika naloga, potvrde brisanja, saglasnosti i prava izbora tema ostaju postojeći. Nisu potrebni novi PNG za ovu promenu rasporeda. Tema zadržava svoj materijal, boje, senke i DNK; fontovi su jednake veličine na istom viewportu. Osnovna soba nema vertikalni skrol. Zasebni modal izbora teme zadržava svoju listu.

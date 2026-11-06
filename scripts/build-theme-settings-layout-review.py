@@ -23,7 +23,7 @@ syncThemeSelectOptions(select){for(const option of select.options)option.disable
 select.value=qaThemes.find(id=>id!=='dark'&&document.body.classList.contains(id+'-theme'))||'dark';}};
 window.setLanguage=lang=>{document.documentElement.lang=lang;window.dispatchEvent(new Event('yamb:languageChanged'))};</script>
 ''' + settings + '''<span class="settings-review-note">Pregled izgleda · sve teme dostupne samo u pregledu</span>
-<script src="theme-game-header.js"></script><script src="theme-settings-room.js"></script><script src="theme-settings-picker.js?v=2"></script>
+<script src="theme-game-header.js"></script><script src="theme-settings-room.js"></script><script src="theme-settings-picker.js?v=3"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{window.app.syncThemeSelectOptions(document.getElementById('setting-theme'));
 document.getElementById('auth-user-info').textContent='Primer igrača';
 document.getElementById('btn-google-logout').style.display='block';

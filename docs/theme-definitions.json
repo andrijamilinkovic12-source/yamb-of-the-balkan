@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 102,
+  "schemaVersion": 103,
   "updatedOn": "2026-11-05",
   "startupLosslessPngVerification20261101": {
     "finding": "R41",
@@ -558,6 +558,7 @@
     "layout": "Postojece kontrole u zaglavlju ostaju 34 x 34 CSS px, komande u brzom meniju 40 x 40 CSS px, a muzicka komanda 30 x 30 CSS px. Tajmer zadrzava postojeci visinski i maksimalni sirinski okvir. Novi PNG su vizuelni slojevi u tim istim zonama; avatar i zivi tekst ostaju dinamicki."
   },
   "settingsRoomRules": {
+    "accountActionAndPrivacyAlignment": "Dorada 2026-11-05: ODJAVI SE i OBRIŠI NALOG koriste ista velika slova, font i visinu 36 px. Brisanje koristi obrnut par postojećih paletnih boja: settings-picker-ink kao podlogu i settings-picker-surface kao tekst, radi jasnog razlikovanja od odjave bez dodavanja nove boje ili kiča. Analitika je centrirana horizontalno i vertikalno u svojoj zoni; kada je jedina vidljiva opcija privatnosti zauzima punu širinu podnožja. Ako su obe opcije prisutne, dele red na dve jednake zone. On/off/waiting tekstovi i postojeća logika ostaju isti. Provera: 320/320 kombinacija svih deset tema, dva jezika, četiri viewporta i četiri stanja podnožja; minimalni kontrast dugmeta brisanja 7,55:1, bez skrola.",
     "scope": "Podešavanja imaju isti raspored, dimenzije kartice, redova, kontrola, tipografije i klik zona kao referentna Green tema u svih deset tema. Devet ostalih tema menjaju samo materijal i paletu prema sopstvenom DNK i pravcu.",
     "assetCatalog": "source-assets/theme-settings-room-v2/manifest.json",
     "pngAssets": "Za svaku od devet tema postoji pet posebno generisanih transparentnih PNG ikona: profil, prikaz teme, jezik, uslovi i privatnost. Vaskrsnja, Pustinjsko Staklo i Severna Maglina koriste nove v2 fajlove umesto ranijih settings PNG ikona. Zelena zadrzava svoje kanonske v1 PNG ikone. Ikona naslova sobe je postojeća kanonska settings-room-identity ikona za svaku temu.",
@@ -1284,7 +1285,10 @@
         "silhouette": "Samostalna dvoredna glinena slova bez oblacica, ploce ili drugog nosaca."
       },
       "visualIdentity": {
-        "background": "Postojeci originalni sumski glineni diorama pejzaz sa prednjim planom, brdima, puteljkom i mirnijom zonom iza menija i table; zakljucana referenca za zivopisnost, ne sablon za kopiranje.",
+        "background": "Sumski glineni diorama pejzaz sa brdima, crkvom, puteljkom i mirnijom zonom iza menija i table. Na livadi u prednjem planu uklonjeno je pet ukrasnih kockica.",
+        "backgroundAsset": "www/assets/green-clay-balkan-diorama-v5.png",
+        "backgroundMaster": "source-assets/green-soft-clay-hires/green-clay-balkan-diorama-no-dice-v1.png",
+        "backgroundPreview": "www/assets/treasury-theme-previews/dark-v2.png",
         "palette": [
           "sumska zelena",
           "topla slonovaca",

@@ -148,9 +148,9 @@ assert(classifications.stagedCanonical.length === 1, `Očekivan je jedan novi ka
 
 const activeBackground = path.join(www, themeManifest.background);
 assert(themeManifest.status === 'complete' && themeManifest.version === 63, 'Green theme manifest status ili cache verzija odstupa.');
-assert(themeManifest.background === 'assets/green-clay-balkan-diorama-v4.png' && fs.existsSync(activeBackground), 'Aktivna Green pozadina nije v4 runtime.');
+assert(themeManifest.background === 'assets/green-clay-balkan-diorama-v5.png' && fs.existsSync(activeBackground), 'Aktivna Green pozadina nije v5 runtime.');
 const activeBackgroundInfo = pngInfo(activeBackground);
-assert(activeBackgroundInfo.width === 941 && activeBackgroundInfo.height === 1672 && activeBackgroundInfo.bytes === 1864586, 'Aktivna Green v4 pozadina ima neočekivane metapodatke.');
+assert(activeBackgroundInfo.width === 941 && activeBackgroundInfo.height === 1672 && activeBackgroundInfo.bytes === 1636760, 'Aktivna Green v5 pozadina ima neočekivane metapodatke.');
 assert(themeManifest.foundationManifest === 'source-assets/green-soft-clay-canonical/theme-foundation/manifest.json' && foundationManifest.status === 'locked', 'Green foundation manifest nije povezan ili zaključan.');
 assert(foundationManifest.integration?.cacheVersion === 59 && foundationManifest.integration?.finalAudit === 'locked by scripts/check-green-asset-coverage.js', 'Green foundation integracija ili final-audit status odstupa.');
 for (const asset of foundationManifest.active) {
@@ -163,15 +163,15 @@ for (const asset of foundationManifest.active) {
     assert(sha256 === asset.sha256, `Green foundation SHA-256 odstupa: ${asset.runtime}`);
 }
 const rollbackBackground = foundationManifest.rollbackBackground;
-assert(rollbackBackground?.runtime === 'www/assets/green-clay-balkan-diorama-v3.png', 'Nedostaje povratna Green v3 pozadina.');
+assert(rollbackBackground?.runtime === 'www/assets/green-clay-balkan-diorama-v4.png', 'Nedostaje povratna Green v4 pozadina.');
 const rollbackFile = path.join(root, rollbackBackground.runtime);
-assert(fs.existsSync(rollbackFile), 'Povratna Green v3 pozadina nije sačuvana.');
+assert(fs.existsSync(rollbackFile), 'Povratna Green v4 pozadina nije sačuvana.');
 const rollbackInfo = pngInfo(rollbackFile);
 assert(JSON.stringify([rollbackInfo.width, rollbackInfo.height]) === JSON.stringify(rollbackBackground.size)
     && rollbackInfo.bytes === rollbackBackground.bytes && rollbackInfo.colorType === rollbackBackground.colorType,
-    'Povratna Green v3 pozadina ima neočekivane metapodatke.');
+    'Povratna Green v4 pozadina ima neočekivane metapodatke.');
 assert(require('crypto').createHash('sha256').update(fs.readFileSync(rollbackFile)).digest('hex') === rollbackBackground.sha256,
-    'Povratna Green v3 pozadina je izmenjena.');
+    'Povratna Green v4 pozadina je izmenjena.');
 
 const retiredBackgrounds = foundationManifest.retiredRuntime;
 const productionSource = walkFiles(www)

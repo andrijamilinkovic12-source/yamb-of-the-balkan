@@ -14,9 +14,21 @@ assert(start >= 0 && end > start, 'SHOP_DATA section missing');
 const shop = vm.runInNewContext(`${config.slice(start, end)};SHOP_DATA`, {});
 const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
 const managerSource = read('www/managers.js');
+const themePreviewStart = managerSource.indexOf('    getTreasuryThemePreviewSource(');
 const previewStart = managerSource.indexOf('    getTreasuryEffectPreviewSource(');
 const previewEnd = managerSource.indexOf('    getTreasuryRewardVideoIcon()', previewStart);
 assert(previewStart >= 0 && previewEnd > previewStart, 'Treasury effect preview method missing');
+assert(themePreviewStart >= 0 && themePreviewStart < previewStart, 'Treasury theme preview method missing');
+const themePreviewSource = vm.runInNewContext(`({${managerSource.slice(themePreviewStart, previewStart)}}).getTreasuryThemePreviewSource`);
+const settingsWindow = {};
+vm.runInNewContext(read('www/theme-settings-picker.js'), {
+    window: settingsWindow,
+    document: { readyState: 'loading', addEventListener() {} }
+});
+for (const theme of themes) {
+    assert.equal(themePreviewSource(theme), settingsWindow.themeSettingsPicker.previewSource(theme),
+        `Treasury and Settings must show the same ${theme} preview`);
+}
 let activeTheme = 'dark';
 const previewSource = new Function('localStorage', 'YAMB_THEME_IDS',
     `return ({${managerSource.slice(previewStart, previewEnd)}}).getTreasuryEffectPreviewSource;`)(
@@ -102,7 +114,7 @@ for (const theme of themes) {
     add('reward-video/inline', `${canonical}/rewarded-video/rewarded-video-active-inline-v${rewardVersion}.png`);
     add('ducat', `${canonical}/ducat/ducat-inline-v${rewardVersion}.png`);
     for (const item of shop.SKINS) add(`skin/${item.id}`, `assets/treasury-skin-previews/${item.id}-face-v1.png`, false);
-    for (const item of shop.THEMES) add(`theme-preview/${item.id}`, `assets/treasury-theme-previews/${item.id}-v1.png`, false);
+    for (const item of shop.THEMES) add(`theme-preview/${item.id}`, themePreviewSource(item.id), false);
     add('close', `${canonical}/room-controls/close-v1.png`);
 
     if (theme !== 'dark') {

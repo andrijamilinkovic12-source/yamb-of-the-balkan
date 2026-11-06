@@ -1898,7 +1898,7 @@ class YambApp {
         const packs = {
             dark: {
                 title: lang === 'en' ? 'Green Soft Clay' : 'Zelena Soft Clay',
-                background: 'assets/green-clay-balkan-diorama-v4.png',
+                background: 'assets/green-clay-balkan-diorama-v5.png',
                 menuAssets: [
                     'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1',

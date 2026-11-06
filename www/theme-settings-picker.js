@@ -10,7 +10,9 @@
     const currentTheme = () => window.themeGameHeader?.activeTheme?.() || 'dark';
     // The theme choice shows the same approved scene used by the Treasury.
     // Settings-room PNGs remain on the room heading and section controls.
-    const previewSource = theme => `assets/treasury-theme-previews/${theme}-v1.png`;
+    const previewSource = theme => theme === 'dark'
+        ? 'assets/treasury-theme-previews/dark-v2.png'
+        : `assets/treasury-theme-previews/${theme}-v1.png`;
     const cleanName = value => String(value || '')
         .replace(/\s*🔒\s*/gu, ' ')
         .replace(/[\p{Extended_Pictographic}\uFE0F]/gu, '')
