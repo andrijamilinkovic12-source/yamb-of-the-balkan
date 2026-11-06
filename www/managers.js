@@ -2858,6 +2858,7 @@ class ShopManager {
     getTreasuryEffectPreviewSource(effectId) {
         const previewRoot = 'assets/effects/treasury-thumbnails-v1';
         if (effectId === 'ice_age') return `${previewRoot}/universal-ice-age-v1.png`;
+        if (effectId === 'neon_pulse') return `${previewRoot}/universal-neon-pulse-v1.png`;
         const selected = localStorage.getItem('yamb_theme') || 'dark';
         const theme = YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
         if (effectId === 'balkan') return `${previewRoot}/universal-balkan-v1.png`;
@@ -2875,7 +2876,7 @@ class ShopManager {
             thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles',
             cosmic_dust: 'cosmic-dust', dragon_fire: 'dragon-fire',
             royal_yamb: 'royal-yamb', fireflies: 'fireflies', ice_age: 'ice-age',
-            black_hole: 'black-hole', supernova: 'supernova', neon_pulse: 'neon-pulse',
+            black_hole: 'black-hole', supernova: 'supernova',
             drones: 'drones', ufo_abduction: 'ufo-abduction'
         };
         const role = roles[effectId];

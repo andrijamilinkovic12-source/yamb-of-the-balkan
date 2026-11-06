@@ -106,7 +106,7 @@ for (const theme of themes) {
         const name = effectNames[item.id];
         assert(name, `Missing effect role ${item.id}`);
         const source = previewSource.call({}, item.id);
-        add(`effect/${item.id}`, source, !['ice_age', 'balkan', 'dragon_fire'].includes(item.id));
+        add(`effect/${item.id}`, source, !['ice_age', 'balkan', 'dragon_fire', 'neon_pulse'].includes(item.id));
     }
     for (const tier of collection) add(`collection/${tier}`, `${canonical}/collection-medals/collection-${tier}-v1.png`);
     const rewardVersion = critical.has(theme) ? 2 : 1;

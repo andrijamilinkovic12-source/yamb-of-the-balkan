@@ -8,7 +8,7 @@ function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark
     let id = 0;
     const fakeContext = () => {
         const calls = [];
-        const gradient = () => ({ addColorStop() {} });
+        const gradient = () => ({ addColorStop(offset, color) { calls.push(['colorStop', offset, color]); } });
         const target = { calls, createRadialGradient: gradient, createLinearGradient: gradient,
             getImageData(x, y, w, h) {
                 const data = new Uint8ClampedArray(w * h * 4);

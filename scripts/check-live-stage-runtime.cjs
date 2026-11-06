@@ -17,6 +17,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     const ships = manifest.assets.filter(a => a.id.startsWith('ufo-'));
     assert.equal(new Set(ships.map(a => a.sha256)).size, 10, 'ten independent ship silhouettes');
     let scenes = 0;
+    let universalNeon;
     for (const theme of themes) {
         const h = makeHarness({ theme });
         for (const type of h.effectIds) {
@@ -33,6 +34,19 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
             }
             if (type === 'drones') assert(scene.droneTargets.length > 100, 'name formed from separate drones');
             if (type === 'ufo_abduction') assert(h.scores.every((node, i) => node.textContent === String(20 + i)), 'game scores never changed');
+            if (type === 'neon_pulse') {
+                const strokes = [];
+                const stroke = ctx.stroke;
+                ctx.stroke = () => { strokes.push(ctx.strokeStyle); stroke(); };
+                h.step(4900);
+                assert(ctx.calls.some(call => call[0] === 'clip'), 'scan is clipped to the board');
+                assert(ctx.calls.some(call => call[0] === 'setLineDash'), 'neon pulses follow the rail');
+                const paint = JSON.stringify([strokes, ctx.calls]);
+                universalNeon ??= paint;
+                assert.equal(paint, universalNeon, `${theme}: same neon painting as all other themes`);
+                h.step(5000);
+                assert.equal(h.body.children.length, 0, 'Neon Pulse ends at its normal duration');
+            }
             scene.stop();
             assert.equal(h.body.children.length, 0, `${theme}/${type}: cleanup`);
             assert.equal(h.frames.size, 0); assert.equal(h.timers.size, 0);
@@ -50,7 +64,12 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     const reduced = makeHarness({ reduced: true });
     for (const type of reduced.effectIds) {
         const scene = new reduced.Stage(reduced.owner, type); await scene.start();
-        assert(scene.duration <= 2600); reduced.step(0); reduced.step(800); scene.stop();
+        assert(scene.duration <= 2600); reduced.step(0); reduced.step(800);
+        if (type === 'neon_pulse') {
+            assert(scene.ctx.calls.some(call => call[0] === 'stroke'), 'reduced motion keeps the neon rail');
+            assert(!scene.ctx.calls.some(call => ['setLineDash', 'clip'].includes(call[0])), 'reduced motion has no moving pulse or scan');
+        }
+        scene.stop();
     }
     const pending = makeHarness();
     const late = new pending.Stage(pending.owner, 'ufo_abduction');

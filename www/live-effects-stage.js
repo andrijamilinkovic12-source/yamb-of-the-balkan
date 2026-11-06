@@ -4,6 +4,7 @@ const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
     drones: 8200, cosmic_dust: 6000, ufo_abduction: 7500, dragon_fire: 5500, royal_yamb: 8000
 });
 const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
+const NEON_PULSE_COLORS = Object.freeze({ cyan: '0, 244, 255', pink: '255, 40, 188', white: '245, 255, 255' });
 
 class LiveEffectsStage {
     static imageCache = new Map();
@@ -133,6 +134,7 @@ class LiveEffectsStage {
         this.canvas.width = Math.round(this.width * dpr);
         this.canvas.height = Math.round(this.height * dpr);
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (this.type === 'neon_pulse') this.prepareNeonFrame();
         this.overlay.dataset.board = `${this.board.width}x${this.board.height}`;
     }
 
@@ -247,29 +249,101 @@ class LiveEffectsStage {
         c.restore();
     }
 
-    neon(t) {
-        const b = this.board, perimeter = 2 * (b.width + b.height);
-        const point = distance => {
-            let d = ((distance % perimeter) + perimeter) % perimeter;
-            if (d < b.width) return [b.x + d, b.y]; d -= b.width;
-            if (d < b.height) return [b.right, b.y + d]; d -= b.height;
-            if (d < b.width) return [b.right - d, b.bottom]; d -= b.width;
-            return [b.x, b.bottom - d];
-        };
-        const speed = this.reduced ? 0 : 280;
-        for (let lane = 0; lane < 3; lane++) {
-            for (let trail = 0; trail < 18; trail++) {
-                const d = t * speed + lane * perimeter / 3 - trail * 7;
-                this.line([point(d - 7), point(d)], lane === 1 ? this.palette.accent : this.palette.main,
-                    (1 - trail / 18) * 0.82, 2.4 + trail * 0.15);
-            }
-            const head = point(t * speed + lane * perimeter / 3);
-            this.glow(head[0], head[1], 20, lane === 1 ? this.palette.accent : this.palette.main, 0.42);
+    prepareNeonFrame() {
+        const b = this.board;
+        const x = Math.max(8, b.x), y = Math.max(8, b.y);
+        const right = Math.min(this.width - 8, b.right), bottom = Math.min(this.height - 8, b.bottom);
+        const width = right - x, height = bottom - y;
+        if (width < 24 || height < 24) {
+            this.neonFrame = null;
+            return;
         }
-        const y = b.y + ((t * 0.32) % 1) * b.height;
-        const pulse = this.reduced ? 0.15 : Math.sin(t * Math.PI / 1.5) ** 2 * 0.32;
-        this.line([[b.x + 2, y], [b.right - 2, y]], this.palette.main, pulse, 1.5);
-        this.glow(b.x + b.width / 2, y, b.width * 0.55, this.palette.main, pulse * 0.16);
+
+        const { cyan, pink } = NEON_PULSE_COLORS;
+        const radius = Math.min(22, width * 0.09, height * 0.09);
+        const perimeter = 2 * (width + height - 4 * radius) + 2 * Math.PI * radius;
+        const rail = this.ctx.createLinearGradient(x, y, right, bottom);
+        rail.addColorStop(0, this.rgba(cyan, 1));
+        rail.addColorStop(0.37, this.rgba(cyan, 1));
+        rail.addColorStop(0.63, this.rgba(pink, 1));
+        rail.addColorStop(1, this.rgba(pink, 1));
+        const scan = this.ctx.createLinearGradient(x, 0, right, 0);
+        scan.addColorStop(0, this.rgba(cyan, 0));
+        scan.addColorStop(0.12, this.rgba(cyan, 1));
+        scan.addColorStop(0.5, this.rgba(NEON_PULSE_COLORS.white, 1));
+        scan.addColorStop(0.88, this.rgba(pink, 1));
+        scan.addColorStop(1, this.rgba(pink, 0));
+        this.neonFrame = { x, y, width, height, radius, perimeter, rail, scan };
+    }
+
+    neon(t) {
+        if (!this.neonFrame) return;
+        const c = this.ctx;
+        const { x, y, width, height, radius, perimeter, rail, scan } = this.neonFrame;
+        const { cyan, pink, white } = NEON_PULSE_COLORS;
+        const stroke = (color, weight, alpha) => {
+            c.strokeStyle = color;
+            c.lineWidth = weight;
+            c.globalAlpha = alpha * this.alpha;
+            c.stroke();
+        };
+        const framePath = inset => {
+            c.beginPath();
+            c.roundRect(x + inset, y + inset, width - 2 * inset, height - 2 * inset, Math.max(0, radius - inset));
+        };
+
+        c.save();
+        c.lineCap = 'round';
+        c.lineJoin = 'round';
+        framePath(5);
+        stroke(rail, 1, 0.36);
+
+        framePath(0);
+        // The dark rail beneath the light keeps its silhouette on bright boards.
+        stroke('#100d24', 10, 0.87);
+        stroke(rail, 21, 0.08);
+        stroke(rail, 12, 0.18);
+        stroke(rail, 6, 0.44);
+        stroke(rail, 2.6, 0.92);
+        if (!this.reduced) {
+            const length = Math.min(250, perimeter * 0.14);
+            const lead = perimeter * (0.08 + t * 0.27);
+            const trail = (size, head) => {
+                c.setLineDash([size, perimeter - size]);
+                c.lineDashOffset = size - head;
+            };
+            [cyan, pink].forEach((color, i) => {
+                const head = lead + perimeter * 0.5 * i;
+                trail(length, head);
+                stroke(this.rgba(color, 1), 25, 0.15);
+                stroke(this.rgba(color, 1), 11, 0.6);
+                trail(length * 0.7, head);
+                stroke(this.rgba(color, 1), 5.5, 0.97);
+                trail(length * 0.32, head);
+                stroke(this.rgba(white, 1), 2.1, 0.98);
+            });
+        }
+        c.restore();
+
+        if (this.reduced) return;
+        const secondPass = t >= 2.52;
+        const progress = (t - (secondPass ? 2.52 : 0.56)) / 1.68;
+        if (progress <= 0 || progress >= 1) return;
+        const beamY = y + height * (secondPass ? 1 - progress : progress);
+        const strength = Math.sin(Math.PI * progress) * this.alpha;
+        c.save();
+        framePath(6);
+        c.clip();
+        c.fillStyle = scan;
+        // A short falloff behind the scan leaves the score underneath readable.
+        const direction = secondPass ? 1 : -1;
+        for (let band = 1; band <= 12; band++) {
+            c.globalAlpha = strength * 0.18 * (1 - band / 13) ** 1.5;
+            c.fillRect(x, beamY + direction * band * 2, width, 2);
+        }
+        c.globalAlpha = strength * 0.85;
+        c.fillRect(x, beamY - 0.75, width, 1.5);
+        c.restore();
     }
 
     thunder(t) {
