@@ -4,6 +4,7 @@ const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
     drones: 8200, cosmic_dust: 6000, ufo_abduction: 7500, dragon_fire: 5500, royal_yamb: 8000
 });
 const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
+const ICE_AGE_GROWTH_SECONDS = 2.8;
 const NEON_PULSE_COLORS = Object.freeze({ cyan: '0, 244, 255', pink: '255, 40, 188', white: '245, 255, 255' });
 
 class LiveEffectsStage {
@@ -107,7 +108,7 @@ class LiveEffectsStage {
         }
         if (!this.reduced) {
             const sound = { balkan: 'balkanTrumpet', drones: 'epicDroneShow', ufo_abduction: 'ufoAbduction',
-                royal_yamb: 'trophy', ice_age: 'iceAge' }[this.type];
+                royal_yamb: 'trophy' }[this.type];
             if (sound) window.app?.soundMgr?.[sound]?.();
         }
         this.timer = setTimeout(() => this.stop(), this.duration + 1000);
@@ -134,6 +135,7 @@ class LiveEffectsStage {
         this.canvas.width = Math.round(this.width * dpr);
         this.canvas.height = Math.round(this.height * dpr);
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (this.type === 'ice_age') this.prepareIceFrost();
         if (this.type === 'neon_pulse') this.prepareNeonFrame();
         this.overlay.dataset.board = `${this.board.width}x${this.board.height}`;
     }
@@ -148,6 +150,8 @@ class LiveEffectsStage {
         this.mutedNodes.forEach(node => node.classList.remove('live-ufo-score-muted'));
         this.mutedNodes.clear();
         this.overlay?.remove();
+        this.iceAudioCleanup?.();
+        this.iceAudioCleanup = null;
         if (this.type === 'balkan') window.app?.soundMgr?.stopBalkanMusic?.(true);
         if (this.owner.stageScene === this) this.owner.stageScene = null;
     }
@@ -217,34 +221,84 @@ class LiveEffectsStage {
         this.ctx.drawImage(image, -width / 2, -h / 2, width, h); this.ctx.restore();
     }
 
+    prepareIceFrost() {
+        const b = this.board;
+        this.iceCorners = [[0, 0, 1, 1], [b.width, 0, -1, 1],
+            [0, b.height, 1, -1], [b.width, b.height, -1, -1]];
+        this.iceTexture ||= document.createElement('canvas');
+        this.iceReveal ||= document.createElement('canvas');
+        const scale = Math.min(1, 720 / Math.max(b.width, b.height));
+        for (const layer of [this.iceTexture, this.iceReveal]) {
+            layer.width = Math.ceil(b.width * scale);
+            layer.height = Math.ceil(b.height * scale);
+            layer.getContext('2d').setTransform(layer.width / b.width, 0, 0, layer.height / b.height, 0, 0);
+        }
+        const texture = this.iceTexture.getContext('2d');
+        texture.globalAlpha = 0.88;
+        for (const [x, y, sx, sy] of this.iceCorners) {
+            texture.save(); texture.translate(x, y); texture.scale(sx, sy);
+            texture.drawImage(this.images.frost, 0, 0, b.width * 0.86, b.height * 0.86);
+            texture.restore();
+        }
+    }
+
     ice(t, p) {
         const c = this.ctx, b = this.board;
-        const progress = this.reduced ? this.ease(p / 0.4) : this.ease(t / 2.8);
-        this.shade(0.09);
-        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
-        const reach = Math.hypot(b.width, b.height) * progress * 0.63;
+        const progress = this.reduced ? this.ease(p / 0.4) : this.ease(t / ICE_AGE_GROWTH_SECONDS);
         this.overlay.dataset.corners = '4';
         this.overlay.dataset.coverage = progress.toFixed(3);
-        [[b.x, b.y, 1, 1], [b.right, b.y, -1, 1], [b.x, b.bottom, 1, -1], [b.right, b.bottom, -1, -1]]
-            .forEach(([x, y, sx, sy]) => {
-                // Screen-space lengths preserve the full board height on tall phones.
-                const ice = c.createRadialGradient(x, y, 0, x, y, Math.max(1, reach));
-                ice.addColorStop(0, this.rgba('210, 236, 247', 0.54 * this.alpha));
-                ice.addColorStop(0.72, this.rgba('186, 219, 239', 0.32 * this.alpha));
-                ice.addColorStop(0.92, this.rgba('230, 247, 251', 0.2 * this.alpha));
-                ice.addColorStop(1, 'rgba(210,240,255,0)');
-                c.fillStyle = ice; c.fillRect(b.x, b.y, b.width, b.height);
-                c.save(); c.translate(x, y); c.scale(sx, sy); c.globalAlpha = this.alpha * 0.88;
-                c.drawImage(this.images.frost, 0, 0, b.width * progress * 0.86, b.height * progress * 0.86);
-                c.restore();
+        if (!this.reduced) {
+            this.once('ice-grow', () => {
+                this.iceAudioCleanup = window.app?.soundMgr?.iceAge?.(ICE_AGE_GROWTH_SECONDS);
             });
-        // Fine glints follow the advancing freezing front rather than falling from above.
-        for (let i = 0; i < 32 && !this.reduced; i++) {
+            if (t >= ICE_AGE_GROWTH_SECONDS) this.once('ice-lock', () => window.app?.soundMgr?.iceAgeCrack?.());
+        }
+        if (progress <= 0) return;
+        const front = Math.hypot(b.width, b.height) * 0.5 * progress;
+        const radius = front + Math.min(front * 0.75, 32);
+        this.shade(0.09);
+        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
+        for (const [x, y] of this.iceCorners) {
+            const ice = c.createRadialGradient(b.x + x, b.y + y, 0, b.x + x, b.y + y, radius);
+            ice.addColorStop(0, this.rgba('210, 236, 247', 0.48 * this.alpha));
+            ice.addColorStop(0.72 * front / radius, this.rgba('186, 219, 239', 0.26 * this.alpha));
+            ice.addColorStop(front / radius, this.rgba('230, 247, 251', 0.15 * this.alpha));
+            ice.addColorStop(1, 'rgba(210,240,255,0)');
+            c.fillStyle = ice; c.fillRect(b.x, b.y, b.width, b.height);
+        }
+
+        // Reveal the cached, full-size crystals without stretching them as they grow.
+        let frost = this.iceTexture;
+        if (progress < 1) {
+            const mask = this.iceReveal.getContext('2d');
+            mask.globalCompositeOperation = 'source-over';
+            mask.clearRect(0, 0, b.width, b.height);
+            for (const [x, y] of this.iceCorners) {
+                const edge = mask.createRadialGradient(x, y, 0, x, y, radius);
+                edge.addColorStop(front / radius, '#fff');
+                edge.addColorStop(1, 'rgba(255,255,255,0)');
+                mask.fillStyle = edge;
+                mask.fillRect(0, 0, b.width, b.height);
+            }
+            mask.globalCompositeOperation = 'source-in';
+            mask.drawImage(this.iceTexture, 0, 0, b.width, b.height);
+            frost = this.iceReveal;
+        }
+        c.save(); c.globalAlpha = this.alpha;
+        c.drawImage(frost, b.x, b.y, b.width, b.height);
+        c.restore();
+
+        for (let i = 0; i < 32 && !this.reduced && progress < 1; i++) {
             const x = b.x + this.seed(i + 4) * b.width, y = b.y + this.seed(i + 90) * b.height;
             const cornerDistance = Math.min(Math.hypot(x - b.x, y - b.y), Math.hypot(x - b.right, y - b.y),
                 Math.hypot(x - b.x, y - b.bottom), Math.hypot(x - b.right, y - b.bottom));
-            const glint = Math.max(0, 1 - Math.abs(cornerDistance - reach * 0.83) / 32);
-            this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7);
+            const glint = Math.max(0, 1 - Math.abs(cornerDistance - front) / 24);
+            this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7 * this.ease((1 - progress) / 0.08));
+        }
+        if (!this.reduced && t >= ICE_AGE_GROWTH_SECONDS) {
+            const lockGlow = 1 - this.ease((t - ICE_AGE_GROWTH_SECONDS) / 0.42);
+            this.glow(b.x + b.width / 2, b.y + b.height / 2, Math.min(b.width, b.height) * 0.27,
+                '229, 250, 255', lockGlow * 0.32);
         }
         c.restore();
     }
@@ -479,26 +533,83 @@ class LiveEffectsStage {
         });
     }
 
+    prepareDust() {
+        const atlas = this.dustAtlas = document.createElement('canvas');
+        const cell = 24;
+        atlas.width = atlas.height = cell * 3;
+        const c = atlas.getContext('2d');
+        const colors = [this.palette.main, this.palette.accent, '238, 248, 255'];
+        for (const [tone, color] of colors.entries()) {
+            for (let shape = 0; shape < 3; shape++) {
+                c.save();
+                c.translate((tone + 0.5) * cell, (shape + 0.5) * cell);
+                c.fillStyle = this.rgba(color, 1);
+                c.beginPath();
+                if (shape === 0) {
+                    c.arc(0, 0, 8.5, 0, Math.PI * 2);
+                } else if (shape === 1) {
+                    const halo = c.createRadialGradient(0, 0, 0, 0, 0, 11);
+                    halo.addColorStop(0, this.rgba('248, 253, 255', 1));
+                    halo.addColorStop(0.22, this.rgba(color, 0.93));
+                    halo.addColorStop(0.5, this.rgba(color, 0.29));
+                    halo.addColorStop(1, this.rgba(color, 0));
+                    c.fillStyle = halo;
+                    c.arc(0, 0, 11, 0, Math.PI * 2);
+                } else {
+                    c.moveTo(0, -11); c.lineTo(2, -2); c.lineTo(10, 0); c.lineTo(2, 2);
+                    c.lineTo(0, 11); c.lineTo(-2, 2); c.lineTo(-10, 0); c.lineTo(-2, -2); c.closePath();
+                }
+                c.fill();
+                c.restore();
+            }
+        }
+
+        const count = this.reduced ? 45 : this.mobile ? 420 : 720;
+        return Array.from({ length: count }, (_, i) => {
+            const layer = i % 3;
+            const variety = this.seed(i + 217);
+            const shape = variety < 0.69 ? 0 : variety < 0.86 ? 1 : variety < 0.92 ? 2 : 3;
+            const tone = shape === 2 ? 2 : i % 5 === 0 ? 1 : i % 7 === 0 ? 2 : 0;
+            return {
+                angle: this.seed(i + 22) * Math.PI * 2,
+                radius: 0.08 + this.seed(i + 74) * 0.75,
+                speed: this.reduced ? 0 : 0.1 + layer * 0.09,
+                shape, tone, color: colors[tone],
+                size: [1.5 + layer * 1.1, 6.8 + layer * 2.7, 4.8 + layer * 1.7, 4 + layer * 1.8][shape]
+            };
+        });
+    }
+
     dust(t) {
-        this.shade(0.21);
+        const c = this.ctx;
+        c.fillStyle = this.rgba('4, 7, 13', (this.reduced ? 0.3 : 0.6) * this.alpha);
+        c.fillRect(0, 0, this.width, this.height);
         for (let cloud = 0; cloud < 3; cloud++) {
             const x = this.width * (0.2 + cloud * 0.3) + Math.sin(t * 0.28 + cloud * 2) * this.width * 0.18;
             const y = this.height * (0.25 + cloud * 0.22) + Math.cos(t * 0.24 + cloud) * 45;
             this.glow(x, y, Math.min(this.width, this.height) * 0.7,
                 cloud === 1 ? this.palette.accent : this.palette.main, 0.085);
         }
-        const count = this.reduced ? 45 : this.mobile ? 145 : 250;
-        for (let i = 0; i < count; i++) {
-            const layer = i % 3, speed = this.reduced ? 0 : 0.1 + layer * 0.09;
-            const angle = this.seed(i + 22) * Math.PI * 2 + t * speed;
-            const radius = 0.08 + this.seed(i + 74) * 0.75;
-            const x = this.width / 2 + Math.cos(angle) * radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
-            const y = this.height / 2 + Math.sin(angle) * radius * this.height * 0.75;
-            this.dot(x, y, 0.65 + layer * 0.45, i % 5 ? this.palette.main : this.palette.accent,
-                0.24 + (Math.sin(t + i) + 1) * 0.19);
-            if (i % 15 === 0) this.line([[x - Math.sin(angle) * 7, y + Math.cos(angle) * 5], [x, y]], this.palette.main, 0.2, 0.8);
-            if (i % 37 === 0) this.glow(x, y, 10, this.palette.accent, 0.12);
+        const particles = this.dustParticles ||= this.prepareDust();
+        const cell = this.dustAtlas.width / 3;
+        for (const [i, particle] of particles.entries()) {
+            const angle = particle.angle + t * particle.speed;
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            const x = this.width / 2 + cos * particle.radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
+            const y = this.height / 2 + sin * particle.radius * this.height * 0.75;
+            const { size, shape } = particle;
+            if (x < -size || x > this.width + size || y < -size || y > this.height + size) continue;
+            const alpha = 0.32 + (Math.sin(t + i) + 1) * 0.2;
+            if (shape === 3) {
+                c.globalAlpha = 1;
+                this.line([[x - sin * size, y + cos * size * 0.72], [x, y]], particle.color, alpha * 0.64, 0.9);
+            } else {
+                c.globalAlpha = this.alpha * alpha;
+                c.drawImage(this.dustAtlas, particle.tone * cell, shape * cell, cell, cell,
+                    x - size / 2, y - size / 2, size, size);
+            }
         }
+        c.globalAlpha = 1;
     }
 
     ufo(t, p) {

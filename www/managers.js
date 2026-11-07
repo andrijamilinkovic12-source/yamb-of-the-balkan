@@ -799,8 +799,8 @@ class EffectManager {
         this.stageScene?.stop();
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
-        if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
-        if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
+        if (type === 'fireflies') this.spawnFireflies();
+        if (type === 'bubbles') this.spawnBubbles();
         if (type === 'black_hole') void this.spawnBlackHole();
         if (type === 'supernova') void this.spawnSupernova();
     }
@@ -1090,7 +1090,7 @@ class EffectManager {
         return this.fireflySpritePromises[theme];
     }
 
-    async spawnFireflies(count = 52, group = 'fireflies') {
+    async spawnFireflies(count = 32, group = 'fireflies') {
         const runId = ++this.fireflyRunId;
         const themeId = this.getGoldRainThemeId();
         this.clearEffectTimeouts(group);
@@ -1102,7 +1102,7 @@ class EffectManager {
         if (runId !== this.fireflyRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 20) : Math.min(count, 28));
+        const particleCount = reducedMotion ? 3 : Math.min(count, compact ? 23 : 32);
         const tone = this.getEffectSurfaceTone();
         const field = document.createElement('div');
         field.className = `firefly-field firefly-field--${tone}${reducedMotion ? ' firefly-field--reduced' : ''}`;
@@ -1178,7 +1178,7 @@ class EffectManager {
         return this.bubbleSpritePromises[theme];
     }
 
-    async spawnBubbles(count = 35, group = 'bubbles') {
+    async spawnBubbles(count = 39, group = 'bubbles') {
         const runId = ++this.bubbleRunId;
         const themeId = this.getGoldRainThemeId();
         this.clearEffectTimeouts(group);
@@ -1190,29 +1190,35 @@ class EffectManager {
         if (runId !== this.bubbleRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 24) : Math.min(count, 35));
+        const particleCount = reducedMotion ? 3 : Math.min(count, compact ? 27 : 39);
         const field = document.createElement('div');
         field.className = `bubble-field${reducedMotion ? ' bubble-field--reduced' : ''}`;
         field.setAttribute('aria-hidden', 'true');
         const fragment = document.createDocumentFragment();
         const sizeRanges = compact ? [[20, 30], [34, 48], [56, 72]] : [[24, 34], [42, 58], [68, 88]];
+        const laneCount = Math.ceil(particleCount / sizeRanges.length);
+        const laneDurations = Array.from({ length: laneCount }, () => 4.8 + Math.random() * 1.5);
         for (let i = 0; i < particleCount; i++) {
+            const sizeIndex = i % sizeRanges.length;
+            const lane = Math.floor(i / sizeRanges.length);
+            const wave = (lane + sizeIndex) % sizeRanges.length;
             const bubble = document.createElement('img');
-            bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][i % 3]}`;
+            bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][sizeIndex]}`;
             bubble.src = sprite.src;
             bubble.alt = '';
             bubble.decoding = 'async';
             bubble.draggable = false;
-            const [minSize, maxSize] = sizeRanges[i % 3];
+            const [minSize, maxSize] = sizeRanges[sizeIndex];
             const size = Math.round(minSize + Math.random() * (maxSize - minSize));
             const drift = (Math.random() - .5) * (compact ? 110 : 180);
             bubble.style.setProperty('--bubble-size', `${size}px`);
-            bubble.style.setProperty('--bubble-x', (4 + ((Math.floor(i / 3) + Math.random() * .8) / Math.ceil(particleCount / 3)) * 88).toFixed(1) + 'vw');
+            const center = 6 + ((lane + .2 + Math.random() * .6) / laneCount) * 88;
+            bubble.style.setProperty('--bubble-x', `calc(${center.toFixed(1)}vw - ${size / 2}px)`);
             bubble.style.setProperty('--bubble-drift-a', `${Math.round(drift * .55)}px`);
             bubble.style.setProperty('--bubble-drift-b', `${Math.round(-drift * .3)}px`);
             bubble.style.setProperty('--bubble-drift-c', `${Math.round(drift)}px`);
-            bubble.style.setProperty('--bubble-delay', `${(i < 6 ? Math.random() * .25 : .2 + Math.random() * 1.4).toFixed(2)}s`);
-            bubble.style.setProperty('--bubble-duration', `${(4.8 + Math.random() * 1.7 + (i % 3) * .18).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-delay', `${(wave * .62 + Math.random() * .22).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-duration', `${(laneDurations[lane] + sizeIndex * .18).toFixed(2)}s`);
             if (reducedMotion) {
                 bubble.style.setProperty('--bubble-x', `${18 + i * 30}vw`);
                 bubble.style.setProperty('--bubble-static-y', `${30 + i * 20}vh`);
@@ -2168,13 +2174,19 @@ class SoundManager {
         });
     }
 
-    iceAge() {
+    iceAge(growthSeconds = 2.8) {
+        let stop;
         this.playSound(() => {
-            const now = this.ctx.currentTime;
-            const bufferSize = Math.floor(this.ctx.sampleRate * 1.45);
-            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const ctx = this.ctx;
+            const now = ctx.currentTime;
+            const end = now + growthSeconds;
+            const bufferSize = Math.ceil(ctx.sampleRate * growthSeconds);
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+            const master = ctx.createGain();
+            master.gain.setValueAtTime(1, now);
+            master.connect(ctx.destination);
 
             const frostNoise = this.ctx.createBufferSource();
             const frostFilter = this.ctx.createBiquadFilter();
@@ -2182,30 +2194,32 @@ class SoundManager {
             frostNoise.buffer = noiseBuffer;
             frostFilter.type = 'bandpass';
             frostFilter.frequency.setValueAtTime(5200, now);
-            frostFilter.frequency.exponentialRampToValueAtTime(540, now + 1.15);
+            frostFilter.frequency.exponentialRampToValueAtTime(780, end);
             frostFilter.Q.setValueAtTime(1.4, now);
             frostGain.gain.setValueAtTime(0, now);
-            frostGain.gain.linearRampToValueAtTime(0.18, now + 0.08);
-            frostGain.gain.exponentialRampToValueAtTime(0.001, now + 1.45);
+            frostGain.gain.linearRampToValueAtTime(0.12, now + 0.08);
+            frostGain.gain.exponentialRampToValueAtTime(0.065, now + growthSeconds * 0.68);
+            frostGain.gain.exponentialRampToValueAtTime(0.001, end);
             frostNoise.connect(frostFilter);
             frostFilter.connect(frostGain);
-            frostGain.connect(this.ctx.destination);
+            frostGain.connect(master);
             frostNoise.start(now);
-            frostNoise.stop(now + 1.5);
+            frostNoise.stop(end);
 
             const hum = this.ctx.createOscillator();
             const humGain = this.ctx.createGain();
             hum.type = 'sine';
             hum.frequency.setValueAtTime(96, now);
-            hum.frequency.exponentialRampToValueAtTime(44, now + 1.4);
+            hum.frequency.exponentialRampToValueAtTime(44, end);
             humGain.gain.setValueAtTime(0, now);
-            humGain.gain.linearRampToValueAtTime(0.08, now + 0.16);
-            humGain.gain.exponentialRampToValueAtTime(0.001, now + 1.55);
+            humGain.gain.linearRampToValueAtTime(0.045, now + 0.16);
+            humGain.gain.exponentialRampToValueAtTime(0.001, end);
             hum.connect(humGain);
-            humGain.connect(this.ctx.destination);
+            humGain.connect(master);
             hum.start(now);
-            hum.stop(now + 1.6);
+            hum.stop(end);
 
+            const sources = [frostNoise, hum];
             [1760, 1320, 2217, 2637].forEach((freq, i) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
@@ -2217,10 +2231,40 @@ class SoundManager {
                 gain.gain.linearRampToValueAtTime(0.055, start + 0.025);
                 gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
                 osc.connect(gain);
-                gain.connect(this.ctx.destination);
+                gain.connect(master);
                 osc.start(start);
                 osc.stop(start + 0.52);
+                sources.push(osc);
             });
+            stop = () => {
+                if (ctx.currentTime >= end) return;
+                const cut = ctx.currentTime;
+                master.gain.setValueAtTime(1, cut);
+                master.gain.linearRampToValueAtTime(0, cut + 0.025);
+                sources.forEach(source => source.stop(cut + 0.025));
+            };
+        });
+        return stop;
+    }
+
+    iceAgeCrack() {
+        this.playSound(() => {
+            const ctx = this.ctx;
+            const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.17), ctx.sampleRate);
+            const samples = buffer.getChannelData(0);
+            let previous = 0;
+            for (let i = 0; i < samples.length; i++) {
+                const t = i / ctx.sampleRate;
+                const noise = Math.random() * 2 - 1;
+                const snap = (noise - previous * 0.72) * 0.18 * Math.exp(-t / 0.014);
+                const body = Math.sin(2 * Math.PI * 230 * t) * 0.13 * Math.exp(-t / 0.027);
+                samples[i] = (snap + body) * Math.min(1, t / 0.001, (samples.length - i - 1) / (ctx.sampleRate * 0.02));
+                previous = noise;
+            }
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            source.start();
         });
     }
      

@@ -84,7 +84,9 @@ function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark
         Object.entries(context.Stage.sources(type, themeId)).map(async ([role, source]) => [role,
             await native.loadImage(path.join(root, 'www', source.split('?')[0]))])));
     return { Stage: context.Stage, Manager: context.Manager, effectIds: [...context.effectIds], owner, body, board, scores, contexts, frames, timers,
-        setTheme(value) { theme = value; }, step(now) {
+        setTheme(value) { theme = value; },
+        setSoundManager(value) { window.app.soundMgr = value; },
+        step(now) {
             const next = frames.entries().next().value;
             if (!next) throw new Error('No frame scheduled');
             frames.delete(next[0]); next[1](now);

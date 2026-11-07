@@ -76,7 +76,7 @@ function harness({ width = 390, reducedMotion = false, missing = false } = {}) {
         addEventListener() {}, removeEventListener() {}
     };
     const context = vm.createContext({
-        document, window, Image, MutationObserver,
+        document, window, Image, MutationObserver, LIVE_STAGE_EFFECT_IDS: [],
         localStorage: { getItem() { return null; } },
         setTimeout(callback) { const id = nextTimer++; timers.set(id, callback); return id; },
         clearTimeout(id) { timers.delete(id); },
@@ -96,11 +96,11 @@ async function main() {
         app.document.documentElement.dataset.splashTheme = theme;
         await app.effect.spawnFireflies();
         assert.equal(app.fields().length, 1, `${theme}: duplicate overlay`);
-        assert.equal(app.sprites().length, 20, `${theme}: mobile sprite count`);
+        assert.equal(app.sprites().length, 23, `${theme}: mobile sprite count`);
         const expected = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
         assert(app.sprites().every(sprite => sprite.src.includes(expected) && sprite.src.endsWith('/effects/firefly-v1.png')),
             `${theme}: wrong theme sprite`);
-        assert(app.document.querySelectorAll('.magic-firefly__halo').length === 20, `${theme}: missing themed light`);
+        assert.equal(app.document.querySelectorAll('.magic-firefly__halo').length, 23, `${theme}: missing themed light`);
         assert(app.document.querySelectorAll('.magic-firefly__light').length === 0, `${theme}: old CSS dots remain`);
         const fly = app.document.querySelectorAll('.magic-firefly')[0];
         assert(fly.style.values['--ff-dx-c'] && fly.style.values['--ff-dy-c'] && fly.style.values['--ff-flap'],
@@ -111,8 +111,9 @@ async function main() {
     assert.equal(app.fields().length, 0, 'Theme switch must remove old fireflies');
 
     const wide = harness({ width: 900 });
-    await wide.effect.spawnFireflies();
-    assert.equal(wide.sprites().length, 28, 'Wide screen count');
+    wide.effect.trigger('fireflies');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(wide.sprites().length, 32, 'Wide screen count after triggering fireflies');
     wide.effect.stop();
     assert.equal(wide.fields().length, 0, 'Stop must clear field');
     assert(wide.observers.every(observer => !observer.active), 'Stop must disconnect observer');
@@ -134,16 +135,24 @@ async function main() {
         const fields = bubbles.document.querySelectorAll('.bubble-field');
         const sprites = bubbles.document.querySelectorAll('.magic-bubble');
         assert.equal(fields.length, 1, `${theme}: duplicate bubble field`);
-        assert.equal(sprites.length, 24, `${theme}: mobile bubble count`);
+        assert.equal(sprites.length, 27, `${theme}: mobile bubble count`);
         const expected = theme === 'dark' ? 'green-soft-clay' : `theme-packs/${theme}`;
         assert(sprites.every(sprite => sprite.tag === 'img' && sprite.src.includes(expected)
             && sprite.src.endsWith('/effects/bubble-v1.png')), `${theme}: wrong theme bubble PNG`);
         for (const size of ['small', 'medium', 'large']) {
-            assert.equal(sprites.filter(sprite => sprite.className.includes(`magic-bubble--${size}`)).length, 8,
+            assert.equal(sprites.filter(sprite => sprite.className.includes(`magic-bubble--${size}`)).length, 9,
                 `${theme}: missing ${size} bubbles`);
         }
         assert(sprites.every(sprite => sprite.style.values['--bubble-duration']
             && sprite.style.values['--bubble-drift-c']), `${theme}: motion variables missing`);
+        for (let i = 0; i < sprites.length; i += 3) {
+            const lane = sprites.slice(i, i + 3);
+            const delays = lane.map(sprite => parseFloat(sprite.style.values['--bubble-delay'])).sort((a, b) => a - b);
+            assert(delays[0] <= .22 && delays[1] - delays[0] >= .39 && delays[2] - delays[1] >= .39,
+                `${theme}: same-lane bubbles need separate launch waves`);
+            assert(lane.every(sprite => sprite.style.values['--bubble-x'].startsWith('calc(')),
+                `${theme}: lanes must be centered independently of bubble size`);
+        }
     }
     bubbles.document.documentElement.dataset.splashTheme = 'dark';
     bubbles.observers.filter(observer => observer.active).forEach(observer => observer.callback());
@@ -151,8 +160,9 @@ async function main() {
         'Theme switch must remove old bubble field');
 
     const wideBubbles = harness({ width: 900 });
-    await wideBubbles.effect.spawnBubbles();
-    assert.equal(wideBubbles.document.querySelectorAll('.magic-bubble').length, 35, 'Wide bubble count');
+    wideBubbles.effect.trigger('bubbles');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(wideBubbles.document.querySelectorAll('.magic-bubble').length, 39, 'Wide screen count after triggering bubbles');
     wideBubbles.effect.stop();
     assert.equal(wideBubbles.document.querySelectorAll('.bubble-field').length, 0, 'Stop must remove bubbles');
 
