@@ -980,33 +980,33 @@ class EffectManager {
         if (reducedMotion) {
             [34, 42, 34].forEach(addCoin);
         } else {
-            const coinCount = isCompact ? 46 : 68;
+            const coinCount = isCompact ? 72 : 104;
+            const waveCount = 4;
+            const lanes = coinCount / waveCount;
             for (let index = 0; index < coinCount; index++) {
-                const size = Math.round(rand(isCompact ? 27 : 32, isCompact ? 43 : 52));
+                const wave = index % waveCount;
+                const lane = Math.floor(index / waveCount);
+                const depth = ((lane + wave) % 3) / 2;
+                const size = Math.round((isCompact ? 23 : 28) + depth * (isCompact ? 16 : 21) + rand(0, 6));
                 const coin = addCoin(size);
-                const drift = rand(isCompact ? -54 : -100, isCompact ? 54 : 100) * profile.drift;
-                const tilt = rand(-18, 18) * profile.spin;
-                const wave = index % 3;
-                const lane = Math.floor(index / 3);
-                const lanesInWave = Math.ceil((coinCount - wave) / 3);
-                coin.style.left = `${(2 + ((lane + rand(0.15, 0.85)) / lanesInWave) * 92).toFixed(1)}vw`;
-                coin.style.setProperty('--fall-delay', `${Math.round(wave * 430 + rand(0, 490))}ms`);
-                coin.style.setProperty('--fall-duration', `${Math.round(rand(3000, 4200))}ms`);
-                coin.style.setProperty('--fall-start-tilt', `${Math.round(-tilt * 0.5)}deg`);
-                coin.style.setProperty('--fall-quarter-drift', `${Math.round(drift * 0.45)}px`);
-                coin.style.setProperty('--fall-mid-drift', `${Math.round(drift * 0.12)}px`);
-                coin.style.setProperty('--fall-late-drift', `${Math.round(drift * 0.76)}px`);
-                coin.style.setProperty('--fall-end-drift', `${Math.round(drift)}px`);
-                coin.style.setProperty('--fall-quarter-tilt', `${Math.round(tilt * 0.38)}deg`);
-                coin.style.setProperty('--fall-mid-tilt', `${Math.round(-tilt * 0.55)}deg`);
-                coin.style.setProperty('--fall-late-tilt', `${Math.round(tilt * 0.7)}deg`);
-                coin.style.setProperty('--fall-end-tilt', `${Math.round(tilt)}deg`);
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                const drift = direction * rand(14, isCompact ? 47 : 80) * profile.drift;
+                const tilt = direction * rand(22, 53) * profile.spin;
+                const turn = direction * (rand(30, 54) + profile.spin * 30);
+                coin.style.left = `${(2 + ((lane + rand(0.1, 0.9)) / lanes) * 96).toFixed(1)}%`;
+                coin.style.setProperty('--coin-opacity', (0.77 + depth * 0.23).toFixed(2));
+                coin.style.setProperty('--fall-delay', `${Math.round(wave * 390 + rand(0, 270))}ms`);
+                coin.style.setProperty('--fall-duration', `${Math.round(rand(3500, 4280) - depth * 620)}ms`);
+                coin.style.setProperty('--fall-sway', `${Math.round(drift)}px`);
+                coin.style.setProperty('--fall-tilt', `${Math.round(tilt)}deg`);
+                coin.style.setProperty('--fall-turn', `${Math.round(turn)}deg`);
             }
         }
 
         let observer = null;
         const cleanup = () => {
             if (runId !== this.goldRainRunId) return;
+            this.clearEffectTimeouts('gold_rain');
             observer?.disconnect();
             if (this.goldRainThemeObserver === observer) this.goldRainThemeObserver = null;
             document.body.classList.remove('fx-gold-rain');

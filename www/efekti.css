@@ -923,7 +923,16 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 .gold-rain-atmosphere--clear .gold-rain-glint { display: none; }
 .gold-rain-atmosphere.closing { animation: goldRainAtmosphereClose 0.65s ease-in forwards; }
 .gold-rain-particles { position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; pointer-events: none; }
-.gold-rain-particle { position: absolute; top: -70px; display: block; object-fit: contain; opacity: 0; will-change: transform, opacity; animation: goldRainCoinFall var(--fall-duration, 3200ms) linear var(--fall-delay, 0ms) both; }
+.gold-rain-particle {
+    position: absolute;
+    top: -56px;
+    display: block;
+    object-fit: contain;
+    opacity: 0;
+    animation:
+        goldRainCoinFall var(--fall-duration, 3500ms) cubic-bezier(.44, .17, .68, .61) var(--fall-delay, 0ms) both,
+        goldRainCoinFlutter var(--fall-duration, 3500ms) ease-in-out var(--fall-delay, 0ms) both;
+}
 .gold-rain-particle .dukat-icon-inline { display: block; width: 100%; height: 100%; }
 .gold-rain-spotlight { position: absolute; top: -20vh; width: 30vw; min-width: 180px; height: 130vh; background: linear-gradient(180deg, rgba(var(--gold-rain-glint, 246, 245, 217), 0.14), rgba(var(--gold-rain-glow, 163, 200, 145), 0.07) 44%, transparent 78%); filter: blur(5px); opacity: 0.45; transform-origin: top center; animation: goldSpotlightSweep 5.8s ease-in-out forwards; }
 .gold-rain-spotlight--left { left: 6vw; --spotlight-start: 18deg; transform: rotate(18deg); }
@@ -940,12 +949,16 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 .gold-rain-static-particle:nth-child(2) { transform: translateY(-8px); }
 .gold-rain-static-coin .dukat-icon-inline { width: 100%; height: 100%; display: block; }
 @keyframes goldRainCoinFall {
-    0% { opacity: 0; transform: translate3d(0, -20px, 0) rotate(var(--fall-start-tilt, 0deg)); }
-    10% { opacity: 1; }
-    25% { transform: translate3d(var(--fall-quarter-drift, 0px), 26vh, 0) rotate(var(--fall-quarter-tilt, 0deg)); }
-    50% { transform: translate3d(var(--fall-mid-drift, 0px), 55vh, 0) rotate(var(--fall-mid-tilt, 0deg)); }
-    76% { opacity: 1; transform: translate3d(var(--fall-late-drift, 0px), 84vh, 0) rotate(var(--fall-late-tilt, 0deg)); }
-    100% { opacity: 0; transform: translate3d(var(--fall-end-drift, 0px), calc(100vh + 140px), 0) rotate(var(--fall-end-tilt, 0deg)); }
+    0% { opacity: 0; translate: -50% 0; }
+    12%, 91% { opacity: var(--coin-opacity, 1); }
+    100% { opacity: 0; translate: -50% calc(100vh + 116px); }
+}
+@keyframes goldRainCoinFlutter {
+    0% { transform: translateX(0) rotate(calc(var(--fall-tilt) * -.35)) rotateY(calc(var(--fall-turn) * .32)); }
+    24% { transform: translateX(var(--fall-sway)) rotate(var(--fall-tilt)) rotateY(var(--fall-turn)); }
+    52% { transform: translateX(calc(var(--fall-sway) * -.56)) rotate(calc(var(--fall-tilt) * -.63)) rotateY(calc(var(--fall-turn) * -.45)); }
+    77% { transform: translateX(calc(var(--fall-sway) * .77)) rotate(calc(var(--fall-tilt) * .68)) rotateY(calc(var(--fall-turn) * .82)); }
+    100% { transform: translateX(calc(var(--fall-sway) * .15)) rotate(calc(var(--fall-tilt) * -.3)) rotateY(calc(var(--fall-turn) * -.74)); }
 }
 @keyframes goldRainAtmosphere { 0% { opacity: 0; } 12% { opacity: 0.82; } 72% { opacity: 0.7; } 100% { opacity: 0; } }
 @keyframes goldRainAtmosphereClose { 0% { opacity: 0.65; } 100% { opacity: 0; } }
