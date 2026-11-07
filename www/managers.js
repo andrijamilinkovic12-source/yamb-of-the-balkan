@@ -1355,36 +1355,37 @@ class EffectManager {
         if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId() || !sprites.length) return;
 
         const rand = (min, max) => min + Math.random() * (max - min);
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
         let width = 0;
         let height = 0;
         const resize = () => {
             width = window.innerWidth || document.documentElement.clientWidth || 1;
             height = window.innerHeight || document.documentElement.clientHeight || 1;
+            const dpr = Math.min(window.devicePixelRatio || 1, width < 640 ? 1.5 : 2);
             canvas.width = Math.ceil(width * dpr);
             canvas.height = Math.ceil(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         };
         resize();
-        const count = width < 640 ? 132 : 180;
+        const count = width < 640 ? 228 : 324;
         const particles = Array.from({ length: count }, (_, index) => {
             const spread = (index / (count - 1)) * 2 - 1;
+            const followThrough = index % 4 === 0;
             return {
                 image: sprites[index % sprites.length],
-                x: width * 0.5 + rand(-width * 0.06, width * 0.06),
+                x: width * (0.5 + rand(-0.06, 0.06) + (followThrough ? spread * 0.12 : 0)),
                 y: height * rand(0.75, 0.82),
-                vx: spread * width * rand(0.72, 1.08) + rand(-30, 30),
+                vx: spread * width * (followThrough ? rand(0.36, 0.6) : rand(0.72, 1.08)) + rand(-30, 30),
                 vy: -height * rand(1.08, 1.78),
                 gravity: height * rand(1.35, 1.82),
                 wobble: rand(0, Math.PI * 2),
                 rotation: rand(-0.45, 0.45),
                 spin: rand(-2.8, 2.8),
                 size: rand(14, 24),
-                age: -rand(0, 0.12),
+                age: followThrough ? -rand(0.16, 0.36) : index % 2 === 1 ? 0 : -rand(0.02, 0.12),
                 ttl: rand(2.35, 2.95)
             };
         });
-        let lastFrame = 0;
+        let lastFrame = null;
         const animate = now => {
             if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId()) {
                 ctx.clearRect(0, 0, width, height);
@@ -1392,8 +1393,10 @@ class EffectManager {
                 return;
             }
             if (window.innerWidth !== width || window.innerHeight !== height) resize();
-            const delta = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0;
+            const firstFrame = lastFrame === null;
+            const delta = firstFrame ? 0 : Math.min(0.05, (now - lastFrame) / 1000);
             lastFrame = now;
+            if (firstFrame) window.app?.soundMgr?.confettiPop?.();
             ctx.clearRect(0, 0, width, height);
             let remaining = 0;
             for (const particle of particles) {
@@ -2308,6 +2311,34 @@ class SoundManager {
             gain.connect(this.ctx.destination);
             osc.start(now);
             osc.stop(now + 1.0);
+        });
+    }
+
+    confettiPop() {
+        this.playSound(() => {
+            const { sampleRate } = this.ctx;
+            if (!this.confettiPopBuffer) {
+                const length = Math.ceil(sampleRate * 0.16);
+                const buffer = this.ctx.createBuffer(1, length, sampleRate);
+                const samples = buffer.getChannelData(0);
+                let softNoise = 0;
+                const smoothing = 1 - Math.exp(-2 * Math.PI * 1400 / sampleRate);
+                for (let i = 0; i < length; i++) {
+                    const t = i / sampleRate;
+                    const noise = Math.random() * 2 - 1;
+                    softNoise += (noise - softNoise) * smoothing;
+                    // A dry crack and a short paper rustle, with no long explosion tail.
+                    const crack = (noise * 0.26 + softNoise * 0.22) * Math.exp(-t / 0.012);
+                    const thump = Math.sin(2 * Math.PI * 175 * t) * 0.19 * Math.exp(-t / 0.017);
+                    const paper = (noise - softNoise) * 0.055 * Math.exp(-t / 0.045);
+                    samples[i] = (crack + thump + paper) * Math.min(1, t / 0.0015, (length - i - 1) / (sampleRate * 0.015));
+                }
+                this.confettiPopBuffer = buffer;
+            }
+            const source = this.ctx.createBufferSource();
+            source.buffer = this.confettiPopBuffer;
+            source.connect(this.ctx.destination);
+            source.start();
         });
     }
 
