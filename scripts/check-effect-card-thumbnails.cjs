@@ -24,6 +24,11 @@ const neonBytes = read(`www/${neonPreview}`);
 assert.equal(neonBytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
 assert(neonBytes.readUInt32BE(16) <= 384 && neonBytes.readUInt32BE(20) <= 256);
 for (theme of themes) assert.equal(getter.call({}, 'neon_pulse'), neonPreview);
+for (theme of themes) {
+ const source = `assets/effects/drones-v1/${theme}-drone-v1.png`;
+ assert.equal(getter.call({}, 'drones'), source);
+ assert.equal(read(`www/${source}`).readUInt32BE(16), 160);
+}
 const before=manifest.assets.reduce((n,a)=>n+a.sourceBytes,0),after=manifest.assets.reduce((n,a)=>n+a.bytes,0);
 assert(after<before*.2,'Effect card pack is no longer substantially smaller than the runtime originals');
 console.log(`PASS: 43 reviewed canonical RGBA derivatives; all ten-theme card resolvers; ${(100*(1-after/before)).toFixed(1)}% fewer PNG bytes; runtime originals preserved.`);

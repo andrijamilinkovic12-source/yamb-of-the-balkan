@@ -2937,6 +2937,7 @@ class ShopManager {
         const selected = localStorage.getItem('yamb_theme') || 'dark';
         const theme = YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
         if (effectId === 'balkan') return `${previewRoot}/universal-balkan-v1.png`;
+        if (effectId === 'drones') return `assets/effects/drones-v1/${theme}-drone-v1.png`;
         if (effectId === 'dragon_fire') return `${previewRoot}/universal-dragon-fire-v1.png`;
         if (effectId === 'ufo_abduction') return `${previewRoot}/${theme}-ufo-abduction-v1.png`;
         if (effectId === 'royal_yamb') return `${previewRoot}/${theme}-royal-yamb-v1.png`;

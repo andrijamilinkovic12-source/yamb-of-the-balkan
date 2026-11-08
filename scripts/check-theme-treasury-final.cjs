@@ -93,7 +93,9 @@ for (const theme of themes) {
         roles.set(role, source);
         if (themed) {
             themedRoles++;
-            assert(source.startsWith(prefix + '/') || source.startsWith(`assets/effects/treasury-thumbnails-v1/${theme}-`), `Foreign theme asset: ${theme}/${role}: ${source}`);
+            assert(source.startsWith(prefix + '/') || source.startsWith(`assets/effects/treasury-thumbnails-v1/${theme}-`)
+                || (role === 'effect/drones' && source === `assets/effects/drones-v1/${theme}-drone-v1.png`),
+                `Foreign theme asset: ${theme}/${role}: ${source}`);
             if (!hashesByRole.has(role)) hashesByRole.set(role, new Set());
             assert(!hashesByRole.get(role).has(hash), `Recolored or copied binary: ${theme}/${role}`);
             hashesByRole.get(role).add(hash);

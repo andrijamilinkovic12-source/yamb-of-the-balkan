@@ -6,6 +6,12 @@ const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
 const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
 const ICE_AGE_GROWTH_SECONDS = 2.8;
 const NEON_PULSE_COLORS = Object.freeze({ cyan: '0, 244, 255', pink: '255, 40, 188', white: '245, 255, 255' });
+const DRONE_LIGHT_ANCHORS = Object.freeze({
+    dark: [0.4969, 0.8409], light: [0.4995, 0.7839], medium: [0.4984, 0.8219],
+    winter: [0.4999, 0.8795], neon: [0.5003, 0.7928], amethyst: [0.498, 0.7906],
+    easter: [0.4997, 0.7838], desert: [0.4994, 0.881], moon: [0.4997, 0.7596],
+    severna: [0.499, 0.8685]
+});
 
 class LiveEffectsStage {
     static imageCache = new Map();
@@ -16,6 +22,7 @@ class LiveEffectsStage {
         if (type === 'ice_age') return { frost: png('frost-corner') };
         if (type === 'balkan') return { trumpet: png('trumpet') };
         if (type === 'dragon_fire') return { flame: png('flame') };
+        if (type === 'drones') return { drone: `assets/effects/drones-v1/${theme}-drone-v1.png` };
         if (type === 'ufo_abduction') return { ship: png(`ufo-${theme}`) };
         if (type === 'royal_yamb') return {
             logo: theme === 'dark' ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
@@ -56,6 +63,10 @@ class LiveEffectsStage {
     constructor(owner, type) {
         this.owner = owner;
         this.type = type;
+        if (type === 'drones') {
+            const app = window.app;
+            this.dronePlayerName = app?.players?.[app.currentPlayerIdx] || app?.playerName || 'YAMB';
+        }
         this.theme = owner.getGoldRainThemeId();
         this.palette = SUPERNOVA_THEME_PROFILES[this.theme];
         this.reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
@@ -95,7 +106,6 @@ class LiveEffectsStage {
         this.scores = [...(this.table?.querySelectorAll?.('.score-btn.filled, .qa-board-grid span') || [])]
             .filter(node => /^\d+$/.test(node.textContent.trim())).slice(0, this.mobile ? 24 : 40)
             .map(node => ({ node, text: node.textContent.trim(), rect: node.getBoundingClientRect() }));
-        if (this.type === 'drones') this.prepareDroneFormation();
         window.addEventListener('resize', this.resize, { passive: true });
         this.visibility = () => { if (document.hidden) this.stop(); };
         document.addEventListener('visibilitychange', this.visibility);
@@ -137,6 +147,7 @@ class LiveEffectsStage {
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         if (this.type === 'ice_age') this.prepareIceFrost();
         if (this.type === 'neon_pulse') this.prepareNeonFrame();
+        if (this.type === 'drones') this.prepareDroneFormation();
         this.overlay.dataset.board = `${this.board.width}x${this.board.height}`;
     }
 
@@ -215,7 +226,7 @@ class LiveEffectsStage {
 
     sprite(image, x, y, width, rotation = 0, alpha = 1, flip = 1, height) {
         if (!image) return;
-        const h = height || width * image.naturalHeight / image.naturalWidth;
+        const h = height || width * (image.naturalHeight || image.height) / (image.naturalWidth || image.width);
         this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(rotation);
         this.ctx.scale(flip, 1); this.ctx.globalAlpha = this.alpha * alpha;
         this.ctx.drawImage(image, -width / 2, -h / 2, width, h); this.ctx.restore();
@@ -497,39 +508,104 @@ class LiveEffectsStage {
     }
 
     prepareDroneFormation() {
-        const app = window.app;
-        const fullName = app?.players?.[app.currentPlayerIdx] || app?.playerName || 'YAMB';
-        const name = String(fullName).trim().split(/\s+/)[0].slice(0, 12).toLocaleUpperCase();
-        const sample = document.createElement('canvas'); sample.width = 360; sample.height = 100;
-        const ctx = sample.getContext('2d', { willReadFrequently: true });
-        ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.font = `800 ${Math.min(66, 330 / Math.max(3, name.length) * 1.65)}px Arial`;
-        ctx.fillText(name, 180, 50, 345);
-        const data = ctx.getImageData(0, 0, 360, 100).data;
-        const points = [];
-        for (let y = 8; y < 95; y += 6) for (let x = 6; x < 355; x += 6) {
-            if (data[(y * 360 + x) * 4 + 3] > 100) points.push([x / 360, y / 100]);
+        const firstName = String(this.dronePlayerName).normalize('NFC').trim().split(/\s+/)[0] || 'YAMB';
+        const letters = Array.from(firstName.toLocaleUpperCase('sr-Latn')).slice(0, 12);
+        const name = letters.join('');
+        const split = Math.ceil(letters.length / 2);
+        const lines = letters.length > 8 ? [letters.slice(0, split).join(''), letters.slice(split).join('')] : [name];
+        const availableWidth = Math.max(120, Math.min(this.width - 40, 760));
+        const measuring = document.createElement('canvas').getContext('2d');
+        measuring.font = '900 96px Arial, sans-serif';
+        const scale = 0.32;
+        const measuredLines = lines.map(text => {
+            const metrics = measuring.measureText(text);
+            return { text, metrics, columns: Math.max(1, Math.ceil(metrics.width * scale / 4)) };
+        });
+        const maxColumns = Math.max(...measuredLines.map(line => line.columns));
+        const spacing = Math.min(this.mobile ? 13 : 18, availableWidth / (maxColumns + 1));
+        const size = Math.min(this.mobile ? 13 : 18, spacing * 0.72);
+        const targets = [];
+        let offsetY = 0;
+
+        for (const { text, metrics, columns } of measuredLines) {
+            const sample = document.createElement('canvas');
+            const ascent = metrics.actualBoundingBoxAscent || 76;
+            const descent = metrics.actualBoundingBoxDescent || 4;
+            sample.width = columns * 4 + 8;
+            sample.height = Math.ceil((ascent + descent) * scale) + 8;
+            const ctx = sample.getContext('2d', { willReadFrequently: true });
+            ctx.font = '900 96px Arial, sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.setTransform(scale, 0, 0, scale, 4, 4);
+            ctx.fillText(text, 0, ascent);
+            const data = ctx.getImageData(0, 0, sample.width, sample.height).data;
+            const rowCount = Math.ceil((sample.height - 8) / 4);
+            for (let row = 0; row < rowCount; row++) for (let col = 0; col < columns; col++) {
+                // Coverage sampling keeps thin strokes and accents without dropping every nth point.
+                let coverage = 0;
+                for (let sy = 0; sy < 4; sy++) for (let sx = 0; sx < 4; sx++) {
+                    const pixelX = 4 + col * 4 + sx, pixelY = 4 + row * 4 + sy;
+                    coverage += data[(pixelY * sample.width + pixelX) * 4 + 3] || 0;
+                }
+                if (coverage < 900) continue;
+                targets.push({ x: (col - (columns - 1) / 2) * spacing, y: offsetY + row * spacing, size });
+            }
+            offsetY += (rowCount + 3) * spacing;
         }
-        const max = this.mobile ? 175 : 280;
-        this.droneTargets = points.filter((_, i) => i % Math.max(1, Math.ceil(points.length / max)) === 0);
+        const centerY = Math.max(150, Math.min(this.height * 0.35, this.height - offsetY / 2 - 35));
+        this.droneTargets = targets.map(target => ({ ...target,
+            x: this.width / 2 + target.x, y: centerY + target.y - (offsetY - spacing * 3) / 2 }));
+        this.overlay.dataset.name = name;
+        this.overlay.dataset.drones = String(targets.length);
+        this.overlay.dataset.droneSource = LiveEffectsStage.sources('drones', this.theme).drone;
+        const backdropTop = centerY - offsetY / 2 - 45;
+        const backdropHeight = offsetY + 90;
+        const backdrop = this.ctx.createLinearGradient(0, backdropTop, 0, backdropTop + backdropHeight);
+        backdrop.addColorStop(0, 'rgba(3,8,18,0)');
+        backdrop.addColorStop(0.3, 'rgba(3,8,18,0.5)');
+        backdrop.addColorStop(0.7, 'rgba(3,8,18,0.5)');
+        backdrop.addColorStop(1, 'rgba(3,8,18,0)');
+        this.droneBackdrop = { gradient: backdrop, y: backdropTop, height: backdropHeight };
+
+        const light = document.createElement('canvas'); light.width = 64; light.height = 64;
+        const lightCtx = light.getContext('2d');
+        const glow = lightCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        glow.addColorStop(0, 'rgba(255,255,255,0.95)');
+        glow.addColorStop(0.14, this.rgba(this.palette.main, 0.8));
+        glow.addColorStop(0.42, this.rgba(this.palette.main, 0.22));
+        glow.addColorStop(1, this.rgba(this.palette.main, 0));
+        lightCtx.fillStyle = glow; lightCtx.fillRect(0, 0, 64, 64);
+        this.droneLight = light;
     }
 
     drones(t, p) {
-        this.shade(0.38);
-        const assemble = this.ease(p / 0.42), depart = this.ease((p - 0.76) / 0.24);
-        (this.droneTargets || []).forEach(([tx, ty], i) => {
-            const targetX = this.width * (0.08 + tx * 0.84), targetY = this.height * 0.3 + ty * Math.min(135, this.height * 0.2);
-            const originX = this.width * this.seed(i + 4), originY = this.height + 30 + this.seed(i + 15) * 120;
-            let x = originX + (targetX - originX) * assemble;
-            let y = originY + (targetY - originY) * assemble;
-            if (!this.reduced) { x += Math.sin(t * 2 + i) * 24 * (1 - assemble); y += Math.sin(t * 1.4 + i) * 18 * (1 - assemble); }
-            x += (this.seed(i + 57) - 0.5) * this.width * depart;
-            y -= (this.height * 0.65 + this.seed(i + 81) * 180) * depart;
-            if (this.reduced) { x = targetX; y = targetY; }
-            const color = i % 7 ? this.palette.main : this.palette.accent;
-            const twinkle = 0.68 + Math.sin(t * 3 + i * 2) * 0.13;
-            this.glow(x, y, this.mobile ? 6 : 8, color, 0.26 * twinkle);
-            this.dot(x, y, this.mobile ? 1.25 : 1.6, color, twinkle);
+        this.shade(0.6);
+        this.ctx.save();
+        this.ctx.globalAlpha = this.alpha;
+        this.ctx.fillStyle = this.droneBackdrop.gradient;
+        this.ctx.fillRect(0, this.droneBackdrop.y, this.width, this.droneBackdrop.height);
+        this.ctx.restore();
+        const assemble = this.reduced ? 1 : this.ease((p - 0.025) / 0.29);
+        const depart = this.reduced ? 0 : this.ease((p - 0.79) / 0.21);
+        this.overlay.dataset.formation = p < 0.315 && !this.reduced ? 'assembling' : depart > 0 ? 'departing' : 'holding';
+        const [lightX, lightY] = DRONE_LIGHT_ANCHORS[this.theme];
+        const image = this.images.drone;
+        const ratio = image.naturalHeight / image.naturalWidth;
+        this.droneTargets.forEach((target, i) => {
+            const originX = this.width * (0.08 + this.seed(i + 4) * 0.84);
+            const originY = this.height + 35 + this.seed(i + 15) * 120;
+            const hover = this.reduced ? 0 : Math.sin(t * 1.8 + i) * 0.35;
+            const x = originX + (target.x - originX) * assemble
+                + (this.seed(i + 57) - 0.5) * this.width * depart;
+            const y = originY + (target.y - originY) * assemble + hover
+                - (this.height * 0.65 + this.seed(i + 81) * 180) * depart;
+            const size = target.size + (1 - assemble) * 20 + depart * 8;
+            const bodyHeight = size * ratio;
+            const twinkle = this.reduced ? 0.82 : 0.86 + Math.sin(t * 2.4 + i * 0.4) * 0.08;
+            // The LED, not the body center, sits on the sampled letter stroke.
+            this.sprite(image, x + (0.5 - lightX) * size, y + (0.5 - lightY) * bodyHeight, size, 0, 0.7 + (1 - assemble) * 0.3);
+            this.sprite(this.droneLight, x, y, Math.max(6, target.size * 1.3), 0, twinkle * 0.85);
+            this.dot(x, y, Math.max(0.95, target.size * 0.16), '255, 254, 248', twinkle);
         });
     }
 
