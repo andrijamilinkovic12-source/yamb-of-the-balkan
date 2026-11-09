@@ -53,9 +53,70 @@
     summary { padding:15px 0 4px; cursor:pointer; color:#d7deed; }.hint { margin:8px 0 4px; }
     label { display:block; margin-top:12px; color:#d7deed; font-weight:700; }
     input { width:100%; margin-top:5px; padding:9px 10px; border:1px solid var(--edge); border-radius:9px; background:rgba(4,7,16,.28); color:var(--ink); font:inherit; font-size:.82rem; }
+    .reports { margin:0 18px 14px; padding:16px; border:1px solid var(--edge); border-radius:16px; background:rgba(7,11,25,.19); }
+    .report-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
+    .report-head h2 { margin:0; font-size:1rem; }
+    .report-actions, .periods { display:flex; flex-wrap:wrap; gap:6px; }
+    .reports button { min-height:34px; font-size:.78rem; }
+    .reports button.active { background:rgba(119,215,164,.25); border-color:var(--ok); }
+    .report-period { margin:12px 0 3px; color:var(--sky); font-weight:800; }
+    .report-note { margin:0 0 12px; color:var(--muted); font-size:.73rem; }
+    .report-method { margin:6px 0 12px; color:var(--muted); font-size:.72rem; }
+    .report-cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+    .report-card { padding:10px; border:1px solid var(--edge); border-radius:11px; }
+    .report-card .value { margin-top:3px; font-size:1.4rem; font-weight:800; color:var(--sky); }
+    .report-details { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:12px; }
+    .report-details h3 { margin:0 0 6px; font-size:.75rem; color:var(--muted); }
+    .report-table-wrap { max-height:320px; margin-top:12px; overflow:auto; border:1px solid var(--edge); border-radius:10px; }
+    .report-table { width:100%; border-collapse:collapse; font-size:.75rem; font-variant-numeric:tabular-nums; }
+    .report-table th, .report-table td { padding:7px 9px; border-bottom:1px solid var(--edge); text-align:right; white-space:nowrap; }
+    .report-table th:first-child, .report-table td:first-child { text-align:left; }
+    .report-table thead { position:sticky; top:0; background:var(--panel); }
+    .report-table td.untracked { color:var(--muted); }
+    body { height:100vh; overflow:hidden; padding:10px; }
+    main { width:100%; height:calc(100vh - 20px); display:flex; flex-direction:column; }
+    header { flex:0 0 auto; padding:13px 20px 10px; }
+    .top-line { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 18px 10px; border-bottom:1px solid var(--edge); }
+    .view-nav, .quick-state { display:flex; align-items:center; flex-wrap:wrap; gap:7px; }
+    .view-nav button { min-height:32px; }
+    .view-nav button.active { background:rgba(119,215,164,.25); border-color:var(--ok); }
+    .quick-state { color:var(--muted); font-size:.72rem; }
+    .quick-state span { padding:5px 9px; border:1px solid var(--edge); border-radius:9px; white-space:nowrap; }
+    .quick-state b { margin-left:5px; color:var(--sky); font-variant-numeric:tabular-nums; }
+    .quick-state span:first-child b { color:var(--ok); }
+    main.stale .live-view .summary, main.stale .live-view .metrics, main.stale .live-view .monitor-panels { opacity:.55; }
+    main.public-only .live-view .metrics, main.public-only .live-view .monitor-panels { opacity:.45; }
+    .view { display:none; min-height:0; overflow:auto; flex:1 1 auto; }
+    .view.active { display:block; }
+    .live-view .summary { margin-top:12px; padding:8px 20px 10px; }
+    .live-view #online { font-size:clamp(2.5rem,4vw,3.5rem); }
+    .live-view .metrics { gap:8px; padding-bottom:8px; }
+    .live-view .metric { min-height:78px; padding:9px 11px; }
+    .live-view .metric .value { margin-top:2px; font-size:1.45rem; }
+    .live-view .metric small { min-height:0; margin-top:2px; }
+    .live-view .monitor-panel { min-height:0; }
+    .diagnostics-view { padding:12px 18px; }
+    .diagnostics-view .monitor-panel { min-height:0; }
+    .diagnostics-view .diagnostic-row span { overflow:visible; text-overflow:clip; white-space:normal; overflow-wrap:anywhere; }
+    .diagnostics-view .diagnostic-head, .diagnostics-view .diagnostic-row { grid-template-columns:140px minmax(210px,1fr) minmax(260px,1.5fr) minmax(230px,1.2fr); }
+    .reports { margin:12px 18px; }
+    .report-cards { grid-template-columns:repeat(5,minmax(0,1fr)); }
+    .report-card { min-height:69px; padding:8px 10px; }
+    .report-card .value { font-size:1.25rem; }
+    .report-table-wrap { max-height:min(36vh,390px); }
+    footer { flex:0 0 auto; padding:7px 20px; border-top:1px solid var(--edge); }
+    details { flex:0 0 auto; padding-bottom:0; }
+    details[open] { max-height:35vh; overflow:auto; padding-bottom:12px; }
+    details summary { padding:6px 0; }
+    @media (min-width:1700px) { .live-view .metrics { grid-template-columns:repeat(6,minmax(0,1fr)); }.report-cards { grid-template-columns:repeat(10,minmax(0,1fr)); } }
+    @media (max-width:1050px) { .top-line { align-items:flex-start; }.report-cards { grid-template-columns:repeat(3,minmax(0,1fr)); }.diagnostics-view .diagnostic-head, .diagnostics-view .diagnostic-row { grid-template-columns:115px 1fr 1.2fr 1fr; } }
+    @media (max-width:700px) { body { height:auto; min-height:100vh; overflow:auto; padding:8px; } main { height:auto; min-height:calc(100vh - 16px); }.view.active { overflow:visible; }.top-line { flex-direction:column; }.report-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }.diagnostics-view { overflow:auto; }.diagnostics-view .diagnostic-head, .diagnostics-view .diagnostic-row { min-width:780px; } }
+    @media print { body { height:auto; overflow:visible; background:#fff; color:#111; padding:0; } main { height:auto; overflow:visible; border:0; box-shadow:none; background:#fff; color:#111; } header,.top-line,.live-view,.diagnostics-view,footer,details,.report-actions,.periods { display:none !important; }.reports-view { display:block !important; overflow:visible; }.reports { margin:0; padding:0; border:0; background:#fff; }.report-table-wrap { max-height:none; overflow:visible; }.report-card,.report-table th,.report-table td { border-color:#aaa; }.report-card .value,.report-period,.monitor-list b { color:#111; } }
     @keyframes zero-pulse { 50% { box-shadow:0 0 0 5px rgba(237,126,146,.08),0 0 30px rgba(237,126,146,.13); } }
     @media (max-width:1050px) { .metrics { grid-template-columns:repeat(4,minmax(0,1fr)); }.diagnostic-summary { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media (max-width:800px) { .report-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }.report-details { grid-template-columns:1fr; } }
     @media (max-width:560px) { body { padding:12px; } header { padding:21px 20px 17px; }.metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.metric { min-height:105px; }.monitor-panels { grid-template-columns:1fr; }.diagnostic-summary { grid-template-columns:repeat(2,minmax(0,1fr)); } footer { grid-template-columns:1fr auto; } footer #updated { grid-column:1 / -1; } details { padding-left:20px; padding-right:20px; } }
+    @media (max-width:560px) { .reports { margin:0 12px 12px; padding:12px; }.report-head { align-items:stretch; } }
   </style>
 </head>
 <body>
@@ -64,6 +125,8 @@
       <div><h1>Yamb of the Balkan</h1><p>Privatni, read-only pregled stanja servera</p></div>
       <div id="state" class="state"><i class="dot"></i><span>Čekam podatke</span></div>
     </header>
+    <div class="top-line"><nav class="view-nav" aria-label="Delovi indikatora"><button type="button" data-view="live-view" class="active">Pregled uživo</button><button type="button" data-view="reports-view">Izveštaji</button><button type="button" data-view="diagnostics-view">Dijagnostika</button></nav><div class="quick-state" aria-live="polite"><span>ONLINE <b id="quick-online">—</b></span><span>U PARTIJI <b id="quick-in-game">—</b></span><span>ČEKA <b id="quick-waiting">—</b></span><span>DAN <b id="quick-day">—</b></span></div></div>
+    <section id="live-view" class="view live-view active" aria-label="Pregled uživo">
     <section class="summary" aria-live="polite"><div class="label">ONLINE IGRAČA</div><div id="online">—</div></section>
     <section class="metrics" aria-live="polite">
       <article class="metric"><div class="label">U PARTIJI</div><div class="value" id="in-game">—</div><small id="duels">Aktivni dueli: —</small></article>
@@ -75,14 +138,25 @@
       <article class="metric waiting"><div class="label">PROSEČNO VREME ČEKANJA</div><div class="value" id="average-wait">—</div><small>Nasumično i privatno uparivanje</small></article>
       <article class="metric"><div class="label">NAJVEĆI BROJ ONLINE · SEDAM DANA</div><div class="value" id="peak-7d">—</div><small>Najveći online broj u poslednjih sedam dana</small></article>
       <article class="metric"><div class="label">AKTIVNI IGRAČI DANAS</div><div class="value" id="active-players">—</div><small id="active-players-note">Danas i poslednja 24 sata</small></article>
-      <article class="metric"><div class="label">TURNIR I KVARTALNA LIGA</div><div class="value" id="competition">—</div><small id="competition-note">Prijave i učesnici aktuelnog kvartala</small></article>
-      <article class="metric"><div class="label">NAGRADNI VIDEO</div><div class="value" id="rewarded-video">—</div><small id="rewarded-video-note">Status i današnje potvrđene nagrade</small></article>
+      <article class="metric"><div class="label">TURNIR I KVARTALNA LIGA · TRENUTNO</div><div class="value" id="competition">—</div><small id="competition-note">Prijave i učesnici aktuelnog kvartala</small></article>
+      <article class="metric"><div class="label">NAGRADNI VIDEO · SERVER</div><div class="value" id="rewarded-video">—</div><small id="rewarded-video-note">Podešavanje i današnje potvrđene nagrade</small></article>
       <article class="metric"><div class="label">PARTIJE PO VRSTI DANAS</div><div class="value" id="games-by-mode">—</div><small>Solo, Hotseat, nasumične i prijateljske</small></article>
     </section>
     <section class="monitor-panels" aria-live="polite">
       <article class="monitor-panel"><h2>TEME AKTIVNIH IGRAČA DANAS</h2><ul class="monitor-list" id="theme-usage"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
       <article class="monitor-panel"><h2>NAJPOSEĆENIJE SOBE DANAS</h2><ul class="monitor-list" id="top-rooms"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
+    </section>
+    </section>
+    <section id="diagnostics-view" class="view diagnostics-view" aria-label="Dijagnostika prekida">
       <article class="monitor-panel diagnostic-panel"><h2>PREKIDI TOKOM DUELA · SAŽETAK SEDAM DANA · ZAPISI SE BRIŠU POSLE TRIDESET DANA</h2><ul class="diagnostic-summary" id="disconnect-summary"><li>Čekam podatke<b>—</b></li></ul><div class="diagnostic-head" aria-hidden="true"><span>VREME</span><span>PARTIJA</span><span>SIGNAL / MREŽA</span><span>DIJAGNOSTIKA / KONAČNI ISHOD</span></div><div id="disconnect-diagnostics"><div class="diagnostic-row"><span class="muted">Čekam podatke</span><span>—</span><span>—</span><span>—</span></div></div></article>
+    </section>
+    <section id="reports-view" class="view reports-view reports" aria-labelledby="reports-title">
+      <div class="report-head"><h2 id="reports-title">Istorijski izveštaji</h2><div class="periods" role="group" aria-label="Period izveštaja"><button type="button" data-period="day">Dnevni</button><button type="button" data-period="week">Nedeljni</button><button type="button" data-period="month">Mesečni</button><button type="button" data-period="year">Godišnji</button></div></div>
+      <div class="report-head"><div><div class="report-period" id="report-period">—</div><p class="report-note" id="report-note">Unesite monitor token da biste videli istoriju.</p></div><div class="report-actions"><button type="button" id="report-prev" aria-label="Prethodni period">← Prethodni</button><button type="button" id="report-next" aria-label="Sledeći period">Sledeći →</button><button type="button" id="report-export" disabled>Preuzmi CSV</button><button type="button" id="report-print" disabled>Štampaj / PDF</button></div></div>
+      <div class="report-cards" id="report-cards"></div>
+      <div class="report-details"><div><h3>PARTIJE PO VRSTI</h3><ul class="monitor-list" id="report-modes"></ul></div><div><h3>NAJPOSEĆENIJE SOBE</h3><ul class="monitor-list" id="report-rooms"></ul></div><div><h3>TEME · KORISNIČKI DANI</h3><ul class="monitor-list" id="report-themes"></ul></div></div>
+      <p class="report-method">Partije su sačuvani završeni rezultati; tehnički rezultat nije isto što i prekid veze. Vrh online je najveći dnevni zabeleženi broj, a čekanje je ponderisani prosek uparivanja. Turnir, liga i podešenost videa prikazuju samo trenutno stanje u pregledu uživo.</p>
+      <div class="report-table-wrap"><table class="report-table"><thead><tr><th id="report-row-label">Dan</th><th>Partije</th><th>Tehnički</th><th>Aktivni</th><th>Vrh online</th><th>Prekidi</th><th>Čekanje</th><th>Video nagrade</th><th>Greške videa</th></tr></thead><tbody id="report-days"></tbody></table></div>
     </section>
     <footer><div id="updated">Potrebni su URL servera i monitor token.</div><button id="alarm-toggle" type="button">Uključi alarm za 0</button><button id="refresh" type="button">Osveži</button></footer>
     <details>
@@ -96,11 +170,11 @@
     (() => {
       const $ = id => document.getElementById(id);
       const state = $('state'), updated = $('updated'), button = $('refresh'), alarmButton = $('alarm-toggle'), url = $('server-url'), token = $('token'), summary = document.querySelector('.summary');
-      const number = value => Number.isFinite(Number(value)) ? Number(value).toLocaleString('sr-RS') : '—';
+      const number = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value).toLocaleString('sr-RS') : '—';
       const themeLabel = { dark: 'Zelena', light: 'Svetlo zlato', medium: 'Trula višnja', winter: 'Plavi okean', neon: 'Neon cyber', amethyst: 'Kraljevski ametist', easter: 'Vaskrs', desert: 'Pustinjsko staklo', moon: 'Mesečev sjaj', severna: 'Severna maglina' };
       const roomLabel = { daily: 'Dnevni izazov', leaderboard: 'Top lista', statistics: 'Statistika', settings: 'Podešavanja', rules: 'Pravila', treasury: 'Riznica', tournament: 'Turnir', solo: 'Solo igra', hotseat: 'Dva igrača', opponent: 'Nađi protivnika', invite: 'Pozovi prijatelja', globalChat: 'Global chat', onlinePlayers: 'Online igrači', economy: 'Dukati i upisi' };
       const formatWait = seconds => {
-        if (!Number.isFinite(Number(seconds))) return '—';
+        if (seconds === null || seconds === undefined || seconds === '' || !Number.isFinite(Number(seconds))) return '—';
         const value = Math.max(0, Math.round(Number(seconds)));
         return value < 60 ? `${value}s` : `${Math.floor(value / 60)}m ${value % 60}s`;
       };
@@ -197,8 +271,118 @@
           container.append(row);
         });
       }
+      const reportButtons = [...document.querySelectorAll('[data-period]')];
+      const reportLabels = { day: 'Dnevni', week: 'Nedeljni', month: 'Mesečni', year: 'Godišnji' };
+      const tournamentStatusLabels = { registration: 'Prijave', active: 'U toku', finished: 'Završen' };
+      const modeLabels = { solo: 'Solo', hotseat: 'Dva igrača', random: 'Nasumične', friend: 'Prijateljske', other: 'Ostale' };
+      const belgradeToday = () => {
+        const parts = new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Belgrade', year:'numeric', month:'2-digit', day:'2-digit' })
+          .formatToParts(new Date()).reduce((result, part) => { result[part.type] = part.value; return result; }, {});
+        return `${parts.year}-${parts.month}-${parts.day}`;
+      };
+      let reportPeriod = 'day', reportAnchor = belgradeToday(), reportData = null, reportLastAttemptAt = 0, reportRequestId = 0;
+      const viewButtons = [...document.querySelectorAll('[data-view]')];
+      viewButtons.forEach(control => control.addEventListener('click', () => {
+        viewButtons.forEach(item => { item.classList.toggle('active', item === control); item.setAttribute('aria-current', item === control ? 'page' : 'false'); });
+        document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === control.dataset.view));
+      }));
+      function clearReport() {
+        reportRequestId++;
+        reportData = null;
+        $('report-period').textContent = '—';
+        ['report-cards', 'report-modes', 'report-rooms', 'report-themes', 'report-days'].forEach(id => $(id).replaceChildren());
+        $('report-export').disabled = true;
+        $('report-print').disabled = true;
+        $('report-next').disabled = true;
+      }
+      function renderReport(data) {
+        reportData = data;
+        reportAnchor = data.startKey;
+        const lastDay = new Date(new Date(`${data.endKey}T12:00:00Z`).getTime() - 86400000).toISOString().slice(0, 10);
+        $('report-period').textContent = `${reportLabels[data.period]} · ${data.startKey}${data.period === 'day' ? '' : ` – ${lastDay}`}`;
+        $('report-note').textContent = `Vreme: Evropa/Beograd · monitor zapis za ${number(data.totals.trackedDays)} od ${number(data.totals.observedDays)} proteklih dana u periodu · Aktivni igrači su jedinstveni u periodu; teme broje korisničke dane. Nerešene video prijave prikazuju trenutno stanje za izabrani period.`;
+        const cards = [
+          ['ZAVRŠENE PARTIJE', data.totals.completed], ['AKTIVNI IGRAČI', data.totals.activePlayers],
+          ['TEHNIČKI REZULTATI', data.totals.technicalResults], ['NAJVIŠE ONLINE', data.totals.peakOnline], ['PREKIDI TOKOM DUELA', data.totals.disconnects],
+          ['PROSEČNO ČEKANJE', data.totals.averageWaitSeconds == null ? '—' : formatWait(data.totals.averageWaitSeconds)],
+          ['VIDEO NAGRADE', data.totals.adGranted], ['ČEKA PROVERU', data.totals.adPending], ['GREŠKE VIDEA', data.totals.adErrors],
+          ['KORISNIČKI DANI', data.totals.playerDays]
+        ];
+        const cardBox = $('report-cards'); cardBox.replaceChildren();
+        cards.forEach(([label, value]) => {
+          const card = document.createElement('div'), name = document.createElement('div'), amount = document.createElement('div');
+          card.className = 'report-card'; name.className = 'label'; amount.className = 'value';
+          name.textContent = label; amount.textContent = typeof value === 'number' ? number(value) : value;
+          card.append(name, amount); cardBox.append(card);
+        });
+        renderList('report-modes', Object.entries(data.totals.modes || {}).map(([mode, count]) => ({ mode, count })), row => modeLabels[row.mode] || row.mode, row => number(row.count));
+        renderList('report-rooms', data.topRooms, row => roomLabel[row.room] || row.room, row => number(row.visits));
+        renderList('report-themes', data.themes, row => themeLabel[row.theme] || row.theme, row => `${number(row.count)} · ${number(row.percent)}%`);
+        $('report-row-label').textContent = data.granularity === 'month' ? 'Mesec' : 'Dan';
+        const body = $('report-days'); body.replaceChildren();
+        (data.breakdown || data.days || []).forEach(day => {
+          const tr = document.createElement('tr');
+          const wait = day.waitSamples ? formatWait(day.waitTotalMs / day.waitSamples / 1000) : '—';
+          [day.label || day.dayKey, day.completed, day.technicalResults, day.activePlayers, day.tracked ? day.peakOnline : null,
+            day.tracked ? day.disconnects : null, wait, day.adGranted, day.tracked ? day.adErrors : null].forEach((value, index) => {
+            const td = document.createElement('td'); td.textContent = index === 0 ? value : number(value);
+            if (index === 6) td.textContent = wait;
+            if (value == null) td.className = 'untracked'; tr.append(td);
+          });
+          body.append(tr);
+        });
+        $('report-next').disabled = data.endKey > data.todayKey;
+        $('report-export').disabled = false;
+        $('report-print').disabled = false;
+      }
+      async function loadReport() {
+        const base = url.value.trim().replace(/\/+$/, ''), secret = token.value.trim();
+        if (!base || !secret) { $('report-note').textContent = 'Unesite URL servera i monitor token da biste videli istoriju.'; return; }
+        const requestId = ++reportRequestId, period = reportPeriod, anchor = reportAnchor;
+        reportLastAttemptAt = Date.now();
+        $('report-note').textContent = 'Učitavam izveštaj…';
+        try {
+          const params = new URLSearchParams({ period, anchor });
+          const response = await fetch(`${base}/api/monitor/report?${params}`, { headers: { 'X-Yamb-Monitor-Token': secret }, cache: 'no-store' });
+          if (!response.ok) {
+            const failure = await response.json().catch(() => ({}));
+            throw new Error(response.status === 404 ? 'Server još nema podršku za istorijske izveštaje.' :
+              failure.reason === 'monitor_history_unavailable' ? 'Na serveru nema baze za istorijske izveštaje.' : messageFor(response));
+          }
+          const data = await response.json();
+          if (!data.ok || data.period !== period) throw new Error('Izveštaj nije dostupan.');
+          if (requestId === reportRequestId) renderReport(data);
+        } catch (error) {
+          if (requestId === reportRequestId) $('report-note').textContent = error.message || 'Izveštaj nije dostupan.';
+        }
+      }
+      reportButtons.forEach(control => control.addEventListener('click', () => {
+        reportPeriod = control.dataset.period; reportAnchor = belgradeToday(); clearReport();
+        reportButtons.forEach(item => item.classList.toggle('active', item === control));
+        loadReport();
+      }));
+      reportButtons[0].classList.add('active');
+      $('report-prev').addEventListener('click', () => {
+        if (!reportData) return;
+        reportAnchor = new Date(new Date(`${reportData.startKey}T12:00:00Z`).getTime() - 86400000).toISOString().slice(0, 10);
+        clearReport(); loadReport();
+      });
+      $('report-next').addEventListener('click', () => {
+        if (!reportData) return;
+        reportAnchor = reportData.endKey; clearReport(); loadReport();
+      });
+      $('report-export').addEventListener('click', () => {
+        if (!reportData) return;
+        const header = [reportData.granularity === 'month' ? 'Mesec' : 'Dan','Završene partije','Tehnički rezultati','Solo','Dva igrača','Nasumične','Prijateljske','Ostale','Aktivni igrači','Vrh online','Prekidi','Prosek čekanja (s)','Video nagrade','Greške videa'];
+        const lines = [header.join(';'), ...(reportData.breakdown || reportData.days || []).map(day => [day.label || day.dayKey, day.completed, day.technicalResults, day.modes.solo, day.modes.hotseat, day.modes.random, day.modes.friend, day.modes.other, day.activePlayers, day.tracked ? day.peakOnline : '', day.tracked ? day.disconnects : '', day.waitSamples ? Math.round(day.waitTotalMs / day.waitSamples / 1000) : '', day.adGranted, day.tracked ? day.adErrors : ''].join(';'))];
+        const blob = new Blob(['\uFEFF', lines.join('\r\n')], { type:'text/csv;charset=utf-8' });
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob);
+        link.download = `yamb-izvestaj-${reportData.period}-${reportData.startKey}.csv`; link.click();
+        window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      });
+      $('report-print').addEventListener('click', () => { if (reportData) window.print(); });
       const ALARM_STORAGE_KEY = 'yamb_zero_alarm_enabled';
-      let timer = null, audioContext = null, alarmEnabled = localStorage.getItem(ALARM_STORAGE_KEY) === 'true', zeroAlarmPlayed = false, zeroAlarmTimer = null, fallbackSocket = null;
+      let timer = null, audioContext = null, alarmEnabled = localStorage.getItem(ALARM_STORAGE_KEY) === 'true', zeroAlarmPlayed = false, zeroAlarmTimer = null, fallbackSocket = null, lastSuccessfulAt = null;
       token.value = sessionStorage.getItem('yamb_monitor_token') || '';
       function setState(kind, message) { state.className = `state ${kind}`; state.querySelector('span').textContent = message; }
       function renderAlarmButton() {
@@ -234,14 +418,17 @@
       }
       function updateZeroAlarm(value) {
         const online = Number(value);
-        const isZero = Number.isFinite(online) && online === 0;
+        const isZero = value !== null && value !== undefined && value !== '' && Number.isFinite(online) && online === 0;
         summary.classList.toggle('zero', isZero);
         if (!isZero) { zeroAlarmPlayed = false; stopZeroAlarmRepeat(); return; }
         if (alarmEnabled && !zeroAlarmPlayed) { zeroAlarmPlayed = true; playZeroAlarm(); }
         if (alarmEnabled) startZeroAlarmRepeat();
       }
       function fill(metrics, dayKey) {
-        $('online').textContent = number(metrics.online); updateZeroAlarm(metrics.online); $('in-game').textContent = number(metrics.playersInGame);
+        $('online').textContent = number(metrics.online); $('quick-online').textContent = number(metrics.online);
+        $('quick-in-game').textContent = number(metrics.playersInGame); $('quick-waiting').textContent = number(metrics.waitingForOpponent);
+        $('quick-day').textContent = dayKey || '—';
+        updateZeroAlarm(metrics.online); $('in-game').textContent = number(metrics.playersInGame);
         $('duels').textContent = `Aktivni dueli: ${number(metrics.activeDuels)}`; $('waiting').textContent = number(metrics.waitingForOpponent);
         $('completed').textContent = number(metrics.completedToday); $('disconnects').textContent = number(metrics.disconnectsToday);
         $('peak').textContent = number(metrics.peakOnlineToday); $('day').textContent = dayKey || '—';
@@ -251,9 +438,9 @@
         $('active-players-note').textContent = `Danas: ${number(metrics.activePlayersToday)} · poslednja 24 sata: ${number(metrics.activePlayersLast24h)}`;
         const tournament = metrics.tournament || {}, league = metrics.quarterlyLeague || {};
         $('competition').textContent = `${number(tournament.registrations)}/${number(tournament.capacity)}`;
-        $('competition-note').textContent = `Turnir: ${tournament.status || '—'} · Kvartal ${number(league.quarter)}: ${number(league.participants)} igrača`;
+        $('competition-note').textContent = `Turnir: ${tournamentStatusLabels[tournament.status] || tournament.status || '—'} · Kvartal ${number(league.quarter)}: ${number(league.participants)} igrača`;
         const rewarded = metrics.rewardedVideo || {};
-        $('rewarded-video').textContent = rewarded.status === 'ready' ? 'SPREMAN' : (rewarded.status === 'unavailable' ? 'NEDOSTUPAN' : '—');
+        $('rewarded-video').textContent = rewarded.status === 'ready' ? 'PODEŠEN' : (rewarded.status === 'unavailable' ? 'NIJE PODEŠEN' : '—');
         $('rewarded-video-note').textContent = `Dodeljeno: ${number(rewarded.grantedToday)} · čeka proveru: ${number(rewarded.pendingVerificationToday)} · greške: ${number(rewarded.errorsToday)}`;
         const modes = metrics.completedByMode || {};
         $('games-by-mode').textContent = `${number(metrics.completedToday)}`;
@@ -274,34 +461,48 @@
         if (!base) return;
         fallbackSocket = window.io(base, { transports: ['websocket', 'polling'], reconnection: true, reconnectionDelay: 1500, timeout: 15000 });
         fallbackSocket.on('connect', () => {
+          document.querySelector('main').classList.remove('stale');
           setState('connected', 'Povezano — alarm prati online igrače');
           updated.textContent = 'Rezervni režim: samo online broj · osvežava se uživo';
         });
         fallbackSocket.on('users_count', value => {
-          $('online').textContent = number(value); updateZeroAlarm(value);
+          $('online').textContent = number(value); $('quick-online').textContent = number(value); updateZeroAlarm(value);
           updated.textContent = `Online broj ažuriran: ${new Date().toLocaleTimeString('sr-RS')}`;
         });
-        fallbackSocket.on('connect_error', () => setState('error', 'Nije moguće povezati se sa serverom.'));
+        fallbackSocket.on('connect_error', () => { document.querySelector('main').classList.add('stale'); stopZeroAlarmRepeat(); setState('error', 'Nije moguće povezati se sa serverom.'); });
+        fallbackSocket.on('disconnect', () => { document.querySelector('main').classList.add('stale'); stopZeroAlarmRepeat(); setState('error', 'Javna veza je prekinuta.'); });
       }
       async function refresh() {
         const base = url.value.trim().replace(/\/+$/, ''), secret = token.value.trim();
         if (!base) { setState('error', 'Unesite URL servera.'); updated.textContent = 'Čekam adresu servera.'; return; }
-        if (!secret) { startPublicOnlineFallback(); setState('connected', 'Alarm prati online igrače'); updated.textContent = 'Unesite token za dodatne privatne statistike.'; return; }
+        if (!secret) {
+          document.querySelector('main').classList.add('public-only');
+          ['quick-in-game', 'quick-waiting', 'quick-day'].forEach(id => $(id).textContent = '—');
+          startPublicOnlineFallback();
+          if (!fallbackSocket?.connected) setState('', 'Čekam javni online signal');
+          updated.textContent = 'Unesite token za dodatne privatne statistike.'; return;
+        }
         button.disabled = true;
         try {
           const response = await fetch(`${base}/api/monitor/status`, { headers: { 'X-Yamb-Monitor-Token': secret }, cache: 'no-store' });
-          if (response.status === 404) { startPublicOnlineFallback(); return; }
+          if (response.status === 404) { document.querySelector('main').classList.add('public-only'); startPublicOnlineFallback(); return; }
           if (!response.ok) throw new Error(messageFor(response));
           const data = await response.json(); if (!data.ok) throw new Error('Podaci nisu dostupni.');
           stopPublicOnlineFallback(); sessionStorage.setItem('yamb_monitor_token', secret); fill(data.metrics || {}, data.dayKey);
+          lastSuccessfulAt = new Date(); document.querySelector('main').classList.remove('stale', 'public-only');
+          if (Date.now() - reportLastAttemptAt >= 60000 || !reportLastAttemptAt) loadReport();
           setState('connected', 'Povezano — automatsko osvežavanje');
           updated.textContent = `Ažurirano: ${new Date(data.generatedAt || Date.now()).toLocaleTimeString('sr-RS')} · na 10 sekundi`;
-        } catch (error) { setState('error', error.message || 'Greška pri čitanju podataka.'); updated.textContent = 'Nema novog podatka. Proverite server i token.'; }
+        } catch (error) {
+          document.querySelector('main').classList.add('stale'); stopZeroAlarmRepeat();
+          setState('error', error.message || 'Greška pri čitanju podataka.');
+          updated.textContent = lastSuccessfulAt ? `Poslednji uspešan podatak: ${lastSuccessfulAt.toLocaleTimeString('sr-RS')} · prikaz može biti zastareo` : 'Nema novog podatka. Proverite server i token.';
+        }
         finally { button.disabled = false; }
       }
-      button.addEventListener('click', refresh);
-      url.addEventListener('change', () => { stopPublicOnlineFallback(); refresh(); });
-      token.addEventListener('change', refresh);
+      button.addEventListener('click', () => { reportLastAttemptAt = 0; refresh(); });
+      url.addEventListener('change', () => { stopPublicOnlineFallback(); clearReport(); reportLastAttemptAt = 0; refresh(); });
+      token.addEventListener('change', () => { clearReport(); reportLastAttemptAt = 0; refresh(); });
       alarmButton.addEventListener('click', async () => {
         alarmEnabled = !alarmEnabled;
         localStorage.setItem(ALARM_STORAGE_KEY, String(alarmEnabled)); renderAlarmButton();

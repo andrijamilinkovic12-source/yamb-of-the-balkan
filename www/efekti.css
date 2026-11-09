@@ -400,10 +400,19 @@
     background: rgba(18, 16, 19, 0.35);
 }
 
+.firefly-flight {
+    position: absolute;
+    inset: var(--safe-top, env(safe-area-inset-top, 0px))
+        var(--safe-right, env(safe-area-inset-right, 0px))
+        var(--safe-bottom, max(35px, env(safe-area-inset-bottom, 0px)))
+        var(--safe-left, env(safe-area-inset-left, 0px));
+    overflow: hidden;
+}
+
 .magic-firefly {
     position: absolute;
-    left: var(--ff-x);
-    top: var(--ff-y);
+    left: calc(var(--ff-x) - var(--ff-size) / 2);
+    top: calc(var(--ff-y) - var(--ff-size) / 2);
     width: var(--ff-size);
     height: var(--ff-size);
     opacity: 0;

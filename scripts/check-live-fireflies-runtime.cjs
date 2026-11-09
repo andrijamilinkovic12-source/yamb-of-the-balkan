@@ -25,7 +25,7 @@ for (const item of Object.values(bubbleManifest.themes)) {
     assert(fs.existsSync(path.join(root, item.treasuryPreview)) && fs.existsSync(path.join(root, item.treasuryThumbnail)));
 }
 
-function harness({ width = 390, reducedMotion = false, missing = false } = {}) {
+function harness({ width = 390, height = 844, reducedMotion = false, missing = false } = {}) {
     const nodes = [];
     const timers = new Map();
     const observers = [];
@@ -35,6 +35,7 @@ function harness({ width = 390, reducedMotion = false, missing = false } = {}) {
         tag, className: '', children: [], attributes: {}, parentNode: null,
         style: { values: {}, setProperty(name, value) { this.values[name] = value; } },
         setAttribute(name, value) { this.attributes[name] = value; },
+        getBoundingClientRect() { return { width, height: height - 80 }; },
         appendChild(child) { this.children.push(child); child.parentNode = this; },
         append(...children) { children.forEach(child => this.appendChild(child)); },
         remove() { if (this.parentNode) this.parentNode.children = this.parentNode.children.filter(child => child !== this); this.parentNode = null; }
@@ -90,6 +91,27 @@ function harness({ width = 390, reducedMotion = false, missing = false } = {}) {
     return { effect, document, window, observers, timers, sprites, fields: () => document.querySelectorAll('.firefly-field') };
 }
 
+function checkFireflyLayout(app, width, flightHeight) {
+    const [flight] = app.document.querySelectorAll('.firefly-flight');
+    assert.equal(flight.parentNode, app.fields()[0], 'Sprites use the clipped safe-area flight layer');
+    const bands = [0, 0, 0];
+    for (const fly of app.document.querySelectorAll('.magic-firefly')) {
+        const vars = fly.style.values;
+        assert(vars['--ff-x'].endsWith('%') && vars['--ff-y'].endsWith('%'), 'Origins are relative to the safe area');
+        const x = parseFloat(vars['--ff-x']) / 100;
+        const y = parseFloat(vars['--ff-y']) / 100;
+        bands[Math.floor(y * 3)]++;
+        for (const key of ['a', 'b', 'c']) {
+            const px = x * width + parseFloat(vars['--ff-dx-' + key]);
+            const py = y * flightHeight + parseFloat(vars['--ff-dy-' + key]);
+            assert(px > 10 && px < width - 10, 'Flight center stays away from the side edge');
+            assert(py > 10 && py < flightHeight - 10, 'Flight center stays away from the safe-area boundary');
+        }
+    }
+    assert(Math.min(...bands) >= 1 && Math.max(...bands) - Math.min(...bands) <= 1,
+        'Top, middle, and bottom each get an even share of the fireflies');
+}
+
 async function main() {
     const app = harness();
     for (const theme of themes) {
@@ -102,6 +124,7 @@ async function main() {
             `${theme}: wrong theme sprite`);
         assert.equal(app.document.querySelectorAll('.magic-firefly__halo').length, 23, `${theme}: missing themed light`);
         assert(app.document.querySelectorAll('.magic-firefly__light').length === 0, `${theme}: old CSS dots remain`);
+        checkFireflyLayout(app, 390, 764);
         const fly = app.document.querySelectorAll('.magic-firefly')[0];
         assert(fly.style.values['--ff-dx-c'] && fly.style.values['--ff-dy-c'] && fly.style.values['--ff-flap'],
             `${theme}: direction or wing motion missing`);
@@ -114,14 +137,21 @@ async function main() {
     wide.effect.trigger('fireflies');
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(wide.sprites().length, 32, 'Wide screen count after triggering fireflies');
+    checkFireflyLayout(wide, 900, 764);
     wide.effect.stop();
     assert.equal(wide.fields().length, 0, 'Stop must clear field');
     assert(wide.observers.every(observer => !observer.active), 'Stop must disconnect observer');
+
+    const short = harness({ width: 320, height: 480 });
+    await short.effect.spawnFireflies();
+    checkFireflyLayout(short, 320, 400);
+    short.effect.stop();
 
     const reduced = harness({ reducedMotion: true });
     await reduced.effect.spawnFireflies();
     assert.equal(reduced.sprites().length, 3, 'Reduced motion uses three static sprites');
     assert(reduced.fields()[0].className.includes('firefly-field--reduced'));
+    checkFireflyLayout(reduced, 390, 764);
     reduced.effect.stop();
 
     const absent = harness({ missing: true });

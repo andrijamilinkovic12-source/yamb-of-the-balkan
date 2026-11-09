@@ -32,7 +32,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
                 assert.equal(scene.overlay.dataset.coverage, '1.000');
                 assert.equal(scene.board.height, h.board.height, 'full physical board height');
             }
-            if (type === 'drones') assert(scene.droneTargets.length > 100, 'name formed from separate drones');
+            if (type === 'drones') assert.equal(scene.droneTargets.length, 5, 'Yamb Squadron uses five full-sized drones');
             if (type === 'ufo_abduction') assert(h.scores.every((node, i) => node.textContent === String(20 + i)), 'game scores never changed');
             if (type === 'neon_pulse') {
                 const strokes = [];

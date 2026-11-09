@@ -9,6 +9,7 @@
     "start": "node server.js",
     "qa:green": "node scripts/serve-green-qa.js",
     "check:js": "node scripts/check-js.js",
+    "check:monitor-report": "node scripts/test-monitor-report.cjs && node scripts/check-monitor-indicator.cjs",
     "check:account-deletion": "node scripts/test-account-deletion.cjs && node scripts/test-account-deletion-ui.cjs && node scripts/test-account-deletion-runtime.cjs",
     "check:analytics-privacy": "node scripts/test-analytics-deletion.cjs && node scripts/test-analytics-privacy.cjs",
     "check:ad-consent": "node scripts/check-ad-consent.js",

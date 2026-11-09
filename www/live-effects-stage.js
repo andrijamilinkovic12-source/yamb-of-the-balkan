@@ -6,6 +6,13 @@ const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
 const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
 const ICE_AGE_GROWTH_SECONDS = 2.8;
 const NEON_PULSE_COLORS = Object.freeze({ cyan: '0, 244, 255', pink: '255, 40, 188', white: '245, 255, 255' });
+const DRONE_FORMATION = Object.freeze([
+    { column: -1, row: 0, side: -1, entry: 0.19 },
+    { column: 0, row: 0, side: 0, entry: 0.06 },
+    { column: 1, row: 0, side: 1, entry: 0.29 },
+    { column: -0.5, row: 1, side: -1, entry: 0.42 },
+    { column: 0.5, row: 1, side: 1, entry: 0.53 }
+]);
 const DRONE_LIGHT_ANCHORS = Object.freeze({
     dark: [0.4969, 0.8409], light: [0.4995, 0.7839], medium: [0.4984, 0.8219],
     winter: [0.4999, 0.8795], neon: [0.5003, 0.7928], amethyst: [0.498, 0.7906],
@@ -63,10 +70,6 @@ class LiveEffectsStage {
     constructor(owner, type) {
         this.owner = owner;
         this.type = type;
-        if (type === 'drones') {
-            const app = window.app;
-            this.dronePlayerName = app?.players?.[app.currentPlayerIdx] || app?.playerName || 'YAMB';
-        }
         this.theme = owner.getGoldRainThemeId();
         this.palette = SUPERNOVA_THEME_PROFILES[this.theme];
         this.reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
@@ -508,65 +511,18 @@ class LiveEffectsStage {
     }
 
     prepareDroneFormation() {
-        const firstName = String(this.dronePlayerName).normalize('NFC').trim().split(/\s+/)[0] || 'YAMB';
-        const letters = Array.from(firstName.toLocaleUpperCase('sr-Latn')).slice(0, 12);
-        const name = letters.join('');
-        const split = Math.ceil(letters.length / 2);
-        const lines = letters.length > 8 ? [letters.slice(0, split).join(''), letters.slice(split).join('')] : [name];
-        const availableWidth = Math.max(120, Math.min(this.width - 40, 760));
-        const measuring = document.createElement('canvas').getContext('2d');
-        measuring.font = '900 96px Arial, sans-serif';
-        const scale = 0.32;
-        const measuredLines = lines.map(text => {
-            const metrics = measuring.measureText(text);
-            return { text, metrics, columns: Math.max(1, Math.ceil(metrics.width * scale / 4)) };
-        });
-        const maxColumns = Math.max(...measuredLines.map(line => line.columns));
-        const spacing = Math.min(this.mobile ? 13 : 18, availableWidth / (maxColumns + 1));
-        const size = Math.min(this.mobile ? 13 : 18, spacing * 0.72);
-        const targets = [];
-        let offsetY = 0;
-
-        for (const { text, metrics, columns } of measuredLines) {
-            const sample = document.createElement('canvas');
-            const ascent = metrics.actualBoundingBoxAscent || 76;
-            const descent = metrics.actualBoundingBoxDescent || 4;
-            sample.width = columns * 4 + 8;
-            sample.height = Math.ceil((ascent + descent) * scale) + 8;
-            const ctx = sample.getContext('2d', { willReadFrequently: true });
-            ctx.font = '900 96px Arial, sans-serif';
-            ctx.fillStyle = '#fff';
-            ctx.setTransform(scale, 0, 0, scale, 4, 4);
-            ctx.fillText(text, 0, ascent);
-            const data = ctx.getImageData(0, 0, sample.width, sample.height).data;
-            const rowCount = Math.ceil((sample.height - 8) / 4);
-            for (let row = 0; row < rowCount; row++) for (let col = 0; col < columns; col++) {
-                // Coverage sampling keeps thin strokes and accents without dropping every nth point.
-                let coverage = 0;
-                for (let sy = 0; sy < 4; sy++) for (let sx = 0; sx < 4; sx++) {
-                    const pixelX = 4 + col * 4 + sx, pixelY = 4 + row * 4 + sy;
-                    coverage += data[(pixelY * sample.width + pixelX) * 4 + 3] || 0;
-                }
-                if (coverage < 900) continue;
-                targets.push({ x: (col - (columns - 1) / 2) * spacing, y: offsetY + row * spacing, size });
-            }
-            offsetY += (rowCount + 3) * spacing;
-        }
-        const centerY = Math.max(150, Math.min(this.height * 0.35, this.height - offsetY / 2 - 35));
-        this.droneTargets = targets.map(target => ({ ...target,
-            x: this.width / 2 + target.x, y: centerY + target.y - (offsetY - spacing * 3) / 2 }));
-        this.overlay.dataset.name = name;
-        this.overlay.dataset.drones = String(targets.length);
+        const image = this.images.drone;
+        const ratio = (image.naturalHeight || image.height) / (image.naturalWidth || image.width);
+        const size = Math.min(160, this.width * 0.235, this.height * 0.205);
+        const rowSpacing = size * (ratio + 0.34);
+        const centerY = this.height * 0.405;
+        this.droneTargets = DRONE_FORMATION.map(target => ({ ...target, size, ratio,
+            x: this.width / 2 + target.column * size * 1.25,
+            y: centerY + (target.row - 0.5) * rowSpacing
+        }));
+        this.overlay.dataset.drones = String(this.droneTargets.length);
         this.overlay.dataset.droneSource = LiveEffectsStage.sources('drones', this.theme).drone;
-        const backdropTop = centerY - offsetY / 2 - 45;
-        const backdropHeight = offsetY + 90;
-        const backdrop = this.ctx.createLinearGradient(0, backdropTop, 0, backdropTop + backdropHeight);
-        backdrop.addColorStop(0, 'rgba(3,8,18,0)');
-        backdrop.addColorStop(0.3, 'rgba(3,8,18,0.5)');
-        backdrop.addColorStop(0.7, 'rgba(3,8,18,0.5)');
-        backdrop.addColorStop(1, 'rgba(3,8,18,0)');
-        this.droneBackdrop = { gradient: backdrop, y: backdropTop, height: backdropHeight };
-
+        if (this.droneLight) return;
         const light = document.createElement('canvas'); light.width = 64; light.height = 64;
         const lightCtx = light.getContext('2d');
         const glow = lightCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
@@ -578,35 +534,56 @@ class LiveEffectsStage {
         this.droneLight = light;
     }
 
-    drones(t, p) {
-        this.shade(0.6);
-        this.ctx.save();
-        this.ctx.globalAlpha = this.alpha;
-        this.ctx.fillStyle = this.droneBackdrop.gradient;
-        this.ctx.fillRect(0, this.droneBackdrop.y, this.width, this.droneBackdrop.height);
-        this.ctx.restore();
-        const assemble = this.reduced ? 1 : this.ease((p - 0.025) / 0.29);
-        const depart = this.reduced ? 0 : this.ease((p - 0.79) / 0.21);
-        this.overlay.dataset.formation = p < 0.315 && !this.reduced ? 'assembling' : depart > 0 ? 'departing' : 'holding';
+    drones(t) {
+        const c = this.ctx;
+        const pulse = this.reduced ? 0 : this.ease((t - 4.58) / 0.18) * (1 - this.ease((t - 4.76) / 0.65));
+        c.fillStyle = this.rgba('5, 9, 17', this.alpha * (this.reduced ? 0.35 : 0.59));
+        c.fillRect(0, 0, this.width, this.height);
+        this.overlay.dataset.formation = this.reduced ? 'holding' : t < 2.3 ? 'assembling'
+            : t >= 5.55 ? 'departing' : pulse > 0 ? 'pulse' : 'holding';
         const [lightX, lightY] = DRONE_LIGHT_ANCHORS[this.theme];
-        const image = this.images.drone;
-        const ratio = image.naturalHeight / image.naturalWidth;
-        this.droneTargets.forEach((target, i) => {
-            const originX = this.width * (0.08 + this.seed(i + 4) * 0.84);
-            const originY = this.height + 35 + this.seed(i + 15) * 120;
-            const hover = this.reduced ? 0 : Math.sin(t * 1.8 + i) * 0.35;
-            const x = originX + (target.x - originX) * assemble
-                + (this.seed(i + 57) - 0.5) * this.width * depart;
-            const y = originY + (target.y - originY) * assemble + hover
-                - (this.height * 0.65 + this.seed(i + 81) * 180) * depart;
-            const size = target.size + (1 - assemble) * 20 + depart * 8;
-            const bodyHeight = size * ratio;
-            const twinkle = this.reduced ? 0.82 : 0.86 + Math.sin(t * 2.4 + i * 0.4) * 0.08;
-            // The LED, not the body center, sits on the sampled letter stroke.
-            this.sprite(image, x + (0.5 - lightX) * size, y + (0.5 - lightY) * bodyHeight, size, 0, 0.7 + (1 - assemble) * 0.3);
-            this.sprite(this.droneLight, x, y, Math.max(6, target.size * 1.3), 0, twinkle * 0.85);
-            this.dot(x, y, Math.max(0.95, target.size * 0.16), '255, 254, 248', twinkle);
+        const drones = this.droneTargets.map(({ x, y, size, ratio, column, row, side, entry }, i) => {
+            const arrival = this.reduced ? 1 : this.ease((t - entry) / 1.72);
+            const exit = this.reduced ? 0 : this.ease((t - 5.55 - row * 0.29 - Math.abs(column) * 0.1) / 1.76);
+            const entryX = side ? this.width * (side > 0 ? 1 : 0) + side * size : x;
+            const entryY = side ? y + size * (row ? 1.2 : 0.68) : -size;
+            const hover = this.reduced ? 0 : Math.sin(t * 2.1 + i * 0.8) * 2.6 * arrival * (1 - exit);
+            const px = entryX + (x - entryX) * arrival + column * size * 0.56 * exit;
+            const py = entryY + (y - entryY) * arrival + hover - (y + size * 1.5) * exit;
+            const tilt = this.reduced ? 0 : (side * 0.19 * (1 - arrival) + column * 0.15 * exit
+                + Math.sin(t * 2 + i) * 0.024 * arrival * (1 - exit));
+            const width = size * (0.82 + 0.18 * arrival - 0.18 * exit);
+            const dx = (lightX - 0.5) * width;
+            const dy = (lightY - 0.5) * width * ratio;
+            const light = this.reduced ? 0.74 : this.ease((t - 2.5 - i * 0.31) / 0.21) * (1 - exit);
+            return { px, py, tilt, width, light, column,
+                lx: px + dx * Math.cos(tilt) - dy * Math.sin(tilt),
+                ly: py + dx * Math.sin(tilt) + dy * Math.cos(tilt) };
         });
+        this.overlay.dataset.lit = String(drones.filter(drone => drone.light > 0.5).length);
+        if (pulse > 0) this.glow(this.width / 2, this.height * 0.405, this.droneTargets[0].size * 2.4,
+            this.palette.main, pulse * 0.31);
+
+        // Draw the beams behind all five bodies so the PNG details stay readable.
+        for (const { lx, ly, width, column, light } of drones) {
+            if (light < 0.02 || this.reduced) continue;
+            const depth = width * (1.14 + pulse * 0.65);
+            const spread = width * (0.22 + pulse * 0.14);
+            const endX = lx + column * depth * 0.23;
+            const beam = c.createLinearGradient(lx, ly, endX, ly + depth);
+            beam.addColorStop(0, this.rgba(this.palette.accent, (0.37 + pulse * 0.28) * light * this.alpha));
+            beam.addColorStop(0.36, this.rgba(this.palette.main, (0.15 + pulse * 0.2) * light * this.alpha));
+            beam.addColorStop(1, this.rgba(this.palette.main, 0));
+            c.fillStyle = beam; c.beginPath();
+            c.moveTo(lx - 2, ly); c.lineTo(lx + 2, ly);
+            c.lineTo(endX + spread, ly + depth); c.lineTo(endX - spread, ly + depth);
+            c.closePath(); c.fill();
+        }
+        for (const { px, py, lx, ly, width, tilt, light } of drones) {
+            this.sprite(this.images.drone, px, py, width, tilt);
+            this.sprite(this.droneLight, lx, ly, width * (0.29 + pulse * 0.35), 0, 0.08 + light * 0.84);
+            this.dot(lx, ly, Math.max(1, width * 0.021), '255, 254, 248', light * 0.9);
+        }
     }
 
     prepareDust() {

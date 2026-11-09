@@ -1109,23 +1109,44 @@ class EffectManager {
         field.style.setProperty('--ff-glow', FIREFLY_THEME_GLOW[themeId]);
         field.setAttribute('aria-hidden', 'true');
 
+        const flight = document.createElement('div');
+        flight.className = 'firefly-flight';
+        field.appendChild(flight);
+        document.body.appendChild(field);
+        const { width, height } = flight.getBoundingClientRect();
         const fragment = document.createDocumentFragment();
         const routes = [[-1, -1], [1, -1], [-1, 1], [1, 1], [1, 0], [-1, 0], [0, 1], [0, -1]];
+        const fitPath = (offsets, origin, length, margin) => {
+            const inward = Math.max(0, origin - margin);
+            const outward = Math.max(0, length - origin - margin);
+            const scale = offsets.reduce((limit, offset) => {
+                if (offset === 0) return limit;
+                return Math.min(limit, (offset < 0 ? inward : outward) / Math.abs(offset));
+            }, 1);
+            return offsets.map(offset => (offset * scale).toFixed(1) + 'px');
+        };
         for (let i = 0; i < particleCount; i++) {
             const fly = document.createElement('span');
             fly.className = 'magic-firefly';
-            const [horizontal, vertical] = routes[i % routes.length];
-            const stepX = horizontal * (62 + Math.random() * 85);
+            const size = compact ? 32 + Math.random() * 13 : 36 + Math.random() * 16;
+            const x = 0.075 + ((i + Math.random() * 0.6) / particleCount) * 0.85;
+            const y = 0.065 + (i % 3) * 0.305 + Math.random() * 0.195;
+            let [horizontal, vertical] = routes[i % routes.length];
+            if ((x < 0.17 && horizontal < 0) || (x > 0.83 && horizontal > 0)) horizontal = -horizontal;
+            if ((y < 0.15 && vertical < 0) || (y > 0.76 && vertical > 0)) vertical = -vertical;
+            const stepX = horizontal * (62 + Math.random() * 85) * (compact ? 0.7 : 1);
             const stepY = vertical * (52 + Math.random() * 88);
-            fly.style.setProperty('--ff-x', (6 + ((i + Math.random() * 0.6) / particleCount) * 86).toFixed(2) + 'vw');
-            fly.style.setProperty('--ff-y', (22 + Math.random() * 60).toFixed(2) + 'vh');
-            fly.style.setProperty('--ff-dx-a', (stepX * 0.52).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-a', (stepY * 0.35).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dx-b', (stepX * 0.18 - vertical * 22).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-b', (stepY * 0.82).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dx-c', (stepX * 1.12).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-c', (stepY * 1.22).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-size', (compact ? 32 + Math.random() * 13 : 36 + Math.random() * 16).toFixed(1) + 'px');
+            const dx = fitPath([stepX * 0.52, stepX * 0.18 - vertical * 22, stepX * 1.12],
+                x * width, width, size * 0.45);
+            const dy = fitPath([stepY * 0.35, stepY * 0.82, stepY * 1.22],
+                y * height, height, size * 0.72);
+            fly.style.setProperty('--ff-x', (x * 100).toFixed(2) + '%');
+            fly.style.setProperty('--ff-y', (y * 100).toFixed(2) + '%');
+            ['a', 'b', 'c'].forEach((key, index) => {
+                fly.style.setProperty('--ff-dx-' + key, dx[index]);
+                fly.style.setProperty('--ff-dy-' + key, dy[index]);
+            });
+            fly.style.setProperty('--ff-size', size.toFixed(1) + 'px');
             fly.style.setProperty('--ff-delay', (i < 6 ? Math.random() * 0.3 : 0.2 + Math.random() * 1.2).toFixed(2) + 's');
             fly.style.setProperty('--ff-duration', (5.2 + Math.random() * 1.25).toFixed(2) + 's');
             fly.style.setProperty('--ff-flap', (0.17 + Math.random() * 0.08).toFixed(2) + 's');
@@ -1141,8 +1162,7 @@ class EffectManager {
             fragment.appendChild(fly);
         }
 
-        field.appendChild(fragment);
-        document.body.appendChild(field);
+        flight.appendChild(fragment);
         let observer = null;
         const cleanup = () => {
             if (runId !== this.fireflyRunId) return;

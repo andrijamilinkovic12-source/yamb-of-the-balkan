@@ -718,6 +718,7 @@ MatchResultSchema.index(
 );
 MatchResultSchema.index({ 'participants.uid': 1, finishedAt: -1 });
 MatchResultSchema.index({ mode: 1, resultType: 1, finishedAt: -1 });
+MatchResultSchema.index({ finishedAt: -1 });
 const MatchResult = mongoose.model('MatchResult', MatchResultSchema);
 
 // Privatni trag prijema lokalnih rezultata za podrsku igracima.
@@ -1042,6 +1043,7 @@ const AdMobRewardVerificationSchema = new mongoose.Schema({
     claimedBy: { type: String, default: '' },
     raw: { type: Object, default: {} }
 });
+AdMobRewardVerificationSchema.index({ claimedAt: -1 });
 const AdMobRewardVerification = mongoose.model('AdMobRewardVerification', AdMobRewardVerificationSchema);
 accountDeletion.protectModelBatches(mongoose.models);
 let deletionWebFirebaseConfig = require('./www/account-deletion-firebase.json');
@@ -6560,8 +6562,9 @@ function getBelgradeDayRange(date = new Date()) {
     const parts = getBelgradeDateParts(date);
     const currentMidnightUtc = Date.UTC(parts.year, parts.month - 1, parts.day);
     const nextMidnightUtc = currentMidnightUtc + (24 * 60 * 60 * 1000);
-    const start = new Date(currentMidnightUtc - getBelgradeTimeZoneOffset(new Date(currentMidnightUtc + (12 * 60 * 60 * 1000))));
-    const end = new Date(nextMidnightUtc - getBelgradeTimeZoneOffset(new Date(nextMidnightUtc + (12 * 60 * 60 * 1000))));
+    // Ponoć koristi pomeraj pre DST prelaza (koji je u Beogradu kasnije tokom noći).
+    const start = new Date(currentMidnightUtc - getBelgradeTimeZoneOffset(new Date(currentMidnightUtc)));
+    const end = new Date(nextMidnightUtc - getBelgradeTimeZoneOffset(new Date(nextMidnightUtc)));
     return { start, end };
 }
 
@@ -6640,6 +6643,19 @@ function getDisconnectIncidentKey(item = {}) {
     }
     return `event:${eventId}`;
 }
+
+require('./lib/monitor-report').mountMonitorReport(app, {
+    isAuthorized: isMonitorRequestAuthorized,
+    hasToken: Boolean(YAMB_MONITOR_TOKEN),
+    hasDatabase: Boolean(MONGO_URI),
+    getBelgradeDayKey,
+    getBelgradeDayRange,
+    ServerMonitorDaily,
+    ServerMonitorDailyActivity,
+    MatchResult,
+    AdMobRewardVerification,
+    normalizeMonitorTheme
+});
 
 app.get('/api/monitor/status', async (req, res) => {
     if (!isMonitorRequestAuthorized(req)) {
