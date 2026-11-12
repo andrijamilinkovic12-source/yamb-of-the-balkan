@@ -13,9 +13,12 @@ function readQaFcmDeliveryConfig(env, runtime, fixture, policy, now = Date.now) 
     if (!env.YAMB_QA_FCM_DELIVERY) return null;
     let value;
     try { value = JSON.parse(env.YAMB_QA_FCM_DELIVERY); } catch (_) { throw new Error('qa_fcm_delivery_config_invalid'); }
-    if (!value || Object.keys(value).sort().join(',') !== 'expiresAt,id,registrationIds,version'
+    const fields = value && Object.keys(value).sort().join(',');
+    if (!value || !['expiresAt,id,registrationIds,version', 'expiresAt,id,nightAllowed,registrationIds,version'].includes(fields)
         || value.version !== 1 || typeof value.id !== 'string'
         || !Number.isSafeInteger(value.expiresAt) || value.expiresAt <= 0 || value.expiresAt > now() + 86400000
+        || (Object.hasOwn(value, 'nightAllowed') && typeof value.nightAllowed !== 'boolean')
+        || (value.nightAllowed && value.expiresAt > now() + 1800000)
         || !Array.isArray(value.registrationIds) || value.registrationIds.length !== 2
         || new Set(value.registrationIds).size !== 2
         || value.registrationIds.some(id => typeof id !== 'string' || !/^[a-f0-9]{24}$/.test(id))) {
@@ -26,7 +29,7 @@ function readQaFcmDeliveryConfig(env, runtime, fixture, policy, now = Date.now) 
 }
 
 async function runQaFcmDeliveryProbe({ config, fixture, db, send, now = Date.now, inQuietHours }) {
-    if (!config || now() >= config.expiresAt || inQuietHours(now())) return { skipped: true };
+    if (!config || now() >= config.expiresAt || (inQuietHours(now()) && !config.nightAllowed)) return { skipped: true };
     if (db.databaseName !== fixture.databaseName) throw new Error('qa_fcm_delivery_database_mismatch');
     // Resolve only receipts collected from the current native QA apps.
     // No token values are inspected, logged or returned by this preparation.
@@ -47,6 +50,7 @@ async function runQaFcmDeliveryProbe({ config, fixture, db, send, now = Date.now
         await send([uid], {
             category: 'tournament', scope: 'tournament', type: 'qa_fcm_delivery',
             tag: 'yamb_qa_push_' + config.id, expiresAt: Math.min(config.expiresAt, now() + 120000),
+            nightAllowed: config.nightAllowed === true,
             title: 'Yamb QA: push test', body: 'Testno obavestenje za probni turnir.',
             data: { qaProbeId: config.id, kind: 'qa_fcm_delivery', recipientUid: uid }
         }, stats);

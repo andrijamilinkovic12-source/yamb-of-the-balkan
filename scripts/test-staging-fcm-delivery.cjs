@@ -33,7 +33,8 @@ async function guardsAndClaims() {
     for (const wrong of [null, {}, { ...value, extra: true }, { ...value, expiresAt: 'tomorrow' },
         { ...value, registrationIds: [value.registrationIds[0], value.registrationIds[0]] },
         { ...value, registrationIds: [value.registrationIds[0], 'bad'] }, { ...value, id: 'bad' },
-        { ...value, expiresAt: at + 86400001 }]) assert.throws(() => read(wrong));
+        { ...value, expiresAt: at + 86400001 }, { ...value, nightAllowed: 'true' },
+        { ...value, nightAllowed: true, expiresAt: at + 1800001 }]) assert.throws(() => read(wrong));
     assert.throws(() => readQaFcmDeliveryConfig({ YAMB_QA_FCM_DELIVERY: JSON.stringify(value) },
         { environment: 'production' }, fixture, policy, () => at));
     assert.deepEqual(qaRegistrationReceipt(ids[0], documents[0], fixture, policy), { qaRegistrationId: value.registrationIds[0] });
@@ -108,6 +109,11 @@ async function senderContract() {
     context.firebaseMessaging = { async send(message, dryRun) { dryRuns.push(dryRun); assert(message.token); } };
     await context.sendPushToUids([ids[0]], {}, stats);
     assert.equal(dryRuns[1], false);
+    context.tournamentNotificationsCore = { inQuietHours: () => true };
+    await context.sendPushToUids([ids[0]], { expiresAt: Date.now() + 60000 }, stats);
+    assert.equal(dryRuns.length, 2, 'Ordinary messages must remain silent during quiet hours');
+    await context.sendPushToUids([ids[0]], { expiresAt: Date.now() + 60000, nightAllowed: true }, stats);
+    assert.equal(dryRuns.length, 3, 'Explicitly approved exact-device QA probe may send');
     const registered = vm.createContext({ MONGO_URI: 'fixture-only', console, qaRegistrationReceipt,
         qaTournamentFixtureConfig: fixture, pushDeliveryPolicy: policy,
         sanitizePushToken: x => x, sanitizePushPlatform: x => x, normalizePushLanguage: x => x,
@@ -117,6 +123,25 @@ async function senderContract() {
     const result = await registered.registerPushToken(ids[0], { token: 'fixture-private' });
     assert.equal(result.qaRegistrationId, value.registrationIds[0]);
     assert(!JSON.stringify(result).includes('fixture-private'));
+}
+
+async function approvedNightProbe() {
+    const config = read({ ...value, id: 'qa_fcm_delivery_night_01', nightAllowed: true });
+    const messages = [];
+    let claims = 0;
+    const db = { databaseName: fixture.databaseName, collection: name => name === 'pushtokens'
+        ? { findOne: async () => ({ _id: documents[0]._id }) }
+        : { updateOne: async (_query, update) => update.$setOnInsert ? { upsertedCount: claims++ === 0 ? 1 : 0 } : {} } };
+    const options = { config, fixture, db, now: () => at, inQuietHours: () => true,
+        send: async (_uids, message) => messages.push(message) };
+    assert.equal((await runQaFcmDeliveryProbe(options)).skipped, false);
+    assert.equal(messages.length, 2);
+    assert(messages.every(message => message.nightAllowed && message.type === 'qa_fcm_delivery'
+        && message.expiresAt <= at + 120000));
+    assert.equal((await runQaFcmDeliveryProbe(options)).skipped, true);
+    assert.equal((await runQaFcmDeliveryProbe({ ...options, now: () => config.expiresAt })).skipped, true);
+    assert.throws(() => readQaFcmDeliveryConfig({ YAMB_QA_FCM_DELIVERY: JSON.stringify({ ...value, nightAllowed: true }) },
+        { environment: 'production' }, fixture, policy, () => at));
 }
 
 async function nativeReceipt() {
@@ -141,6 +166,6 @@ async function nativeReceipt() {
 }
 
 (async () => {
-    await guardsAndClaims(); await senderContract(); await nativeReceipt();
+    await guardsAndClaims(); await senderContract(); await nativeReceipt(); await approvedNightProbe();
     console.log('PASS: QA-only registration receipts, exact-device delivery, ownership/freshness guards, one-shot claim, quiet hours and no token export.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

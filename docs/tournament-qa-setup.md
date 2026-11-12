@@ -144,6 +144,12 @@ recognized error codes. Firebase acceptance still needs matching device receipt
 and notification-tap checks. Remove the delivery setting after testing. The
 probe cannot reset a bracket, alter wallets or bypass production rollout gates.
 
+After explicit operator approval, only this exact-device probe can include
+`nightAllowed: true` for a controlled night test. Its configuration must expire
+within 30 minutes. All QA project, instance, account, current-device and one-shot
+guards still apply. Ordinary notifications and production quiet hours are not
+changed. Clear the setting immediately after recording the device evidence.
+
 ## Dependency Review
 
 The QA build audit on 2026-11-12 identified Mongoose 8.24.4 as a high-severity
