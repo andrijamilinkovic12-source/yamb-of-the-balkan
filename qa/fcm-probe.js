@@ -19,9 +19,12 @@ function readQaFcmProbeId(env, runtime, fixture, policy) {
     return id;
 }
 
-function createQaFcmStats() {
+function createQaFcmStats({ registrationId = null, deliver = false } = {}) {
+    if (deliver && !registrationId) throw new Error('qa_fcm_delivery_registration_required');
     const data = { registrations: 0, attempted: 0, accepted: 0, errors: {} };
     return {
+        registrationId,
+        validationOnly: !deliver,
         registrations: n => { data.registrations += n; },
         attempted: n => { data.attempted += n; },
         accepted: n => { data.accepted += n; },

@@ -119,6 +119,31 @@ the two approved accounts. A successful validation is not device delivery.
 Remove the variable after the investigation or use a new ID for an intentional
 rerun. Do not copy the probe variable to production or a shared group.
 
+### Exact-Device Delivery Probe
+
+Actual delivery uses a separate opt-in `YAMB_QA_FCM_DELIVERY` JSON setting.
+First deploy the QA build with this variable absent. In each authorized native
+QA app call the existing `ensureRegistered(app, {qaRegistrationReceipt: true})`
+path, after checking notification permission is already granted. The app uses
+its normal private registration flow. Only the approved QA accounts receive a
+non-secret database registration ID; neither the acknowledgment nor the QA
+automation exports registration tokens. Production responses are unchanged.
+
+Configure JSON fields `version: 1`, a unique `id` matching the validation probe
+ID pattern, `registrationIds` with exactly those two distinct IDs in fixture
+account order, and `expiresAt` as a Unix millisecond timestamp at most 24 hours
+ahead. Keep the values outside Git. Arm the first emulator's native receipt
+listener and put the second QA app in the background before Save and deploy.
+The server checks ownership, enabled Android registration, tournament preference
+and a registration sync in the last 30 minutes for both IDs before claiming
+the probe once. Older registrations are neither used nor deleted. Quiet hours,
+expiry, QA project/instance checks and the account allowlist still apply.
+
+`QA FCM delivery` in private Render logs reports only aggregate counts and
+recognized error codes. Firebase acceptance still needs matching device receipt
+and notification-tap checks. Remove the delivery setting after testing. The
+probe cannot reset a bracket, alter wallets or bypass production rollout gates.
+
 ## Dependency Review
 
 The QA build audit on 2026-11-12 identified Mongoose 8.24.4 as a high-severity

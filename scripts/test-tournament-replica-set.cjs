@@ -16,6 +16,7 @@ const { createTournamentReadinessStore } = require('../lib/tournament-readiness-
 const { createTournamentReadinessService } = require('../lib/tournament-readiness');
 const { createProfileWrites } = require('../lib/profile-writes');
 const { readFixtureConfig, prepareTournamentFixture, fixturePairing } = require('../qa/tournament-fixture');
+const { runQaFcmDeliveryProbe } = require('../qa/fcm-delivery');
 
 const fee = 5500;
 const at = Date.parse('2026-11-11T09:00:00+01:00');
@@ -112,12 +113,44 @@ async function main() {
         assert((await service.execute('register', input(ids[0], later))).ok);
         await lifecycle(conn, service, ids[7]);
         await qaFixture(conn);
+        await fcmDeliveryClaim(conn);
         console.log('PASS: isolated MongoDB replica-set rollback, draw, verified sanction, notification and subsequent edition enrollment.');
     } finally {
         try {
             if (mayClean && conn.db?.databaseName === dbName && /^yamb_tournament_qa_[a-f0-9]{32}$/.test(dbName)) await conn.db.dropDatabase();
         } finally { await conn.close(); }
     }
+}
+
+async function fcmDeliveryClaim(conn) {
+    const fixture = { databaseName: conn.db.databaseName, humanUids: ['qa-fcm-native-device-00001', 'qa-fcm-native-device-00002'] };
+    const registrationIds = fixture.humanUids.map(() => new mongoose.Types.ObjectId());
+    const registrations = conn.db.collection('pushtokens');
+    await registrations.insertMany(fixture.humanUids.map((uid, index) => ({ _id: registrationIds[index], uid,
+        enabled: true, platform: 'android', categories: { tournament: true }, lastSeenAt: at })));
+    await registrations.insertOne({ uid: fixture.humanUids[0], enabled: true, platform: 'android',
+        categories: { tournament: true }, lastSeenAt: at, token: 'old-fixture-must-not-send' });
+    const config = { id: 'qa_fcm_live_replica_fixture', registrationIds, expiresAt: at + 60000 };
+    const sent = [];
+    const options = { config, fixture, db: conn.db, now: () => at, inQuietHours: () => false,
+        async send([uid], _message, stats) {
+            assert(stats.registrationId.equals(registrationIds[fixture.humanUids.indexOf(uid)]));
+            assert.equal(stats.validationOnly, false);
+            stats.registrations(1); stats.attempted(1); stats.accepted(1); sent.push(uid);
+        } };
+    await registrations.updateOne({ _id: registrationIds[0] }, { $set: { enabled: false } });
+    await assert.rejects(runQaFcmDeliveryProbe(options), /receipt_not_current/);
+    assert.equal(await conn.db.collection('qafcmproberuns').countDocuments({}), 0);
+    await registrations.updateOne({ _id: registrationIds[0] }, { $set: { enabled: true } });
+    const results = await Promise.all([runQaFcmDeliveryProbe(options), runQaFcmDeliveryProbe(options)]);
+    assert.equal(results.filter(r => !r.skipped).length, 1);
+    assert.deepEqual(sent, fixture.humanUids);
+    assert((await runQaFcmDeliveryProbe(options)).skipped);
+    assert.equal(sent.length, 2);
+    const stored = await conn.db.collection('qafcmproberuns').findOne({ _id: 'delivery:' + config.id });
+    assert.equal(stored.outcomes.length, 2);
+    assert(!JSON.stringify(stored).includes(fixture.humanUids[0]));
+    console.log('PASS: real MongoDB one-shot FCM delivery claim, current-device selection, ownership and disabled-registration refusal. No messages sent.');
 }
 
 async function qaFixture(conn) {

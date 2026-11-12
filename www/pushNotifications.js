@@ -400,6 +400,10 @@
 
             const existingToken = localStorage.getItem(TOKEN_KEY);
             if (existingToken) {
+                if (options.qaRegistrationReceipt === true && window.location.origin === 'https://yamb-reconnect-qa.onrender.com') {
+                    const receipt = await sendTokenToServer(activeApp, existingToken, { ...options, force: true });
+                    return { ok: !!receipt?.ok, qaRegistrationId: receipt?.qaRegistrationId || null };
+                }
                 sendTokenToServer(activeApp, existingToken, options)
                     .catch(error => console.warn('Push token sync nije uspeo:', error));
             }

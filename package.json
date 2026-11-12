@@ -28,7 +28,7 @@
     "check:online-reconnect": "node scripts/check-online-reconnect.js && node scripts/test-timeout-result-perspective.cjs",
     "check:socket-transport": "node scripts/check-socket-transport.js",
     "check:firebase-security": "node scripts/check-firebase-security.js",
-    "check:reconnect-staging": "node scripts/check-reconnect-staging.js && node scripts/test-staging-push-policy.cjs",
+    "check:reconnect-staging": "node scripts/check-reconnect-staging.js && node scripts/test-staging-push-policy.cjs && node scripts/test-staging-fcm-delivery.cjs",
     "build:reconnect-staging": "node scripts/build-reconnect-staging.js",
     "install:reconnect-staging-clients": "node scripts/install-reconnect-staging-clients.js",
     "audit:statistics": "node scripts/audit-statistics.js",

@@ -46,6 +46,8 @@ const { readFixtureConfig, prepareTournamentFixture, fixturePairing } = require(
 const qaTournamentFixtureConfig = readFixtureConfig(process.env);
 const { readQaFcmProbeId, runQaFcmProbe } = require('./qa/fcm-probe');
 const qaFcmProbeId = readQaFcmProbeId(process.env, SERVER_RUNTIME, qaTournamentFixtureConfig, pushDeliveryPolicy);
+const { qaRegistrationReceipt, readQaFcmDeliveryConfig, runQaFcmDeliveryProbe } = require('./qa/fcm-delivery');
+const qaFcmDeliveryConfig = readQaFcmDeliveryConfig(process.env, SERVER_RUNTIME, qaTournamentFixtureConfig, pushDeliveryPolicy);
 let qaTournamentFixtureCycle = '';
 
 let firebaseAuth = null;
@@ -742,6 +744,14 @@ if (MONGO_URI) {
                 db: mongoose.connection.db, send: sendPushToUids, inQuietHours: tournamentNotificationsCore.inQuietHours });
             if (!result.skipped) console.log('QA FCM probe:', JSON.stringify(result.outcomes));
         }).catch(() => console.error('QA FCM probe could not complete.'));
+        if (qaFcmDeliveryConfig) tournamentLoaded.then(async () => {
+            if (MAINTENANCE_MODE || !tournamentStateInitialized
+                || tournamentState.registrationCycleId !== qaTournamentFixtureCycle) return;
+            const result = await runQaFcmDeliveryProbe({ config: qaFcmDeliveryConfig, fixture: qaTournamentFixtureConfig,
+                db: mongoose.connection.db, send: sendPushToUids, inQuietHours: tournamentNotificationsCore.inQuietHours });
+            if (!result.skipped) console.log('QA FCM delivery:', JSON.stringify(result.outcomes));
+        }).catch(error => console.error('QA FCM delivery refused:',
+            /^qa_fcm_delivery_[a-z_]+$/.test(error.message) ? error.message : 'operation_failed'));
         initChatFromDb();
         queueMatchResultReconciliation(1000);
         backfillMissingLeaderboardScoresFromMatchResults(1000)
@@ -1369,7 +1379,7 @@ async function registerPushToken(uid, data = {}) {
     if (!uid || !token) return { ok: false, reason: 'invalid_push_token' };
 
     try {
-        await PushToken.findOneAndUpdate(
+        const registration = await PushToken.findOneAndUpdate(
             { token },
             {
                 $set: {
@@ -1386,7 +1396,7 @@ async function registerPushToken(uid, data = {}) {
             },
             { upsert: true, new: true }
         );
-        return { ok: true };
+        return { ok: true, ...qaRegistrationReceipt(uid, registration, qaTournamentFixtureConfig, pushDeliveryPolicy) };
     } catch (err) {
         console.error('Greška pri upisu push tokena:', err);
         return { ok: false, reason: 'err_server_conn' };
@@ -1421,7 +1431,7 @@ function rejectPushWithoutAuth(socket, reply) {
     socket.emit('auth_required', result);
 }
 
-async function getPushTokenDocsForUids(uids, category = 'tournament') {
+async function getPushTokenDocsForUids(uids, category = 'tournament', registrationId = null) {
     if (!MONGO_URI || !Array.isArray(uids) || uids.length === 0) return [];
     uids = pushDeliveryPolicy.selectUids(uids);
 
@@ -1434,6 +1444,7 @@ async function getPushTokenDocsForUids(uids, category = 'tournament') {
         lastSeenAt: { $gte: Date.now() - PUSH_TOKEN_STALE_MS }
     };
     query[`categories.${category}`] = { $ne: false };
+    if (registrationId && pushDeliveryPolicy.mode === 'staging') query._id = registrationId;
 
     return PushToken.find(query).select('uid token language').lean();
 }
@@ -1489,9 +1500,10 @@ function getLocalizedPushMessage(baseMessage, language) {
 async function sendPushToUids(uids, baseMessage = {}, probe = null) {
     if (!firebaseMessaging) return { ok: false, reason: 'firebase_messaging_unavailable' };
     const diagnostics = pushDeliveryPolicy.mode === 'staging' ? probe : null;
+    const validationOnly = diagnostics ? !(diagnostics.validationOnly === false && diagnostics.registrationId) : undefined;
 
     try {
-        const docs = await getPushTokenDocsForUids(uids, baseMessage.category || 'tournament');
+        const docs = await getPushTokenDocsForUids(uids, baseMessage.category || 'tournament', diagnostics?.registrationId);
         const tokenGroups = new Map();
         docs.forEach(doc => {
             if (!doc.token || !pushDeliveryPolicy.allowsUid(doc.uid)) return;
@@ -1517,7 +1529,7 @@ async function sendPushToUids(uids, baseMessage = {}, probe = null) {
                 diagnostics?.attempted(batch.length);
 
                 if (typeof firebaseMessaging.sendEachForMulticast === 'function') {
-                    const response = await firebaseMessaging.sendEachForMulticast(message, diagnostics ? true : undefined);
+                    const response = await firebaseMessaging.sendEachForMulticast(message, validationOnly);
                     successCount += response.successCount || 0;
                     diagnostics?.accepted(response.successCount || 0);
                     response.responses.forEach((item, index) => {
@@ -1528,7 +1540,7 @@ async function sendPushToUids(uids, baseMessage = {}, probe = null) {
                     await Promise.all(batch.map(async token => {
                         try {
                             const { tokens: _tokens, ...singleMessage } = message;
-                            await firebaseMessaging.send({ ...singleMessage, token }, diagnostics ? true : undefined);
+                            await firebaseMessaging.send({ ...singleMessage, token }, validationOnly);
                             successCount += 1;
                             diagnostics?.accepted(1);
                         } catch (error) {
