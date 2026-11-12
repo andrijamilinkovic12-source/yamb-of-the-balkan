@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "tool": "built-in image_gen",
+  "useCase": "stylized-concept",
+  "assets": [
+    {
+      "theme": "dark",
+      "direction": "clay",
+      "generatedFile": "exec-d79a5550-f332-423a-9fb7-a8f7c632a2bc.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/dark.png",
+      "masterSha256": "aa64436a71fe9149abe96669b812b1d4b31a98019f6fafe2f3dc3be7763f3d59",
+      "productionPath": "www/assets/effects/drones-v1/dark-drone-v1.png",
+      "sha256": "2af1c12402558f3e41b0e8ff22a129db2c4de15b829419db92d00fc87e48daba",
+      "width": 160,
+      "height": 78,
+      "bytes": 25042,
+      "alpha": true,
+      "lightAnchor": [
+        0.4969,
+        0.8409
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "light",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedFile": "exec-9cb9c682-50b4-421e-854e-89a37a999717.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/light.png",
+      "masterSha256": "75874518e944423891dbeb0c4efe267424fcb3b2e7281cc7fe57e0457a61473d",
+      "productionPath": "www/assets/effects/drones-v1/light-drone-v1.png",
+      "sha256": "5a7fed1c5615d46108d5fa329852a43faf87b6b74a4f12a0738a11a359b63916",
+      "width": 160,
+      "height": 79,
+      "bytes": 27008,
+      "alpha": true,
+      "lightAnchor": [
+        0.4995,
+        0.7839
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "medium",
+      "direction": "clay",
+      "generatedFile": "exec-f6c6cc58-ee24-427f-af31-4b57ecd147ab.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/medium.png",
+      "masterSha256": "e20eb54dc08d7dd5947856185ffb4b19d7692797aa1ebe8eb8ba2c10ecadb549",
+      "productionPath": "www/assets/effects/drones-v1/medium-drone-v1.png",
+      "sha256": "5eba536962efb8d3c55e9c86a3555252e12bb328c6101b1879117a14a7fa14df",
+      "width": 160,
+      "height": 79,
+      "bytes": 24308,
+      "alpha": true,
+      "lightAnchor": [
+        0.4984,
+        0.8219
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "winter",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedFile": "exec-62becf7c-e226-407c-bf8d-86f2ce30e2eb.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/winter.png",
+      "masterSha256": "f3498ac590b538cfa02743b5bfe16f687ddefabc85b2ec4e017a22e09340c14d",
+      "productionPath": "www/assets/effects/drones-v1/winter-drone-v1.png",
+      "sha256": "bfc94ba95ce1c853281b7460872ba04d238592a7fe998cc2c4784ab3659307b4",
+      "width": 160,
+      "height": 69,
+      "bytes": 25693,
+      "alpha": true,
+      "lightAnchor": [
+        0.4999,
+        0.8795
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "neon",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedFile": "exec-8e816c22-80a6-44b1-8d27-d74762856755.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/neon.png",
+      "masterSha256": "1188b95d38dd32751667b703e8579f5d2b315887ca2593b7ea21ab72ffbdf1b3",
+      "productionPath": "www/assets/effects/drones-v1/neon-drone-v1.png",
+      "sha256": "2ec1078a7e9f5ce46a3179c0af89913ac16bcc10d2ed7b48fad3db486f47fbc7",
+      "width": 160,
+      "height": 89,
+      "bytes": 28613,
+      "alpha": true,
+      "lightAnchor": [
+        0.5003,
+        0.7928
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "amethyst",
+      "direction": "clay",
+      "generatedFile": "exec-0a3207a2-08ce-46b2-b7ea-2127b37f47f6.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/amethyst.png",
+      "masterSha256": "77e1839469a63eb098886f18cbc294475f1b60d2282e2e4ce0a41adab4d1aaa1",
+      "productionPath": "www/assets/effects/drones-v1/amethyst-drone-v1.png",
+      "sha256": "b3e5d58cb33fa2b01ae4561a2420a282e401030323bd8552c4c53b20b54e5d44",
+      "width": 160,
+      "height": 67,
+      "bytes": 20062,
+      "alpha": true,
+      "lightAnchor": [
+        0.498,
+        0.7906
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "easter",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedFile": "exec-8434f230-7572-4ab3-8a63-e7fed0c753b3.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/easter.png",
+      "masterSha256": "a105aeb530cc3084f7d53dba5fe9b48a91945cf4ee296645267f9c07c07ea075",
+      "productionPath": "www/assets/effects/drones-v1/easter-drone-v1.png",
+      "sha256": "d0b4b3a79b2eec94eaf6cb7b5de6fbb027276e15ef95b6c1de1280e876a3feda",
+      "width": 160,
+      "height": 81,
+      "bytes": 27071,
+      "alpha": true,
+      "lightAnchor": [
+        0.4997,
+        0.7838
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "desert",
+      "direction": "clay",
+      "generatedFile": "exec-d8719ee2-3d91-419a-bc23-72d61f0fb5a4.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/desert.png",
+      "masterSha256": "07d772d43caf508461e4211b7baaf7fc4ed3f81f6adb9ba477abf67d5e396619",
+      "productionPath": "www/assets/effects/drones-v1/desert-drone-v1.png",
+      "sha256": "ec664c3e93b96858aba24e23c87cf6108d2f0015da724d8cee1b4530c2adbb97",
+      "width": 160,
+      "height": 63,
+      "bytes": 20094,
+      "alpha": true,
+      "lightAnchor": [
+        0.4994,
+        0.881
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "moon",
+      "direction": "clay",
+      "generatedFile": "exec-4b1050d8-24d4-40fd-afa6-046e78f789aa.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/moon.png",
+      "masterSha256": "b281d9c5bc4776e0bdfc26fca5dfe0b00d96ba40a1daacff8be8ab1c763589ca",
+      "productionPath": "www/assets/effects/drones-v1/moon-drone-v1.png",
+      "sha256": "4c68b3e941a11850f7fb91bdaf7eb9d3d5be4a19915ea17c2869805216d63fea",
+      "width": 160,
+      "height": 74,
+      "bytes": 19693,
+      "alpha": true,
+      "lightAnchor": [
+        0.4997,
+        0.7596
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    },
+    {
+      "theme": "severna",
+      "direction": "smooth_rubber_matte_plastic",
+      "generatedFile": "exec-bc2d9c65-b112-499f-9c18-75eb78896f4d.png",
+      "master": "source-assets/theme-drone-sprites-v1/masters/severna.png",
+      "masterSha256": "163ee19d3df2150d7db3e84b05f6e753fe8013bafb46c86c645fa3c9c1c2f658",
+      "productionPath": "www/assets/effects/drones-v1/severna-drone-v1.png",
+      "sha256": "3a1782c4c76be5bed532e1a0a1886dbf053a038d629ef6d0ae723d69471f15d7",
+      "width": 160,
+      "height": 67,
+      "bytes": 22303,
+      "alpha": true,
+      "lightAnchor": [
+        0.499,
+        0.8685
+      ],
+      "preparation": "Crop transparent margins and downscale; colors and material unchanged."
+    }
+  ]
+}

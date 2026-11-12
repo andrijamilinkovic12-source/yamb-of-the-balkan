@@ -57,6 +57,10 @@ class TournamentManager {
         this.pendingRegistration = false;
         this.registrationRulesPromptOpen = false;
         this.pendingUnregister = false;
+        this.pendingReadiness = false;
+        this.readinessNotices = [];
+        this.readinessPromptOpen = false;
+        this.readinessClockTimer = null;
         this.reminderInFlight = false;
         this.isIntroPlaying = false;
 
@@ -98,7 +102,9 @@ class TournamentManager {
     showSchedulingLockedMessage() {
         if (this.app && this.app.modal) {
             this.app.modal.alert(
-                tt('tourney_schedule_locked_until_full') || 'Termini za zakazivanje otključavaju se kada se prijavi svih 8 igrača.',
+                this.hasReadinessPolicy()
+                    ? this.tr('tourney_readiness_before_start', 'Mečevi počinju tek kada svih osam igrača potvrdi spremnost.')
+                    : (tt('tourney_schedule_locked_until_full') || 'Termini za zakazivanje otključavaju se kada se prijavi svih 8 igrača.'),
                 tt('tourney_alert_warning') || 'UPOZORENJE'
             );
         }
@@ -107,6 +113,252 @@ class TournamentManager {
     tr(key, fallback) {
         const translated = tt(key);
         return translated && translated !== key ? translated : fallback;
+    }
+
+    readinessCore() {
+        return window.tournamentReadinessCore || null;
+    }
+
+    hasReadinessPolicy() {
+        return this.readinessCore()?.isManaged(this.state) || false;
+    }
+
+    isReadinessPrestart() {
+        return this.readinessCore()?.isPrestart(this.state) || false;
+    }
+
+    tournamentNow() {
+        if (!this.readinessTimeBase) return Date.now();
+        return this.readinessTimeBase.server + performance.now() - this.readinessTimeBase.local;
+    }
+
+    readinessDeadline(value) {
+        const lang = localStorage.getItem('yamb_lang') === 'en' ? 'en-GB' : 'sr-RS';
+        return new Date(value).toLocaleString(lang, {
+            timeZone: 'Europe/Belgrade', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    myReadinessPlayer() {
+        return this.state.players.find(player => player.id === this.app.playerId) || null;
+    }
+
+    canJoinReadiness() {
+        return !this.currentTournamentReliability()?.blocked && (this.readinessCore()?.canRegister(this.state, this.tournamentNow()) || false);
+    }
+
+    tournamentProtocolFields() {
+        const protocol = window.tournamentReliabilityCore?.CLIENT_PROTOCOL;
+        return protocol ? { clientProtocol: protocol } : {};
+    }
+
+    currentTournamentReliability() {
+        const status = this.tournamentReliabilityStatus;
+        return status?.cycleId === this.state.registrationCycleId && status?.recipientUid === this.app.playerId ? status : null;
+    }
+
+    requestTournamentReliability() {
+        if (!window.tournamentReliabilityCore?.isManaged(this.state) || !this.app.socket?.connected || !this.app.playerId) return;
+        const key = this.app.playerId + ':' + this.state.registrationCycleId;
+        const at = Date.now();
+        if (this.tournamentReliabilityRequest?.key === key && at - this.tournamentReliabilityRequest.at < 15000) return;
+        this.tournamentReliabilityRequest = { key, at };
+        this.app.socket.emit('tourney_get_reliability');
+    }
+
+    updateReadinessClock() {
+        if (!this.isReadinessPrestart() || !this.state.readiness) {
+            if (this.readinessClockTimer) clearInterval(this.readinessClockTimer);
+            this.readinessClockTimer = null;
+            return;
+        }
+        const now = this.tournamentNow();
+        document.querySelectorAll('[data-readiness-countdown]').forEach(element => {
+            const deadline = Number(element.dataset.readinessCountdown);
+            const remaining = this.readinessCore().activeMsBetween(now, deadline);
+            const minutes = Math.ceil(remaining / 60000);
+            element.textContent = now >= deadline
+                ? this.tr('tourney_readiness_checking', 'Provera roka na serveru')
+                : `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, '0')}m`;
+        });
+        if (!this.readinessClockTimer) {
+            this.readinessClockTimer = setInterval(() => {
+                if (document.hidden) return;
+                this.updateReadinessClock();
+                this.maybeShowReadinessNotice();
+                if (this.app.socket?.connected && Date.now() - (this.lastReadinessRefresh || 0) >= 30000) {
+                    this.lastReadinessRefresh = Date.now();
+                    this.app.socket.emit('tourney_get_state');
+                }
+            }, 1000);
+        }
+    }
+
+    async confirmReadiness(expected = null) {
+        const player = this.myReadinessPlayer();
+        if (!this.isReadinessPrestart() || !player || !this.state.readiness || this.pendingReadiness) return;
+        if (!this.app.socket?.connected) {
+            this.app.modal.alert(tt('sys_no_conn'), tt('err_title'));
+            return;
+        }
+        this.pendingReadiness = true;
+        this.app.socket.emit('tourney_readiness_confirm', {
+            ...(expected || { cycleId: this.state.registrationCycleId, entryId: player.entryId }), ...this.tournamentProtocolFields()
+        });
+        this.render();
+        setTimeout(() => {
+            if (!this.pendingReadiness) return;
+            this.pendingReadiness = false;
+            this.app.socket?.emit('tourney_get_state');
+            if (document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
+        }, 12000);
+    }
+
+    scheduleReadinessNoticeCheck() {
+        if (!this.readinessNotices?.length || this.readinessNoticeTimer) return;
+        this.readinessNoticeTimer = setTimeout(() => {
+            this.readinessNoticeTimer = null;
+            this.maybeShowReadinessNotice();
+        }, 1000);
+    }
+
+    async maybeShowReadinessNotice(notice = null) {
+        const matchNotices = window.tournamentNotificationsCore;
+        const isMatchNotice = item => matchNotices?.isMatchNotice(item);
+        this.readinessNotices = (this.readinessNotices || []).filter(item => item.recipientUid === this.app.playerId
+            && !localStorage.getItem('yamb_tourney_notice_' + item.noticeId)
+            && (!isMatchNotice(item) || !this.readinessTimeBase || matchNotices.isCurrent(this.state, item, this.tournamentNow())));
+        if (isMatchNotice(notice) && (notice.recipientUid !== this.app.playerId
+            || (this.readinessTimeBase && !matchNotices.isCurrent(this.state, notice, this.tournamentNow())))) return;
+        if (notice?.recipientUid && notice.recipientUid !== this.app.playerId) return;
+        if (notice && localStorage.getItem('yamb_tourney_notice_' + notice.noticeId)) return;
+        if (notice && !this.readinessNotices.some(item => item.noticeId === notice.noticeId)) {
+            this.readinessNotices.push({ ...notice, recipientUid: this.app.playerId });
+        }
+        if (!this.app?.modal || this.readinessPromptOpen || this.reminderInFlight || this.registrationRulesPromptOpen
+            || this.app.gameActive || document.hidden || this.pendingNoticeNavigation
+            || document.getElementById('waiting-screen')?.classList.contains('active')
+            || document.getElementById('game-scene')?.classList.contains('active')) {
+            this.scheduleReadinessNoticeCheck();
+            return;
+        }
+        const overlay = document.getElementById('custom-modal-overlay');
+        if (overlay?.style.display === 'flex' || overlay?.classList.contains('active')) {
+            this.scheduleReadinessNoticeCheck();
+            return;
+        }
+        const player = this.myReadinessPlayer();
+        const pending = this.isReadinessPrestart() && this.state.readiness && player
+            && !this.readinessCore().isReady(player) && this.tournamentNow() < player.readyDeadlineAt;
+        let next = this.readinessNotices.find(item => !isMatchNotice(item) || this.readinessTimeBase);
+        if (!next && pending) {
+            next = { noticeId: player.entryId + ':readiness_requested', kind: 'readiness_requested',
+                recipientUid: this.app.playerId,
+                cycleId: this.state.registrationCycleId, entryId: player.entryId };
+            if (localStorage.getItem('yamb_tourney_notice_' + next.noticeId)) return;
+        }
+        if (!next) {
+            this.scheduleReadinessNoticeCheck();
+            return;
+        }
+        const isConfirmation = ['readiness_requested', 'readiness_halfway', 'readiness_last_call'].includes(next.kind);
+        if (isConfirmation && (!pending || next.entryId !== player.entryId
+            || next.cycleId !== this.state.registrationCycleId)) {
+            this.readinessNotices = this.readinessNotices.filter(item => item.noticeId !== next.noticeId);
+            return;
+        }
+        this.readinessPromptOpen = true;
+        try {
+            if (isMatchNotice(next)) {
+                const copy = matchNotices.copy(next, localStorage.getItem('yamb_lang'));
+                if (copy) {
+                    const open = await this.app.modal.confirm(this.escape(copy.body), {
+                        title: copy.title, okText: this.tr('push_open', 'Otvori'),
+                        cancelText: this.tr('push_later', 'Kasnije'), contextClass: 'tournament'
+                    });
+                    if (open && matchNotices.isCurrent(this.state, next, this.tournamentNow())) this.openTournamentNotice(next);
+                }
+            } else if (window.tournamentReliabilityCore?.isNotice(next)) {
+                const copy = window.tournamentReliabilityCore.copy(next, localStorage.getItem('yamb_lang'));
+                await this.app.modal.alert(this.escape(copy.body), copy.title, { contextClass: 'tournament' });
+                this.requestTournamentReliability();
+            } else if (isConfirmation) {
+                const message = this.tr('tourney_readiness_prompt',
+                    'Potvrdite spremnost do {0} (Beograd). Bez potvrde mesto se oslobađa uz pun povraćaj kotizacije.')
+                    .replace('{0}', this.readinessDeadline(player.readyDeadlineAt));
+                const accepted = await this.app.modal.confirm(this.escape(message), {
+                    title: this.tr('tourney_readiness_title', 'POTVRDA SPREMNOSTI'),
+                    okText: this.tr('tourney_readiness_confirm', 'POTVRĐUJEM UČEŠĆE'),
+                    cancelText: this.tr('tourney_readiness_later', 'KASNIJE'), contextClass: 'tournament'
+                });
+                if (accepted && next.recipientUid === this.app.playerId) {
+                    this.confirmReadiness({ cycleId: next.cycleId, entryId: next.entryId });
+                }
+            } else {
+                await this.app.modal.alert(this.escape(this.tr('tourney_readiness_refund_recorded',
+                    'Prijava je zatvorena bez kazne. Povraćaj kotizacije je evidentiran. Ako ste na limitu dukata, ostatak se vraća čim ima prostora.')),
+                this.tr('tourney_readiness_refund_title', 'POVRAĆAJ KOTIZACIJE'), { contextClass: 'tournament' });
+            }
+            this.acknowledgeTournamentNotice(next);
+        } finally {
+            this.readinessPromptOpen = false;
+            this.scheduleReadinessNoticeCheck();
+        }
+    }
+
+    acknowledgeTournamentNotice(notice) {
+        if (notice.recipientUid !== this.app.playerId) return;
+        const key = 'yamb_tourney_notice_' + notice.noticeId;
+        if (!localStorage.getItem(key)) {
+            localStorage.setItem(key, '1');
+            this.app.socket?.emit('tourney_notice_read', { noticeId: notice.noticeId });
+        }
+        this.readinessNotices = (this.readinessNotices || []).filter(item => item.noticeId !== notice.noticeId);
+    }
+
+    openTournamentNotice(notice) {
+        if (!notice?.noticeId || notice.recipientUid !== this.app.playerId || this.app.gameActive
+            || document.getElementById('waiting-screen')?.classList.contains('active')) return;
+        const nav = { notice, until: Date.now() + 15000 };
+        this.pendingNoticeNavigation = nav;
+        if (!this.app.socket) this.app.initSocketConnection?.();
+        const socket = this.app.socket;
+        if (socket?.connected) socket.emit('tourney_get_state');
+        else socket?.once('connect', () => {
+            if (this.pendingNoticeNavigation === nav) socket.emit('tourney_get_state');
+        });
+        setTimeout(() => {
+            if (this.pendingNoticeNavigation !== nav) return;
+            this.pendingNoticeNavigation = null;
+            this.maybeShowReadinessNotice();
+        }, 15000);
+    }
+
+    applyTournamentNoticeNavigation() {
+        const nav = this.pendingNoticeNavigation;
+        if (!nav) return;
+        this.pendingNoticeNavigation = null;
+        const { notice } = nav;
+        if (Date.now() >= nav.until || notice.recipientUid !== this.app.playerId || this.app.gameActive
+            || document.getElementById('waiting-screen')?.classList.contains('active')) return;
+        if (notice.scheduleId) {
+            const index = Number(notice.index);
+            if (!window.tournamentNotificationsCore?.isCurrent(this.state, { ...notice, index,
+                expiresAt: Number(notice.expiresAt) }, this.tournamentNow())) return;
+            this.activeTab = 'bracket';
+            this.open({ skipIntro: true });
+            this.openMatchModal(notice.round, index);
+        } else {
+            if (['readiness_requested', 'readiness_halfway', 'readiness_last_call'].includes(notice.kind)) {
+                const player = this.myReadinessPlayer();
+                if (notice.cycleId !== this.state.registrationCycleId || player?.entryId !== notice.entryId
+                    || !this.isReadinessPrestart() || this.readinessCore().isReady(player)
+                    || this.tournamentNow() >= player.readyDeadlineAt) return;
+            }
+            this.activeTab = 'info';
+            this.open({ skipIntro: true });
+        }
+        this.acknowledgeTournamentNotice(notice);
     }
 
     // --- NOVA BULLETPROOF FUNKCIJA ZA INDEKS MOĆI (AŽURIRANA ZA CENTRALNU BAZU) ---
@@ -185,6 +437,20 @@ class TournamentManager {
         const myId = this.app.playerId;
         const status = this.state.status;
 
+        if (this.isReadinessPrestart() && this.state.readiness) {
+            const player = this.myReadinessPlayer();
+            if (player && !this.readinessCore().isReady(player)) {
+                showBadge('var(--success)', '0 0 8px var(--success)', true,
+                    this.tr('tourney_readiness_action', 'Potvrdite spremnost za turnir'));
+            } else if (player) {
+                showBadge('var(--text-muted)', 'none', false,
+                    this.tr('tourney_readiness_waiting', 'Čekamo potvrde ostalih igrača'));
+            } else if (this.canJoinReadiness()) {
+                showBadge('var(--success)', 'none', false, this.tr('tourney_badge_open', 'Turnir prima prijave'));
+            } else hideBadge();
+            return;
+        }
+
         // 1. Faza prijave: Prikazujemo narandžasto (ako već nismo prijavljeni)
         if (status === 'registration') {
             const isRegistered = this.state.players.some(p => p.id === myId);
@@ -208,6 +474,10 @@ class TournamentManager {
                 if (this.state.bracket[round]) {
                     this.state.bracket[round].forEach(match => {
                         if (match && ((match.p1 && match.p1.id === myId) || (match.p2 && match.p2.id === myId))) {
+                            if (['double_dq', 'void'].includes(match.review?.kind)) {
+                                eliminated = true;
+                                return;
+                            }
                             if (match.winnerId) {
                                 if (match.winnerId === myId) {
                                     stillInTournament = true;
@@ -218,7 +488,12 @@ class TournamentManager {
                             }
 
                             stillInTournament = true;
-                            if (!match.winnerId) {
+                            const schedule = match.scheduling;
+                            if (schedule) {
+                                const now = this.tournamentNow();
+                                if (now < schedule.deadlineAt && (schedule.accepted || !schedule.pending
+                                    || now >= schedule.pending.replyDueAt || schedule.pending.by !== myId)) hasActionNow = true;
+                            } else {
                                 if (match.p1 && match.p2 && (match.timeAccepted || !match.proposedTime || match.proposedById !== myId)) {
                                     hasActionNow = true;
                                 }
@@ -287,18 +562,23 @@ class TournamentManager {
             info.round,
             info.index,
             proposedPart,
-            acceptedPart
+            acceptedPart,
+            match.scheduling?.id || '',
+            match.scheduling?.revision || 0
         ].join('|');
     }
 
     maybeShowTournamentReminder(state = this.state) {
         if (!this.app || !this.app.modal || this.reminderInFlight) return;
+        if (window.tournamentNotificationsCore?.isManaged(state)) return;
         if (document.getElementById('tournament-screen')?.classList.contains('active')) return;
         if (document.getElementById('game-scene')?.classList.contains('active')) return;
         if (this.app.gameActive) return;
 
         const info = this.findMyActiveMatch(state);
         if (!info) return;
+        if (info.match.scheduling && (this.tournamentNow() >= info.match.scheduling.deadlineAt
+            || (!info.match.scheduling.accepted && info.match.scheduling.pending?.replyDueAt <= this.tournamentNow()))) return;
 
         const key = this.getTournamentReminderKey(info);
         if (!key) return;
@@ -325,7 +605,10 @@ class TournamentManager {
         const opponentName = this.escape(info.opponent.name || 'Protivnik');
         let msg;
 
-        if (info.match.timeAccepted) {
+        if (info.match.scheduling?.pending && info.match.scheduling.pending.replyDueAt > this.tournamentNow()
+            && info.match.scheduling.pending.by !== this.app.playerId) {
+            msg = `${this.tr('tourney_reminder_pending_accept', 'Protivnik je predložio termin za turnirski meč.')}<br><br><strong>${opponentName}</strong><br>${this.readinessDeadline(info.match.scheduling.pending.at)}`;
+        } else if (info.match.timeAccepted) {
             msg = `${this.tr('tourney_reminder_ready', 'Vaš turnirski meč je dogovoren.')}<br><br><strong>${opponentName}</strong><br>${this.formatDate(info.match.time || info.match.proposedTime)}<br><br>${this.tr('tourney_reminder_open', 'Otvorite turnir da pokrenete meč.')}`;
         } else if (info.match.proposedTime && info.match.proposedById !== this.app.playerId) {
             msg = `${this.tr('tourney_reminder_pending_accept', 'Protivnik je predložio termin za turnirski meč.')}<br><br><strong>${opponentName}</strong><br>${this.formatDate(info.match.proposedTime)}<br><br>${this.tr('tourney_reminder_open_accept', 'Otvorite turnir da prihvatite ili predložite drugo vreme.')}`;
@@ -364,11 +647,20 @@ class TournamentManager {
 
                 // >>> DODATA LINIJA KODA <<<
                 // Odmah po uspostavljanju konekcije tražimo stanje da bismo ažurirali bedž
-                this.app.socket.emit('tourney_get_state');
+                this.app.socket.emit('tourney_get_state', this.tournamentProtocolFields());
 
                 this.app.socket.on('tourney_state_update', (newState) => {
                     const oldStatus = this.state.status;
                     this.state = newState;
+                    this.requestTournamentReliability();
+                    if (Number.isFinite(newState.serverTime)) {
+                        this.readinessTimeBase = { server: newState.serverTime, local: performance.now() };
+                    }
+                    const readinessPlayer = this.myReadinessPlayer();
+                    if (readinessPlayer || !this.isReadinessPrestart()) this.pendingRegistration = false;
+                    if (!readinessPlayer) this.pendingUnregister = false;
+                    if (this.readinessCore()?.isReady(readinessPlayer) || !this.isReadinessPrestart()) this.pendingReadiness = false;
+                    this.updateReadinessClock();
 
                     // --- POZIV NOVE FUNKCIJE ZA BEDŽ ---
                     this.updateTourneyBadge();
@@ -401,7 +693,7 @@ class TournamentManager {
                         }
 
                         // Ako server ima staru vrednost, ispaljujemo update
-                        if (needsUpdate) {
+                        if (needsUpdate && !this.isReadinessPrestart()) {
                             this.app.socket.emit('tourney_update_pi', { id: myId, pi: myPi });
                         }
                         // ---------------------------------------------
@@ -411,8 +703,11 @@ class TournamentManager {
                         const storageKey = 'yamb_tourney_reg_' + myId;
                         const localRegTime = localStorage.getItem(storageKey);
 
-                        if (newState.status === 'registration' && localRegTime && !isRegisteredServer) {
+                        if ((newState.status === 'registration' || this.isReadinessPrestart()) && localRegTime && !isRegisteredServer) {
                             localStorage.removeItem(storageKey);
+                            if (this.hasReadinessPolicy()) {
+                                localStorage.removeItem('yamb_tourney_entry_' + myId + '_' + newState.registrationCycleId);
+                            }
                         }
 
                         if (newState.status !== 'registration' && newState.bracket && newState.bracket.f && newState.bracket.f[0] && newState.bracket.f[0].winnerId) {
@@ -420,22 +715,67 @@ class TournamentManager {
                         }
                     }
 
-                    if (oldStatus === 'registration' && newState.status !== 'registration') {
+                    if (this.isReadinessPrestart() && newState.readiness) {
+                        this.activeTab = 'info';
+                    }
+                    else if (['registration', 'confirmation'].includes(oldStatus) && newState.status === 'active') {
                         this.activeTab = 'bracket';
                     }
                     else if (oldStatus !== 'registration' && newState.status === 'registration') {
                         this.activeTab = 'info';
                     }
 
+                    this.applyTournamentNoticeNavigation();
                     this.maybeShowTournamentReminder(newState);
+                    this.maybeShowReadinessNotice();
+
+                    this.refreshManagedMatchModal();
 
                     if(document.getElementById('tournament-screen').classList.contains('active')) {
                         this.render();
                     }
                 });
 
+                this.app.socket.on('tourney_readiness_result', (result = {}) => {
+                    this.pendingReadiness = false;
+                    if (!result.ok) this.app.modal.alert(this.serverMessage(result.reason, tt('err_server_conn')), tt('warning_title'));
+                    if (document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
+                });
+                this.app.socket.on('tourney_schedule_result', (result = {}) => {
+                    this.pendingSchedulingAction = null;
+                    if (!result.ok) this.app.modal.alert(this.serverMessage(result.reason, tt('err_server_conn')), tt('warning_title'), { contextClass: 'tournament' });
+                });
+                this.app.socket.on('tourney_reliability_status', status => {
+                    if (status?.recipientUid !== this.app.playerId || status.cycleId !== this.state.registrationCycleId) return;
+                    this.tournamentReliabilityStatus = status;
+                    if (this.isReadinessPrestart() && document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
+                });
+                this.app.socket.on('tourney_notices', (notices = []) => {
+                    if (!Array.isArray(notices)) return;
+                    for (const notice of notices) this.maybeShowReadinessNotice(notice);
+                });
+                this.app.socket.on('tourney_notice', notice => this.maybeShowReadinessNotice(notice));
+                this.app.socket.on('sync_local_stats', () => {
+                    this.app.socket.emit('tourney_get_notices', this.tournamentProtocolFields());
+                    this.requestTournamentReliability();
+                });
+                this.app.socket.on('disconnect', () => {
+                    this.pendingRegistration = false;
+                    this.pendingUnregister = false;
+                    this.pendingReadiness = false;
+                    this.pendingSchedulingAction = null;
+                    this.tournamentReliabilityRequest = null;
+                    if (this.tournamentAttendance) {
+                        this.tournamentAttendance.begin = true;
+                        this.updateTournamentAttendanceStatus();
+                    }
+                });
+
                 this.app.socket.on('tourney_register_result', (result = {}) => {
                     this.pendingRegistration = false;
+                    if (result.reason === 'tourney_readiness_stale') {
+                        localStorage.removeItem('yamb_tourney_entry_' + this.app.playerId + '_' + this.state.registrationCycleId);
+                    }
 
                     if (result.ok) {
                         if (this.app && this.app.playerId) {
@@ -459,11 +799,21 @@ class TournamentManager {
                     if (result.ok) {
                         if (this.app && this.app.playerId) {
                             localStorage.removeItem('yamb_tourney_reg_' + this.app.playerId);
+                            if (this.hasReadinessPolicy()) {
+                                localStorage.removeItem('yamb_tourney_entry_' + this.app.playerId + '_' + this.state.registrationCycleId);
+                            }
+                        }
+                        if (this.pendingWithdrawNoticeId) {
+                            localStorage.setItem('yamb_tourney_notice_' + this.pendingWithdrawNoticeId, '1');
+                            this.app.socket.emit('tourney_notice_read', { noticeId: this.pendingWithdrawNoticeId });
+                            this.pendingWithdrawNoticeId = null;
                         }
 
                         if (!result.alreadyUnregistered && this.app && this.app.modal) {
                             this.app.modal.alert(
-                                tt('tourney_unregistered_success') || `Uspešno ste se odjavili. Vraćeno Vam je ${TOURNEY_ENTRY_FEE} ${dukatIconHtml()}.`,
+                                result.refundRecorded
+                                    ? this.tr('tourney_readiness_refund_recorded', 'Povraćaj kotizacije je evidentiran.')
+                                    : (tt('tourney_unregistered_success') || `Uspešno ste se odjavili. Vraćeno Vam je ${TOURNEY_ENTRY_FEE} ${dukatIconHtml()}.`),
                                 tt('modal_title_info') || "INFO"
                             );
                         }
@@ -510,7 +860,7 @@ class TournamentManager {
                             if (!this.app.socket || !this.app.socket.connected) return;
                             this.app.socket.emit('tourney_duel_response', {
                                 matchRoomId: data.matchRoomId,
-                                ...payload
+                                ...payload, ...this.tournamentProtocolFields()
                             });
                         };
 
@@ -528,7 +878,7 @@ class TournamentManager {
                         }
 
                         this.app.modal.confirm(msg).then(acc => {
-                            if (acc && data.expiresAt && Date.now() > data.expiresAt) {
+                            if (acc && data.expiresAt && this.tournamentNow() >= data.expiresAt) {
                                 showTourneyDuelNotice(tt('room_invite_expired_self') || 'Istekao je rok za odgovor na pozivnicu.');
                                 sendResponse({ accepted: false });
                                 return;
@@ -558,12 +908,23 @@ class TournamentManager {
 
                 this.app.socket.on('tourney_duel_expired', (data = {}) => {
                     if (data.silent) return;
+                    if (data.reason === 'tourney_schedule_stale') {
+                        if (this.managedJoinRoomId !== data.matchRoomId) return;
+                        this.managedJoinRoomId = null;
+                        if (!this.app.gameActive && document.getElementById('waiting-screen')?.classList.contains('active')) {
+                            this.app.cancelOnline({ closedRoom: true });
+                            this.openScreen();
+                        }
+                        showTourneyDuelNotice(tt(data.reason));
+                        return;
+                    }
                     const opponentName = this.escape(data.opponentName || tt('player_guest') || 'Igrač');
                     const msg = (tt('tourney_duel_expired_notice') || '{0} nije odgovorio na vreme. Meč nije pokrenut.').replace('{0}', opponentName);
                     showTourneyDuelNotice(msg);
                 });
 
                 this.app.socket.on('tourney_join_allowed', (matchRoomId) => {
+                    if (window.tournamentSchedulingCore?.isManaged(this.state)) this.managedJoinRoomId = matchRoomId;
                     this.app.joinPrivateGame(this.app.playerName, matchRoomId);
                 });
             }
@@ -740,19 +1101,19 @@ class TournamentManager {
     }
 
     openScreen() {
-        if (this.state.status !== 'registration' && this.activeTab === 'info') {
+        if (this.state.status !== 'registration' && !this.isReadinessPrestart() && this.activeTab === 'info') {
             this.activeTab = 'bracket';
         }
 
         this.app.navigateTo('tournament-screen');
         if(this.app.socket && this.app.socket.connected) {
-            this.app.socket.emit('tourney_get_state');
+            this.app.socket.emit('tourney_get_state', this.tournamentProtocolFields());
             this.app.socket.emit('get_tourney_stats');
         } else {
             this.app.initSocketConnection();
             setTimeout(() => {
                 if(this.app.socket) {
-                    this.app.socket.emit('tourney_get_state');
+                    this.app.socket.emit('tourney_get_state', this.tournamentProtocolFields());
                     this.app.socket.emit('get_tourney_stats');
                 }
             }, 500);
@@ -799,7 +1160,10 @@ class TournamentManager {
 
         const tabContent = document.getElementById('tourney-tab-content');
 
-        if (this.activeTab === 'bracket') {
+        if (this.activeTab === 'bracket' && this.isReadinessPrestart()) {
+            tabContent.style.overflowY = 'auto';
+            this.renderReadiness(tabContent);
+        } else if (this.activeTab === 'bracket') {
             tabContent.classList.add('tourney-tab-content--bracket');
             tabContent.style.overflowY = 'hidden';
             tabContent.style.overflowX = 'hidden';
@@ -1464,7 +1828,57 @@ class TournamentManager {
         `, `${tt('tourney_champion_journey_title') || 'PUT DO TITULE'} - ${edition}`);
     }
 
+    renderReadiness(container) {
+        const core = this.readinessCore();
+        const text = key => this.escape(this.tr(key, key));
+        const player = this.myReadinessPlayer();
+        const session = this.state.readiness;
+        const confirmed = core.isReady(player);
+        const pending = player && session && !confirmed;
+        const canJoin = this.canJoinReadiness();
+        const reliability = this.currentTournamentReliability();
+        const working = this.pendingReadiness || this.pendingUnregister || this.pendingRegistration;
+        const title = session ? text('tourney_readiness_title') : text('tourney_readiness_registration');
+        const summary = pending ? text('tourney_readiness_action')
+            : confirmed ? text('tourney_readiness_confirmed_wait')
+            : player ? text('tourney_readiness_registered_wait') : text('tourney_readiness_rules');
+        const deadline = pending ? Number(player.readyDeadlineAt) : 0;
+        const count = session ? core.countReady(this.state) : this.state.players.length;
+        const action = pending
+            ? `<button type="button" class="btn-menu btn-primary tourney-readiness-confirm" ${working ? 'disabled' : ''} onclick="app.tournamentManager.confirmReadiness()">${text(this.pendingReadiness ? 'tourney_readiness_sending' : 'tourney_readiness_confirm')}</button>`
+            : !player
+                ? `<button type="button" class="btn-menu btn-primary tourney-readiness-confirm" ${!canJoin || working ? 'disabled' : ''} onclick="app.tournamentManager.registerPlayer()">${text(reliability?.blocked ? 'tourney_reliability_blocked_button' : canJoin ? 'tourney_register_me' : 'tourney_readiness_waiting')}${canJoin ? `<span>${TOURNEY_ENTRY_FEE} ${dukatIconHtml()}</span>` : ''}</button>`
+                : '';
+        container.innerHTML = `
+            <section class="tourney-readiness">
+                <header class="tourney-readiness-heading">
+                    <img class="tourney-readiness-trophy" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <div><h3>${this.escape(this.getCurrentTournamentEditionLabel())}</h3><p>${title}</p></div>
+                    <strong class="tourney-readiness-total">${count}<span>/8</span></strong>
+                </header>
+                <p class="tourney-readiness-count-label">${text(session ? 'tourney_readiness_confirmed_count' : 'tourney_registered')}</p>
+                <p class="tourney-readiness-summary">${summary}</p>
+                ${reliability?.blocked || reliability?.warningEdition ? `<p class="tourney-readiness-summary" role="status">${text(reliability.blocked ? 'tourney_reliability_blocked' : 'tourney_reliability_warning_summary')}</p>` : ''}
+                ${pending ? `<div class="tourney-readiness-deadline"><time datetime="${new Date(deadline).toISOString()}">${text('tourney_readiness_until')} ${this.escape(this.readinessDeadline(deadline))} · ${text('tourney_readiness_belgrade')}</time><strong data-readiness-countdown="${deadline}"></strong><p>${text('tourney_readiness_clock_note')}</p></div>` : ''}
+                <div class="tourney-readiness-actions">
+                    ${action}
+                    ${player ? `<button type="button" class="btn-menu btn-secondary tourney-readiness-withdraw" ${working ? 'disabled' : ''} onclick="app.tournamentManager.unregisterPlayer()">${text(this.pendingUnregister ? 'tourney_unregistering' : 'tourney_readiness_withdraw')}</button>` : ''}
+                </div>
+                ${session ? `<p class="tourney-readiness-session-end">${text('tourney_readiness_session_until')} ${this.escape(this.readinessDeadline(session.expiresAt))} · ${text('tourney_readiness_belgrade')}</p>` : ''}
+                <ul class="tourney-readiness-roster" aria-label="${this.escapeAttr(this.tr('tourney_readiness_roster', 'Učesnici turnira'))}">
+                    ${this.state.players.map(participant => `<li class="${core.isReady(participant) ? 'is-ready' : ''}"><span class="tourney-readiness-roster-name">${this.escape(participant.name)}</span><span class="tourney-readiness-roster-status">${text(core.isReady(participant) ? 'tourney_readiness_ready' : session ? 'tourney_readiness_pending' : 'tourney_readiness_registered')}</span></li>`).join('')}
+                </ul>
+                <p class="tourney-readiness-footnote">${text('tourney_readiness_before_start')}</p>
+            </section>
+        `;
+        this.updateReadinessClock();
+    }
+
     renderRegistration(container) {
+        if (this.isReadinessPrestart()) {
+            this.renderReadiness(container);
+            return;
+        }
         const myId = this.app.playerId;
         const isRegistered = this.state.players.some(p => p.id === myId);
         const isRegistrationOpen = this.state.status === 'registration';
@@ -1474,7 +1888,8 @@ class TournamentManager {
         const nextEdition = this.getNextTournamentEditionLabel();
         const resetCountdown = this.formatTournamentResetCountdown(this.state.resetAt);
         const registrationDesc = isFinished
-            ? (tt('tourney_finished_desc') || 'Turnir je završen. Rezultati i put do titule ostaju sačuvani.')
+            ? (window.tournamentAdjudicationCore?.isManaged(this.state) && !this.state.bracket?.f?.[0]?.winnerId
+                ? tt('tourney_finished_without_champion') : (tt('tourney_finished_desc') || 'Turnir je završen. Rezultati i put do titule ostaju sačuvani.'))
             : (tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.');
 
         let buttonHtml = '';
@@ -1554,6 +1969,7 @@ class TournamentManager {
 
     buildTournamentParticipationRules(fee) {
         const text = (key, fallback) => this.escape(this.tr(key, fallback));
+        const reliability = window.tournamentReliabilityCore?.isManaged(this.state);
         const feeNotice = this.escape(
             this.tr(
                 'tourney_participation_rules_fee',
@@ -1582,10 +1998,12 @@ class TournamentManager {
                         <span class="tourney-participation-rules__number" aria-hidden="true">2</span>
                         <div>
                             <p class="tourney-participation-rules__rule-title">${text('tourney_participation_rules_tp_title', 'Ako meč ostane bez odgovora')}</p>
-                            <p class="tourney-participation-rules__rule-copy">${text('tourney_participation_rules_tp_text', 'Kod dugog neodgovaranja ili neodigravanja, nakon provere aktivnosti i pokušaja dogovora, tehnička pobeda može pripasti aktivnijem protivniku.')}</p>
+                            <p class="tourney-participation-rules__rule-copy">${reliability ? this.escape(tt('tourney_reliability_evidence')) : text('tourney_participation_rules_tp_text', 'Kod dugog neodgovaranja ili neodigravanja, nakon provere aktivnosti i pokušaja dogovora, tehnička pobeda može pripasti aktivnijem protivniku.')}</p>
                         </div>
                     </div>
+                    ${reliability ? `<div class="tourney-participation-rules__rule" role="listitem"><span class="tourney-participation-rules__number" aria-hidden="true">3</span><div><p class="tourney-participation-rules__rule-title">${this.escape(tt('tourney_reliability_rules_title'))}</p><p class="tourney-participation-rules__rule-copy">${this.escape(tt('tourney_reliability_rules_text'))}</p></div></div>` : ''}
                 </div>
+                ${this.hasReadinessPolicy() ? `<p class="tourney-participation-rules__fee">${text('tourney_readiness_rules', 'Kada se popuni osam mesta, potrebno je posebno potvrditi spremnost u roku od šest sati, računajući vreme 09–22h po Beogradu. Bez potvrde vraća se kotizacija. Mečevi počinju tek kada svi potvrde.')}</p>` : ''}
                 <p class="tourney-participation-rules__fee">${feeNotice}</p>
             </section>
         `;
@@ -1608,13 +2026,19 @@ class TournamentManager {
     async registerPlayer() {
         this.app.soundMgr.click();
         if (this.pendingRegistration || this.registrationRulesPromptOpen) return;
+        if (this.currentTournamentReliability()?.blocked) {
+            this.app.modal.alert(tt('tourney_reliability_blocked'));
+            return;
+        }
 
-        if (this.state.status !== 'registration' || this.state.players.length >= 8) {
+        if (this.hasReadinessPolicy() ? !this.canJoinReadiness() : (this.state.status !== 'registration' || this.state.players.length >= 8)) {
             this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
             return;
         }
 
         const fee = TOURNEY_ENTRY_FEE;
+        const expectedCycle = this.hasReadinessPolicy() ? this.state.registrationCycleId : null;
+        const expectedTournament = this.getSafeTournamentNumber();
         let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
 
         if (currentBalance < fee) {
@@ -1636,7 +2060,13 @@ class TournamentManager {
 
         if (!acceptedRules || this.pendingRegistration) return;
 
-        if (this.state.status !== 'registration' || this.state.players.length >= 8) {
+        if (Boolean(expectedCycle) !== this.hasReadinessPolicy()
+            || expectedTournament !== this.getSafeTournamentNumber()
+            || (expectedCycle && expectedCycle !== this.state.registrationCycleId)) {
+            this.app.modal.alert(this.tr('tourney_readiness_stale', 'Prijava ili rok su promenjeni. Proverite novo stanje turnira.'));
+            return;
+        }
+        if (this.hasReadinessPolicy() ? !this.canJoinReadiness() : (this.state.status !== 'registration' || this.state.players.length >= 8)) {
             this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
             return;
         }
@@ -1667,14 +2097,34 @@ class TournamentManager {
             tournamentRulesAccepted: true,
             tournamentRulesVersion: TOURNEY_PARTICIPATION_RULES_VERSION
         };
+        if (this.hasReadinessPolicy()) {
+            const key = 'yamb_tourney_entry_' + this.app.playerId + '_' + this.state.registrationCycleId;
+            const requestId = localStorage.getItem(key) || (window.crypto?.randomUUID?.()
+                || ('entry_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2)));
+            localStorage.setItem(key, requestId);
+            Object.assign(playerData, { cycleId: this.state.registrationCycleId, entryRequestId: requestId,
+                readinessPolicyVersion: this.readinessCore().VERSION, readinessPolicyAccepted: true });
+            if (window.tournamentReliabilityCore?.isManaged(this.state)) Object.assign(playerData,
+                { ...this.tournamentProtocolFields(), reliabilityRulesAccepted: true });
+        }
         this.app.socket.emit('tourney_register', playerData);
+        if (this.hasReadinessPolicy()) setTimeout(() => {
+            if (!this.pendingRegistration) return;
+            this.pendingRegistration = false;
+            this.app.socket?.emit('tourney_get_state');
+            if (document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
+        }, 12000);
     }
 
     async unregisterPlayer() {
         this.app.soundMgr.click();
         if (this.pendingUnregister) return;
+        const selectedPlayer = this.myReadinessPlayer();
+        const expected = this.hasReadinessPolicy()
+            ? { cycleId: this.state.registrationCycleId, entryId: selectedPlayer?.entryId }
+            : {};
 
-        if (this.state.status !== 'registration') {
+        if (this.state.status !== 'registration' && !this.isReadinessPrestart()) {
             this.app.modal.alert(tt('tourney_cannot_unregister') || "Turnir je već počeo, odjava više nije moguća!");
             return;
         }
@@ -1689,13 +2139,21 @@ class TournamentManager {
             }
 
             this.pendingUnregister = true;
+            this.pendingWithdrawNoticeId = expected.entryId ? expected.entryId + ':readiness_withdrawn' : null;
             this.render();
-            this.app.socket.emit('tourney_unregister');
+            this.app.socket.emit('tourney_unregister', expected);
+            if (this.hasReadinessPolicy()) setTimeout(() => {
+                if (!this.pendingUnregister) return;
+                this.pendingUnregister = false;
+                this.app.socket?.emit('tourney_get_state');
+                if (document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
+            }, 12000);
         }
     }
 
     formatDate(dateString) {
         if (!dateString) return '';
+        if (window.tournamentSchedulingCore?.isManaged(this.state)) return this.readinessDeadline(dateString);
         const d = new Date(dateString);
         const lang = localStorage.getItem('yamb_lang') || 'sr';
         const locale = lang === 'en' ? 'en-GB' : 'sr-RS';
@@ -1745,6 +2203,8 @@ class TournamentManager {
     }
 
     getMatchResultLabel(match) {
+        const reviewLabel = this.getTournamentReviewLabel(match);
+        if (reviewLabel) return this.escape(reviewLabel);
         if (!match || !match.winnerId) return '';
         if (match.scoreLabel) return this.escape(match.scoreLabel);
 
@@ -1762,8 +2222,14 @@ class TournamentManager {
         return '';
     }
 
+    getTournamentReviewLabel(match) {
+        const kind = match?.review?.kind;
+        return ['double_dq', 'void', 'bye', 'empty'].includes(kind) ? tt('tourney_review_' + kind) : '';
+    }
+
     getMatchDrawReplayLabel(match) {
         if (!match || match.winnerId || !match.rematchRequired) return '';
+        if (match.replayReason === 'server_interruption') return this.escape(tt('tourney_server_replay_short'));
         const isNetworkReplay = match.replayReason === 'mutual_disconnect';
         const label = this.escape(isNetworkReplay
             ? (tt('tourney_network_replay_short') || 'MREŽNI PREKID - PONAVLJANJE')
@@ -1781,16 +2247,17 @@ class TournamentManager {
 
     getMatchDrawReplayNoticeHTML(match) {
         if (!match || match.winnerId || !match.rematchRequired) return '';
+        const isServerReplay = match.replayReason === 'server_interruption';
 
         const isNetworkReplay = match.replayReason === 'mutual_disconnect';
-        const title = this.escape(isNetworkReplay
+        const title = this.escape(isServerReplay ? tt('tourney_server_replay_short') : isNetworkReplay
             ? (tt('tourney_network_replay_short') || 'MREŽNI PREKID - PONAVLJANJE')
             : (tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE'));
-        const text = this.escape(isNetworkReplay
+        const text = this.escape(isServerReplay ? tt('tourney_server_replay_modal') : isNetworkReplay
             ? (tt('tourney_network_replay_modal') || 'Veza oba igrača je prekinuta. Pobednik nije dodeljen i turnirski meč mora da se ponovi.')
             : (tt('tourney_draw_replay_modal') || 'Partija je završena nerešeno. Meč se ponavlja dok neko ne pobedi.'));
         const score = match.lastDrawScoreLabel ? this.escape(match.lastDrawScoreLabel) : '';
-        const scoreHtml = !isNetworkReplay && score
+        const scoreHtml = !isServerReplay && !isNetworkReplay && score
             ? `<p style="margin-top: 8px; color: var(--text-main); font-size: 0.88rem;">${this.escape(tt('tourney_draw_score') || 'Skor remija')}: <strong style="color: var(--gold-main);">${score}</strong></p>`
             : '';
         const countLabel = this.getMatchDrawCountLabel(match);
@@ -1818,6 +2285,8 @@ class TournamentManager {
                 return this.tr('tourney_technical_disconnect', 'prekid veze');
             case 'opponent_disqualified':
                 return this.tr('tourney_technical_opponent_dq', 'diskvalifikacija protivnika');
+            case 'verified_no_show': return tt('tourney_technical_no_show');
+            case 'unanswered_valid_proposal': return tt('tourney_technical_no_reply');
             default:
                 return this.tr('tourney_technical_default', 'tehnički');
         }
@@ -2005,7 +2474,7 @@ class TournamentManager {
         if (!match || (!match.p1 && !match.p2)) {
             return `
                 <div class="tourney-match tourney-match--empty" style="--match-min-height: 62px;">
-                    <span style="color: rgba(255,255,255,0.3); font-size: 0.8rem; font-weight: bold;">---</span>
+                    <span style="color: var(--tourney-readable-ink, var(--text-main)); font-size: 0.8rem; font-weight: bold;">${this.escape(this.getTournamentReviewLabel(match) || '---')}</span>
                 </div>`;
         }
 
@@ -2052,7 +2521,9 @@ class TournamentManager {
         };
 
         let statusDot = '';
-        if (match.rematchRequired && !match.winnerId) {
+        if (['double_dq', 'void'].includes(match.review?.kind)) {
+            statusDot = '';
+        } else if (match.rematchRequired && !match.winnerId) {
             statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 8px #ff9800;"></div>`;
         } else if (match.timeAccepted && match.time) {
             statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success);"></div>`;
@@ -2086,13 +2557,22 @@ class TournamentManager {
     }
 
     openMatchModal(round, index) {
-        if (this.state.status === 'registration' || (this.state.status === 'active' && !this.isTournamentSchedulingUnlocked())) {
+        if (this.state.status !== 'finished' && !this.isTournamentSchedulingUnlocked()) {
             this.showSchedulingLockedMessage();
             return;
         }
 
-        const match = this.state.bracket[round][index];
+        const match = this.state.bracket?.[round]?.[index];
         if (!match || !match.p1 || !match.p2) return;
+        if (['double_dq', 'void'].includes(match.review?.kind)) {
+            this.app.modal.alert(this.escape(match.review.kind === 'void' ? tt('tourney_review_void_detail') : tt('tourney_review_double_dq')),
+                this.getTournamentReviewLabel(match), { contextClass: 'tournament' });
+            return;
+        }
+        if (!match.winnerId && window.tournamentSchedulingCore?.isScheduled(match)) {
+            this.openManagedMatchModal(round, index);
+            return;
+        }
 
         const myId = this.app.playerId;
         const isMyMatch = match.p1.id === myId || match.p2.id === myId;
@@ -2213,6 +2693,145 @@ class TournamentManager {
         `, titleFallback);
     }
 
+    openManagedMatchModal(round, index) {
+        const match = this.state.bracket[round][index];
+        const s = match.scheduling;
+        const core = window.tournamentSchedulingCore;
+        const now = this.tournamentNow();
+        const mine = [match.p1.id, match.p2.id].includes(this.app.playerId);
+        const expired = now >= s.deadlineAt;
+        const pending = s.pending;
+        const pendingExpired = core.responseExpired(match, now);
+        const attendanceCore = window.tournamentAdjudicationCore;
+        const attendance = mine && attendanceCore?.isManaged(this.state) ? attendanceCore.windowFor(match) : null;
+        const canCheckIn = Boolean(attendance && now >= attendance.opens && now <= attendance.closes);
+        this.managedSchedulingView = { round, index, cycleId: this.state.registrationCycleId,
+            scheduleId: s.id, revision: s.revision, proposalId: pending?.id, acceptedId: s.accepted?.id };
+        this.managedSchedulingPhase = { expired, pendingExpired, canCheckIn };
+        const line = (key, value, extra = '') => `<div class="tourney-scheduling-line ${extra}"><span>${this.escape(tt(key))}</span><strong>${this.escape(this.readinessDeadline(value))}</strong></div>`;
+        const agreed = s.accepted ? `<section class="tourney-scheduling-block">${line('tourney_schedule_agreed', s.accepted.at)}
+            ${mine && !expired ? `<p class="tourney-scheduling-note">${tt('tourney_schedule_preserved')}</p>` : ''}</section>` : '';
+        const offer = pending ? `<section class="tourney-scheduling-block">${line(pending.by === this.app.playerId ? 'tourney_you_proposed' : 'tourney_opp_proposes_time', pending.at)}
+            ${line('tourney_schedule_reply_due', pending.replyDueAt)}
+            ${pendingExpired ? `<p class="tourney-scheduling-status">${tt('tourney_schedule_response_expired')}</p>` : ''}
+            ${mine && !expired && !pendingExpired && pending.by !== this.app.playerId ? `<button class="btn-menu btn-primary" data-schedule-action onclick="app.tournamentManager.acceptTime('${round}',${index})">${tt('tourney_accept_time')}</button>` : ''}</section>` : '';
+        const firstDue = !s.firstProposedAt ? line('tourney_schedule_first_due', s.firstProposalDueAt) : '';
+        const form = mine && !expired && now + core.MIN_LEAD_MS < s.deadlineAt ? `<section class="tourney-scheduling-block">
+            <label for="tourney-time-input">${tt('tourney_schedule_input')}</label>
+            <input type="datetime-local" id="tourney-time-input" class="modal-input" min="${core.localInput(Math.ceil((now + core.MIN_LEAD_MS) / 60000) * 60000)}" max="${core.localInput(s.deadlineAt - 1)}">
+            <button class="btn-menu btn-secondary" data-schedule-action onclick="app.tournamentManager.proposeTime('${round}',${index})">${tt('tourney_schedule_send')}</button></section>` : '';
+        this.app.modal.alert(`<div class="tourney-scheduling">
+            <h3>${this.escape(match.p1.name)} <span>VS</span> ${this.escape(match.p2.name)}</h3>
+            ${this.getMatchDrawReplayNoticeHTML(match)}
+            ${line('tourney_schedule_deadline', s.deadlineAt, 'tourney-scheduling-deadline')}
+            <p class="tourney-scheduling-note">${tt('tourney_schedule_zone')}</p>
+            ${firstDue}
+            ${match.review?.kind === 'extension' ? `<p class="tourney-scheduling-status">${tt('tourney_review_extension')}</p>` : ''}
+            ${expired ? `<p class="tourney-scheduling-status">${tt('tourney_schedule_expired')}</p>` : ''}
+            ${agreed}${offer}
+            ${canCheckIn ? `<section class="tourney-scheduling-block">
+                <button class="btn-menu btn-secondary" onclick="app.tournamentManager.checkInForTournamentMatch('${round}',${index})">${tt('tourney_attendance_checkin')}</button>
+                <p id="tourney-attendance-status" class="tourney-scheduling-note" aria-live="polite"></p></section>` : ''}
+            ${mine && !expired && s.accepted ? `<button class="btn-menu btn-primary" data-schedule-action onclick="app.tournamentManager.startDuel('${round}',${index})">${tt(match.rematchRequired ? 'tourney_replay_match' : 'tourney_start_match')}</button>` : ''}
+            ${form}
+            ${!mine ? `<p class="tourney-scheduling-note">${tt('tourney_not_your_match')}</p>` : ''}
+        </div>`, tt('tourney_match_title'), { contextClass: 'tournament' });
+        clearTimeout(this.managedSchedulingTimer);
+        const nextChange = Math.min(expired ? Infinity : s.deadlineAt, pending && !pendingExpired ? pending.replyDueAt : Infinity,
+            attendance && now < attendance.opens ? attendance.opens : canCheckIn ? attendance.closes : Infinity);
+        this.updateTournamentAttendanceStatus();
+        if (Number.isFinite(nextChange)) this.managedSchedulingTimer = setTimeout(() => this.refreshManagedMatchModal(), Math.max(1, nextChange - now + 50));
+    }
+
+    refreshManagedMatchModal() {
+        const overlay = document.getElementById('custom-modal-overlay');
+        const view = this.managedSchedulingView;
+        if (!view || !overlay?.querySelector('.tourney-scheduling') || overlay.style.display === 'none') return;
+        const current = this.state.bracket?.[view.round]?.[view.index];
+        if (this.state.registrationCycleId !== view.cycleId || !current?.p1 || !current.p2) {
+            this.app.modal.close();
+            return;
+        }
+        const s = current.scheduling;
+        const now = this.tournamentNow();
+        const attendanceCore = window.tournamentAdjudicationCore;
+        const attendance = attendanceCore?.isManaged(this.state) && [current.p1.id, current.p2.id].includes(this.app.playerId)
+            ? attendanceCore.windowFor(current) : null;
+        const canCheckIn = Boolean(attendance && now >= attendance.opens && now <= attendance.closes);
+        if (!current.winnerId && s?.id === view.scheduleId && s.revision === view.revision
+            && this.managedSchedulingPhase.expired === (now >= s.deadlineAt)
+            && this.managedSchedulingPhase.canCheckIn === canCheckIn
+            && !attendanceCore?.terminal(current)
+            && this.managedSchedulingPhase.pendingExpired === window.tournamentSchedulingCore.responseExpired(current, now)) return;
+        const draft = document.getElementById('tourney-time-input')?.value;
+        this.openMatchModal(view.round, view.index);
+        const input = document.getElementById('tourney-time-input');
+        if (input && s?.id === view.scheduleId && draft) input.value = draft;
+    }
+
+    updateTournamentAttendanceStatus() {
+        const label = document.getElementById('tourney-attendance-status');
+        const session = this.tournamentAttendance;
+        const view = this.managedSchedulingView;
+        if (!label || !session || session.input.scheduleId !== view?.scheduleId || session.input.acceptedId !== view.acceptedId) return;
+        const text = tt(session.begin ? 'tourney_attendance_pending' : 'tourney_attendance_wait');
+        if (label.textContent !== text) label.textContent = text;
+    }
+
+    checkInForTournamentMatch(round, index) {
+        const input = this.managedSchedulingView;
+        const match = this.state.bracket?.[round]?.[index];
+        const core = window.tournamentAdjudicationCore;
+        if (!core?.isManaged(this.state) || input?.round !== round || input.index !== index || input.scheduleId !== match?.scheduling?.id
+            || input.acceptedId !== match.scheduling.accepted?.id || !this.app.socket?.connected) return;
+        const current = this.tournamentAttendance;
+        if (current?.input.scheduleId === input.scheduleId && current.input.acceptedId === input.acceptedId && current.uid === this.app.playerId) return;
+        const session = { input: { ...input }, uid: this.app.playerId, begin: true, inFlight: false };
+        clearInterval(this.tournamentAttendanceTimer);
+        this.tournamentAttendance = session;
+        const tick = () => {
+            const live = this.state.bracket?.[round]?.[index];
+            const window = core.windowFor(live);
+            const now = this.tournamentNow();
+            if (!window || now > window.closes || this.app.playerId !== session.uid || this.state.registrationCycleId !== input.cycleId
+                || live.scheduling.id !== input.scheduleId || live.scheduling.accepted?.id !== input.acceptedId) {
+                clearInterval(this.tournamentAttendanceTimer);
+                this.tournamentAttendance = null;
+                return;
+            }
+            const socket = this.app.socket;
+            if (now < window.opens || !socket?.connected || session.inFlight || this.app.gameActive || document.hidden
+                || this.app.appLifecyclePaused || this.app.nativeAppActive === false
+                || !document.getElementById('tournament-screen')?.classList.contains('active')) return;
+            session.inFlight = true;
+            const retry = setTimeout(() => { session.inFlight = false; }, 8000);
+            socket.emit('tourney_attendance', { ...session.input, begin: session.begin, ...this.tournamentProtocolFields() }, reply => {
+                clearTimeout(retry);
+                session.inFlight = false;
+                if (reply?.ok && this.tournamentAttendance === session) {
+                    session.begin = false;
+                    this.updateTournamentAttendanceStatus();
+                }
+            });
+        };
+        this.tournamentAttendanceTimer = setInterval(tick, core.PING_MS);
+        this.updateTournamentAttendanceStatus();
+        tick();
+    }
+
+    sendManagedSchedulingAction(event, round, index, extra = {}) {
+        const view = this.managedSchedulingView;
+        if (this.pendingSchedulingAction || !view || view.round !== round || view.index !== index || !this.app.socket?.connected) return;
+        this.pendingSchedulingAction = view;
+        this.app.socket.emit(event, { ...view, ...extra, ...this.tournamentProtocolFields() });
+        this.app.modal.close();
+        setTimeout(() => {
+            if (this.pendingSchedulingAction !== view) return;
+            this.pendingSchedulingAction = null;
+            this.app.socket?.emit('tourney_get_state');
+        }, 12000);
+    }
+
     proposeTime(round, index) {
         if (!this.isTournamentSchedulingUnlocked()) {
             this.showSchedulingLockedMessage();
@@ -2226,6 +2845,17 @@ class TournamentManager {
         }
 
         this.app.soundMgr.click();
+
+        if (window.tournamentSchedulingCore?.isManaged(this.state)) {
+            const value = window.tournamentSchedulingCore.parseTime(input.value);
+            const now = this.tournamentNow();
+            const deadline = this.state.bracket?.[round]?.[index]?.scheduling?.deadlineAt;
+            if (!Number.isFinite(value) || value < now + window.tournamentSchedulingCore.MIN_LEAD_MS || value >= deadline) {
+                this.app.modal.alert(tt('tourney_schedule_invalid_time'), tt('warning_title'), { contextClass: 'tournament' });
+                return;
+            }
+            return this.sendManagedSchedulingAction('tourney_propose_time', round, index, { proposedTime: new Date(value).toISOString() });
+        }
 
         if (this.app.socket) {
             this.app.socket.emit('tourney_propose_time', {
@@ -2247,6 +2877,7 @@ class TournamentManager {
         }
 
         this.app.soundMgr.click();
+        if (window.tournamentSchedulingCore?.isManaged(this.state)) return this.sendManagedSchedulingAction('tourney_accept_time', round, index);
 
         if (this.app.socket) {
             this.app.socket.emit('tourney_accept_time', { round, index });
@@ -2273,7 +2904,13 @@ class TournamentManager {
                 round,
                 index,
                 targetId: opponent.id,
-                opponentName: opponent.name
+                opponentName: opponent.name,
+                ...this.tournamentProtocolFields(),
+                ...(window.tournamentSchedulingCore?.isManaged(this.state) ? {
+                    cycleId: this.managedSchedulingView?.cycleId,
+                    scheduleId: this.managedSchedulingView?.scheduleId,
+                    acceptedId: this.managedSchedulingView?.acceptedId
+                } : {})
             });
         }
 

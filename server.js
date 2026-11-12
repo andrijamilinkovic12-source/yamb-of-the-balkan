@@ -13,6 +13,16 @@ const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
 const powerIndexCore = require('./www/powerIndexCore');
+const tournamentReadinessCore = require('./www/tournamentReadinessCore');
+const tournamentSchedulingCore = require('./www/tournamentSchedulingCore');
+const tournamentNotificationsCore = require('./www/tournamentNotificationsCore');
+const tournamentAudit = require('./lib/tournament-match-audit');
+const tournamentAdjudicationCore = require('./www/tournamentAdjudicationCore');
+const tournamentAdjudication = require('./lib/tournament-adjudication');
+const tournamentReliability = require('./www/tournamentReliabilityCore');
+const { createTournamentReadinessService } = require('./lib/tournament-readiness');
+const { createTournamentReadinessStore } = require('./lib/tournament-readiness-store');
+const { createTournamentSchedulingRuntime } = require('./lib/tournament-scheduling-runtime');
 const {
     createAccountDeletion, scrubEmbedded: scrubDeletedAccountReferences,
     referenceHashes: deletionReferenceHashes, hash: deletionIdentityHash
@@ -39,6 +49,9 @@ const FIREBASE_APP_CHECK_ENFORCE = /^(?:1|true|yes|on)$/i.test(String(process.en
 // Deployment is deliberately opt-in until isolated account-deletion QA passes.
 const ACCOUNT_DELETION_ENABLED = /^(?:1|true)$/i.test(process.env.ACCOUNT_DELETION_ENABLED || '');
 const ANALYTICS_PRIVACY_ENABLED = /^(?:1|true)$/i.test(process.env.ANALYTICS_PRIVACY_ENABLED || '');
+// Enable only after all tournament rollout steps and client compatibility QA.
+const TOURNAMENT_READINESS_ENABLED = /^(?:1|true)$/i.test(process.env.TOURNAMENT_READINESS_ENABLED || '')
+    && (SERVER_RUNTIME.environment !== 'production' || /^(?:1|true)$/i.test(process.env.TOURNAMENT_ROLLOUT_APPROVED || ''));
 let analyticsGoogleAuth = null;
 if (ANALYTICS_PRIVACY_ENABLED && !ACCOUNT_DELETION_ENABLED) {
     throw new Error('Account deletion must be enabled before account-linked Analytics.');
@@ -470,13 +483,14 @@ let tournamentState = {
     finishedAt: null,
     resetAt: null
 };
+let tournamentStateInitialized = !process.env.MONGO_URI;
 
 // Funkcija za učitavanje turnira iz baze na startu
 async function initTournamentFromDb() {
     if (!process.env.MONGO_URI) return;
     try {
         const TournamentStateDb = mongoose.model('TournamentState');
-        let dbState = await TournamentStateDb.findOne();
+        const dbState = await TournamentStateDb.findOne().lean();
         if (dbState) {
             tournamentState.status = dbState.status;
             tournamentState.tournamentNumber = dbState.tournamentNumber || 1;
@@ -485,19 +499,33 @@ async function initTournamentFromDb() {
             tournamentState.pushFlags = dbState.pushFlags || {};
             tournamentState.finishedAt = dbState.finishedAt || null;
             tournamentState.resetAt = dbState.resetAt || null;
+            tournamentState.readinessPolicyVersion = dbState.readinessPolicyVersion || '';
+            tournamentState.registrationCycleId = dbState.registrationCycleId || '';
+            tournamentState.readinessRevision = dbState.readinessRevision || 0;
+            tournamentState.readiness = dbState.readiness || null;
+            tournamentState.schedulingPolicyVersion = dbState.schedulingPolicyVersion || '';
+            tournamentState.notificationPolicyVersion = dbState.notificationPolicyVersion || '';
+            tournamentState.auditPolicyVersion = dbState.auditPolicyVersion || '';
+            tournamentState.adjudicationPolicyVersion = dbState.adjudicationPolicyVersion || '';
+            tournamentState.reliabilityPolicyVersion = dbState.reliabilityPolicyVersion || '';
             normalizeTournamentLifecycleState();
-            await saveTournamentToDb();
+            if (tournamentAudit.isManaged(tournamentState)) await recoverAuditedTournamentGames();
+            if (!tournamentReadinessCore.isPrestart(tournamentState)) await saveTournamentToDb();
             await persistCurrentFinishedTournamentHistoryIfNeeded();
             scheduleTournamentAutoReset();
             console.log("🏆 Turnir uspešno učitan iz MongoDB baze.");
         } else {
+            tournamentState = createFreshTournamentState(1);
             let newState = new TournamentStateDb(tournamentState);
             await newState.save();
             scheduleTournamentAutoReset();
             console.log("🏆 Kreiran novi čist turnir u MongoDB bazi.");
         }
+        tournamentStateInitialized = true;
+        emitTournamentStateUpdate();
     } catch (err) {
         console.error("Greška pri učitavanju turnira iz baze:", err);
+        if (tournamentState.auditPolicyVersion) setTimeout(initTournamentFromDb, 15000).unref();
     }
 }
 
@@ -506,6 +534,22 @@ async function saveTournamentToDb() {
     if (!process.env.MONGO_URI) return;
     try {
         const TournamentStateDb = mongoose.model('TournamentState');
+        if (tournamentSchedulingCore.isManaged(tournamentState) && !tournamentReadinessCore.isPrestart(tournamentState)) {
+            await getTournamentSchedulingRuntime().save();
+            return;
+        }
+        if (tournamentReadinessCore.isPrestart(tournamentState)) {
+            const snapshot = structuredClone(tournamentState);
+            const revision = Number(snapshot.readinessRevision || 0);
+            snapshot.readinessRevision = revision + 1;
+            const saved = await TournamentStateDb.findOneAndUpdate({
+                registrationCycleId: snapshot.registrationCycleId, readinessRevision: revision
+            }, { $set: snapshot }, { writeConcern: { w: 'majority' } });
+            if (!saved) throw new Error('tournament_readiness_revision_conflict');
+            if (tournamentState.registrationCycleId === snapshot.registrationCycleId
+                && tournamentState.readinessRevision === revision) tournamentState.readinessRevision = revision + 1;
+            return;
+        }
         await TournamentStateDb.findOneAndUpdate({}, tournamentState, { upsert: true });
     } catch (err) {
         console.error("Greška pri čuvanju turnira u bazu:", err);
@@ -534,7 +578,16 @@ function createFreshTournamentState(tournamentNumber = 1) {
         bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] },
         pushFlags: {},
         finishedAt: null,
-        resetAt: null
+        resetAt: null,
+        readinessPolicyVersion: TOURNAMENT_READINESS_ENABLED ? tournamentReadinessCore.VERSION : '',
+        registrationCycleId: TOURNAMENT_READINESS_ENABLED ? crypto.randomUUID() : '',
+        readinessRevision: 0,
+        schedulingPolicyVersion: TOURNAMENT_READINESS_ENABLED ? tournamentSchedulingCore.VERSION : '',
+        notificationPolicyVersion: TOURNAMENT_READINESS_ENABLED ? tournamentNotificationsCore.VERSION : '',
+        auditPolicyVersion: TOURNAMENT_READINESS_ENABLED ? tournamentAudit.VERSION : '',
+        adjudicationPolicyVersion: TOURNAMENT_READINESS_ENABLED ? tournamentAdjudicationCore.VERSION : '',
+        reliabilityPolicyVersion: TOURNAMENT_READINESS_ENABLED ? tournamentReliability.VERSION : '',
+        readiness: null
     };
 }
 
@@ -573,16 +626,28 @@ function markTournamentFinishedForReset() {
 }
 
 function emitTournamentStateUpdate() {
-    if (io && io.emit) io.emit('tourney_state_update', tournamentState);
+    if (io && io.emit) io.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
 }
 
 async function resetTournamentForNextCycle(reason = 'auto') {
     clearTournamentAutoResetTimer();
+    const previous = tournamentState;
     await persistCurrentFinishedTournamentHistoryIfNeeded();
+    if (tournamentState !== previous) return;
     const nextNumber = safeTournamentNumber(tournamentState.tournamentNumber) + 1;
-    tournamentState = createFreshTournamentState(nextNumber);
+    const nextState = createFreshTournamentState(nextNumber);
+    if (MONGO_URI && previous.auditPolicyVersion) {
+        const reset = await mongoose.model('TournamentState').findOneAndUpdate({ registrationCycleId: previous.registrationCycleId,
+            readinessRevision: previous.readinessRevision, status: previous.status,
+            ...(previous.status === 'finished' ? { 'bracket.f.0.prizesAwarded': true } : { players: { $size: 0 } }) },
+        { $set: nextState }, { writeConcern: { w: 'majority' } });
+        if (!reset) throw new Error('tournament_reset_revision_conflict');
+    } else if (MONGO_URI && tournamentReadinessCore.isManaged(nextState)) {
+        await mongoose.model('TournamentState').findOneAndUpdate({}, nextState, { upsert: true });
+    }
+    tournamentState = nextState;
     console.log(`🏆 Turnir resetovan za ${nextNumber}. turnir (${reason}).`);
-    await saveTournamentToDb();
+    if (!previous.auditPolicyVersion && !tournamentReadinessCore.isManaged(nextState)) await saveTournamentToDb();
     emitTournamentStateUpdate();
 }
 
@@ -596,6 +661,7 @@ function clearTournamentAutoResetTimer() {
 function scheduleTournamentAutoReset() {
     clearTournamentAutoResetTimer();
     if (tournamentState.status !== 'finished' || !tournamentState.resetAt) return;
+    if (tournamentState.auditPolicyVersion && !tournamentState.bracket?.f?.[0]?.prizesAwarded) return;
 
     const remainingMs = new Date(tournamentState.resetAt).getTime() - Date.now();
     if (remainingMs <= 0) {
@@ -718,6 +784,7 @@ MatchResultSchema.index(
 );
 MatchResultSchema.index({ 'participants.uid': 1, finishedAt: -1 });
 MatchResultSchema.index({ mode: 1, resultType: 1, finishedAt: -1 });
+MatchResultSchema.index({ finishedAt: -1 });
 const MatchResult = mongoose.model('MatchResult', MatchResultSchema);
 
 // Privatni trag prijema lokalnih rezultata za podrsku igracima.
@@ -875,9 +942,62 @@ const TournamentStateSchema = new mongoose.Schema({
     bracket: { type: Object, default: { qf: [null, null, null, null], sf: [null, null], f: [null] } },
     pushFlags: { type: Object, default: {} },
     finishedAt: { type: Date, default: null },
-    resetAt: { type: Date, default: null }
+    resetAt: { type: Date, default: null },
+    readinessPolicyVersion: { type: String, default: '' },
+    registrationCycleId: { type: String, default: '' },
+    readinessRevision: { type: Number, default: 0 },
+    readiness: { type: Object, default: null },
+    schedulingPolicyVersion: { type: String, default: '' },
+    notificationPolicyVersion: { type: String, default: '' },
+    auditPolicyVersion: { type: String, default: '' },
+    adjudicationPolicyVersion: { type: String, default: '' },
+    reliabilityPolicyVersion: { type: String, default: '' }
 });
 mongoose.model('TournamentState', TournamentStateSchema);
+
+const TournamentEntrySchema = new mongoose.Schema({
+    _id: String, entryId: String, cycleId: String, tournamentNumber: Number,
+    uid: String, requestId: String, amount: Number, status: String,
+    chargedAt: Number, startedAt: Number, refundedAmount: Number,
+    readinessPolicyVersion: String, readinessRequestedAt: Number,
+    readinessDeadlineAt: Number, readinessConfirmedAt: Number,
+    refundReason: String, refundRequestedAt: Number, clientProtocol: String, reliabilityPolicyVersion: String, reliabilityAcceptedAt: Number
+}, { collection: 'tournamententries', versionKey: false });
+TournamentEntrySchema.index({ cycleId: 1, uid: 1, requestId: 1 }, { unique: true });
+TournamentEntrySchema.index({ status: 1, refundRequestedAt: 1 });
+TournamentEntrySchema.index({ uid: 1, tournamentNumber: 1, startedAt: 1 });
+mongoose.model('TournamentEntry', TournamentEntrySchema);
+
+const TournamentReliabilitySchema = new mongoose.Schema({
+    _id: String, uid: String, warningEdition: Number, blockedEdition: Number, lastIncidentEdition: Number, updatedAt: Number
+}, { collection: 'tournamentreliabilities', versionKey: false });
+TournamentReliabilitySchema.index({ uid: 1 });
+mongoose.model('TournamentReliability', TournamentReliabilitySchema);
+
+const TournamentNoticeSchema = new mongoose.Schema({
+    _id: String, noticeId: String, cycleId: String, tournamentNumber: Number,
+    uid: String, entryId: String, kind: String, createdAt: Number, dueAt: Number,
+    deadlineAt: Number, amount: Number, refundPending: Number, pushSentAt: Number,
+    readAt: Number, obsoleteAt: Number, pushLeaseAt: Number, nextPushAt: Number,
+    round: String, index: Number, scheduleId: String, referenceId: String, key: String,
+    expiresAt: Number, purgeAt: Date, nightAllowed: Boolean, scheduledAt: Number,
+    replyDueAt: Number, resultType: String, scoreLabel: String, won: Boolean, reviewKind: String, blockedEdition: Number
+}, { collection: 'tournamentnotices', versionKey: false });
+TournamentNoticeSchema.index({ uid: 1, readAt: 1, dueAt: -1 });
+TournamentNoticeSchema.index({ pushSentAt: 1, obsoleteAt: 1, nextPushAt: 1 });
+TournamentNoticeSchema.index({ entryId: 1, dueAt: 1 });
+TournamentNoticeSchema.index({ purgeAt: 1 }, { expireAfterSeconds: 0 });
+mongoose.model('TournamentNotice', TournamentNoticeSchema);
+
+const TournamentMatchAuditSchema = new mongoose.Schema({
+    _id: String, cycleId: String, tournamentNumber: Number, round: String, index: Number,
+    scheduleId: String, attempt: Number, kind: String, at: Number, participantUids: [String],
+    actorUid: String, roomId: String, matchId: String, open: Boolean, closedAt: Number, details: Object
+}, { collection: 'tournamentmatchaudits', versionKey: false });
+TournamentMatchAuditSchema.index({ cycleId: 1, round: 1, index: 1, at: 1 });
+TournamentMatchAuditSchema.index({ cycleId: 1, kind: 1, open: 1, at: 1 });
+TournamentMatchAuditSchema.index({ participantUids: 1 });
+mongoose.model('TournamentMatchAudit', TournamentMatchAuditSchema);
 
 const GlobalChatMessageSchema = new mongoose.Schema({
     id: { type: String, required: true },
@@ -1042,6 +1162,7 @@ const AdMobRewardVerificationSchema = new mongoose.Schema({
     claimedBy: { type: String, default: '' },
     raw: { type: Object, default: {} }
 });
+AdMobRewardVerificationSchema.index({ claimedAt: -1 });
 const AdMobRewardVerification = mongoose.model('AdMobRewardVerification', AdMobRewardVerificationSchema);
 accountDeletion.protectModelBatches(mongoose.models);
 let deletionWebFirebaseConfig = require('./www/account-deletion-firebase.json');
@@ -1303,6 +1424,7 @@ function buildPushMessage(baseMessage, tokens) {
         }),
         android: {
             priority: 'high',
+            ...(Number.isFinite(baseMessage.expiresAt) ? { ttl: Math.max(0, baseMessage.expiresAt - Date.now()) } : {}),
             notification: {
                 channelId: PUSH_NOTIFICATION_CHANNEL_ID,
                 sound: 'default',
@@ -1338,6 +1460,9 @@ async function sendPushToUids(uids, baseMessage = {}) {
             const tokens = Array.from(group);
             const localizedMessage = getLocalizedPushMessage(baseMessage, language);
             for (let i = 0; i < tokens.length; i += 500) {
+                if ((Number.isFinite(baseMessage.expiresAt) && (Date.now() >= baseMessage.expiresAt
+                    || (!baseMessage.nightAllowed && tournamentNotificationsCore.inQuietHours(Date.now()))))
+                    || (baseMessage.isCurrent && !baseMessage.isCurrent())) break;
                 const batch = tokens.slice(i, i + 500);
                 const message = buildPushMessage(localizedMessage, batch);
 
@@ -2713,6 +2838,8 @@ function clearDisconnectGraceForUid(uid, roomId = null) {
             });
         }
         rememberRecentLifecycleGrace(uid, ghost);
+        if (ghost.tournamentAuditGame) observeTournamentRoom(ghost.roomId, 'reconnect_restored', uid,
+            Date.now(), { startedAt: ghost.startedAt, deadlineAt: ghost.deadlineAt });
         delete ghostSessions[uid];
         cleared = true;
     }
@@ -3074,7 +3201,11 @@ async function handleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId) {
             resolutionReason: 'disconnect_grace_expired',
             winnerConnectedAtResolution
         });
-        await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
+        const bracketSettled = await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
+        if (stateAfterGrace.tournamentAuditGame && !bracketSettled) {
+            interruptAuditedTournamentRoom(activeRoomId, stateAfterGrace);
+            return;
+        }
     } else {
         console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
         resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
@@ -3187,6 +3318,11 @@ function beginReconnectGraceForSocket(socket, activeRoomId, source = 'disconnect
         socketRef: socket
     };
     ghostSessions[pid] = ghost;
+    if (activeRoomState.tournamentAuditGame) {
+        ghost.tournamentAuditGame = true;
+        observeTournamentRoom(activeRoomId, 'reconnect_started', pid, now,
+            { source, startedAt, deadlineAt, provisional: source === 'app_backgrounded' });
+    }
 
     if (source === 'app_backgrounded') {
         ghost.diagnosticConfirmTimer = setTimeout(() => {
@@ -3364,7 +3500,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
         penaltyPoints: penaltyAmount,
         startedAt: room?.matchStartedAt || null,
         finishedAt: Date.now()
-    });
+    }, { majority: Boolean(room?.tournamentAuditGame) });
 
     const storedResult = ledgerWrite.result;
     const winnerReward = ledgerWrite.created
@@ -3891,7 +4027,7 @@ function getMatchResultIdentitySignature(payload = {}) {
     });
 }
 
-async function ensureMatchResult(payload = {}) {
+async function ensureMatchResult(payload = {}, { majority = false } = {}) {
     if (!MONGO_URI) return { ok: false, reason: 'db_unavailable', created: false, result: null };
 
     const normalized = normalizeMatchResultPayload(payload);
@@ -3910,7 +4046,7 @@ async function ensureMatchResult(payload = {}) {
         const writeResult = await MatchResult.updateOne(
             { matchId: normalized.matchId },
             { $setOnInsert: normalized },
-            { upsert: true }
+            { upsert: true, ...(majority ? { writeConcern: { w: 'majority' } } : {}) }
         );
         const result = await MatchResult.findOne({ matchId: normalized.matchId });
         if (!result) return { ok: false, reason: 'match_result_not_found', created: false, result: null };
@@ -4488,7 +4624,7 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
         isDraw,
         startedAt: state.matchStartedAt || null,
         finishedAt: Date.now()
-    });
+    }, { majority: Boolean(state.tournamentAuditGame) });
 
     if (!ledgerWrite.ok) {
         const existingApplied = ledgerWrite.result && Array.isArray(ledgerWrite.result.statsAppliedUids)
@@ -4597,6 +4733,16 @@ async function settleCompletedOnlineRoom(roomId, finisherSocketId = null) {
 
     const settlementPromise = (async () => {
         await applyServerSideCompletedDuel(roomId, finisherSocketId);
+        if (state.tournamentAuditGame) {
+            const settled = await settleAuditedTournamentGame(state.tournamentAuditGame);
+            if (!settled) {
+                interruptAuditedTournamentRoom(roomId, state);
+                return false;
+            }
+            emitCompletedOnlineGame(roomId);
+            markOnlineRoomGameFinished(roomId);
+            return true;
+        }
         emitCompletedOnlineGame(roomId);
         await applyTournamentCompletedDuelResult(roomId);
         await recordTournamentDrawReplay(roomId);
@@ -4796,7 +4942,11 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
             roomId,
             reason: 'turn_timeout'
         });
-        await applyTournamentTechnicalWinner(roomId, winnerUid, 'turn_timeout');
+        const bracketSettled = await applyTournamentTechnicalWinner(roomId, winnerUid, 'turn_timeout');
+        if (state.tournamentAuditGame && !bracketSettled) {
+            interruptAuditedTournamentRoom(roomId, state);
+            return;
+        }
 
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
 
@@ -4914,6 +5064,647 @@ function createTournamentMatch(p1 = null, p2 = null) {
 function createEmptyTournamentBracket() {
     return { qf: [null, null, null, null], sf: [null, null], f: [null] };
 }
+
+let tournamentSchedulingRuntime = null;
+const authorizedTournamentRooms = new Map();
+const pendingAuditedTournamentGames = new Map();
+const tournamentAuditObservations = new Map();
+let tournamentAuditStore;
+let tournamentAuditFlushing = false;
+const tournamentAttendanceRunId = crypto.randomUUID();
+const tournamentAttendanceCoverage = tournamentAdjudication.createCoverage();
+let tournamentAttendanceWrites = 0;
+let tournamentAdjudicationBusy = false;
+
+function tournamentDecisionOptions(now = Date.now()) {
+    return { now, createId: () => crypto.randomUUID(), createMatch: createTournamentMatch,
+        resetDelayMs: TOURNEY_FINISHED_RESET_DELAY_MS };
+}
+
+async function recordTournamentAppointmentPresence(socket, data, uid) {
+    const at = Date.now();
+    if (!data || !tournamentStateInitialized || !tournamentAdjudicationCore.isManaged(tournamentState)
+        || tournamentState.status !== 'active' || data.cycleId !== tournamentState.registrationCycleId
+        || !Number.isInteger(data.index) || !socket.connected || mongoose.connection.readyState !== 1
+        || (tournamentState.reliabilityPolicyVersion && !tournamentReliability.accepts(tournamentState, data))) return false;
+    const match = getTournamentMatch(data.round, data.index)?.match;
+    const window = tournamentAdjudicationCore.windowFor(match);
+    if (!window || !isTournamentParticipant(match, uid) || data.scheduleId !== match.scheduling.id
+        || data.acceptedId !== match.scheduling.accepted.id || at < window.opens || at > window.closes
+        || isPlayerBusyForInvite(socket.id, uid, { ignoreClientBusy: true })
+        || getTournamentSchedulingRuntime().isLocked(data.round, data.index)) return false;
+    const key = [data.cycleId, data.scheduleId, data.acceptedId, uid].join(':');
+    if (socket.tournamentAttendance?.key !== key) {
+        if (data.begin !== true || socket.tournamentAttendance?.writing) return false;
+        socket.tournamentAttendance = { key, id: crypto.randomUUID() };
+    }
+    const session = socket.tournamentAttendance;
+    if (session.writing) return false;
+    if (at - (session.lastAt || 0) < tournamentAdjudicationCore.PING_MS - 2000) return true;
+    session.writing = true;
+    tournamentAttendanceWrites += 1;
+    try {
+        const row = tournamentAudit.event(tournamentState, data.round, data.index, match, 'appointment_presence',
+            [session.id, at], at, { actorUid: uid, details: { acceptedId: data.acceptedId, runId: tournamentAttendanceRunId,
+                sessionId: session.id } });
+        if (!row) return false;
+        await getTournamentAuditStore().observe(row);
+        session.lastAt = at;
+        return true;
+    } catch (error) {
+        tournamentAttendanceCoverage.invalidate();
+        console.error('[Tournament attendance] Write failed:', error.code || error.name);
+        return false;
+    } finally {
+        tournamentAttendanceWrites -= 1;
+        session.writing = false;
+    }
+}
+
+async function reviewTournamentDeadlines() {
+    if (tournamentAdjudicationBusy) return;
+    if (!tournamentStateInitialized || !tournamentAdjudicationCore.isManaged(tournamentState)
+        || mongoose.connection.readyState !== 1) {
+        tournamentAttendanceCoverage.invalidate();
+        return;
+    }
+    tournamentAdjudicationBusy = true;
+    try {
+        const cycleId = tournamentState.registrationCycleId;
+        const store = getTournamentAuditStore();
+        if (!await store.probe(cycleId) || cycleId !== tournamentState.registrationCycleId) {
+            tournamentAttendanceCoverage.invalidate();
+            return;
+        }
+        if (tournamentAttendanceWrites || tournamentAuditObservations.size) return;
+        tournamentAttendanceCoverage.sample(Date.now());
+        if (tournamentState.status !== 'active') return;
+        for (const round of ['qf', 'sf', 'f']) {
+            for (const [index, candidate] of tournamentState.bracket[round].entries()) {
+                if (!candidate?.scheduling || tournamentAdjudicationCore.terminal(candidate) || isTournamentMatchInPlay(round, index)) continue;
+                const window = tournamentAdjudicationCore.windowFor(candidate);
+                const at = Date.now();
+                if (at < candidate.scheduling.deadlineAt && (!window || at < window.closes)) continue;
+                const plan = await getTournamentSchedulingRuntime().transition(async state => {
+                    const match = state.bracket?.[round]?.[index];
+                    if (state.registrationCycleId !== cycleId || state.status !== 'active' || match !== candidate) return null;
+                    const rows = await store.evidence(cycleId, round, index);
+                    const canCommit = () => !isTournamentMatchInPlay(round, index) && !tournamentAttendanceWrites
+                        && tournamentAuditObservations.size === 0 && mongoose.connection.readyState === 1;
+                    if (!canCommit()) return null;
+                    const now = Date.now();
+                    const decision = tournamentAdjudication.evaluate(match, rows, now, tournamentAttendanceCoverage, tournamentAttendanceRunId);
+                    if (!decision) return null;
+                    return { ...tournamentAdjudication.planDecision(state, round, index, match, decision, tournamentDecisionOptions(now)), canCommit };
+                });
+                if (!plan) continue;
+                emitTournamentStateUpdate();
+                for (const uid of plan.incident?.inactiveUids || []) {
+                    const socket = io.sockets.sockets.get(onlinePlayers[uid]);
+                    if (socket && getVerifiedUid(socket) === uid) void emitTournamentReliabilityStatus(socket).catch(() => {});
+                }
+                for (const uid of new Set(plan.refunds || [])) {
+                    const user = await UserProfile.findOne({ firebaseUid: uid }).lean();
+                    if (user) emitProfileSyncToUid(uid, user);
+                }
+                if (tournamentState.status === 'finished') {
+                    await settleAuditedTournamentFinal();
+                    if (!tournamentAutoResetTimer) scheduleTournamentAutoReset();
+                    return;
+                }
+            }
+        }
+    } catch (error) {
+        tournamentAttendanceCoverage.invalidate();
+        console.error('[Tournament adjudication] Review deferred:', error.code || error.name);
+    } finally { tournamentAdjudicationBusy = false; }
+}
+
+const tournamentAdjudicationTimer = setInterval(() => { void reviewTournamentDeadlines(); }, 15000);
+tournamentAdjudicationTimer.unref();
+
+function getTournamentAuditStore() {
+    return tournamentAuditStore ||= tournamentAudit.createStore({ connection: mongoose.connection,
+        guardWrite: values => accountDeletion.guardWrite(values) });
+}
+
+function queueTournamentAuditObservation(event) {
+    if (!event || tournamentAuditObservations.has(event._id)) return;
+    if (tournamentAuditObservations.size >= 512) {
+        console.warn('[Tournament audit] Observation queue is full; missing observations are not absence evidence.');
+        return;
+    }
+    tournamentAuditObservations.set(event._id, event);
+    void flushTournamentAuditObservations();
+}
+
+async function flushTournamentAuditObservations() {
+    if (tournamentAuditFlushing || mongoose.connection.readyState !== 1) return;
+    tournamentAuditFlushing = true;
+    try {
+        for (const [id, event] of tournamentAuditObservations) {
+            try { await getTournamentAuditStore().observe(event); }
+            catch (error) {
+                if (error.code !== 'account_deleted') throw error;
+            }
+            tournamentAuditObservations.delete(id);
+        }
+    } catch (error) {
+        console.error('[Tournament audit] Observations will retry:', error.code || error.name);
+    } finally { tournamentAuditFlushing = false; }
+}
+
+function observeTournamentRoom(roomId, kind, uid, at, details = {}) {
+    const room = roomState[roomId];
+    const receipt = room?.tournamentAuditGame;
+    if (!receipt || !receipt.participantUids.includes(uid)) return;
+    const match = getTournamentMatch(receipt.round, receipt.index)?.match;
+    if (match?.scheduling?.id !== receipt.scheduleId) return;
+    if (kind === 'presence_observed') {
+        const buckets = room.auditPresenceBuckets ||= Object.create(null);
+        const bucket = Math.floor(at / 30000);
+        if (buckets[uid] === bucket) return;
+        buckets[uid] = bucket;
+    }
+    queueTournamentAuditObservation(tournamentAudit.event(tournamentState, receipt.round, receipt.index, match, kind,
+        [receipt.matchId, uid, kind === 'presence_observed' ? Math.floor(at / 30000) : at], at,
+        { actorUid: uid, roomId, matchId: receipt.matchId, details }));
+}
+
+function observeTournamentInvite(invite, kind, actorUid, at = Date.now()) {
+    const match = getTournamentMatch(invite.round, invite.index)?.match;
+    if (match?.scheduling?.id !== invite.scheduleId || invite.cycleId !== tournamentState.registrationCycleId) return;
+    queueTournamentAuditObservation(tournamentAudit.event(tournamentState, invite.round, invite.index, match,
+        kind, kind === 'room_arrival' ? [invite.matchRoomId, actorUid] : invite.matchRoomId, at, { actorUid, roomId: invite.matchRoomId,
+            details: { acceptedId: invite.acceptedId, scheduledAt: match.scheduling.accepted?.at, expiresAt: invite.expiresAt } }));
+}
+
+async function persistAuditedTournamentGame(roomId, room, stillValid) {
+    const info = parseTournamentRoomId(roomId);
+    const match = info && getTournamentMatch(info.round, info.index)?.match;
+    if (!match || match.scheduling?.id !== room.tournamentScheduleId || !stillValid()) return false;
+    const receipt = tournamentAudit.event(tournamentState, info.round, info.index, match, 'game_started', room.matchId,
+        room.matchStartedAt, { roomId, matchId: room.matchId, open: true,
+            details: { acceptedId: match.scheduling.accepted?.id || null, scheduledAt: match.scheduling.accepted?.at || null } });
+    pendingAuditedTournamentGames.set(receipt.matchId, { ...receipt, starting: true });
+    try {
+        await getTournamentAuditStore().observe(receipt);
+        if (!stillValid()) {
+            await getTournamentAuditStore().closeUnplayed(receipt, 'game_start_aborted', Date.now());
+            pendingAuditedTournamentGames.delete(receipt.matchId);
+            return false;
+        }
+        room.tournamentAuditGame = receipt;
+        return true;
+    } catch (error) {
+        // An ambiguous commit is reconciled from MongoDB, never guessed from memory.
+        console.error('[Tournament audit] Game receipt failed:', error.code || error.name);
+        return false;
+    } finally {
+        if (pendingAuditedTournamentGames.has(receipt.matchId)) pendingAuditedTournamentGames.set(receipt.matchId, receipt);
+    }
+}
+
+async function resolveAuditedTournamentGame(receipt, { allowReplay = false, reason = 'server_interruption', winnerId, expectedType } = {}) {
+    const store = getTournamentAuditStore();
+    const plan = await getTournamentSchedulingRuntime().transition(async state => {
+        const ledger = receipt.kind === 'game_started' ? await store.ledger(receipt.matchId) : null;
+        let outcome = tournamentAudit.fromLedger(receipt, ledger, MAX_SCORE);
+        if (outcome === false || (outcome && ((winnerId && winnerId !== outcome.winnerId)
+            || (expectedType && expectedType !== outcome.resultType)))) {
+            const match = state.bracket?.[receipt.round]?.[receipt.index];
+            if (match?.scheduling?.id === receipt.scheduleId) await store.observe(tournamentAudit.event(state,
+                receipt.round, receipt.index, match, 'recovery_conflict', receipt.matchId, Date.now(),
+                { roomId: receipt.roomId, matchId: receipt.matchId }));
+            return null;
+        }
+        if (!outcome && reason === 'account_deleted' && winnerId) {
+            outcome = { kind: 'result_recorded', at: Date.now(), winnerId, resultType: 'technical', reason,
+                p1Score: Number(receipt.participantUids[0] === winnerId), p2Score: Number(receipt.participantUids[1] === winnerId) };
+        }
+        if (!outcome && allowReplay) outcome = { kind: 'game_interrupted', at: Date.now(), reason };
+        if (!outcome) return null;
+        const options = tournamentDecisionOptions();
+        const next = tournamentAudit.planResolution(state, receipt, outcome, options);
+        if (next) next.scheduleId = receipt.scheduleId;
+        if (next && tournamentAdjudicationCore.isManaged(state)) {
+            next.refunds = [];
+            tournamentAdjudication.cascade(state, next, options);
+        }
+        return next;
+    });
+    if (!plan) {
+        const match = tournamentState.bracket?.[receipt.round]?.[receipt.index];
+        return tournamentState.registrationCycleId === receipt.cycleId && match?.lastResolvedGameId === receipt.matchId
+            && (!winnerId || match.winnerId === winnerId) && (!expectedType || match.resultType === expectedType);
+    }
+    pendingAuditedTournamentGames.delete(receipt.matchId);
+    if (tournamentStateInitialized) emitTournamentStateUpdate();
+    if (tournamentState.status === 'finished') {
+        try { await settleAuditedTournamentFinal(); }
+        catch (error) { console.error('[Tournament audit] Final awards will retry:', error.code || error.name); }
+        if (!tournamentAutoResetTimer) scheduleTournamentAutoReset();
+    }
+    for (const uid of new Set(plan.refunds || [])) {
+        const profile = await UserProfile.findOne({ firebaseUid: uid }).lean().catch(() => null);
+        if (profile) emitProfileSyncToUid(uid, profile);
+    }
+    if (ACCOUNT_DELETION_ENABLED && plan.result) queueMicrotask(() => {
+        settleDeletedTournamentParticipants().catch(() => console.error('[Account deletion] Tournament settlement needs retry.'));
+    });
+    return true;
+}
+
+async function settleAuditedTournamentGame(receipt, options) {
+    try { return await resolveAuditedTournamentGame(receipt, options); }
+    catch (error) {
+        console.error('[Tournament audit] Outcome deferred:', error.code || error.name);
+        return false;
+    }
+}
+
+function interruptAuditedTournamentRoom(roomId, state) {
+    io.to(roomId).emit('force_cancel_online', { roomId, matchId: state.matchId, reason: 'tournament_server_interruption', tournamentReplay: true });
+    cleanupOnlineRoom(roomId);
+}
+
+async function settleAuditedTournamentFinal() {
+    const plan = await getTournamentSchedulingRuntime().transition(async state => {
+        const match = state.bracket?.f?.[0];
+        if (!state.auditPolicyVersion || state.status !== 'finished' || !match?.winnerId || match.prizesAwarded) return null;
+        const winner = getTournamentPlayer(match, match.winnerId);
+        const runnerUp = getTournamentOpponent(match, match.winnerId);
+        if (!winner || !runnerUp) throw new Error('tournament_final_players_missing');
+        const awards = [
+            { uid: winner.id, role: 'winner', amount: TOURNEY_WINNER_REWARD },
+            { uid: runnerUp.id, role: 'runnerup', amount: TOURNEY_RUNNER_UP_REWARD }
+        ].filter(award => !award.uid.startsWith('deleted_'));
+        const record = winner.id.startsWith('deleted_') ? null : await buildTournamentChampionshipRecord(match, winner);
+        if (record) {
+            record.wonAt = new Date(state.finishedAt);
+            record.tournamentCycleId = state.registrationCycleId;
+        }
+        const next = { ...match, prizesAwarded: true, statsRecorded: true, prizeAwards: { [winner.id]: true, [runnerUp.id]: true } };
+        return { round: 'f', index: 0, scheduleId: match.scheduling.id, winnerId: match.winnerId,
+            updates: { 'bracket.f.0': next }, final: { awards, record, maxBalance: MAX_BALANCE },
+            events: [tournamentAudit.event(state, 'f', 0, match, 'final_settled', match.scheduling.id, Date.now(), {
+                details: { winnerId: match.winnerId }
+            })] };
+    });
+    if (!plan) return;
+    scheduleTournamentAutoReset();
+    for (const award of plan.final.awards) {
+        const profile = await UserProfile.findOne({ firebaseUid: award.uid }).lean();
+        if (profile) {
+            emitProfileSyncToUid(award.uid, profile);
+            emitTournamentPrizeToUid(award.uid, { role: award.role, reward: award.amount,
+                balance: profile.balance, tournamentWins: profile.tournamentWins });
+        }
+    }
+    if (tournamentStateInitialized) {
+        emitTournamentStateUpdate();
+        io.emit('tourney_stats_data', await buildTourneyStatsPayload());
+    }
+}
+
+async function recoverAuditedTournamentGames() {
+    if (!tournamentAudit.isManaged(tournamentState)) return;
+    const store = getTournamentAuditStore();
+    const rows = await store.openGames(tournamentState.registrationCycleId);
+    const openIds = new Set(rows.map(row => row.matchId));
+    for (const [id, receipt] of pendingAuditedTournamentGames) {
+        if (!openIds.has(id) && !roomState[receipt.roomId]?.tournamentAuditGame && !receipt.starting) pendingAuditedTournamentGames.delete(id);
+    }
+    for (const receipt of rows) {
+        if (pendingAuditedTournamentGames.get(receipt.matchId)?.starting) continue;
+        const live = roomState[receipt.roomId];
+        if (live?.matchId === receipt.matchId && !live.gameFinished) continue;
+        pendingAuditedTournamentGames.set(receipt.matchId, receipt);
+        const match = getTournamentMatch(receipt.round, receipt.index)?.match;
+        if (match?.winnerId || match?.scheduling?.id !== receipt.scheduleId) {
+            await store.closeUnplayed(receipt, 'game_superseded', Date.now());
+            pendingAuditedTournamentGames.delete(receipt.matchId);
+            continue;
+        }
+        await resolveAuditedTournamentGame(receipt, { allowReplay: true });
+    }
+}
+
+function isTournamentMatchInPlay(round, index) {
+    const belongs = roomId => {
+        const info = parseTournamentRoomId(roomId);
+        return info?.round === round && info.index === index;
+    };
+    return Object.entries(roomState).some(([roomId, state]) => belongs(roomId) && state && !state.gameFinished)
+        || (tournamentState.auditPolicyVersion && [...pendingAuditedTournamentGames.values()].some(receipt =>
+            receipt.cycleId === tournamentState.registrationCycleId && receipt.round === round && receipt.index === index))
+        || Object.keys(privateRooms).some(belongs)
+        || Object.values(pendingTournamentDuelInvites).some(invite => invite.round === round && invite.index === index)
+        || [...authorizedTournamentRooms.entries()].some(([roomId, ticket]) => belongs(roomId) && ticket.expiresAt > Date.now());
+}
+
+function getTournamentSchedulingRuntime() {
+    if (!tournamentSchedulingRuntime) tournamentSchedulingRuntime = createTournamentSchedulingRuntime({
+        getState: () => tournamentState, createId: () => crypto.randomUUID(), isBusy: isTournamentMatchInPlay,
+        persistState: async (snapshot, revision) => {
+            if (!MONGO_URI || mongoose.connection.readyState !== 1) throw new Error('tournament_database_unavailable');
+            const saved = await mongoose.model('TournamentState').updateOne({
+                registrationCycleId: snapshot.registrationCycleId, readinessRevision: revision
+            }, { $set: snapshot }, { writeConcern: { w: 'majority' } });
+            if (saved.matchedCount !== 1) throw new Error('tournament_scheduling_revision_conflict');
+        },
+        persistMatch: async (state, input, match, revision, command) => {
+            if (!MONGO_URI || mongoose.connection.readyState !== 1) throw new Error('tournament_database_unavailable');
+            const prefix = `bracket.${input.round}.${input.index}`;
+            const values = {};
+            for (const key of ['scheduling', 'time', 'timeAccepted', 'proposedTime', 'proposedById']) {
+                values[prefix + '.' + key] = match[key];
+            }
+            if (command === 'accept') values[prefix + '.pushRemindersSent'] = {};
+            values.readinessRevision = revision + 1;
+            const filter = {
+                registrationCycleId: state.registrationCycleId, status: 'active', readinessRevision: revision,
+                [prefix + '.winnerId']: null, [prefix + '.scheduling.id']: input.scheduleId,
+                [prefix + '.scheduling.revision']: input.revision
+            };
+            if (state.auditPolicyVersion) {
+                await getTournamentAuditStore().commitState(filter, values, { guardUids: state.players.map(player => player.id),
+                    events: [tournamentAudit.scheduleEvent(state, input, match, command)] });
+                return;
+            }
+            const saved = await mongoose.model('TournamentState').updateOne(filter, { $set: values }, { writeConcern: { w: 'majority' } });
+            if (saved.matchedCount !== 1) throw new Error('tournament_scheduling_revision_conflict');
+        },
+        persistTransition: (state, plan, revision) => {
+            const prefix = `bracket.${plan.round}.${plan.index}`;
+            return getTournamentAuditStore().commitState({ registrationCycleId: state.registrationCycleId,
+                readinessRevision: revision, status: plan.final ? 'finished' : 'active', [prefix + '.winnerId']: plan.winnerId || null,
+                ...(plan.final ? { [prefix + '.prizesAwarded']: { $ne: true } } : {}),
+                [prefix + '.scheduling.id']: plan.scheduleId }, { ...plan.updates, readinessRevision: revision + 1 },
+            { ...plan, refundMaxBalance: MAX_BALANCE, guardUids: state.players.map(player => player.id) });
+        }
+    });
+    return tournamentSchedulingRuntime;
+}
+
+async function handleTournamentScheduling(socket, command, data, uid) {
+    let result;
+    try {
+        if (!tournamentStateInitialized) throw new Error('tournament_not_loaded');
+        if (!data || !isTournamentSchedulingUnlocked()) {
+            socket.emit('tourney_schedule_result', { ok: false, reason: 'tourney_schedule_stale' });
+            return;
+        }
+        if (tournamentState.reliabilityPolicyVersion && !tournamentReliability.accepts(tournamentState, data)) {
+            socket.emit('tourney_schedule_result', { ok: false, reason: 'tourney_client_update_required' });
+            return;
+        }
+        result = await getTournamentSchedulingRuntime().execute(command, {
+            uid, cycleId: data.cycleId, round: data.round, index: data.index,
+            scheduleId: data.scheduleId, revision: data.revision,
+            proposedTime: data.proposedTime, proposalId: data.proposalId
+        });
+        if (result.ok) {
+            emitTournamentStateUpdate();
+            if (!tournamentState.notificationPolicyVersion) {
+                const appointment = result.match.scheduling[command === 'propose' ? 'pending' : 'accepted'];
+                const notify = () => {
+                    const match = getTournamentMatch(result.round, result.index)?.match;
+                    if (match !== result.match || match.winnerId || Date.now() >= match.scheduling.deadlineAt) return;
+                    if (command === 'propose') {
+                        if (match.scheduling.pending?.id !== appointment.id || Date.now() >= appointment.replyDueAt) return;
+                        return notifyTournamentTimeProposed(match, result.round, result.index, uid);
+                    }
+                    if (match.scheduling.accepted?.id === appointment.id) return notifyTournamentTimeAccepted(match, result.round, result.index);
+                };
+                queueTournamentPush(notify, 'managed_time_' + command);
+            }
+        }
+    } catch (err) {
+        console.error('[Tournament scheduling] Durable action failed:', err.message);
+        if (tournamentState.adjudicationPolicyVersion) tournamentAttendanceCoverage.invalidate();
+        result = { ok: false, reason: 'err_server_conn' };
+    }
+    socket.emit('tourney_schedule_result', { ok: result.ok, reason: result.reason });
+    socket.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
+}
+
+function canStartManagedTournamentMatch(match, round, index) {
+    return tournamentStateInitialized && tournamentState.status === 'active'
+        && tournamentSchedulingCore.canStart(match, Date.now())
+        && !getTournamentSchedulingRuntime().isLocked(round, index);
+}
+
+function authorizeManagedTournamentJoin(socket, roomId) {
+    const info = parseTournamentRoomId(roomId);
+    if (!info) return true;
+    if (!tournamentStateInitialized) return false;
+    if (!tournamentSchedulingCore.isManaged(tournamentState)) return true;
+    const uid = getVerifiedUid(socket);
+    const match = getTournamentMatch(info.round, info.index)?.match;
+    const ticket = authorizedTournamentRooms.get(roomId);
+    return Boolean(uid && ticket && ticket.expiresAt > Date.now() && ticket.seats.some(seat => seat.uid === uid && seat.socketId === socket.id)
+        && ticket.cycleId === tournamentState.registrationCycleId && match
+        && ticket.seats.every(seat => isTournamentParticipant(match, seat.uid))
+        && match.scheduling?.id === ticket.scheduleId && match.scheduling.accepted?.id === ticket.acceptedId
+        && canStartManagedTournamentMatch(match, info.round, info.index) && !roomState[roomId]);
+}
+
+function isCurrentTournamentRoomAttempt(roomId, match) {
+    return Boolean(match.scheduling?.id && roomState[roomId]?.tournamentScheduleId === match.scheduling.id);
+}
+
+function openNextTournamentScheduling(round, index) {
+    if (!tournamentSchedulingCore.isManaged(tournamentState)) return;
+    const nextRound = round === 'qf' ? 'sf' : round === 'sf' ? 'f' : null;
+    if (!nextRound) return;
+    const match = tournamentState.bracket[nextRound][Math.floor(index / 2)];
+    if (match?.p1 && match.p2 && !match.scheduling) {
+        tournamentSchedulingCore.open(match, nextRound, Date.now(), crypto.randomUUID());
+    }
+}
+
+function reopenTournamentScheduling(match, round) {
+    if (tournamentSchedulingCore.isManaged(tournamentState)) {
+        tournamentSchedulingCore.open(match, round, Date.now(), crypto.randomUUID());
+        match.pushRemindersSent = {};
+    }
+}
+
+let tournamentReadinessStore = null;
+let tournamentReadinessService = null;
+let tournamentReadinessQueue = Promise.resolve();
+let tournamentReadinessWorkerBusy = false;
+
+function getTournamentReadinessStore() {
+    if (!tournamentReadinessStore) {
+        tournamentReadinessStore = createTournamentReadinessStore({
+            connection: mongoose.connection,
+            guardWrite: values => accountDeletion.guardWrite(values),
+            maxBalance: MAX_BALANCE,
+            getRuntimeState: () => tournamentState,
+            isMatchInPlay: (round, index, scheduleId) => tournamentState.bracket?.[round]?.[index]?.scheduling?.id === scheduleId
+                && isTournamentMatchInPlay(round, index)
+        });
+    }
+    return tournamentReadinessStore;
+}
+
+function runTournamentReadinessCommand(command, input) {
+    const run = async () => {
+        if (!MONGO_URI || mongoose.connection.readyState !== 1) {
+            return { ok: false, reason: 'err_server_conn' };
+        }
+        await Promise.all([mongoose.model('TournamentEntry').init(), mongoose.model('TournamentNotice').init()]);
+        if (tournamentState.auditPolicyVersion) await mongoose.model('TournamentMatchAudit').init();
+        if (tournamentState.reliabilityPolicyVersion) await mongoose.model('TournamentReliability').init();
+        if (!tournamentReadinessService) {
+            tournamentReadinessService = createTournamentReadinessService({
+                store: getTournamentReadinessStore(), createId: () => crypto.randomUUID(),
+                createMatch: createTournamentMatch, shuffle: shuffleTournamentPlayers, entryFee: TOURNEY_ENTRY_FEE
+            });
+        }
+        const result = await tournamentReadinessService.execute(command, input);
+        if (result.changed) {
+            tournamentState = result.state;
+            emitTournamentStateUpdate();
+            const users = new Map(result.users.map(user => [user.firebaseUid, user]));
+            for (const [uid, user] of users) emitProfileSyncToUid(uid, user);
+            if (result.started && !result.state.notificationPolicyVersion) {
+                queueTournamentPush(() => notifyTournamentStarted(), 'readiness_started', { retry: true });
+            }
+        }
+        return result;
+    };
+    const task = tournamentReadinessQueue.then(run);
+    tournamentReadinessQueue = task.catch(() => {});
+    return task;
+}
+
+function buildTournamentReadinessPush(notice) {
+    const deadlineSr = notice.deadlineAt
+        ? new Date(notice.deadlineAt).toLocaleString('sr-RS', {
+            timeZone: 'Europe/Belgrade', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        }) : '';
+    const deadlineEn = notice.deadlineAt
+        ? new Date(notice.deadlineAt).toLocaleString('en-GB', {
+            timeZone: 'Europe/Belgrade', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        }) : '';
+    const pending = ['readiness_requested', 'readiness_halfway', 'readiness_last_call'].includes(notice.kind);
+    return {
+        category: 'tournament', scope: 'tournament', type: 'tournament_' + notice.kind,
+        tag: 'tournament_' + notice.kind + '_' + notice.entryId,
+        expiresAt: Math.min(pending && Number.isFinite(notice.deadlineAt) ? notice.deadlineAt : Infinity,
+            tournamentReadinessCore.windowAt(Date.now()).end),
+        ...buildLocalizedPushContent(
+            pending ? 'Potvrdi učešće u turniru' : 'Kotizacija za turnir se vraća',
+            pending
+                ? `Potvrdi spremnost do ${deadlineSr} (Beograd). Bez potvrde mesto se oslobađa uz pun povraćaj kotizacije.`
+                : 'Prijava je zatvorena bez kazne. Povraćaj kotizacije je evidentiran; detalji su u turniru.',
+            pending ? 'Confirm tournament participation' : 'Tournament entry fee refund',
+            pending
+                ? `Confirm readiness by ${deadlineEn} (Belgrade time). Without confirmation, your spot is released and the entry fee refunded.`
+                : 'Your entry was closed without a penalty. The entry fee refund is recorded; open the tournament for details.'
+        ),
+        data: { tab: 'info', entryId: notice.entryId, cycleId: notice.cycleId, deadlineAt: notice.deadlineAt || '',
+            noticeId: notice.noticeId, recipientUid: notice.recipientUid, kind: notice.kind }
+    };
+}
+
+function buildTournamentMatchPush(notice) {
+    const sr = tournamentNotificationsCore.copy(notice, 'sr');
+    const en = tournamentNotificationsCore.copy(notice, 'en');
+    const nightAllowed = ['match_reminder_30', 'match_reminder_5'].includes(notice.kind)
+        && tournamentNotificationsCore.inQuietHours(notice.scheduledAt);
+    return {
+        category: 'tournament', scope: 'tournament', type: 'tournament_' + notice.kind,
+        tag: notice.noticeId, nightAllowed,
+        expiresAt: nightAllowed ? notice.expiresAt : Math.min(notice.expiresAt, tournamentReadinessCore.windowAt(Date.now()).end),
+        isCurrent: () => tournamentNotificationsCore.isCurrent(tournamentState, notice, Date.now())
+            && (['match_result', 'match_review'].includes(notice.kind) || !isTournamentMatchInPlay(notice.round, notice.index)),
+        ...buildLocalizedPushContent(sr.title, sr.body, en.title, en.body),
+        data: { tab: 'bracket', round: notice.round, index: notice.index, cycleId: notice.cycleId,
+            scheduleId: notice.scheduleId, noticeId: notice.noticeId, recipientUid: notice.recipientUid,
+            kind: notice.kind, referenceId: notice.referenceId, expiresAt: notice.expiresAt }
+    };
+}
+
+function buildTournamentReliabilityPush(notice) {
+    const sr = tournamentReliability.copy(notice, 'sr');
+    const en = tournamentReliability.copy(notice, 'en');
+    return { category: 'tournament', scope: 'tournament', type: 'tournament_' + notice.kind, tag: notice.noticeId,
+        expiresAt: tournamentReadinessCore.windowAt(Date.now()).end,
+        ...buildLocalizedPushContent(sr.title, sr.body, en.title, en.body),
+        data: { tab: 'info', noticeId: notice.noticeId, recipientUid: notice.recipientUid, kind: notice.kind } };
+}
+
+async function emitTournamentReliabilityStatus(socket) {
+    const uid = getVerifiedUid(socket);
+    if (!uid || !tournamentStateInitialized || !tournamentReliability.isManaged(tournamentState) || mongoose.connection.readyState !== 1) return;
+    const { registrationCycleId: cycleId, tournamentNumber } = tournamentState;
+    const status = await getTournamentReadinessStore().reliabilityStatus(uid, tournamentNumber);
+    if (getVerifiedUid(socket) === uid && tournamentState.registrationCycleId === cycleId) {
+        socket.emit('tourney_reliability_status', { ...status, recipientUid: uid, cycleId, tournamentNumber });
+    }
+}
+
+function emitPrivateTournamentNotice(notice) {
+    const uid = notice.recipientUid;
+    const socket = io.sockets.sockets.get(onlinePlayers[uid]);
+    if (socket && getVerifiedUid(socket) === uid && (!tournamentReliability.isNotice(notice)
+        || socket.tournamentClientProtocol === tournamentReliability.CLIENT_PROTOCOL)) socket.emit('tourney_notice', notice);
+}
+
+async function queueManagedTournamentDuelNotice(round, index, uid) {
+    if (!MONGO_URI || mongoose.connection.readyState !== 1) return;
+    const rows = tournamentNotificationsCore.duelRequest(tournamentState, round, index, uid, Date.now());
+    for (const notice of await getTournamentReadinessStore().saveMatchNotices(rows)) emitPrivateTournamentNotice(notice);
+}
+
+async function emitTournamentReadinessNotices(socket) {
+    const uid = getVerifiedUid(socket);
+    if (!uid || !MONGO_URI || mongoose.connection.readyState !== 1) return;
+    const notices = await getTournamentReadinessStore().getNotices(uid);
+    const supported = socket.tournamentClientProtocol === tournamentReliability.CLIENT_PROTOCOL
+        ? notices : notices.filter(notice => !tournamentReliability.isNotice(notice));
+    if (supported.length && getVerifiedUid(socket) === uid) socket.emit('tourney_notices', supported);
+}
+
+async function checkTournamentReadiness() {
+    if (tournamentReadinessWorkerBusy || !tournamentStateInitialized || !MONGO_URI || mongoose.connection.readyState !== 1) return;
+    tournamentReadinessWorkerBusy = true;
+    try {
+        if (tournamentReadinessCore.isPrestart(tournamentState) && tournamentState.readiness) {
+            await runTournamentReadinessCommand('tick', { cycleId: tournamentState.registrationCycleId });
+        }
+        const store = getTournamentReadinessStore();
+        if (tournamentState.auditPolicyVersion) {
+            await recoverAuditedTournamentGames();
+            await flushTournamentAuditObservations();
+            if (tournamentState.status === 'finished') {
+                await settleAuditedTournamentFinal();
+                if (!tournamentAutoResetTimer) scheduleTournamentAutoReset();
+            }
+        }
+        if (tournamentNotificationsCore.isManaged(tournamentState)) {
+            for (const notice of await store.syncMatchNotices(tournamentState.registrationCycleId)) emitPrivateTournamentNotice(notice);
+        }
+        await store.deliver(async (uid, notice) => {
+            if (tournamentNotificationsCore.isMatchNotice(notice)) return sendPushToUids([uid], buildTournamentMatchPush(notice));
+            emitPrivateTournamentNotice(notice);
+            if (tournamentReliability.isNotice(notice)) return sendPushToUids([uid], buildTournamentReliabilityPush(notice));
+            return sendPushToUids([uid], buildTournamentReadinessPush(notice));
+        });
+        for (const user of await store.settleRefunds()) emitProfileSyncToUid(user.firebaseUid, user);
+    } catch (error) {
+        console.error('Tournament readiness check failed:', error.code || error.name || 'unknown');
+    } finally { tournamentReadinessWorkerBusy = false; }
+}
+
+const tournamentReadinessInterval = setInterval(() => {
+    checkTournamentReadiness().catch(() => {});
+}, 15000);
+if (tournamentReadinessInterval.unref) tournamentReadinessInterval.unref();
 
 function ensureTournamentPushFlags() {
     if (!tournamentState.pushFlags || typeof tournamentState.pushFlags !== 'object') {
@@ -5254,6 +6045,7 @@ async function notifyTournamentFinalScheduled(match, round, index) {
 }
 
 async function notifyTournamentChampion(match, winnerObj) {
+    if (tournamentNotificationsCore.isManaged(tournamentState)) return { ok: true, skipped: true };
     if (!match?.winnerId || !winnerObj?.id) return { ok: false, reason: 'missing_winner' };
     if (match.winnerId !== winnerObj.id) return { ok: false, reason: 'winner_mismatch' };
 
@@ -5337,6 +6129,7 @@ function getTournamentAttentionReminderSlot(now = new Date()) {
 
 function getTournamentAttentionReminderState(match, now) {
     if (!match || match.winnerId || !match.p1?.id || !match.p2?.id) return null;
+    if (match.scheduling && now >= match.scheduling.deadlineAt) return null;
 
     const scheduledAt = match.timeAccepted ? parseTournamentTimeMs(match.time) : NaN;
     if (Number.isFinite(scheduledAt)) {
@@ -5344,10 +6137,9 @@ function getTournamentAttentionReminderState(match, now) {
         return { kind: 'overdue', scheduledTime: match.time };
     }
 
-    return {
-        kind: match.proposedTime ? 'proposal_pending' : 'unscheduled',
-        proposedTime: match.proposedTime || ''
-    };
+    const pendingTime = match.scheduling && (!match.scheduling.pending || now >= match.scheduling.pending.replyDueAt)
+        ? '' : match.proposedTime || '';
+    return { kind: pendingTime ? 'proposal_pending' : 'unscheduled', proposedTime: pendingTime };
 }
 
 function buildTournamentAttentionReminderPayload(round, index, slot, attentionState) {
@@ -5409,6 +6201,7 @@ function buildTournamentAttentionReminderPayload(round, index, slot, attentionSt
 async function sendTournamentAttentionReminder(match, round, index, slot, now) {
     const attentionState = getTournamentAttentionReminderState(match, now);
     if (!attentionState) return;
+    const scheduleRevision = match.scheduling;
 
     const participantUids = Array.from(new Set(getTournamentMatchParticipantUids(match)));
     if (participantUids.length !== 2) return;
@@ -5421,6 +6214,7 @@ async function sendTournamentAttentionReminder(match, round, index, slot, now) {
     if (pendingUids.length === 0) return;
 
     const activeTokenDocs = await getPushTokenDocsForUids(pendingUids, 'tournament');
+    if (scheduleRevision && (match.scheduling !== scheduleRevision || match.winnerId)) return;
     const recipientUids = Array.from(new Set(activeTokenDocs.map(token => String(token.uid || '').trim()).filter(Boolean)));
     if (recipientUids.length === 0) return;
 
@@ -5435,6 +6229,7 @@ async function sendTournamentAttentionReminder(match, round, index, slot, now) {
         deliveredByUid[uid] = reservationAt;
     });
     await saveTournamentToDb();
+    if (scheduleRevision && (match.scheduling !== scheduleRevision || match.winnerId || Date.now() >= scheduleRevision.deadlineAt)) return;
 
     const payload = buildTournamentAttentionReminderPayload(round, index, slot, attentionState);
     const results = await Promise.all(recipientUids.map(async uid => {
@@ -5473,6 +6268,7 @@ async function checkUpcomingTournamentMatchReminders(now) {
 
         matches.forEach((match, index) => {
             if (!match || match.winnerId || !match.timeAccepted || !match.time) return;
+            if (match.scheduling && now >= match.scheduling.deadlineAt) return;
 
             const matchTime = parseTournamentTimeMs(match.time);
             if (!Number.isFinite(matchTime)) return;
@@ -5494,6 +6290,7 @@ async function checkUpcomingTournamentMatchReminders(now) {
                     round,
                     index,
                     windowInfo,
+                    acceptedId: match.scheduling?.accepted?.id,
                     promise: sendPushToUids(getTournamentMatchParticipantUids(match), {
                         category: 'tournament',
                         scope: 'tournament',
@@ -5523,7 +6320,8 @@ async function checkUpcomingTournamentMatchReminders(now) {
     }));
 
     let changed = false;
-    results.forEach(({ match, round, index, windowInfo, result }) => {
+    results.forEach(({ match, round, index, windowInfo, acceptedId, result }) => {
+        if (acceptedId && match.scheduling?.accepted?.id !== acceptedId) return;
         const sent = Math.max(0, toSafeInt(result?.sent, 0));
         if (result?.ok && sent > 0) {
             match.pushRemindersSent[windowInfo.key] = Date.now();
@@ -5562,7 +6360,7 @@ async function checkTournamentMatchReminders() {
     tournamentReminderCheckInProgress = true;
 
     try {
-        if (tournamentState.status !== 'active' || !tournamentState.bracket) return;
+        if (tournamentState.status !== 'active' || !tournamentState.bracket || tournamentNotificationsCore.isManaged(tournamentState)) return;
 
         const now = Date.now();
         await checkUpcomingTournamentMatchReminders(now);
@@ -5674,6 +6472,7 @@ function advanceTournamentBracket(round, index, winnerObj) {
     else if (round === 'f') {
         markTournamentFinishedForReset();
     }
+    if (tournamentState.schedulingPolicyVersion) openNextTournamentScheduling(round, index);
     saveTournamentToDb();
     scheduleTournamentAutoReset();
     if (ACCOUNT_DELETION_ENABLED) queueMicrotask(() => {
@@ -5874,6 +6673,7 @@ function getTournamentRoomMatchScores(roomId, match) {
 }
 
 async function recordTournamentDrawReplay(roomId) {
+    if (tournamentState.auditPolicyVersion && roomState[roomId]?.tournamentAuditGame) return settleAuditedTournamentGame(roomState[roomId].tournamentAuditGame);
     const roomInfo = parseTournamentRoomId(roomId);
     if (!roomInfo) return false;
 
@@ -5882,6 +6682,7 @@ async function recordTournamentDrawReplay(roomId) {
 
     const { match } = matchInfo;
     if (!match || match.winnerId) return false;
+    if (tournamentState.schedulingPolicyVersion && !isCurrentTournamentRoomAttempt(roomId, match)) return false;
 
     const regularScores = getTournamentRoomMatchScores(roomId, match);
     if (!regularScores || regularScores.p1Score !== regularScores.p2Score) return false;
@@ -5896,9 +6697,11 @@ async function recordTournamentDrawReplay(roomId) {
     match.lastDrawAt = Date.now();
     match.lastDrawRoomId = roomId;
     match.lastDrawMatchId = drawMatchId;
+    if (tournamentState.schedulingPolicyVersion) reopenTournamentScheduling(match, roomInfo.round);
 
     await saveTournamentToDb();
-    io.emit('tourney_state_update', tournamentState);
+    if (tournamentState.schedulingPolicyVersion) emitTournamentStateUpdate();
+    else io.emit('tourney_state_update', tournamentState);
     return true;
 }
 
@@ -5908,11 +6711,16 @@ function isTournamentDrawRematchAllowed(roomId, state) {
     const match = roomInfo && getTournamentMatch(roomInfo.round, roomInfo.index)?.match;
     if (!match || match.winnerId || match.rematchRequired !== true || match.lastDrawRoomId !== roomId) return false;
     if (match.lastDrawMatchId && match.lastDrawMatchId !== state.matchId) return false;
+    if (tournamentState.schedulingPolicyVersion && (!match.scheduling || Date.now() >= match.scheduling.deadlineAt
+        || getTournamentSchedulingRuntime().isLocked(roomInfo.round, roomInfo.index)
+        || isTournamentMatchInPlay(roomInfo.round, roomInfo.index))) return false;
     const scores = getTournamentRoomMatchScores(roomId, match);
     return !!scores && scores.p1Score === scores.p2Score;
 }
 
 async function recordTournamentNetworkReplay(roomId) {
+    if (tournamentState.auditPolicyVersion && roomState[roomId]?.tournamentAuditGame) return settleAuditedTournamentGame(roomState[roomId].tournamentAuditGame,
+        { allowReplay: true, reason: 'mutual_disconnect' });
     const roomInfo = parseTournamentRoomId(roomId);
     if (!roomInfo) return false;
 
@@ -5922,15 +6730,18 @@ async function recordTournamentNetworkReplay(roomId) {
     const { match } = matchInfo;
     if (!match || match.winnerId) return false;
     if (match.lastNetworkReplayRoomId === roomId) return true;
+    if (tournamentState.schedulingPolicyVersion && !isCurrentTournamentRoomAttempt(roomId, match)) return false;
 
     match.rematchRequired = true;
     match.replayReason = 'mutual_disconnect';
     match.networkReplayCount = Math.max(0, toSafeInt(match.networkReplayCount, 0)) + 1;
     match.lastNetworkReplayAt = Date.now();
     match.lastNetworkReplayRoomId = roomId;
+    if (tournamentState.schedulingPolicyVersion) reopenTournamentScheduling(match, roomInfo.round);
 
     await saveTournamentToDb();
-    io.emit('tourney_state_update', tournamentState);
+    if (tournamentState.schedulingPolicyVersion) emitTournamentStateUpdate();
+    else io.emit('tourney_state_update', tournamentState);
     return true;
 }
 
@@ -5943,6 +6754,14 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
 
     const { match, index } = matchInfo;
     if (!match || match.winnerId || !isTournamentParticipant(match, winnerUid)) return false;
+    if (tournamentState.schedulingPolicyVersion && reason !== 'account_deleted' && !isCurrentTournamentRoomAttempt(roomId, match)) return false;
+
+    if (tournamentState.auditPolicyVersion) {
+        const receipt = roomState[roomId]?.tournamentAuditGame || (reason === 'account_deleted'
+            ? tournamentAudit.event(tournamentState, roomInfo.round, index, match, 'administrative_resolution',
+                roomId, Date.now(), { roomId, matchId: match.scheduling.id }) : null);
+        return receipt ? settleAuditedTournamentGame(receipt, { reason, winnerId: winnerUid, expectedType: 'technical' }) : false;
+    }
 
     match.winnerId = winnerUid;
     const p1Score = match.p1.id === winnerUid ? 1 : 0;
@@ -5951,7 +6770,8 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
 
     const winnerObj = match.p1.id === winnerUid ? match.p1 : match.p2;
     advanceTournamentBracket(roomInfo.round, index, winnerObj);
-    io.emit('tourney_state_update', tournamentState);
+    if (tournamentState.schedulingPolicyVersion) emitTournamentStateUpdate();
+    else io.emit('tourney_state_update', tournamentState);
 
     if (roomInfo.round === 'f') {
         try {
@@ -5969,6 +6789,7 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
 }
 
 async function applyTournamentCompletedDuelResult(roomId) {
+    if (tournamentState.auditPolicyVersion && roomState[roomId]?.tournamentAuditGame) return settleAuditedTournamentGame(roomState[roomId].tournamentAuditGame);
     const roomInfo = parseTournamentRoomId(roomId);
     if (!roomInfo) return false;
 
@@ -5977,6 +6798,7 @@ async function applyTournamentCompletedDuelResult(roomId) {
 
     const { match, index } = matchInfo;
     if (!match || match.winnerId) return false;
+    if (tournamentState.schedulingPolicyVersion && !isCurrentTournamentRoomAttempt(roomId, match)) return false;
 
     const regularScores = getTournamentRoomMatchScores(roomId, match);
     if (!regularScores) return false;
@@ -5990,7 +6812,8 @@ async function applyTournamentCompletedDuelResult(roomId) {
     match.winnerId = winnerId;
     const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
     advanceTournamentBracket(roomInfo.round, index, winnerObj);
-    io.emit('tourney_state_update', tournamentState);
+    if (tournamentState.schedulingPolicyVersion) emitTournamentStateUpdate();
+    else io.emit('tourney_state_update', tournamentState);
 
     if (roomInfo.round === 'f') {
         try {
@@ -6261,6 +7084,7 @@ async function awardTournamentFinalPrizes(match, winnerObj) {
 }
 
 async function settleTournamentFinalPrizes(match, winnerObj) {
+    if (tournamentState.auditPolicyVersion) return settleAuditedTournamentFinal();
     if (!match || !winnerObj || match.prizesAwarded || match.prizeAwardInProgress) return;
 
     match.prizeAwardInProgress = true;
@@ -6273,6 +7097,7 @@ async function settleTournamentFinalPrizes(match, winnerObj) {
 }
 
 async function recordTournamentChampion(match, winnerObj) {
+    if (tournamentState.auditPolicyVersion) return;
     if (!match || !winnerObj || match.statsRecorded || match.statsRecordInProgress) return;
 
     if (!MONGO_URI) {
@@ -6376,6 +7201,7 @@ function getCurrentFinishedChampionStatsFallback() {
 
 async function persistCurrentFinishedTournamentHistoryIfNeeded() {
     if (!MONGO_URI || tournamentState.status !== 'finished') return;
+    if (tournamentState.auditPolicyVersion) return settleAuditedTournamentFinal();
 
     const finalMatch = tournamentState?.bracket?.f?.[0];
     if (!finalMatch?.winnerId) return;
@@ -6560,8 +7386,9 @@ function getBelgradeDayRange(date = new Date()) {
     const parts = getBelgradeDateParts(date);
     const currentMidnightUtc = Date.UTC(parts.year, parts.month - 1, parts.day);
     const nextMidnightUtc = currentMidnightUtc + (24 * 60 * 60 * 1000);
-    const start = new Date(currentMidnightUtc - getBelgradeTimeZoneOffset(new Date(currentMidnightUtc + (12 * 60 * 60 * 1000))));
-    const end = new Date(nextMidnightUtc - getBelgradeTimeZoneOffset(new Date(nextMidnightUtc + (12 * 60 * 60 * 1000))));
+    // Ponoć koristi pomeraj pre DST prelaza (koji je u Beogradu kasnije tokom noći).
+    const start = new Date(currentMidnightUtc - getBelgradeTimeZoneOffset(new Date(currentMidnightUtc)));
+    const end = new Date(nextMidnightUtc - getBelgradeTimeZoneOffset(new Date(nextMidnightUtc)));
     return { start, end };
 }
 
@@ -6640,6 +7467,19 @@ function getDisconnectIncidentKey(item = {}) {
     }
     return `event:${eventId}`;
 }
+
+require('./lib/monitor-report').mountMonitorReport(app, {
+    isAuthorized: isMonitorRequestAuthorized,
+    hasToken: Boolean(YAMB_MONITOR_TOKEN),
+    hasDatabase: Boolean(MONGO_URI),
+    getBelgradeDayKey,
+    getBelgradeDayRange,
+    ServerMonitorDaily,
+    ServerMonitorDailyActivity,
+    MatchResult,
+    AdMobRewardVerification,
+    normalizeMonitorTheme
+});
 
 app.get('/api/monitor/status', async (req, res) => {
     if (!isMonitorRequestAuthorized(req)) {
@@ -7162,6 +8002,7 @@ function findPendingTournamentDuelInvite(starterSocketId, targetSocketId, round,
 function expirePendingTournamentDuelInvite(key) {
     const invite = clearPendingTournamentDuelInvite(key);
     if (!invite) return;
+    if (tournamentState.auditPolicyVersion) observeTournamentInvite(invite, 'invite_expired', null);
 
     io.to(invite.starterSocketId).emit('tourney_duel_expired', {
         matchRoomId: invite.matchRoomId,
@@ -7179,6 +8020,8 @@ function clearPendingTournamentDuelInvitesForSocket(socketId) {
         const invite = pendingTournamentDuelInvites[key];
         if (!invite || (invite.starterSocketId !== socketId && invite.targetSocketId !== socketId)) continue;
         clearPendingTournamentDuelInvite(key);
+        if (tournamentState.auditPolicyVersion) observeTournamentInvite(invite, 'invite_disconnected',
+            invite.starterSocketId === socketId ? invite.starterUid : invite.targetUid);
 
         const otherSocketId = invite.starterSocketId === socketId ? invite.targetSocketId : invite.starterSocketId;
         io.to(otherSocketId).emit('tourney_duel_expired', {
@@ -10213,9 +11056,16 @@ async function settleDeletedTournamentParticipants() {
     try {
         for (const round of ['qf', 'sf', 'f']) {
             for (const [index, match] of (tournamentState.bracket[round] || []).entries()) {
-                if (!match || match.winnerId || !match.p1 || !match.p2) continue;
+                if (!match || match.winnerId || ['double_dq', 'void', 'empty'].includes(match.review?.kind) || !match.p1 || !match.p2) continue;
                 const removed = [match.p1, match.p2].filter(isDeletedTournamentPlayer);
                 if (!removed.length) continue;
+                if (tournamentState.auditPolicyVersion) {
+                    const winner = removed.length === 2 ? match.p1 : removed[0].id === match.p1.id ? match.p2 : match.p1;
+                    if (!await applyTournamentTechnicalWinner(`tourney_${round}_${index}_account_deletion`, winner.id, 'account_deleted')) {
+                        throw new Error('tournament_account_deletion_settlement_pending');
+                    }
+                    continue;
+                }
                 match.prizeAwards = match.prizeAwards || {};
                 removed.forEach(player => { match.prizeAwards[player.id] = true; });
                 if (removed.length === 2) {
@@ -10234,6 +11084,7 @@ async function settleDeletedTournamentParticipants() {
 }
 
 async function prepareRuntimeForAccountDeletion(uid, replacement) {
+    if (tournamentState.auditPolicyVersion) await accountDeletion.waitForWrites(uid);
     const references = value => deletionReferenceHashes(value).has(deletionIdentityHash(uid));
     const sockets = [...io.sockets.sockets.values()].filter(socket => socket.verifiedUid === uid || socket.playerId === uid);
 
@@ -10266,7 +11117,7 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
         for (const [key, value] of store) if (key === uid || references(value)) store.delete(key);
     }
 
-    if (tournamentState.status === 'registration') {
+    if (['registration', 'confirmation'].includes(tournamentState.status)) {
         tournamentState.players = tournamentState.players.filter(player => player.id !== uid);
         removePlayerFromTournamentBracket(uid);
     }
@@ -10282,7 +11133,11 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
     await settleDeletedTournamentParticipants();
     // Unlike the ordinary best-effort save, this write must succeed before a
     // deletion job can finish; otherwise the durable job will retry it.
-    await mongoose.model('TournamentState').findOneAndUpdate({}, tournamentState, { upsert: true });
+    if (tournamentState.auditPolicyVersion && !tournamentReadinessCore.isPrestart(tournamentState)) {
+        await getTournamentSchedulingRuntime().save();
+    } else {
+        await mongoose.model('TournamentState').findOneAndUpdate({}, tournamentState, { upsert: true });
+    }
 
     globalChatHistory = globalChatHistory.filter(message => message.senderUid !== uid && message.senderId !== uid);
     await globalChatSaveQueue.catch(() => {});
@@ -10446,6 +11301,9 @@ io.on('connection', (socket) => {
             return;
         }
         if (!rememberRoomPresence(roomId, socket)) return;
+        if (data.foreground === true && roomState[roomId]?.tournamentAuditGame && getVerifiedUid(socket) === uid) {
+            observeTournamentRoom(roomId, 'presence_observed', uid, Date.now());
+        }
         // Only explicit foreground evidence from the actual player repairs a missed resume.
         // Legacy tournament heartbeats may run in the background and must not cancel grace.
         if (data.foreground === true && ghost?.source === 'app_backgrounded' &&
@@ -11407,7 +12265,11 @@ io.on('connection', (socket) => {
                         roomId: activeRoomId,
                         reason: 'back_to_menu'
                     });
-                    await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'back_to_menu');
+                    const bracketSettled = await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'back_to_menu');
+                    if (state.tournamentAuditGame && !bracketSettled) {
+                        interruptAuditedTournamentRoom(activeRoomId, state);
+                        return;
+                    }
                 }
             }
 
@@ -13717,13 +14579,18 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('join_private_game', (data) => {
+    socket.on('join_private_game', async (data) => {
         let nickname = data.nickname || data;
         let roomId = data.roomId;
         let photoUrl = data.photoUrl || '';
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
         if (!roomId) { socket.emit('error_msg', 'err_invalid_room'); return; }
+
+        if (!authorizeManagedTournamentJoin(socket, roomId)) {
+            socket.emit('tourney_duel_expired', { matchRoomId: roomId, reason: 'tourney_schedule_stale' });
+            return;
+        }
 
         const requesterUid = getSocketUid(socket.id);
         const busyState = getPlayerBusyState(socket.id, requesterUid);
@@ -13734,6 +14601,13 @@ io.on('connection', (socket) => {
                 socket.emit('error_msg', 'err_player_busy');
                 return;
             }
+        }
+
+        if (tournamentState.auditPolicyVersion) {
+            const ticket = authorizedTournamentRooms.get(roomId);
+            const info = ticket && parseTournamentRoomId(roomId);
+            if (info) observeTournamentInvite({ ...info, ...ticket, matchRoomId: roomId },
+                'room_arrival', getVerifiedUid(socket));
         }
 
         if (!privateRooms[roomId]) {
@@ -13765,9 +14639,11 @@ io.on('connection', (socket) => {
 
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
 
-            roomState[roomId] = {
+            const tournamentTicket = authorizedTournamentRooms.get(roomId);
+            const nextRoom = {
                 matchId: createServerMatchId(),
                 matchStartedAt: Date.now(),
+                ...(tournamentTicket ? { tournamentScheduleId: tournamentTicket.scheduleId } : {}),
                 players: [p1.id, socket.id],
                 playerUids: [
                     p1.uid || registeredSockets[p1.id] || '',
@@ -13783,6 +14659,20 @@ io.on('connection', (socket) => {
                 najavaAktivna: false,
                 najavljenoPolje: null
             };
+            if (tournamentTicket && tournamentState.auditPolicyVersion) {
+                const reservation = privateRooms[roomId];
+                const valid = () => privateRooms[roomId] === reservation && !roomState[roomId]
+                    && p1Socket.connected && socket.connected && playerRooms[p1.id] === roomId && playerRooms[socket.id] === roomId
+                    && authorizeManagedTournamentJoin(socket, roomId) && authorizeManagedTournamentJoin(p1Socket, roomId);
+                if (!await persistAuditedTournamentGame(roomId, nextRoom, valid)) {
+                    authorizedTournamentRooms.delete(roomId);
+                    if (privateRooms[roomId] === reservation && !roomState[roomId]) cleanupOnlineRoom(roomId);
+                    for (const playerSocket of [p1Socket, socket]) playerSocket.emit('tourney_duel_expired', { matchRoomId: roomId, reason: 'tourney_schedule_stale' });
+                    return;
+                }
+            }
+            if (tournamentTicket) authorizedTournamentRooms.delete(roomId);
+            roomState[roomId] = nextRoom;
             startTurnTimer(roomId); 
             notifyOnlinePlayersStatusChanged();
             clearPendingRoomInvitesForSocket(socket.id);
@@ -14744,7 +15634,7 @@ io.on('connection', (socket) => {
         if (requester) io.to(requester).emit('rematch_declined');
     });
 
-    socket.on('accept_rematch', (data = {}, ack) => {
+    socket.on('accept_rematch', async (data = {}, ack) => {
         const roomId = playerRooms[socket.id];
         const state = roomId && roomState[roomId];
         const playersArr = Array.isArray(state?.players) ? [...state.players] : [];
@@ -14762,10 +15652,12 @@ io.on('connection', (socket) => {
         for (const clientId of playersArr) gameStartTimes[clientId] = Date.now();
         const p1 = io.sockets.sockets.get(playersArr[0]);
         const p2 = io.sockets.sockets.get(playersArr[1]);
-        clearFinishedRoomCleanup(roomId);
-        roomState[roomId] = {
+        const roundInfo = tournamentRoom && state.tournamentScheduleId ? parseTournamentRoomId(roomId) : null;
+        const scheduleId = roundInfo && getTournamentMatch(roundInfo.round, roundInfo.index)?.match?.scheduling?.id;
+        const nextRoom = {
                     matchId: createServerMatchId(),
                     matchStartedAt: Date.now(),
+                    ...(scheduleId ? { tournamentScheduleId: scheduleId } : {}),
                     players: playersArr,
                     playerUids: playersArr.map(playerSocketId => getSocketUid(playerSocketId)),
                     playerNames: [p1 ? p1.playerName : "Igrač 1", p2 ? p2.playerName : "Igrač 2"],
@@ -14778,6 +15670,16 @@ io.on('connection', (socket) => {
                     najavaAktivna: false,
                     najavljenoPolje: null
         };
+        if (scheduleId && tournamentState.auditPolicyVersion) {
+            const valid = () => roomState[roomId] === state && state.gameFinished && p1?.connected && p2?.connected
+                && p1.rooms.has(roomId) && p2.rooms.has(roomId) && getTournamentMatch(roundInfo.round, roundInfo.index)?.match?.scheduling?.id === scheduleId;
+            if (!await persistAuditedTournamentGame(roomId, nextRoom, valid)) {
+                if (typeof ack === 'function') ack({ ok: false, reason: 'err_server_conn' });
+                return;
+            }
+        }
+        clearFinishedRoomCleanup(roomId);
+        roomState[roomId] = nextRoom;
         startTurnTimer(roomId);
         notifyOnlinePlayersStatusChanged();
         if (typeof ack === 'function') ack({ ok: true });
@@ -14793,11 +15695,58 @@ io.on('connection', (socket) => {
             return;
         }
 
+        if ((tournamentReadinessCore.isPrestart(tournamentState) && tournamentState.players.length > 0)
+            || (tournamentState.auditPolicyVersion && tournamentState.status === 'active')) {
+            rejectTournamentAction(socket, 'tourney_readiness_reset_blocked');
+            return;
+        }
+
         console.log("⚠️ TURNIR JE RESETOVAN OD STRANE KORISNIKA!");
         await resetTournamentForNextCycle('admin');
     });
 
-    socket.on('tourney_get_state', () => { socket.emit('tourney_state_update', tournamentState); });
+    socket.on('tourney_get_state', (data = {}) => {
+        if (!tournamentStateInitialized) return;
+        if (data?.clientProtocol === tournamentReliability.CLIENT_PROTOCOL) socket.tournamentClientProtocol = data.clientProtocol;
+        socket.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
+        emitTournamentReadinessNotices(socket).catch(() => {});
+    });
+
+    socket.on('tourney_get_notices', (data = {}) => {
+        if (data?.clientProtocol === tournamentReliability.CLIENT_PROTOCOL) socket.tournamentClientProtocol = data.clientProtocol;
+        emitTournamentReadinessNotices(socket).catch(() => {});
+    });
+
+    socket.on('tourney_get_reliability', () => {
+        emitTournamentReliabilityStatus(socket).catch(() => {});
+    });
+
+    socket.on('tourney_notice_read', async (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        const noticeId = data?.noticeId;
+        if (!uid || typeof noticeId !== 'string' || noticeId.length > 160 || !MONGO_URI) return;
+        try { await getTournamentReadinessStore().acknowledge(uid, noticeId); }
+        catch (error) { console.error('Tournament notice acknowledgement failed:', error.code || error.name); }
+    });
+
+    socket.on('tourney_readiness_confirm', async (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+        if (!tournamentStateInitialized) {
+            socket.emit('tourney_readiness_result', { ok: false, reason: 'err_server_conn' });
+            return;
+        }
+        try {
+            const result = await runTournamentReadinessCommand('confirm', {
+                uid, cycleId: data?.cycleId, entryId: data?.entryId, clientProtocol: data?.clientProtocol
+            });
+            socket.emit('tourney_readiness_result', { ok: result.ok, reason: result.reason });
+            socket.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
+        } catch (error) {
+            console.error('Tournament readiness confirmation failed:', error.code || error.name);
+            socket.emit('tourney_readiness_result', { ok: false, reason: 'err_server_conn' });
+        }
+    });
 
     socket.on('get_tourney_stats', async () => {
         try {
@@ -14817,6 +15766,41 @@ io.on('connection', (socket) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) {
             socket.emit('tourney_register_result', { ok: false, reason: 'auth_required' });
+            return;
+        }
+        if (!tournamentStateInitialized) {
+            socket.emit('tourney_register_result', { ok: false, reason: 'err_server_conn' });
+            return;
+        }
+
+        if (tournamentReadinessCore.isManaged(tournamentState)) {
+            if (tournamentState.reliabilityPolicyVersion && !tournamentReliability.accepts(tournamentState, playerData)) {
+                socket.emit('tourney_register_result', { ok: false, reason: 'tourney_client_update_required' });
+                return;
+            }
+            if (playerData?.tournamentRulesAccepted !== true
+                || playerData?.tournamentRulesVersion !== TOURNEY_PARTICIPATION_RULES_VERSION) {
+                socket.emit('tourney_register_result', { ok: false, reason: 'tourney_rules_acceptance_required' });
+                return;
+            }
+            try {
+                const serverPi = await calculateTournamentPi(uid, playerData?.pi);
+                const result = await runTournamentReadinessCommand('register', {
+                    uid, cycleId: playerData?.cycleId, requestId: playerData?.entryRequestId,
+                    policyVersion: playerData?.readinessPolicyVersion, accepted: playerData?.readinessPolicyAccepted,
+                    clientProtocol: playerData?.clientProtocol, reliabilityRulesAccepted: playerData?.reliabilityRulesAccepted,
+                    player: { name: sanitizeTournamentName(socket.playerName || playerData?.name),
+                        photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData?.photoUrl),
+                        pi: serverPi, participationRulesVersion: TOURNEY_PARTICIPATION_RULES_VERSION,
+                        participationRulesAcceptedAt: Date.now() }
+                });
+                socket.emit('tourney_register_result', { ok: result.ok, reason: result.reason,
+                    alreadyRegistered: result.alreadyRegistered, blockedEdition: result.blockedEdition });
+                socket.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
+            } catch (error) {
+                console.error('Tournament readiness registration failed:', error.code || error.name);
+                socket.emit('tourney_register_result', { ok: false, reason: 'err_server_conn' });
+            }
             return;
         }
 
@@ -14910,6 +15894,7 @@ io.on('connection', (socket) => {
     socket.on('tourney_update_pi', async (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
+        if (tournamentReadinessCore.isPrestart(tournamentState)) return;
 
         const pi = await calculateTournamentPi(uid, data.pi);
         let updated = false;
@@ -14945,10 +15930,29 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_unregister', async () => {
+    socket.on('tourney_unregister', async (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) {
             socket.emit('tourney_unregister_result', { ok: false, reason: 'auth_required' });
+            return;
+        }
+        if (!tournamentStateInitialized) {
+            socket.emit('tourney_unregister_result', { ok: false, reason: 'err_server_conn' });
+            return;
+        }
+
+        if (tournamentReadinessCore.isManaged(tournamentState)) {
+            try {
+                const result = await runTournamentReadinessCommand('withdraw', {
+                    uid, cycleId: data?.cycleId, entryId: data?.entryId
+                });
+                socket.emit('tourney_unregister_result', { ok: result.ok, reason: result.reason,
+                    alreadyUnregistered: result.alreadyUnregistered, refundRecorded: result.ok });
+                socket.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
+            } catch (error) {
+                console.error('Tournament readiness withdrawal failed:', error.code || error.name);
+                socket.emit('tourney_unregister_result', { ok: false, reason: 'err_server_conn' });
+            }
             return;
         }
 
@@ -14986,9 +15990,12 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_propose_time', (data = {}) => {
+    socket.on('tourney_propose_time', async (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
+        if (tournamentSchedulingCore.isManaged(tournamentState)) {
+            return handleTournamentScheduling(socket, 'propose', data, uid);
+        }
 
         if (!isTournamentSchedulingUnlocked()) {
             return rejectTournamentAction(socket, 'tourney_schedule_locked_until_full');
@@ -15012,9 +16019,12 @@ io.on('connection', (socket) => {
         queueTournamentPush(() => notifyTournamentTimeProposed(match, data.round, index, uid), 'time_proposed');
     });
 
-    socket.on('tourney_accept_time', (data = {}) => {
+    socket.on('tourney_accept_time', async (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
+        if (tournamentSchedulingCore.isManaged(tournamentState)) {
+            return handleTournamentScheduling(socket, 'accept', data, uid);
+        }
 
         if (!isTournamentSchedulingUnlocked()) {
             return rejectTournamentAction(socket, 'tourney_schedule_locked_until_full');
@@ -15040,6 +16050,9 @@ io.on('connection', (socket) => {
     socket.on('tourney_start_duel', (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
+        if (tournamentState.reliabilityPolicyVersion && !tournamentReliability.accepts(tournamentState, data)) {
+            return rejectTournamentAction(socket, 'tourney_client_update_required');
+        }
 
         if (!isTournamentSchedulingUnlocked()) {
             return rejectTournamentAction(socket, 'tourney_schedule_locked_until_full');
@@ -15051,6 +16064,12 @@ io.on('connection', (socket) => {
         const { match, index } = matchInfo;
         if (!isTournamentParticipant(match, uid)) return rejectTournamentAction(socket, 'err_invalid_room');
         if (match.winnerId || !match.timeAccepted) return rejectTournamentAction(socket, 'err_invalid_room');
+        if (tournamentSchedulingCore.isManaged(tournamentState) && (
+            data.cycleId !== tournamentState.registrationCycleId || data.scheduleId !== match.scheduling?.id
+            || data.acceptedId !== match.scheduling?.accepted?.id
+            || !canStartManagedTournamentMatch(match, data.round, index))) {
+            return rejectTournamentAction(socket, 'tourney_schedule_stale');
+        }
 
         const opponent = getTournamentOpponent(match, uid);
         const starter = getTournamentPlayer(match, uid);
@@ -15059,6 +16078,14 @@ io.on('connection', (socket) => {
         if (isPlayerBusyForInvite(socket.id, uid)) {
             socket.emit('error_msg', 'err_player_busy');
             return;
+        }
+
+        if (tournamentState.auditPolicyVersion) {
+            const at = Date.now();
+            const a = match.scheduling.accepted;
+            queueTournamentAuditObservation(tournamentAudit.event(tournamentState, data.round, index, match,
+                'launch_requested', [a.id, uid, Math.floor(at / 30000)], at, { actorUid: uid,
+                    details: { acceptedId: a.id, scheduledAt: a.at, opponentConnected: !!onlinePlayers[opponent.id] } }));
         }
 
         if (onlinePlayers[opponent.id]) {
@@ -15076,10 +16103,13 @@ io.on('connection', (socket) => {
                 });
                 return;
             }
+            if (tournamentSchedulingCore.isManaged(tournamentState) && isTournamentMatchInPlay(data.round, index)) {
+                return rejectTournamentAction(socket, 'tourney_schedule_busy');
+            }
 
             const matchRoomId = `tourney_${data.round}_${index}_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
             const createdAt = Date.now();
-            const expiresAt = createdAt + ROOM_INVITE_RESPONSE_WINDOW_MS;
+            const expiresAt = Math.min(createdAt + ROOM_INVITE_RESPONSE_WINDOW_MS, match.scheduling?.deadlineAt ?? Infinity);
             pendingTournamentDuelInvites[matchRoomId] = {
                 matchRoomId,
                 starterSocketId: socket.id,
@@ -15090,12 +16120,16 @@ io.on('connection', (socket) => {
                 targetName: sanitizeTournamentName(opponent.name || 'Igrač'),
                 round: String(data.round || ''),
                 index,
+                cycleId: tournamentState.registrationCycleId,
+                scheduleId: match.scheduling?.id,
+                acceptedId: match.scheduling?.accepted?.id,
                 createdAt,
                 expiresAt,
                 timeoutId: setTimeout(() => {
                     expirePendingTournamentDuelInvite(matchRoomId);
-                }, ROOM_INVITE_RESPONSE_WINDOW_MS)
+                }, Math.max(1, expiresAt - createdAt))
             };
+            if (tournamentState.auditPolicyVersion) observeTournamentInvite(pendingTournamentDuelInvites[matchRoomId], 'invite_sent', uid, createdAt);
 
             io.to(opponentSocketId).emit('tourney_duel_ready', {
                 matchRoomId,
@@ -15108,9 +16142,21 @@ io.on('connection', (socket) => {
                 expiresAt
             });
         } else {
-            queueTournamentPush(() => notifyTournamentDuelRequested(match, data.round, index, uid), 'duel_requested');
+            if (tournamentState.notificationPolicyVersion) {
+                queueManagedTournamentDuelNotice(data.round, index, uid).catch(error => {
+                    console.error('[Tournament notices] Duel request:', error.code || error.name);
+                });
+            } else {
+                queueTournamentPush(() => notifyTournamentDuelRequested(match, data.round, index, uid), 'duel_requested');
+            }
             socket.emit('error_msg', 'err_tourney_opp_offline');
         }
+    });
+
+    socket.on('tourney_attendance', async (data = {}, ack) => {
+        const uid = requireTournamentAuth(socket);
+        const ok = uid ? await recordTournamentAppointmentPresence(socket, data, uid) : false;
+        if (typeof ack === 'function') ack({ ok });
     });
 
     socket.on('tourney_duel_response', (data = {}) => {
@@ -15125,6 +16171,10 @@ io.on('connection', (socket) => {
         }
 
         const responderUid = getSocketUid(socket.id);
+        if (tournamentSchedulingCore.isManaged(tournamentState) && getVerifiedUid(socket) !== invite.targetUid) return;
+        if (tournamentState.reliabilityPolicyVersion && !tournamentReliability.accepts(tournamentState, data)) {
+            return rejectTournamentAction(socket, 'tourney_client_update_required');
+        }
         if (invite.targetSocketId !== socket.id && (!responderUid || responderUid !== invite.targetUid)) {
             return;
         }
@@ -15141,6 +16191,7 @@ io.on('connection', (socket) => {
         }
 
         if (data.busy === true) {
+            if (tournamentState.auditPolicyVersion) observeTournamentInvite(invite, 'invite_busy', invite.targetUid);
             starterSocket.emit('tourney_duel_busy', {
                 matchRoomId,
                 opponentName: invite.targetName || 'Igrač'
@@ -15149,6 +16200,7 @@ io.on('connection', (socket) => {
         }
 
         if (data.accepted !== true) {
+            if (tournamentState.auditPolicyVersion) observeTournamentInvite(invite, 'invite_declined', invite.targetUid);
             starterSocket.emit('tourney_duel_declined', {
                 matchRoomId,
                 opponentName: invite.targetName || 'Igrač'
@@ -15157,6 +16209,7 @@ io.on('connection', (socket) => {
         }
 
         if (Date.now() > invite.expiresAt) {
+            if (tournamentState.auditPolicyVersion) observeTournamentInvite(invite, 'invite_expired', null);
             socket.emit('tourney_duel_expired', {
                 matchRoomId,
                 opponentName: invite.starterName || 'Igrač'
@@ -15178,6 +16231,26 @@ io.on('connection', (socket) => {
             return;
         }
 
+        if (tournamentSchedulingCore.isManaged(tournamentState)) {
+            const match = getTournamentMatch(invite.round, invite.index)?.match;
+            if (!match || getVerifiedUid(starterSocket) !== invite.starterUid || invite.cycleId !== tournamentState.registrationCycleId
+                || invite.scheduleId !== match.scheduling?.id || invite.acceptedId !== match.scheduling?.accepted?.id
+                || !canStartManagedTournamentMatch(match, invite.round, invite.index) || isTournamentMatchInPlay(invite.round, invite.index)) {
+                socket.emit('error_msg', 'tourney_schedule_stale');
+                starterSocket.emit('error_msg', 'tourney_schedule_stale');
+                return;
+            }
+            const expiresAt = Math.min(Date.now() + 120000, match.scheduling.deadlineAt);
+            const seats = [{ uid: invite.starterUid, socketId: starterSocket.id }, { uid: invite.targetUid, socketId: socket.id }];
+            authorizedTournamentRooms.set(matchRoomId, { cycleId: invite.cycleId, scheduleId: invite.scheduleId,
+                acceptedId: invite.acceptedId, seats, expiresAt });
+            if (tournamentState.auditPolicyVersion) observeTournamentInvite(invite, 'invite_accepted', invite.targetUid);
+            setTimeout(() => {
+                if (!authorizedTournamentRooms.delete(matchRoomId)) return;
+                if (privateRooms[matchRoomId] && !roomState[matchRoomId]) cleanupOnlineRoom(matchRoomId);
+                for (const seat of seats) io.to(seat.socketId).emit('tourney_duel_expired', { matchRoomId, reason: 'tourney_schedule_stale' });
+            }, Math.max(1, expiresAt - Date.now())).unref();
+        }
         starterSocket.emit('tourney_join_allowed', matchRoomId);
         socket.emit('tourney_join_allowed', matchRoomId);
     });
@@ -15199,12 +16272,21 @@ io.on('connection', (socket) => {
             const activeRoomInfo = parseTournamentRoomId(activeRoomId);
             const roomMatchesSubmittedMatch = activeRoomInfo
                 && activeRoomInfo.round === round
-                && activeRoomInfo.index === index;
+                && activeRoomInfo.index === index
+                && (!tournamentState.schedulingPolicyVersion || isCurrentTournamentRoomAttempt(activeRoomId, match));
             const regularScores = roomMatchesSubmittedMatch
                 ? getTournamentRoomMatchScores(activeRoomId, match)
                 : null;
 
             if (regularScores) {
+                if (tournamentState.auditPolicyVersion) {
+                    if (regularScores.p1Score !== regularScores.p2Score
+                        && (regularScores.p1Score > regularScores.p2Score ? match.p1.id : match.p2.id) === uid) {
+                        const receipt = roomState[activeRoomId]?.tournamentAuditGame;
+                        if (receipt) await settleAuditedTournamentGame(receipt, { winnerId: uid });
+                    }
+                    return;
+                }
                 if (regularScores.p1Score === regularScores.p2Score) {
                     await recordTournamentDrawReplay(activeRoomId);
                     return rejectTournamentAction(socket, 'err_invalid_room');
@@ -15224,7 +16306,8 @@ io.on('connection', (socket) => {
             match.winnerId = winnerId;
             const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
             advanceTournamentBracket(round, index, winnerObj);
-            io.emit('tourney_state_update', tournamentState);
+            if (tournamentState.schedulingPolicyVersion) emitTournamentStateUpdate();
+            else io.emit('tourney_state_update', tournamentState);
 
             if (round === 'f') {
                 try {

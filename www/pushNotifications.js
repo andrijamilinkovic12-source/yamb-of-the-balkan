@@ -148,10 +148,16 @@
         const open = async () => {
             const app = window.app;
             if (!app) return;
+            if (data.noticeId && (data.recipientUid !== app.playerId || app.gameActive)) return;
             if (!(await claimPendingRewardBeforeNotificationNavigation(app))) return;
 
+            if (data.noticeId) {
+                app.tournamentManager?.openTournamentNotice(data);
+                return;
+            }
+
             if (app.tournamentManager && typeof app.tournamentManager.open === 'function') {
-                app.tournamentManager.activeTab = 'bracket';
+                app.tournamentManager.activeTab = data.tab === 'info' ? 'info' : 'bracket';
                 app.tournamentManager.open();
 
                 const round = data.round || data.tournamentRound;
@@ -307,9 +313,13 @@
 
     function showForegroundNotification(notification = {}) {
         const data = notification?.data || {};
+        const app = window.app;
+        if (data.noticeId && data.scope === 'tournament') {
+            if (app?.playerId && data.recipientUid === app.playerId && app.socket?.connected) app.socket.emit('tourney_get_state');
+            return;
+        }
         const title = escapeHtml(notification?.title || 'Yamb of the Balkan');
         const body = escapeHtml(notification?.body || '');
-        const app = window.app;
         const modal = app?.modal || window.modalManager;
         const canOpen = Boolean(data.scope || data.type);
 

@@ -11,7 +11,7 @@ function bootLiveEffectsReview(EffectManager) {
     document.getElementById('qa-board-grid').innerHTML = Array.from({ length: 84 }, (_, index) =>
         '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)]
             : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
-    window.app ||= { playerName: 'Andrija' };
+    window.app ||= { playerName: params.get('name') || 'Andrija' };
     const run = id => {
         fx.stop(); effect = id;
         document.getElementById('effect-choice').value = id;

@@ -85,7 +85,7 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false,
         performance: { now() { return now; } },
         requestAnimationFrame(callback) { const id = nextId++; raf.set(id, callback); return id; },
         cancelAnimationFrame(id) { raf.delete(id); },
-        setTimeout(callback) { const id = nextId++; timeouts.set(id, callback); return id; },
+        setTimeout(callback, delay) { const id = nextId++; timeouts.set(id, { callback, at: now + delay }); return id; },
         clearTimeout(id) { timeouts.delete(id); }
     });
     vm.runInContext(`${prelude}\n${effectClass}\nthis.EffectManager = EffectManager;`, context);
@@ -93,6 +93,11 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false,
     return {
         effect, document, body, nodes, classes, raf, timeouts, imagePaths, observers,
         frame(at) {
+            for (const [id, timer] of [...timeouts].sort((a, b) => a[1].at - b[1].at)) {
+                if (timer.at > at || !timeouts.delete(id)) continue;
+                now = timer.at;
+                timer.callback();
+            }
             now = at;
             const callbacks = [...raf.values()];
             raf.clear();
@@ -110,12 +115,25 @@ async function main() {
         assert(app.classes.has('fx-gold-rain'), `${theme}: effect did not start`);
         const layers = app.nodes.filter(node => node.className === 'gold-rain-particles');
         assert.equal(layers.length, 1, `${theme}: duplicate coin layer`);
-        assert.equal(layers[0].children.length, 46, `${theme}: missing visible PNG coins`);
-        assert(layers[0].children.every(node => node.tag === 'img' && node.src === app.imagePaths.at(-1)));
-        const delays = layers[0].children.map(node => parseInt(node.style.properties['--fall-delay'], 10));
-        assert(Math.min(...delays) < 490 && Math.max(...delays) >= 860, `${theme}: coins must arrive in staggered waves`);
-        assert(layers[0].children.every(node => node.style.properties['--fall-quarter-drift'] !== undefined
-            && node.style.properties['--fall-late-drift'] !== undefined), `${theme}: coins need a complete swaying fall`);
+        const coins = layers[0].children;
+        assert.equal(coins.length, 72, `${theme}: missing visible PNG coins`);
+        assert(coins.every(node => node.tag === 'img' && node.src === app.imagePaths.at(-1)));
+        const number = (coin, key) => parseFloat(coin.style.properties[key]);
+        for (const [i, coin] of coins.entries()) {
+            const delay = number(coin, '--fall-delay');
+            const duration = number(coin, '--fall-duration');
+            assert.equal(Math.floor(delay / 390), i % 4, `${theme}: expected four staggered waves`);
+            assert(delay + duration <= 5800, `${theme}: the last coins must finish before the rain ends`);
+            assert(Math.abs(number(coin, '--fall-sway')) > 0, `${theme}: missing lateral sway`);
+            const turn = Math.abs(number(coin, '--fall-turn'));
+            assert(turn >= 40 && turn < 75, `${theme}: turning coins must still show the original face`);
+        }
+        for (const wave of [0, 1, 2, 3]) {
+            const positions = coins.filter((_, i) => i % 4 === wave).map(coin => parseFloat(coin.style.left));
+            assert(positions[0] < 8 && positions.at(-1) > 92, `${theme}: each wave must span the screen`);
+        }
+        assert.deepEqual([...new Set(coins.map(coin => number(coin, '--coin-opacity')))], [0.77, 0.89, 1],
+            `${theme}: expected distinct near, middle and far depth layers`);
         assert(app.imagePaths.at(-1).includes(theme === 'dark' ? 'green-soft-clay/canonical/ducat' : `theme-packs/${theme}/canonical/ducat`));
         assert(app.nodes.some(node => node.className.includes('gold-rain-atmosphere--clear')), `${theme}: lighting obscures the canonical coins`);
         app.frame((index + 1) * 3000);
@@ -124,12 +142,18 @@ async function main() {
     assert(!app.classes.has('fx-gold-rain'));
     assert.equal(app.nodes.filter(node => node.className.startsWith('gold-rain')).length, 0);
     assert.equal(app.raf.size, 0);
+    assert.equal(app.timeouts.size, 0, 'Stop must clear scheduled cleanup');
+    assert(app.observers.every(observer => !observer.active), 'Stop must disconnect theme observation');
 
     const wide = harness(false, { width: 900 });
     await wide.effect.spawnGoldRain();
-    assert.equal(wide.nodes.find(node => node.className === 'gold-rain-particles')?.children.length, 68,
-        'Wide screens must use the same three-wave layout with 68 canonical ducats');
-    wide.effect.stop();
+    assert.equal(wide.nodes.find(node => node.className === 'gold-rain-particles')?.children.length, 104,
+        'Wide screens must use the same four-wave layout with 104 canonical ducats');
+    wide.frame(5150);
+    assert(wide.nodes.some(node => node.className.includes('gold-rain-atmosphere--clear closing')), 'Lighting must ease out');
+    wide.frame(6450);
+    assert.equal(wide.nodes.length, 0, 'All gold rain nodes must disappear after the last wave');
+    assert.equal(wide.timeouts.size, 0, 'Natural completion must not leave timers behind');
 
     const reduced = harness(true);
     await reduced.effect.spawnGoldRain();
@@ -143,6 +167,12 @@ async function main() {
     switcher.observers.filter(observer => observer.active).forEach(observer => observer.callback());
     assert(!switcher.classes.has('fx-gold-rain'), 'Switching theme must remove the old effect');
     assert.equal(switcher.nodes.filter(node => node.className.startsWith('gold-rain')).length, 0);
+    assert.equal(switcher.timeouts.size, 0, 'Switching theme must cancel the old timers');
+    const cancelled = harness();
+    const pending = cancelled.effect.spawnGoldRain();
+    cancelled.effect.stop();
+    await pending;
+    assert.equal(cancelled.nodes.length, 0, 'Stop during asset loading must not leave a delayed burst');
     const fallback = harness(false, { failParticle: true });
     await fallback.effect.spawnGoldRain();
     assert(fallback.nodes.find(node => node.className === 'gold-rain-particles')?.children.every(node => node.src.includes('ducat-front-v1.png')),
@@ -151,7 +181,7 @@ async function main() {
     await absent.effect.spawnGoldRain();
     assert(!absent.classes.has('fx-gold-rain') && !absent.nodes.some(node => node.className.startsWith('gold-rain-atmosphere')),
         'Missing canonical PNGs must not leave a light-only effect');
-    console.log('Gold Rain runtime passed: ten canonical PNG sets, visible DOM coin layers, cleanup, theme switch and reduced motion.');
+    console.log('Gold Rain runtime passed: ten canonical PNGs, denser four-wave rain, layered sizes, turn angles, cleanup, theme switch and reduced motion.');
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

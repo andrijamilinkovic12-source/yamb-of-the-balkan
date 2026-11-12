@@ -334,7 +334,7 @@ assert(managersSource.includes('data-green-category=')
     && managersSource.includes('riznica-green-theme-icon')
     && themeCssSource.includes('#riznica-screen .riznica-green-theme-fallback')
     && themeCssSource.includes('#riznica-screen .riznica-green-theme-icon')
-    && configSource.includes('3D Soft Clay tema sa šumskim motivima i glinenim kockicama.'),
+    && configSource.includes('3D Soft Neomorphism, pravac Clay: zeleni balkanski predeo i glineni detalji.'),
     'Green katalog Riznice je izgubio sopstveni motiv ili opis teme.');
 assert(managersSource.includes("watchToUnlockLabel.replace(/\\s*📺\\s*/u, ' ').trim()")
     && managersSource.includes("${isGreenTreasury ? '' : '⏱ '}${resolveText(item.duration)}")

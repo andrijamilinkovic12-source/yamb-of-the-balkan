@@ -16,12 +16,17 @@ signing.properties
 
 # Local render, emulator, QA and downloaded tool workspace
 tmp/
+/reports/play-console-pregled-2026-11-01/
+/reports/play-console-zemlje-2026-11-01/
+/screenshots/play-store-authentic-2026-11-01/
+/screenshots/play-store-phone-2026-11-01/
 
 # Local/editor files
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 android/.idea/
+android/.settings/
 android/local.properties
 
 # Build outputs

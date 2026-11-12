@@ -278,6 +278,8 @@ class ModalManager {
             els.overlay.classList.add('modal-context-tournament');
         }
 
+        // Cloud profile translations must not replace this dialog's explicit action labels.
+        for (const element of [els.title, els.btnOk, els.btnCancel]) element?.removeAttribute?.('data-lang');
         if(els.title) els.title.innerText = title;
         if(els.msg) els.msg.innerHTML = msg; 
         
@@ -799,8 +801,8 @@ class EffectManager {
         this.stageScene?.stop();
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
-        if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
-        if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
+        if (type === 'fireflies') this.spawnFireflies();
+        if (type === 'bubbles') this.spawnBubbles();
         if (type === 'black_hole') void this.spawnBlackHole();
         if (type === 'supernova') void this.spawnSupernova();
     }
@@ -980,33 +982,33 @@ class EffectManager {
         if (reducedMotion) {
             [34, 42, 34].forEach(addCoin);
         } else {
-            const coinCount = isCompact ? 46 : 68;
+            const coinCount = isCompact ? 72 : 104;
+            const waveCount = 4;
+            const lanes = coinCount / waveCount;
             for (let index = 0; index < coinCount; index++) {
-                const size = Math.round(rand(isCompact ? 27 : 32, isCompact ? 43 : 52));
+                const wave = index % waveCount;
+                const lane = Math.floor(index / waveCount);
+                const depth = ((lane + wave) % 3) / 2;
+                const size = Math.round((isCompact ? 23 : 28) + depth * (isCompact ? 16 : 21) + rand(0, 6));
                 const coin = addCoin(size);
-                const drift = rand(isCompact ? -54 : -100, isCompact ? 54 : 100) * profile.drift;
-                const tilt = rand(-18, 18) * profile.spin;
-                const wave = index % 3;
-                const lane = Math.floor(index / 3);
-                const lanesInWave = Math.ceil((coinCount - wave) / 3);
-                coin.style.left = `${(2 + ((lane + rand(0.15, 0.85)) / lanesInWave) * 92).toFixed(1)}vw`;
-                coin.style.setProperty('--fall-delay', `${Math.round(wave * 430 + rand(0, 490))}ms`);
-                coin.style.setProperty('--fall-duration', `${Math.round(rand(3000, 4200))}ms`);
-                coin.style.setProperty('--fall-start-tilt', `${Math.round(-tilt * 0.5)}deg`);
-                coin.style.setProperty('--fall-quarter-drift', `${Math.round(drift * 0.45)}px`);
-                coin.style.setProperty('--fall-mid-drift', `${Math.round(drift * 0.12)}px`);
-                coin.style.setProperty('--fall-late-drift', `${Math.round(drift * 0.76)}px`);
-                coin.style.setProperty('--fall-end-drift', `${Math.round(drift)}px`);
-                coin.style.setProperty('--fall-quarter-tilt', `${Math.round(tilt * 0.38)}deg`);
-                coin.style.setProperty('--fall-mid-tilt', `${Math.round(-tilt * 0.55)}deg`);
-                coin.style.setProperty('--fall-late-tilt', `${Math.round(tilt * 0.7)}deg`);
-                coin.style.setProperty('--fall-end-tilt', `${Math.round(tilt)}deg`);
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                const drift = direction * rand(14, isCompact ? 47 : 80) * profile.drift;
+                const tilt = direction * rand(22, 53) * profile.spin;
+                const turn = direction * (rand(30, 54) + profile.spin * 30);
+                coin.style.left = `${(2 + ((lane + rand(0.1, 0.9)) / lanes) * 96).toFixed(1)}%`;
+                coin.style.setProperty('--coin-opacity', (0.77 + depth * 0.23).toFixed(2));
+                coin.style.setProperty('--fall-delay', `${Math.round(wave * 390 + rand(0, 270))}ms`);
+                coin.style.setProperty('--fall-duration', `${Math.round(rand(3500, 4280) - depth * 620)}ms`);
+                coin.style.setProperty('--fall-sway', `${Math.round(drift)}px`);
+                coin.style.setProperty('--fall-tilt', `${Math.round(tilt)}deg`);
+                coin.style.setProperty('--fall-turn', `${Math.round(turn)}deg`);
             }
         }
 
         let observer = null;
         const cleanup = () => {
             if (runId !== this.goldRainRunId) return;
+            this.clearEffectTimeouts('gold_rain');
             observer?.disconnect();
             if (this.goldRainThemeObserver === observer) this.goldRainThemeObserver = null;
             document.body.classList.remove('fx-gold-rain');
@@ -1090,7 +1092,7 @@ class EffectManager {
         return this.fireflySpritePromises[theme];
     }
 
-    async spawnFireflies(count = 52, group = 'fireflies') {
+    async spawnFireflies(count = 32, group = 'fireflies') {
         const runId = ++this.fireflyRunId;
         const themeId = this.getGoldRainThemeId();
         this.clearEffectTimeouts(group);
@@ -1102,30 +1104,51 @@ class EffectManager {
         if (runId !== this.fireflyRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 20) : Math.min(count, 28));
+        const particleCount = reducedMotion ? 3 : Math.min(count, compact ? 23 : 32);
         const tone = this.getEffectSurfaceTone();
         const field = document.createElement('div');
         field.className = `firefly-field firefly-field--${tone}${reducedMotion ? ' firefly-field--reduced' : ''}`;
         field.style.setProperty('--ff-glow', FIREFLY_THEME_GLOW[themeId]);
         field.setAttribute('aria-hidden', 'true');
 
+        const flight = document.createElement('div');
+        flight.className = 'firefly-flight';
+        field.appendChild(flight);
+        document.body.appendChild(field);
+        const { width, height } = flight.getBoundingClientRect();
         const fragment = document.createDocumentFragment();
         const routes = [[-1, -1], [1, -1], [-1, 1], [1, 1], [1, 0], [-1, 0], [0, 1], [0, -1]];
+        const fitPath = (offsets, origin, length, margin) => {
+            const inward = Math.max(0, origin - margin);
+            const outward = Math.max(0, length - origin - margin);
+            const scale = offsets.reduce((limit, offset) => {
+                if (offset === 0) return limit;
+                return Math.min(limit, (offset < 0 ? inward : outward) / Math.abs(offset));
+            }, 1);
+            return offsets.map(offset => (offset * scale).toFixed(1) + 'px');
+        };
         for (let i = 0; i < particleCount; i++) {
             const fly = document.createElement('span');
             fly.className = 'magic-firefly';
-            const [horizontal, vertical] = routes[i % routes.length];
-            const stepX = horizontal * (62 + Math.random() * 85);
+            const size = compact ? 32 + Math.random() * 13 : 36 + Math.random() * 16;
+            const x = 0.075 + ((i + Math.random() * 0.6) / particleCount) * 0.85;
+            const y = 0.065 + (i % 3) * 0.305 + Math.random() * 0.195;
+            let [horizontal, vertical] = routes[i % routes.length];
+            if ((x < 0.17 && horizontal < 0) || (x > 0.83 && horizontal > 0)) horizontal = -horizontal;
+            if ((y < 0.15 && vertical < 0) || (y > 0.76 && vertical > 0)) vertical = -vertical;
+            const stepX = horizontal * (62 + Math.random() * 85) * (compact ? 0.7 : 1);
             const stepY = vertical * (52 + Math.random() * 88);
-            fly.style.setProperty('--ff-x', (6 + ((i + Math.random() * 0.6) / particleCount) * 86).toFixed(2) + 'vw');
-            fly.style.setProperty('--ff-y', (22 + Math.random() * 60).toFixed(2) + 'vh');
-            fly.style.setProperty('--ff-dx-a', (stepX * 0.52).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-a', (stepY * 0.35).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dx-b', (stepX * 0.18 - vertical * 22).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-b', (stepY * 0.82).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dx-c', (stepX * 1.12).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-dy-c', (stepY * 1.22).toFixed(1) + 'px');
-            fly.style.setProperty('--ff-size', (compact ? 32 + Math.random() * 13 : 36 + Math.random() * 16).toFixed(1) + 'px');
+            const dx = fitPath([stepX * 0.52, stepX * 0.18 - vertical * 22, stepX * 1.12],
+                x * width, width, size * 0.45);
+            const dy = fitPath([stepY * 0.35, stepY * 0.82, stepY * 1.22],
+                y * height, height, size * 0.72);
+            fly.style.setProperty('--ff-x', (x * 100).toFixed(2) + '%');
+            fly.style.setProperty('--ff-y', (y * 100).toFixed(2) + '%');
+            ['a', 'b', 'c'].forEach((key, index) => {
+                fly.style.setProperty('--ff-dx-' + key, dx[index]);
+                fly.style.setProperty('--ff-dy-' + key, dy[index]);
+            });
+            fly.style.setProperty('--ff-size', size.toFixed(1) + 'px');
             fly.style.setProperty('--ff-delay', (i < 6 ? Math.random() * 0.3 : 0.2 + Math.random() * 1.2).toFixed(2) + 's');
             fly.style.setProperty('--ff-duration', (5.2 + Math.random() * 1.25).toFixed(2) + 's');
             fly.style.setProperty('--ff-flap', (0.17 + Math.random() * 0.08).toFixed(2) + 's');
@@ -1141,8 +1164,7 @@ class EffectManager {
             fragment.appendChild(fly);
         }
 
-        field.appendChild(fragment);
-        document.body.appendChild(field);
+        flight.appendChild(fragment);
         let observer = null;
         const cleanup = () => {
             if (runId !== this.fireflyRunId) return;
@@ -1178,7 +1200,7 @@ class EffectManager {
         return this.bubbleSpritePromises[theme];
     }
 
-    async spawnBubbles(count = 35, group = 'bubbles') {
+    async spawnBubbles(count = 39, group = 'bubbles') {
         const runId = ++this.bubbleRunId;
         const themeId = this.getGoldRainThemeId();
         this.clearEffectTimeouts(group);
@@ -1190,29 +1212,35 @@ class EffectManager {
         if (runId !== this.bubbleRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const particleCount = reducedMotion ? 3 : (compact ? Math.min(count, 24) : Math.min(count, 35));
+        const particleCount = reducedMotion ? 3 : Math.min(count, compact ? 27 : 39);
         const field = document.createElement('div');
         field.className = `bubble-field${reducedMotion ? ' bubble-field--reduced' : ''}`;
         field.setAttribute('aria-hidden', 'true');
         const fragment = document.createDocumentFragment();
         const sizeRanges = compact ? [[20, 30], [34, 48], [56, 72]] : [[24, 34], [42, 58], [68, 88]];
+        const laneCount = Math.ceil(particleCount / sizeRanges.length);
+        const laneDurations = Array.from({ length: laneCount }, () => 4.8 + Math.random() * 1.5);
         for (let i = 0; i < particleCount; i++) {
+            const sizeIndex = i % sizeRanges.length;
+            const lane = Math.floor(i / sizeRanges.length);
+            const wave = (lane + sizeIndex) % sizeRanges.length;
             const bubble = document.createElement('img');
-            bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][i % 3]}`;
+            bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][sizeIndex]}`;
             bubble.src = sprite.src;
             bubble.alt = '';
             bubble.decoding = 'async';
             bubble.draggable = false;
-            const [minSize, maxSize] = sizeRanges[i % 3];
+            const [minSize, maxSize] = sizeRanges[sizeIndex];
             const size = Math.round(minSize + Math.random() * (maxSize - minSize));
             const drift = (Math.random() - .5) * (compact ? 110 : 180);
             bubble.style.setProperty('--bubble-size', `${size}px`);
-            bubble.style.setProperty('--bubble-x', (4 + ((Math.floor(i / 3) + Math.random() * .8) / Math.ceil(particleCount / 3)) * 88).toFixed(1) + 'vw');
+            const center = 6 + ((lane + .2 + Math.random() * .6) / laneCount) * 88;
+            bubble.style.setProperty('--bubble-x', `calc(${center.toFixed(1)}vw - ${size / 2}px)`);
             bubble.style.setProperty('--bubble-drift-a', `${Math.round(drift * .55)}px`);
             bubble.style.setProperty('--bubble-drift-b', `${Math.round(-drift * .3)}px`);
             bubble.style.setProperty('--bubble-drift-c', `${Math.round(drift)}px`);
-            bubble.style.setProperty('--bubble-delay', `${(i < 6 ? Math.random() * .25 : .2 + Math.random() * 1.4).toFixed(2)}s`);
-            bubble.style.setProperty('--bubble-duration', `${(4.8 + Math.random() * 1.7 + (i % 3) * .18).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-delay', `${(wave * .62 + Math.random() * .22).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-duration', `${(laneDurations[lane] + sizeIndex * .18).toFixed(2)}s`);
             if (reducedMotion) {
                 bubble.style.setProperty('--bubble-x', `${18 + i * 30}vw`);
                 bubble.style.setProperty('--bubble-static-y', `${30 + i * 20}vh`);
@@ -1355,36 +1383,37 @@ class EffectManager {
         if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId() || !sprites.length) return;
 
         const rand = (min, max) => min + Math.random() * (max - min);
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
         let width = 0;
         let height = 0;
         const resize = () => {
             width = window.innerWidth || document.documentElement.clientWidth || 1;
             height = window.innerHeight || document.documentElement.clientHeight || 1;
+            const dpr = Math.min(window.devicePixelRatio || 1, width < 640 ? 1.5 : 2);
             canvas.width = Math.ceil(width * dpr);
             canvas.height = Math.ceil(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         };
         resize();
-        const count = width < 640 ? 132 : 180;
+        const count = width < 640 ? 228 : 324;
         const particles = Array.from({ length: count }, (_, index) => {
             const spread = (index / (count - 1)) * 2 - 1;
+            const followThrough = index % 4 === 0;
             return {
                 image: sprites[index % sprites.length],
-                x: width * 0.5 + rand(-width * 0.06, width * 0.06),
+                x: width * (0.5 + rand(-0.06, 0.06) + (followThrough ? spread * 0.12 : 0)),
                 y: height * rand(0.75, 0.82),
-                vx: spread * width * rand(0.72, 1.08) + rand(-30, 30),
+                vx: spread * width * (followThrough ? rand(0.36, 0.6) : rand(0.72, 1.08)) + rand(-30, 30),
                 vy: -height * rand(1.08, 1.78),
                 gravity: height * rand(1.35, 1.82),
                 wobble: rand(0, Math.PI * 2),
                 rotation: rand(-0.45, 0.45),
                 spin: rand(-2.8, 2.8),
                 size: rand(14, 24),
-                age: -rand(0, 0.12),
+                age: followThrough ? -rand(0.16, 0.36) : index % 2 === 1 ? 0 : -rand(0.02, 0.12),
                 ttl: rand(2.35, 2.95)
             };
         });
-        let lastFrame = 0;
+        let lastFrame = null;
         const animate = now => {
             if (runId !== this.confettiRunId || theme !== this.getGoldRainThemeId()) {
                 ctx.clearRect(0, 0, width, height);
@@ -1392,8 +1421,10 @@ class EffectManager {
                 return;
             }
             if (window.innerWidth !== width || window.innerHeight !== height) resize();
-            const delta = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0;
+            const firstFrame = lastFrame === null;
+            const delta = firstFrame ? 0 : Math.min(0.05, (now - lastFrame) / 1000);
             lastFrame = now;
+            if (firstFrame) window.app?.soundMgr?.confettiPop?.();
             ctx.clearRect(0, 0, width, height);
             let remaining = 0;
             for (const particle of particles) {
@@ -2165,13 +2196,19 @@ class SoundManager {
         });
     }
 
-    iceAge() {
+    iceAge(growthSeconds = 2.8) {
+        let stop;
         this.playSound(() => {
-            const now = this.ctx.currentTime;
-            const bufferSize = Math.floor(this.ctx.sampleRate * 1.45);
-            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const ctx = this.ctx;
+            const now = ctx.currentTime;
+            const end = now + growthSeconds;
+            const bufferSize = Math.ceil(ctx.sampleRate * growthSeconds);
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+            const master = ctx.createGain();
+            master.gain.setValueAtTime(1, now);
+            master.connect(ctx.destination);
 
             const frostNoise = this.ctx.createBufferSource();
             const frostFilter = this.ctx.createBiquadFilter();
@@ -2179,30 +2216,32 @@ class SoundManager {
             frostNoise.buffer = noiseBuffer;
             frostFilter.type = 'bandpass';
             frostFilter.frequency.setValueAtTime(5200, now);
-            frostFilter.frequency.exponentialRampToValueAtTime(540, now + 1.15);
+            frostFilter.frequency.exponentialRampToValueAtTime(780, end);
             frostFilter.Q.setValueAtTime(1.4, now);
             frostGain.gain.setValueAtTime(0, now);
-            frostGain.gain.linearRampToValueAtTime(0.18, now + 0.08);
-            frostGain.gain.exponentialRampToValueAtTime(0.001, now + 1.45);
+            frostGain.gain.linearRampToValueAtTime(0.12, now + 0.08);
+            frostGain.gain.exponentialRampToValueAtTime(0.065, now + growthSeconds * 0.68);
+            frostGain.gain.exponentialRampToValueAtTime(0.001, end);
             frostNoise.connect(frostFilter);
             frostFilter.connect(frostGain);
-            frostGain.connect(this.ctx.destination);
+            frostGain.connect(master);
             frostNoise.start(now);
-            frostNoise.stop(now + 1.5);
+            frostNoise.stop(end);
 
             const hum = this.ctx.createOscillator();
             const humGain = this.ctx.createGain();
             hum.type = 'sine';
             hum.frequency.setValueAtTime(96, now);
-            hum.frequency.exponentialRampToValueAtTime(44, now + 1.4);
+            hum.frequency.exponentialRampToValueAtTime(44, end);
             humGain.gain.setValueAtTime(0, now);
-            humGain.gain.linearRampToValueAtTime(0.08, now + 0.16);
-            humGain.gain.exponentialRampToValueAtTime(0.001, now + 1.55);
+            humGain.gain.linearRampToValueAtTime(0.045, now + 0.16);
+            humGain.gain.exponentialRampToValueAtTime(0.001, end);
             hum.connect(humGain);
-            humGain.connect(this.ctx.destination);
+            humGain.connect(master);
             hum.start(now);
-            hum.stop(now + 1.6);
+            hum.stop(end);
 
+            const sources = [frostNoise, hum];
             [1760, 1320, 2217, 2637].forEach((freq, i) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
@@ -2214,10 +2253,40 @@ class SoundManager {
                 gain.gain.linearRampToValueAtTime(0.055, start + 0.025);
                 gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
                 osc.connect(gain);
-                gain.connect(this.ctx.destination);
+                gain.connect(master);
                 osc.start(start);
                 osc.stop(start + 0.52);
+                sources.push(osc);
             });
+            stop = () => {
+                if (ctx.currentTime >= end) return;
+                const cut = ctx.currentTime;
+                master.gain.setValueAtTime(1, cut);
+                master.gain.linearRampToValueAtTime(0, cut + 0.025);
+                sources.forEach(source => source.stop(cut + 0.025));
+            };
+        });
+        return stop;
+    }
+
+    iceAgeCrack() {
+        this.playSound(() => {
+            const ctx = this.ctx;
+            const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.17), ctx.sampleRate);
+            const samples = buffer.getChannelData(0);
+            let previous = 0;
+            for (let i = 0; i < samples.length; i++) {
+                const t = i / ctx.sampleRate;
+                const noise = Math.random() * 2 - 1;
+                const snap = (noise - previous * 0.72) * 0.18 * Math.exp(-t / 0.014);
+                const body = Math.sin(2 * Math.PI * 230 * t) * 0.13 * Math.exp(-t / 0.027);
+                samples[i] = (snap + body) * Math.min(1, t / 0.001, (samples.length - i - 1) / (ctx.sampleRate * 0.02));
+                previous = noise;
+            }
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            source.start();
         });
     }
      
@@ -2308,6 +2377,34 @@ class SoundManager {
             gain.connect(this.ctx.destination);
             osc.start(now);
             osc.stop(now + 1.0);
+        });
+    }
+
+    confettiPop() {
+        this.playSound(() => {
+            const { sampleRate } = this.ctx;
+            if (!this.confettiPopBuffer) {
+                const length = Math.ceil(sampleRate * 0.16);
+                const buffer = this.ctx.createBuffer(1, length, sampleRate);
+                const samples = buffer.getChannelData(0);
+                let softNoise = 0;
+                const smoothing = 1 - Math.exp(-2 * Math.PI * 1400 / sampleRate);
+                for (let i = 0; i < length; i++) {
+                    const t = i / sampleRate;
+                    const noise = Math.random() * 2 - 1;
+                    softNoise += (noise - softNoise) * smoothing;
+                    // A dry crack and a short paper rustle, with no long explosion tail.
+                    const crack = (noise * 0.26 + softNoise * 0.22) * Math.exp(-t / 0.012);
+                    const thump = Math.sin(2 * Math.PI * 175 * t) * 0.19 * Math.exp(-t / 0.017);
+                    const paper = (noise - softNoise) * 0.055 * Math.exp(-t / 0.045);
+                    samples[i] = (crack + thump + paper) * Math.min(1, t / 0.0015, (length - i - 1) / (sampleRate * 0.015));
+                }
+                this.confettiPopBuffer = buffer;
+            }
+            const source = this.ctx.createBufferSource();
+            source.buffer = this.confettiPopBuffer;
+            source.connect(this.ctx.destination);
+            source.start();
         });
     }
 
@@ -2857,9 +2954,11 @@ class ShopManager {
     getTreasuryEffectPreviewSource(effectId) {
         const previewRoot = 'assets/effects/treasury-thumbnails-v1';
         if (effectId === 'ice_age') return `${previewRoot}/universal-ice-age-v1.png`;
+        if (effectId === 'neon_pulse') return `${previewRoot}/universal-neon-pulse-v1.png`;
         const selected = localStorage.getItem('yamb_theme') || 'dark';
         const theme = YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
         if (effectId === 'balkan') return `${previewRoot}/universal-balkan-v1.png`;
+        if (effectId === 'drones') return `assets/effects/drones-v1/${theme}-drone-v1.png`;
         if (effectId === 'dragon_fire') return `${previewRoot}/universal-dragon-fire-v1.png`;
         if (effectId === 'ufo_abduction') return `${previewRoot}/${theme}-ufo-abduction-v1.png`;
         if (effectId === 'royal_yamb') return `${previewRoot}/${theme}-royal-yamb-v1.png`;
@@ -2874,7 +2973,7 @@ class ShopManager {
             thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles',
             cosmic_dust: 'cosmic-dust', dragon_fire: 'dragon-fire',
             royal_yamb: 'royal-yamb', fireflies: 'fireflies', ice_age: 'ice-age',
-            black_hole: 'black-hole', supernova: 'supernova', neon_pulse: 'neon-pulse',
+            black_hole: 'black-hole', supernova: 'supernova',
             drones: 'drones', ufo_abduction: 'ufo-abduction'
         };
         const role = roles[effectId];

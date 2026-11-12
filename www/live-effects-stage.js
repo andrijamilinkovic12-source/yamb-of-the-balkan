@@ -4,6 +4,21 @@ const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
     drones: 8200, cosmic_dust: 6000, ufo_abduction: 7500, dragon_fire: 5500, royal_yamb: 8000
 });
 const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
+const ICE_AGE_GROWTH_SECONDS = 2.8;
+const NEON_PULSE_COLORS = Object.freeze({ cyan: '0, 244, 255', pink: '255, 40, 188', white: '245, 255, 255' });
+const DRONE_FORMATION = Object.freeze([
+    { column: -1, row: 0, side: -1, entry: 0.19 },
+    { column: 0, row: 0, side: 0, entry: 0.06 },
+    { column: 1, row: 0, side: 1, entry: 0.29 },
+    { column: -0.5, row: 1, side: -1, entry: 0.42 },
+    { column: 0.5, row: 1, side: 1, entry: 0.53 }
+]);
+const DRONE_LIGHT_ANCHORS = Object.freeze({
+    dark: [0.4969, 0.8409], light: [0.4995, 0.7839], medium: [0.4984, 0.8219],
+    winter: [0.4999, 0.8795], neon: [0.5003, 0.7928], amethyst: [0.498, 0.7906],
+    easter: [0.4997, 0.7838], desert: [0.4994, 0.881], moon: [0.4997, 0.7596],
+    severna: [0.499, 0.8685]
+});
 
 class LiveEffectsStage {
     static imageCache = new Map();
@@ -14,6 +29,7 @@ class LiveEffectsStage {
         if (type === 'ice_age') return { frost: png('frost-corner') };
         if (type === 'balkan') return { trumpet: png('trumpet') };
         if (type === 'dragon_fire') return { flame: png('flame') };
+        if (type === 'drones') return { drone: `assets/effects/drones-v1/${theme}-drone-v1.png` };
         if (type === 'ufo_abduction') return { ship: png(`ufo-${theme}`) };
         if (type === 'royal_yamb') return {
             logo: theme === 'dark' ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
@@ -93,7 +109,6 @@ class LiveEffectsStage {
         this.scores = [...(this.table?.querySelectorAll?.('.score-btn.filled, .qa-board-grid span') || [])]
             .filter(node => /^\d+$/.test(node.textContent.trim())).slice(0, this.mobile ? 24 : 40)
             .map(node => ({ node, text: node.textContent.trim(), rect: node.getBoundingClientRect() }));
-        if (this.type === 'drones') this.prepareDroneFormation();
         window.addEventListener('resize', this.resize, { passive: true });
         this.visibility = () => { if (document.hidden) this.stop(); };
         document.addEventListener('visibilitychange', this.visibility);
@@ -106,7 +121,7 @@ class LiveEffectsStage {
         }
         if (!this.reduced) {
             const sound = { balkan: 'balkanTrumpet', drones: 'epicDroneShow', ufo_abduction: 'ufoAbduction',
-                royal_yamb: 'trophy', ice_age: 'iceAge' }[this.type];
+                royal_yamb: 'trophy' }[this.type];
             if (sound) window.app?.soundMgr?.[sound]?.();
         }
         this.timer = setTimeout(() => this.stop(), this.duration + 1000);
@@ -133,6 +148,9 @@ class LiveEffectsStage {
         this.canvas.width = Math.round(this.width * dpr);
         this.canvas.height = Math.round(this.height * dpr);
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (this.type === 'ice_age') this.prepareIceFrost();
+        if (this.type === 'neon_pulse') this.prepareNeonFrame();
+        if (this.type === 'drones') this.prepareDroneFormation();
         this.overlay.dataset.board = `${this.board.width}x${this.board.height}`;
     }
 
@@ -146,6 +164,8 @@ class LiveEffectsStage {
         this.mutedNodes.forEach(node => node.classList.remove('live-ufo-score-muted'));
         this.mutedNodes.clear();
         this.overlay?.remove();
+        this.iceAudioCleanup?.();
+        this.iceAudioCleanup = null;
         if (this.type === 'balkan') window.app?.soundMgr?.stopBalkanMusic?.(true);
         if (this.owner.stageScene === this) this.owner.stageScene = null;
     }
@@ -209,67 +229,189 @@ class LiveEffectsStage {
 
     sprite(image, x, y, width, rotation = 0, alpha = 1, flip = 1, height) {
         if (!image) return;
-        const h = height || width * image.naturalHeight / image.naturalWidth;
+        const h = height || width * (image.naturalHeight || image.height) / (image.naturalWidth || image.width);
         this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(rotation);
         this.ctx.scale(flip, 1); this.ctx.globalAlpha = this.alpha * alpha;
         this.ctx.drawImage(image, -width / 2, -h / 2, width, h); this.ctx.restore();
     }
 
+    prepareIceFrost() {
+        const b = this.board;
+        this.iceCorners = [[0, 0, 1, 1], [b.width, 0, -1, 1],
+            [0, b.height, 1, -1], [b.width, b.height, -1, -1]];
+        this.iceTexture ||= document.createElement('canvas');
+        this.iceReveal ||= document.createElement('canvas');
+        const scale = Math.min(1, 720 / Math.max(b.width, b.height));
+        for (const layer of [this.iceTexture, this.iceReveal]) {
+            layer.width = Math.ceil(b.width * scale);
+            layer.height = Math.ceil(b.height * scale);
+            layer.getContext('2d').setTransform(layer.width / b.width, 0, 0, layer.height / b.height, 0, 0);
+        }
+        const texture = this.iceTexture.getContext('2d');
+        texture.globalAlpha = 0.88;
+        for (const [x, y, sx, sy] of this.iceCorners) {
+            texture.save(); texture.translate(x, y); texture.scale(sx, sy);
+            texture.drawImage(this.images.frost, 0, 0, b.width * 0.86, b.height * 0.86);
+            texture.restore();
+        }
+    }
+
     ice(t, p) {
         const c = this.ctx, b = this.board;
-        const progress = this.reduced ? this.ease(p / 0.4) : this.ease(t / 2.8);
-        this.shade(0.09);
-        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
-        const reach = Math.hypot(b.width, b.height) * progress * 0.63;
+        const progress = this.reduced ? this.ease(p / 0.4) : this.ease(t / ICE_AGE_GROWTH_SECONDS);
         this.overlay.dataset.corners = '4';
         this.overlay.dataset.coverage = progress.toFixed(3);
-        [[b.x, b.y, 1, 1], [b.right, b.y, -1, 1], [b.x, b.bottom, 1, -1], [b.right, b.bottom, -1, -1]]
-            .forEach(([x, y, sx, sy]) => {
-                // Screen-space lengths preserve the full board height on tall phones.
-                const ice = c.createRadialGradient(x, y, 0, x, y, Math.max(1, reach));
-                ice.addColorStop(0, this.rgba('210, 236, 247', 0.54 * this.alpha));
-                ice.addColorStop(0.72, this.rgba('186, 219, 239', 0.32 * this.alpha));
-                ice.addColorStop(0.92, this.rgba('230, 247, 251', 0.2 * this.alpha));
-                ice.addColorStop(1, 'rgba(210,240,255,0)');
-                c.fillStyle = ice; c.fillRect(b.x, b.y, b.width, b.height);
-                c.save(); c.translate(x, y); c.scale(sx, sy); c.globalAlpha = this.alpha * 0.88;
-                c.drawImage(this.images.frost, 0, 0, b.width * progress * 0.86, b.height * progress * 0.86);
-                c.restore();
+        if (!this.reduced) {
+            this.once('ice-grow', () => {
+                this.iceAudioCleanup = window.app?.soundMgr?.iceAge?.(ICE_AGE_GROWTH_SECONDS);
             });
-        // Fine glints follow the advancing freezing front rather than falling from above.
-        for (let i = 0; i < 32 && !this.reduced; i++) {
+            if (t >= ICE_AGE_GROWTH_SECONDS) this.once('ice-lock', () => window.app?.soundMgr?.iceAgeCrack?.());
+        }
+        if (progress <= 0) return;
+        const front = Math.hypot(b.width, b.height) * 0.5 * progress;
+        const radius = front + Math.min(front * 0.75, 32);
+        this.shade(0.09);
+        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
+        for (const [x, y] of this.iceCorners) {
+            const ice = c.createRadialGradient(b.x + x, b.y + y, 0, b.x + x, b.y + y, radius);
+            ice.addColorStop(0, this.rgba('210, 236, 247', 0.48 * this.alpha));
+            ice.addColorStop(0.72 * front / radius, this.rgba('186, 219, 239', 0.26 * this.alpha));
+            ice.addColorStop(front / radius, this.rgba('230, 247, 251', 0.15 * this.alpha));
+            ice.addColorStop(1, 'rgba(210,240,255,0)');
+            c.fillStyle = ice; c.fillRect(b.x, b.y, b.width, b.height);
+        }
+
+        // Reveal the cached, full-size crystals without stretching them as they grow.
+        let frost = this.iceTexture;
+        if (progress < 1) {
+            const mask = this.iceReveal.getContext('2d');
+            mask.globalCompositeOperation = 'source-over';
+            mask.clearRect(0, 0, b.width, b.height);
+            for (const [x, y] of this.iceCorners) {
+                const edge = mask.createRadialGradient(x, y, 0, x, y, radius);
+                edge.addColorStop(front / radius, '#fff');
+                edge.addColorStop(1, 'rgba(255,255,255,0)');
+                mask.fillStyle = edge;
+                mask.fillRect(0, 0, b.width, b.height);
+            }
+            mask.globalCompositeOperation = 'source-in';
+            mask.drawImage(this.iceTexture, 0, 0, b.width, b.height);
+            frost = this.iceReveal;
+        }
+        c.save(); c.globalAlpha = this.alpha;
+        c.drawImage(frost, b.x, b.y, b.width, b.height);
+        c.restore();
+
+        for (let i = 0; i < 32 && !this.reduced && progress < 1; i++) {
             const x = b.x + this.seed(i + 4) * b.width, y = b.y + this.seed(i + 90) * b.height;
             const cornerDistance = Math.min(Math.hypot(x - b.x, y - b.y), Math.hypot(x - b.right, y - b.y),
                 Math.hypot(x - b.x, y - b.bottom), Math.hypot(x - b.right, y - b.bottom));
-            const glint = Math.max(0, 1 - Math.abs(cornerDistance - reach * 0.83) / 32);
-            this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7);
+            const glint = Math.max(0, 1 - Math.abs(cornerDistance - front) / 24);
+            this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7 * this.ease((1 - progress) / 0.08));
+        }
+        if (!this.reduced && t >= ICE_AGE_GROWTH_SECONDS) {
+            const lockGlow = 1 - this.ease((t - ICE_AGE_GROWTH_SECONDS) / 0.42);
+            this.glow(b.x + b.width / 2, b.y + b.height / 2, Math.min(b.width, b.height) * 0.27,
+                '229, 250, 255', lockGlow * 0.32);
         }
         c.restore();
     }
 
-    neon(t) {
-        const b = this.board, perimeter = 2 * (b.width + b.height);
-        const point = distance => {
-            let d = ((distance % perimeter) + perimeter) % perimeter;
-            if (d < b.width) return [b.x + d, b.y]; d -= b.width;
-            if (d < b.height) return [b.right, b.y + d]; d -= b.height;
-            if (d < b.width) return [b.right - d, b.bottom]; d -= b.width;
-            return [b.x, b.bottom - d];
-        };
-        const speed = this.reduced ? 0 : 280;
-        for (let lane = 0; lane < 3; lane++) {
-            for (let trail = 0; trail < 18; trail++) {
-                const d = t * speed + lane * perimeter / 3 - trail * 7;
-                this.line([point(d - 7), point(d)], lane === 1 ? this.palette.accent : this.palette.main,
-                    (1 - trail / 18) * 0.82, 2.4 + trail * 0.15);
-            }
-            const head = point(t * speed + lane * perimeter / 3);
-            this.glow(head[0], head[1], 20, lane === 1 ? this.palette.accent : this.palette.main, 0.42);
+    prepareNeonFrame() {
+        const b = this.board;
+        const x = Math.max(8, b.x), y = Math.max(8, b.y);
+        const right = Math.min(this.width - 8, b.right), bottom = Math.min(this.height - 8, b.bottom);
+        const width = right - x, height = bottom - y;
+        if (width < 24 || height < 24) {
+            this.neonFrame = null;
+            return;
         }
-        const y = b.y + ((t * 0.32) % 1) * b.height;
-        const pulse = this.reduced ? 0.15 : Math.sin(t * Math.PI / 1.5) ** 2 * 0.32;
-        this.line([[b.x + 2, y], [b.right - 2, y]], this.palette.main, pulse, 1.5);
-        this.glow(b.x + b.width / 2, y, b.width * 0.55, this.palette.main, pulse * 0.16);
+
+        const { cyan, pink } = NEON_PULSE_COLORS;
+        const radius = Math.min(22, width * 0.09, height * 0.09);
+        const perimeter = 2 * (width + height - 4 * radius) + 2 * Math.PI * radius;
+        const rail = this.ctx.createLinearGradient(x, y, right, bottom);
+        rail.addColorStop(0, this.rgba(cyan, 1));
+        rail.addColorStop(0.37, this.rgba(cyan, 1));
+        rail.addColorStop(0.63, this.rgba(pink, 1));
+        rail.addColorStop(1, this.rgba(pink, 1));
+        const scan = this.ctx.createLinearGradient(x, 0, right, 0);
+        scan.addColorStop(0, this.rgba(cyan, 0));
+        scan.addColorStop(0.12, this.rgba(cyan, 1));
+        scan.addColorStop(0.5, this.rgba(NEON_PULSE_COLORS.white, 1));
+        scan.addColorStop(0.88, this.rgba(pink, 1));
+        scan.addColorStop(1, this.rgba(pink, 0));
+        this.neonFrame = { x, y, width, height, radius, perimeter, rail, scan };
+    }
+
+    neon(t) {
+        if (!this.neonFrame) return;
+        const c = this.ctx;
+        const { x, y, width, height, radius, perimeter, rail, scan } = this.neonFrame;
+        const { cyan, pink, white } = NEON_PULSE_COLORS;
+        const stroke = (color, weight, alpha) => {
+            c.strokeStyle = color;
+            c.lineWidth = weight;
+            c.globalAlpha = alpha * this.alpha;
+            c.stroke();
+        };
+        const framePath = inset => {
+            c.beginPath();
+            c.roundRect(x + inset, y + inset, width - 2 * inset, height - 2 * inset, Math.max(0, radius - inset));
+        };
+
+        c.save();
+        c.lineCap = 'round';
+        c.lineJoin = 'round';
+        framePath(5);
+        stroke(rail, 1, 0.36);
+
+        framePath(0);
+        // The dark rail beneath the light keeps its silhouette on bright boards.
+        stroke('#100d24', 10, 0.87);
+        stroke(rail, 21, 0.08);
+        stroke(rail, 12, 0.18);
+        stroke(rail, 6, 0.44);
+        stroke(rail, 2.6, 0.92);
+        if (!this.reduced) {
+            const length = Math.min(250, perimeter * 0.14);
+            const lead = perimeter * (0.08 + t * 0.27);
+            const trail = (size, head) => {
+                c.setLineDash([size, perimeter - size]);
+                c.lineDashOffset = size - head;
+            };
+            [cyan, pink].forEach((color, i) => {
+                const head = lead + perimeter * 0.5 * i;
+                trail(length, head);
+                stroke(this.rgba(color, 1), 25, 0.15);
+                stroke(this.rgba(color, 1), 11, 0.6);
+                trail(length * 0.7, head);
+                stroke(this.rgba(color, 1), 5.5, 0.97);
+                trail(length * 0.32, head);
+                stroke(this.rgba(white, 1), 2.1, 0.98);
+            });
+        }
+        c.restore();
+
+        if (this.reduced) return;
+        const secondPass = t >= 2.52;
+        const progress = (t - (secondPass ? 2.52 : 0.56)) / 1.68;
+        if (progress <= 0 || progress >= 1) return;
+        const beamY = y + height * (secondPass ? 1 - progress : progress);
+        const strength = Math.sin(Math.PI * progress) * this.alpha;
+        c.save();
+        framePath(6);
+        c.clip();
+        c.fillStyle = scan;
+        // A short falloff behind the scan leaves the score underneath readable.
+        const direction = secondPass ? 1 : -1;
+        for (let band = 1; band <= 12; band++) {
+            c.globalAlpha = strength * 0.18 * (1 - band / 13) ** 1.5;
+            c.fillRect(x, beamY + direction * band * 2, width, 2);
+        }
+        c.globalAlpha = strength * 0.85;
+        c.fillRect(x, beamY - 0.75, width, 1.5);
+        c.restore();
     }
 
     thunder(t) {
@@ -369,62 +511,158 @@ class LiveEffectsStage {
     }
 
     prepareDroneFormation() {
-        const app = window.app;
-        const fullName = app?.players?.[app.currentPlayerIdx] || app?.playerName || 'YAMB';
-        const name = String(fullName).trim().split(/\s+/)[0].slice(0, 12).toLocaleUpperCase();
-        const sample = document.createElement('canvas'); sample.width = 360; sample.height = 100;
-        const ctx = sample.getContext('2d', { willReadFrequently: true });
-        ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.font = `800 ${Math.min(66, 330 / Math.max(3, name.length) * 1.65)}px Arial`;
-        ctx.fillText(name, 180, 50, 345);
-        const data = ctx.getImageData(0, 0, 360, 100).data;
-        const points = [];
-        for (let y = 8; y < 95; y += 6) for (let x = 6; x < 355; x += 6) {
-            if (data[(y * 360 + x) * 4 + 3] > 100) points.push([x / 360, y / 100]);
-        }
-        const max = this.mobile ? 175 : 280;
-        this.droneTargets = points.filter((_, i) => i % Math.max(1, Math.ceil(points.length / max)) === 0);
+        const image = this.images.drone;
+        const ratio = (image.naturalHeight || image.height) / (image.naturalWidth || image.width);
+        const size = Math.min(160, this.width * 0.235, this.height * 0.205);
+        const rowSpacing = size * (ratio + 0.34);
+        const centerY = this.height * 0.405;
+        this.droneTargets = DRONE_FORMATION.map(target => ({ ...target, size, ratio,
+            x: this.width / 2 + target.column * size * 1.25,
+            y: centerY + (target.row - 0.5) * rowSpacing
+        }));
+        this.overlay.dataset.drones = String(this.droneTargets.length);
+        this.overlay.dataset.droneSource = LiveEffectsStage.sources('drones', this.theme).drone;
+        if (this.droneLight) return;
+        const light = document.createElement('canvas'); light.width = 64; light.height = 64;
+        const lightCtx = light.getContext('2d');
+        const glow = lightCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        glow.addColorStop(0, 'rgba(255,255,255,0.95)');
+        glow.addColorStop(0.14, this.rgba(this.palette.main, 0.8));
+        glow.addColorStop(0.42, this.rgba(this.palette.main, 0.22));
+        glow.addColorStop(1, this.rgba(this.palette.main, 0));
+        lightCtx.fillStyle = glow; lightCtx.fillRect(0, 0, 64, 64);
+        this.droneLight = light;
     }
 
-    drones(t, p) {
-        this.shade(0.38);
-        const assemble = this.ease(p / 0.42), depart = this.ease((p - 0.76) / 0.24);
-        (this.droneTargets || []).forEach(([tx, ty], i) => {
-            const targetX = this.width * (0.08 + tx * 0.84), targetY = this.height * 0.3 + ty * Math.min(135, this.height * 0.2);
-            const originX = this.width * this.seed(i + 4), originY = this.height + 30 + this.seed(i + 15) * 120;
-            let x = originX + (targetX - originX) * assemble;
-            let y = originY + (targetY - originY) * assemble;
-            if (!this.reduced) { x += Math.sin(t * 2 + i) * 24 * (1 - assemble); y += Math.sin(t * 1.4 + i) * 18 * (1 - assemble); }
-            x += (this.seed(i + 57) - 0.5) * this.width * depart;
-            y -= (this.height * 0.65 + this.seed(i + 81) * 180) * depart;
-            if (this.reduced) { x = targetX; y = targetY; }
-            const color = i % 7 ? this.palette.main : this.palette.accent;
-            const twinkle = 0.68 + Math.sin(t * 3 + i * 2) * 0.13;
-            this.glow(x, y, this.mobile ? 6 : 8, color, 0.26 * twinkle);
-            this.dot(x, y, this.mobile ? 1.25 : 1.6, color, twinkle);
+    drones(t) {
+        const c = this.ctx;
+        const pulse = this.reduced ? 0 : this.ease((t - 4.58) / 0.18) * (1 - this.ease((t - 4.76) / 0.65));
+        c.fillStyle = this.rgba('5, 9, 17', this.alpha * (this.reduced ? 0.35 : 0.59));
+        c.fillRect(0, 0, this.width, this.height);
+        this.overlay.dataset.formation = this.reduced ? 'holding' : t < 2.3 ? 'assembling'
+            : t >= 5.55 ? 'departing' : pulse > 0 ? 'pulse' : 'holding';
+        const [lightX, lightY] = DRONE_LIGHT_ANCHORS[this.theme];
+        const drones = this.droneTargets.map(({ x, y, size, ratio, column, row, side, entry }, i) => {
+            const arrival = this.reduced ? 1 : this.ease((t - entry) / 1.72);
+            const exit = this.reduced ? 0 : this.ease((t - 5.55 - row * 0.29 - Math.abs(column) * 0.1) / 1.76);
+            const entryX = side ? this.width * (side > 0 ? 1 : 0) + side * size : x;
+            const entryY = side ? y + size * (row ? 1.2 : 0.68) : -size;
+            const hover = this.reduced ? 0 : Math.sin(t * 2.1 + i * 0.8) * 2.6 * arrival * (1 - exit);
+            const px = entryX + (x - entryX) * arrival + column * size * 0.56 * exit;
+            const py = entryY + (y - entryY) * arrival + hover - (y + size * 1.5) * exit;
+            const tilt = this.reduced ? 0 : (side * 0.19 * (1 - arrival) + column * 0.15 * exit
+                + Math.sin(t * 2 + i) * 0.024 * arrival * (1 - exit));
+            const width = size * (0.82 + 0.18 * arrival - 0.18 * exit);
+            const dx = (lightX - 0.5) * width;
+            const dy = (lightY - 0.5) * width * ratio;
+            const light = this.reduced ? 0.74 : this.ease((t - 2.5 - i * 0.31) / 0.21) * (1 - exit);
+            return { px, py, tilt, width, light, column,
+                lx: px + dx * Math.cos(tilt) - dy * Math.sin(tilt),
+                ly: py + dx * Math.sin(tilt) + dy * Math.cos(tilt) };
+        });
+        this.overlay.dataset.lit = String(drones.filter(drone => drone.light > 0.5).length);
+        if (pulse > 0) this.glow(this.width / 2, this.height * 0.405, this.droneTargets[0].size * 2.4,
+            this.palette.main, pulse * 0.31);
+
+        // Draw the beams behind all five bodies so the PNG details stay readable.
+        for (const { lx, ly, width, column, light } of drones) {
+            if (light < 0.02 || this.reduced) continue;
+            const depth = width * (1.14 + pulse * 0.65);
+            const spread = width * (0.22 + pulse * 0.14);
+            const endX = lx + column * depth * 0.23;
+            const beam = c.createLinearGradient(lx, ly, endX, ly + depth);
+            beam.addColorStop(0, this.rgba(this.palette.accent, (0.37 + pulse * 0.28) * light * this.alpha));
+            beam.addColorStop(0.36, this.rgba(this.palette.main, (0.15 + pulse * 0.2) * light * this.alpha));
+            beam.addColorStop(1, this.rgba(this.palette.main, 0));
+            c.fillStyle = beam; c.beginPath();
+            c.moveTo(lx - 2, ly); c.lineTo(lx + 2, ly);
+            c.lineTo(endX + spread, ly + depth); c.lineTo(endX - spread, ly + depth);
+            c.closePath(); c.fill();
+        }
+        for (const { px, py, lx, ly, width, tilt, light } of drones) {
+            this.sprite(this.images.drone, px, py, width, tilt);
+            this.sprite(this.droneLight, lx, ly, width * (0.29 + pulse * 0.35), 0, 0.08 + light * 0.84);
+            this.dot(lx, ly, Math.max(1, width * 0.021), '255, 254, 248', light * 0.9);
+        }
+    }
+
+    prepareDust() {
+        const atlas = this.dustAtlas = document.createElement('canvas');
+        const cell = 24;
+        atlas.width = atlas.height = cell * 3;
+        const c = atlas.getContext('2d');
+        const colors = [this.palette.main, this.palette.accent, '238, 248, 255'];
+        for (const [tone, color] of colors.entries()) {
+            for (let shape = 0; shape < 3; shape++) {
+                c.save();
+                c.translate((tone + 0.5) * cell, (shape + 0.5) * cell);
+                c.fillStyle = this.rgba(color, 1);
+                c.beginPath();
+                if (shape === 0) {
+                    c.arc(0, 0, 8.5, 0, Math.PI * 2);
+                } else if (shape === 1) {
+                    const halo = c.createRadialGradient(0, 0, 0, 0, 0, 11);
+                    halo.addColorStop(0, this.rgba('248, 253, 255', 1));
+                    halo.addColorStop(0.22, this.rgba(color, 0.93));
+                    halo.addColorStop(0.5, this.rgba(color, 0.29));
+                    halo.addColorStop(1, this.rgba(color, 0));
+                    c.fillStyle = halo;
+                    c.arc(0, 0, 11, 0, Math.PI * 2);
+                } else {
+                    c.moveTo(0, -11); c.lineTo(2, -2); c.lineTo(10, 0); c.lineTo(2, 2);
+                    c.lineTo(0, 11); c.lineTo(-2, 2); c.lineTo(-10, 0); c.lineTo(-2, -2); c.closePath();
+                }
+                c.fill();
+                c.restore();
+            }
+        }
+
+        const count = this.reduced ? 45 : this.mobile ? 420 : 720;
+        return Array.from({ length: count }, (_, i) => {
+            const layer = i % 3;
+            const variety = this.seed(i + 217);
+            const shape = variety < 0.69 ? 0 : variety < 0.86 ? 1 : variety < 0.92 ? 2 : 3;
+            const tone = shape === 2 ? 2 : i % 5 === 0 ? 1 : i % 7 === 0 ? 2 : 0;
+            return {
+                angle: this.seed(i + 22) * Math.PI * 2,
+                radius: 0.08 + this.seed(i + 74) * 0.75,
+                speed: this.reduced ? 0 : 0.1 + layer * 0.09,
+                shape, tone, color: colors[tone],
+                size: [1.5 + layer * 1.1, 6.8 + layer * 2.7, 4.8 + layer * 1.7, 4 + layer * 1.8][shape]
+            };
         });
     }
 
     dust(t) {
-        this.shade(0.21);
+        const c = this.ctx;
+        c.fillStyle = this.rgba('4, 7, 13', (this.reduced ? 0.3 : 0.6) * this.alpha);
+        c.fillRect(0, 0, this.width, this.height);
         for (let cloud = 0; cloud < 3; cloud++) {
             const x = this.width * (0.2 + cloud * 0.3) + Math.sin(t * 0.28 + cloud * 2) * this.width * 0.18;
             const y = this.height * (0.25 + cloud * 0.22) + Math.cos(t * 0.24 + cloud) * 45;
             this.glow(x, y, Math.min(this.width, this.height) * 0.7,
                 cloud === 1 ? this.palette.accent : this.palette.main, 0.085);
         }
-        const count = this.reduced ? 45 : this.mobile ? 145 : 250;
-        for (let i = 0; i < count; i++) {
-            const layer = i % 3, speed = this.reduced ? 0 : 0.1 + layer * 0.09;
-            const angle = this.seed(i + 22) * Math.PI * 2 + t * speed;
-            const radius = 0.08 + this.seed(i + 74) * 0.75;
-            const x = this.width / 2 + Math.cos(angle) * radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
-            const y = this.height / 2 + Math.sin(angle) * radius * this.height * 0.75;
-            this.dot(x, y, 0.65 + layer * 0.45, i % 5 ? this.palette.main : this.palette.accent,
-                0.24 + (Math.sin(t + i) + 1) * 0.19);
-            if (i % 15 === 0) this.line([[x - Math.sin(angle) * 7, y + Math.cos(angle) * 5], [x, y]], this.palette.main, 0.2, 0.8);
-            if (i % 37 === 0) this.glow(x, y, 10, this.palette.accent, 0.12);
+        const particles = this.dustParticles ||= this.prepareDust();
+        const cell = this.dustAtlas.width / 3;
+        for (const [i, particle] of particles.entries()) {
+            const angle = particle.angle + t * particle.speed;
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            const x = this.width / 2 + cos * particle.radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
+            const y = this.height / 2 + sin * particle.radius * this.height * 0.75;
+            const { size, shape } = particle;
+            if (x < -size || x > this.width + size || y < -size || y > this.height + size) continue;
+            const alpha = 0.32 + (Math.sin(t + i) + 1) * 0.2;
+            if (shape === 3) {
+                c.globalAlpha = 1;
+                this.line([[x - sin * size, y + cos * size * 0.72], [x, y]], particle.color, alpha * 0.64, 0.9);
+            } else {
+                c.globalAlpha = this.alpha * alpha;
+                c.drawImage(this.dustAtlas, particle.tone * cell, shape * cell, cell, cell,
+                    x - size / 2, y - size / 2, size, size);
+            }
         }
+        c.globalAlpha = 1;
     }
 
     ufo(t, p) {

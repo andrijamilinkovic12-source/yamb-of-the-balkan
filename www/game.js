@@ -8401,6 +8401,11 @@ class YambApp {
             if (!this.canShowOnlineRoomTerminalNotice(data.roomId)) return;
             this.cancelOnline({ closedRoom: true });
             const tournamentReplay = data.tournamentReplay === true;
+            if (data.reason === 'tournament_server_interruption') {
+                if (this.modal) this.modal.alert(gt('tourney_server_result_pending'), gt('tourney_match_title'));
+                await this.refreshProfileAfterOnlineRoomClosed();
+                return;
+            }
             this.modal.alert(
                 tournamentReplay
                     ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')

@@ -81,7 +81,9 @@ for (const theme of themes) {
         roles.set(role, source);
         if (themed) {
             themedRoles++;
-            assert(source.startsWith(prefix + '/') || source.startsWith(`assets/effects/treasury-thumbnails-v1/${theme}-`), `Foreign theme asset: ${theme}/${role}: ${source}`);
+            assert(source.startsWith(prefix + '/') || source.startsWith(`assets/effects/treasury-thumbnails-v1/${theme}-`)
+                || (role === 'effect/drones' && source === `assets/effects/drones-v1/${theme}-drone-v1.png`),
+                `Foreign theme asset: ${theme}/${role}: ${source}`);
             if (!hashesByRole.has(role)) hashesByRole.set(role, new Set());
             assert(!hashesByRole.get(role).has(hash), `Recolored or copied binary: ${theme}/${role}`);
             hashesByRole.get(role).add(hash);
@@ -94,7 +96,7 @@ for (const theme of themes) {
         const name = effectNames[item.id];
         assert(name, `Missing effect role ${item.id}`);
         const source = previewSource.call({}, item.id);
-        add(`effect/${item.id}`, source, !['ice_age', 'balkan', 'dragon_fire'].includes(item.id));
+        add(`effect/${item.id}`, source, !['ice_age', 'balkan', 'dragon_fire', 'neon_pulse'].includes(item.id));
     }
     for (const tier of collection) add(`collection/${tier}`, `${canonical}/collection-medals/collection-${tier}-v1.png`);
     const rewardVersion = critical.has(theme) ? 2 : 1;

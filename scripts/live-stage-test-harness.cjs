@@ -3,16 +3,17 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 
-function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark', native } = {}) {
+function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark', playerName = 'Andrija', native } = {}) {
     const frames = new Map(), timers = new Map(), contexts = [];
     let id = 0;
     const fakeContext = () => {
         const calls = [];
-        const gradient = () => ({ addColorStop() {} });
+        const gradient = () => ({ addColorStop(offset, color) { calls.push(['colorStop', offset, color]); } });
         const target = { calls, createRadialGradient: gradient, createLinearGradient: gradient,
+            measureText(text) { return { width: Array.from(text).length * 62, actualBoundingBoxAscent: 72, actualBoundingBoxDescent: 4 }; },
             getImageData(x, y, w, h) {
                 const data = new Uint8ClampedArray(w * h * 4);
-                for (let yy = 20; yy < h - 20; yy++) for (let xx = 25; xx < w - 25; xx++) data[(yy * w + xx) * 4 + 3] = 255;
+                for (let yy = 4; yy < h - 4; yy++) for (let xx = 4; xx < w - 4; xx++) data[(yy * w + xx) * 4 + 3] = 255;
                 return { data };
             }
         };
@@ -35,6 +36,10 @@ function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark
         if (tag === 'canvas') {
             const backing = native?.createCanvas(1, 1);
             const ctx = backing ? backing.getContext('2d') : fakeContext();
+            if (backing) {
+                const drawImage = ctx.drawImage.bind(ctx);
+                ctx.drawImage = (source, ...args) => drawImage(source.native || source, ...args);
+            }
             contexts.push(ctx);
             node.getContext = () => ctx;
             node.native = backing;
@@ -59,7 +64,7 @@ function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark
         getElementById: () => null, addEventListener() {}, removeEventListener() {} };
     const window = { innerWidth: width, innerHeight: height, devicePixelRatio: 1,
         matchMedia: query => ({ matches: query.includes('prefers-reduced-motion') ? reduced : width <= 760 }),
-        addEventListener() {}, removeEventListener() {}, app: { playerName: 'Andrija' } };
+        addEventListener() {}, removeEventListener() {}, app: { playerName } };
     const pending = [];
     class Image {
         constructor() { this.naturalWidth = 576; this.naturalHeight = 260; }
@@ -84,7 +89,11 @@ function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark
         Object.entries(context.Stage.sources(type, themeId)).map(async ([role, source]) => [role,
             await native.loadImage(path.join(root, 'www', source.split('?')[0]))])));
     return { Stage: context.Stage, Manager: context.Manager, effectIds: [...context.effectIds], owner, body, board, scores, contexts, frames, timers,
-        setTheme(value) { theme = value; }, step(now) {
+        setTheme(value) { theme = value; },
+        setSoundManager(value) { window.app.soundMgr = value; },
+        setPlayerName(value) { window.app.playerName = value; },
+        setViewport(nextWidth, nextHeight) { window.innerWidth = nextWidth; window.innerHeight = nextHeight; },
+        step(now) {
             const next = frames.entries().next().value;
             if (!next) throw new Error('No frame scheduled');
             frames.delete(next[0]); next[1](now);
