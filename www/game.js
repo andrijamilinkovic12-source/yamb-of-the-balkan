@@ -149,6 +149,7 @@ class YambApp {
         this.tournamentFinalCeremonyCountdownTimer = null;
         this.tournamentFinalWinnerSubmittedRooms = new Set();
         this.onlineRecoveryPromptOpen = false;
+        this.coldStartRecoveryRoomId = '';
         this.onlineRoomTerminalNoticeId = '';
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
@@ -1897,7 +1898,7 @@ class YambApp {
         const packs = {
             dark: {
                 title: lang === 'en' ? 'Green Soft Clay' : 'Zelena Soft Clay',
-                background: 'assets/green-clay-balkan-diorama-v4.png',
+                background: 'assets/green-clay-balkan-diorama-v5.png',
                 menuAssets: [
                     'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1',
@@ -6636,6 +6637,7 @@ class YambApp {
         this.setInviteBusyState(false);
         this.onlineRollPending = false;
         this.onlineTurnTimerPaused = false;
+        this.coldStartRecoveryRoomId = '';
 
         if (wasSpectator) {
             if (this.spectateSyncRetryTimer) {
@@ -8376,6 +8378,7 @@ class YambApp {
 
         // Mark the room synchronously, before any profile refresh can yield to another event.
         this.onlineRoomTerminalNoticeId = targetRoomId;
+        if (this.coldStartRecoveryRoomId === targetRoomId) this.coldStartRecoveryRoomId = '';
         if (localStorage.getItem('yamb_active_online_room') === targetRoomId) {
             localStorage.removeItem('yamb_active_online_room');
         }
@@ -8436,7 +8439,7 @@ class YambApp {
                     return;
                 }
 
-                if (!data.active && data.tournamentReplay !== true) {
+                if (!data.active && data.tournamentReplay !== true && this.coldStartRecoveryRoomId !== responseRoomId) {
                     console.log("ℹ️ Ignorišem neaktivan room_status za duel koji je već aktivan na klijentu:", responseRoomId);
                     return;
                 }
@@ -8465,6 +8468,7 @@ class YambApp {
                 this.onlineRecoveryPromptOpen = true;
                 try {
                     const zeliNastavak = await this.modal.confirm(gt('online_recovery_prompt') || "Imate prekinut online duel! Da li želite da se vratite u igru?");
+                    if (localStorage.getItem('yamb_active_online_room') !== responseRoomId) return;
                     if (zeliNastavak) {
                         this.resumeOnlineGame(data.roomId, {
                             coldStartRecovery: true,
@@ -11255,9 +11259,10 @@ class YambApp {
             : 30000;
         const stopAt = Date.now() + retryWindowMs;
         const appPlugin = window.Capacitor?.Plugins?.App;
+        const isRecoveringRoom = () => this.coldStartRecoveryRoomId === roomId && this.isOnlineRecoveryEventRelevant(roomId);
         this.appLifecycleEpisodeId = `${this.appLifecycleSessionId}-${++this.appLifecycleEpisodeCounter}`;
 
-        while (Date.now() < stopAt && this.isOnlineRecoveryEventRelevant(roomId)) {
+        while (Date.now() < stopAt && isRecoveringRoom()) {
             if (!this.socket?.connected) {
                 this.initSocketConnection();
             } else {
@@ -11267,7 +11272,7 @@ class YambApp {
                 } catch (error) {
                     console.warn('Povratak u online sobu čeka ponovnu prijavu:', error);
                 }
-                if (authResult?.ok && this.isOnlineRecoveryEventRelevant(roomId)) {
+                if (authResult?.ok && isRecoveringRoom()) {
                     let nativeVerified = false;
                     let nativeActive = this.nativeAppActive;
                     if (appPlugin && typeof appPlugin.getState === 'function') {
@@ -11282,7 +11287,7 @@ class YambApp {
                     }
                     const visible = document.visibilityState === 'visible';
                     if (visible && (nativeVerified || !appPlugin) &&
-                        this.socket?.connected && this.isOnlineRecoveryEventRelevant(roomId)) {
+                        this.socket?.connected && isRecoveringRoom()) {
                         const resumeSocket = this.socket;
                         const payload = {
                             roomId,
@@ -11305,7 +11310,8 @@ class YambApp {
                                 resolve(response || { ok: false, reason: 'empty_resume_ack' });
                             });
                         });
-                        if (result.ok && this.socket === resumeSocket && this.isOnlineRecoveryEventRelevant(roomId)) {
+                        if (result.ok && this.socket === resumeSocket && isRecoveringRoom()) {
+                            this.coldStartRecoveryRoomId = '';
                             try {
                                 await this.requestOnlineStateSync(roomId);
                             } catch (error) {
@@ -11314,20 +11320,21 @@ class YambApp {
                             }
                             return true;
                         }
-                        if (result.reason === 'disconnect_grace_expired' || result.reason === 'room_mismatch') break;
+                        if (['disconnect_grace_expired', 'room_closed', 'room_mismatch'].includes(result.reason)) break;
                     }
                 }
             }
             await new Promise(resolve => setTimeout(resolve, 700));
         }
 
-        if (this.socket?.connected && this.isOnlineRecoveryEventRelevant(roomId)) {
+        if (this.socket?.connected && isRecoveringRoom()) {
             this.socket.emit('check_room_status', { roomId });
         }
         return false;
     }
 
     resumeOnlineGame(roomId, options = {}) {
+        this.coldStartRecoveryRoomId = options.coldStartRecovery === true ? roomId : '';
         this.onlineMode = true;
         this.gameActive = true;
         this.roomId = roomId;
@@ -11366,7 +11373,7 @@ class YambApp {
         if (options.coldStartRecovery === true) {
             void this.confirmColdStartOnlineResume(roomId, options).catch(error => {
                 console.warn('Povratak u online partiju nije završen:', error);
-                if (this.socket?.connected && this.isOnlineRecoveryEventRelevant(roomId)) {
+                if (this.socket?.connected && this.coldStartRecoveryRoomId === roomId && this.isOnlineRecoveryEventRelevant(roomId)) {
                     this.socket.emit('check_room_status', { roomId });
                 }
             });

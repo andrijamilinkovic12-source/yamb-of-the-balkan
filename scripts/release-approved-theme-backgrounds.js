@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const root = path.resolve(__dirname, '..');
 const definitions = JSON.parse(fs.readFileSync(path.join(root, 'docs/theme-definitions.json'), 'utf8'));
 const policy = definitions.backgroundCandidatePolicy;
-const green = { path: 'www/assets/green-clay-balkan-diorama-v4.png', sha256: '0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181' };
+const green = { path: 'www/assets/green-clay-balkan-diorama-v5.png', sha256: '025156cca0fa8b4f494023352730c7eefea04fc5fe0aa0c627cc9f2c7ab24dc6' };
 const sourceById = new Map([
     ['dark', green],
     ['light', policy.approvedV9Backgrounds.light],
@@ -20,7 +20,7 @@ const sourceById = new Map([
     ['severna', policy.approvedV4Backgrounds.severna]
 ]);
 const runtimeNames = {
-    dark: 'green-clay-balkan-diorama-v4.png',
+    dark: 'green-clay-balkan-diorama-v5.png',
     light: 'light-v9.png', medium: 'medium-v9.png', winter: 'winter-v13.png',
     neon: 'neon-v4.png', amethyst: 'amethyst-v6.png', easter: 'easter-v6-1.png',
     desert: 'desert-v8-2.png', moon: 'moon-v14.png', severna: 'severna-v4.png'

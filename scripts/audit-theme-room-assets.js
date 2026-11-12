@@ -38,7 +38,7 @@ const entries = (theme, room) => {
         add('ducat', themed(theme, 'canonical/ducat/ducat-inline-v1.png'));
         const skinManifest = JSON.parse(fs.readFileSync(path.join(root, 'source-assets/dice-skins-v1/manifest.json'), 'utf8'));
         skinManifest.skins.forEach(skin => add(`skin/${skin.id}`, `assets/treasury-skin-previews/${skin.id}-face-v1.png`, `assets/dice-skins-v1/${skin.id}-face-v1.png`));
-        themes.forEach(id => add(`theme-preview/${id}`, `assets/treasury-theme-previews/${id}-v1.png`));
+        themes.forEach(id => add(`theme-preview/${id}`, `assets/treasury-theme-previews/${id}-v${id === 'dark' ? 2 : 1}.png`));
         add('close', close(theme));
     } else if (room === 'global-chat') {
         add('identity', themed(theme, 'canonical/global-chat-room-identity/global-chat-room-v1.png'));

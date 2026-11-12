@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const native = require(process.env.YAMB_CANVAS_PATH || '@napi-rs/canvas');
 const { makeHarness, root } = require('./live-stage-test-harness.cjs');
-const backgrounds = { dark: 'green-clay-balkan-diorama-v4.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
+const backgrounds = { dark: 'green-clay-balkan-diorama-v5.png', light: 'theme-backgrounds/light-v9.png', medium: 'theme-backgrounds/medium-v9.png', winter: 'theme-backgrounds/winter-v13.png', neon: 'theme-backgrounds/neon-v4.png', amethyst: 'theme-backgrounds/amethyst-v6.png', easter: 'theme-backgrounds/easter-v6-1.png', desert: 'theme-backgrounds/desert-v8-2.png', moon: 'theme-backgrounds/moon-v14.png', severna: 'theme-backgrounds/severna-v4.png' };
 async function render(type, theme, time) {
     const h = makeHarness({ theme, native });
     const scene = new h.Stage(h.owner, type); await scene.start(); h.step(0); h.step(time);

@@ -35,11 +35,9 @@ vm.runInNewContext(text('www/theme-game-header.js'), { document, window, Image: 
 vm.runInNewContext(text('www/theme-settings-room.js'), { document, window, Image: class {}, MutationObserver: class {} });
 const closeCss = text('www/theme-room-close-controls.css');
 const settingsCss = text('www/theme-settings-room.css');
-const previewSources = allThemes.map(theme => `assets/treasury-theme-previews/${theme}-v1.png`);
+const previewSources = allThemes.map(theme => `assets/treasury-theme-previews/${theme}-v${theme === 'dark' ? 2 : 1}.png`);
 for (const theme of allThemes) {
     assert.equal(window.themeSettingsRoom.sources(theme).length, 9);
-    assert.ok(fs.existsSync(path.join(root, 'www', 'assets/treasury-theme-previews', `${theme}-v1.png`)),
-        `${theme} Treasury theme preview missing from Settings picker`);
     for (const role of ['room', ...roles, 'sound','music','vibration']) {
         const source = window.themeSettingsRoom.asset(role, theme);
         assert.ok(fs.existsSync(path.join(root, 'www', source.split('?')[0])), source);
@@ -72,9 +70,9 @@ for (const id of ['setting-name','setting-sound','setting-music','setting-vibrat
     assert.ok(settings.includes(`id="${id}"`), `Missing functional Settings control ${id}`);
 for (const role of ['sound','music','vibration'])
     assert.ok(text('www/theme-game-header.js').includes(`['setting-${role}', '${role}']`));
-assert.ok(html.includes('theme-settings-room.css?v=6'));
+assert.ok(html.includes('theme-settings-room.css?v=7'));
 assert.ok(html.includes('theme-settings-room.js?v=5'));
-assert.ok(html.includes('theme-settings-picker.js?v=2'));
+assert.ok(html.includes('theme-settings-picker.js?v=3'));
 assert.ok(settings.includes('id="settings-theme-trigger"'));
 assert.ok(settings.includes('id="settings-theme-overlay"'));
 assert.ok(settings.includes('id="settings-theme-options"'));

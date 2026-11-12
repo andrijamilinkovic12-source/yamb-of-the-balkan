@@ -9,6 +9,7 @@ const markup = index.slice(index.indexOf('    <div id="settings-screen"'), index
 const sheets = [...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m => m[1]);
 const translations = vm.runInNewContext(read('www/languages.js') + '\nTRANSLATIONS', { window: {}, document: { addEventListener() {} }, localStorage: { getItem: () => 'sr' } });
 const themes = ['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
+const analyticsText = require('../www/analytics-privacy.js').text;
 const output = path.join(root, 'tmp/settings-one-screen');
 const fixture = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(s => `<link rel="stylesheet" href="${s}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:24px}*{animation:none!important;transition:none!important}</style>${markup}`;
 const rows = [], failures = [];
@@ -56,6 +57,11 @@ const rows = [], failures = [];
             }, { theme, lang, dictionary: translations[lang] });
             for (const viewport of [{width:320,height:568},{width:360,height:640},{width:384,height:824},{width:430,height:932}]) {
                 await page.setViewportSize(viewport);
+                for (const footer of [{id:'both',ads:true,state:'off'},{id:'analytics-off',ads:false,state:'off'},{id:'analytics-on',ads:false,state:'on'},{id:'analytics-waiting',ads:false,state:'waiting'}]) {
+                await page.evaluate(({ ads, label }) => {
+                    document.getElementById('ad-privacy-options').hidden = !ads;
+                    document.getElementById('analytics-privacy-options').textContent = label;
+                }, { ads:footer.ads, label:analyticsText[lang][footer.state] });
                 const result = await page.evaluate(() => {
                     const body = document.querySelector('.settings-card-body'), shell = document.querySelector('.settings-shell');
                     const b = body.getBoundingClientRect(), s = shell.getBoundingClientRect();
@@ -72,14 +78,24 @@ const rows = [], failures = [];
                         return rgb.reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
                     };
                     const deleteStyle = getComputedStyle(document.getElementById('delete-account-button'));
+                    const logoutStyle = getComputedStyle(document.getElementById('btn-google-logout'));
                     const light = [luminance(deleteStyle.color),luminance(deleteStyle.backgroundColor)].sort((a,b)=>b-a);
-                    return { body:rect(body), shell:rect(shell), controls, clipped, overflow, typography, deleteContrast:(light[0]+.05)/(light[1]+.05), scroll:body.scrollHeight > body.clientHeight + 1, inside:s.top >= 24 && s.bottom <= innerHeight - 24 + 1, png:[...body.querySelectorAll('img[src]')].filter(i=>i.getAttribute('src') && i.getBoundingClientRect().width).every(i => i.complete && i.naturalWidth > 0) };
+                    const analytics = document.getElementById('analytics-privacy-options');
+                    const footer = document.querySelector('.settings-privacy-footer');
+                    const a = analytics.getBoundingClientRect(), f = footer.getBoundingClientRect();
+                    const analyticsStyle = getComputedStyle(analytics);
+                    const singleCentered = !document.getElementById('ad-privacy-options').hidden || Math.abs(a.x+a.width/2-f.x-f.width/2)<1;
+                    const centered = singleCentered && analyticsStyle.textAlign==='center' && analyticsStyle.justifyContent==='center' && analyticsStyle.alignItems==='center';
+                    const uppercase = deleteStyle.textTransform==='uppercase' && logoutStyle.textTransform==='uppercase';
+                    const distinct = deleteStyle.backgroundColor !== logoutStyle.backgroundColor;
+                    return { body:rect(body), shell:rect(shell), controls, clipped, overflow, typography, centered, uppercase, distinct, deleteContrast:(light[0]+.05)/(light[1]+.05), scroll:body.scrollHeight > body.clientHeight + 1, inside:s.top >= 24 && s.bottom <= innerHeight - 24 + 1, png:[...body.querySelectorAll('img[src]')].filter(i=>i.getAttribute('src') && i.getBoundingClientRect().width).every(i => i.complete && i.naturalWidth > 0) };
                 });
-                rows.push({ theme, lang, viewport, ...result });
-                const reference = rows.find(r => r.theme === 'dark' && r.lang === lang && r.viewport.width === viewport.width);
+                rows.push({ theme, lang, viewport, footer:footer.id, ...result });
+                const reference = rows.find(r => r.theme === 'dark' && r.lang === lang && r.viewport.width === viewport.width && r.footer === footer.id);
                 const sameType = JSON.stringify(reference.typography) === JSON.stringify(result.typography);
-                if (result.scroll || !result.inside || result.clipped.length || result.overflow.length || !result.png || result.deleteContrast < 4.5 || !sameType) failures.push({ theme, lang, viewport, clipped:result.clipped, overflow:result.overflow, scroll:result.scroll, inside:result.inside, png:result.png, sameType, deleteContrast:result.deleteContrast });
-                if (lang === 'sr' && (viewport.width === 320 || viewport.width === 384)) await page.screenshot({ path:path.join(output, `${theme}-${viewport.width}.png`) });
+                if (result.scroll || !result.inside || result.clipped.length || result.overflow.length || !result.png || result.deleteContrast < 4.5 || !sameType || !result.centered || !result.uppercase || !result.distinct) failures.push({ theme, lang, viewport, footer:footer.id, clipped:result.clipped, overflow:result.overflow, scroll:result.scroll, inside:result.inside, png:result.png, sameType, deleteContrast:result.deleteContrast, centered:result.centered, uppercase:result.uppercase, distinct:result.distinct });
+                if (lang === 'sr' && (viewport.width === 320 || viewport.width === 384) && ['both','analytics-waiting'].includes(footer.id)) await page.screenshot({ path:path.join(output, `${theme}-${viewport.width}-${footer.id}.png`) });
+                }
             }
         }
         for (const id of ['setting-sound','setting-music','setting-vibration']) {

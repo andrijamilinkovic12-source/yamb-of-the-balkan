@@ -34,7 +34,7 @@ assert(!/body\.easter-theme\s+#online-players-body\s+img\s*[,\{]/.test(legacyCss
 const clearRule = roomCss.match(/\.online-players-search::-webkit-search-cancel-button\s*\{([^}]+)\}/)?.[1];
 assert(clearRule?.includes('var(--theme-room-close-image)'), 'Search clear must reuse the theme canonical X');
 assert(!/url\(|content:/.test(clearRule), 'Search clear must not add another asset identity or text glyph');
-assert(html.includes('theme-online-players-room.css?v=4') && html.includes('teme.css?v=7.11'),
+assert(html.includes('theme-online-players-room.css?v=4') && html.includes('teme.css?v=7.12'),
     'Online Players visual fixes need new cache versions');
 
 const cssBlock = (source, marker) => {

@@ -2944,7 +2944,8 @@ class ShopManager {
 
     getTreasuryThemePreviewSource(themeId) {
         // Small PNGs derived from the approved backgrounds; full backgrounds stay in the game.
-        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst',
+        if (themeId === 'dark') return 'assets/treasury-theme-previews/dark-v2.png';
+        const knownThemes = ['light', 'medium', 'winter', 'neon', 'amethyst',
             'easter', 'desert', 'moon', 'severna'];
         return knownThemes.includes(themeId)
             ? `assets/treasury-theme-previews/${themeId}-v1.png`

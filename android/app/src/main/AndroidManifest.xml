@@ -69,10 +69,6 @@
 
         </activity>
 
-        <activity
-            android:name="com.getcapacitor.android.MainActivity"
-            tools:node="remove" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

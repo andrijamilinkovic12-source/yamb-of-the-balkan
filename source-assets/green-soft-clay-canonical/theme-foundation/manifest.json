@@ -6,14 +6,14 @@
   "active": [
     {
       "role": "theme background",
-      "runtime": "www/assets/green-clay-balkan-diorama-v4.png",
+      "runtime": "www/assets/green-clay-balkan-diorama-v5.png",
       "size": [
         941,
         1672
       ],
-      "bytes": 1721266,
+      "bytes": 1636760,
       "colorType": 2,
-      "sha256": "3751e15700ae2d88b5024ea220a02afc23158500338f5b40dda2b0b246e35b07"
+      "sha256": "025156cca0fa8b4f494023352730c7eefea04fc5fe0aa0c627cc9f2c7ab24dc6"
     },
     {
       "role": "splash title",
@@ -28,14 +28,14 @@
     }
   ],
   "rollbackBackground": {
-    "runtime": "www/assets/green-clay-balkan-diorama-v3.png",
+    "runtime": "www/assets/green-clay-balkan-diorama-v4.png",
     "size": [
       941,
       1672
     ],
-    "bytes": 1562192,
+    "bytes": 1721266,
     "colorType": 2,
-    "sha256": "049c6cdafe90cd37bab3f1b2c48831ed7253ca16d95ba411f8cec98f58a12c41"
+    "sha256": "3751e15700ae2d88b5024ea220a02afc23158500338f5b40dda2b0b246e35b07"
   },
   "retiredRuntime": [
     {
@@ -76,7 +76,7 @@
     }
   ],
   "integration": {
-    "activeBackground": "connected through www/themes/green/manifest.json, www/index.html and www/game.js",
+    "activeBackground": "Green manifest, HTML preload, game theme routing, CSS and loading gate. Treasury and Settings share the small preview derived from the same master.",
     "splash": "connected through www/index.html and Green startup preload",
     "retiredRuntime": "removed from shipped www tree in Global Coverage step 2 after zero-reference and hash verification",
     "cacheVersion": 59,

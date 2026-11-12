@@ -1,6 +1,6 @@
 # Tournament Reliability Rollout
 
-Status: Steps 1-6 implemented locally. Release verification is still open and rollout is disabled. No commit or deploy yet.
+Status: Steps 1-6 implemented and verified on isolated MongoDB and Android emulators. Production activation is still gated and disabled.
 The existing tournament is not migrated or adjudicated by this work.
 
 ## Ordered Work
@@ -12,7 +12,7 @@ The existing tournament is not migrated or adjudicated by this work.
 5. Evidence-based technical decisions, no-show checks, draws and disputed-match resolution: implemented; local tests below.
 6. Reliability warnings/suspensions and release compatibility: implemented. Isolated database and Android emulator verification passed; physical-device and release activation checks remain pending.
 
-Commit and deployment remain deferred until all six steps and release gates pass.
+Keep the new policy disabled when publishing code before all activation gates pass.
 
 ## Step 1 Rules
 
@@ -113,6 +113,7 @@ Commit and deployment remain deferred until all six steps and release gates pass
 - `TOURNAMENT_SCHEDULING_UI=1` with the existing browser runner: 360 scheduling dialog checks in ten themes, both languages and three viewport sizes, including server replay and real proposal, acceptance and attendance button clicks.
 - `node scripts/test-tournament-readiness-ui.cjs`: real production renderers/CSS with synthetic data and all external network blocked; 360 theme/language/viewport/state checks, modal actions, touch targets and overlap checks.
 - `npm run check:js`, `npm run check:firebase-security`, `npm run check:account-deletion`: regression checks.
+- The legacy Green performance, Green inventory and Easter inventory audits fail with the same first errors on the previous release (`33b0cd55`) and on the integrated candidate. The tournament, Treasury and settings checks passed; the legacy audits were not bypassed.
 - No production database or real FCM delivery is used by these tests.
 - Native-store tests simulate the MongoDB transaction API; they do not substitute for an isolated replica-set integration run.
 

@@ -7,7 +7,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1] / "www" / "assets"
 SOURCES = {
-    "dark": "green-clay-balkan-diorama-v4.png",
+    "dark": "green-clay-balkan-diorama-v5.png",
     "light": "theme-backgrounds/light-v9.png",
     "medium": "theme-backgrounds/medium-v9.png",
     "winter": "theme-backgrounds/winter-v13.png",
@@ -28,7 +28,8 @@ def main() -> None:
     preview_bytes = 0
     for theme, source_name in SOURCES.items():
         source = ROOT / source_name
-        target = output_dir / f"{theme}-v1.png"
+        version = 2 if theme == "dark" else 1
+        target = output_dir / f"{theme}-v{version}.png"
         with Image.open(source) as image:
             image = image.convert("RGB")
             image.thumbnail(TARGET_SIZE, Image.Resampling.LANCZOS)

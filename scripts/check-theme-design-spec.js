@@ -69,7 +69,7 @@ assert(new Set(spec.themes.filter(theme => theme.id !== 'dark').map(theme => the
 assert(spec.backgroundSceneRule && ['scene', 'readability', 'restraint', 'originality', 'blueOcean', 'balkanInspiration', 'balkanRestraint', 'balancedDetail', 'compositionDiversity', 'review'].every(key => typeof spec.backgroundSceneRule[key] === 'string' && spec.backgroundSceneRule[key].length > 20), 'Diverse background scene rule is incomplete.');
 assert(spec.acceptanceCriteria.backgroundSceneGate, 'Vivid background scene acceptance gate is missing.');
 const crypto = require('crypto');
-const green = { path: 'www/assets/green-clay-balkan-diorama-v4.png', sha256: '0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181', locked: true };
+const green = { path: 'www/assets/green-clay-balkan-diorama-v5.png', sha256: '025156cca0fa8b4f494023352730c7eefea04fc5fe0aa0c627cc9f2c7ab24dc6', locked: true };
 const policy = spec.backgroundCandidatePolicy;
 const approved = {
     dark: green,

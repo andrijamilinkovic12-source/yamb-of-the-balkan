@@ -7023,7 +7023,7 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     gap: 0;
     background:
         linear-gradient(180deg, rgba(195,216,162,.05), rgba(13,40,22,.16)),
-        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat !important;
+        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v5.png")) center / cover no-repeat !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
@@ -7125,7 +7125,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 .easter-room-intro.theme-dark {
     background:
         linear-gradient(180deg, rgba(191,218,166,.08), rgba(18,48,28,.32)),
-        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat;
+        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v5.png")) center / cover no-repeat;
 }
 
 /* The shared Hotseat/room intro must use the selected theme's approved scene. */
@@ -18548,7 +18548,7 @@ body.winter-theme .tournament-intro.theme-winter {
    Default/free green theme with its own rendered background and dice skin.
    ========================================================= */
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) {
-    --green-clay-bg-image: url("assets/green-clay-balkan-diorama-v4.png");
+    --green-clay-bg-image: url("assets/green-clay-balkan-diorama-v5.png");
     --green-clay-ink: #e7efda;
     --green-clay-ink-strong: #f2f6e8;
     --green-clay-muted: #e1ecd2;
@@ -19700,7 +19700,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 
 .theme-loading-gate.theme-dark {
     --theme-loading-base: #315f4b;
-    --theme-loading-bg-image: url("assets/green-clay-balkan-diorama-v4.png");
+    --theme-loading-bg-image: url("assets/green-clay-balkan-diorama-v5.png");
     --theme-loading-veil-top: rgba(174,215,186,.05);
     --theme-loading-veil-bottom: rgba(20,55,41,.42);
     --theme-loading-glow: rgba(189,227,199,.22);
@@ -21330,7 +21330,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     gap: 0;
     background:
         linear-gradient(180deg, rgba(204,224,172,.07), rgba(10,39,21,.18)),
-        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat !important;
+        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v5.png")) center / cover no-repeat !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     animation: easterRoomIntroFade 4.6s ease forwards;

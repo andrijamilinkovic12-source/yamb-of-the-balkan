@@ -1,7 +1,7 @@
 /* The destination theme owns the loading gate, even while body still uses the old theme. */
 #theme-loading-gate.theme-dark {
     --gate-surface:#344f37; --gate-ink:#f2f6e8; --gate-accent:#e2dfab; --gate-muted:#d8e5cf;
-    --theme-loading-bg-image:url('assets/green-clay-balkan-diorama-v4.png');
+    --theme-loading-bg-image:url('assets/green-clay-balkan-diorama-v5.png');
 }
 #theme-loading-gate.theme-light {
     --gate-surface:#fff1d7; --gate-ink:#392817; --gate-accent:#875024; --gate-muted:#705237;
