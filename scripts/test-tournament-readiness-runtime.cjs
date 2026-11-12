@@ -26,6 +26,18 @@ function socketHandler(event, context) {
 }
 
 async function main() {
+    const flagStart = source.indexOf('const TOURNAMENT_READINESS_ENABLED =');
+    const flagEnd = source.indexOf('\nlet analyticsGoogleAuth', flagStart);
+    for (const environment of ['production', 'staging']) {
+        for (const enabled of ['', 'false', 'true']) {
+            for (const approved of ['', 'false', 'true']) {
+                const flags = vm.createContext({ process: { env: { TOURNAMENT_READINESS_ENABLED: enabled,
+                    TOURNAMENT_ROLLOUT_APPROVED: approved } }, SERVER_RUNTIME: { environment } });
+                vm.runInContext(source.slice(flagStart, flagEnd) + '\nglobalThis.enabled = TOURNAMENT_READINESS_ENABLED;', flags);
+                assert.equal(flags.enabled, enabled === 'true' && (environment !== 'production' || approved === 'true'));
+            }
+        }
+    }
     const events = [], commands = [], handlers = new Map();
     let authenticated = true;
     const initial = { status: 'confirmation', players: [], tournamentNumber: 11,

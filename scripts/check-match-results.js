@@ -903,6 +903,7 @@ async function checkAtomicRewardClaimBehavior() {
         claimedGameRewardIds: []
     };
     const context = {
+        profileWrites: require('../lib/profile-writes').createProfileWrites(),
         Math,
         MAX_REWARD_PER_GAME: 8000,
         MAX_BALANCE: 5000000,

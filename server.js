@@ -22,6 +22,8 @@ const tournamentAdjudication = require('./lib/tournament-adjudication');
 const tournamentReliability = require('./www/tournamentReliabilityCore');
 const { createTournamentReadinessService } = require('./lib/tournament-readiness');
 const { createTournamentReadinessStore } = require('./lib/tournament-readiness-store');
+const { createProfileWrites } = require('./lib/profile-writes');
+const profileWrites = createProfileWrites();
 const { createTournamentSchedulingRuntime } = require('./lib/tournament-scheduling-runtime');
 const {
     createAccountDeletion, scrubEmbedded: scrubDeletedAccountReferences,
@@ -29,6 +31,7 @@ const {
 } = require('./lib/account-deletion');
 const { createAnalyticsDeletion } = require('./lib/analytics-deletion');
 const { createAnalyticsPrivacy } = require('./lib/analytics-privacy');
+const { createPushDeliveryPolicy } = require('./lib/push-delivery-policy');
 const {
     getServerRuntimeDescriptor,
     validateStagingFirebaseRuntime
@@ -38,6 +41,7 @@ const MAINTENANCE_MODE = /^(?:1|true|yes|on)$/i.test(String(process.env.MAINTENA
 const MAINTENANCE_RETRY_AFTER_SECONDS = 300;
 const MAINTENANCE_PAGE_PATH = path.join(__dirname, 'www', 'maintenance.html');
 const SERVER_RUNTIME = getServerRuntimeDescriptor(process.env);
+const pushDeliveryPolicy = createPushDeliveryPolicy({ environment: SERVER_RUNTIME.environment, env: process.env });
 
 let firebaseAuth = null;
 let firebaseMessaging = null;
@@ -183,7 +187,14 @@ try {
             });
         }
         firebaseAppCheck = getAppCheck(firebaseApp);
-        firebaseMessaging = SERVER_RUNTIME.environment === 'staging' || process.env.FIREBASE_AUTH_EMULATOR_HOST ? null : getMessaging(firebaseApp);
+        if (pushDeliveryPolicy.mode === 'staging') {
+            pushDeliveryPolicy.validateCredentials(serviceAccount);
+            const messagingApp = initializeApp({ credential: cert(serviceAccount), projectId: pushDeliveryPolicy.projectId },
+                'yamb-staging-messaging');
+            firebaseMessaging = getMessaging(messagingApp);
+        } else {
+            firebaseMessaging = pushDeliveryPolicy.enabled ? getMessaging(firebaseApp) : null;
+        }
         if (stagingProjectIdOnlyAuth) firebaseAdminCredentialSource = 'staging_project_id_only';
         console.log(`✅ Firebase Admin Auth spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}; Messaging: ${firebaseMessaging ? 'aktivan' : 'isključen'}).`);
     } else {
@@ -195,6 +206,7 @@ try {
 
 if (SERVER_RUNTIME.environment === 'staging') {
     validateStagingFirebaseRuntime(firebaseAdminProjectId, process.env);
+    if (pushDeliveryPolicy.mode === 'staging' && !firebaseMessaging) throw new Error('staging_fcm_initialization_failed');
 }
 
 // Inicijalizacija aplikacije
@@ -412,7 +424,9 @@ app.get('/api/firebase-auth-status', (req, res) => {
         androidFirebaseProjectId: readAndroidFirebaseProjectId(),
         firebaseWebApiKeyPresent: !!getFirebaseWebApiKey(),
         firebaseAppCheckActive: !!firebaseAppCheck,
-        firebaseAppCheckEnforced: FIREBASE_APP_CHECK_ENFORCE
+        firebaseAppCheckEnforced: FIREBASE_APP_CHECK_ENFORCE,
+        firebaseMessagingActive: !!firebaseMessaging,
+        stagingPushRestricted: pushDeliveryPolicy.mode === 'staging'
     });
 });
 
@@ -1377,6 +1391,7 @@ function rejectPushWithoutAuth(socket, reply) {
 
 async function getPushTokenDocsForUids(uids, category = 'tournament') {
     if (!MONGO_URI || !Array.isArray(uids) || uids.length === 0) return [];
+    uids = pushDeliveryPolicy.selectUids(uids);
 
     const uniqueUids = Array.from(new Set(uids.map(uid => String(uid || '').trim()).filter(Boolean)));
     if (uniqueUids.length === 0) return [];
@@ -1446,7 +1461,7 @@ async function sendPushToUids(uids, baseMessage = {}) {
         const docs = await getPushTokenDocsForUids(uids, baseMessage.category || 'tournament');
         const tokenGroups = new Map();
         docs.forEach(doc => {
-            if (!doc.token) return;
+            if (!doc.token || !pushDeliveryPolicy.allowsUid(doc.uid)) return;
             const language = normalizePushLanguage(doc.language);
             if (!tokenGroups.has(language)) tokenGroups.set(language, new Set());
             tokenGroups.get(language).add(doc.token);
@@ -3397,6 +3412,8 @@ async function getTechnicalCoinAmount(playerId) {
 
 async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null, coinPenalty = 0, opponentMeta = null, syncExtra = {}) {
     if (!process.env.MONGO_URI || !playerId) return null;
+    if (!profileWrites.owns(playerId)) return profileWrites.run(playerId,
+        () => applyServerSidePenalty(playerId, penaltyAmount, h2hKey, coinPenalty, opponentMeta, syncExtra));
     try {
         const UserProfile = mongoose.model('UserProfile');
         const leaguePeriodDate = syncExtra.periodDate;
@@ -3466,6 +3483,8 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
 }
 
 async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount = 50, h2hKey = null, h2hContext = {}) {
+    if (!profileWrites.owns([winnerId, loserId])) return profileWrites.run([winnerId, loserId],
+        () => applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount, h2hKey, h2hContext));
     const calculatedWinnerReward = await getTechnicalCoinAmount(winnerId);
     const calculatedLoserCoinPenalty = await getTechnicalCoinAmount(loserId);
 
@@ -4598,6 +4617,9 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
     }));
 
     if (participants.some(player => !player.uid || player.uid.startsWith('guest_'))) return [];
+    const profileUids = participants.map(player => player.uid);
+    if (!profileWrites.owns(profileUids)) return profileWrites.run(profileUids,
+        () => applyServerSideCompletedDuel(roomId, finisherSocketId));
 
     const isDraw = participants[0].score === participants[1].score;
     const matchId = ensureRoomMatchId(roomId, state);
@@ -5185,7 +5207,7 @@ tournamentAdjudicationTimer.unref();
 
 function getTournamentAuditStore() {
     return tournamentAuditStore ||= tournamentAudit.createStore({ connection: mongoose.connection,
-        guardWrite: values => accountDeletion.guardWrite(values) });
+        guardWrite: values => accountDeletion.guardWrite(values), profileWrites });
 }
 
 function queueTournamentAuditObservation(event) {
@@ -5540,6 +5562,7 @@ function getTournamentReadinessStore() {
     if (!tournamentReadinessStore) {
         tournamentReadinessStore = createTournamentReadinessStore({
             connection: mongoose.connection,
+            profileWrites,
             guardWrite: values => accountDeletion.guardWrite(values),
             maxBalance: MAX_BALANCE,
             getRuntimeState: () => tournamentState,
@@ -6926,6 +6949,7 @@ function emitTournamentPrizeToUid(uid, payload) {
 
 async function debitTournamentEntryFee(uid) {
     if (!MONGO_URI) return { ok: true, user: null };
+    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => debitTournamentEntryFee(uid));
 
     const existingUser = await UserProfile.findOne({ firebaseUid: uid }).select('balance').lean();
     if (!existingUser) return { ok: false, reason: 'auth_required' };
@@ -6945,6 +6969,7 @@ async function debitTournamentEntryFee(uid) {
 
 async function refundTournamentEntryFee(uid) {
     if (!MONGO_URI) return null;
+    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => refundTournamentEntryFee(uid));
 
     const user = await UserProfile.findOne({ firebaseUid: uid });
     if (!user) return null;
@@ -6959,6 +6984,8 @@ async function refundTournamentEntryFee(uid) {
 
 async function applyTournamentPrize(uid, amount, role, incrementTournamentWins = false) {
     if (!uid) return { ok: false };
+    if (!profileWrites.owns(uid)) return profileWrites.run(uid,
+        () => applyTournamentPrize(uid, amount, role, incrementTournamentWins));
 
     if (!MONGO_URI) {
         emitTournamentPrizeToUid(uid, { role, reward: amount });
@@ -9306,6 +9333,9 @@ let matchResultReconcileRunning = false;
 
 async function reconcileStoredServerMatchResult(result) {
     if (!result || result.verification !== 'server') return 0;
+    const profileUids = (result.participants || []).map(participant => participant.uid);
+    if (!profileWrites.owns(profileUids)) return profileWrites.run(profileUids,
+        () => reconcileStoredServerMatchResult(result));
 
     const leaderboardAppliedCount = await persistLeaderboardScoresForMatchResult(result, {
         notifyRecords: false,
@@ -10403,6 +10433,7 @@ async function resolvePendingGameRewardSession(uid, socketId, data = {}) {
 }
 
 async function claimVerifiedGameRewardBalance(uid, matchId, reward) {
+    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => claimVerifiedGameRewardBalance(uid, matchId, reward));
     const safeReward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, toSafeInt(reward, 0)));
     const claimedUser = await UserProfile.findOneAndUpdate(
         {
@@ -11162,6 +11193,12 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
 
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
+    profileWrites.bindSocket(socket, [
+        'set_player_data', 'request_profile_sync', 'request_daily_challenge',
+        'claim_trophy_reward', 'claim_daily_reward', 'check_quarter_reward',
+        'claim_shop_ad_reward', 'claim_shop_discount', 'claim_shop_ad_unlock',
+        'claim_undo_token_reward', 'submit_match_result', 'submit_score', 'submit_league_score', 'undo_last_move'
+    ]);
 
     socket.use(async (_packet, next) => {
         if (!ACCOUNT_DELETION_ENABLED || !socket.verifiedUid) return next();
@@ -11831,7 +11868,9 @@ io.on('connection', (socket) => {
                         acceptedBalance = requestedBalance;
                     } else if (requestedBalanceDelta < 0) {
                         if (hasAcceptedPaidPurchase) {
-                            acceptedBalance = requestedBalance;
+                            // A client snapshot may predate a refund/prize. Charge
+                            // the priced unlocks without discarding newer credits.
+                            acceptedBalance = Math.max(requestedBalance, oldBalance - requestedPaidUnlockCost);
                         } else {
                             console.log(`🛡️ ECONOMY GUARD: Ignorišem zastareli pad dukata sa ${oldBalance} na ${requestedBalance} bez nove kupovine.`);
                         }
