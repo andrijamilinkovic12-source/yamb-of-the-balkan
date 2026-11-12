@@ -16,7 +16,7 @@
     "check:ad-reward-flow": "node scripts/check-ad-reward-flow.js && node scripts/check-offline-undo-reward.js && node scripts/check-online-players-ad-exit.js",
     "check:game-rules": "node scripts/check-game-rules.js",
     "check:trophies": "node scripts/check-trophies.js",
-    "check:profile-sync": "node scripts/check-profile-sync.js && node scripts/test-theme-selection-sync.cjs && node scripts/test-profile-writes.cjs",
+    "check:profile-sync": "node scripts/check-profile-sync.js && node scripts/test-theme-selection-sync.cjs && node scripts/test-profile-writes.cjs && node scripts/test-mongoose-security.cjs",
     "check:match-results": "node scripts/check-match-results.js && node scripts/check-leaderboard-runtime.js && node scripts/test-local-finish-submit.cjs",
     "check:online-duel-finish": "node scripts/check-theme-online-random-finish.js",
     "check:league": "node scripts/check-quarterly-league.js",
@@ -65,6 +65,7 @@
     "check:tournament-reliability": "node scripts/test-tournament-reliability.cjs",
     "check:tournament-replica-set": "node scripts/test-tournament-replica-set.cjs",
     "check:profile-writes": "node scripts/test-profile-writes.cjs",
+    "check:database-security": "node scripts/test-mongoose-security.cjs",
     "check:tournament-economy-replica-set": "node scripts/test-tournament-economy-replica-set.cjs",
     "check:tournament-crash-replica-set": "node scripts/test-tournament-crash-replica-set.cjs",
     "check:effect-screen-lifecycle": "node scripts/check-effect-screen-lifecycle.js",
@@ -99,7 +100,7 @@
     "express": "^4.18.2",
     "firebase-admin": "^14.5.0",
     "google-auth-library": "11.1.0",
-    "mongoose": "^8.0.0",
+    "mongoose": "8.24.7",
     "socket.io": "^4.8.3"
   },
   "devDependencies": {

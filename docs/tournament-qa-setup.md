@@ -79,6 +79,31 @@ exercise a controlled window, but that is not evidence of an always-on schedule.
 Do not silently upgrade a plan or add a keepalive workaround. Review/approve an
 always-on QA arrangement before claiming overnight/day-long schedule coverage.
 
+## Dependency Review
+
+The QA build audit on 2026-11-12 identified Mongoose 8.24.4 as a high-severity
+runtime finding. The follow-up QA candidate pins Mongoose 8.24.7 (and its required
+mquery 5.0.1) without upgrading major versions. Tests cover inherited-property
+hydration and real MongoDB connection-level filter sanitization as well as the
+existing tournament transaction/reconnect flows. This does not establish that
+an exploit occurred. The previously deployed production dependency is unchanged.
+
+The initial full audit had 12 findings (1 critical, 2 high); the runtime-only
+audit had 10 (0 critical, 1 high). The critical tar finding belongs to the
+development Capacitor CLI tree. Other dependency findings and the existing
+Green-theme test failure remain separate release risks; this small patch is not
+a claim of a clean full audit. No `npm audit fix --force` or Capacitor major
+upgrade was performed.
+
+After the patch, the runtime-only audit reports 9 findings (1 low, 8 moderate,
+0 high, 0 critical). The full tree still reports 11 findings, including the
+development-only Capacitor/tar high/critical findings. All three isolated MongoDB
+suites passed with the patched version, including crash boundaries, real driver
+retry, parallel economy writes and persisted edition activation/rollback.
+
+Primary advisories: [connection filter sanitization](https://github.com/Automattic/mongoose/security/advisories/GHSA-gg4r-jv3p-qx3c),
+[inherited-property handling](https://github.com/Automattic/mongoose/security/advisories/GHSA-8332-j7wj-wjw4).
+
 References: [Render Free limits](https://render.com/docs/free),
 [FCM server authentication and sending](https://firebase.google.com/docs/cloud-messaging/send/admin-sdk),
 [FCM IAM permissions](https://docs.cloud.google.com/iam/docs/roles-permissions/firebasecloudmessaging).
