@@ -66,6 +66,33 @@ with a production key.
 
 ## Device Evidence Still Needed
 
+### Controlled Eight-Participant Fixture
+
+The QA-only bootstrap is off when `YAMB_TOURNAMENT_QA_FIXTURE` is absent.
+First deploy the exact tested QA commit without this variable. Before activating,
+confirm the current QA registration is empty, the service runs one instance,
+and the previous QA process is stopped. Render's Restart action is not a stop:
+it uses a rolling deploy with the prior environment. Do not seed concurrently
+with the old process, use a shared environment group, or touch production.
+
+Only on `yamb-reconnect-qa`, use `TOURNAMENT_READINESS_ENABLED=true`,
+`TOURNAMENT_ROLLOUT_APPROVED=false`, `ACCOUNT_DELETION_SINGLE_INSTANCE=true`,
+and `YAMB_TOURNAMENT_QA_FIXTURE` with JSON fields `version: 1`, a unique
+`id` matching `qa_[a-z0-9_]{16,60}`, and `humanUids` with exactly the two
+approved QA Firebase UIDs. When FCM is enabled, its allowlist must match those
+two UIDs exactly. Save privately; never add actual UIDs or secrets to Git.
+Resume only with the tested QA branch/build and verify the deployed SHA.
+
+The fixture preserves the edition number and tournament history, and creates a
+new registration cycle with the current rules. Six synthetic profiles are
+registered and confirmed using the normal transactional service; the two device
+accounts are registered but still have to confirm in the app. Test coin top-ups
+are recorded per profile and actual entry fees are charged once. The fixture
+pairs the two device players in the first quarterfinal for that cycle only.
+Do not remove the fixture setting before the bracket is drawn. Reusing the same
+fixture ID resumes an interrupted setup or does nothing if it already finished.
+A startup refusal must be diagnosed before attempting another fixture ID.
+
 Use approved QA accounts and the QA app, not production players. Verify actual
 receipt in foreground/background/locked-screen states, tap navigation to the
 correct match, duplicate/stale message handling, and behavior with Android

@@ -15,6 +15,7 @@ const review = require('../lib/tournament-adjudication');
 const { createTournamentReadinessStore } = require('../lib/tournament-readiness-store');
 const { createTournamentReadinessService } = require('../lib/tournament-readiness');
 const { createProfileWrites } = require('../lib/profile-writes');
+const { readFixtureConfig, prepareTournamentFixture, fixturePairing } = require('../qa/tournament-fixture');
 
 const fee = 5500;
 const at = Date.parse('2026-11-11T09:00:00+01:00');
@@ -110,12 +111,87 @@ async function main() {
         await col('tournamentstates').updateOne({ registrationCycleId: next }, { $set: fresh(17, later) });
         assert((await service.execute('register', input(ids[0], later))).ok);
         await lifecycle(conn, service, ids[7]);
+        await qaFixture(conn);
         console.log('PASS: isolated MongoDB replica-set rollback, draw, verified sanction, notification and subsequent edition enrollment.');
     } finally {
         try {
             if (mayClean && conn.db?.databaseName === dbName && /^yamb_tournament_qa_[a-f0-9]{32}$/.test(dbName)) await conn.db.dropDatabase();
         } finally { await conn.close(); }
     }
+}
+
+async function qaFixture(conn) {
+    const col = name => conn.db.collection(name);
+    const states = col('tournamentstates');
+    const old = await states.findOne({});
+    const humanUids = ['qa-device-account-00001', 'qa-device-account-00002'];
+    const env = { YAMB_RUNTIME_ENV: 'staging', YAMB_STAGING_INSTANCE_ID: 'reconnect-qa-01',
+        YAMB_STAGING_FIREBASE_PROJECT_ID: 'yamb-reconnect-qa', YAMB_PRODUCTION_FIREBASE_PROJECT_ID: 'yamb-of-the-balkan',
+        YAMB_STAGING_DB_NAME: conn.db.databaseName, MONGO_URI: 'mongodb://127.0.0.1/' + conn.db.databaseName,
+        ACCOUNT_DELETION_SINGLE_INSTANCE: 'true', TOURNAMENT_READINESS_ENABLED: 'true',
+        YAMB_TOURNAMENT_QA_FIXTURE: JSON.stringify({ version: 1, id: 'qa_fixture_verification_01', humanUids }) };
+    assert.equal(readFixtureConfig({ YAMB_RUNTIME_ENV: 'production' }), null);
+    assert.throws(() => readFixtureConfig({ ...env, YAMB_RUNTIME_ENV: 'production' }));
+    assert.throws(() => readFixtureConfig({ ...env, YAMB_PRODUCTION_DB_NAME: conn.db.databaseName }));
+    assert.throws(() => readFixtureConfig({ ...env, RENDER: 'true', RENDER_SERVICE_ID: 'wrong-service' }), /fixture_scope/);
+    assert.throws(() => readFixtureConfig({ ...env, YAMB_TOURNAMENT_QA_FIXTURE: '{"version":1}' }), /fixture_config/);
+    const pushEnv = { ...env, YAMB_STAGING_FCM_ENABLED: 'true' };
+    assert.throws(() => readFixtureConfig({ ...pushEnv, YAMB_STAGING_FCM_ALLOWED_UIDS: '["other-qa-account"]' }), /fixture_push_scope/);
+    const config = readFixtureConfig({ ...pushEnv, YAMB_STAGING_FCM_ALLOWED_UIDS: JSON.stringify(humanUids) });
+    const profileWrites = createProfileWrites();
+    const noGuard = async () => () => {};
+    const setup = { config, connection: conn, profileWrites, guardWrite: noGuard,
+        createState: edition => fresh(edition, randomUUID()), createMatch: makeMatch,
+        entryFee: fee, maxBalance: 100000, now: () => at };
+    await assert.rejects(prepareTournamentFixture({ ...setup, config: { ...config, databaseName: 'other_qa' } }), /fixture_database/);
+    const history = await col('tourneystats').find({}).toArray();
+    await states.replaceOne({ _id: old._id }, { ...fresh(23, randomUUID()), status: 'active' });
+    await assert.rejects(prepareTournamentFixture(setup), /fixture_not_empty/);
+    const baseline = fresh(23, randomUUID());
+    await states.replaceOne({ _id: old._id }, baseline);
+    await col('userprofiles').insertOne({ firebaseUid: humanUids[0], balance: 1000, playerName: 'Native One' });
+    await assert.rejects(prepareTournamentFixture(setup), /fixture_human_missing/);
+    assert.equal((await col('userprofiles').findOne({ firebaseUid: humanUids[0] })).balance, 1000);
+    assert.equal((await states.findOne({})).registrationCycleId, baseline.registrationCycleId);
+    assert.equal(await col('tournamentqafixtures').countDocuments({}), 0);
+    await col('userprofiles').insertOne({ firebaseUid: humanUids[1], balance: 30000, playerName: 'Native Two' });
+    let humanSecondGuard = 0;
+    await assert.rejects(prepareTournamentFixture({ ...setup, guardWrite: async value => {
+        if (value === humanUids[1] && ++humanSecondGuard === 2) throw new Error('simulated_interruption');
+        return () => {};
+    } }), /simulated_interruption/);
+    assert.equal((await states.findOne({})).players.length, 1);
+    const runs = await Promise.all([prepareTournamentFixture(setup), prepareTournamentFixture(setup)]);
+    const [prepared, repeated] = runs;
+    assert.equal(prepared.participants, 8);
+    assert.equal(prepared.confirmed, 6);
+    assert.equal(repeated.alreadyPrepared, true);
+    assert.equal(repeated.cycleId, prepared.cycleId);
+    const state = await states.findOne({ registrationCycleId: prepared.cycleId });
+    assert.equal(state.status, 'confirmation');
+    assert.equal(state.tournamentNumber, 23);
+    assert.equal(await col('tournamententries').countDocuments({ cycleId: prepared.cycleId, status: 'paid', amount: fee }), 8);
+    assert.equal(await col('tournamentnotices').countDocuments({ cycleId: prepared.cycleId, uid: { $in: humanUids }, kind: 'readiness_requested' }), 2);
+    for (const [index, uid] of [...humanUids, ...config.syntheticUids].entries()) {
+        const user = await col('userprofiles').findOne({ firebaseUid: uid });
+        assert.equal(user.balance, (index === 1 ? 30000 : 25000) - fee);
+        assert.equal(user.qaTournamentFixtureGrants[config.id].amount, index === 0 ? 24000 : index === 1 ? 0 : 25000);
+    }
+    assert.equal(fixturePairing(config, prepared.cycleId, baseline.registrationCycleId, state.players), null);
+    const store = createTournamentReadinessStore({ connection: conn, profileWrites, maxBalance: 100000, now: () => at });
+    const service = createTournamentReadinessService({ store, createId: randomUUID, createMatch: makeMatch,
+        shuffle: players => fixturePairing(config, prepared.cycleId, state.registrationCycleId, players), entryFee: fee, now: () => at });
+    for (const uid of humanUids) {
+        const result = await service.execute('confirm', { uid, cycleId: prepared.cycleId,
+            entryId: state.players.find(player => player.id === uid).entryId, clientProtocol: reliability.CLIENT_PROTOCOL });
+        assert(result.ok);
+    }
+    const started = await states.findOne({ registrationCycleId: prepared.cycleId });
+    assert.equal(started.status, 'active');
+    assert.deepEqual([started.bracket.qf[0].p1.id, started.bracket.qf[0].p2.id], humanUids);
+    assert.equal((await prepareTournamentFixture(setup)).alreadyPrepared, true);
+    assert.deepEqual(await col('tourneystats').find({}).toArray(), history);
+    console.log('PASS: staging-only fixture rollback, restart, ledger, six synthetic confirmations, native pair and preserved history.');
 }
 
 async function lifecycle(conn, service, uid) {

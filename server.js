@@ -42,6 +42,9 @@ const MAINTENANCE_RETRY_AFTER_SECONDS = 300;
 const MAINTENANCE_PAGE_PATH = path.join(__dirname, 'www', 'maintenance.html');
 const SERVER_RUNTIME = getServerRuntimeDescriptor(process.env);
 const pushDeliveryPolicy = createPushDeliveryPolicy({ environment: SERVER_RUNTIME.environment, env: process.env });
+const { readFixtureConfig, prepareTournamentFixture, fixturePairing } = require('./qa/tournament-fixture');
+const qaTournamentFixtureConfig = readFixtureConfig(process.env);
+let qaTournamentFixtureCycle = '';
 
 let firebaseAuth = null;
 let firebaseMessaging = null;
@@ -242,6 +245,9 @@ app.use(express.json());
 // Hosting health check ostaje dostupan i dok igra prikazuje ekran održavanja.
 app.get('/healthz', (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
+    if (qaTournamentFixtureConfig && (!qaTournamentFixtureCycle || !tournamentStateInitialized)) {
+        return res.status(503).json({ ok: false, reason: 'qa_tournament_fixture_not_ready' });
+    }
     res.status(200).json({
         ok: true,
         maintenance: MAINTENANCE_MODE,
@@ -707,8 +713,25 @@ if (MONGO_URI) {
         serverSelectionTimeoutMS: 5000, 
         socketTimeoutMS: 45000,        
     })
-    .then(() => {
+    .then(async () => {
         console.log('✅ MongoDB connected & stable!');
+        if (qaTournamentFixtureConfig) {
+            try {
+                await Promise.all([UserProfile, ...['TournamentEntry', 'TournamentNotice', 'TournamentMatchAudit',
+                    'TournamentReliability'].map(name => mongoose.model(name))].map(model => model.init()));
+                const fixture = await prepareTournamentFixture({ config: qaTournamentFixtureConfig,
+                    connection: mongoose.connection, profileWrites, guardWrite: values => accountDeletion.guardWrite(values),
+                    createState: createFreshTournamentState, createMatch: createTournamentMatch,
+                    entryFee: TOURNEY_ENTRY_FEE, maxBalance: MAX_BALANCE });
+                qaTournamentFixtureCycle = fixture.cycleId;
+                console.log(fixture.alreadyPrepared ? 'QA tournament fixture already prepared.' :
+                    `QA tournament fixture prepared: ${fixture.participants} registered, ${fixture.confirmed} confirmed.`);
+            } catch (error) {
+                const reason = /^qa_tournament_fixture_[a-z_]+$/.test(error.message) ? error.message : 'database_operation_failed';
+                console.error('QA tournament fixture refused:', reason);
+                return;
+            }
+        }
         initTournamentFromDb();
         initChatFromDb();
         queueMatchResultReconciliation(1000);
@@ -5584,7 +5607,9 @@ function runTournamentReadinessCommand(command, input) {
         if (!tournamentReadinessService) {
             tournamentReadinessService = createTournamentReadinessService({
                 store: getTournamentReadinessStore(), createId: () => crypto.randomUUID(),
-                createMatch: createTournamentMatch, shuffle: shuffleTournamentPlayers, entryFee: TOURNEY_ENTRY_FEE
+                createMatch: createTournamentMatch, entryFee: TOURNEY_ENTRY_FEE,
+                shuffle: players => fixturePairing(qaTournamentFixtureConfig, qaTournamentFixtureCycle,
+                    tournamentState.registrationCycleId, players) || shuffleTournamentPlayers(players)
             });
         }
         const result = await tournamentReadinessService.execute(command, input);
