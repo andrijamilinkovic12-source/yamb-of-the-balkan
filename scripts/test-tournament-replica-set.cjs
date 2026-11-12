@@ -33,7 +33,7 @@ async function main() {
     }
     const dbName = 'yamb_tournament_qa_' + randomUUID().replace(/-/g, '');
     const conn = mongoose.createConnection(`mongodb://127.0.0.1:${portText}/?directConnection=true`, {
-        dbName, serverSelectionTimeoutMS: 2500, retryWrites: true, autoIndex: false
+        dbName, serverSelectionTimeoutMS: 2500, retryWrites: true, autoIndex: false, sanitizeFilter: true
     });
     let mayClean = false;
     try {
@@ -43,6 +43,10 @@ async function main() {
             'Refusing to write: use an isolated primary with a replica-set name starting with yamb-test');
         assert.equal(conn.db.databaseName, dbName);
         mayClean = true;
+        const SecurityFixture = conn.model('SecurityFilterFixture', new mongoose.Schema({ name: String, marker: String }));
+        await SecurityFixture.create({ name: 'fixture', marker: 'protected' });
+        await assert.rejects(SecurityFixture.findOne({ name: 'fixture', marker: { $ne: null } }).exec(),
+            error => error.name === 'CastError', 'Connection-level sanitizeFilter was bypassed');
         const col = name => conn.db.collection(name);
         for (const name of ['tournamentstates', 'tournamententries', 'tournamentnotices', 'tournamentmatchaudits',
             'tournamentreliabilities', 'userprofiles']) await conn.db.createCollection(name);
