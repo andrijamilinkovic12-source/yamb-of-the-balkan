@@ -1,6 +1,6 @@
 # Tournament Reliability Rollout
 
-Status: Steps 1-6 implemented and verified on isolated MongoDB and Android emulators. Production activation is still gated and disabled.
+Status: Steps 1-6 implemented and verified on isolated MongoDB and Android emulators. Production activation is controlled by the two runtime flags and the release gates below.
 The existing tournament is not migrated or adjudicated by this work.
 
 ## Ordered Work
@@ -13,6 +13,26 @@ The existing tournament is not migrated or adjudicated by this work.
 6. Reliability warnings/suspensions and release compatibility: implemented. Isolated database and Android emulator verification passed; physical-device and release activation checks remain pending.
 
 Keep the new policy disabled when publishing code before all activation gates pass.
+
+## Single-Process Deployment
+
+The existing production start command, `node server.js`, delegates to
+`scripts/start-single-instance.cjs` before loading app dependencies.
+It initially runs a database-free maintenance bridge for three minutes. Its
+health response explicitly reports `maintenance: true` and
+`phase: deployment_drain`; all other HTTP and WebSocket traffic is rejected.
+Only after the interval and port release does it load the real app and workers.
+This protects the in-process wallet coordinator during Render's rolling handover.
+The previous release has no custom SIGTERM handler; Render retires it before
+the new application's delayed startup. Keep one configured service instance.
+
+Use platform maintenance during the controlled release, and do not reopen
+traffic on Render's initial Live label alone. Wait for the real app health
+with `maintenance: false`, verify the deployed SHA and unchanged saved bracket,
+then reopen public traffic. Production requires both tournament flags set true
+before the next fresh cycle is created. Existing saved cycles retain their policy.
+
+Reference: [Render deployment sequence](https://render.com/docs/deploys#zero-downtime-deploys).
 
 ## Step 1 Rules
 
@@ -99,7 +119,7 @@ Keep the new policy disabled when publishing code before all activation gates pa
 - First proven incident: private warning. A new proven incident during the next three official appearances means skipping exactly the next edition. An appearance counts when the draw starts, even if a later match is voided; cancelling before the draw, missing an edition and reopened registration cycles do not count. Three clean appearances expire the warning. After serving a suspension, the next incident starts with a new warning.
 - Only one incident per participant and edition counts. The decision, private warning/suspension ledger and notification commit together with the bracket write. Registration checks the current edition against the private ledger inside the same transaction, before debit. A retry or reopening registration for the same edition cannot consume or bypass the suspension.
 - Fresh managed cycles require protocol `yamb-tournament-6` and explicit consent to the new rules before taking the fee. Supported clients get private eligibility and notice data only for the authenticated account. Older clients cannot enroll or take new scheduling/attendance actions on these cycles, but can withdraw a paid entry or recover a room already in play. The marker identifies supported UI behavior, not a security attestation.
-- Production requires both `TOURNAMENT_READINESS_ENABLED=true` and `TOURNAMENT_ROLLOUT_APPROVED=true` to stamp new managed cycles. Both remain off. Already-stamped cycles keep their policy. Rollback to legacy rules for a future cycle also disables the new admission policy for that cycle; never roll back a managed paid or active cycle to an unaware binary.
+- Production requires both `TOURNAMENT_READINESS_ENABLED=true` and `TOURNAMENT_ROLLOUT_APPROVED=true` to stamp new managed cycles. Missing flags leave activation off. Already-stamped cycles keep their policy. Rollback to legacy rules for a future cycle also disables the new admission policy for that cycle; never roll back a managed paid or active cycle to an unaware binary.
 
 ## Local Verification
 
@@ -119,7 +139,8 @@ Keep the new policy disabled when publishing code before all activation gates pa
 
 ## Release Gates Still Required
 
-- The existing remote QA service was identified on 2026-11-12; the user supplied healthy staging and separate Firebase project status. It still serves old commit `7d28d5a`. [QA setup and outstanding checks](tournament-qa-setup.md) records the baseline and rollout order. A local opt-in push policy now restricts QA delivery to an explicit test-account allowlist and credentials from the QA Firebase project; default QA delivery stays off. No remote setting, IAM access, key or deployment has changed, and real FCM delivery is still unverified.
+- The isolated remote QA service was verified on 2026-11-12 with its own Firebase project and restricted recipient policy. Current-device FCM probes confirmed actual foreground/background receipt and notification-tap navigation, then receipt with a sleeping screen and a closed application process (not Android Force stop). The user opened the cold-app notification into the tournament. Denied notification permission returned permission_denied without breaking the app connection, and the original permission was restored. The temporary QA night exception was explicitly approved, was not shipped in this production candidate, and was cleared after testing. No production push was used for these probes.
+- A separate real app server with local Firebase Auth emulator and a disposable MongoDB replica set passed continuous 15-minute wall-clock presence and verified no-show adjudication after the full window. Another real tournament game crossed its scheduling cutoff during five-minute grace and resumed without a premature result. This supplements, but is distinct from, the earlier Android UI/background/reconnect evidence. It is not a physical/OEM Android coverage guarantee.
 
 - The isolated `npm run check:tournament-replica-set` passed on a local MongoDB 8.0.37 replica set named `yamb-test`. The runner does not load `.env`, refuses remote/non-test servers and uses only a disposable `yamb_tournament_qa_*` database.
 - Two Android emulators passed native background, screen sleep, cold relaunch, and an induced TCP disconnect in a real managed quarterfinal on a loopback QA backend with a local Firebase Auth emulator and eight synthetic entrants. Both-client return, visible absence/return notices, matching timers, and five-minute server-side technical/replay outcomes were verified. Physical-device lifecycle, real FCM and disabled notification permissions, continuous attendance, old-client rejection before charging, and a live duel crossing its scheduling deadline still need release QA.

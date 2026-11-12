@@ -3,6 +3,12 @@
 require('dotenv').config(process.env.YAMB_RUNTIME_ENV === 'test' && process.env.YAMB_TEST_ENV_FILE
     ? { path: process.env.YAMB_TEST_ENV_FILE } : undefined);
 
+if (require.main === module && /^(production|prod)$/i.test(process.env.YAMB_RUNTIME_ENV || 'production')) {
+    require('./scripts/start-single-instance.cjs').startDrain({ port: Number(process.env.PORT) || 3000,
+        load: () => { delete require.cache[__filename]; require(__filename); } });
+    return;
+}
+
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");

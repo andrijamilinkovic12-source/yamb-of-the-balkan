@@ -7,6 +7,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "check:single-instance-start": "node scripts/test-single-instance-start.cjs",
     "qa:green": "node scripts/serve-green-qa.js",
     "check:js": "node scripts/check-js.js",
     "check:monitor-report": "node scripts/test-monitor-report.cjs && node scripts/check-monitor-indicator.cjs",
