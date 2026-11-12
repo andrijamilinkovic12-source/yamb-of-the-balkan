@@ -35,6 +35,13 @@ async function main() {
                     TOURNAMENT_ROLLOUT_APPROVED: approved } }, SERVER_RUNTIME: { environment } });
                 vm.runInContext(source.slice(flagStart, flagEnd) + '\nglobalThis.enabled = TOURNAMENT_READINESS_ENABLED;', flags);
                 assert.equal(flags.enabled, enabled === 'true' && (environment !== 'production' || approved === 'true'));
+                let status;
+                const health = vm.createContext({ SERVER_RUNTIME: { environment, instanceId: '' },
+                    MAINTENANCE_MODE: false, TOURNAMENT_READINESS_ENABLED: flags.enabled,
+                    app: { get: (_route, handler) => handler({}, { setHeader() {}, status: () => ({ json: value => { status = value; } }) }) } });
+                const healthStart = source.indexOf("app.get('/healthz',");
+                vm.runInContext(source.slice(healthStart, source.indexOf('\n});', healthStart) + 4), health);
+                assert.equal(status.tournamentReadinessEnabled, flags.enabled);
             }
         }
     }

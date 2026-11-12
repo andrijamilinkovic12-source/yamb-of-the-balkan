@@ -252,7 +252,8 @@ app.get('/healthz', (req, res) => {
         ok: true,
         maintenance: MAINTENANCE_MODE,
         environment: SERVER_RUNTIME.environment,
-        instanceId: SERVER_RUNTIME.instanceId
+        instanceId: SERVER_RUNTIME.instanceId,
+        tournamentReadinessEnabled: TOURNAMENT_READINESS_ENABLED
     });
 });
 
