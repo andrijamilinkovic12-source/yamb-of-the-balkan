@@ -106,6 +106,19 @@ exercise a controlled window, but that is not evidence of an always-on schedule.
 Do not silently upgrade a plan or add a keepalive workaround. Review/approve an
 always-on QA arrangement before claiming overnight/day-long schedule coverage.
 
+### Firebase Validation Probe
+
+When device delivery is missing, set a fresh `YAMB_QA_FCM_PROBE_ID` matching
+`qa_fcm_[a-z0-9_]{8,40}` only on the QA service with its active fixture and
+approved FCM allowlist. Deploy the QA build with the variable set during the
+active notification window. It claims the ID once and calls the same Firebase
+sender in validation-only mode. It does not deliver a notification, remove
+registrations, change the bracket, or create a public endpoint. The private
+Render log contains only counts and recognized error codes, separately for
+the two approved accounts. A successful validation is not device delivery.
+Remove the variable after the investigation or use a new ID for an intentional
+rerun. Do not copy the probe variable to production or a shared group.
+
 ## Dependency Review
 
 The QA build audit on 2026-11-12 identified Mongoose 8.24.4 as a high-severity

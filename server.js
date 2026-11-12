@@ -44,6 +44,8 @@ const SERVER_RUNTIME = getServerRuntimeDescriptor(process.env);
 const pushDeliveryPolicy = createPushDeliveryPolicy({ environment: SERVER_RUNTIME.environment, env: process.env });
 const { readFixtureConfig, prepareTournamentFixture, fixturePairing } = require('./qa/tournament-fixture');
 const qaTournamentFixtureConfig = readFixtureConfig(process.env);
+const { readQaFcmProbeId, runQaFcmProbe } = require('./qa/fcm-probe');
+const qaFcmProbeId = readQaFcmProbeId(process.env, SERVER_RUNTIME, qaTournamentFixtureConfig, pushDeliveryPolicy);
 let qaTournamentFixtureCycle = '';
 
 let firebaseAuth = null;
@@ -732,7 +734,14 @@ if (MONGO_URI) {
                 return;
             }
         }
-        initTournamentFromDb();
+        const tournamentLoaded = initTournamentFromDb();
+        if (qaFcmProbeId) tournamentLoaded.then(async () => {
+            if (MAINTENANCE_MODE || !tournamentStateInitialized
+                || tournamentState.registrationCycleId !== qaTournamentFixtureCycle) return;
+            const result = await runQaFcmProbe({ id: qaFcmProbeId, fixture: qaTournamentFixtureConfig,
+                db: mongoose.connection.db, send: sendPushToUids, inQuietHours: tournamentNotificationsCore.inQuietHours });
+            if (!result.skipped) console.log('QA FCM probe:', JSON.stringify(result.outcomes));
+        }).catch(() => console.error('QA FCM probe could not complete.'));
         initChatFromDb();
         queueMatchResultReconciliation(1000);
         backfillMissingLeaderboardScoresFromMatchResults(1000)
@@ -1477,8 +1486,9 @@ function getLocalizedPushMessage(baseMessage, language) {
     return localized ? { ...baseMessage, ...localized } : baseMessage;
 }
 
-async function sendPushToUids(uids, baseMessage = {}) {
+async function sendPushToUids(uids, baseMessage = {}, probe = null) {
     if (!firebaseMessaging) return { ok: false, reason: 'firebase_messaging_unavailable' };
+    const diagnostics = pushDeliveryPolicy.mode === 'staging' ? probe : null;
 
     try {
         const docs = await getPushTokenDocsForUids(uids, baseMessage.category || 'tournament');
@@ -1489,6 +1499,7 @@ async function sendPushToUids(uids, baseMessage = {}) {
             if (!tokenGroups.has(language)) tokenGroups.set(language, new Set());
             tokenGroups.get(language).add(doc.token);
         });
+        if (diagnostics) diagnostics.registrations([...tokenGroups.values()].reduce((count, group) => count + group.size, 0));
         if (tokenGroups.size === 0) return { ok: true, sent: 0 };
 
         let successCount = 0;
@@ -1503,20 +1514,25 @@ async function sendPushToUids(uids, baseMessage = {}) {
                     || (baseMessage.isCurrent && !baseMessage.isCurrent())) break;
                 const batch = tokens.slice(i, i + 500);
                 const message = buildPushMessage(localizedMessage, batch);
+                diagnostics?.attempted(batch.length);
 
                 if (typeof firebaseMessaging.sendEachForMulticast === 'function') {
-                    const response = await firebaseMessaging.sendEachForMulticast(message);
+                    const response = await firebaseMessaging.sendEachForMulticast(message, diagnostics ? true : undefined);
                     successCount += response.successCount || 0;
+                    diagnostics?.accepted(response.successCount || 0);
                     response.responses.forEach((item, index) => {
+                        if (!item.success) diagnostics?.failure(item.error);
                         if (!item.success && isInvalidFcmTokenError(item.error)) invalidTokens.push(batch[index]);
                     });
                 } else {
                     await Promise.all(batch.map(async token => {
                         try {
                             const { tokens: _tokens, ...singleMessage } = message;
-                            await firebaseMessaging.send({ ...singleMessage, token });
+                            await firebaseMessaging.send({ ...singleMessage, token }, diagnostics ? true : undefined);
                             successCount += 1;
+                            diagnostics?.accepted(1);
                         } catch (error) {
+                            diagnostics?.failure(error);
                             if (isInvalidFcmTokenError(error)) invalidTokens.push(token);
                         }
                     }));
@@ -1524,10 +1540,11 @@ async function sendPushToUids(uids, baseMessage = {}) {
             }
         }
 
-        await removeInvalidPushTokens(invalidTokens);
+        if (!diagnostics) await removeInvalidPushTokens(invalidTokens);
         return { ok: true, sent: successCount, invalid: invalidTokens.length };
     } catch (err) {
-        console.error('Greška pri slanju push notifikacije:', err);
+        if (diagnostics) diagnostics.failure(err);
+        else console.error('Greška pri slanju push notifikacije:', err);
         return { ok: false, reason: 'push_send_failed' };
     }
 }

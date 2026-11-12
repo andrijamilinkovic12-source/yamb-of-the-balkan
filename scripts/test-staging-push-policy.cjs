@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const { createPushDeliveryPolicy } = require('../lib/push-delivery-policy');
+const { readQaFcmProbeId, runQaFcmProbe, createQaFcmStats } = require('../qa/fcm-probe');
 const safety = require('./reconnect-staging-safety');
 const a = 'fixture-staging-player-000001';
 const b = 'fixture-staging-player-000002';
@@ -89,22 +90,84 @@ async function main() {
     assert.equal(init('production', {}, { ...account, project_id: 'yamb-of-the-balkan' }).sends.length, 1);
 
     const deliveries = [];
+    const dryRuns = [];
+    let fcmError = null, cleanups = 0;
     let reads = 0;
     const send = vm.createContext({ pushDeliveryPolicy: stage, MONGO_URI: 'fixture-no-network',
-        firebaseMessaging: { sendEachForMulticast: async message => { deliveries.push(message); return {
+        firebaseMessaging: { sendEachForMulticast: async (message, dryRun) => { deliveries.push(message); dryRuns.push(dryRun);
+            if (fcmError) return { successCount: 0, responses: [{ success: false, error: fcmError }] };
+            return {
             successCount: message.tokens.length, responses: message.tokens.map(() => ({ success: true })) }; } },
         PushToken: { find(query) { reads++; assert.deepEqual(Array.from(query.uid.$in), [a]);
             return { select: () => ({ lean: async () => [{ uid: a, token: 'qa-token' }, { uid: outside, token: 'forged-token' }] }) }; } },
         PUSH_TOKEN_STALE_MS: 10000, normalizePushLanguage: () => 'sr',
         getLocalizedPushMessage: value => value, buildPushMessage: (_base, tokens) => ({ tokens }),
-        removeInvalidPushTokens: async () => {}, isInvalidFcmTokenError: () => false, console });
+        removeInvalidPushTokens: async () => { cleanups++; }, isInvalidFcmTokenError: () => true, console });
     for (const name of ['getPushTokenDocsForUids', 'sendPushToUids']) vm.runInContext(actual(name), send);
     assert.equal((await send.sendPushToUids([outside])).sent, 0);
     assert.equal(reads, 0, 'Disallowed user reached the token query');
     assert.equal((await send.sendPushToUids([outside, a])).sent, 1);
     assert.equal(deliveries.length, 1);
     assert.deepEqual(Array.from(deliveries[0].tokens), ['qa-token'], 'Token owner bypassed the allowlist');
+    assert.equal(dryRuns[0], undefined);
+    assert.equal(cleanups, 1);
+    fcmError = { code: 'messaging/mismatched-credential', message: "Permission 'cloudmessaging.messages.create' denied for private fixture" };
+    const diagnostic = createQaFcmStats();
+    assert.equal((await send.sendPushToUids([a], {}, diagnostic)).sent, 0);
+    assert.equal(dryRuns[1], true);
+    assert.equal(cleanups, 1, 'Validation-only diagnostics modified registrations');
+    diagnostic.failure({ code: 'private-fixture', message: 'do not log me' });
+    assert.deepEqual(diagnostic.snapshot(), { registrations: 1, attempted: 1, accepted: 0,
+        errors: { 'messaging/iam-send-denied': 1, unclassified: 1 } });
+    assert(!JSON.stringify(diagnostic.snapshot()).includes('private fixture'));
+    send.pushDeliveryPolicy = production;
+    send.PushToken = { find: () => ({ select: () => ({ lean: async () => [{ uid: a, token: 'fixture' }] }) }) };
+    fcmError = null;
+    const productionStats = createQaFcmStats();
+    await send.sendPushToUids([a], {}, productionStats);
+    assert.equal(dryRuns[2], undefined);
+    assert.equal(productionStats.snapshot().attempted, 0);
+    await testOneShotProbe(stage, production);
     console.log('PASS: QA push opt-in, scoped credentials, test-account allowlist at query/send, emulator block, fail-closed initialization and unchanged production defaults. No real push sent.');
+}
+
+async function testOneShotProbe(stage, production) {
+    const runtime = { environment: 'staging', instanceId: 'reconnect-qa-01' };
+    const fixture = { humanUids: [a, b], databaseName: 'fixture-db' };
+    const id = 'qa_fcm_fixture_01';
+    const probeEnv = { YAMB_QA_FCM_PROBE_ID: id };
+    assert.equal(readQaFcmProbeId({}, runtime, fixture, stage), null);
+    assert.equal(readQaFcmProbeId(probeEnv, runtime, fixture, stage), id);
+    assert.throws(() => readQaFcmProbeId(probeEnv, { environment: 'production' }, fixture, production), /scope_invalid/);
+    assert.throws(() => readQaFcmProbeId(probeEnv, runtime, { ...fixture, humanUids: [a, outside] }, stage), /scope_invalid/);
+    const rows = new Map(), requested = [];
+    const db = { databaseName: fixture.databaseName, collection(name) {
+        assert.equal(name, 'qafcmproberuns');
+        return { async updateOne({ _id }, update) {
+            if (update.$setOnInsert) {
+                if (rows.has(_id)) return { upsertedCount: 0 };
+                rows.set(_id, { ...update.$setOnInsert });
+                return { upsertedCount: 1 };
+            }
+            Object.assign(rows.get(_id), update.$set);
+            return { matchedCount: 1 };
+        } };
+    } };
+    const options = { id, fixture, db, now: () => 10000, inQuietHours: () => false,
+        async send([uid], message, stats) {
+            requested.push(uid);
+            assert.equal(message.type, 'qa_fcm_probe');
+            stats.registrations(1); stats.attempted(1); stats.accepted(1);
+        } };
+    assert((await runQaFcmProbe({ ...options, inQuietHours: () => true })).skipped);
+    assert.equal(rows.size, 0);
+    await assert.rejects(runQaFcmProbe({ ...options, db: { databaseName: 'other' } }), /database_mismatch/);
+    const results = await Promise.all([runQaFcmProbe(options), runQaFcmProbe(options)]);
+    assert.equal(results.filter(r => !r.skipped).length, 1);
+    assert.deepEqual(requested, [a, b]);
+    assert.equal(rows.get(id).outcomes.length, 2);
+    assert(!JSON.stringify(rows.get(id)).includes(a));
+    console.log('PASS: QA-only FCM dry-run, redacted failure counts, no token cleanup, and single durable claim.');
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });
