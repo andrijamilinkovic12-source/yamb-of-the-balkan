@@ -3,6 +3,8 @@
 const assert = require('node:assert/strict');
 const { randomUUID } = require('node:crypto');
 const mongoose = require('mongoose');
+const fs = require('node:fs');
+const vm = require('node:vm');
 const readiness = require('../www/tournamentReadinessCore');
 const scheduling = require('../www/tournamentSchedulingCore');
 const notifications = require('../www/tournamentNotificationsCore');
@@ -12,6 +14,7 @@ const audit = require('../lib/tournament-match-audit');
 const review = require('../lib/tournament-adjudication');
 const { createTournamentReadinessStore } = require('../lib/tournament-readiness-store');
 const { createTournamentReadinessService } = require('../lib/tournament-readiness');
+const { createProfileWrites } = require('../lib/profile-writes');
 
 const fee = 5500;
 const at = Date.parse('2026-11-11T09:00:00+01:00');
@@ -52,7 +55,8 @@ async function main() {
         await col('tournamentreliabilities').insertOne({ _id: ids[0], uid: ids[0], warningEdition: 10, lastIncidentEdition: 10 });
         await col('tournamententries').insertOne({ _id: randomUUID(), uid: ids[0], tournamentNumber: 13, startedAt: at - 1000, status: 'refunded' });
 
-        const store = createTournamentReadinessStore({ connection: conn, maxBalance: 100000, now: () => at });
+        const profileWrites = createProfileWrites();
+        const store = createTournamentReadinessStore({ connection: conn, profileWrites, maxBalance: 100000, now: () => at });
         const serviceWith = testStore => createTournamentReadinessService({ store: testStore, createId: randomUUID, createMatch: makeMatch,
             shuffle: players => players, entryFee: fee, now: () => at });
         const service = serviceWith(store);
@@ -60,8 +64,8 @@ async function main() {
             policyVersion: readiness.VERSION, clientProtocol: reliability.CLIENT_PROTOCOL, reliabilityRulesAccepted: true, player: { name: uid } });
         const before = async uid => (await col('userprofiles').findOne({ firebaseUid: uid })).balance;
         assert.equal((await service.execute('register', { ...input(ids[0]), clientProtocol: 'old' })).reason, 'tourney_client_update_required');
-        const failure = serviceWith({ transaction: command => store.transaction(tx => command({ ...tx,
-            saveState: async () => { throw new Error('isolated_rollback'); } })) });
+        const failure = serviceWith({ transaction: (command, uids) => store.transaction(tx => command({ ...tx,
+            saveState: async () => { throw new Error('isolated_rollback'); } }), uids) });
         await assert.rejects(failure.execute('register', input(ids[0])), /isolated_rollback/);
         assert.equal(await before(ids[0]), 25000);
         assert.equal(await col('tournamententries').countDocuments({ cycleId }), 0);
@@ -74,7 +78,7 @@ async function main() {
         assert.equal(state.status, 'active');
         assert.equal(await col('tournamentmatchaudits').countDocuments({ cycleId, kind: 'match_opened' }), 4);
 
-        const journal = audit.createStore({ connection: conn });
+        const journal = audit.createStore({ connection: conn, profileWrites });
         const match = state.bracket.qf[0];
         const now = match.scheduling.deadlineAt;
         const decision = review.evaluate(match, await journal.evidence(cycleId, 'qf', 0), now, { covers: () => true }, 'fixture-process');
@@ -101,12 +105,88 @@ async function main() {
         const later = randomUUID();
         await col('tournamentstates').updateOne({ registrationCycleId: next }, { $set: fresh(17, later) });
         assert((await service.execute('register', input(ids[0], later))).ok);
+        await lifecycle(conn, service, ids[7]);
         console.log('PASS: isolated MongoDB replica-set rollback, draw, verified sanction, notification and subsequent edition enrollment.');
     } finally {
         try {
             if (mayClean && conn.db?.databaseName === dbName && /^yamb_tournament_qa_[a-f0-9]{32}$/.test(dbName)) await conn.db.dropDatabase();
         } finally { await conn.close(); }
     }
+}
+
+async function lifecycle(conn, service, uid) {
+    const source = fs.readFileSync(require.resolve('../server'), 'utf8').replace(/\r\n/g, '\n');
+    const actual = name => {
+        const start = source.search(new RegExp('(?:async )?function ' + name + '\\('));
+        assert(start >= 0, name);
+        return source.slice(start, source.indexOf('\n}', start) + 2);
+    };
+    const states = conn.db.collection('tournamentstates');
+    class StateModel {
+        static findOne() { return { lean: () => states.findOne({}) }; }
+        static findOneAndUpdate(filter, update, options = {}) {
+            return states.findOneAndUpdate(filter, update.$set ? update : { $set: update }, {
+                upsert: !!options.upsert, returnDocument: 'after', includeResultMetadata: false
+            });
+        }
+    }
+    await states.deleteMany({});
+    const legacy = { status: 'active', tournamentNumber: 10, players: [{ id: 'fixture-legacy-a' }, { id: 'fixture-legacy-b' }],
+        bracket: { qf: [{ p1: { id: 'fixture-legacy-a' }, p2: { id: 'fixture-legacy-b' }, winnerId: 'fixture-legacy-a', score1: 2300, score2: 2100 }], sf: [], f: [] } };
+    await states.insertOne(structuredClone(legacy));
+    const history = conn.db.collection('tourneystats');
+    await history.insertOne({ playerId: 'fixture-past-champion', wins: 3, championships: [{ tournamentNumber: 9 }] });
+    const historyBefore = JSON.stringify(await history.findOne({ playerId: 'fixture-past-champion' }));
+    const context = vm.createContext({ crypto: { randomUUID }, structuredClone, Date, console: { log() {}, error(error) { throw error; } },
+        process: { env: { MONGO_URI: 'loopback-only' } }, MONGO_URI: 'loopback-only', mongoose: { model: () => StateModel },
+        TOURNAMENT_READINESS_ENABLED: true, TOURNEY_FINISHED_RESET_DELAY_MS: 86400000,
+        tournamentState: {}, tournamentReadinessCore: readiness, tournamentSchedulingCore: scheduling,
+        tournamentNotificationsCore: notifications, tournamentAudit: audit, tournamentAdjudicationCore: adjudication,
+        tournamentReliability: reliability, emitTournamentStateUpdate() {}, scheduleTournamentAutoReset() {},
+        clearTournamentAutoResetTimer() {}, persistCurrentFinishedTournamentHistoryIfNeeded: async () => {},
+        recoverAuditedTournamentGames: async () => {} });
+    for (const name of ['safeTournamentNumber', 'getTournamentFinishedAtFallback', 'createFreshTournamentState',
+        'normalizeTournamentLifecycleState', 'markTournamentFinishedForReset', 'initTournamentFromDb', 'saveTournamentToDb',
+        'resetTournamentForNextCycle']) vm.runInContext(actual(name), context);
+    await context.initTournamentFromDb();
+    assert.equal(context.tournamentState.tournamentNumber, 10);
+    assert.equal(context.tournamentState.readinessPolicyVersion, '');
+    assert.equal(JSON.stringify(context.tournamentState.bracket), JSON.stringify(legacy.bracket));
+    assert.equal(JSON.stringify(context.tournamentState.players), JSON.stringify(legacy.players));
+    context.markTournamentFinishedForReset();
+    assert.equal(context.tournamentState.resetAt - context.tournamentState.finishedAt, 86400000);
+    await context.saveTournamentToDb();
+    await context.resetTournamentForNextCycle('isolated_activation_test');
+    let next = await states.findOne({});
+    assert.equal(next.tournamentNumber, 11);
+    for (const [field, value] of Object.entries(fresh(11, next.registrationCycleId))) {
+        if (field.endsWith('PolicyVersion')) assert.equal(next[field], value);
+    }
+    const command = { uid, cycleId: next.registrationCycleId, requestId: randomUUID(), accepted: true,
+        policyVersion: readiness.VERSION, clientProtocol: reliability.CLIENT_PROTOCOL, reliabilityRulesAccepted: true,
+        player: { name: 'Lifecycle fixture' } };
+    const profiles = conn.db.collection('userprofiles');
+    const balanceBefore = (await profiles.findOne({ firebaseUid: uid })).balance;
+    assert.equal((await service.execute('register', { ...command, clientProtocol: 'old-client' })).reason, 'tourney_client_update_required');
+    assert.equal((await profiles.findOne({ firebaseUid: uid })).balance, balanceBefore);
+    assert((await service.execute('register', command)).ok);
+    context.TOURNAMENT_READINESS_ENABLED = false;
+    await context.initTournamentFromDb();
+    assert.equal(context.tournamentState.readinessPolicyVersion, readiness.VERSION, 'Flag rollback migrated an already-paid cycle');
+    await assert.rejects(context.resetTournamentForNextCycle('unsafe_rollback'), /revision_conflict/);
+    assert.equal((await profiles.findOne({ firebaseUid: uid })).balance, balanceBefore - fee);
+    next = await states.findOne({});
+    assert.equal(next.tournamentNumber, 11);
+    assert((await service.execute('withdraw', { uid, cycleId: next.registrationCycleId, entryId: next.players[0].entryId,
+        clientProtocol: reliability.CLIENT_PROTOCOL })).ok);
+    await context.initTournamentFromDb();
+    await context.resetTournamentForNextCycle('isolated_future_rollback');
+    const rollback = await states.findOne({});
+    assert.equal(rollback.tournamentNumber, 12);
+    assert.equal(rollback.readinessPolicyVersion, '');
+    assert.equal((await profiles.findOne({ firebaseUid: uid })).balance, balanceBefore);
+    assert.equal(JSON.stringify(await history.findOne({ playerId: 'fixture-past-champion' })), historyBefore);
+    console.log('PASS: persisted X legacy unchanged, 24h reset to managed XI, old-client pre-debit rejection, paid-cycle rollback blocked, empty future XII rollback and champion history preserved.');
 }
 
 main().catch(error => { console.error(error.message); process.exitCode = 1; });

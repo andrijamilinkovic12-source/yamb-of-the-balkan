@@ -958,6 +958,7 @@ async function checkServerDuelIdempotency() {
     ]);
     const context = {
         MONGO_URI: 'mongodb://test',
+        profileWrites: require('../lib/profile-writes').createProfileWrites(),
         roomState,
         calculateCompletedDuelTotal(sheet) { return sheet; },
         getDuelParticipantMeta(socketId, fallbackName, fallbackUid) {
