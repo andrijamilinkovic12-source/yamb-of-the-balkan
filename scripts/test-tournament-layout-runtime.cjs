@@ -6,7 +6,7 @@ const output=path.join(root,'tmp/tournament-layout-runtime'),index=read('www/ind
 const themes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
 const sheets=[...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
 const room=index.slice(index.indexOf('<div id="tournament-screen"'),index.indexOf('\n    <script>',index.indexOf('<div id="tournament-screen"'))).replace('class="screen"','class="screen active"');
-const modal=index.slice(index.indexOf('<div id="custom-modal-overlay"'),index.indexOf('<div id="chat-float-btn"'));
+const modal=index.slice(index.indexOf('<div id="custom-modal-overlay"'),index.indexOf('<button id="chat-float-btn"'));
 const fixture=`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(f=>`<link rel="stylesheet" href="${f}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:24px;--safe-left:0px;--safe-right:0px}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}</style><body>${room}${modal}</body>`;
 const managers=read('www/managers.js'),languages=read('www/languages.js'),config=read('www/config.js');
 const rows=[],failures=[];

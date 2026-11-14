@@ -5,6 +5,9 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const sum = (arr) => arr.reduce((a, b) => a + b, 0);
 const TOURNEY_FINAL_WINNER_REWARD = 44000;
 const TOURNEY_FINAL_RUNNER_UP_REWARD = 5500;
+const QUARTER_WINNER_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Belgrade', year: 'numeric', month: 'numeric', day: 'numeric'
+});
 
 // STRIKTNO PRAVILO: Samo Google nalozi (Nema generisanja usr_ ID-a)
 function getPlayerId() {
@@ -112,8 +115,7 @@ class YambApp {
         this.najavaAktivna = false; 
         this.najavljenoPolje = null;
         this.modeTag = "Solo"; 
-        this.chatOpen = false; 
-        this.unreadMsgs = 0;
+
         this.lastGameType = 'normal';
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
@@ -143,11 +145,12 @@ class YambApp {
         this.spectateSyncRetryTimer = null;
         this.spectateSyncRetryAttempts = 0;
         this.tournamentFinalCeremonyActive = false;
-        this.tournamentFinalCeremonySeenAt = 0;
-        this.tournamentFinalCeremonySeenRole = '';
         this.tournamentFinalCeremonyTimer = null;
         this.tournamentFinalCeremonyCountdownTimer = null;
         this.tournamentFinalWinnerSubmittedRooms = new Set();
+        this.pendingTournamentPrizes = new Map();
+        this.tournamentPrizeNoticeTimer = null;
+        this.tournamentPrizeNoticeOpen = false;
         this.onlineRecoveryPromptOpen = false;
         this.coldStartRecoveryRoomId = '';
         this.onlineRoomTerminalNoticeId = '';
@@ -254,19 +257,8 @@ class YambApp {
             monthEl.innerText = meseci[now.getMonth()];
         }
 
-        const chatWin = document.getElementById("chat-window");
-        if(chatWin) this.dragElement(chatWin);
-        
-        const btnSend = document.getElementById('btn-chat-send');
-        if(btnSend) {
-            btnSend.addEventListener('click', () => this.sendChat());
-            btnSend.addEventListener('touchend', (e) => { e.preventDefault(); this.sendChat(); });
-        }
-        const chatInput = document.getElementById('chat-input-field');
-        if(chatInput) {
-            chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendChat(); });
-        }
-        
+        if (typeof DuelChat === 'function') this.duelChat = new DuelChat(this);
+
         const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
         const rememberedSplashTheme = localStorage.getItem('yamb_last_theme') || savedTheme;
         const startupTheme = this.playerId
@@ -4513,6 +4505,7 @@ class YambApp {
                 });
                 // Friend invitations must also arrive in a freshly opened main menu.
                 this.socket.on('account_deletion_started', data => window.yambAccountPrivacy?.handleStarted(data));
+                this.socket.on('previous_quarter_winner_data', data => this.receiveQuarterWinner(data));
                 this.setupRoomInviteListeners();
                 this.bindConnectionDiagnosticListeners();
 
@@ -4523,6 +4516,7 @@ class YambApp {
                     
                     if (!this.playerId) return;
 
+                    this.checkQuarterWinner();
                     const identityResult = await this.authenticateSocketIdentity();
                     if (identityResult?.ok && this.soloFinishMatchId
                         && document.getElementById('game-over-screen')?.classList.contains('active')) {
@@ -4544,33 +4538,6 @@ class YambApp {
                         prevYear -= 1;
                     }
 
-                    // FIX: Prikazujemo samo u prva 3 dana prvog meseca u kvartalu (Januar, April, Jul, Oktobar)
-                    let belgradeMonth = now.getMonth();
-                    let belgradeDay = now.getDate();
-                    try {
-                        const periodParts = new Intl.DateTimeFormat('en-US', {
-                            timeZone: 'Europe/Belgrade',
-                            month: 'numeric',
-                            day: 'numeric'
-                        }).formatToParts(now);
-                        belgradeMonth = (Number(periodParts.find(part => part.type === 'month')?.value) || (belgradeMonth + 1)) - 1;
-                        belgradeDay = Number(periodParts.find(part => part.type === 'day')?.value) || belgradeDay;
-                    } catch (_err) {}
-                    const isFirstMonthOfQuarter = (belgradeMonth % 3 === 0);
-                    const isWithinFirstThreeDays = (belgradeDay <= 3);
-
-                    const shownWinnerKey = `yamb_winner_shown_${prevYear}_Q${prevQuarter}`;
-                    
-                    if (isFirstMonthOfQuarter && isWithinFirstThreeDays) {
-                        if (!localStorage.getItem(shownWinnerKey)) {
-                            this.socket.emit('get_previous_quarter_winner', { year: prevYear, quarter: prevQuarter });
-                        }
-                    } else {
-                        // Prošla su 3 dana, upisujemo u lokalnu memoriju da je "prikazano" 
-                        // kako ne bismo slali nepotrebne zahteve serveru do kraja kvartala
-                        localStorage.setItem(shownWinnerKey, 'true');
-                    }
-                    
                     const pendingReward = localStorage.getItem('yamb_pending_quarter_check');
                     if (pendingReward) {
                         try {
@@ -4660,6 +4627,10 @@ class YambApp {
                 });
 
                 this.socket.on('disconnect', (reason = '') => {
+                    if (this.quarterWinnerCheck?.awaitingResponse) {
+                        this.quarterWinnerCheck.awaitingResponse = false;
+                        this.quarterWinnerCheck.nextCheckAt = 0;
+                    }
                     this.pendingConnectionDiagnostic = {
                         reason: String(reason || '').substring(0, 120),
                         ...this.getConnectionDiagnosticSnapshot(),
@@ -4822,35 +4793,15 @@ class YambApp {
                     this.applyCloudProfileSync(data);
                 });
 
-                this.socket.on('tourney_prize_awarded', (data = {}) => {
-                    if (!data.role) return;
-
-                    if (this.shouldSuppressTournamentPrizeModal(data)) {
-                        if (typeof updateMainMenuDashboard === 'function') {
-                            updateMainMenuDashboard();
-                        }
-                        return;
-                    }
-
-                    if (data.role === 'winner') {
-                        if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
-                        if (this.effectMgr) this.effectMgr.trigger('gold_rain');
-                        const championTitle = gt('tourney_champion_title') || 'ŠAMPION TURNIRA';
-                        this.modal.alert(
-                            `<img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
-                            championTitle.replace(/\s*🏆/gu, ''),
-                            { contextClass: 'tourney-winner' }
-                        );
-                    } else if (data.role === 'runnerup') {
-                        this.modal.alert(
-                            `<img class="tourney-prize-result-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
-                            (gt('tourney_finalist_title') || 'FINALISTA').replace(/\s*🥈/gu, ''),
-                            { contextClass: 'tourney-finalist' }
-                        );
-                    }
-
+                this.socket.on('tourney_prize_awarded', data => {
+                    this.queueTournamentPrizeNotice(data);
                     if (typeof updateMainMenuDashboard === 'function') {
                         updateMainMenuDashboard();
+                    }
+                });
+                this.socket.on('tourney_pending_prizes', ({ recipientUid, prizes } = {}) => {
+                    if (Array.isArray(prizes)) {
+                        prizes.forEach(prize => this.queueTournamentPrizeNotice({ ...prize, recipientUid }));
                     }
                 });
 
@@ -5685,6 +5636,8 @@ class YambApp {
         this.appLifecycleLastResumeAt = Date.now();
         const lifecycleSeq = ++this.appLifecycleSequence;
         this.checkForInvite();
+        if (!this.gameActive) this.checkQuarterWinner();
+        if (this.pendingTournamentPrizes?.size) this.scheduleTournamentPrizeNotice();
 
         if (this.gameActive && !this.onlineMode) {
             this.resumeLocalGameClock();
@@ -5814,6 +5767,8 @@ class YambApp {
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
+        if (screenId === 'main-menu') this.checkQuarterWinner();
+        this.duelChat?.navigate(screenId);
         if (['quote-screen', 'waiting-screen', 'game-scene'].includes(screenId)) this.warmGameSwitchAssets();
         if (screenId === 'splash-screen') {
             this.configureThemeSplashImage(document.documentElement.dataset.splashTheme
@@ -5828,7 +5783,10 @@ class YambApp {
             }
         }
         if(screenId === 'main-menu' && !this.inviteDetected) this.checkSavedGame();
-        if (screenId === 'main-menu') this.scheduleNextMenuThemeWarmup();
+        if (screenId === 'main-menu') {
+            this.scheduleNextMenuThemeWarmup();
+            if (this.pendingTournamentPrizes?.size) this.scheduleTournamentPrizeNotice();
+        }
         if (screenId === 'highscores-screen') { this.switchHsTab('global'); }
     }
 
@@ -5846,101 +5804,6 @@ class YambApp {
                 this.diceBtns.push(btn); 
             } 
         }
-        this.makeButtonDraggable();
-    }
-    
-    dragElement(elmnt) { 
-        if(!elmnt) return; 
-        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; 
-        var header = document.getElementById("chat-header"); 
-        if (header) { 
-            header.addEventListener('mousedown', dragMouseDown); 
-            header.addEventListener('touchstart', dragMouseDown, {passive: false}); 
-        } 
-        function dragMouseDown(e) { 
-            if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
-            if(e.type === 'touchstart') { pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY; } 
-            else { e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; } 
-            document.addEventListener('mouseup', closeDragElement); 
-            document.addEventListener('mousemove', elementDrag); 
-            document.addEventListener('touchend', closeDragElement); 
-            document.addEventListener('touchmove', elementDrag, {passive: false}); 
-        } 
-        function elementDrag(e) { 
-            let clientX, clientY; 
-            if(e.type === 'touchmove') { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; } 
-            else { e.preventDefault(); clientX = e.clientX; clientY = e.clientY; } 
-            pos1 = pos3 - clientX; pos2 = pos4 - clientY; pos3 = clientX; pos4 = clientY; 
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; 
-        } 
-        function closeDragElement() { 
-            document.removeEventListener('mouseup', closeDragElement); 
-            document.removeEventListener('mousemove', elementDrag); 
-            document.removeEventListener('touchend', closeDragElement); 
-            document.removeEventListener('touchmove', elementDrag); 
-        } 
-    }
-
-    makeButtonDraggable() {
-        const btn = document.getElementById('chat-float-btn');
-        if (!btn) return;
-        let isDragging = false; let startX, startY, initialLeft, initialTop; let moved = false; 
-        const onTouchStart = (e) => {
-            if(e.touches.length > 1) return;
-            const touch = e.touches[0]; startX = touch.clientX; startY = touch.clientY;
-            const rect = btn.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top;
-            isDragging = true; moved = false; btn.style.transition = 'none';
-        };
-        const onTouchMove = (e) => {
-            if (!isDragging) return;
-            e.preventDefault(); 
-            const touch = e.touches[0]; const dx = touch.clientX - startX; const dy = touch.clientY - startY;
-            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved = true;
-            btn.style.left = `${initialLeft + dx}px`; btn.style.top = `${initialTop + dy}px`;
-            btn.style.right = 'auto'; btn.style.bottom = 'auto'; 
-        };
-        const onTouchEnd = () => { isDragging = false; btn.style.transition = 'transform 0.2s'; };
-        const onClick = (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); return false; } };
-        btn.addEventListener('touchstart', onTouchStart, {passive: false});
-        btn.addEventListener('touchmove', onTouchMove, {passive: false});
-        btn.addEventListener('touchmove', onTouchEnd);
-        btn.addEventListener('click', onClick, true); 
-    }
-
-    toggleChat() { 
-        this.chatOpen = !this.chatOpen; 
-        const win = document.getElementById('chat-window'); 
-        const badge = document.getElementById('chat-badge'); 
-        if (this.chatOpen) { 
-            win.classList.add('active'); badge.classList.remove('active'); 
-            this.unreadMsgs = 0; 
-            const body = document.getElementById('chat-body'); if(body) body.scrollTop = body.scrollHeight; 
-        } else { win.classList.remove('active'); } 
-    }
-    
-    appendChatMessage(sender, text, type) { 
-        const body = document.getElementById('chat-body'); if(!body) return;
-        const msgDiv = document.createElement('div'); msgDiv.className = `msg-bubble ${type}`; 
-        msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`; body.appendChild(msgDiv); 
-        body.scrollTop = body.scrollHeight; 
-        if (!this.chatOpen) { 
-            this.unreadMsgs++; const badge = document.getElementById('chat-badge');
-            if(badge) badge.classList.add('active'); this.soundMgr.chat(); 
-        } 
-    }
-    
-    sendChat() { 
-        const input = document.getElementById('chat-input-field'); 
-        let text = input.value.trim(); 
-        if (!text) return; 
-        
-        text = cenzurisiPoruku(text); 
-
-        this.appendChatMessage(gt('chat_you'), text, "msg-outgoing"); 
-        input.value = ""; 
-        if (this.onlineMode && this.socket) { 
-            this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); 
-        } 
     }
 
     async challengePlayer(targetId, targetName, targetUid = null, options = {}) {
@@ -6711,10 +6574,6 @@ class YambApp {
         this.navigateTo('main-menu');
         const waitingScreen = document.getElementById('waiting-screen');
         if (waitingScreen) waitingScreen.classList.remove('is-hosting-invite', 'is-friend-invite', 'is-random-online');
-        const floatBtn = document.getElementById('chat-float-btn');
-        if(floatBtn) floatBtn.classList.add('hidden');
-        document.getElementById('chat-window').classList.remove('active');
-        this.chatOpen = false;
 
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
 
@@ -7494,7 +7353,7 @@ class YambApp {
         this.socket.off('remote_roll');
         this.socket.off('remote_hold');
         this.socket.off('remote_announce');
-        this.socket.off('chat_msg');
+        this.duelChat?.bind(this.socket);
         this.socket.off('opponent_left');
         this.socket.off('rematch_requested');
         this.socket.off('rematch_started');
@@ -7572,42 +7431,6 @@ class YambApp {
         this.socket.off('room_spectators_count');
         this.socket.on('room_spectators_count', (count) => {
             this.updateSpectatorIcon(count);
-        });
-
-        this.socket.off('previous_quarter_winner_data');
-        this.socket.on('previous_quarter_winner_data', (data) => {
-            if (data?.settling) {
-                clearTimeout(this.quarterWinnerRetryTimer);
-                this.quarterWinnerRetryTimer = setTimeout(() => {
-                    if (this.socket && this.socket.connected) {
-                        this.socket.emit('get_previous_quarter_winner', { year: data.year, quarter: data.quarter });
-                    }
-                }, Math.min(Math.max(1000, Number(data.retryAfterMs) + 1000), 24 * 60 * 60 * 1000));
-                return;
-            }
-
-            if (!data) {
-                const now = new Date();
-                const leaguePeriod = window.kvartalnaLiga && typeof window.kvartalnaLiga.getCurrentQuarterInfo === 'function'
-                    ? window.kvartalnaLiga.getCurrentQuarterInfo()
-                    : { currentYear: now.getFullYear(), currentQuarter: Math.floor(now.getMonth() / 3) + 1 };
-                let prevQ = leaguePeriod.currentQuarter - 1;
-                let prevY = leaguePeriod.currentYear;
-                if(prevQ === 0) { prevQ = 4; prevY -= 1; }
-                localStorage.setItem(`yamb_winner_shown_${prevY}_Q${prevQ}`, 'true');
-                return;
-            }
-
-            const shownKey = `yamb_winner_shown_${data.year}_Q${data.quarter}`;
-            if (localStorage.getItem(shownKey)) return;
-
-            const mainMenu = document.getElementById('main-menu');
-            if (this.gameActive || (mainMenu && !mainMenu.classList.contains('active'))) {
-                return; 
-            }
-
-            this.showQuarterWinnerModal(data);
-            localStorage.setItem(shownKey, 'true');
         });
 
         this.socket.off('quarter_reward_check_result');
@@ -7780,6 +7603,7 @@ class YambApp {
             if (!this.isCurrentRoomPayload(data)) return;
             if (this.isSpectator && !this.gameActive) return;
 
+            if (this.duelChat?.preferencePending) void this.duelChat.sync();
             this.onlineRollPending = false;
 
             if ((this.gameActive || this.isSpectator) && this.onlineMode) {
@@ -8035,11 +7859,6 @@ class YambApp {
             if (Array.isArray(data.allScores)) this.allScores = data.allScores;
             if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
 
-            const pendingTournamentFinalCeremony = this.getTournamentFinalCeremonyData(data);
-            if (pendingTournamentFinalCeremony) {
-                this.rememberTournamentFinalCeremony(pendingTournamentFinalCeremony.role, false);
-            }
-
             this.beginOnlineFinalBoardDelay(data);
         });
 
@@ -8178,7 +7997,6 @@ class YambApp {
             this.updateStatusLabel();
         }); 
 
-        this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage(gt('chat_opponent'), data.msg, "msg-incoming"); }); 
         
         this.socket.on('rematch_requested', async (data = {}) => {
             if(this.isSpectator || !this.onlineMode || (data.roomId && data.roomId !== this.roomId)) return;
@@ -8212,6 +8030,7 @@ class YambApp {
         });
 
         this.socket.on('rematch_started', async () => {
+            this.duelChat?.reset(this.roomId);
             this.rematchRequestToken = (this.rematchRequestToken || 0) + 1;
             if(this.isSpectator) {
                 this.lastOnlineGameResult = null;
@@ -8716,6 +8535,7 @@ class YambApp {
 
         this.updateQuickMenuIcons();
         this.updateSpectatorIcon(0);
+        this.gameActive = true;
 
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
@@ -8733,16 +8553,7 @@ class YambApp {
         }
         this.createScoreTables();
         this.resetTurnLogic();
-        this.gameActive = true;
         this.lastGameType = 'normal';
-        document.getElementById('chat-body').innerHTML = "";
-        const chatBtn = document.getElementById('chat-float-btn');
-        if (chatBtn) {
-            chatBtn.classList.add('hidden');
-            if (skipQuote && this.modeTag !== "Solo" && this.modeTag !== "Hotseat") {
-                chatBtn.classList.remove('hidden');
-            }
-        }
         this.effectMgr.stop(); this.loadEquippedEffect(); 
         
         this.startClientTimer();
@@ -8779,10 +8590,6 @@ class YambApp {
             if (document.getElementById('quote-screen').classList.contains('active')) {
                 this.navigateTo('game-scene');
                 
-                const chatBtn = document.getElementById('chat-float-btn');
-                if (chatBtn && this.modeTag !== "Solo" && this.modeTag !== "Hotseat") {
-                    chatBtn.classList.remove('hidden');
-                }
             }
         }, 6000); 
     }
@@ -9701,6 +9508,7 @@ class YambApp {
 
         return {
             roomId,
+            matchId: String(onlineResult?.matchId || ''),
             round: roomInfo.round,
             index: roomInfo.index,
             role,
@@ -9711,17 +9519,93 @@ class YambApp {
         };
     }
 
-    rememberTournamentFinalCeremony(role, active = false) {
-        this.tournamentFinalCeremonySeenRole = String(role || '');
-        this.tournamentFinalCeremonySeenAt = Date.now();
-        this.tournamentFinalCeremonyActive = !!active;
+    queueTournamentPrizeNotice(data) {
+        const uid = getPlayerId();
+        if (!uid || !data || (data.recipientUid && data.recipientUid !== uid)
+            || !['winner', 'runnerup'].includes(data.role)) return;
+        const id = /^[a-f0-9]{64}$/.test(data.id) ? data.id : '';
+        const key = `${uid}:${id || data.role}`;
+        this.pendingTournamentPrizes.set(key, { id, uid, matchId: data.matchId || '', role: data.role });
+        this.scheduleTournamentPrizeNotice();
     }
 
-    shouldSuppressTournamentPrizeModal(data = {}) {
-        const role = String(data.role || '');
-        if (!role || role !== this.tournamentFinalCeremonySeenRole) return false;
-        const suppressionWindowMs = 10 * 60 * 1000;
-        return this.tournamentFinalCeremonyActive || (Date.now() - this.tournamentFinalCeremonySeenAt < suppressionWindowMs);
+    scheduleTournamentPrizeNotice() {
+        if (this.tournamentPrizeNoticeTimer || this.tournamentPrizeNoticeOpen
+            || document.hidden || this.nativeAppActive === false
+            || !document.getElementById('main-menu')?.classList.contains('active')) return;
+        this.tournamentPrizeNoticeTimer = setTimeout(() => {
+            this.tournamentPrizeNoticeTimer = null;
+            void this.showPendingTournamentPrizeNotice();
+        }, 500);
+    }
+
+    tournamentPrizeReadKey(prize) {
+        return prize.matchId
+            ? `yamb_tourney_ceremony_read_${prize.uid}_${prize.matchId}`
+            : `yamb_tourney_prize_read_${prize.uid}_${prize.id}`;
+    }
+
+    acknowledgeTournamentPrizeNotice(prize) {
+        if (!prize.id) return;
+        localStorage.setItem(this.tournamentPrizeReadKey(prize), '1');
+        if (this.socket?.connected && this.socketVerifiedUid === prize.uid) {
+            this.socket.emit('tourney_prize_notice_read', { id: prize.id });
+        }
+    }
+
+    async showPendingTournamentPrizeNotice() {
+        const uid = getPlayerId();
+        if (!uid || !this.modal || this.gameActive || this.tournamentFinalCeremonyActive || this.tournamentPrizeNoticeOpen
+            || document.hidden || this.nativeAppActive === false
+            || !document.getElementById('main-menu')?.classList.contains('active')) return;
+        const popupIds = ['custom-modal-overlay', 'global-chat-overlay', 'online-players-overlay',
+            'league-modal-overlay', 'undo-menu-overlay'];
+        const anotherPopupOpen = popupIds.some(id => {
+            const popup = document.getElementById(id);
+            return popup?.style.display === 'flex' || popup?.classList.contains('active');
+        });
+        if (anotherPopupOpen || document.getElementById('winner-modal-overlay')) {
+            this.scheduleTournamentPrizeNotice();
+            return;
+        }
+        for (const [key, prize] of this.pendingTournamentPrizes) {
+            this.pendingTournamentPrizes.delete(key);
+            if (prize.uid !== uid) continue;
+            const acknowledged = prize.id && localStorage.getItem(this.tournamentPrizeReadKey(prize));
+            const legacyAcknowledged = !prize.id && this.legacyTournamentCeremonyReceipt?.uid === uid
+                && this.legacyTournamentCeremonyReceipt?.role === prize.role
+                && Date.now() - this.legacyTournamentCeremonyReceipt.at < 10 * 60 * 1000;
+            if (acknowledged || legacyAcknowledged) {
+                this.acknowledgeTournamentPrizeNotice(prize);
+                continue;
+            }
+            this.tournamentPrizeNoticeOpen = true;
+            try {
+                if (await this.showTournamentPrizeNotice(prize.role)) this.acknowledgeTournamentPrizeNotice(prize);
+            } finally {
+                this.tournamentPrizeNoticeOpen = false;
+                if (this.pendingTournamentPrizes.size) this.scheduleTournamentPrizeNotice();
+            }
+            break;
+        }
+    }
+
+    showTournamentPrizeNotice(role) {
+        if (role === 'winner') {
+            this.soundMgr?.win?.();
+            this.effectMgr?.trigger('gold_rain');
+            const title = gt('tourney_champion_title') || 'ŠAMPION TURNIRA';
+            return this.modal.alert(
+                `<img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                title.replace(/\s*🏆/gu, ''),
+                { contextClass: 'tourney-winner' }
+            );
+        }
+        return this.modal.alert(
+            `<img class="tourney-prize-result-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+            (gt('tourney_finalist_title') || 'FINALISTA').replace(/\s*🥈/gu, ''),
+            { contextClass: 'tourney-finalist' }
+        );
     }
 
     submitTournamentFinalWinnerIfNeeded(ceremonyData) {
@@ -9759,7 +9643,8 @@ class YambApp {
 
         return new Promise(resolve => {
             this.clearTournamentFinalCeremony();
-            this.rememberTournamentFinalCeremony(ceremonyData.role, true);
+            this.tournamentFinalCeremonyActive = true;
+            const uid = getPlayerId();
 
             const isWinner = ceremonyData.role === 'winner';
             const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
@@ -9815,6 +9700,17 @@ class YambApp {
             const finish = () => {
                 if (resolved || !nextBtn || nextBtn.disabled) return;
                 resolved = true;
+                if (uid && uid === getPlayerId()) {
+                    this.legacyTournamentCeremonyReceipt = { uid, role: ceremonyData.role, at: Date.now() };
+                    if (ceremonyData.matchId) {
+                        localStorage.setItem(this.tournamentPrizeReadKey({ uid, matchId: ceremonyData.matchId }), '1');
+                        for (const [key, prize] of this.pendingTournamentPrizes) {
+                            if (prize.uid !== uid || prize.matchId !== ceremonyData.matchId) continue;
+                            this.acknowledgeTournamentPrizeNotice(prize);
+                            this.pendingTournamentPrizes.delete(key);
+                        }
+                    }
+                }
                 this.clearTournamentFinalCeremonyTimersOnly();
                 overlay.classList.add('closing');
                 setTimeout(() => {
@@ -10018,7 +9914,6 @@ class YambApp {
         try {
             const tournamentFinalCeremony = this.getTournamentFinalCeremonyData(onlineResult);
             if (tournamentFinalCeremony) {
-                this.rememberTournamentFinalCeremony(tournamentFinalCeremony.role, true);
                 this.submitTournamentFinalWinnerIfNeeded(tournamentFinalCeremony);
                 await this.showTournamentFinalCeremony(tournamentFinalCeremony);
             }
@@ -11507,9 +11402,6 @@ class YambApp {
             this.createScoreTables(); 
             this.gameActive = true; 
             this.lastGameType = 'normal';
-            document.getElementById('chat-body').innerHTML = ""; 
-            const chatBtn = document.getElementById('chat-float-btn'); 
-            if (chatBtn) chatBtn.classList.add('hidden'); 
             this.effectMgr.stop(); this.loadEquippedEffect(); 
             
             this.highlightCurrentPlayer(); 
@@ -11576,9 +11468,56 @@ class YambApp {
         if (this.undoManager) await this.undoManager.executeUndo();
     }
 
+    checkQuarterWinner(now = new Date()) {
+        const { year, month, day } = Object.fromEntries(QUARTER_WINNER_DATE_FORMAT.formatToParts(now)
+            .filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+        if ((month - 1) % 3 !== 0 || day > 3 || this.gameActive || !getPlayerId()
+            || document.visibilityState === 'hidden' || this.nativeAppActive === false
+            || !document.getElementById('main-menu')?.classList.contains('active')) return;
+
+        const period = { year: month === 1 ? year - 1 : year, quarter: month === 1 ? 4 : (month - 1) / 3 };
+        const key = `yamb_winner_shown_${period.year}_Q${period.quarter}`;
+        if (localStorage.getItem(key) || document.getElementById('winner-modal-overlay')) return;
+
+        if (this.quarterWinnerCheck?.key !== key) {
+            this.quarterWinnerCheck = { ...period, key, nextCheckAt: 0 };
+        }
+        const check = this.quarterWinnerCheck;
+        if (check.winner) {
+            this.showQuarterWinnerModal(check.winner);
+            localStorage.setItem(key, 'true');
+            return;
+        }
+        if (!this.socket?.connected || now.getTime() < check.nextCheckAt) return;
+
+        check.awaitingResponse = true;
+        check.nextCheckAt = now.getTime() + 15000;
+        this.socket.emit('get_previous_quarter_winner', period);
+    }
+
+    receiveQuarterWinner(data, now = new Date()) {
+        const check = this.quarterWinnerCheck;
+        if (!check?.awaitingResponse) return;
+        if (data && (data.year !== check.year || data.quarter !== check.quarter)) return;
+        check.awaitingResponse = false;
+
+        if (data?.settling) {
+            const delay = Math.min(Math.max(1000, (Number(data.retryAfterMs) || 0) + 1000), 86400000);
+            check.nextCheckAt = now.getTime() + delay;
+            clearTimeout(this.quarterWinnerRetryTimer);
+            this.quarterWinnerRetryTimer = setTimeout(() => this.checkQuarterWinner(), delay);
+        } else if (!data?.playerName) {
+            // An empty archive response should not count as a displayed announcement.
+            check.nextCheckAt = now.getTime() + 60000;
+        } else {
+            check.winner = data;
+            this.checkQuarterWinner(now);
+        }
+    }
+
     showQuarterWinnerModal(data) {
         const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.playerName)}&background=333&color=FFD700`;
-        const photo = data.photoUrl && data.photoUrl.length > 5 ? data.photoUrl : defaultAvatar;
+        const photo = /^https?:\/\//i.test(data.photoUrl || '') ? data.photoUrl : defaultAvatar;
         const activeQlWinnerTheme = localStorage.getItem('yamb_theme') || 'dark';
         const qlChampionMedalSource = getThemeMedalSource('quarterlyLeague', 'gold', activeQlWinnerTheme);
         
@@ -11591,32 +11530,41 @@ class YambApp {
         if(this.effectMgr) this.effectMgr.trigger('confetti');
 
         let modalHtml = `
-        <div id="winner-modal-overlay" class="modal-overlay${activeQlWinnerTheme === 'dark' ? ' active' : ''}" style="z-index: 9999999; display: flex;">
+        <div id="winner-modal-overlay" class="modal-overlay active" role="dialog" aria-modal="true" aria-labelledby="quarter-winner-title" style="z-index: 9999999; display: flex;">
             <div class="modal-box quarter-winner-card" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                 <div class="quarter-winner-brand" style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                     ${window.ThemeQuarterlyLeagueRoom.markup('room', data.quarter)}
                 </div>
-                <h2 class="quarter-winner-title" style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
+                <h2 id="quarter-winner-title" class="quarter-winner-title" style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p class="quarter-winner-period" style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
                 <img class="ql-quarter-champion-medal" src="${qlChampionMedalSource}" alt="" aria-hidden="true" decoding="async">
 
                 <div class="quarter-winner-avatar-wrap" style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
-                    <img class="quarter-winner-avatar" src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
+                    <img class="quarter-winner-avatar" src="${this.escapeHtml(photo)}" alt="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
                     <div class="quarter-winner-mvp" style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--gold-main); color: #000; padding: 2px 10px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MVP</div>
                 </div>
                 
-                <h3 class="quarter-winner-name" style="color: #fff; font-size: 1.5rem; margin-bottom: 5px;">${data.playerName}</h3>
-                <p class="quarter-winner-points" style="color: var(--gold-main); font-size: 1.2rem; font-weight: bold; margin-bottom: 25px;">${data.score} PTS</p>
+                <h3 class="quarter-winner-name" style="color: #fff; font-size: 1.5rem; margin-bottom: 5px;">${this.escapeHtml(data.playerName)}</h3>
+                <p class="quarter-winner-points" style="color: var(--gold-main); font-size: 1.2rem; font-weight: bold; margin-bottom: 25px;">${this.escapeHtml(data.score)} PTS</p>
                 
                 <p class="quarter-winner-message" style="color: #ddd; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;">
                     ${congratsText}
                 </p>
                 
-                <button class="btn-menu btn-primary quarter-winner-action" onclick="document.getElementById('winner-modal-overlay').remove(); app.effectMgr.stop();" style="width: 100%;">${btnText}</button>
+                <button type="button" class="btn-menu btn-primary quarter-winner-action" style="width: 100%;">${btnText}</button>
             </div>
         </div>`;
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+        const overlay = document.getElementById('winner-modal-overlay');
+        const continueButton = overlay.querySelector('.quarter-winner-action');
+        const previousFocus = document.activeElement;
+        continueButton.addEventListener('click', () => {
+            overlay.remove();
+            this.effectMgr?.stop();
+            previousFocus?.focus?.({ preventScroll: true });
+        }, { once: true });
+        continueButton.focus({ preventScroll: true });
     }
     
 }

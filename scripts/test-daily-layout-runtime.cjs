@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p
 const output=path.join(root,'tmp/daily-layout-runtime'),index=read('www/index.html');
 const themes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
 const sheets=[...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
-const modal=index.slice(index.indexOf('<div id="custom-modal-overlay"'),index.indexOf('<div id="chat-float-btn"'));
+const modal=index.slice(index.indexOf('<div id="custom-modal-overlay"'),index.indexOf('<button id="chat-float-btn"'));
 const fixture=`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(f=>`<link rel="stylesheet" href="${f}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:24px;--safe-left:0px;--safe-right:0px}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}</style><body>${modal}</body>`;
 const managers=read('www/managers.js'),languages=read('www/languages.js'),config=read('www/config.js'),rows=[],failures=[];
 async function main(){

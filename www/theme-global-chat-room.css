@@ -1,3 +1,125 @@
+/* Live menu indicators are separate from the theme PNG and do not resize its host. */
+#main-menu > .main-global-chat-btn {
+    --chat-signal-fill: var(--theme-card-primary, #F4DC9D);
+    --chat-signal-ink: var(--theme-card-surface, #193E2B);
+}
+#main-menu > .main-global-chat-btn .global-chat-unread {
+    position: absolute;
+    z-index: 3;
+    top: -2px;
+    right: -6px;
+    box-sizing: border-box;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--chat-signal-ink);
+    border-radius: 10px;
+    background: var(--chat-signal-fill);
+    color: var(--chat-signal-ink);
+    box-shadow: 0 2px 4px #0005, inset 0 1px 0 #ffffff50;
+    font: 850 11px/1 var(--font-main, sans-serif);
+    letter-spacing: 0;
+    pointer-events: none;
+}
+#main-menu > .main-global-chat-btn .global-chat-typing {
+    position: absolute;
+    z-index: 3;
+    bottom: -2px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    box-sizing: border-box;
+    width: 27px;
+    height: 14px;
+    border: 1px solid var(--chat-signal-ink);
+    border-radius: 8px;
+    background: var(--chat-signal-fill);
+    box-shadow: 0 2px 4px #0004;
+    pointer-events: none;
+}
+#main-menu > .main-global-chat-btn .global-chat-unread:not([data-state="unread"]) {
+    background: var(--theme-card-raised, #D6C996);
+    color: var(--theme-card-ink, #193E2B);
+    border-color: var(--theme-card-ink, #193E2B);
+    box-shadow: 0 1px 3px #0004, inset 0 1px 0 #ffffff40;
+}
+#main-menu > .main-global-chat-btn .global-chat-typing i {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--chat-signal-ink);
+    animation: global-chat-writing 1.2s ease-in-out infinite;
+}
+#main-menu > .main-global-chat-btn .global-chat-typing i:nth-child(2) { animation-delay: .16s; }
+#main-menu > .main-global-chat-btn .global-chat-typing i:nth-child(3) { animation-delay: .32s; }
+#main-menu > .main-global-chat-btn :is(.global-chat-unread,.global-chat-typing)[hidden],
+#global-chat-typing-status[hidden] { display: none !important; }
+#global-chat-typing-status {
+    color: var(--gc-ink, #FFF5D8);
+    font-size: .7rem;
+    font-weight: 700;
+    height: 14px;
+    line-height: 14px;
+    min-width: 0;
+    max-width: calc(100% - 45px);
+    margin-right: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+@keyframes global-chat-writing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    #main-menu > .main-global-chat-btn .global-chat-typing i { animation: none; }
+}
+
+/* Message actions inherit the actual bubble's foreground in every palette. */
+#global-chat-overlay .global-chat-message-actions {
+    display: inline-flex;
+    gap: 6px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+#global-chat-overlay .global-chat-meta { flex-wrap: wrap; }
+#global-chat-overlay .global-chat-message-action,
+#global-chat-overlay #btn-global-cancel-edit {
+    min-height: 32px;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: 700 .72rem/1.2 'Montserrat', Arial, sans-serif;
+    cursor: pointer;
+}
+#global-chat-overlay .global-chat-message-action:focus-visible,
+#global-chat-overlay #btn-global-cancel-edit:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+#global-chat-overlay :is(.global-chat-message-action,#btn-global-cancel-edit,.global-chat-send):disabled {
+    cursor: wait;
+    opacity: .55;
+}
+#global-chat-editing {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 8px;
+    border: 1px solid var(--gc-border, #90AA78);
+    border-radius: 9px;
+    color: var(--gc-ink, #FFF5D8);
+    background: var(--gc-raised, #284B32);
+    font: 700 .75rem/1.3 'Montserrat', Arial, sans-serif;
+}
+#global-chat-editing[hidden] { display: none !important; }
+#global-chat-overlay #global-chat-status[data-tone="success"] { color: var(--gc-ink, #FFF5D8) !important; }
+
 /* Nine original Global Chat interiors. Green keeps its locked room reference. */
 body.light-theme #global-chat-overlay {
     --gc-surface: #FFF1D7; --gc-raised: #F3D6A8; --gc-inset: #DBB47B;

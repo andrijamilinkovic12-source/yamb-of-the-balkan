@@ -105,7 +105,8 @@ async function main() {
             row.filter = { registrationCycleId: cycleId, readinessRevision: 0 };
             row.values = { readinessRevision: 1, status: 'finished' };
             row.plan = { events: [], final: { maxBalance: 100000, awards: [
-                { uid, role: 'winner', amount: 12000 }, { uid: runnerUp, role: 'runnerup', amount: 5500 }
+                { uid, role: 'winner', amount: 12000, notice: { id: 'a'.repeat(64), matchId: 'final-game', role: 'winner', reward: 12000 } },
+                { uid: runnerUp, role: 'runnerup', amount: 5500, notice: { id: 'a'.repeat(64), matchId: 'final-game', role: 'runnerup', reward: 5500 } }
             ], record: { winnerId: uid, winnerName: 'Crash fixture', winnerPhotoUrl: '', wonAt: Date.now(), tournamentNumber: 30 } } };
             return row;
         }
@@ -125,12 +126,14 @@ async function main() {
                 } else {
                     assert.equal((await profile(row.runnerUp)).balance, committed ? 30500 : 25000);
                     assert.equal((await profile(row.uid)).tournamentWins, committed ? 1 : 0);
+                    assert.equal((await profile(row.uid)).pendingTournamentPrizes?.length || 0, committed ? 1 : 0);
                     assert.equal(await col('tourneystats').countDocuments({ playerId: row.uid }), committed ? 1 : 0);
                     if (!committed) await command(rt, row);
                     await assert.rejects(command(rt, row), /revision_conflict/);
                     assert.equal((await profile(row.uid)).balance, 37000);
                     assert.equal((await profile(row.runnerUp)).balance, 30500);
                     assert.equal((await profile(row.uid)).tournamentWins, 1);
+                    assert.deepEqual((await profile(row.runnerUp)).pendingTournamentPrizes, [row.plan.final.awards[1].notice]);
                     assert.equal((await col('tourneystats').findOne({ playerId: row.uid })).championships.length, 1);
                 }
             }

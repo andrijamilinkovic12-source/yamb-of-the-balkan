@@ -12,7 +12,7 @@ const index = read('www/index.html');
 const sheets = [...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(match => match[1]);
 const roomStart = index.indexOf('<div id="tournament-screen"');
 const room = index.slice(roomStart, index.indexOf('\n    <script>', roomStart)).replace('class="screen"', 'class="screen active"');
-const modal = index.slice(index.indexOf('<div id="custom-modal-overlay"'), index.indexOf('<div id="chat-float-btn"'));
+const modal = index.slice(index.indexOf('<div id="custom-modal-overlay"'), index.indexOf('<button id="chat-float-btn"'));
 const fixture = '<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">'
     + sheets.map(file => '<link rel="stylesheet" href="' + file + '">').join('')
     + '<style>:root{--safe-top:24px;--safe-bottom:24px;--safe-left:0px;--safe-right:0px}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}</style>'

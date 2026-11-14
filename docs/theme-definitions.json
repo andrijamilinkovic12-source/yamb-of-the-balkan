@@ -1031,6 +1031,34 @@
       },
       "qa": "Android qaLocal: docs/qa-theme-global-chat-layout.json, docs/qa-theme-global-chat-layout-320x568.json, docs/qa-theme-global-chat-layout-768x1024.json i docs/qa-theme-global-chat-layout-320x568-font130.json; pregled docs/theme-global-chat-room-review.html."
     },
+    "globalChatActivityIndicators": {
+      "scope": "Svih deset tema; postojeći kanonski PNG ikone i njegove dimenzije ostaju isti.",
+      "unread": "Živi broj novih poruka prikazuje se preko ikone, odvojeno od PNG crteža. Sopstvene poruke se ne broje; ponovljena isporuka istog ID-a ne uvećava broj. Pri prvom korišćenju postojeća istorija je početna tačka; kasnije se pamti mesto čitanja zasebno za nalog na tom uređaju. Broj obuhvata dostupnu serversku istoriju (najviše 50 poruka).",
+      "read": "Broj se vraća na mirnu oznaku 0 kada poruke stignu i prikažu se u otvorenoj, vidljivoj chat sobi. Nula pokriva ukrasne indikatore nacrtane u postojećem PNG-u. Bez potvrđene veze koriste se ? ili …, umesto lažne potvrde da nema novih poruka. Sam klik na ikonu, skrivena aplikacija i pozadinska sinhronizacija ne označavaju poruke pročitanim. Povratak veze osvežava metapodatke bez učitavanja teksta poruka u glavni meni.",
+      "typing": "Tri animirane tačke označavaju stvarno kucanje drugog prijavljenog korisnika. Status se prekida slanjem, zatvaranjem, prekidom veze ili istekom kratkog roka. Ne otkriva sadržaj poruke i ne piše se u bazu.",
+      "appearance": "Oznake su dinamički UI, sa površinom i kontrastnim bojama iz palete teme, istom geometrijom u svih deset tema i bez pomeranja ikone. Poštuju smanjenu animaciju i lokalizaciju. Statički ukras na PNG-u ne predstavlja broj novih poruka.",
+      "checks": "scripts/test-global-chat-activity.cjs; scripts/test-global-chat-activity-layout.cjs (10 tema × 3 mobilne širine)."
+    },
+    "globalChatMessageManagement": {
+      "scope": "Svih deset tema. Autor može da izmeni ili obriše svoju poruku dok je dostupna u aktivnoj istoriji. Sistemske i tuđe poruke nemaju ove akcije.",
+      "ui": "Tekstualna dugmad Izmeni i Obriši stoje uz sopstvenu poruku. Izmena koristi postojeće polje unosa i dugme slanja, uz traku Izmena poruke i Otkaži; prethodni nacrt nove poruke se čuva. Brisanje traži potvrdu i uklanja poruku svim učesnicima. Uspešno izmenjena poruka ima oznaku izmenjeno.",
+      "style": "Akcije i traka izmene imaju zajedničku geometriju i tipografiju u svih deset tema. Boje nasleđuju kontrastni par površine i teksta teme. Ne dodaju se PNG/SVG ikone niti menja kanonski identitet sobe.",
+      "authority": "Vlasništvo određuje isključivo serverski potvrđen UID. Proveravaju se revizija, najviše 550 znakova, moderacija, zabrana pisanja i učestalost zahteva. Konkurentna izmena ne sme prepisati noviju verziju. Korisnik pod zabranom pisanja može ukloniti svoju poruku.",
+      "persistence": "Izmene i brisanje dele serverski red sa upisom poruka i resetom istorije. MongoDB upis je ograničen ID-em poruke, vlasnikom i prethodnom revizijom. Uspeh se potvrđuje i emituje tek nakon uspešnog upisa; neuspeh ne pravi privid lokalnog uspeha. Izmena zadržava originalni ID i vreme nastanka i ne broji se kao nova poruka. Brisanje uklanja poruku i iz broja nepročitanih.",
+      "checks": "scripts/test-global-chat-mutations.cjs; scripts/test-global-chat-mutations-ui.cjs; scripts/check-global-chat-activity-emulator.cjs."
+    },
+    "globalChatModeration": {
+      "scope": "Privatan panel u Globalnom chatu dostupan jednom serverski konfigurisanom vlasniku po potvrđenom Firebase UID-u. Prikaz i ovlašćenje se proveravaju odvojeno.",
+      "views": "Prijave, aktivne poruke, aktivne zabrane i evidencija. Prijava zadržava sačuvani tekst i opcioni razlog i posle izmene ili brisanja poruke.",
+      "actions": "Rešavanje i odbacivanje prijave, uklanjanje poruke, zabrana pisanja sa rokom ili trajno i ukidanje zabrane. Obavezan razlog i potvrda. Odluka i evidencija čuvaju se u istoj MongoDB transakciji.",
+      "geometry": "Panel koristi postojeći okvir sobe. Lista se skroluje unutar okvira, komande prate istu geometriju i boje palete teme u svih deset tema."
+    },
+    "onlineDuelChat": {
+      "scope": "Privatni chat u aktivnom online duelu, bez obzira na način pokretanja. Prikaz dostupan samo dvojici igrača.",
+      "layout": "Zajedničke dimenzije i kontrole u svih deset tema. Površine i tekst koriste postojeće palete teme, a plutajuće dugme koristi kanonsku tematsku chat ikonu.",
+      "interaction": "Plutajuće dugme i prozor mogu se pomerati dodirom ili mišem unutar vidljivog prostora sa sistemskim marginama. Prozor se pomera i smanjuje kad se pojavi tastatura. Minimizirana ikona prikazuje broj nepročitanih.",
+      "privacy": "Igrač može isključiti slanje i prijem. Izbor se pamti po nalogu na uređaju. Istorija ima najviše 50 poruka po aktivnom meču. Prijava čuva samo izabranu poruku i oznaku duela u moderatorskom panelu."
+    },
     "globalChatFinalAudit": {
       "intro": "Isti skraceni intro za svih deset tema i sve sobe: sadrzaj se otvara posle 2400 ms, intro se zavrsava posle 3200 ms. U intro ide kanonska ikona Globalnog chata aktivne teme.",
       "activePng": "Cetiri razlicite aktivne PNG putanje po temi: identitet sobe, prazno/ucitavanje, slanje i kanonsko X dugme. Stari Easter, Desert i Severna Global Chat PNG vise nisu navedeni u aktivnom paketu ni rezervnoj putanji intra; aktivni markup ne koristi SVG.",

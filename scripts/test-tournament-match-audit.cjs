@@ -117,7 +117,10 @@ function fake(state) {
             if (!matchedCount) Object.assign(row, structuredClone(update.$setOnInsert || {}));
             for (const [key, value] of Object.entries(update.$set || {})) set(row, key, value);
             for (const [key, value] of Object.entries(update.$inc || {})) set(row, key, (val(row, key) || 0) + value);
-            for (const [key, value] of Object.entries(update.$push || {})) set(row, key, [...value.$each, ...(val(row, key) || [])]);
+            for (const [key, value] of Object.entries(update.$push || {})) {
+                const existing = val(row, key) || [];
+                set(row, key, value.$each ? [...value.$each, ...existing] : [...existing, value]);
+            }
             return { matchedCount };
         }
     }) }, async transaction(fn, options) {
@@ -178,7 +181,11 @@ async function persistence() {
     final.state.status = 'finished';
     final.match.winnerId = final.players[0].id;
     const p = fake(final.state);
-    const awards = final.players.map((player, i) => ({ uid: player.id, amount: i ? 5500 : 40000, role: i ? 'runnerup' : 'winner' }));
+    const awards = final.players.map((player, i) => {
+        const amount = i ? 5500 : 44000;
+        const role = i ? 'runnerup' : 'winner';
+        return { uid: player.id, amount, role, notice: { id: 'a'.repeat(64), matchId: 'final-game', role, reward: amount } };
+    });
     const plan = { events: [audit.event(final.state, 'f', 0, final.match, 'final_settled', 'awards', options.now)],
         final: { awards, maxBalance: 100000, record: { winnerId: final.players[0].id, winnerName: 'Winner', wonAt: new Date(at) } } };
     const finalFilter = { registrationCycleId: final.state.registrationCycleId, readinessRevision: 3 };
@@ -186,11 +193,13 @@ async function persistence() {
     p.fail('tourneystats');
     await assert.rejects(p.store.commitState(finalFilter, values, plan), /fixture_write_failed/);
     assert.deepEqual(p.db.userprofiles.map(row => row.balance), [2000, 2000]);
+    assert.ok(p.db.userprofiles.every(row => !row.pendingTournamentPrizes), 'notice rolls back with the wallet');
     assert.equal(p.db.tournamentmatchaudits.length, 0, 'receipt and prize fail together');
     p.fail(null);
     await p.store.commitState(finalFilter, values, plan);
     await assert.rejects(p.store.commitState(finalFilter, values, plan), /revision_conflict/);
-    assert.deepEqual(p.db.userprofiles.map(row => row.balance), [42000, 7500]);
+    assert.deepEqual(p.db.userprofiles.map(row => row.balance), [46000, 7500]);
+    assert.deepEqual(p.db.userprofiles.map(row => row.pendingTournamentPrizes), awards.map(award => [award.notice]));
     assert.equal(p.db.tourneystats[0].wins, 1);
     assert.equal(p.db.tourneystats[0].championships.length, 1);
 

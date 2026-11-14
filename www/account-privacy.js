@@ -46,7 +46,9 @@
             }
             const keys = typeof getAccountSnapshotStorageKeys === 'function' ? getAccountSnapshotStorageKeys(uid) : [];
             for (const key of [...keys, 'yamb_uid', 'yamb_quarter_data', 'yamb_last_daily', 'yamb_daily_reward_claimed',
-                'yamb_daily_reward_amount', 'yamb_push_token', 'yamb_push_token_synced_' + uid]) localStorage.removeItem(key);
+                'yamb_daily_reward_amount', 'yamb_push_token', 'yamb_push_token_synced_' + uid,
+                'yamb_global_chat_read_' + uid, 'yamb_duel_chat_disabled_' + uid]) localStorage.removeItem(key);
+            app?.globalChat?.syncActivityIdentity();
             if (purge) localStorage.removeItem('yamb_account_snapshot_' + uid);
             if (purge) localStorage.setItem('yamb_deletion_disabled_uid', uid);
             localStorage.setItem('yamb_lang', rememberedLanguage);

@@ -1,0 +1,54 @@
+/* Owner-only tools reuse each room's material and contrast pair. No new icon identity. */
+#global-chat-overlay :is(.chat-owner-bar,.chat-moderation-panel) {
+    color: var(--gc-ink, #FFF5D8);
+    background: var(--gc-surface, #2C4F31);
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: .78rem;
+    line-height: 1.4;
+    min-width: 0;
+}
+#global-chat-overlay .chat-owner-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    flex: 0 0 auto; padding: 5px 12px; border-bottom: 1px solid var(--gc-border, #819B70);
+}
+#global-chat-overlay .chat-owner-bar > span { font-size: .68rem; font-weight: 700; }
+#global-chat-overlay .chat-moderation-panel { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+#global-chat-overlay .chat-moderation-panel button,
+#global-chat-overlay .chat-owner-bar button {
+    min-height: 32px; border: 1px solid var(--gc-border, #819B70); border-radius: 8px;
+    padding: 4px 8px; color: inherit; background: var(--gc-raised, #365C3C);
+    font: 700 .72rem/1.2 'Montserrat', Arial, sans-serif; cursor: pointer;
+}
+#global-chat-overlay .chat-mod-tabs { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px; padding: 7px 8px 3px; }
+#global-chat-overlay .chat-mod-tabs button { min-width: 0; padding: 5px 2px; font-size: .66rem; overflow-wrap: anywhere; }
+#global-chat-overlay .chat-mod-tabs button[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: -3px; }
+#global-chat-overlay .chat-mod-toolbar { display: flex; align-items: center; gap: 6px; padding: 4px 8px; min-height: 36px; }
+#global-chat-overlay .chat-mod-toolbar > span { flex: 1; font-size: .7rem; color: var(--gc-danger, #FFDDD0); }
+#global-chat-overlay .chat-mod-toolbar > span[data-success="true"] { color: inherit; }
+#global-chat-overlay .chat-mod-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 8px; }
+#global-chat-overlay .chat-mod-card {
+    padding: 10px; margin-bottom: 8px; border: 1px solid var(--gc-border, #819B70); border-radius: 10px;
+    background: var(--gc-raised, #365C3C); box-shadow: 0 2px 5px #0002; overflow-wrap: anywhere;
+}
+#global-chat-overlay .chat-mod-card p { margin: 6px 0; }
+#global-chat-overlay .chat-mod-card small { font-size: .66rem; }
+#global-chat-overlay .chat-mod-note { border-left: 2px solid currentColor; padding-left: 7px; font-size: .7rem; }
+#global-chat-overlay .chat-mod-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+#global-chat-overlay .chat-mod-decision {
+    display: flex; flex-direction: column; gap: 4px; padding: 8px; margin: 3px 8px; border: 1px solid currentColor;
+    border-radius: 9px; background: var(--gc-raised, #365C3C); flex: 0 0 auto; overflow-wrap: anywhere;
+}
+#global-chat-overlay .chat-mod-decision strong { font-size: .72rem; }
+#global-chat-overlay .chat-mod-decision label { font-size: .68rem; }
+#global-chat-overlay .chat-mod-decision :is(textarea,select) {
+    box-sizing: border-box; width: 100%; min-width: 0; padding: 6px; color: inherit;
+    background: var(--gc-inset, #284B32); border: 1px solid var(--gc-border, #819B70); border-radius: 7px;
+    font: inherit; resize: none;
+}
+#global-chat-overlay .chat-mod-decision textarea { height: 48px; }
+#global-chat-overlay .chat-mod-decision select { height: 34px; }
+#global-chat-overlay .chat-mod-empty { margin: 12px; text-align: center; }
+#global-chat-overlay .chat-moderation-restriction { color: var(--gc-danger, #FFDDD0); font-size: .7rem; line-height: 1.35; overflow-wrap: anywhere; }
+#global-chat-overlay :is(.chat-owner-bar,.chat-moderation-panel) button:disabled { opacity: .55; cursor: wait; }
+#global-chat-overlay :is(.chat-owner-bar,.chat-moderation-panel) button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+#global-chat-overlay :is(#chat-owner-bar,#chat-moderation-panel,#chat-mod-decision,#chat-mod-more,#chat-mod-duration-wrap,#global-chat-body,#global-chat-footer,#chat-moderation-restriction)[hidden] { display: none !important; }

@@ -170,6 +170,7 @@ function setYambAuthState(user, options = {}) {
 
     if (!normalized) {
         localStorage.removeItem('yamb_uid');
+        window.app?.globalChat?.syncActivityIdentity();
         localStorage.removeItem('yamb_player_name');
         localStorage.removeItem('yamb_player_photo');
 
@@ -192,6 +193,7 @@ function setYambAuthState(user, options = {}) {
     }
 
     localStorage.setItem('yamb_uid', normalized.uid);
+    window.app?.globalChat?.syncActivityIdentity();
     migrateLegacyLocalProgressToUid(normalized.uid);
 
     if (normalized.displayName) {
@@ -996,6 +998,7 @@ async function odjaviSe() {
         // 1. Brisanje Firebase podataka
         localStorage.removeItem('yamb_player_photo');
         localStorage.removeItem('yamb_uid');
+        window.app?.globalChat?.syncActivityIdentity();
 
         // 2. STRIKTNO BRISANJE STATISTIKE I INVENTARA - Sve kreće od nule!
         localStorage.removeItem('yamb_stats');

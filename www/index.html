@@ -125,7 +125,9 @@
     <link rel="stylesheet" href="theme-effect-previews.css?v=16">
     <link rel="stylesheet" href="theme-treasury-room.css?v=8">
     <link rel="stylesheet" href="theme-room-close-controls.css?v=3">
-    <link rel="stylesheet" href="theme-global-chat-room.css?v=6">
+    <link rel="stylesheet" href="theme-global-chat-room.css?v=8">
+    <link rel="stylesheet" href="theme-global-chat-moderation.css?v=1">
+    <link rel="stylesheet" href="theme-duel-chat.css?v=1">
     <link rel="stylesheet" href="theme-online-players-room.css?v=4">
     <link rel="stylesheet" href="theme-economy-room.css?v=1">
     <link rel="stylesheet" href="theme-leaderboard-room.css?v=5">
@@ -149,7 +151,7 @@
     <link rel="stylesheet" href="theme-tournament-readiness.css?v=1">
     <link rel="stylesheet" href="theme-tournament-scheduling.css?v=1">
     
-    <script src="languages.js?v=5.33"></script>
+    <script src="languages.js?v=5.37"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -382,12 +384,25 @@
         </div>
     </div>
 
-    <div id="chat-float-btn" class="chat-float-btn hidden" onclick="app.toggleChat()">💬<div id="chat-badge" class="chat-notification"></div></div>
-    <div id="chat-window" class="chat-window">
-        <div id="chat-header" class="chat-header"><span data-lang="ui_chat_title">CHAT</span><span style="cursor:pointer;" onclick="app.toggleChat()">▼</span></div>
+    <button id="chat-float-btn" class="chat-float-btn hidden" type="button" aria-label="Chat u duelu" aria-expanded="false" aria-controls="chat-window">
+        <img class="duel-chat-launcher-icon" data-theme-src="assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png?v=1" alt="" decoding="async">
+        <span id="chat-badge" class="chat-notification" hidden aria-hidden="true"></span>
+    </button>
+    <section id="chat-window" class="chat-window" aria-labelledby="duel-chat-title" inert>
+        <div id="chat-header" class="chat-header">
+            <div id="duel-chat-handle"><span id="duel-chat-title" data-lang="duel_chat_title">Chat u duelu</span></div>
+            <button id="duel-chat-minimize" type="button" data-lang-aria="duel_chat_minimize" aria-label="Smanji chat">−</button>
+        </div>
         <div id="chat-body" class="chat-body"></div>
-        <div class="chat-footer"><input type="text" id="chat-input-field" class="chat-input" placeholder="..." data-lang-placeholder="ui_chat_placeholder"><button id="btn-chat-send" class="btn-chat-send" data-lang-aria="aria_send_message" aria-label="Pošalji poruku">➤</button></div>
-    </div>
+        <p id="duel-chat-status" role="status" hidden></p>
+        <div class="chat-footer">
+            <div id="duel-chat-compose">
+                <input type="text" id="chat-input-field" class="chat-input" maxlength="550" autocomplete="off" enterkeyhint="send" placeholder="Napiši poruku..." data-lang-placeholder="ui_chat_placeholder" data-lang-aria="global_chat_placeholder" aria-label="Napiši poruku">
+                <button id="btn-chat-send" type="button" class="btn-chat-send" data-lang-aria="aria_send_message" aria-label="Pošalji poruku"><span data-lang="duel_chat_send">Pošalji</span></button>
+            </div>
+            <button id="duel-chat-switch" type="button">Isključi chat</button>
+        </div>
+    </section>
 
     <div id="splash-screen" class="screen active">
 
@@ -462,12 +477,13 @@
     </div>
 
     <div id="main-menu" class="screen">
-        <div class="main-global-chat-btn" onclick="app.openGlobalChat()"
+        <div class="main-global-chat-btn" onclick="app.openGlobalChat()" role="button" tabindex="0" aria-label="Global chat"
              style="position: absolute; top: 30px; left: 20px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); font-size: 2rem;" 
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
             <img class="green-global-chat-icon" data-theme-src="assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-
+            <span id="global-chat-unread" class="global-chat-unread" hidden aria-hidden="true"></span>
+            <span id="global-chat-typing" class="global-chat-typing" hidden aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
 
         <div class="main-summary-row" style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
@@ -1547,6 +1563,30 @@
                 <button type="button" class="global-chat-close" onclick="app.closeGlobalChat()" aria-label="Zatvori chat" data-lang-aria="aria_close_chat">×</button>
             </div>
 
+            <div id="chat-owner-bar" class="chat-owner-bar" hidden>
+                <span data-lang="chat_mod_owner">Vlasnik · moderator</span>
+                <button id="btn-chat-moderation" type="button">Moderacija</button>
+            </div>
+            <section id="chat-moderation-panel" class="chat-moderation-panel" hidden aria-label="Moderacija" data-lang-aria="chat_mod_panel">
+                <div class="chat-mod-tabs">
+                    <button type="button" data-chat-mod-tab="reports" data-lang="chat_mod_reports">Prijave</button>
+                    <button type="button" data-chat-mod-tab="messages" data-lang="chat_mod_messages">Poruke</button>
+                    <button type="button" data-chat-mod-tab="bans" data-lang="chat_mod_bans">Zabrane</button>
+                    <button type="button" data-chat-mod-tab="audit" data-lang="chat_mod_audit">Evidencija</button>
+                </div>
+                <div class="chat-mod-toolbar"><span id="chat-mod-status" role="status" aria-live="polite"></span><button id="chat-mod-refresh" type="button" data-lang="chat_mod_refresh">Osveži</button></div>
+                <div id="chat-mod-decision" class="chat-mod-decision" hidden>
+                    <strong id="chat-mod-decision-title"></strong>
+                    <label for="chat-mod-reason" data-lang="chat_mod_reason">Razlog odluke</label>
+                    <textarea id="chat-mod-reason" maxlength="300" rows="2"></textarea>
+                    <label id="chat-mod-duration-wrap"><span data-lang="chat_mod_duration">Trajanje zabrane</span>
+                        <select id="chat-mod-duration"><option value="15m" data-lang="chat_mod_15m">15 minuta</option><option value="1h" data-lang="chat_mod_1h">1 sat</option><option value="24h" data-lang="chat_mod_24h">24 sata</option><option value="7d" data-lang="chat_mod_7d">7 dana</option><option value="permanent" data-lang="chat_mod_permanent">Trajno</option></select>
+                    </label>
+                    <div class="chat-mod-actions"><button id="chat-mod-submit" type="button" data-lang="chat_mod_apply">Potvrdi odluku</button><button id="chat-mod-cancel" type="button" data-lang="chat_cancel_edit">Otkaži</button></div>
+                </div>
+                <div id="chat-mod-list" class="chat-mod-list"></div>
+                <button id="chat-mod-more" type="button" hidden data-lang="chat_mod_more">Učitaj još</button>
+            </section>
             <div id="global-chat-body" class="chat-body global-chat-body">
                 <div class="global-chat-welcome global-chat-state" data-chat-state="empty" role="status" aria-live="polite">
                     <img class="global-chat-state-soft-clay-icon-green theme-chat-state-icon" data-theme-src="assets/green-soft-clay/global-chat-empty-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1554,7 +1594,12 @@
                 </div>
             </div>
 
-            <div class="chat-footer global-chat-footer">
+            <div id="global-chat-footer" class="chat-footer global-chat-footer">
+                <div id="chat-moderation-restriction" class="chat-moderation-restriction" hidden role="alert"></div>
+                <div id="global-chat-editing" class="global-chat-editing" hidden>
+                    <span data-lang="chat_editing">Izmena poruke</span>
+                    <button id="btn-global-cancel-edit" type="button" data-lang="chat_cancel_edit">Otkaži</button>
+                </div>
                 <div class="global-chat-compose">
                     <textarea id="global-chat-input" class="modal-input global-chat-input" maxlength="550" rows="1" placeholder="Napiši poruku..." data-lang-placeholder="global_chat_placeholder" autocomplete="off" enterkeyhint="send"></textarea>
                     <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku" data-lang-aria="aria_send_message">
@@ -1563,6 +1608,7 @@
                     </button>
                 </div>
                 <div class="global-chat-hint-row">
+                    <span id="global-chat-typing-status" class="global-chat-typing-status" hidden role="status" aria-live="polite"></span>
                     <span id="global-chat-char-count" class="global-chat-char-count">0/550</span>
                 </div>
                 <div id="global-chat-status" class="global-chat-status" role="alert"></div>
@@ -1691,16 +1737,18 @@
     <script src="turnir.js?v=1043"></script>
     <script src="pravilaigre.js?v=1.38"></script>
     <script src="vracanjeupisa.js?v=1.8"></script>
-    <script src="globalchat.js?v=1.10"></script>
+    <script src="globalchat.js?v=1.13"></script>
+    <script src="globalchat-moderation.js?v=2"></script>
     <script src="appCheck.js?v=1.0"></script>
-    <script src="auth.js?v=1018"></script>
+    <script src="auth.js?v=1019"></script>
     <script src="account-deletion-client.js?v=2"></script>
     <link rel="stylesheet" href="analytics-privacy.css?v=3">
     <script src="analytics-privacy.js?v=2"></script>
-    <script src="account-privacy.js?v=3"></script>
+    <script src="account-privacy.js?v=5"></script>
     <script src="pushNotifications.js?v=1.3"></script>
     <script src="theme-invite-friend-room.js?v=4"></script>
-    <script src="game.js?v=6.49"></script>
+    <script src="duel-chat.js?v=1"></script>
+    <script src="game.js?v=6.52"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>

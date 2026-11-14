@@ -18,6 +18,11 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
+const { createGlobalChatActivity } = require('./lib/global-chat-activity');
+const { createGlobalChatMutations, persistGlobalChatMutation } = require('./lib/global-chat-mutations');
+const { createGlobalChatModeration } = require('./lib/global-chat-moderation');
+const { createGlobalChatModerationStore } = require('./lib/global-chat-moderation-store');
+const { createDuelChat } = require('./lib/duel-chat');
 const powerIndexCore = require('./www/powerIndexCore');
 const tournamentReadinessCore = require('./www/tournamentReadinessCore');
 const tournamentSchedulingCore = require('./www/tournamentSchedulingCore');
@@ -1026,7 +1031,9 @@ const GlobalChatMessageSchema = new mongoose.Schema({
     senderId: { type: String, default: '' },
     senderUid: { type: String, default: '' },
     msg: { type: String, default: '' },
-    createdAt: { type: Number, default: Date.now }
+    createdAt: { type: Number, default: Date.now },
+    editedAt: { type: Number, default: 0 },
+    revision: { type: Number, default: 0 }
 }, { _id: false });
 
 const GlobalChatSchema = new mongoose.Schema({
@@ -1045,8 +1052,18 @@ const GlobalChatReportSchema = new mongoose.Schema({
     senderName: { type: String, default: 'Nepoznat' },
     msg: { type: String, default: '' },
     messageCreatedAt: { type: Number, default: 0 },
-    reportedAt: { type: Number, default: Date.now }
+    reportedAt: { type: Number, default: Date.now },
+    messageRevision: { type: Number, default: 0 },
+    reportReason: { type: String, default: '' },
+    source: { type: String, enum: ['global', 'duel'], default: 'global' },
+    duelRoomId: { type: String, default: '' },
+    duelMatchId: { type: String, default: '' },
+    status: { type: String, enum: ['open', 'resolved', 'dismissed'], default: 'open' },
+    resolvedByUid: { type: String, default: '' },
+    resolvedAt: { type: Number, default: 0 },
+    resolutionReason: { type: String, default: '' }
 });
+GlobalChatReportSchema.index({ status: 1, reportedAt: -1, _id: -1 });
 mongoose.model('GlobalChatReport', GlobalChatReportSchema);
 
 const GlobalChatModerationLogSchema = new mongoose.Schema({
@@ -1061,8 +1078,17 @@ const GlobalChatModerationLogSchema = new mongoose.Schema({
     nextStrikes: { type: Number, default: 0 },
     banUntil: { type: Number, default: 0 },
     banDurationMs: { type: Number, default: 0 },
-    createdAt: { type: Number, default: Date.now }
+    createdAt: { type: Number, default: Date.now },
+    actorUid: { type: String, default: '' },
+    actorName: { type: String, default: '' },
+    reason: { type: String, default: '' },
+    messageId: { type: String, default: '' },
+    reportId: { type: String, default: '' },
+    permanent: { type: Boolean, default: false },
+    commandId: { type: String }
 });
+GlobalChatModerationLogSchema.index({ createdAt: -1, _id: -1 });
+GlobalChatModerationLogSchema.index({ commandId: 1 }, { unique: true, sparse: true });
 mongoose.model('GlobalChatModerationLog', GlobalChatModerationLogSchema);
 
 const FriendNotificationSchema = new mongoose.Schema({
@@ -1071,6 +1097,10 @@ const FriendNotificationSchema = new mongoose.Schema({
     fromName: { type: String, default: '' },
     photoUrl: { type: String, default: '' },
     createdAt: { type: Number, default: Date.now }
+}, { _id: false });
+
+const TournamentPrizeNoticeSchema = new mongoose.Schema({
+    id: String, matchId: String, role: String, reward: Number
 }, { _id: false });
 
 const UserProfileSchema = new mongoose.Schema({
@@ -1090,6 +1120,8 @@ const UserProfileSchema = new mongoose.Schema({
     currentWinStreak: { type: Number, default: 0 },
     maxWinStreak: { type: Number, default: 0 },
     tournamentWins: { type: Number, default: 0 },
+    pendingTournamentPrizes: { type: [TournamentPrizeNoticeSchema], default: undefined },
+    lastTournamentPrizeId: String,
     unlockedTrophies: { type: [String], default: [] },
     claimedTrophyRewards: { type: [String], default: undefined },
     unlockedSkins: { type: [String], default: [] },
@@ -1116,6 +1148,10 @@ const UserProfileSchema = new mongoose.Schema({
     h2hStats: { type: Object, default: {} },             
     chatBanUntil: { type: Number, default: 0 },
     chatBanStrikes: { type: Number, default: 0 },
+    chatBanPermanent: { type: Boolean, default: false },
+    chatBanReason: { type: String, default: '' },
+    chatBanActorUid: { type: String, default: '' },
+    chatBanAt: { type: Number, default: 0 },
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -2324,6 +2360,7 @@ const THEME_UNLOCK_IDS = new Set([
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
 let globalChatHistory = [];
+const globalChatActivity = createGlobalChatActivity({ io, getHistory: () => globalChatHistory });
 let globalChatSaveQueue = Promise.resolve();
 let globalChatWeeklyResetTimer = null;
 let globalChatLastResetWeekKey = '';
@@ -2359,7 +2396,9 @@ function normalizeGlobalChatMessage(raw, index = 0) {
         senderId: String(raw.senderId || ''),
         senderUid: String(raw.senderUid || ''),
         msg,
-        createdAt
+        createdAt,
+        editedAt: Math.max(0, toSafeInt(raw.editedAt, 0)),
+        revision: Math.max(0, toSafeInt(raw.revision, 0))
     };
 }
 
@@ -2582,6 +2621,59 @@ function queueGlobalChatMessageSave(message) {
             console.error("Greška u redu za čuvanje chat poruka:", err);
         });
 }
+
+const globalChatMutations = createGlobalChatMutations({
+    getHistory: () => globalChatHistory,
+    enqueue: operation => {
+        const result = globalChatSaveQueue.catch(() => {}).then(operation);
+        globalChatSaveQueue = result.catch(() => {});
+        return result;
+    },
+    persist: change => MONGO_URI
+        ? persistGlobalChatMutation(mongoose.model('GlobalChat'), change)
+        : Promise.resolve(true),
+    publish: (event, data) => io.emit(event, data),
+    filterText: text => cenzurisiPoruku(text),
+    checkRate: uid => {
+        const now = Date.now();
+        const state = globalChatRateLimits[uid] || {};
+        if (now - (state.lastMutationAt || 0) < GLOBAL_CHAT_MIN_INTERVAL_MS) return false;
+        state.lastMutationAt = now;
+        state.lastSeenAt = now;
+        globalChatRateLimits[uid] = state;
+        return true;
+    },
+    canEdit: async (socket, uid) => {
+        if (MONGO_URI) {
+            try {
+                const profile = await UserProfile.findOne({ firebaseUid: uid }).select('chatBanUntil chatBanPermanent').lean();
+                return profile?.chatBanPermanent || Number(profile?.chatBanUntil) > Date.now() ? 'err_chat_suspended' : '';
+            } catch (_) { return 'err_server_conn'; }
+        }
+        const ip = String(socket.handshake.headers['x-forwarded-for'] || socket.handshake.address || '').split(',')[0].trim();
+        return chatBans[ip]?.banUntil > Date.now() ? 'err_chat_suspended' : '';
+    }
+});
+
+const GLOBAL_CHAT_OWNER_UID = String(process.env.GLOBAL_CHAT_OWNER_UID || '').trim();
+const notifyChatUid = (uid, event, data) => {
+    if (!uid) return;
+    for (const client of io.sockets.sockets.values()) if (client.verifiedUid === uid) client.emit(event, data);
+};
+const globalChatModeration = createGlobalChatModeration({
+    ownerUid: GLOBAL_CHAT_OWNER_UID,
+    store: createGlobalChatModerationStore({ connection: mongoose.connection, profileWrites,
+        models: { Profile: UserProfile, Chat: mongoose.model('GlobalChat'),
+            Report: mongoose.model('GlobalChatReport'), Audit: mongoose.model('GlobalChatModerationLog') } }),
+    enqueue: operation => {
+        const result = globalChatSaveQueue.catch(() => {}).then(operation);
+        globalChatSaveQueue = result.catch(() => {});
+        return result;
+    },
+    getHistory: () => globalChatHistory,
+    publish: (event, data) => io.emit(event, data),
+    notify: notifyChatUid
+});
 
 // GRACE PERIOD PROMENLJIVE
 const disconnectTimers = {};
@@ -4800,6 +4892,24 @@ const FINISHED_ROOM_CLEANUP_MS = 5 * 60 * 1000;
 
 const roomTimers = {};
 const roomState = {};
+const duelChat = createDuelChat({
+    getRoom: socket => {
+        const id = playerRooms[socket.id];
+        return id ? { id, state: roomState[id] } : null;
+    },
+    getSocket: id => io.sockets.sockets.get(id),
+    checkPosting: async uid => {
+        if (!MONGO_URI) return '';
+        const profile = await UserProfile.findOne({ firebaseUid: uid }).select('chatBanUntil chatBanPermanent').lean();
+        return profile?.chatBanPermanent || Number(profile?.chatBanUntil) > Date.now() ? 'err_chat_suspended' : '';
+    },
+    filterText: text => cenzurisiPoruku(text),
+    saveReport: async data => {
+        if (!MONGO_URI) throw new Error('chat_report_store_unavailable');
+        await mongoose.model('GlobalChatReport').create(data);
+        notifyChatUid(GLOBAL_CHAT_OWNER_UID, 'global_chat_moderation_changed', { kind: 'report' });
+    }
+});
 const finishedRoomCleanupTimers = {};
 
 function startTurnTimer(roomId, durationMs = TOTAL_TIMEOUT) {
@@ -5367,7 +5477,9 @@ async function settleAuditedTournamentFinal() {
         const awards = [
             { uid: winner.id, role: 'winner', amount: TOURNEY_WINNER_REWARD },
             { uid: runnerUp.id, role: 'runnerup', amount: TOURNEY_RUNNER_UP_REWARD }
-        ].filter(award => !award.uid.startsWith('deleted_'));
+        ].filter(award => !award.uid.startsWith('deleted_')).map(award => ({
+            ...award, notice: buildTournamentPrizeNotice(state, match, award.role, award.amount)
+        }));
         const record = winner.id.startsWith('deleted_') ? null : await buildTournamentChampionshipRecord(match, winner);
         if (record) {
             record.wonAt = new Date(state.finishedAt);
@@ -5386,7 +5498,7 @@ async function settleAuditedTournamentFinal() {
         const profile = await UserProfile.findOne({ firebaseUid: award.uid }).lean();
         if (profile) {
             emitProfileSyncToUid(award.uid, profile);
-            emitTournamentPrizeToUid(award.uid, { role: award.role, reward: award.amount,
+            emitTournamentPrizeToUid(award.uid, { ...award.notice,
                 balance: profile.balance, tournamentWins: profile.tournamentWins });
         }
     }
@@ -6839,6 +6951,7 @@ async function applyTournamentCompletedDuelResult(roomId) {
         return false;
     }
 
+    match.lastResolvedGameId = roomState[roomId]?.matchId || '';
     match.winnerId = winnerId;
     const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
     advanceTournamentBracket(roomInfo.round, index, winnerObj);
@@ -6948,10 +7061,25 @@ function emitProfileSyncToUid(uid, user, extra = {}) {
     io.to(socketId).emit('sync_local_stats', { ...buildProfileSyncPayload(user), ...extra });
 }
 
+function buildTournamentPrizeNotice(state, match, role, reward) {
+    const id = crypto.createHash('sha256').update(JSON.stringify([
+        state.registrationCycleId || '', state.tournamentNumber, match.winnerId, match.resultRecordedAt
+    ])).digest('hex');
+    return { id, matchId: match.resultType === 'regular' ? String(match.lastResolvedGameId || '') : '', role, reward };
+}
+
 function emitTournamentPrizeToUid(uid, payload) {
-    const socketId = uid ? onlinePlayers[uid] : null;
-    if (!socketId) return;
-    io.to(socketId).emit('tourney_prize_awarded', payload);
+    const socket = io.sockets.sockets.get(onlinePlayers[uid]);
+    if (socket && getVerifiedUid(socket) === uid) socket.emit('tourney_prize_awarded', { ...payload, recipientUid: uid });
+}
+
+async function emitPendingTournamentPrizes(socket) {
+    const uid = getVerifiedUid(socket);
+    if (!uid || !MONGO_URI) return;
+    const user = await UserProfile.findOne({ firebaseUid: uid }).select('pendingTournamentPrizes').lean();
+    if (socket.connected && getVerifiedUid(socket) === uid && user?.pendingTournamentPrizes?.length) {
+        socket.emit('tourney_pending_prizes', { recipientUid: uid, prizes: user.pendingTournamentPrizes });
+    }
 }
 
 async function debitTournamentEntryFee(uid) {
@@ -6989,34 +7117,29 @@ async function refundTournamentEntryFee(uid) {
     return user;
 }
 
-async function applyTournamentPrize(uid, amount, role, incrementTournamentWins = false) {
+async function applyTournamentPrize(uid, notice) {
     if (!uid) return { ok: false };
-    if (!profileWrites.owns(uid)) return profileWrites.run(uid,
-        () => applyTournamentPrize(uid, amount, role, incrementTournamentWins));
+    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => applyTournamentPrize(uid, notice));
 
     if (!MONGO_URI) {
-        emitTournamentPrizeToUid(uid, { role, reward: amount });
+        emitTournamentPrizeToUid(uid, notice);
         return { ok: true, user: null };
     }
 
-    const user = await UserProfile.findOne({ firebaseUid: uid });
+    const previous = await UserProfile.findOne({ firebaseUid: uid }).select('balance tournamentWins lastTournamentPrizeId').lean();
+    if (!previous) return { ok: false };
+    if (previous.lastTournamentPrizeId === notice.id) return { ok: true, user: previous };
+    const user = await UserProfile.findOneAndUpdate({ firebaseUid: uid, lastTournamentPrizeId: { $ne: notice.id } }, {
+        $set: { balance: Math.min(MAX_BALANCE, Math.max(0, toSafeInt(previous.balance)) + notice.reward),
+            lastTournamentPrizeId: notice.id },
+        ...(notice.role === 'winner' ? { $inc: { tournamentWins: 1 } } : {}),
+        $push: { pendingTournamentPrizes: notice }
+    }, { new: true, writeConcern: { w: 'majority' } });
     if (!user) return { ok: false };
-
-    user.balance = Math.min(
-        MAX_BALANCE,
-        Math.max(0, toSafeInt(user.balance)) + amount
-    );
-
-    if (incrementTournamentWins) {
-        user.tournamentWins = Math.max(0, toSafeInt(user.tournamentWins)) + 1;
-    }
-
-    await user.save();
 
     emitProfileSyncToUid(uid, user);
     emitTournamentPrizeToUid(uid, {
-        role,
-        reward: amount,
+        ...notice,
         balance: user.balance,
         tournamentWins: user.tournamentWins
     });
@@ -7098,14 +7221,16 @@ async function awardTournamentFinalPrizes(match, winnerObj) {
     }
 
     if (!match.prizeAwards[winnerObj.id]) {
-        const prizeResult = await applyTournamentPrize(winnerObj.id, TOURNEY_WINNER_REWARD, 'winner', true);
+        const notice = buildTournamentPrizeNotice(tournamentState, match, 'winner', TOURNEY_WINNER_REWARD);
+        const prizeResult = await applyTournamentPrize(winnerObj.id, notice);
         if (!prizeResult.ok) throw new Error('winner_prize_not_applied');
         match.prizeAwards[winnerObj.id] = true;
         saveTournamentToDb();
     }
 
     if (runnerUpObj && runnerUpObj.id && !match.prizeAwards[runnerUpObj.id]) {
-        const prizeResult = await applyTournamentPrize(runnerUpObj.id, TOURNEY_RUNNER_UP_REWARD, 'runnerup', false);
+        const notice = buildTournamentPrizeNotice(tournamentState, match, 'runnerup', TOURNEY_RUNNER_UP_REWARD);
+        const prizeResult = await applyTournamentPrize(runnerUpObj.id, notice);
         if (!prizeResult.ok) throw new Error('runnerup_prize_not_applied');
         match.prizeAwards[runnerUpObj.id] = true;
         saveTournamentToDb();
@@ -11201,7 +11326,7 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
     profileWrites.bindSocket(socket, [
-        'set_player_data', 'request_profile_sync', 'request_daily_challenge',
+        'set_player_data', 'request_profile_sync', 'request_daily_challenge', 'global_chat_msg',
         'claim_trophy_reward', 'claim_daily_reward', 'check_quarter_reward',
         'claim_shop_ad_reward', 'claim_shop_discount', 'claim_shop_ad_unlock',
         'claim_undo_token_reward', 'submit_match_result', 'submit_score', 'submit_league_score', 'undo_last_move'
@@ -11440,6 +11565,7 @@ io.on('connection', (socket) => {
             reason: appCheckResult.ok ? null : appCheckResult.reason
         };
         if (typeof ack === 'function') ack(result);
+        if (result.ok) emitPendingTournamentPrizes(socket).catch(() => {});
         if (result.reason === 'account_deleted') socket.emit('account_deletion_started', { uid: result.uid });
         if (!result.ok) socket.emit('auth_required', result);
     });
@@ -11732,6 +11858,8 @@ io.on('connection', (socket) => {
         }
 
         touchMonitorActivity(verifiedUid, socket.activeTheme);
+        globalChatActivity.snapshot(socket);
+        void globalChatModeration.pushCapabilities(socket);
 
         try {
             if (!MONGO_URI) {
@@ -15227,7 +15355,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
+    duelChat.bind(socket);
 
     socket.on('connection_diagnostic_snapshot', (data = {}) => {
         rememberClientConnectionDiagnosticSnapshot(socket, data);
@@ -15245,6 +15373,10 @@ io.on('connection', (socket) => {
             clientReconnectTransport: String(data.reconnectTransport || getSocketTransport(socket)).substring(0, 32)
         });
     });
+
+    globalChatActivity.bind(socket);
+    globalChatMutations.bind(socket);
+    globalChatModeration.bind(socket);
 
     socket.on('request_global_chat_history', () => {
         if (!socket.playerName || !socket.verifiedUid) {
@@ -15271,15 +15403,17 @@ io.on('connection', (socket) => {
         if (MONGO_URI) {
             try {
                 chatProfile = await UserProfile.findOne({ firebaseUid: socket.verifiedUid })
-                    .select('chatBanUntil chatBanStrikes')
+                    .select('chatBanUntil chatBanStrikes chatBanPermanent')
                     .lean();
 
-                if (chatProfile && toSafeInt(chatProfile.chatBanUntil, 0) > now) {
+                if (chatProfile?.chatBanPermanent || toSafeInt(chatProfile?.chatBanUntil, 0) > now) {
                     socket.emit('error_msg', 'err_chat_suspended');
                     return;
                 }
             } catch (err) {
                 console.error('Greška pri proveri chat bana:', err);
+                socket.emit('global_chat_post_rejected', { reason: 'err_server_conn' });
+                return;
             }
         }
 
@@ -15331,7 +15465,8 @@ io.on('connection', (socket) => {
                 try {
                     await UserProfile.findOneAndUpdate(
                         { firebaseUid: socket.verifiedUid },
-                        { $set: { chatBanUntil: banUntil }, $inc: { chatBanStrikes: 1 } },
+                        { $set: { chatBanUntil: banUntil, chatBanPermanent: false,
+                            chatBanReason: 'chat_auto_profanity', chatBanActorUid: '', chatBanAt: now }, $inc: { chatBanStrikes: 1 } },
                         { upsert: false }
                     );
 
@@ -15363,6 +15498,7 @@ io.on('connection', (socket) => {
             }
 
             socket.emit('error_msg', 'err_chat_banned');
+            void globalChatModeration.pushCapabilities(socket);
             return; 
         }
 
@@ -15381,6 +15517,7 @@ io.on('connection', (socket) => {
         }
 
         queueGlobalChatMessageSave(chatObj);
+        globalChatActivity.stop(socket);
         io.emit('global_chat_msg', chatObj);
     });
 
@@ -15402,7 +15539,7 @@ io.on('connection', (socket) => {
             return;
         }
 
-        const messageId = String(data.messageId || '');
+        const messageId = typeof data?.messageId === 'string' ? data.messageId : '';
         const reportedMessage = globalChatHistory.find(message => message.id === messageId);
         if (!reportedMessage) {
             socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_report_missing' });
@@ -15424,10 +15561,13 @@ io.on('connection', (socket) => {
                 senderName: reportedMessage.sender || 'Nepoznat',
                 msg: reportedMessage.msg || '',
                 messageCreatedAt: reportedMessage.createdAt || 0,
+                messageRevision: reportedMessage.revision || 0,
+                reportReason: typeof data?.reason === 'string' ? data.reason.trim().slice(0, 300) : '',
                 reportedAt: now
             });
             globalChatReportLimits[socket.verifiedUid] = now;
             socket.emit('global_chat_report_result', { ok: true, reason: 'chat_report_sent' });
+            notifyChatUid(GLOBAL_CHAT_OWNER_UID, 'global_chat_moderation_changed', { kind: 'report' });
         } catch (err) {
             console.error('Greška pri čuvanju prijave chat poruke:', err);
             socket.emit('global_chat_report_result', { ok: false, reason: 'err_server_conn' });
@@ -15769,6 +15909,17 @@ io.on('connection', (socket) => {
 
     socket.on('tourney_get_reliability', () => {
         emitTournamentReliabilityStatus(socket).catch(() => {});
+    });
+
+    socket.on('tourney_prize_notice_read', async (data = {}) => {
+        const uid = getVerifiedUid(socket);
+        if (!uid || !MONGO_URI || typeof data?.id !== 'string' || !/^[a-f0-9]{64}$/.test(data.id)) return;
+        try {
+            await UserProfile.updateOne({ firebaseUid: uid }, { $pull: { pendingTournamentPrizes: { id: data.id } } },
+                { writeConcern: { w: 'majority' } });
+        } catch (error) {
+            console.error('Tournament prize notice acknowledgement failed:', error.code || error.name);
+        }
     });
 
     socket.on('tourney_notice_read', async (data = {}) => {
@@ -16348,6 +16499,7 @@ io.on('connection', (socket) => {
                 }
 
                 setTournamentMatchResult(match, 'regular', regularScores.p1Score, regularScores.p2Score);
+                match.lastResolvedGameId = roomState[activeRoomId]?.matchId || '';
             } else {
                 console.warn(`⚠️ TURNIR: Nije moguće izvući regularan skor za ${round}/${index} iz sobe ${activeRoomId || 'n/a'}.`);
                 return rejectTournamentAction(socket, 'err_invalid_room');
