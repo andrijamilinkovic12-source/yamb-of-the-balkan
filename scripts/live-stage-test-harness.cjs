@@ -10,6 +10,7 @@ function makeHarness({ width = 390, height = 844, reduced = false, theme = 'dark
         const calls = [];
         const gradient = () => ({ addColorStop(offset, color) { calls.push(['colorStop', offset, color]); } });
         const target = { calls, createRadialGradient: gradient, createLinearGradient: gradient,
+            createImageData(width, height) { return { data: new Uint8ClampedArray(width * height * 4), width, height }; },
             measureText(text) { return { width: Array.from(text).length * 62, actualBoundingBoxAscent: 72, actualBoundingBoxDescent: 4 }; },
             getImageData(x, y, w, h) {
                 const data = new Uint8ClampedArray(w * h * 4);

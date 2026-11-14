@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "tool": "built-in image_gen",
+  "useCase": "stylized-concept",
+  "master": "source-assets/thunder-storm-v1/storm-cloud-master.png",
+  "masterSha256": "882c24fe4b7ea7a5022cfa45c870ee0166be53f4e34fc1de9f3c6c71a9fafdcd",
+  "prompt": "source-assets/thunder-storm-v1/prompt.txt",
+  "preparation": "Downscale only; preserve the generated colors and soft transparency.",
+  "assets": [
+    {
+      "productionPath": "www/assets/effects/thunder-storm-v1/storm-cloud-v1.png",
+      "sha256": "4e5351a4b6c6425143da28637f221acad0e068d1862ff4b7d4922c03f209133b",
+      "width": 1024,
+      "height": 341,
+      "alpha": true
+    }
+  ]
+}

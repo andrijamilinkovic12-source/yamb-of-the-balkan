@@ -62,6 +62,12 @@
         const prelude = managerSource.slice(managerSource.indexOf('const YAMB_THEME_IDS ='), managerSource.indexOf('const filterYambThemeIds'));
         const effectClass = managerSource.slice(managerSource.indexOf('class EffectManager {'), managerSource.indexOf('// --- 5. SOUND MANAGER'));
         const Manager = new Function(prelude + '\n' + stageSource + '\n' + effectClass + '\nreturn EffectManager;')();
+        if (new URLSearchParams(location.search).get('sound') === '1') {
+          const soundClass = managerSource.slice(managerSource.indexOf('class SoundManager {'), managerSource.indexOf('class ShopManager {'));
+          const Sound = new Function(soundClass + '\nreturn SoundManager;')();
+          window.app ||= {};
+          window.app.soundMgr = new Sound();
+        }
         new Function('EffectManager', bootSource + '\nbootLiveEffectsReview(EffectManager);')(Manager);
       } catch (error) {
         const node = document.getElementById('qa-error'); node.hidden = false; node.textContent = error.stack || String(error);

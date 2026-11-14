@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "tool": "built-in image_gen",
+  "useCase": "stylized-concept",
+  "generatedFile": "exec-0b00f882-fae6-4384-9121-b594e842b454.png",
+  "master": "source-assets/dragon-breath-v1/dragon-rig-master.png",
+  "masterSha256": "a2a428739629eac521871c1c327812e9c5776bda5cd7abb0c3905e88d2e426de",
+  "preparation": "Split separated components, crop transparent margins, and downscale with one shared scale; preserve colors and alpha.",
+  "assets": [
+    {
+      "role": "head",
+      "productionPath": "www/assets/effects/dragon-breath-v1/head-v1.png",
+      "sha256": "048ee3ad48642e0e2dce00ec76527b244c2f4a4b27b25203c14c5cc809a47b1b",
+      "crop": {
+        "left": 13,
+        "top": 28,
+        "width": 1221,
+        "height": 844
+      },
+      "width": 768,
+      "height": 531,
+      "alpha": true
+    },
+    {
+      "role": "jaw",
+      "productionPath": "www/assets/effects/dragon-breath-v1/jaw-v1.png",
+      "sha256": "db450e61f23e1c5f59b4c7482dfa25571c13f077092556590673b2965ba02327",
+      "crop": {
+        "left": 366,
+        "top": 955,
+        "width": 678,
+        "height": 263
+      },
+      "width": 426,
+      "height": 165,
+      "alpha": true
+    }
+  ],
+  "rig": {
+    "headPivot": [
+      0.51597,
+      0.58412
+    ],
+    "jawPivot": [
+      0.09735,
+      0.31559
+    ],
+    "upperMouth": [
+      0.9697,
+      0.58294
+    ],
+    "lowerMouth": [
+      0.94985,
+      0.55133
+    ],
+    "jawWidth": 0.55528
+  }
+}

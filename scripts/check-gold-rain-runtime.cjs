@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const vm = require('node:vm');
 
 const root = path.join(__dirname, '..');
@@ -9,7 +10,7 @@ const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.in
 const effectClass = source.slice(source.indexOf('class EffectManager {'), source.indexOf('class SoundManager {'));
 assert(prelude.includes('GOLD_RAIN_THEME_PROFILES') && effectClass.includes('spawnGoldRain()'));
 
-function harness(reducedMotion = false, { failParticle = false, failAll = false, width = 390 } = {}) {
+function harness(reducedMotion = false, { failPoses = [], failCanonical = false, failAll = false, width = 390 } = {}) {
     const nodes = [];
     const classes = new Set();
     const raf = new Map();
@@ -67,7 +68,8 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false,
             imagePaths.push(value);
             assert(fs.existsSync(path.join(root, 'www', value.split('?')[0])), `Missing canonical coin ${value}`);
             queueMicrotask(() => {
-                if (failAll || (failParticle && value.includes('ducat-particle'))) this.onerror();
+                if (failAll || (failCanonical && !value.includes('ducat-particle'))
+                    || failPoses.some(pose => value.includes(`ducat-${pose}-v`))) this.onerror();
                 else this.onload();
             });
         }
@@ -108,6 +110,8 @@ function harness(reducedMotion = false, { failParticle = false, failAll = false,
 
 async function main() {
     const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+    const poses = ['front', 'angle-left', 'angle-right'];
+    const artwork = new Set();
     const app = harness();
     for (const [index, theme] of themes.entries()) {
         app.document.documentElement.dataset.splashTheme = theme;
@@ -117,7 +121,17 @@ async function main() {
         assert.equal(layers.length, 1, `${theme}: duplicate coin layer`);
         const coins = layers[0].children;
         assert.equal(coins.length, 72, `${theme}: missing visible PNG coins`);
-        assert(coins.every(node => node.tag === 'img' && node.src === app.imagePaths.at(-1)));
+        const rootPath = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+        const sources = poses.map(pose => `${rootPath}/canonical/ducat/ducat-${pose}-v${version}.png`);
+        for (const src of sources) {
+            const png = fs.readFileSync(path.join(root, 'www', src));
+            assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+            assert.equal(png[25], 6, `${src}: PNG must have alpha`);
+            artwork.add(crypto.createHash('sha256').update(png).digest('hex'));
+            assert.equal(coins.filter(coin => coin.src === src).length, 24, `${theme}: balanced pose distribution`);
+        }
+        assert(coins.every(node => node.tag === 'img' && sources.includes(node.src)), `${theme}: wrong pose or theme`);
         const number = (coin, key) => parseFloat(coin.style.properties[key]);
         for (const [i, coin] of coins.entries()) {
             const delay = number(coin, '--fall-delay');
@@ -131,14 +145,23 @@ async function main() {
         for (const wave of [0, 1, 2, 3]) {
             const positions = coins.filter((_, i) => i % 4 === wave).map(coin => parseFloat(coin.style.left));
             assert(positions[0] < 8 && positions.at(-1) > 92, `${theme}: each wave must span the screen`);
+            assert.equal(new Set(coins.filter((_, i) => i % 4 === wave).map(coin => coin.src)).size, 3,
+                `${theme}: every wave must mix all three poses`);
         }
         assert.deepEqual([...new Set(coins.map(coin => number(coin, '--coin-opacity')))], [0.77, 0.89, 1],
             `${theme}: expected distinct near, middle and far depth layers`);
-        assert(app.imagePaths.at(-1).includes(theme === 'dark' ? 'green-soft-clay/canonical/ducat' : `theme-packs/${theme}/canonical/ducat`));
+        for (const opacity of [0.77, 0.89, 1]) {
+            assert.equal(new Set(coins.filter(coin => number(coin, '--coin-opacity') === opacity).map(coin => coin.src)).size, 3,
+                `${theme}: pose must vary independently of coin size and depth`);
+        }
+        const loaded = app.imagePaths.length;
+        await app.effect.spawnGoldRain();
+        assert.equal(app.imagePaths.length, loaded, `${theme}: replay must reuse the loaded poses`);
         assert(app.nodes.some(node => node.className.includes('gold-rain-atmosphere--clear')), `${theme}: lighting obscures the canonical coins`);
         app.frame((index + 1) * 3000);
     }
     app.effect.stop();
+    assert.equal(artwork.size, 30, 'All ten themes need three distinct original PNGs');
     assert(!app.classes.has('fx-gold-rain'));
     assert.equal(app.nodes.filter(node => node.className.startsWith('gold-rain')).length, 0);
     assert.equal(app.raf.size, 0);
@@ -149,6 +172,9 @@ async function main() {
     await wide.effect.spawnGoldRain();
     assert.equal(wide.nodes.find(node => node.className === 'gold-rain-particles')?.children.length, 104,
         'Wide screens must use the same four-wave layout with 104 canonical ducats');
+    const wideCounts = poses.map(pose => wide.nodes.find(node => node.className === 'gold-rain-particles').children
+        .filter(coin => coin.src.includes(`ducat-${pose}-`)).length);
+    assert(Math.max(...wideCounts) - Math.min(...wideCounts) <= 1, 'Wide screens also balance the three poses');
     wide.frame(5150);
     assert(wide.nodes.some(node => node.className.includes('gold-rain-atmosphere--clear closing')), 'Lighting must ease out');
     wide.frame(6450);
@@ -158,6 +184,8 @@ async function main() {
     const reduced = harness(true);
     await reduced.effect.spawnGoldRain();
     assert.equal(reduced.nodes.find(node => node.className === 'gold-rain-static-coin')?.children.length, 3, 'Reduced motion must show three static canonical ducats');
+    assert.equal(new Set(reduced.nodes.find(node => node.className === 'gold-rain-static-coin').children.map(coin => coin.src)).size,
+        3, 'Reduced motion keeps all three stationary poses');
     assert.equal(reduced.raf.size, 0, 'Reduced motion must not animate');
     reduced.effect.stop();
 
@@ -173,15 +201,25 @@ async function main() {
     cancelled.effect.stop();
     await pending;
     assert.equal(cancelled.nodes.length, 0, 'Stop during asset loading must not leave a delayed burst');
-    const fallback = harness(false, { failParticle: true });
+    const partial = harness(false, { failPoses: ['angle-left'] });
+    await partial.effect.spawnGoldRain();
+    const surviving = partial.nodes.find(node => node.className === 'gold-rain-particles').children;
+    assert.equal(new Set(surviving.map(coin => coin.src)).size, 2, 'A missing pose must not cancel the other poses');
+    assert(surviving.every(coin => !coin.src.includes('angle-left')));
+    const attempts = partial.imagePaths.length;
+    await partial.effect.spawnGoldRain();
+    assert(partial.imagePaths.length > attempts, 'A partial load must be retried on the next run');
+    const fallback = harness(false, { failCanonical: true });
+    fallback.document.documentElement.dataset.splashTheme = 'easter';
     await fallback.effect.spawnGoldRain();
-    assert(fallback.nodes.find(node => node.className === 'gold-rain-particles')?.children.every(node => node.src.includes('ducat-front-v1.png')),
-        'A failed particle sprite must fall back to the same theme canonical front');
+    assert(fallback.nodes.find(node => node.className === 'gold-rain-particles')?.children.every(node =>
+        node.src === 'assets/theme-packs/easter/canonical/ducat/ducat-particle-v2.png'),
+        'Missing pose PNGs must fall back to the same theme and version');
     const absent = harness(false, { failAll: true });
     await absent.effect.spawnGoldRain();
     assert(!absent.classes.has('fx-gold-rain') && !absent.nodes.some(node => node.className.startsWith('gold-rain-atmosphere')),
         'Missing canonical PNGs must not leave a light-only effect');
-    console.log('Gold Rain runtime passed: ten canonical PNGs, denser four-wave rain, layered sizes, turn angles, cleanup, theme switch and reduced motion.');
+    console.log('Gold Rain runtime passed: 30 original pose PNGs across ten themes, mixed four-wave rain, cache, fallbacks, cleanup, theme switch and reduced motion.');
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

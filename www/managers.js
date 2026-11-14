@@ -322,7 +322,7 @@ class EffectManager {
         this.confettiRunId = 0;
         this.confettiSpritePromises = {};
         this.goldRainThemeObserver = null;
-        this.greenDucatParticleSpritePromise = null;
+        this.goldRainSpritePromises = {};
         this.goldRainRunId = 0;
         this.fireflyRunId = 0;
         this.fireflySpritePromises = {};
@@ -882,40 +882,27 @@ class EffectManager {
         return YAMB_THEME_IDS.includes(selected) ? selected : 'dark';
     }
 
-    loadGreenDucatParticleSprite() {
-        if (this.greenDucatParticleSpritePromise) {
-            return this.greenDucatParticleSpritePromise;
-        }
-
-        this.greenDucatParticleSpritePromise = new Promise(resolve => {
+    loadGoldRainSprites(theme = this.getGoldRainThemeId()) {
+        if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve([]);
+        if (this.goldRainSpritePromises[theme]) return this.goldRainSpritePromises[theme];
+        const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+        const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
+        const load = pose => new Promise(resolve => {
             const image = new Image();
             image.decoding = 'async';
             image.onload = () => resolve(image);
-            image.onerror = () => {
-                this.greenDucatParticleSpritePromise = null;
-                resolve(null);
-            };
-            image.src = 'assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png?v=1';
+            image.onerror = () => resolve(null);
+            image.src = `${root}/canonical/ducat/ducat-${pose}-v${version}.png`;
         });
-
-        return this.greenDucatParticleSpritePromise;
-    }
-
-    loadThemeDucatParticleSprite(theme = this.getGoldRainThemeId()) {
-        if (!YAMB_THEME_IDS.slice(1).includes(theme)) return Promise.resolve(null);
-        this.themeDucatParticleSpritePromises ||= {};
-        if (this.themeDucatParticleSpritePromises[theme]) return this.themeDucatParticleSpritePromises[theme];
-        this.themeDucatParticleSpritePromises[theme] = new Promise(resolve => {
-            const image = new Image();
-            image.decoding = 'async';
-            image.onload = () => resolve(image);
-            image.onerror = () => {
-                delete this.themeDucatParticleSpritePromises[theme];
-                resolve(null);
-            };
-            image.src = `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v${['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`;
+        this.goldRainSpritePromises[theme] = Promise.all(['front', 'angle-left', 'angle-right'].map(load)).then(async images => {
+            const sprites = images.filter(Boolean);
+            if (sprites.length === images.length) return sprites;
+            delete this.goldRainSpritePromises[theme];
+            if (sprites.length) return sprites;
+            const fallback = await load('particle');
+            return fallback ? [fallback] : [];
         });
-        return this.themeDucatParticleSpritePromises[theme];
+        return this.goldRainSpritePromises[theme];
     }
 
     async spawnGoldRain() {
@@ -933,21 +920,8 @@ class EffectManager {
         document.querySelectorAll('.gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin, .falling-coin.gold-rain-coin').forEach(el => el.remove());
         document.body.classList.remove('fx-gold-rain');
 
-        let ducatSprite = themeId === 'dark'
-            ? await this.loadGreenDucatParticleSprite()
-            : await this.loadThemeDucatParticleSprite(themeId);
-        if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId()) return;
-        if (!ducatSprite) {
-            const root = themeId === 'dark' ? 'assets/green-soft-clay/' : `assets/theme-packs/${themeId}/`;
-            const version = ['easter', 'desert', 'severna'].includes(themeId) ? 2 : 1;
-            ducatSprite = await new Promise(resolve => {
-                const fallback = new Image();
-                fallback.onload = () => resolve(fallback);
-                fallback.onerror = () => resolve(null);
-                fallback.src = `${root}canonical/ducat/ducat-front-v${version}.png`;
-            });
-        }
-        if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId() || !ducatSprite) return;
+        const ducatSprites = await this.loadGoldRainSprites(themeId);
+        if (runId !== this.goldRainRunId || themeId !== this.getGoldRainThemeId() || !ducatSprites.length) return;
 
         const atmosphere = document.createElement('div');
         atmosphere.className = 'gold-rain-atmosphere gold-rain-atmosphere--clear';
@@ -967,10 +941,10 @@ class EffectManager {
         document.body.appendChild(layer);
         document.body.classList.add('fx-gold-rain');
 
-        const addCoin = (size) => {
+        const addCoin = (size, poseIndex) => {
             const coin = document.createElement('img');
             coin.className = reducedMotion ? 'gold-rain-static-particle' : 'gold-rain-particle';
-            coin.src = ducatSprite.src;
+            coin.src = ducatSprites[poseIndex % ducatSprites.length].src;
             coin.alt = '';
             coin.decoding = 'async';
             coin.style.width = `${size}px`;
@@ -990,7 +964,7 @@ class EffectManager {
                 const lane = Math.floor(index / waveCount);
                 const depth = ((lane + wave) % 3) / 2;
                 const size = Math.round((isCompact ? 23 : 28) + depth * (isCompact ? 16 : 21) + rand(0, 6));
-                const coin = addCoin(size);
+                const coin = addCoin(size, lane + wave * 2);
                 const direction = Math.random() < 0.5 ? -1 : 1;
                 const drift = direction * rand(14, isCompact ? 47 : 80) * profile.drift;
                 const tilt = direction * rand(22, 53) * profile.spin;
@@ -2133,6 +2107,117 @@ class SoundManager {
         });
     }
 
+    dragonBreath(breathDelay = 0.9) {
+        let cleanup;
+        this.playSound(() => {
+            const ctx = this.ctx, now = ctx.currentTime;
+            const start = now + breathDelay, end = start + 2.9;
+            const master = ctx.createGain();
+            master.gain.setValueAtTime(0.8, now);
+            master.connect(ctx.destination);
+            const buffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+            const samples = buffer.getChannelData(0);
+            for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+            const wind = ctx.createBufferSource();
+            wind.buffer = buffer; wind.loop = true;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(600, now);
+            filter.frequency.linearRampToValueAtTime(950, start);
+            filter.frequency.linearRampToValueAtTime(3400, start + 0.12);
+            filter.frequency.exponentialRampToValueAtTime(750, end);
+            const windGain = ctx.createGain();
+            windGain.gain.setValueAtTime(0, now);
+            windGain.gain.linearRampToValueAtTime(0.025, now + breathDelay * 0.65);
+            windGain.gain.linearRampToValueAtTime(0.012, start);
+            windGain.gain.linearRampToValueAtTime(0.18, start + 0.09);
+            windGain.gain.linearRampToValueAtTime(0.12, start + 2);
+            windGain.gain.exponentialRampToValueAtTime(0.0001, end);
+            wind.connect(filter); filter.connect(windGain); windGain.connect(master);
+            wind.start(now); wind.stop(end);
+
+            const growl = ctx.createOscillator(), growlFilter = ctx.createBiquadFilter(), growlGain = ctx.createGain();
+            growl.type = 'sawtooth'; growlFilter.type = 'lowpass';
+            growlFilter.frequency.value = 160;
+            growl.frequency.setValueAtTime(62, now);
+            growl.frequency.linearRampToValueAtTime(48, start + 0.2);
+            growl.frequency.linearRampToValueAtTime(64, start + 1.5);
+            growl.frequency.linearRampToValueAtTime(39, end);
+            growlGain.gain.setValueAtTime(0, now);
+            growlGain.gain.linearRampToValueAtTime(0.035, start);
+            growlGain.gain.linearRampToValueAtTime(0.045, start + 0.15);
+            growlGain.gain.exponentialRampToValueAtTime(0.0001, end);
+            growl.connect(growlFilter); growlFilter.connect(growlGain); growlGain.connect(master);
+            growl.start(now); growl.stop(end);
+
+            const impact = ctx.createOscillator(), impactGain = ctx.createGain();
+            impact.type = 'triangle';
+            impact.frequency.setValueAtTime(150, start);
+            impact.frequency.exponentialRampToValueAtTime(50, start + 0.18);
+            impactGain.gain.setValueAtTime(0, start);
+            impactGain.gain.linearRampToValueAtTime(0.07, start + 0.015);
+            impactGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.24);
+            impact.connect(impactGain); impactGain.connect(master);
+            impact.start(start); impact.stop(start + 0.26);
+            let stopped = false;
+            cleanup = () => {
+                if (stopped) return;
+                stopped = true;
+                const cut = ctx.currentTime;
+                master.gain.setValueAtTime(0.8, cut);
+                master.gain.linearRampToValueAtTime(0, cut + 0.03);
+                [wind, growl, impact].forEach(source => { try { source.stop(cut + 0.035); } catch (_) {} });
+            };
+        });
+        return cleanup;
+    }
+
+    royalFanfare(crestDelay = 2.6) {
+        let cleanup;
+        this.playSound(() => {
+            const ctx = this.ctx, now = ctx.currentTime;
+            const master = ctx.createGain();
+            master.gain.setValueAtTime(0.8, now);
+            master.connect(ctx.destination);
+            const sources = [];
+            const note = (frequency, offset, duration, volume) => {
+                const start = now + offset;
+                const envelope = ctx.createGain();
+                envelope.gain.setValueAtTime(0, start);
+                envelope.gain.linearRampToValueAtTime(volume, start + 0.035);
+                envelope.gain.exponentialRampToValueAtTime(volume * 0.55, start + duration * 0.38);
+                envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+                envelope.connect(master);
+                for (const [harmonic, level] of [[1, 1], [2, 0.2]]) {
+                    const oscillator = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    oscillator.type = harmonic === 1 ? 'triangle' : 'sine';
+                    oscillator.frequency.setValueAtTime(frequency * harmonic, start);
+                    gain.gain.value = level;
+                    oscillator.connect(gain); gain.connect(envelope);
+                    oscillator.start(start); oscillator.stop(start + duration + 0.02);
+                    sources.push(oscillator);
+                }
+            };
+            [[0, 261.63], [0.26, 329.63], [0.52, 392], [0.94, 523.25], [1.44, 392]]
+                .filter(([offset]) => offset + 0.43 < crestDelay)
+                .forEach(([offset, frequency]) => note(frequency, offset, 0.43, 0.075));
+            [130.81, 261.63, 329.63, 392, 523.25].forEach((frequency, i) =>
+                note(frequency, crestDelay, 1.15 + i * 0.06, i === 0 ? 0.035 : 0.043));
+            note(1046.5, crestDelay + 0.02, 0.6, 0.014);
+            let stopped = false;
+            cleanup = () => {
+                if (stopped) return;
+                stopped = true;
+                const cut = ctx.currentTime;
+                master.gain.setValueAtTime(0.8, cut);
+                master.gain.linearRampToValueAtTime(0, cut + 0.03);
+                sources.forEach(source => { try { source.stop(cut + 0.035); } catch (_) {} });
+            };
+        });
+        return cleanup;
+    }
+
     trophy() {
         if (this.isEasterThemeActive()) {
             this.easterTrophy();
@@ -2291,93 +2376,121 @@ class SoundManager {
     }
      
     // --- PROCEDURALNI ZVUK GROMA ---
-    thunder() {
+    thunder(strikeDelay = 1.48) {
+        let cleanup;
         this.playSound(() => {
-            const now = this.ctx.currentTime;
-            
-            const bufferSize = this.ctx.sampleRate * 4.5; 
-            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1; 
+            const ctx = this.ctx, now = ctx.currentTime, strike = now + strikeDelay, end = now + 4.2;
+            const master = ctx.createGain(), sources = [];
+            master.gain.setValueAtTime(0.72, now); master.connect(ctx.destination);
+            if (!this.thunderNoiseBuffer) {
+                this.thunderNoiseBuffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 1.6), ctx.sampleRate);
+                const samples = this.thunderNoiseBuffer.getChannelData(0);
+                for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
             }
-            const noiseSrc = this.ctx.createBufferSource();
-            noiseSrc.buffer = noiseBuffer;
+            const noise = (type, frequency, start, finish) => {
+                const source = ctx.createBufferSource(), filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+                source.buffer = this.thunderNoiseBuffer; source.loop = true;
+                filter.type = type; filter.frequency.setValueAtTime(frequency, start); filter.Q.value = 0.6;
+                gain.gain.setValueAtTime(0, start);
+                source.connect(filter); filter.connect(gain); gain.connect(master);
+                source.start(start); source.stop(finish); sources.push(source);
+                return { filter, envelope: gain.gain };
+            };
+            const wind = noise('lowpass', 280, now, strike);
+            wind.envelope.linearRampToValueAtTime(0.035, now + 0.45);
+            wind.envelope.linearRampToValueAtTime(0.055, strike - 0.1);
+            wind.envelope.linearRampToValueAtTime(0, strike);
 
-            const filter = this.ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(150, now);
-            filter.frequency.linearRampToValueAtTime(1000, now + 0.1); 
-            filter.frequency.exponentialRampToValueAtTime(40, now + 4.5); 
-            
-            const gain = this.ctx.createGain();
-            gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(1.5, now + 0.05); 
-            gain.gain.exponentialRampToValueAtTime(0.4, now + 0.4); 
-            gain.gain.linearRampToValueAtTime(0.01, now + 4.5); 
+            const crack = noise('highpass', 780, strike, strike + 0.27);
+            crack.envelope.linearRampToValueAtTime(0.32, strike + 0.003);
+            crack.envelope.exponentialRampToValueAtTime(0.0001, strike + 0.26);
 
-            noiseSrc.connect(filter);
-            filter.connect(gain);
-            gain.connect(this.ctx.destination);
-            noiseSrc.start(now);
-            
-            const osc = this.ctx.createOscillator();
-            const oscGain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(50, now); 
-            osc.frequency.exponentialRampToValueAtTime(10, now + 4.5); 
-            
-            oscGain.gain.setValueAtTime(0, now);
-            oscGain.gain.linearRampToValueAtTime(1.2, now + 0.1);
-            oscGain.gain.exponentialRampToValueAtTime(0.01, now + 4.5);
-            
-            osc.connect(oscGain);
-            oscGain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 4.5);
+            const rumble = noise('lowpass', 650, strike + 0.09, end);
+            rumble.filter.frequency.exponentialRampToValueAtTime(65, end);
+            rumble.envelope.linearRampToValueAtTime(0.2, strike + 0.18);
+            rumble.envelope.linearRampToValueAtTime(0.12, strike + 0.45);
+            rumble.envelope.linearRampToValueAtTime(0.16, strike + 0.68);
+            rumble.envelope.exponentialRampToValueAtTime(0.0001, end - 0.06);
+
+            const bass = ctx.createOscillator(), bassGain = ctx.createGain();
+            bass.type = 'sine';
+            bass.frequency.setValueAtTime(58, strike + 0.07);
+            bass.frequency.exponentialRampToValueAtTime(31, end);
+            bassGain.gain.setValueAtTime(0, strike + 0.07);
+            bassGain.gain.linearRampToValueAtTime(0.105, strike + 0.15);
+            bassGain.gain.exponentialRampToValueAtTime(0.0001, end - 0.05);
+            bass.connect(bassGain); bassGain.connect(master);
+            bass.start(strike + 0.07); bass.stop(end); sources.push(bass);
+            let remaining = sources.length;
+            sources.forEach(source => { source.onended = () => {
+                source.disconnect();
+                if (!--remaining) master.disconnect();
+            }; });
+            let stopped = false;
+            cleanup = () => {
+                if (stopped) return;
+                stopped = true;
+                const cut = ctx.currentTime;
+                master.gain.setValueAtTime(0.72, cut);
+                master.gain.linearRampToValueAtTime(0, cut + 0.025);
+                sources.forEach(source => { try { source.stop(cut + 0.03); } catch (_) {} });
+            };
         });
+        return cleanup;
     }
 
     // --- ZVUK ZVIŽDUKA RAKETE PRI POLETANJU ---
-    fireworkLaunch() {
-        this.playSound(() => {
-            const now = this.ctx.currentTime;
-            
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(1500, now + 1.0); 
-            
-            gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(0.08, now + 0.1);
-            gain.gain.linearRampToValueAtTime(0, now + 1.0); 
-            
-            const bufferSize = this.ctx.sampleRate * 1.0;
-            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-            
-            const noiseSrc = this.ctx.createBufferSource();
-            noiseSrc.buffer = noiseBuffer;
-            const noiseFilter = this.ctx.createBiquadFilter();
-            noiseFilter.type = 'highpass';
-            noiseFilter.frequency.value = 1000;
-            
-            const noiseGain = this.ctx.createGain();
-            noiseGain.gain.setValueAtTime(0.03, now);
-            noiseGain.gain.linearRampToValueAtTime(0, now + 1.0);
-            
-            noiseSrc.connect(noiseFilter);
-            noiseFilter.connect(noiseGain);
-            noiseGain.connect(this.ctx.destination);
-            noiseSrc.start(now);
+    fireworkVoice(volume = 1) {
+        const ctx = this.ctx, master = ctx.createGain(), sources = [];
+        master.gain.setValueAtTime(volume * 0.8, ctx.currentTime);
+        master.connect(ctx.destination);
+        let stopped = false;
+        return { master, sources, stop: () => {
+            if (stopped) return;
+            stopped = true;
+            const now = ctx.currentTime;
+            master.gain.setValueAtTime(volume * 0.8, now);
+            master.gain.linearRampToValueAtTime(0, now + 0.025);
+            sources.forEach(source => { try { source.stop(now + 0.03); } catch (_) {} });
+        } };
+    }
 
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 1.0);
+    getFireworkNoise() {
+        if (!this.fireworkNoiseBuffer) {
+            const ctx = this.ctx;
+            this.fireworkNoiseBuffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 1.6), ctx.sampleRate);
+            const samples = this.fireworkNoiseBuffer.getChannelData(0);
+            for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+        }
+        return this.fireworkNoiseBuffer;
+    }
+
+    fireworkLaunch(duration = 0.72, variation = 0) {
+        let cleanup;
+        this.playSound(() => {
+            const ctx = this.ctx, now = ctx.currentTime;
+            const voice = this.fireworkVoice();
+            const osc = ctx.createOscillator(), gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320 + variation % 3 * 45, now);
+            osc.frequency.exponentialRampToValueAtTime(1450 + variation % 3 * 90, now + duration);
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.027, now + 0.08);
+            gain.gain.linearRampToValueAtTime(0, now + duration);
+            osc.connect(gain); gain.connect(voice.master);
+            osc.start(now); osc.stop(now + duration);
+            const noise = ctx.createBufferSource(), filter = ctx.createBiquadFilter(), noiseGain = ctx.createGain();
+            noise.buffer = this.getFireworkNoise();
+            filter.type = 'bandpass'; filter.frequency.value = 2100; filter.Q.value = 0.8;
+            noiseGain.gain.setValueAtTime(0, now);
+            noiseGain.gain.linearRampToValueAtTime(0.018, now + 0.06);
+            noiseGain.gain.linearRampToValueAtTime(0, now + duration);
+            noise.connect(filter); filter.connect(noiseGain); noiseGain.connect(voice.master);
+            noise.start(now); noise.stop(now + duration);
+            voice.sources.push(osc, noise);
+            cleanup = voice.stop;
         });
+        return cleanup;
     }
 
     confettiPop() {
@@ -2408,34 +2521,36 @@ class SoundManager {
         });
     }
 
-    // --- ZVUK JAKE EKSPLOZIJE ---
-    fireworkExplode() {
+    fireworkExplode(kind = 'sphere', variation = 0, volume = 1) {
+        let cleanup;
         this.playSound(() => {
-            const now = this.ctx.currentTime;
-            
-            const bufferSize = this.ctx.sampleRate * 2.0;
-            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-            
-            const noiseSrc = this.ctx.createBufferSource();
-            noiseSrc.buffer = noiseBuffer;
-
-            const filter = this.ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1000, now);
-            filter.frequency.exponentialRampToValueAtTime(100, now + 1.5); 
-
-            const gain = this.ctx.createGain();
+            const ctx = this.ctx, now = ctx.currentTime, voice = this.fireworkVoice(volume);
+            const ring = kind === 'ring', willow = kind === 'willow';
+            const duration = willow ? 1.25 : ring ? 0.6 : 0.85;
+            const noise = ctx.createBufferSource(), filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+            noise.buffer = this.getFireworkNoise();
+            filter.type = ring ? 'bandpass' : 'lowpass';
+            filter.frequency.setValueAtTime((willow ? 950 : ring ? 2100 : 1550) + variation % 3 * 90, now);
+            filter.frequency.exponentialRampToValueAtTime(willow ? 100 : ring ? 520 : 170, now + duration);
+            filter.Q.value = ring ? 0.7 : 0.5;
             gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(0.8, now + 0.05); 
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5); 
-
-            noiseSrc.connect(filter);
-            filter.connect(gain);
-            gain.connect(this.ctx.destination);
-            noiseSrc.start(now);
+            gain.gain.linearRampToValueAtTime(ring ? 0.2 : 0.25, now + 0.008);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+            noise.connect(filter); filter.connect(gain); gain.connect(voice.master);
+            noise.start(now, variation % 3 * 0.08); noise.stop(now + duration);
+            const thump = ctx.createOscillator(), bass = ctx.createGain();
+            thump.type = 'sine';
+            thump.frequency.setValueAtTime(willow ? 82 : ring ? 170 : 120, now);
+            thump.frequency.exponentialRampToValueAtTime(willow ? 36 : 55, now + 0.26);
+            bass.gain.setValueAtTime(0, now);
+            bass.gain.linearRampToValueAtTime(ring ? 0.04 : 0.085, now + 0.012);
+            bass.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+            thump.connect(bass); bass.connect(voice.master);
+            thump.start(now); thump.stop(now + 0.45);
+            voice.sources.push(noise, thump);
+            cleanup = voice.stop;
         });
+        return cleanup;
     }
 
     // --- EPSKI HEROJSKI ZVUK (ZA DRONOVE V.2) ---
