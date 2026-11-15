@@ -72,32 +72,32 @@
     const text = {
         sr: {
             label: 'Obriši nalog', status: 'Proveri zahtev za brisanje',
-            warning: 'Trajno se brišu tvoj nalog u igri, profil, statistika, Dukati, inventar, prijateljstva i poruke povezane sa nalogom. Ovo se ne može poništiti. Tvoj Google nalog se ne briše. Nastavi sa potvrdom identiteta?',
+            warning: 'Trajno se brišu tvoj nalog u igri, profil, statistika, Dukati, inventar, prijateljstva i poruke povezane sa nalogom. Ovo se ne može poništiti. Nalog kojim se prijavljuješ ostaje aktivan. Nastavi sa potvrdom identiteta?',
             confirm: 'Trajno obrisati nalog u igri za:',
-            finalWarning: 'Gubiš profil, statistiku, Dukate, inventar, prijateljstva i povezane poruke. Brisanje se ne može poništiti. Tvoj Google nalog ostaje aktivan.',
+            finalWarning: 'Gubiš profil, statistiku, Dukate, inventar, prijateljstva i povezane poruke. Brisanje se ne može poništiti. Nalog kojim se prijavljuješ ostaje aktivan.',
             login: 'Za brisanje se prvo prijavi na svoj nalog u igri.',
             unavailable: 'Automatsko brisanje trenutno nije dostupno. Pokušaj kasnije ili se obrati na andrija.milinkovic12@gmail.com.',
-            wrong: 'Izabran je drugi Google nalog. Brisanje nije pokrenuto. Prijavi se ponovo na nalog koji želiš da obrišeš.',
-            complete: 'Nalog u igri i njegovi podaci na serveru igre su obrisani. Tvoj Google nalog ostaje aktivan.',
+            wrong: 'Izabran je drugi nalog. Brisanje nije pokrenuto. Prijavi se ponovo na nalog koji želiš da obrišeš.',
+            complete: 'Nalog u igri i njegovi podaci na serveru igre su obrisani. Nalog kojim se prijavljuješ ostaje aktivan.',
             analyticsSubmitted: 'Google-u je poslat zahtev za brisanje povezanih Analytics podataka. Google ga obrađuje odvojeno; ova potvrda ne znači da je njihova obrada već završena.',
             pending: 'Zahtev za brisanje je primljen. Postupak još traje i nastaviće se na serveru. Status možeš ponovo proveriti ovim dugmetom.',
             uncertain: 'Nije bilo moguće potvrditi status brisanja. Ako je zahtev primljen, server nastavlja postupak. Proveri status ponovo ili kontaktiraj podršku.',
-            recent: 'Potrebna je nova Google prijava. Prijavi se ponovo i zatim potvrdi brisanje.',
+            recent: 'Potrebna je ponovna prijava. Prijavi se ponovo i zatim potvrdi brisanje.',
             received: 'Zahtev za brisanje ovog naloga je primljen. Nalog je odjavljen sa ovog uređaja.'
         },
         en: {
             label: 'Delete account', status: 'Check deletion request',
-            warning: 'Your game account, profile, statistics, Dukati, inventory, friendships and associated messages will be permanently deleted. This cannot be undone. Your Google account will remain. Continue to verify your identity?',
+            warning: 'Your game account, profile, statistics, Dukati, inventory, friendships and associated messages will be permanently deleted. This cannot be undone. Your sign-in account will remain active. Continue to verify your identity?',
             confirm: 'Permanently delete the game account for:',
-            finalWarning: 'You will lose your profile, statistics, Dukati, inventory, friendships and associated messages. Deletion cannot be undone. Your Google account remains active.',
+            finalWarning: 'You will lose your profile, statistics, Dukati, inventory, friendships and associated messages. Deletion cannot be undone. Your sign-in account remains active.',
             login: 'Sign in to your game account before requesting deletion.',
             unavailable: 'Automatic deletion is currently unavailable. Please try later or contact andrija.milinkovic12@gmail.com.',
-            wrong: 'A different Google account was selected. Deletion has not started. Sign in again to the account you want to delete.',
-            complete: 'Your game account and its data on the game server have been deleted. Your Google account remains active.',
+            wrong: 'A different account was selected. Deletion has not started. Sign in again to the account you want to delete.',
+            complete: 'Your game account and its data on the game server have been deleted. Your sign-in account remains active.',
             analyticsSubmitted: 'A request to delete linked Analytics data has been submitted to Google. Google processes it separately; this confirmation does not mean that its processing has already finished.',
             pending: 'Your deletion request was received. Processing is still in progress and will continue on the server. You can check its status again with this button.',
             uncertain: 'The deletion status could not be confirmed. If the request was received, processing continues on the server. Check again or contact support.',
-            recent: 'A new Google sign-in is required. Sign in again, then confirm deletion.',
+            recent: 'Sign in again to verify your identity. Sign in again, then confirm deletion.',
             received: 'A deletion request for this account was received. The account has been signed out on this device.'
         }
     };

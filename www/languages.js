@@ -2,6 +2,12 @@
 
 const TRANSLATIONS = {
     sr: {
+        "auth_facebook_login": "Prijavi se preko Facebooka",
+        "auth_facebook_link": "Poveži Facebook",
+        "auth_google_link": "Poveži Google",
+        "auth_provider_linked": "Način prijave je povezan sa ovim Yamb nalogom.",
+        "auth_facebook_existing_account": "Prijavi se na postojeći Yamb nalog, pa poveži Facebook u Podešavanjima.",
+        "auth_provider_in_use": "Ovaj način prijave je već povezan sa drugim Yamb nalogom.",
         // --- SPLASH SCREEN ---
         "splash_quote": "\"Ko misli da je srećan, on je zaista srećan.\"",
         "splash_author": "– Jovan Dučić",
@@ -1073,6 +1079,12 @@ const TRANSLATIONS = {
         "penalty_msg": "Kazna zbog odugovlačenja: -{0} Power Index poena."
     },
     en: {
+        "auth_facebook_login": "Sign in with Facebook",
+        "auth_facebook_link": "Link Facebook",
+        "auth_google_link": "Link Google",
+        "auth_provider_linked": "The sign-in method is linked to this Yamb account.",
+        "auth_facebook_existing_account": "Sign in to your existing Yamb account, then link Facebook in Settings.",
+        "auth_provider_in_use": "This sign-in method is already linked to a different Yamb account.",
         // --- SPLASH SCREEN ---
         "splash_quote": "\"He who thinks he is happy, is truly happy.\"",
         "splash_author": "– Jovan Dučić",

@@ -80,9 +80,13 @@ async function run() {
     h.setToken({ ...currentToken, auth_time: 1 });
     await assert.rejects(h.service.request('verified-test-token', 'DELETE'), { code: 'recent_sign_in_required' });
     h.setToken({ ...currentToken, firebase: { sign_in_provider: 'password' } });
-    await assert.rejects(h.service.request('verified-test-token', 'DELETE'), { code: 'google_sign_in_required' });
+    await assert.rejects(h.service.request('verified-test-token', 'DELETE'), { code: 'sign_in_required' });
     assert.equal(h.rows.length, 0, 'invalid/unconfirmed requests must not create a deletion job');
     h.setToken(currentToken);
+
+    const facebook = harness();
+    facebook.setToken({ ...currentToken, firebase: { sign_in_provider: 'facebook.com' } });
+    assert.equal((await facebook.service.request('verified-test-token', 'DELETE')).state, 'pending');
 
     const releaseOldWrite = await h.service.guardWrite({ firebaseUid: uid });
     const receipt = await h.service.request('verified-test-token', 'DELETE');

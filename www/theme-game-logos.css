@@ -161,3 +161,20 @@ body.easter-theme #splash-screen.has-login .splash-welcome-copy {
         gap: 6px !important;
     }
 }
+.yamb-facebook-login[hidden], .yamb-facebook-link[hidden] { display: none !important; }
+#splash-screen .yamb-facebook-login {
+    width: auto;
+    min-height: 40px;
+    padding: 5px 18px;
+    border-radius: 24px;
+    background: #174ea6;
+    color: #fff;
+    font-size: .83rem;
+}
+#settings-screen .yamb-facebook-link {
+    padding: 0;
+    min-height: 24px;
+    border: 0;
+    background: transparent;
+    font-size: .72rem;
+}
