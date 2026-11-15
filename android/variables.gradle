@@ -16,4 +16,6 @@ ext {
     
     // Dodato za Firebase Authentication plugin
     rgcfaIncludeGoogle = true 
+    rgcfaIncludeFacebook = Boolean.valueOf(System.getenv('YAMB_ANDROID_FACEBOOK_APP_ID') != null &&
+        System.getenv('YAMB_ANDROID_FACEBOOK_CLIENT_TOKEN') != null)
 }

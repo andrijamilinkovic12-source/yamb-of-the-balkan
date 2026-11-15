@@ -57,8 +57,9 @@ function expectedPath(theme, anchor) {
   const room = !anchor.inMenu;
   const canonical = green.match(/canonical\/([a-z-]+)-room-identity\//);
   if (canonical) {
+    const variant = /-room-menu-v\d+\.png/.test(green) ? '-menu' : '';
     const version = ['leaderboard', 'quarterly-league'].includes(canonical[1]) ? 2 : 1;
-    return `assets/theme-packs/${theme}/canonical/${canonical[1]}-room-identity/${canonical[1]}-room${room ? '' : '-menu'}-v${version}.png`;
+    return `assets/theme-packs/${theme}/canonical/${canonical[1]}-room-identity/${canonical[1]}-room${variant}-v${version}.png`;
   }
   if (green.includes('treasury-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}treasury-free-v3.png?v=${['easter', 'desert', 'severna'].includes(theme) ? 3 : 2}`;
   if (green.includes('ducats-undo-free-v3')) return `assets/theme-packs/${theme}/${room ? '' : 'runtime/menu/'}ducats-undo-free-v${['winter', 'desert', 'moon', 'severna'].includes(theme) ? 4 : 3}.png${theme === 'neon' ? '?v=2' : ''}`;
@@ -119,10 +120,10 @@ for (const theme of themes) {
     assert(image.parentElement.classList.contains('theme-main-room-icon-host'), `${theme}: missing host class for ${actual}`);
     const file = path.join(repo, 'www', actual.split('?')[0]);
     assert(fs.existsSync(file), `${theme}: missing runtime file ${actual}`);
-    const required = image.anchor.inMenu ? 384 : 512;
+    const required = image.anchor.inMenu || /-room-menu-v\d+\.png/.test(expected) ? 384 : 512;
     assert.deepEqual(pngSize(file), [required, required], `${theme}: wrong size for ${actual}`);
   }
-  const leagueMenuIcon = path.join(repo, `www/assets/theme-packs/${theme}/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png`);
+  const leagueMenuIcon = path.join(repo, `www/assets/theme-packs/${theme}/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png`);
   assert(fs.existsSync(leagueMenuIcon), `${theme}: missing league menu icon`);
   assert.deepEqual(pngSize(leagueMenuIcon), [384,384]);
 }

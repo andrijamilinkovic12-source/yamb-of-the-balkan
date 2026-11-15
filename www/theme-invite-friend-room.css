@@ -1,4 +1,46 @@
 /* Green supplies the geometry; theme card tokens supply the other nine materials. */
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-card-actions {
+    display: flex;
+    flex: 0 0 32px;
+    align-items: stretch;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    margin: auto 0 0;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-card-actions > .friend-card-btn {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn {
+    box-sizing: border-box;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: var(--theme-room-close-image) center / contain no-repeat !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn:focus-visible {
+    outline: 2px solid var(--invite-primary);
+    outline-offset: 1px;
+}
+@media (max-height: 649px) {
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-card-actions {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        flex-basis: 24px;
+    }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn {
+        flex-basis: 24px;
+        width: 24px;
+        height: 24px;
+    }
+}
 #custom-notification-container > .custom-toast.invite-room-toast {
     box-sizing: border-box;
     display: grid !important;

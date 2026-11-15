@@ -4,6 +4,7 @@ const {chromium}=require(process.env.YAMB_PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const output=path.join(root,'tmp/daily-layout-runtime'),index=read('www/index.html');
 const themes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
+const language=process.env.YAMB_DAILY_LANGUAGE==='en'?'en':'sr';
 const sheets=[...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
 const modal=index.slice(index.indexOf('<div id="custom-modal-overlay"'),index.indexOf('<button id="chat-float-btn"'));
 const fixture=`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(f=>`<link rel="stylesheet" href="${f}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:24px;--safe-left:0px;--safe-right:0px}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}</style><body>${modal}</body>`;
@@ -26,6 +27,7 @@ async function main(){
    for(const theme of themes){
     await page.goto('http://daily-fixture.local/www/fixture.html');
     await page.evaluate(theme=>{document.body.className=theme==='dark'?'':`${theme}-theme`;document.documentElement.dataset.splashTheme=theme;localStorage.clear();localStorage.setItem('yamb_theme',theme);window._safeT=k=>t(k);},theme);
+    await page.evaluate(language=>localStorage.setItem('yamb_lang',language),language);
     await page.addScriptTag({content:read('www/theme-quality-assets.js')});
     await page.evaluate(themes=>{window.YAMB_THEME_IDS=themes;window.YAMB_FREE_THEME_IDS=['dark'];window.filterYambThemeIds=a=>(Array.isArray(a)?a:[]).filter(x=>YAMB_THEME_IDS.includes(x));},themes);
     await page.addScriptTag({content:config.slice(config.indexOf('const SHOP_DATA ='),config.indexOf('// Export'))});
@@ -60,6 +62,16 @@ async function main(){
       const dice=[...document.querySelectorAll('#glass-daily-overlay.active .daily-glass-die')];
       return Promise.all(dice.map(async e=>{const source=getComputedStyle(e).backgroundImage.match(/url\("?([^"\)]+)/)?.[1];if(!source)return{source:null,loaded:false};const img=new Image();img.src=source;await img.decode().catch(()=>{});return{source,loaded:img.naturalWidth>0};}));
      });
+     const buttonPngs=await page.evaluate(async()=>Promise.all(
+      [...document.querySelectorAll('#glass-daily-overlay.active .daily-glass-btn')]
+       .filter(e=>e.getBoundingClientRect().height).map(async e=>{
+        const role=['stop','double','claim'].find(role=>e.classList.contains(`daily-glass-btn-${role}`));
+        const source=getComputedStyle(e).backgroundImage.match(/url\("?([^"\)]+)/)?.[1];
+        const img=new Image();if(source)img.src=source;await img.decode().catch(()=>{});
+        const expected=dnevniIzazov.getDailyAsset(`button-${role}`);
+        return{role,source,loaded:img.naturalWidth===768&&img.naturalHeight===144,correct:source===new URL(expected,location.href).href,label:e.textContent.trim()};
+       })
+     ));
      const result=await page.evaluate(state=>{
       const scope=document.getElementById(['active','complete'].includes(state)?'glass-daily-overlay':'custom-modal-overlay');
       const metric={};for(const sel of ['.daily-glass-card','.daily-glass-header','.daily-glass-title','.daily-glass-subtitle','.daily-room-mark','.daily-task-mark','.daily-glass-dice-grid','.daily-glass-die','.daily-glass-score-box','.daily-glass-score-lbl','.daily-glass-score-val','.daily-complete-mark','.daily-glass-btn-stop','.daily-glass-btn-double','.daily-glass-btn-claim','.custom-modal','.cm-title','.cm-msg','.cm-btn-ok','.daily-already-icon','.daily-already span']){
@@ -79,13 +91,15 @@ async function main(){
      if(result.overflow.length)failures.push(`${theme}/${state}/${viewport.width}: overflow ${result.overflow}`);
      if(result.cardScroll)failures.push(`${theme}/${state}/${viewport.width}: card scroll`);
      if(dicePngs.some(p=>!p.loaded))failures.push(`${theme}/${state}/${viewport.width}: dice PNG skin missing`);
+     if(buttonPngs.some(p=>!p.loaded||!p.correct))failures.push(`${theme}/${state}/${viewport.width}: button PNG missing or wrong theme`);
+     for(const button of buttonPngs){const label={stop:'STOP',double:language==='en'?'DOUBLE':'DUPLIRAJ',claim:language==='en'?'CLAIM':'PREUZMI'}[button.role];if(!button.label.includes(label))failures.push(`${theme}/${state}: wrong ${language} label`);}
      if(result.noticeContrast!==null&&result.noticeContrast<4.5)failures.push(`${theme}/${state}: notice button contrast ${result.noticeContrast}`);
      if(!baseline[state])baseline[state]=result.metric;
      for(const[sel,m]of Object.entries(result.metric))for(const[prop,v]of Object.entries(m)){
       const expected=baseline[state][sel]?.[prop];if(typeof v==='number'?Math.abs(v-expected)>=1.1:v!==expected)failures.push(`${theme}/${state}/${viewport.width} ${sel}.${prop}: ${v} != Green ${expected}`);
      }
      if(viewport.width===360)await page.screenshot({path:path.join(output,`${theme}-${state}.png`)});
-     rows.push({theme,state,viewport,dicePngs,...result});
+     rows.push({theme,state,language,viewport,dicePngs,buttonPngs,...result});
     }
    }
   }

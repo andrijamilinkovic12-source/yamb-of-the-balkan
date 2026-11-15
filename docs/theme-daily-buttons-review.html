@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dnevni izazov — PNG dugmad</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#141a20;color:#edf2f6;font-family:Montserrat,Arial,sans-serif;padding:24px}
+main{max-width:1000px;margin:auto}h1{font-size:23px;margin:0 0 12px}p{font-size:14px;line-height:1.5;color:#c1cbd3}
+.controls{display:flex;gap:8px;margin:18px 0}.controls button{padding:9px 14px;background:#31404e;border:1px solid #607487;border-radius:9px;color:white;font:inherit;cursor:pointer}
+#themes{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+article{border:1px solid #52616c;border-radius:20px;padding:16px;background:var(--panel);color:var(--ink)}
+h2{font-size:15px;margin:0 0 14px}.button-stack{display:grid;justify-content:center;gap:10px}
+.sample{width:306px;max-width:100%;border:1px solid transparent;border-radius:18px;padding:15px 20px;background:transparent var(--png) center/100% 100% no-repeat;color:var(--text);font:950 14.72px/21px Montserrat,Arial,sans-serif;text-align:center;height:53px}
+.sample[data-role=double]{height:60px}
+small{display:block;text-align:center;font-size:11px;opacity:.7;margin-top:12px}
+@media(max-width:370px){body{padding:12px}#themes{grid-template-columns:1fr}article{padding:12px}.sample{width:calc(100vw - 52px)}}
+</style>
+</head>
+<body><main>
+<h1>Dnevni izazov — STOP, DUPLIRAJ i PREUZMI</h1>
+<p>30 zasebnih PNG dugmadi u paletama deset tema. Pregled materijala i natpisa. U igri DUPLIRAJ zadržava postojeće kanonske ikone videa i dukata.</p>
+<div class="controls"><button type="button" id="sr">Srpski</button><button type="button" id="en">English</button></div>
+<div id="themes"></div>
+</main>
+<script>
+const themes=[{"id":"dark","name":"Zelena","roles":{"stop":{"face":"#31573A","edge":"#A74731","ink":"#FFFFFF"},"double":{"face":"#A8BF83","edge":"#42673D","ink":"#102315"},"claim":{"face":"#476941","edge":"#D6C99B","ink":"#FFFFFF"}},"assets":{"stop":"../www/assets/green-soft-clay/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/green-soft-clay/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/green-soft-clay/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"light","name":"Svetlo zlato","roles":{"stop":{"face":"#875024","edge":"#DBB47B","ink":"#FFFFFF"},"double":{"face":"#F3D6A8","edge":"#875024","ink":"#392817"},"claim":{"face":"#FFF1D7","edge":"#9B754F","ink":"#392817"}},"assets":{"stop":"../www/assets/theme-packs/light/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/light/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/light/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"medium","name":"Trula višnja","roles":{"stop":{"face":"#60252E","edge":"#AF7777","ink":"#FFF6F2"},"double":{"face":"#F1C3B2","edge":"#60252E","ink":"#3A1424"},"claim":{"face":"#431720","edge":"#E9AF9E","ink":"#FFF6F2"}},"assets":{"stop":"../www/assets/theme-packs/medium/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/medium/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/medium/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"winter","name":"Plavi okean","roles":{"stop":{"face":"#0B5C8C","edge":"#BBD8DE","ink":"#FFFFFF"},"double":{"face":"#DEECEB","edge":"#0B5C8C","ink":"#18384B"},"claim":{"face":"#FFF4E5","edge":"#6D9BA8","ink":"#18384B"}},"assets":{"stop":"../www/assets/theme-packs/winter/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/winter/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/winter/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"neon","name":"Neon Cyber","roles":{"stop":{"face":"#121B2B","edge":"#F08CE3","ink":"#F4FAFF"},"double":{"face":"#56E5D2","edge":"#1A2B40","ink":"#071923"},"claim":{"face":"#1A2B40","edge":"#56E5D2","ink":"#F4FAFF"}},"assets":{"stop":"../www/assets/theme-packs/neon/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/neon/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/neon/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"amethyst","name":"Kraljevski ametist","roles":{"stop":{"face":"#563660","edge":"#A37EAE","ink":"#FBF6FF"},"double":{"face":"#F2C879","edge":"#563660","ink":"#2C183A"},"claim":{"face":"#3C284B","edge":"#D691B5","ink":"#FBF6FF"}},"assets":{"stop":"../www/assets/theme-packs/amethyst/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/amethyst/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/amethyst/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"easter","name":"Vaskršnja","roles":{"stop":{"face":"#4D6B45","edge":"#A66443","ink":"#FFFFFF"},"double":{"face":"#EEE5D3","edge":"#879373","ink":"#3D4434"},"claim":{"face":"#FFF8EA","edge":"#4D6B45","ink":"#3D4434"}},"assets":{"stop":"../www/assets/theme-packs/easter/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/easter/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/easter/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"desert","name":"Pustinjsko staklo","roles":{"stop":{"face":"#7D4D38","edge":"#D79269","ink":"#FFFFFF"},"double":{"face":"#F0D0AB","edge":"#A87759","ink":"#443027"},"claim":{"face":"#FFF0DA","edge":"#D5B29B","ink":"#443027"}},"assets":{"stop":"../www/assets/theme-packs/desert/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/desert/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/desert/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"moon","name":"Mesečev sjaj","roles":{"stop":{"face":"#3B3F4B","edge":"#858895","ink":"#F5F5F7"},"double":{"face":"#E1E2E7","edge":"#858895","ink":"#242630"},"claim":{"face":"#252934","edge":"#A7A9B8","ink":"#F5F5F7"}},"assets":{"stop":"../www/assets/theme-packs/moon/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/moon/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/moon/canonical/daily-buttons/claim-v1.png?v=1"}},{"id":"severna","name":"Severna maglina","roles":{"stop":{"face":"#182C44","edge":"#C3ACEA","ink":"#F5FBFF"},"double":{"face":"#8AE3E4","edge":"#24445B","ink":"#0A2934"},"claim":{"face":"#24445B","edge":"#8AE3E4","ink":"#F5FBFF"}},"assets":{"stop":"../www/assets/theme-packs/severna/canonical/daily-buttons/stop-v1.png?v=1","double":"../www/assets/theme-packs/severna/canonical/daily-buttons/double-v1.png?v=1","claim":"../www/assets/theme-packs/severna/canonical/daily-buttons/claim-v1.png?v=1"}}];
+const labels={sr:{stop:'STOP',double:'DUPLIRAJ',claim:'PREUZMI'},en:{stop:'STOP',double:'DOUBLE',claim:'CLAIM'}};
+let language='sr';
+function render(){document.getElementById('themes').replaceChildren(...themes.map(theme=>{
+ const card=document.createElement('article');card.id=theme.id;
+ card.style.setProperty('--panel',theme.roles.stop.face);card.style.setProperty('--ink',theme.roles.stop.ink);
+ const title=document.createElement('h2');title.textContent=theme.name;card.append(title);
+ const stack=document.createElement('div');stack.className='button-stack';
+ for(const role of ['stop','double','claim']){const button=document.createElement('div');button.className='sample';button.dataset.role=role;button.style.setProperty('--png','url("'+theme.assets[role]+'")');button.style.setProperty('--text',theme.roles[role].ink);button.textContent=labels[language][role];stack.append(button);}
+ card.append(stack);return card;
+}));}
+document.getElementById('sr').onclick=()=>{language='sr';render();};
+document.getElementById('en').onclick=()=>{language='en';render();};render();
+</script></body></html>

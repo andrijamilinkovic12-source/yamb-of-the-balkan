@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pošta — pregled svih tema</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #141c21; color: #edf3ef; font: 15px/1.5 system-ui, sans-serif; }
+        main { display: grid; grid-template-columns: minmax(225px, 280px) minmax(0, 407px); justify-content: center; gap: clamp(16px, 5vw, 64px); padding: 20px max(12px, 3vw); }
+        h1 { margin: 0 0 8px; font-size: 2rem; }
+        p { margin: 0 0 18px; color: #bbc9c3; }
+        label { display: block; margin: 0 0 5px; font-weight: 650; }
+        select { width: 100%; min-height: 42px; padding: 7px 10px; margin-bottom: 14px; font: inherit; color: inherit; background: #202c32; border: 1px solid #536961; border-radius: 8px; }
+        iframe { display: block; width: 100%; height: clamp(400px, calc(100dvh - 40px), 820px); border: 4px solid #4b5f57; border-radius: 25px; background: #26382d; }
+        @media (max-width: 620px) {
+            main { grid-template-columns: minmax(0, 407px); gap: 8px; }
+            iframe { height: min(760px, 90dvh); }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section aria-labelledby="review-title">
+            <h1 id="review-title">Pošta</h1>
+            <p>Interaktivan pregled sa probnim porukama. Otvori poruku da vidiš njen sadržaj i promenu broja nepročitanih.</p>
+            <label for="review-theme">Tema</label>
+            <select id="review-theme">
+                <option value="dark">Zelena</option><option value="light">Svetlo zlato</option>
+                <option value="medium">Trula višnja</option><option value="winter">Plavi okean</option>
+                <option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option>
+                <option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option>
+                <option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
+            </select>
+            <label for="review-role">Prikaz</label>
+            <select id="review-role"><option value="player">Igrač</option><option value="owner">Vlasnik</option></select>
+        </section>
+        <iframe id="review-phone" title="Pošta u prikazu telefona"></iframe>
+    </main>
+    <script>
+        const themeSelect = document.getElementById('review-theme');
+        const roleSelect = document.getElementById('review-role');
+        const phone = document.getElementById('review-phone');
+        const query = new URLSearchParams(location.search);
+        if ([...themeSelect.options].some(option => option.value === query.get('theme'))) themeSelect.value = query.get('theme');
+        if (query.get('role') === 'owner') roleSelect.value = 'owner';
+        function loadPreview() {
+            const state = new URLSearchParams({ theme: themeSelect.value, role: roleSelect.value });
+            phone.src = `theme-player-mailbox-app-frame.html?${state}`;
+        }
+        themeSelect.addEventListener('change', loadPreview);
+        roleSelect.addEventListener('change', loadPreview);
+        loadPreview();
+    </script>
+</body>
+</html>

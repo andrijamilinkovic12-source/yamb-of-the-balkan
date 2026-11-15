@@ -12,14 +12,13 @@
   },
   "inventory": {
     "runtimeRoot": "www/assets/easter-soft-clay",
-    "pngCount": 150,
-    "totalBytes": 15259305,
+    "pngCount": 145,
+    "totalBytes": 14751237,
     "families": {
       "canonical": 6,
       "root": 19,
       "economy": 3,
       "game": 2,
-      "hotseat": 1,
       "invite": 4,
       "leaderboard": 3,
       "opponent": 5,
@@ -27,7 +26,6 @@
       "rules": 6,
       "runtime": 14,
       "settings": 8,
-      "solo": 4,
       "statistics": 19,
       "tournament": 9,
       "treasury": 38
@@ -46,19 +44,30 @@
     },
     "medalConsumers": ["top-list", "tournament", "quarterly-league", "power-index", "fire-streak"]
   },
+  "sharedLocalFinish": {
+    "score": "assets/theme-packs/easter/canonical/solo-results/finish-score-mark-quality-v2.png",
+    "claim": "assets/theme-packs/easter/canonical/solo-results/finish-claim-v1.png",
+    "rewardVideo": "assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v2.png",
+    "personalRecord": "assets/theme-packs/easter/canonical/solo-record-icons/personal-v1.png"
+  },
   "foundation": {
     "background": "www/assets/theme-backgrounds/easter-v6-1.png",
-    "backgroundBytes": 1849355,
+    "backgroundBytes": 1774612,
     "splash": "www/assets/theme-packs/easter/splash-title-soft-clay-v1.png"
   },
   "delivery": {
-    "startupPngCount": 16,
+    "startupPngCount": 20,
     "startupTransferBudgetBytes": 5242880,
     "startupDecodedBudgetBytes": 25165824,
     "roomHydration": "on demand",
     "treasuryWarmupConcurrency": 4
   },
   "retiredRuntime": [
+    "www/assets/easter-soft-clay/hotseat/winner.png",
+    "www/assets/easter-soft-clay/solo/finish-claim-v2.png",
+    "www/assets/easter-soft-clay/solo/finish-reward-video-v2.png",
+    "www/assets/easter-soft-clay/solo/finish-score-mark-v1.png",
+    "www/assets/easter-soft-clay/solo/personal-best.png",
     "www/assets/easter-soft-clay/daily-challenge-pro-v5.png",
     "www/assets/easter-soft-clay/runtime/menu/daily-challenge-pro-v5.png",
     "www/assets/easter-soft-clay/daily/task-v2.png",

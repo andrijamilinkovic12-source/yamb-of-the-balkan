@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Yamb of the Balkan</title>
+    <style>
+        body { margin: 0; padding: 24px; background: #10251d; color: #f7f3e2; font: 1rem/1.6 system-ui, sans-serif; }
+        main { max-width: 34rem; margin: 8vh auto; padding: 24px; background: #203c2e; border-radius: 20px; }
+        h1 { margin: 0; line-height: 1.2; }
+        output { display: block; margin: 12px 0; font: 700 1.4rem ui-monospace, monospace; letter-spacing: .08em;
+            user-select: all; overflow-wrap: anywhere; }
+        button { min-height: 44px; padding: 8px 14px; border: 1px solid #83946f; border-radius: 10px;
+            background: #f4dc9d; color: #193e2b; font: inherit; font-weight: 700; cursor: pointer; }
+        #copy-status:empty { margin: 0; }
+        a { display: inline-block; margin: 4px 14px 4px 0; padding: 6px 0; color: #ffdd86; font-weight: 700; }
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Yamb of the Balkan</h1>
+        <p id="instructions"></p>
+        <output id="code" hidden></output>
+        <button id="copy" type="button" hidden></button>
+        <p id="copy-status" role="status"></p>
+        <a id="open" href="/" hidden></a>
+        <a id="install" href="https://play.google.com/store/apps/details?id=com.yamb.balkan" rel="noreferrer"></a>
+    </main>
+    <script>
+        const params = new URL(location.href).searchParams;
+        const english = params.get('lang') === 'en';
+        const code = (params.get('ref') || '').trim().toUpperCase();
+        const valid = /^[A-F0-9]{12}$/.test(code);
+        document.documentElement.lang = english ? 'en' : 'sr';
+        const instructions = english
+            ? 'Your friend invited you to Yamb of the Balkan. Copy this code, install or open the game, and enter it before your first sign-in with Google or Facebook. Your first server-verified regular online match can earn your friend a referral reward: 3,000 ducats for their first confirmed referral, 3,000 for the second and 5,000 for the third. Each inviting Yamb account can earn up to 11,000 ducats in total; later referrals earn no extra reward.'
+            : 'Prijatelj te je pozvao u Yamb of the Balkan. Kopiraj ovaj kod, instaliraj ili otvori igru i unesi ga pre prve prijave preko Googlea ili Facebooka. Tvoja prva regularna onlajn partija koju server potvrdi može doneti prijatelju nagradu: 3.000 dukata za njegovu prvu potvrđenu preporuku, 3.000 za drugu i 5.000 za treću. Svaki pošiljalac može osvojiti ukupno najviše 11.000 dukata; kasnije preporuke ne donose dodatnu nagradu.';
+        document.getElementById('instructions').textContent = valid ? instructions
+            : english ? 'This invitation does not contain a valid code.' : 'Ovaj poziv nema važeći kod.';
+        document.getElementById('install').textContent = english ? 'Install from Google Play' : 'Instaliraj sa Google Play-a';
+        if (valid) {
+            const value = document.getElementById('code');
+            value.textContent = code;
+            value.hidden = false;
+            const copy = document.getElementById('copy');
+            copy.hidden = false;
+            copy.textContent = english ? 'Copy invitation code' : 'Kopiraj pozivni kod';
+            copy.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(code);
+                    document.getElementById('copy-status').textContent = english
+                        ? 'Code copied. Enter it before your first sign-in.'
+                        : 'Kod je kopiran. Unesi ga pre prve prijave.';
+                } catch (_) {
+                    const selection = window.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(value);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    document.getElementById('copy-status').textContent = english
+                        ? 'Select and copy the code above. Enter it before your first sign-in.'
+                        : 'Označi i kopiraj kod iznad. Unesi ga pre prve prijave.';
+                }
+            });
+            const open = document.getElementById('open');
+            open.href = '/?ref=' + code;
+            open.textContent = english ? 'Open the game' : 'Otvori igru';
+            open.hidden = false;
+        }
+    </script>
+</body>
+</html>

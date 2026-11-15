@@ -1,0 +1,88 @@
+{
+  "model": "Built-in ImageGen",
+  "style": "3D Soft Neomorphism",
+  "size": "256x256 RGBA PNG",
+  "assets": [
+    {
+      "theme": "dark",
+      "name": "Zelena",
+      "prompt": "Hand-sculpted matte clay forest-green letter, thick warm cream flap and a plain recessed terracotta seal, no decorative symbols.",
+      "master": "source-assets/theme-player-mailbox-v1/dark/post-master-v1.png",
+      "runtime": "www/assets/green-soft-clay/canonical/player-mailbox/post-v1.png",
+      "sha256": "2601ee6c55486e8d677d7eba680c0acd198ef69d532738592ed1749140c3ce51"
+    },
+    {
+      "theme": "light",
+      "name": "Svetlo zlato",
+      "prompt": "smooth matte rubber with wide low silhouette, beveled diagonal fold on a honey ochre #E6BE83 horizontal letter case, ivory #FFF1D7 lip with cocoa seam #875024, tiny muted olive #76612B detail; cozy warm light",
+      "master": "source-assets/theme-player-mailbox-v1/light/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/light/canonical/player-mailbox/post-v1.png",
+      "sha256": "76295121b01b20417a1b74e50d9f81220b72eb6baef851d483c1dce142250593"
+    },
+    {
+      "theme": "medium",
+      "name": "Trula višnja",
+      "prompt": "soft matte hand-shaped clay, slightly asymmetrical burgundy #8B3038 post pocket with a broad shallow indentation and angled blush #F1C3B2 folded letter peeking out, plum #431720 shade, tiny warm clay edge #E39A70",
+      "master": "source-assets/theme-player-mailbox-v1/medium/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/medium/canonical/player-mailbox/post-v1.png",
+      "sha256": "7b9ea7ba02d037624afe1bb0df30a31c6164463224e1fca290edeff6e367628f"
+    },
+    {
+      "theme": "winter",
+      "name": "Plavi okean",
+      "prompt": "smooth matte rubber icon, an Aegean-white #FFF4E5 envelope standing in an ocean-blue #0E5A9B curved mail tray, deep Aegean navy #173D5B and a small terracotta #BD684A seam accent, shape as broad curved as a sail with one narrowed edge",
+      "master": "source-assets/theme-player-mailbox-v1/winter/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/winter/canonical/player-mailbox/post-v1.png",
+      "sha256": "1bdbee74f910caa1c312e4dc748c67f9d3a38428efb907d49b6d3293978f7887"
+    },
+    {
+      "theme": "neon",
+      "name": "Neon Cyber",
+      "prompt": "smooth matte plastic, dark blue #193455 rounded rectangular two-piece postal terminal with folded letter face, one large clear aqua #56E5D2 inlaid chevron on the letter face and tiny subdued magenta #F08CE3 accent, shadows #080D18, one restrained cyan rim",
+      "master": "source-assets/theme-player-mailbox-v1/neon/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/neon/canonical/player-mailbox/post-v1.png",
+      "sha256": "ecea8981cff29c685ff32c21fae23e9c6f78bf44febcdfd3319a4cbad4173235"
+    },
+    {
+      "theme": "amethyst",
+      "name": "Kraljevska",
+      "prompt": "Matte clay rounded deep purple arch with a lavender folded envelope, broad chamfer and a small ochre lip, smooth face with no crown or decoration.",
+      "master": "source-assets/theme-player-mailbox-v1/amethyst/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/amethyst/canonical/player-mailbox/post-v1.png",
+      "sha256": "82ec8bc0cdffdbeb7bc43b07959f518add3eb451f7be6090d550f28d6390fc84"
+    },
+    {
+      "theme": "easter",
+      "name": "Vaskršnja",
+      "prompt": "smooth matte rubber, one olive #D3D5B7 oval postal pocket with a cream #FFF8EA upright envelope with folded triangular face and a wide leaf-shaped thumb notch in #4D6B45, one muted terracotta #A66443 accent, gentle spring daylight",
+      "master": "source-assets/theme-player-mailbox-v1/easter/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/easter/canonical/player-mailbox/post-v1.png",
+      "sha256": "78ca1826510492710b7c1c16bad1d9a00d471fe2ceb1b2fd7bd94cc89bcfd347"
+    },
+    {
+      "theme": "desert",
+      "name": "Pustinjsko staklo",
+      "prompt": "soft sculpted matte Clay, a broad sandstone mail slot in two chunky low horizontal coral #D79269 and cinnamon #87523C layers with a creamy #FFF0DA folded letter inserted at a modest angle, one muted teal #396B72 accent, soft grain free finish",
+      "master": "source-assets/theme-player-mailbox-v1/desert/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/desert/canonical/player-mailbox/post-v1.png",
+      "sha256": "4abb700f1aa960a348f0d083e5d033d4b5be251fc8a14c51e0c2848f513dd33b"
+    },
+    {
+      "theme": "moon",
+      "name": "Mesečev sjaj",
+      "prompt": "soft matte clay, low silver-grey #E1E2E7 lunar mail pod with a single concave scoop and one pale envelope flap in charcoal #3B3F4B cradle, ebony #181B24 shade, quiet silvery #A7A9B8 bounce light; softly modeled",
+      "master": "source-assets/theme-player-mailbox-v1/moon/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/moon/canonical/player-mailbox/post-v1.png",
+      "sha256": "c7067ab940217827c3921eda3570c6b03084fe82aef7483f8bdd545f38a6e9d1"
+    },
+    {
+      "theme": "severna",
+      "name": "Severna maglina",
+      "prompt": "smooth matte rubber, broad continuous rounded navy #24445B postal catch tray with icy #F5FBFF letter inside, one soft ice-cyan #8AE3E4 trailing lip and a hint of dusty violet #C3ACEA, midnight #0B1830 shading, serene northern light",
+      "master": "source-assets/theme-player-mailbox-v1/severna/post-master-v1.png",
+      "runtime": "www/assets/theme-packs/severna/canonical/player-mailbox/post-v1.png",
+      "sha256": "95d39421f222a320b7e9cc3d15230b7231691f8da6d374a95211ce4365e84692"
+    }
+  ],
+  "prompt": "One original centered game UI icon that immediately reads as mail at 40 CSS px, in 3D Soft Neomorphism with theme-specific material and palette. Use a tactile folded envelope, a clear sculptural silhouette and soft shading. Transparent alpha, no card backdrop, unread badge, text, watermark, decorations or photoreal texture. Each theme uses a separate generation."
+}

@@ -1,0 +1,2209 @@
+{
+  "generatedAt": "2026-11-15T18:10:06.043Z",
+  "scope": "Preparation/inventory only; no commit, push, deployment, Android build or production account changes.",
+  "source": {
+    "directory": "C:\\Users\\andri\\OneDrive\\Desktop\\Yamb_of_the_Balkan",
+    "branch": "main",
+    "head": "b764a026f11ba4e7d7c19686a691466c4827744d",
+    "cachedOriginMain": "b764a026f11ba4e7d7c19686a691466c4827744d",
+    "remoteMainVerified": "b764a026f11ba4e7d7c19686a691466c4827744d",
+    "remoteFacebookQaVerified": "4057a26c5c3bb18d79c39b2991485ff717cac6b3"
+  },
+  "android": {
+    "base": {
+      "versionCode": 114,
+      "versionName": "12.4"
+    },
+    "candidate": {
+      "versionCode": 115,
+      "versionName": "12.5"
+    },
+    "status": "Candidate prepared only; confirm highest versionCode in Play Console before uploading. No APK/AAB built.",
+    "package": "com.yamb.balkan",
+    "firebaseProject": "yamb-of-the-balkan"
+  },
+  "summary": {
+    "modified": 54,
+    "new": 114,
+    "total": 168,
+    "byCategory": {
+      "configuration-example": {
+        "files": 2,
+        "bytes": 5683
+      },
+      "android": {
+        "files": 7,
+        "bytes": 19435
+      },
+      "documentation": {
+        "files": 8,
+        "bytes": 312684
+      },
+      "server": {
+        "files": 18,
+        "bytes": 866641
+      },
+      "qa-website": {
+        "files": 5,
+        "bytes": 32530
+      },
+      "checks-and-tooling": {
+        "files": 18,
+        "bytes": 282038
+      },
+      "source-masters": {
+        "files": 42,
+        "bytes": 57506125
+      },
+      "public-website": {
+        "files": 9,
+        "bytes": 60016
+      },
+      "client": {
+        "files": 18,
+        "bytes": 1217358
+      },
+      "runtime-assets": {
+        "files": 41,
+        "bytes": 3650200
+      }
+    },
+    "runtimePngs": 41,
+    "sourcePngs": 40
+  },
+  "checks": {
+    "forbiddenFilesInCandidate": [],
+    "missingRuntimeFiles": [],
+    "localServerRequires": [
+      {
+        "source": "./scripts/start-single-instance.cjs",
+        "exists": true
+      },
+      {
+        "source": "./lib/global-chat-activity",
+        "exists": true
+      },
+      {
+        "source": "./lib/global-chat-mutations",
+        "exists": true
+      },
+      {
+        "source": "./lib/global-chat-moderation",
+        "exists": true
+      },
+      {
+        "source": "./lib/global-chat-moderation-store",
+        "exists": true
+      },
+      {
+        "source": "./lib/duel-chat",
+        "exists": true
+      },
+      {
+        "source": "./www/powerIndexCore",
+        "exists": true
+      },
+      {
+        "source": "./www/tournamentReadinessCore",
+        "exists": true
+      },
+      {
+        "source": "./www/tournamentSchedulingCore",
+        "exists": true
+      },
+      {
+        "source": "./www/tournamentNotificationsCore",
+        "exists": true
+      },
+      {
+        "source": "./lib/tournament-match-audit",
+        "exists": true
+      },
+      {
+        "source": "./lib/player-mailbox",
+        "exists": true
+      },
+      {
+        "source": "./lib/player-mailbox-store",
+        "exists": true
+      },
+      {
+        "source": "./lib/player-referrals",
+        "exists": true
+      },
+      {
+        "source": "./lib/tournament-mail-warnings",
+        "exists": true
+      },
+      {
+        "source": "./lib/mailbox-champions",
+        "exists": true
+      },
+      {
+        "source": "./lib/mailbox-leaderboard",
+        "exists": true
+      },
+      {
+        "source": "./lib/league-rank-mail",
+        "exists": true
+      },
+      {
+        "source": "./lib/statistics-mail",
+        "exists": true
+      },
+      {
+        "source": "./lib/player-support",
+        "exists": true
+      },
+      {
+        "source": "./www/tournamentAdjudicationCore",
+        "exists": true
+      },
+      {
+        "source": "./lib/tournament-adjudication",
+        "exists": true
+      },
+      {
+        "source": "./www/tournamentReliabilityCore",
+        "exists": true
+      },
+      {
+        "source": "./lib/tournament-readiness",
+        "exists": true
+      },
+      {
+        "source": "./lib/tournament-readiness-store",
+        "exists": true
+      },
+      {
+        "source": "./lib/profile-writes",
+        "exists": true
+      },
+      {
+        "source": "./lib/friendships",
+        "exists": true
+      },
+      {
+        "source": "./lib/tournament-scheduling-runtime",
+        "exists": true
+      },
+      {
+        "source": "./lib/account-deletion",
+        "exists": true
+      },
+      {
+        "source": "./lib/analytics-deletion",
+        "exists": true
+      },
+      {
+        "source": "./lib/analytics-privacy",
+        "exists": true
+      },
+      {
+        "source": "./lib/push-delivery-policy",
+        "exists": true
+      },
+      {
+        "source": "./scripts/reconnect-staging-safety",
+        "exists": true
+      },
+      {
+        "source": "./www/account-deletion-firebase.json",
+        "exists": true
+      },
+      {
+        "source": "./lib/monitor-report",
+        "exists": true
+      }
+    ],
+    "manifestPngs": [
+      {
+        "name": "theme-daily-buttons-v1",
+        "assets": [
+          {
+            "theme": "dark",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/dark-stop-v1.png",
+            "runtime": "www/assets/green-soft-clay/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 110581
+          },
+          {
+            "theme": "dark",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/dark-double-v1.png",
+            "runtime": "www/assets/green-soft-clay/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 117232
+          },
+          {
+            "theme": "dark",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/dark-claim-v1.png",
+            "runtime": "www/assets/green-soft-clay/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 118085
+          },
+          {
+            "theme": "light",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/light-stop-v1.png",
+            "runtime": "www/assets/theme-packs/light/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 101541
+          },
+          {
+            "theme": "light",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/light-double-v1.png",
+            "runtime": "www/assets/theme-packs/light/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 103165
+          },
+          {
+            "theme": "light",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/light-claim-v1.png",
+            "runtime": "www/assets/theme-packs/light/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 86251
+          },
+          {
+            "theme": "medium",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/medium-stop-v1.png",
+            "runtime": "www/assets/theme-packs/medium/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 90474
+          },
+          {
+            "theme": "medium",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/medium-double-v1.png",
+            "runtime": "www/assets/theme-packs/medium/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 94317
+          },
+          {
+            "theme": "medium",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/medium-claim-v1.png",
+            "runtime": "www/assets/theme-packs/medium/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 97676
+          },
+          {
+            "theme": "winter",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/winter-stop-v1.png",
+            "runtime": "www/assets/theme-packs/winter/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 88859
+          },
+          {
+            "theme": "winter",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/winter-double-v1.png",
+            "runtime": "www/assets/theme-packs/winter/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 92049
+          },
+          {
+            "theme": "winter",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/winter-claim-v1.png",
+            "runtime": "www/assets/theme-packs/winter/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 88523
+          },
+          {
+            "theme": "neon",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/neon-stop-v1.png",
+            "runtime": "www/assets/theme-packs/neon/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 99485
+          },
+          {
+            "theme": "neon",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/neon-double-v1.png",
+            "runtime": "www/assets/theme-packs/neon/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 96068
+          },
+          {
+            "theme": "neon",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/neon-claim-v1.png",
+            "runtime": "www/assets/theme-packs/neon/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 99498
+          },
+          {
+            "theme": "amethyst",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/amethyst-stop-v1.png",
+            "runtime": "www/assets/theme-packs/amethyst/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 88981
+          },
+          {
+            "theme": "amethyst",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/amethyst-double-v1.png",
+            "runtime": "www/assets/theme-packs/amethyst/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 102079
+          },
+          {
+            "theme": "amethyst",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/amethyst-claim-v1.png",
+            "runtime": "www/assets/theme-packs/amethyst/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 93942
+          },
+          {
+            "theme": "easter",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/easter-stop-v1.png",
+            "runtime": "www/assets/theme-packs/easter/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 100331
+          },
+          {
+            "theme": "easter",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/easter-double-v1.png",
+            "runtime": "www/assets/theme-packs/easter/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 95573
+          },
+          {
+            "theme": "easter",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/easter-claim-v1.png",
+            "runtime": "www/assets/theme-packs/easter/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 90579
+          },
+          {
+            "theme": "desert",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/desert-stop-v1.png",
+            "runtime": "www/assets/theme-packs/desert/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 89328
+          },
+          {
+            "theme": "desert",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/desert-double-v1.png",
+            "runtime": "www/assets/theme-packs/desert/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 104748
+          },
+          {
+            "theme": "desert",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/desert-claim-v1.png",
+            "runtime": "www/assets/theme-packs/desert/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 87097
+          },
+          {
+            "theme": "moon",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/moon-stop-v1.png",
+            "runtime": "www/assets/theme-packs/moon/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 86768
+          },
+          {
+            "theme": "moon",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/moon-double-v1.png",
+            "runtime": "www/assets/theme-packs/moon/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 84796
+          },
+          {
+            "theme": "moon",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/moon-claim-v1.png",
+            "runtime": "www/assets/theme-packs/moon/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 89808
+          },
+          {
+            "theme": "severna",
+            "role": "stop",
+            "master": "source-assets/theme-daily-buttons-v1/masters/severna-stop-v1.png",
+            "runtime": "www/assets/theme-packs/severna/canonical/daily-buttons/stop-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 91575
+          },
+          {
+            "theme": "severna",
+            "role": "double",
+            "master": "source-assets/theme-daily-buttons-v1/masters/severna-double-v1.png",
+            "runtime": "www/assets/theme-packs/severna/canonical/daily-buttons/double-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 92636
+          },
+          {
+            "theme": "severna",
+            "role": "claim",
+            "master": "source-assets/theme-daily-buttons-v1/masters/severna-claim-v1.png",
+            "runtime": "www/assets/theme-packs/severna/canonical/daily-buttons/claim-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 768,
+            "height": 144,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 88138
+          }
+        ],
+        "count": 30,
+        "valid": true
+      },
+      {
+        "name": "theme-player-mailbox-v1",
+        "assets": [
+          {
+            "theme": "dark",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/dark/post-master-v1.png",
+            "runtime": "www/assets/green-soft-clay/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 83138
+          },
+          {
+            "theme": "light",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/light/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/light/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 77763
+          },
+          {
+            "theme": "medium",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/medium/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/medium/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 78331
+          },
+          {
+            "theme": "winter",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/winter/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/winter/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 73281
+          },
+          {
+            "theme": "neon",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/neon/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/neon/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 92148
+          },
+          {
+            "theme": "amethyst",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/amethyst/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/amethyst/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 74640
+          },
+          {
+            "theme": "easter",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/easter/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/easter/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 79706
+          },
+          {
+            "theme": "desert",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/desert/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/desert/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 68675
+          },
+          {
+            "theme": "moon",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/moon/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/moon/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 73044
+          },
+          {
+            "theme": "severna",
+            "role": "post",
+            "master": "source-assets/theme-player-mailbox-v1/severna/post-master-v1.png",
+            "runtime": "www/assets/theme-packs/severna/canonical/player-mailbox/post-v1.png",
+            "masterExists": true,
+            "pngSignature": true,
+            "width": 256,
+            "height": 256,
+            "rgba": true,
+            "hashMatches": true,
+            "bytes": 76293
+          }
+        ],
+        "count": 10,
+        "valid": true
+      }
+    ],
+    "facebookQaFiles": [
+      {
+        "file": ".env.reconnect-staging.example",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      },
+      {
+        "file": "android/app/build.gradle",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      },
+      {
+        "file": "android/app/src/facebook/AndroidManifest.xml",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "android/app/src/main/java/com/yamb/balkan/AccountIdentityPlugin.java",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "android/app/src/main/java/com/yamb/balkan/AnalyticsPrivacyPlugin.java",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "android/app/src/main/java/com/yamb/balkan/MainActivity.java",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "android/variables.gradle",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "capacitor.config.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "lib/account-deletion.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      },
+      {
+        "file": "lib/analytics-privacy.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "scripts/test-account-deletion.cjs",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "www/account-deletion-client.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "www/account-privacy.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": true
+      },
+      {
+        "file": "www/auth.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      },
+      {
+        "file": "www/index.html",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      },
+      {
+        "file": "www/languages.js",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      },
+      {
+        "file": "www/theme-game-logos.css",
+        "existsInMainWorkspace": true,
+        "sameAsQa": false
+      }
+    ],
+    "nativeRuntimeProvided": [
+      "capacitor.js"
+    ],
+    "facebookQaWorkingChanges": [
+      {
+        "kind": "auth-function",
+        "name": "updateFacebookControls",
+        "integrated": true
+      },
+      {
+        "kind": "auth-function",
+        "name": "connectAuthAccount",
+        "integrated": true
+      },
+      {
+        "kind": "auth-function",
+        "name": "facebookAuthConflict",
+        "integrated": true
+      },
+      {
+        "kind": "settings-css",
+        "integrated": true
+      },
+      {
+        "kind": "auth-css",
+        "integrated": true
+      },
+      {
+        "kind": "translation",
+        "key": "auth_facebook_link",
+        "integrated": true
+      },
+      {
+        "kind": "translation",
+        "key": "auth_facebook_link_label",
+        "integrated": true
+      },
+      {
+        "kind": "translation",
+        "key": "auth_facebook_connected",
+        "integrated": true
+      },
+      {
+        "kind": "translation",
+        "key": "auth_facebook_connected_label",
+        "integrated": true
+      },
+      {
+        "kind": "html-control",
+        "id": "dugmeFacebookPrijava",
+        "integrated": true
+      },
+      {
+        "kind": "html-control",
+        "id": "settings-auth-providers",
+        "integrated": true
+      }
+    ]
+  },
+  "worktrees": [
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan",
+      "head": "b764a026f11ba4e7d7c19686a691466c4827744d",
+      "branch": "refs/heads/main",
+      "trackedChanges": [
+        ".env.example",
+        ".env.reconnect-staging.example",
+        "android/app/build.gradle",
+        "android/app/src/main/java/com/yamb/balkan/AnalyticsPrivacyPlugin.java",
+        "android/app/src/main/java/com/yamb/balkan/MainActivity.java",
+        "android/variables.gradle",
+        "capacitor.config.js",
+        "docs/theme-daily-final-audit.md",
+        "docs/theme-definitions.json",
+        "docs/theme-room-asset-counts.json",
+        "lib/account-deletion.js",
+        "lib/analytics-privacy.js",
+        "lib/global-chat-moderation-store.js",
+        "lib/global-chat-moderation.js",
+        "lib/tournament-adjudication.js",
+        "lib/tournament-match-audit.js",
+        "qa/account-privacy-site/delete-account.html",
+        "qa/account-privacy-site/privacy.html",
+        "qa/account-privacy-site/privacy_en.html",
+        "qa/account-privacy-site/terms.html",
+        "qa/account-privacy-site/terms_en.html",
+        "scripts/audit-theme-room-assets.js",
+        "scripts/check-theme-daily-room.js",
+        "scripts/prepare-account-privacy-site.cjs",
+        "scripts/test-account-deletion.cjs",
+        "scripts/test-daily-layout-runtime.cjs",
+        "scripts/test-global-chat-moderation-db.cjs",
+        "scripts/test-invite-friend-layout-runtime.cjs",
+        "scripts/test-tournament-adjudication.cjs",
+        "scripts/test-tournament-match-audit.cjs",
+        "server.js",
+        "website-updates/delete-account.html",
+        "website-updates/public/account-deletion-client.js",
+        "website-updates/public/account-deletion-page.js",
+        "website-updates/public/account-deletion-web.js",
+        "website-updates/public/delete-account.html",
+        "website-updates/public/privacy.html",
+        "website-updates/public/privacy_en.html",
+        "website-updates/public/terms.html",
+        "website-updates/public/terms_en.html",
+        "www/account-deletion-client.js",
+        "www/account-deletion-page.js",
+        "www/account-deletion-web.js",
+        "www/account-privacy.js",
+        "www/auth.js",
+        "www/dnevniizazov.js",
+        "www/game.js",
+        "www/globalchat-moderation.js",
+        "www/index.html",
+        "www/languages.js",
+        "www/theme-daily-room.css",
+        "www/theme-game-logos.css",
+        "www/theme-invite-friend-room.css",
+        "www/theme-settings-room.css"
+      ]
+    },
+    {
+      "directory": "C:/Users/andri/.codex/worktrees/reconnect-security/Yamb_of_the_Balkan",
+      "head": "f254488c4e8de91ce88e301d57ca38930fb017ef",
+      "branch": "refs/heads/codex/reconnect-security",
+      "trackedChanges": [],
+      "inspectionError": "git status failed in C:/Users/andri/.codex/worktrees/reconnect-security/Yamb_of_the_Balkan: fatal: this operation must be run in a work tree\n"
+    },
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan/tmp/account-deletion-qa-worktree",
+      "head": "157020e7b358b93858f7cc4fab16aad109370921",
+      "branch": "refs/heads/codex/account-deletion-qa",
+      "trackedChanges": []
+    },
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan/tmp/confetti-release-worktree",
+      "head": "54d0bb03aa8dce135ed43ea3a0846383579135d5",
+      "branch": "detached",
+      "trackedChanges": []
+    },
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan/tmp/facebook-login-qa-worktree",
+      "head": "4057a26c5c3bb18d79c39b2991485ff717cac6b3",
+      "branch": "refs/heads/codex/facebook-login-qa",
+      "trackedChanges": [
+        "www/auth.js",
+        "www/index.html",
+        "www/languages.js",
+        "www/theme-game-logos.css",
+        "www/theme-settings-room.css"
+      ]
+    },
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan/tmp/reconnect-cold-start-release-worktree",
+      "head": "33b0cd55fffcdf8fcb3b3416d5bf374dd12152a6",
+      "branch": "refs/heads/codex/reconnect-cold-start-release",
+      "trackedChanges": [
+        ".vscode/settings.json",
+        "android/.idea/deploymentTargetSelector.xml",
+        "android/.idea/misc.xml",
+        "android/app/capacitor.build.gradle",
+        "android/capacitor-cordova-android-plugins/build.gradle",
+        "android/capacitor-cordova-android-plugins/cordova.variables.gradle",
+        "android/capacitor.settings.gradle"
+      ]
+    },
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan/tmp/reconnect-cold-start-render-worktree",
+      "head": "114eeb3cbb490b7fe95c0607ec323de5462ff2c4",
+      "branch": "refs/heads/codex/reconnect-cold-start-render-qa",
+      "trackedChanges": []
+    },
+    {
+      "directory": "C:/Users/andri/OneDrive/Desktop/Yamb_of_the_Balkan/tmp/tournament-production-release-2026-11-12",
+      "head": "bdadb676c261a8d05b7c4c3f3f674beffe0c3427",
+      "branch": "refs/heads/codex/tournament-production-2026-11-12",
+      "trackedChanges": []
+    }
+  ],
+  "files": [
+    {
+      "file": ".env.example",
+      "status": "modified",
+      "category": "configuration-example",
+      "bytes": 2816,
+      "sha256": "8a1d041f62c7c84c583ff28f006d467146ae02f32a2ac40e6efe11f089969852"
+    },
+    {
+      "file": ".env.reconnect-staging.example",
+      "status": "modified",
+      "category": "configuration-example",
+      "bytes": 2867,
+      "sha256": "cd016291c4f16965773aee7426272756106d87c141777f4e28521a3a79792139"
+    },
+    {
+      "file": "android/app/build.gradle",
+      "status": "modified",
+      "category": "android",
+      "bytes": 4293,
+      "sha256": "27a540ed0268ff889d5ce98bbd0d2c034a5def8dc20f9f1c7092be3bef0790f5"
+    },
+    {
+      "file": "android/app/src/facebook/AndroidManifest.xml",
+      "status": "new",
+      "category": "android",
+      "bytes": 1247,
+      "sha256": "67edaa2b2210763fc41943d00ef5e8af55ecefc92a8f9e8d8ba1f8c13be7580d"
+    },
+    {
+      "file": "android/app/src/main/java/com/yamb/balkan/AccountIdentityPlugin.java",
+      "status": "new",
+      "category": "android",
+      "bytes": 4345,
+      "sha256": "6f94faced86188298a48d4703b8fe3ab625505fcb2b4b88de4697d1cfcc1a678"
+    },
+    {
+      "file": "android/app/src/main/java/com/yamb/balkan/AnalyticsPrivacyPlugin.java",
+      "status": "modified",
+      "category": "android",
+      "bytes": 6672,
+      "sha256": "c86bb7babdc7333cbe15bf1e700db18bf0d4966ff3d00bc6d09d601cf34539c3"
+    },
+    {
+      "file": "android/app/src/main/java/com/yamb/balkan/MainActivity.java",
+      "status": "modified",
+      "category": "android",
+      "bytes": 1124,
+      "sha256": "9e7d8d2265f14c7d1e52c2b6fd095433c15c6e048263a86bd8a44938ccbea250"
+    },
+    {
+      "file": "android/variables.gradle",
+      "status": "modified",
+      "category": "android",
+      "bytes": 810,
+      "sha256": "4ad757382989e72b8f89120662c116d783126a26081f372c02551247fbc88519"
+    },
+    {
+      "file": "capacitor.config.js",
+      "status": "modified",
+      "category": "android",
+      "bytes": 944,
+      "sha256": "61557a079b87360f3052f3eea422ca1b04665904f9a60be120777d2e3ea4c709"
+    },
+    {
+      "file": "docs/facebook-login-and-referrals-qa.md",
+      "status": "new",
+      "category": "documentation",
+      "bytes": 7992,
+      "sha256": "badf7072b48b5461dd1d8a69e8411e1b83a411581039fd8486475557273459b2"
+    },
+    {
+      "file": "docs/facebook-production-release-plan.md",
+      "status": "new",
+      "category": "documentation",
+      "bytes": 8026,
+      "sha256": "d3a6271a95db35078001dbef88817c695678e0f0cf936205817da937cb2bfc7e"
+    },
+    {
+      "file": "docs/theme-daily-buttons-review.html",
+      "status": "new",
+      "category": "documentation",
+      "bytes": 7819,
+      "sha256": "9e1d77e8a8ad59d3b2a0cbe24ecff5f4d2835a2e5909e26110ee942f50f1f37a"
+    },
+    {
+      "file": "docs/theme-daily-final-audit.md",
+      "status": "modified",
+      "category": "documentation",
+      "bytes": 4978,
+      "sha256": "c620eca4fc800bf0de49c4f07c0bbfe824cd4536e61b611ae5c7754bdae8d4b0"
+    },
+    {
+      "file": "docs/theme-definitions.json",
+      "status": "modified",
+      "category": "documentation",
+      "bytes": 241899,
+      "sha256": "b76d563c88ce022e6dff6afded906ef1d9283b7ded6a671746a1bb91025c763c"
+    },
+    {
+      "file": "docs/theme-player-mailbox-app-frame.html",
+      "status": "new",
+      "category": "documentation",
+      "bytes": 29590,
+      "sha256": "b7f227d2c4483813b7a87e1dbf8ef1d795f92b95b980ebc7c3629d91ee3333f5"
+    },
+    {
+      "file": "docs/theme-player-mailbox-review.html",
+      "status": "new",
+      "category": "documentation",
+      "bytes": 3258,
+      "sha256": "020fa942976e239d0c27747a0ab0aa080874aeda127a8a6086bd9650adc09bce"
+    },
+    {
+      "file": "docs/theme-room-asset-counts.json",
+      "status": "modified",
+      "category": "documentation",
+      "bytes": 9122,
+      "sha256": "7aff217b3e92279c40f0f29643e2fcba19377592e6015653110ba7bbaf0feb87"
+    },
+    {
+      "file": "lib/account-deletion.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 24539,
+      "sha256": "c6337afcaf0a8aa3b4ff3eca1a5795b50fa438f3aafd890604e83acdfd4fab62"
+    },
+    {
+      "file": "lib/analytics-privacy.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 4369,
+      "sha256": "e8a10af068e9ac70253c0ae997cc244ee3f09b4f96f35a69ffe7ab193f4d9a4e"
+    },
+    {
+      "file": "lib/friendships.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 1343,
+      "sha256": "1b2b1c05f58387c94da6db2f08d8604071ea9d75950a01306be1d283d46af828"
+    },
+    {
+      "file": "lib/global-chat-moderation-store.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 7191,
+      "sha256": "d6fc9a4829dd4121bac6d3211d56d5f925d5fd0d57019a6e7278a5f03a45a70e"
+    },
+    {
+      "file": "lib/global-chat-moderation.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 7458,
+      "sha256": "ad7ebff10dc4298e57c4d4976c71e435ddfb13469bbbfff431723b8d0fe1e5ed"
+    },
+    {
+      "file": "lib/league-rank-mail.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 2495,
+      "sha256": "86710d246b207efefdae55a5df4394a91c7e883c8bf4a613bd47f7175d8aff4a"
+    },
+    {
+      "file": "lib/mailbox-champions.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 1928,
+      "sha256": "b8a7294e271ad26b36e343f64f3cab005c00e0d086962eb552002811023563dd"
+    },
+    {
+      "file": "lib/mailbox-leaderboard.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 2267,
+      "sha256": "c25f6a9f0c0226d8996c2be54ac85fa9546c2c03cc9cd188cfee36b8e1455b62"
+    },
+    {
+      "file": "lib/mailbox-system-notices.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 616,
+      "sha256": "296dc9774b5ca58bfdb40887494c24ec07321c5002575cd4a1f032cacf5c244e"
+    },
+    {
+      "file": "lib/player-mailbox-store.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 11063,
+      "sha256": "fa52f57c87e0b966298ba49656d3b9b369b98bbcb6b0999242285cb7a6e7ddb4"
+    },
+    {
+      "file": "lib/player-mailbox.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 10702,
+      "sha256": "1aff59c8063a54a1c5d2d925f27e8b32f9514e75b7e14ab78c5ed8c43cc67ac2"
+    },
+    {
+      "file": "lib/player-referrals.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 6941,
+      "sha256": "698613e943d251e0c8aa3914c142d44c4f820190f8b318dc7c7b0322ab3588e2"
+    },
+    {
+      "file": "lib/player-support.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 5457,
+      "sha256": "783cd5207058ebb25e302c63a2ba90a1561fe229f82cc4b8ca044947b17c6a6c"
+    },
+    {
+      "file": "lib/statistics-mail.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 5169,
+      "sha256": "4cc1622e5c670ba9d988dc07cc11af509d5a48b56334fe569da620c2cbc7cc7b"
+    },
+    {
+      "file": "lib/tournament-adjudication.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 8797,
+      "sha256": "6d9716ba30192fff3cd87e993e65ec5fd7b71bacc38e5c1bae7d4f902286e966"
+    },
+    {
+      "file": "lib/tournament-mail-warnings.js",
+      "status": "new",
+      "category": "server",
+      "bytes": 7382,
+      "sha256": "c71c8ee2336a9b1097c60fa89059903f65612a70478f766a2e439eb159476561"
+    },
+    {
+      "file": "lib/tournament-match-audit.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 14748,
+      "sha256": "0e045299174eed67c6f81575fc68503613ca41076f1cefa26e8c9b233dad0c88"
+    },
+    {
+      "file": "qa/account-privacy-site/delete-account.html",
+      "status": "modified",
+      "category": "qa-website",
+      "bytes": 5542,
+      "sha256": "4ceaabdce4d92e735fb8f572bb1ffd9893ce08937c0c94f42a578c9cab8fa9c8"
+    },
+    {
+      "file": "qa/account-privacy-site/privacy.html",
+      "status": "modified",
+      "category": "qa-website",
+      "bytes": 9984,
+      "sha256": "26f4684e4322ad61da27e52f15628a06c010b4df1234287ca4a46edb3e47202c"
+    },
+    {
+      "file": "qa/account-privacy-site/privacy_en.html",
+      "status": "modified",
+      "category": "qa-website",
+      "bytes": 9809,
+      "sha256": "522cb13768a6138deb56867759f23dfa2373cc1dd6398dc1ca7563b328b2f33e"
+    },
+    {
+      "file": "qa/account-privacy-site/terms.html",
+      "status": "modified",
+      "category": "qa-website",
+      "bytes": 3608,
+      "sha256": "2a78e7540b6ecaf72e8bc824f835799ea565919431b24c8f1b267d339489199a"
+    },
+    {
+      "file": "qa/account-privacy-site/terms_en.html",
+      "status": "modified",
+      "category": "qa-website",
+      "bytes": 3587,
+      "sha256": "ed77f31ad8f51de75d49e06caece9f50c19d36f2ad2733fe2c47a5598c9c0a38"
+    },
+    {
+      "file": "scripts/audit-theme-room-assets.js",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 9845,
+      "sha256": "c3b22ba698a863141ae5130a791bee780adb574e60cdbf734dd2cf3b30be3035"
+    },
+    {
+      "file": "scripts/check-theme-daily-room.js",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 18567,
+      "sha256": "5be74751d5962a311c052c5dc34823375fbc4e271ad17124a7acb4bba4b5ef27"
+    },
+    {
+      "file": "scripts/prepare-account-privacy-site.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 25316,
+      "sha256": "6472f102dac3c53265535940d671476540dcd269caa386cb1bf5f3a6f72c94cd"
+    },
+    {
+      "file": "scripts/test-account-deletion.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 11351,
+      "sha256": "7a8695e9f51ca99c3bb15ebcaae218e54344f471bba0a56b304a53be5f1395c4"
+    },
+    {
+      "file": "scripts/test-daily-layout-runtime.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 11299,
+      "sha256": "da8fa1a404bc626546a10f0f449872aa89996009a824f7aa688b1d068f0a683b"
+    },
+    {
+      "file": "scripts/test-friend-removal.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 9549,
+      "sha256": "6ae3bf1375acd0b0833354dcf235ea5c37ef0928e25ba65596bd7f6a88a7c7c0"
+    },
+    {
+      "file": "scripts/test-global-chat-moderation-db.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 21986,
+      "sha256": "a285db97e790187258b7c9bae8b9b545161679327066e27faf5156a96ac68e7b"
+    },
+    {
+      "file": "scripts/test-invite-friend-layout-runtime.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 20272,
+      "sha256": "71727ae3d07fe0f441516c07e81b3e116a9fb9744b2d2666f85d1c7bbd9c25f8"
+    },
+    {
+      "file": "scripts/test-mailbox-leaderboard.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 8294,
+      "sha256": "c4cfe39ed899aae3a50ef443668a71d8a446461e8f01dd722211d355a5bce868"
+    },
+    {
+      "file": "scripts/test-player-mailbox-history.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 12655,
+      "sha256": "8add352e5a10d14fd8956e43ca3adbd508986ea8a145b1a2ccbc584251223060"
+    },
+    {
+      "file": "scripts/test-player-mailbox-layout.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 45143,
+      "sha256": "46dfb8aa05add7759ee4704965a138bc3ff8cbf1c1fa2e9aa0352c07112b68e1"
+    },
+    {
+      "file": "scripts/test-player-mailbox.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 10622,
+      "sha256": "036533f1533ed3ba5c24f565c1bf69b479219991330b4169e240dacae6d58206"
+    },
+    {
+      "file": "scripts/test-player-referrals-client.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 5781,
+      "sha256": "7cf8e219b1c0f5e44f134abafe3b9978d7c6cb9ee96b65a16ce03ffacb7cb0fc"
+    },
+    {
+      "file": "scripts/test-player-referrals.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 13466,
+      "sha256": "23b61b318862c2dde665f073579ce16032be949a69309fcf388b0eb98377c726"
+    },
+    {
+      "file": "scripts/test-statistics-mail.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 9964,
+      "sha256": "e33377b821d1b7bd658a69ac70f391c2e36756378d4ea83de5ec6f6e27ea2f6c"
+    },
+    {
+      "file": "scripts/test-tournament-adjudication.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 13701,
+      "sha256": "a908e83e82e118f7041c2a600dc4a8c5faea35d13622be8659401e8a70e0f774"
+    },
+    {
+      "file": "scripts/test-tournament-mail-warnings.cjs",
+      "status": "new",
+      "category": "checks-and-tooling",
+      "bytes": 13022,
+      "sha256": "0c32a169bbcaf6b543d1a6215d3cb2ac83fd59c17dee9790c60c01b24ad78fbf"
+    },
+    {
+      "file": "scripts/test-tournament-match-audit.cjs",
+      "status": "modified",
+      "category": "checks-and-tooling",
+      "bytes": 21205,
+      "sha256": "d6515324b3377b6977011ddeb4b5e7e452ba8839068ff7bdcbb619363b8a4e65"
+    },
+    {
+      "file": "server.js",
+      "status": "modified",
+      "category": "server",
+      "bytes": 744176,
+      "sha256": "9411fc7976e241fed61d825f1ff329ae3cf843e67eba95c6ed7488eda8c969c6"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/manifest.json",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 75063,
+      "sha256": "cedbf1837e2acc1729cb15d25269baf4b114c1c046db0f46e947a3fcd3d788d4"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/amethyst-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1388291,
+      "sha256": "34a57a8496a1f43af33c7089c3080736253d42acca9b85d5584cb3f7453520d7"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/amethyst-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1683618,
+      "sha256": "42ea3d6ca8d761a9c3a246e32f285cfacce1e3661ada1eb6d7014096893ff16b"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/amethyst-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1412243,
+      "sha256": "b919fb7b9641a85917ec0931d3e39f52dd7a5c96e50c525dd73fb810f3cb7341"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/dark-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1728093,
+      "sha256": "464f47f78beffc67f00963d6803c4bbb05624f8d7e780fe255b3202de9879f83"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/dark-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1666762,
+      "sha256": "c9594df998f7771287b2ec6342cb1feb8e8884b1e5f3a1539bf6f0a375309bac"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/dark-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1617231,
+      "sha256": "6e37c8781abdbaec30006ad33bb1cf21b42bd055ffc31dbe41c7e0013af52fc9"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/desert-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1408520,
+      "sha256": "4a9608c768e2b60e23e69b5ba63fb55c663760bba3985aa105dcec0308b011f7"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/desert-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1410519,
+      "sha256": "74b4222377537770ae0aafabed9129dae1c1cb9473cf84fccaea8a7702396315"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/desert-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1557696,
+      "sha256": "dbaca449a61161199e731c4df1ba004943f35ced817b28fb4cd2c445192e5ac8"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/easter-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1532758,
+      "sha256": "043bf7b4a7489a6b48fe6ff4b77dabe2a0fce88cc2212998cdf0e4381b9c2f3f"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/easter-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1582808,
+      "sha256": "2aa71ae0b37a3fd0f1c1fa56bac149fb1c6a5b0e36358a1d598b5e9e0fe99eda"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/easter-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1464945,
+      "sha256": "563ca417b36412aaef498f99c3841a7963d13aab91bd9d5a5c6c465564665770"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/light-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1228284,
+      "sha256": "026314cdfbdf7ba9f51005504315b4def1daa548b45dacf888490e8810d5bde0"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/light-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1525019,
+      "sha256": "1f88b901878a8186db028651e1beac40cc9ccd390f73da8e046f1203220f4292"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/light-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1541465,
+      "sha256": "95a95cc02434c3dbeb1e1c0e60fc0cd70d649221fb76dbd60b0eab384445da2d"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/medium-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1448917,
+      "sha256": "bc5189c1a5414cda628d0988b0440a454b20d898de19d2d239cca2642294b091"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/medium-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1469999,
+      "sha256": "5e6796ee2b794ad2c72ed2573dd4901fbe6051290b1742df424ac5875ce5a43a"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/medium-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1445292,
+      "sha256": "877ca8ba48d367d1ba457b711174f1649ebc8e86dbac71d8a5e1ac75c4e37fae"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/moon-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1384726,
+      "sha256": "0ba92355a5fb11a66eb79893ab69bfc3eee6ce7b1c4b4ffe885e05898440d0de"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/moon-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1358078,
+      "sha256": "38db45b24471923385c37ac21d394a0a8bbe6564dc7b36345a487c9b0a21b583"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/moon-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1415686,
+      "sha256": "ad9fae4f7572b5b353bd54c75ad10e92670b6217b2f24ffa663a63b750e3f9bf"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/neon-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1188937,
+      "sha256": "b53c5ed01be85296b39068e23e9214d51f5d151a5c8090f23244a113f813c0e5"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/neon-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1337391,
+      "sha256": "08fee1497243b98ca232ebd6aa95a9d1c2940e427a25fb61eae20bc59a806989"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/neon-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1228825,
+      "sha256": "0c8e809c42ad485fe6fa51b2325cf9e4292077ac3fde82e056ac05d0891c22d5"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/severna-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1499460,
+      "sha256": "80ec8cb70e6df81f14e234781035f635abd35bdff1c82b4f49ab47336214efeb"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/severna-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1463223,
+      "sha256": "1fae9aa8e75056d2e2d7234e95b4d7787308f501a3c492fec2ab3479bdff7d3b"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/severna-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1307810,
+      "sha256": "9ad589d76e9e90310ea4369e2e01221316e97c4c28cdee81c80d34c4326dfe6c"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/winter-claim-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1345122,
+      "sha256": "fd4c452643067bec757bf6bfe7aff2ae26e9baf9953cb39d8be813f0d31af970"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/winter-double-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1473680,
+      "sha256": "bfd105a8990fc6879d17453d40f8d05f9875b63d7958be535a224b30f9bb69c3"
+    },
+    {
+      "file": "source-assets/theme-daily-buttons-v1/masters/winter-stop-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1440286,
+      "sha256": "d901ceb2fd3cbdfb55ca37ab6fff7b13868d43acccc12ba9486a4f46d5bd8fd5"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/amethyst/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1487229,
+      "sha256": "9985aa04240d4d1963d714247b1073b2b110b7f147caca88061a0f4f483b03ef"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/dark/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1137536,
+      "sha256": "8c40413b9de046da2c61211da4561eb921f9669b198994354fa4fb90ce559414"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/desert/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1495304,
+      "sha256": "0593e94dcc5b4aa4dcb6c058e93c868078c49ed5b069b1fa5dc22c4139557040"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/easter/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1451632,
+      "sha256": "a363c36d2cfc05e75a465332acb01886c42be4af9b43d1e0ee971dfbe9a189ce"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/light/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1451421,
+      "sha256": "4314f3becd202f841c63054c509f4e37796b86a78f72816969c02c3a4134f937"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/manifest.json",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 5987,
+      "sha256": "496b863359c8eb796a8af4a65cbe2e589a01bd895620938c1cd23e6cd2feb44d"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/medium/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1465223,
+      "sha256": "d34ec56223dd17ce2e7c06d96a3278e4aab3cad8cc9f51a8af1a440b970752ed"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/moon/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1330478,
+      "sha256": "e22d9c90e79ae793c240d629dffa4cff58eb816b9120b5f2e4f0c9d2f05025ad"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/neon/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1373721,
+      "sha256": "637bcb1b98e7aeb33c29217dcfd6aae3f7907877fcbd3dea4eee5d4e3a0c9ad2"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/severna/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1329606,
+      "sha256": "24791ed64dc5bfbd03f7d4ee175ac2bff590ef6727809adb397b290429f454ff"
+    },
+    {
+      "file": "source-assets/theme-player-mailbox-v1/winter/post-master-v1.png",
+      "status": "new",
+      "category": "source-masters",
+      "bytes": 1347241,
+      "sha256": "28b11a0c40a72922ac3cabda18b4f28c77ae2b1cc743a6612201f5d0f90caf99"
+    },
+    {
+      "file": "website-updates/delete-account.html",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 5396,
+      "sha256": "9d4f156a5b430df52e11479360ae123cac6d5d5571466645b2549298e6051904"
+    },
+    {
+      "file": "website-updates/public/account-deletion-client.js",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 7819,
+      "sha256": "c14477012517c5fbc2106313b57db54d79ac3648e11a1fd15cab3c8df8352fcb"
+    },
+    {
+      "file": "website-updates/public/account-deletion-page.js",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 12829,
+      "sha256": "bb3172f5904ccc0779971d27398c323ee4fb65a8c6b7be61b132475a966547f3"
+    },
+    {
+      "file": "website-updates/public/account-deletion-web.js",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 2172,
+      "sha256": "550f553ee83df4310411f7ce2e1d7408a04e259ed153108ba7a4ce8988639dff"
+    },
+    {
+      "file": "website-updates/public/delete-account.html",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 5396,
+      "sha256": "9d4f156a5b430df52e11479360ae123cac6d5d5571466645b2549298e6051904"
+    },
+    {
+      "file": "website-updates/public/privacy.html",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 9838,
+      "sha256": "a9576448f54625db027fafb314adf5a4c84f0d70b3ec0612e14f987bb4a1cff6"
+    },
+    {
+      "file": "website-updates/public/privacy_en.html",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 9663,
+      "sha256": "85a90e8dd706592c93ebf543961d8105008229cf890c334c0e93ad84efc978ab"
+    },
+    {
+      "file": "website-updates/public/terms.html",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 3462,
+      "sha256": "cbddb0f8831f0028094592b2fe350c154fe288161c9057869e4609f543b84de6"
+    },
+    {
+      "file": "website-updates/public/terms_en.html",
+      "status": "modified",
+      "category": "public-website",
+      "bytes": 3441,
+      "sha256": "fbe16f6623c824dc2356cb848622fce11a23af5e5e914a56f21308fd03866df3"
+    },
+    {
+      "file": "www/account-deletion-client.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 7819,
+      "sha256": "c14477012517c5fbc2106313b57db54d79ac3648e11a1fd15cab3c8df8352fcb"
+    },
+    {
+      "file": "www/account-deletion-page.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 12829,
+      "sha256": "bb3172f5904ccc0779971d27398c323ee4fb65a8c6b7be61b132475a966547f3"
+    },
+    {
+      "file": "www/account-deletion-web.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 2172,
+      "sha256": "550f553ee83df4310411f7ce2e1d7408a04e259ed153108ba7a4ce8988639dff"
+    },
+    {
+      "file": "www/account-privacy.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 9650,
+      "sha256": "564137380888b04036a189797715e97c798296e585b5701e62938a107bed4c77"
+    },
+    {
+      "file": "www/assets/auth/facebook-logo.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 2998,
+      "sha256": "a3c4f14c54929f56a44c8d7a551ad1b40c3f9fa8369da3a7a2b218f9d9831597"
+    },
+    {
+      "file": "www/assets/green-soft-clay/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 118085,
+      "sha256": "a9ea7c1b93e24e23f3cb6d4f86040c466a480514ba04fd46a79e46c36032a22f"
+    },
+    {
+      "file": "www/assets/green-soft-clay/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 117232,
+      "sha256": "567dc7d19dc524d618f0d6ca8ccb278cfc1e218c9d021866069aa211630bf0e4"
+    },
+    {
+      "file": "www/assets/green-soft-clay/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 110581,
+      "sha256": "e4b21816254d339a0c8d33610e92e472bf5eaaa441912b5f27df72703fc048bf"
+    },
+    {
+      "file": "www/assets/green-soft-clay/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 83138,
+      "sha256": "2601ee6c55486e8d677d7eba680c0acd198ef69d532738592ed1749140c3ce51"
+    },
+    {
+      "file": "www/assets/theme-packs/amethyst/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 93942,
+      "sha256": "26dfe454093fccb29e59046828b8e196711ea2dc5bf949b8e0e176367f0860b7"
+    },
+    {
+      "file": "www/assets/theme-packs/amethyst/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 102079,
+      "sha256": "27d3052b1f2ae1ef07c8f229b93e01693390795ed7f234b63c267d0eafa7362b"
+    },
+    {
+      "file": "www/assets/theme-packs/amethyst/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 88981,
+      "sha256": "b5d72db5bcfb0e9deedd5cfce91457ebbb3fccfd6af58f5137a24fdb7f091f5f"
+    },
+    {
+      "file": "www/assets/theme-packs/amethyst/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 74640,
+      "sha256": "82ec8bc0cdffdbeb7bc43b07959f518add3eb451f7be6090d550f28d6390fc84"
+    },
+    {
+      "file": "www/assets/theme-packs/desert/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 87097,
+      "sha256": "40f477f59cb2733b140f2aa53bb5cec95469895316650d06baeb49ac5a889c91"
+    },
+    {
+      "file": "www/assets/theme-packs/desert/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 104748,
+      "sha256": "234ae8fdad08f9efd9f483df7547f079a25c07e65c7450361bc2633603f57875"
+    },
+    {
+      "file": "www/assets/theme-packs/desert/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 89328,
+      "sha256": "f9143ebe55eef25a7c40b44ceb05c9ae096e0749d3402547668925edb89d74f8"
+    },
+    {
+      "file": "www/assets/theme-packs/desert/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 68675,
+      "sha256": "4abb700f1aa960a348f0d083e5d033d4b5be251fc8a14c51e0c2848f513dd33b"
+    },
+    {
+      "file": "www/assets/theme-packs/easter/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 90579,
+      "sha256": "b6a1911d94066e41b2972a23cf1b733fd4f840949cef47d037aa1de9c892ad0e"
+    },
+    {
+      "file": "www/assets/theme-packs/easter/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 95573,
+      "sha256": "a783390554d6c4cbc02e55279b33cb58c2619bb8451d25c8823837362bab07b8"
+    },
+    {
+      "file": "www/assets/theme-packs/easter/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 100331,
+      "sha256": "897dec741ab22b7a94d3d1b8729f576fcfbe785dd68baf56c6f3850cb4d81316"
+    },
+    {
+      "file": "www/assets/theme-packs/easter/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 79706,
+      "sha256": "78ca1826510492710b7c1c16bad1d9a00d471fe2ceb1b2fd7bd94cc89bcfd347"
+    },
+    {
+      "file": "www/assets/theme-packs/light/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 86251,
+      "sha256": "2b414c76794aa4b1d4c0c0a0b5f619c2a22e5a03588d6fd34aa99d4b7e4d2bef"
+    },
+    {
+      "file": "www/assets/theme-packs/light/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 103165,
+      "sha256": "83fca532d9055ba21de957759f004e40cb0a0d7be545b7f8852fa5364023afaf"
+    },
+    {
+      "file": "www/assets/theme-packs/light/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 101541,
+      "sha256": "834d7a32995232b104696ef0b2ff2cd21c18ea2283c81c1fe4e01b8dc3b4066a"
+    },
+    {
+      "file": "www/assets/theme-packs/light/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 77763,
+      "sha256": "76295121b01b20417a1b74e50d9f81220b72eb6baef851d483c1dce142250593"
+    },
+    {
+      "file": "www/assets/theme-packs/medium/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 97676,
+      "sha256": "da4d65c928768c534d83e183d59d50d52681562a5c06e6cc209e18ea0081d404"
+    },
+    {
+      "file": "www/assets/theme-packs/medium/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 94317,
+      "sha256": "5848851cf523f3be3ba5880daa7f52e34345ed76eeff74e495428e9455ca23b2"
+    },
+    {
+      "file": "www/assets/theme-packs/medium/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 90474,
+      "sha256": "d824df6676f839357c02c2f60b24a870a260e98db37f901d39782ff2cbf527b2"
+    },
+    {
+      "file": "www/assets/theme-packs/medium/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 78331,
+      "sha256": "7b9ea7ba02d037624afe1bb0df30a31c6164463224e1fca290edeff6e367628f"
+    },
+    {
+      "file": "www/assets/theme-packs/moon/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 89808,
+      "sha256": "7d9293b57d57fe618be3362e17004e48f1a40232b1dd415118863ff5c0fcfcc4"
+    },
+    {
+      "file": "www/assets/theme-packs/moon/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 84796,
+      "sha256": "3376657af31ca5d15458e904aa8a9ef19803f72d2fa97f1dc9695058f1f88c84"
+    },
+    {
+      "file": "www/assets/theme-packs/moon/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 86768,
+      "sha256": "947483700e3cb71734f3b5cb715ae2a3d5e3033bb9092f8856e1c6c9ca03fbb6"
+    },
+    {
+      "file": "www/assets/theme-packs/moon/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 73044,
+      "sha256": "c7067ab940217827c3921eda3570c6b03084fe82aef7483f8bdd545f38a6e9d1"
+    },
+    {
+      "file": "www/assets/theme-packs/neon/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 99498,
+      "sha256": "7ba34918416726af94fc97331e7e077997bfe1831472420158a5a6ff347a4500"
+    },
+    {
+      "file": "www/assets/theme-packs/neon/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 96068,
+      "sha256": "21a42a1e8c3fc0888fb0f7e3191b05fcfbd284ae16d5e04f46047a1d2228a411"
+    },
+    {
+      "file": "www/assets/theme-packs/neon/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 99485,
+      "sha256": "1d7d553b891c234033813cf8986d68efeeafec4a943d36c458bbee7b0e1c9739"
+    },
+    {
+      "file": "www/assets/theme-packs/neon/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 92148,
+      "sha256": "ecea8981cff29c685ff32c21fae23e9c6f78bf44febcdfd3319a4cbad4173235"
+    },
+    {
+      "file": "www/assets/theme-packs/severna/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 88138,
+      "sha256": "f9118cf5f950a7f8e54223eae481aee4ed494e12f9bfc461f39dc0750554dffc"
+    },
+    {
+      "file": "www/assets/theme-packs/severna/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 92636,
+      "sha256": "3bef2a923c35c1621c35a5fe58ebaa6b0d6cbda116becd603cbc02391832c1a5"
+    },
+    {
+      "file": "www/assets/theme-packs/severna/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 91575,
+      "sha256": "4b2026ee66841ba07f5b85653dae9014a3ac640b63a64ae1288ca1d565e39c00"
+    },
+    {
+      "file": "www/assets/theme-packs/severna/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 76293,
+      "sha256": "95d39421f222a320b7e9cc3d15230b7231691f8da6d374a95211ce4365e84692"
+    },
+    {
+      "file": "www/assets/theme-packs/winter/canonical/daily-buttons/claim-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 88523,
+      "sha256": "1da717c4a7c832bc7bc6455baf2f140dad7c9c61e3c406c886ad37f2c44afe74"
+    },
+    {
+      "file": "www/assets/theme-packs/winter/canonical/daily-buttons/double-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 92049,
+      "sha256": "561f54977cac4c9914584f57c852746ae005aa99285e5710f7942d24417b91a6"
+    },
+    {
+      "file": "www/assets/theme-packs/winter/canonical/daily-buttons/stop-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 88859,
+      "sha256": "86f86033a7af7ec523e3424c584fe25f9294638fab136e2e82750133709f72d3"
+    },
+    {
+      "file": "www/assets/theme-packs/winter/canonical/player-mailbox/post-v1.png",
+      "status": "new",
+      "category": "runtime-assets",
+      "bytes": 73281,
+      "sha256": "1bdbee74f910caa1c312e4dc748c67f9d3a38428efb907d49b6d3293978f7887"
+    },
+    {
+      "file": "www/auth.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 52678,
+      "sha256": "07df77c7152539ec316f5035c105c8b2bcc4cfd21746b896a8b690618e428088"
+    },
+    {
+      "file": "www/dnevniizazov.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 51290,
+      "sha256": "10dadd5e0fc10a08325b7384cf1ae6faf731b4960b69a7fe3902d7316361e469"
+    },
+    {
+      "file": "www/game.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 592683,
+      "sha256": "c5a106d28613a2bb37e95bdb233da788281b0728b0f663a34ad1116239ed280e"
+    },
+    {
+      "file": "www/globalchat-moderation.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 15910,
+      "sha256": "24ba13438a8214cf83f134eb0aa9532bd00a1eaf9a0bdf093286f7e69d672d09"
+    },
+    {
+      "file": "www/index.html",
+      "status": "modified",
+      "category": "client",
+      "bytes": 149141,
+      "sha256": "725377cdd704578a8ec8c6d18b8330688bf987a45e1225ea1bf3a01c6232363e"
+    },
+    {
+      "file": "www/languages.js",
+      "status": "modified",
+      "category": "client",
+      "bytes": 167741,
+      "sha256": "d8803c6395821423b45f33a8da106a6a1c8423d8db71a281aab3b431d238881c"
+    },
+    {
+      "file": "www/player-mailbox.css",
+      "status": "new",
+      "category": "client",
+      "bytes": 9029,
+      "sha256": "2aac25267c2f2ccbbfc231ea22780bb1b7e7dac94c4ce89e24a26330ab83ef96"
+    },
+    {
+      "file": "www/player-mailbox.js",
+      "status": "new",
+      "category": "client",
+      "bytes": 32164,
+      "sha256": "08d020c42b4292b924810647d8e69999f4a941de0df12270f7593271405fd13d"
+    },
+    {
+      "file": "www/player-referrals.js",
+      "status": "new",
+      "category": "client",
+      "bytes": 5073,
+      "sha256": "0af26a31d641237fefbf51238f055c17bc14c4ba1db299419f41a7418fac3d22"
+    },
+    {
+      "file": "www/referral.html",
+      "status": "new",
+      "category": "client",
+      "bytes": 4615,
+      "sha256": "3a50667dc635f74c35257b17e260c8bf1d86b1fe0a7bddbf01ac53bcd61dad44"
+    },
+    {
+      "file": "www/theme-daily-room.css",
+      "status": "modified",
+      "category": "client",
+      "bytes": 19301,
+      "sha256": "e292f8f8968984d803f7f86c7ea3d19d04be6ed6c87a1e196b47a5488565dba1"
+    },
+    {
+      "file": "www/theme-game-logos.css",
+      "status": "modified",
+      "category": "client",
+      "bytes": 8802,
+      "sha256": "3fdc870c9ac66388f648501ad0a2fd8c2f36a7f8a29bd24a83e7d5f1cc1a7ad7"
+    },
+    {
+      "file": "www/theme-invite-friend-room.css",
+      "status": "modified",
+      "category": "client",
+      "bytes": 48435,
+      "sha256": "42127dec89a791ef92e0f9af30f4a87d8a0a3313c188a68517a70b5b715515b8"
+    },
+    {
+      "file": "www/theme-settings-room.css",
+      "status": "modified",
+      "category": "client",
+      "bytes": 28026,
+      "sha256": "07066f12c59074ba44b84eb79608e8b3faa5633ea7456761999bb6eebbf46472"
+    }
+  ],
+  "openBeforeCommit": [
+    "Implement automatic app-update notices using a trustworthy confirmed-public-release signal; ordinary Render deploy must not trigger them.",
+    "Step 2: update linked-profile/deletion wording in SR/EN legal documents and generator.",
+    "Step 3: final regression checks for the full release scope."
+  ],
+  "openExternal": [
+    "Production Meta/Firebase setup and public access are not confirmed by this inventory.",
+    "Verify highest Play Console versionCode and Play App Signing certificate before release upload.",
+    "Confirm actual VS Code folder when opening the editor; no Code process was found during this check."
+  ]
+}

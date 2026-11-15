@@ -36,6 +36,7 @@
     "inspect:result-flow": "node scripts/inspect-player-result-flow.js",
     "check:h2h-ledger": "node scripts/check-h2h-ledger-rebuild.js",
     "check:theme-performance": "node scripts/check-theme-performance.js",
+    "check:theme-release-assets": "node scripts/audit-main-room-icon-routing.js && npm run check:theme-quality-refresh && npm run check:theme-treasury-final && npm run check:theme-quarterly-league-final && npm run check:theme-solo-results && npm run check:theme-hotseat-final && node scripts/check-theme-rules-room.cjs && node scripts/check-theme-statistics-room.cjs && node scripts/check-theme-leaderboard-room.js && node scripts/check-theme-online-players-room.js && node scripts/check-theme-global-chat-final.cjs && node scripts/check-theme-economy-critical-v2.js && node scripts/check-tournament-room-packs.js && node scripts/check-theme-online-random-room.js",
     "check:theme-board": "node scripts/check-theme-game-board.js",
     "check:dice-skins": "node scripts/check-universal-dice-skins.js && node scripts/check-theme-dice-entitlements.js",
     "check:skin-action-buttons": "node scripts/check-skin-action-buttons.js && node scripts/test-skin-action-buttons.js && node scripts/test-skin-preload-retention.cjs",
@@ -86,7 +87,7 @@
     "check:easter-coverage": "node scripts/check-easter-asset-coverage.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:ad-consent && npm run check:ad-reward-flow && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:online-duel-finish && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:tournament-registration && npm run check:theme-performance && npm run check:theme-board && npm run check:dice-skins && npm run check:skin-action-buttons && npm run check:skin-roll-counter && npm run check:theme-game-header && npm run check:theme-settings-room && npm run check:theme-quote && npm run check:theme-daily-room && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
+    "test": "npm run check:js && npm run check:ad-consent && npm run check:ad-reward-flow && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:online-duel-finish && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:tournament-registration && npm run check:theme-performance && npm run check:theme-release-assets && npm run check:theme-board && npm run check:dice-skins && npm run check:skin-action-buttons && npm run check:skin-roll-counter && npm run check:theme-game-header && npm run check:theme-settings-room && npm run check:theme-quote && npm run check:theme-daily-room && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:easter-coverage && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",

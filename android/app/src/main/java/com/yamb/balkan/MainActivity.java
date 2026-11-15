@@ -13,6 +13,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(H2HSharePlugin.class);
         registerPlugin(AdConsentPlugin.class);
         registerPlugin(AnalyticsPrivacyPlugin.class);
+        registerPlugin(AccountIdentityPlugin.class);
         super.onCreate(savedInstanceState);
         WindowCompat.enableEdgeToEdge(getWindow());
         // The game's artwork stays dark independently of the Android device theme.

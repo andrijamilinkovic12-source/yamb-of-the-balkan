@@ -121,6 +121,8 @@ class YambApp {
         this.pendingNewGamePlayers = 1;
         this.friendsListUids = [];
         this.friendProfilesByUid = new Map();
+        this.friendRequestsSnapshot = [];
+        this.friendRemovalPending = null;
         this.publicPlayerPowerCache = new Map();
         this.pendingPublicPlayerPower = new Set();
         this.localGameElapsedMs = 0;
@@ -285,6 +287,7 @@ class YambApp {
         if (window.Capacitor) {
             window.Capacitor.Plugins.App.addListener('appUrlOpen', async (data) => {
                 try {
+                    window.yambReferrals?.acceptLink(data.url);
                     const url = new URL(data.url);
                     const roomId = url.searchParams.get('room');
                     if (roomId) {
@@ -2215,6 +2218,7 @@ class YambApp {
     }
 
     getMainRoomPackSource(theme, roomId, variant = 'room') {
+        if (roomId === 'mailbox') return window.playerMailbox?.iconSource(theme) || '';
         const themes = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
         if (!themes.includes(theme)) return '';
         const role = { opponent: 'online-random', invite: 'invite-friend', globalChat: 'global-chat',
@@ -2373,6 +2377,7 @@ class YambApp {
             ? 'assets/green-soft-clay/canonical/menu-resume-buttons/'
             : `assets/theme-packs/${theme}/canonical/menu-resume-buttons/`;
         const menuButtons = ['resume', 'new'].map(role => `${menuButtonRoot}${role}-v1.png?v=1`);
+        const mailbox = window.playerMailbox?.iconSource(theme);
         const splash = document.getElementById('splash-screen')?.classList.contains('active')
             ? this.getThemeSplashSource(theme) : '';
         const leagueWatermark = theme === 'dark'
@@ -2392,7 +2397,7 @@ class YambApp {
             ? this.collectThemeSourcesFromRoot(theme, menuRoot)
             : [...pack.assets, ...(pack.menuAssets || [])].filter(source => source.startsWith(root) && mainMenuAsset.test(source)
                 && !source.includes('/canonical/quarterly-league-room-identity/quarterly-league-room-v2.png'));
-        return [...new Set([pack.background, splash, leagueWatermark, ...menuButtons, ...menuPackSources, ...menuSources].filter(Boolean))];
+        return [...new Set([pack.background, splash, leagueWatermark, ...menuButtons, ...menuPackSources, ...menuSources, mailbox].filter(Boolean))];
     }
 
     getThemeRoomSources(theme, roomId) {
@@ -2930,6 +2935,7 @@ class YambApp {
             image.src = getThemeTreasuryControlSource(image.dataset.treasuryControl, safeTheme);
         });
         document.documentElement.dataset.splashTheme = safeTheme;
+        window.playerMailbox?.applyTheme(safeTheme);
         this.syncOnlineRandomStateImages(safeTheme, {
             hydrate: !!document.getElementById('waiting-screen')?.classList.contains('active')
         });
@@ -3912,6 +3918,7 @@ class YambApp {
             : null;
 
         const safeFriends = Array.isArray(friends) ? friends : [];
+        this.friendRequestsSnapshot = Array.isArray(requests) ? requests : [];
         this.friendProfilesByUid = new Map(
             safeFriends
                 .filter(friend => friend && friend.uid)
@@ -3998,7 +4005,10 @@ class YambApp {
                                 <div class="easter-friend-record-row easter-friend-loss"><span>${recordLabel('ws_record_loss_short', 'POR')}</span><strong>${safeLosses}</strong></div>
                             </div>
                         </div>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')"><img class="theme-invite-send-icon green-invite-send-icon" data-invite-role="send" src="${window.themeInviteFriend.asset('send')}" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                        <div class="friend-card-actions">
+                            <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')"><img class="theme-invite-send-icon green-invite-send-icon" data-invite-role="send" src="${window.themeInviteFriend.asset('send')}" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                            <button type="button" class="friend-remove-btn" onclick="app.removeFriend('${safeUid}', '${safeFriendNameJs}')" aria-label="${this.escapeHtml((gt('friend_remove_aria') || 'Ukloni prijatelja {0}').replace('{0}', () => friendName))}" title="${this.escapeHtml(gt('friend_remove') || 'Ukloni prijatelja')}"></button>
+                        </div>
                         <span class="green-friend-presence" aria-label="${this.escapeHtml(statusText)}">${this.escapeHtml(statusText)}</span>
                     </div>
                 `;
@@ -4029,6 +4039,37 @@ class YambApp {
         if (waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-hosting-invite')) {
             this.renderInviteOwnerRival();
         }
+    }
+
+    async removeFriend(targetUid, friendName = '') {
+        if (this.friendRemovalPending || !this.requireLogin()) return false;
+        const account = localStorage.getItem('yamb_uid') || this.playerId || '';
+        const sameAccount = () => account === (localStorage.getItem('yamb_uid') || this.playerId || '');
+        const pending = { targetUid };
+        this.friendRemovalPending = pending;
+        try {
+            const name = this.escapeHtml(friendName || getFallbackPlayerName());
+            const confirmed = await this.modal.confirm((gt('friend_remove_confirm') || 'Ukloniti {0} iz prijatelja?').replace('{0}', () => name), {
+                title: gt('friend_remove') || 'Ukloni prijatelja', okText: gt('friend_remove_action') || 'Ukloni',
+                cancelText: gt('btn_cancel') || 'Otkaži', contextClass: 'invite-friend'
+            });
+            if (!confirmed || !sameAccount()) return false;
+            const result = await this.emitFriendAck('remove_friend', { targetUid });
+            if (!sameAccount()) return false;
+            if (!result?.ok || result.recipientUid !== account) {
+                this.showServerNotice(result?.reason || 'err_server_conn', 'err_title', { contextClass: 'invite-friend' });
+                return false;
+            }
+            this.friendsListUids = this.friendsListUids.filter(uid => uid !== targetUid);
+            this.friendProfilesByUid.delete(targetUid);
+            this.renderFriendsList([...this.friendProfilesByUid.values()], this.friendRequestsSnapshot || []);
+            this.requestFriendsList();
+            if (typeof isOnlinePlayersModalOpen === 'function' && isOnlinePlayersModalOpen()) this.socket.emit('get_online_players_list');
+            return true;
+        } catch (_) {
+            if (sameAccount()) this.showServerNotice('err_server_conn', 'err_title', { contextClass: 'invite-friend' });
+            return false;
+        } finally { if (this.friendRemovalPending === pending) this.friendRemovalPending = null; }
     }
 
     async resolveFriendRequest(uid, accepted, friendName = '') {
@@ -4506,6 +4547,7 @@ class YambApp {
                 // Friend invitations must also arrive in a freshly opened main menu.
                 this.socket.on('account_deletion_started', data => window.yambAccountPrivacy?.handleStarted(data));
                 this.socket.on('previous_quarter_winner_data', data => this.receiveQuarterWinner(data));
+                window.playerMailbox?.bindSocket(this.socket);
                 this.setupRoomInviteListeners();
                 this.bindConnectionDiagnosticListeners();
 
@@ -4790,6 +4832,8 @@ class YambApp {
                 });
 
                 this.socket.on('sync_local_stats', (data) => {
+                    if (data?.recipientUid && data.recipientUid !== localStorage.getItem('yamb_uid')) return;
+                    window.yambReferrals?.acknowledge(data);
                     this.applyCloudProfileSync(data);
                 });
 
@@ -4851,6 +4895,7 @@ class YambApp {
                     this.socketVerifiedUid = result.uid;
                     this.playerId = result.uid;
                     localStorage.setItem('yamb_uid', result.uid);
+                    queueMicrotask(() => window.playerMailbox?.refresh());
                 } else {
                     console.warn(`Server nije verifikovao Firebase identitet: ${result?.reason || 'unknown_error'}`);
                 }
@@ -5091,6 +5136,7 @@ class YambApp {
 
         this.socket.emit('set_player_data', {
             uid: uid,
+            referralCode: window.yambReferrals?.codeForSync(uid) || undefined,
             name: this.playerName,
             photoUrl: localStorage.getItem('yamb_player_photo') || '',
             stats: this.getFullLocalStats(),
@@ -5768,6 +5814,7 @@ class YambApp {
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
         if (screenId === 'main-menu') this.checkQuarterWinner();
+        window.playerMailbox?.navigate(screenId);
         this.duelChat?.navigate(screenId);
         if (['quote-screen', 'waiting-screen', 'game-scene'].includes(screenId)) this.warmGameSwitchAssets();
         if (screenId === 'splash-screen') {
@@ -6259,6 +6306,7 @@ class YambApp {
 
     shouldPlayThemedRoomIntro(roomId) {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        if (roomId === 'mailbox') return Boolean(this.getMainRoomPackSource(activeTheme, roomId));
         return (['light', 'medium', 'winter', 'neon', 'amethyst', 'moon'].includes(activeTheme)
             && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers',
                 'economy', 'solo', 'hotseat', 'opponent', 'invite'].includes(roomId))
@@ -6268,7 +6316,7 @@ class YambApp {
             || this.shouldPlaySevernaRoomIntro(roomId);
     }
 
-    playEasterRoomIntro(roomId, onComplete) {
+    playEasterRoomIntro(roomId, onComplete, { afterIntro = false } = {}) {
         if (this.easterRoomIntroPlaying) return;
         this.reportMonitorRoomVisit(roomId);
         // Intro daje dovoljno vremena da se PNG paket izabrane sobe preuzme i
@@ -6276,6 +6324,7 @@ class YambApp {
         this.prepareThemeRoomAssets(roomId);
 
         const rooms = {
+            mailbox: { scale: 1 },
             leaderboard: {
                 icon: 'assets/theme-packs/easter/canonical/leaderboard-room-identity/leaderboard-room-v2.png?v=2',
                 greenIcon: 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
@@ -6416,7 +6465,7 @@ class YambApp {
             iconElement.style.setProperty('--easter-room-icon-scale', roomIconScale);
             iconElement.style.setProperty('--easter-room-icon-pulse-scale', roomIconScale * 1.035);
         }
-        const titleLines = (room.lines ? room.lines() : [room.label()])
+        const titleLines = (isIconOnly ? [] : room.lines ? room.lines() : [room.label()])
             .map(line => String(line).replace(/^[^\p{L}\p{N}]+/u, '').trim().toUpperCase())
             .filter(Boolean);
         let waveIndex = 0;
@@ -6460,14 +6509,17 @@ class YambApp {
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 
-        setTimeout(() => {
-            onComplete();
-        }, window.ROOM_INTRO_TIMING?.openAtMs ?? 2400);
+        if (!afterIntro) {
+            setTimeout(() => {
+                onComplete();
+            }, window.ROOM_INTRO_TIMING?.openAtMs ?? 2400);
+        }
 
         setTimeout(() => {
             overlay.classList.add('hidden');
             overlay.setAttribute('aria-hidden', 'true');
             this.easterRoomIntroPlaying = false;
+            if (afterIntro) onComplete();
         }, window.ROOM_INTRO_TIMING?.durationMs ?? 3200);
     }
 
@@ -7361,6 +7413,7 @@ class YambApp {
         this.socket.off('friend_req_accepted');
         this.socket.off('friend_req_declined'); 
         this.socket.off('friends_list_data');
+        this.socket.off('friendships_changed');
         this.socket.off('search_results');
         
         this.socket.off('request_state_sync');
@@ -8147,6 +8200,8 @@ class YambApp {
         });
 
         this.socket.on('friends_list_data', async (data = {}) => {
+            const account = localStorage.getItem('yamb_uid') || this.playerId || '';
+            if (data.recipientUid && data.recipientUid !== account) return;
             if (data && data.ok === false) {
                 this.renderFriendsList([], []);
                 this.friendsListUids = [];
@@ -8167,6 +8222,13 @@ class YambApp {
             this.friendsListUids = friends.map(f => f.uid);
             this.renderFriendsList(friends, requests);
             await this.showQueuedFriendNotifications(data.notifications || []);
+        });
+
+        this.socket.on('friendships_changed', (data = {}) => {
+            const account = localStorage.getItem('yamb_uid') || this.playerId || '';
+            if (!account || data.recipientUid !== account) return;
+            this.requestFriendsList();
+            if (typeof isOnlinePlayersModalOpen === 'function' && isOnlinePlayersModalOpen()) this.socket.emit('get_online_players_list');
         });
 
         this.socket.on('search_results', async (results) => {

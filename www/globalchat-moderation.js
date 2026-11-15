@@ -214,6 +214,8 @@
             document.getElementById('chat-mod-decision').hidden = false;
             document.getElementById('chat-mod-decision-title').textContent = `${this.tr(`chat_mod_audit_${context.action}`)} · ${context.name}`;
             document.getElementById('chat-mod-duration-wrap').hidden = context.action !== 'mute';
+            document.getElementById('chat-mod-reply-wrap').hidden = !context.reportId;
+            document.getElementById('chat-mod-reply').value = '';
             document.getElementById('chat-mod-reason').value = '';
             document.getElementById('chat-mod-reason').focus({ preventScroll: true });
             this.status('');
@@ -234,6 +236,7 @@
                 const accepted = await this.manager.app.modal.confirm(this.tr('chat_mod_confirm'), { contextClass: 'global-chat' });
                 if (!accepted) return;
                 const result = await this.rpc('global_chat_moderation_action', { ...context, reason,
+                    reply: context.reportId ? document.getElementById('chat-mod-reply').value.trim() : '',
                     duration: document.getElementById('chat-mod-duration').value });
                 if (!result.ok) { this.status(result.reason); return; }
                 this.busy = false; this.cancelDecision();

@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <base href="../www/">
+    <title>Pošta — prikaz sobe</title>
+    <link rel="stylesheet" href="style.css?v=5.25">
+    <link rel="stylesheet" href="teme.css?v=7.12">
+    <link rel="stylesheet" href="theme-main-room-icons.css?v=26">
+    <link rel="stylesheet" href="theme-main-menu-typography.css?v=3">
+    <link rel="stylesheet" href="theme-game-logos.css?v=5">
+    <link rel="stylesheet" href="theme-card-surfaces.css?v=7">
+    <link rel="stylesheet" href="theme-room-close-controls.css?v=3">
+    <link rel="stylesheet" href="theme-global-chat-room.css?v=8">
+    <link rel="stylesheet" href="player-mailbox.css?v=6">
+    <link rel="stylesheet" href="theme-quarterly-league-room.css?v=9">
+</head>
+<body>
+    <!-- Menu and mailbox markup from www/index.html. The preview uses the application styles and client script. -->
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+        const theme = themes.includes(params.get('theme')) ? params.get('theme') : 'dark';
+        const owner = params.get('role') === 'owner';
+        const account = 'mailbox-preview';
+        const previewStorage = new Map([['yamb_theme', theme], ['yamb_lang', 'sr'], ['yamb_uid', account]]);
+        Object.defineProperty(window, 'localStorage', { value: {
+            getItem: key => previewStorage.get(key) ?? null,
+            setItem: (key, value) => previewStorage.set(key, String(value)),
+            removeItem: key => previewStorage.delete(key)
+        } });
+        document.documentElement.dataset.splashTheme = theme;
+        if (theme !== 'dark') document.body.classList.add(theme + '-theme');
+    </script>
+    <div id="main-menu" class="screen active" inert>
+        <div class="main-global-chat-btn" role="button" tabindex="0" aria-label="Global chat"
+             style="position: absolute; top: 30px; left: 20px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); font-size: 2rem;">
+            <img class="green-global-chat-icon" data-theme-src="assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <span id="global-chat-unread" class="global-chat-unread" hidden aria-hidden="true"></span>
+            <span id="global-chat-typing" class="global-chat-typing" hidden aria-hidden="true"><i></i><i></i><i></i></span>
+        </div>
+        <button type="button" id="player-mailbox-button" aria-label="Pošta" aria-haspopup="dialog">
+            <img data-mailbox-icon alt="" decoding="async">
+            <span id="player-mailbox-unread" hidden aria-hidden="true"></span>
+        </button>
+
+        <div class="main-summary-row" style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
+
+            <div class="main-online-card" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;">
+                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <div class="main-online-icon-wrap">
+                        <img class="main-online-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+                        <div class="main-online-presence-dot" aria-hidden="true"></div>
+                    </div>
+                    <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
+                    <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;" data-lang="ui_online_short">Online</span>
+                </div>
+            </div>
+
+            <div class="main-league-card" style="flex: 1.8; cursor: pointer; background: rgba(255, 215, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 215, 0, 0.25); border-left: 1px solid rgba(255, 215, 0, 0.15); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); position: relative; overflow: hidden; transition: transform 0.1s;">
+                <span class="main-league-watermark-zone ql-quarter-logo" data-ql-logo="menu" aria-hidden="true"><img class="ql-quarter-logo-base" src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2" alt=""><img class="ql-quarter-logo-active" src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v2.png?v=2" alt=""></span>
+                <div class="main-league-content" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <span class="main-league-title" data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
+                    <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
+
+                    <div class="main-league-progress" style="width: 90%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);">
+                        <div id="league-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #E0C995, #FFD700); box-shadow: 0 0 5px #FFD700; transition: width 0.5s;"></div>
+                    </div>
+                    <span id="league-pts-text" style="font-size: 0.6rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
+                </div>
+            </div>
+
+            <div class="main-economy-card" title="Dukati i vraćanje upisa" data-lang-title="tooltip_undo_menu" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;">
+                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <div class="main-economy-icon-wrap">
+                        <img class="main-economy-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+                    </div>
+                    <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
+                    <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modes-grid">
+
+            <div class="mode-btn mode-solo">
+                <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
+                    <span class="mode-icon">
+                        <img class="green-solo-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    </span>
+                    <span class="mode-text" data-lang="menu_solo">Solo igra</span>
+                </div>
+                <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
+                    <button class="mini-btn btn-resume-inline" data-lang="menu_resume_inline">NASTAVI</button>
+                    <button class="mini-btn btn-new-inline" data-lang="menu_new_game">NOVA IGRA</button>
+                </div>
+            </div>
+
+            <div class="mode-btn mode-dual">
+                <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
+                    <span class="mode-icon">
+                        <img class="green-hotseat-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    </span>
+                    <span class="mode-text" data-lang="menu_dual">Dva igrača (Hotseat)</span>
+                </div>
+                <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
+                    <button class="mini-btn btn-resume-inline" data-lang="menu_resume_inline">NASTAVI</button>
+                    <button class="mini-btn btn-new-inline" data-lang="menu_new_game">NOVA IGRA</button>
+                </div>
+            </div>
+
+            <button class="mode-btn mode-random">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
+                    <span class="mode-icon">
+                        <img class="green-opponent-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    </span>
+                    <span class="mode-text" data-lang="menu_online">Nađi protivnika (Random)</span>
+                </div>
+            </button>
+
+            <button class="mode-btn mode-invite">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
+                    <span class="mode-icon">
+                        <img class="green-invite-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    </span>
+                    <span class="mode-text" data-lang="menu_invite">Pozovi prijatelja</span>
+                </div>
+            </button>
+
+        </div>
+
+        <div class="menu-divider" style="margin-top: 5px;"></div>
+
+        <div class="special-actions-row" style="max-width: 380px;">
+            <button class="btn-special-square spec-riznica" aria-label="Riznica" data-lang-aria="menu_shop">
+                <img class="green-soft-clay-special-icon green-soft-clay-special-icon--treasury" data-theme-src="assets/green-soft-clay/runtime/menu/treasury-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+            </button>
+            <button class="btn-special-square spec-turnir" aria-label="Turnir" data-lang-aria="tourney_title">
+                <img class="green-soft-clay-special-icon green-soft-clay-special-icon--tournament" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+                <div id="tourney-status-badge" style="position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; display: none; z-index: 10;"></div>
+            </button>
+        </div>
+
+        <div class="icon-menu-grid">
+            <button class="btn-square" aria-label="Dnevni izazov" data-lang-aria="daily_challenge_title">
+                <img class="green-soft-clay-icon green-soft-clay-icon--daily" data-theme-src="assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+            </button>
+            <button class="btn-square" aria-label="Top lista" data-lang-aria="menu_hs">
+                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+            </button>
+            <button class="btn-square" aria-label="Statistika" data-lang-aria="menu_stats">
+                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+            </button>
+            <button class="btn-square" aria-label="Podešavanja" data-lang-aria="menu_settings">
+                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+            </button>
+            <button class="btn-square" aria-label="Pravila igre" data-lang-aria="menu_rules">
+                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+
+            </button>
+        </div>
+    </div>
+    <dialog id="player-mailbox" aria-labelledby="player-mailbox-title">
+        <header>
+            <img data-mailbox-icon alt="" decoding="async">
+            <h2 id="player-mailbox-title" data-lang="mailbox_title">Pošta</h2>
+            <button type="button" id="player-mailbox-close" data-lang-aria="mailbox_close" aria-label="Zatvori poštu"></button>
+        </header>
+        <button type="button" id="player-mailbox-back" data-lang="mailbox_back" hidden>Nazad u Poštu</button>
+        <div class="player-mailbox-content">
+            <div id="player-mailbox-inbox">
+                <div class="player-mailbox-actions">
+                    <button type="button" id="player-mailbox-report" data-lang="mailbox_support_report" disabled>Prijavi problem</button>
+                    <button type="button" id="player-mailbox-support" data-lang="mailbox_support_owner" hidden>Prijave igrača</button>
+                    <button type="button" id="player-mailbox-compose" data-lang="mailbox_publish_title" hidden>Nova objava</button>
+                </div>
+                <nav class="player-mailbox-folders" data-lang-aria="mailbox_folders" aria-label="Fascikle pošte">
+                    <button type="button" id="player-mailbox-folder-inbox" data-lang="mailbox_folder_inbox" aria-pressed="true">Primljeno</button>
+                    <button type="button" id="player-mailbox-folder-archive" data-lang="mailbox_folder_archive" aria-pressed="false">Arhiva</button>
+                </nav>
+                <p id="player-mailbox-status" role="status"></p>
+                <button type="button" id="player-mailbox-retry" data-lang="mailbox_retry" hidden>Pokušaj ponovo</button>
+                <ul id="player-mailbox-list" aria-labelledby="player-mailbox-title"></ul>
+                <button type="button" id="player-mailbox-more" data-lang="mailbox_more" hidden>Učitaj još</button>
+            </div>
+            <article id="player-mailbox-detail" hidden>
+                <h3 id="player-mailbox-subject" tabindex="-1"></h3>
+                <time id="player-mailbox-date"></time>
+                <p id="player-mailbox-body"></p>
+                <p id="player-mailbox-protected-note" data-lang="mailbox_protected" hidden>Ova stalna objava ostaje na vrhu Pošte i ne može da se obriše ni arhivira.</p>
+                <p id="player-mailbox-reference"></p>
+                <a id="player-mailbox-action" target="_blank" rel="noopener noreferrer" hidden></a>
+                <button type="button" id="player-mailbox-read-retry" data-lang="mailbox_read_retry" hidden>Označi kao pročitano</button>
+                <div class="player-mailbox-actions">
+                    <button type="button" id="player-mailbox-archive" data-lang="mailbox_archive">Arhiviraj</button>
+                    <button type="button" id="player-mailbox-delete" data-lang="mailbox_delete">Obriši</button>
+                </div>
+                <p id="player-mailbox-manage-status" role="status"></p>
+            </article>
+            <form id="player-mailbox-report-form" hidden>
+                <label for="player-mailbox-category" data-lang="mailbox_support_category">Vrsta problema</label>
+                <select id="player-mailbox-category" name="category">
+                    <option value="game" data-lang="mailbox_category_game">Igra i prikaz</option>
+                    <option value="results" data-lang="mailbox_category_results">Rezultat i statistika</option>
+                    <option value="connection" data-lang="mailbox_category_connection">Veza i prekid partije</option>
+                    <option value="rewards" data-lang="mailbox_category_rewards">Nagrade i dukati</option>
+                    <option value="other" data-lang="mailbox_category_other">Ostalo</option>
+                </select>
+                <label for="player-mailbox-description" data-lang="mailbox_support_description">Opiši šta se dogodilo</label>
+                <textarea id="player-mailbox-description" name="description" rows="4" required minlength="10" maxlength="1000"></textarea>
+                <label class="player-mailbox-consent"><input type="checkbox" name="attachDiagnostics" aria-describedby="player-mailbox-diagnostics-copy"><span data-lang="mailbox_support_attach">Priloži podatke iz igre</span></label>
+                <small id="player-mailbox-diagnostics-copy" data-lang="mailbox_support_diagnostics">Ako postoje, prilažu se poslednji rezultat, evidencija slanja rezultata i prekid veze sa tvog naloga u prethodna 24 sata.</small>
+                <button type="submit" data-lang="mailbox_support_send">Pošalji prijavu</button>
+                <p id="player-mailbox-report-status" role="status"></p>
+            </form>
+            <section id="player-mailbox-support-panel" hidden>
+                <h3 data-lang="mailbox_support_owner">Prijave igrača</h3>
+                <p id="player-mailbox-support-status" role="status"></p>
+                <button type="button" id="player-mailbox-support-retry" data-lang="mailbox_retry" hidden>Pokušaj ponovo</button>
+                <div id="player-mailbox-support-list"></div>
+                <button type="button" id="player-mailbox-support-more" data-lang="chat_mod_more" hidden>Učitaj još</button>
+            </section>
+            <form id="player-mailbox-publish-form" hidden>
+                <label for="player-mailbox-publish-subject" data-lang="mailbox_publish_subject">Naslov objave</label>
+                <input id="player-mailbox-publish-subject" name="title" required maxlength="100">
+                <label for="player-mailbox-publish-body" data-lang="mailbox_publish_body">Tekst objave</label>
+                <textarea id="player-mailbox-publish-body" name="text" rows="4" required maxlength="550"></textarea>
+                <label for="player-mailbox-publish-action" data-lang="mailbox_publish_action">Dugme uz objavu</label>
+                <select id="player-mailbox-publish-action" name="action">
+                    <option value="" data-lang="mailbox_publish_none">Bez dugmeta</option>
+                    <option value="facebook" data-lang="mailbox_action_facebook">Otvori Facebook stranicu</option>
+                    <option value="update" data-lang="mailbox_action_update">Otvori Google Play</option>
+                </select>
+                <div id="player-mailbox-publish-url-wrap" hidden>
+                    <label for="player-mailbox-publish-url" data-lang="mailbox_publish_url">Link Facebook stranice</label>
+                    <input id="player-mailbox-publish-url" name="url" type="url" maxlength="300">
+                </div>
+                <button type="submit" data-lang="mailbox_publish_send">Objavi svim igračima</button>
+                <p id="player-mailbox-publish-status" role="status"></p>
+            </form>
+        </div>
+    </dialog>
+    <script src="languages.js?v=5.48"></script>
+    <script src="player-mailbox.js?v=13"></script>
+    <script src="theme-main-room-icons.js?v=26"></script>
+    <script src="theme-quarterly-league-room.js?v=2"></script>
+
+    <script>
+        const day = 86400000;
+        const now = Date.now();
+        const storeLink = 'https://play.google.com/store/apps/details?id=com.yamb.balkan';
+        const messages = [
+            { id: 'game:official-facebook-follow-v1', type: 'facebook_follow', pinned: true, protected: true,
+                action: { type: 'facebook', url: 'https://www.facebook.com/profile.php?id=61588191682382' }, createdAt: now - day },
+            { id: 'notice', type: 'game_notice', title: 'Nova verzija igre', text: 'Nova verzija igre je dostupna na Google Play-u. Ažuriraj aplikaciju pre sledeće partije.', action: { type: 'update', url: storeLink }, createdAt: now - 60 * 60000 },
+            { id: 'moderation', type: 'moderation_resolved', text: 'Hvala na prijavi. Pregledao sam poruku i uklonio je iz Globalnog četa.', reference: 'QA-2045', createdAt: now - 2 * 60 * 60000 },
+            { id: 'support', type: 'support_reply', text: 'Pregledao sam zapis o prekidu veze. Rezultat partije je uredno sačuvan i vidi se u Statistici.', reference: 'QA-2041', createdAt: now - 3 * 60 * 60000 },
+            { id: 'friend', type: 'friend_accepted', fromName: 'Mina (probni igrač)', createdAt: now - day, readAt: now - day },
+            { id: 'league', type: 'league_reward', rank: 2, reward: 24000, createdAt: now - 2 * day, readAt: now - day },
+            { id: 'tournament-review', type: 'tournament_unplayed', createdAt: now - 4 * 60 * 60000,
+                tournament: { tournamentNumber: 12, round: 'qf', outcome: 'extended', deadlineAt: now + day } },
+            { id: 'game:champion-tournament-preview', type: 'tournament_champion', createdAt: now - 4 * day,
+                champion: { playerName: 'Mina (probni igrač)', tournamentNumber: 11 } },
+            { id: 'game:champion-league-preview', type: 'league_champion', createdAt: now - 5 * day,
+                champion: { playerName: 'Luka (probni igrač)', year: 2026, quarter: 3, score: 150000 } },
+            { id: 'game:leaderboard-preview', type: 'leaderboard_record', createdAt: now - 7 * 60 * 60000,
+                leaderboard: { playerName: 'Mina (probni igrač)', score: 1450,
+                    periods: [{ period: 'weekly', change: 'leader_changed', previousScore: 1400, periodStartedAt: now - 4 * day },
+                        { period: 'monthly', change: 'record_improved', previousScore: 1430, periodStartedAt: now - 13 * day }] } },
+            { id: 'rank-preview', type: 'league_rank_changed', createdAt: now - 8 * 60 * 60000,
+                leagueRank: { year: 2026, quarter: 4, previousRank: 'profi', nextRank: 'majstor', score: 15050, direction: 'up' } },
+            { id: 'power-preview', type: 'power_index_milestone', createdAt: now - 10 * 60 * 60000,
+                statistics: { milestone: 10000, value: 10245, next: 15000 } },
+            { id: 'streak-preview', type: 'fire_streak_milestone', createdAt: now - 12 * 60 * 60000,
+                statistics: { milestone: 6, value: 6, best: 12, next: 9 } },
+            { id: 'streak-ended-preview', type: 'fire_streak_ended', createdAt: now - 3 * day,
+                statistics: { value: 6, best: 12 } },
+            { id: 'tournament-warning-preview', type: 'tournament_match_warning', createdAt: now - 30 * 60000,
+                tournamentWarning: { tournamentNumber: 11, round: 'qf', index: 0, stage: 'schedule_halfway',
+                    opponentName: 'Mina (probni igrač)', actionDeadlineAt: now + 4 * 60 * 60000, deadlineAt: now + day } }
+        ];
+        const tickets = owner ? [{
+            reference: '507f1f77bcf86cd799439011', category: 'connection',
+            description: 'Igra se zaustavila posle kratkog prekida veze. Nakon povratka nisam video rezultat.',
+            createdAt: now - 20 * 60000, diagnostics: { match: { matchId: 'QA-PARTIJA', mode: 'random', resultType: 'regular' },
+                disconnect: { outcome: 'recovered', reconnectDurationMs: 2100 } }
+        }] : [];
+        let notificationId = 0;
+        const response = details => ({ ok: true, recipientUid: account, ...details });
+        window.app = {
+            socketVerifiedUid: account,
+            async emitSocketAck(event, data) {
+                switch (event) {
+                    case 'player_mailbox_get': {
+                        const rows = messages.filter(message => !message.deleted && !!message.archived === (data.folder === 'archive'))
+                            .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.createdAt - a.createdAt);
+                        const start = Number(data.before) || 0;
+                        return response({ ...(data.summary ? {} : { messages: structuredClone(rows.slice(start, start + 20)),
+                            next: rows.length > start + 20 ? String(start + 20) : '', folder: data.folder || 'inbox' }),
+                            unread: messages.filter(message => !message.deleted && !message.archived && !message.readAt).length,
+                            supportAvailable: true, supportOwner: owner });
+                    }
+                    case 'player_mailbox_read':
+                        for (const message of messages) if (data.ids.includes(message.id)) message.readAt = Date.now();
+                        return response({});
+                    case 'player_mailbox_manage': {
+                        const message = messages.find(entry => entry.id === data.id);
+                        if (message?.protected) return { ok: false, reason: 'mailbox_protected' };
+                        if (message) {
+                            if (data.action === 'delete') message.deleted = true;
+                            else message.archived = data.action === 'archive';
+                        }
+                        return response({});
+                    }
+                    case 'player_support_submit':
+                        return response({ reference: 'QA-' + (2050 + ++notificationId) });
+                    case 'player_support_list':
+                        return owner ? response({ rows: tickets.slice(), next: '' }) : { ok: false };
+                    case 'player_support_reply': {
+                        const index = tickets.findIndex(ticket => ticket.reference === data.reference);
+                        if (!owner || index < 0) return { ok: false };
+                        tickets.splice(index, 1);
+                        return response({});
+                    }
+                    case 'player_mailbox_publish':
+                        if (!owner) return { ok: false };
+                        messages.unshift({ ...data, id: 'qa-' + ++notificationId, type: 'game_notice', createdAt: Date.now() });
+                        return response({});
+                    default:
+                        return { ok: false };
+                }
+            }
+        };
+        playerMailbox.bindSocket({ connected: true, on() {} });
+        playerMailbox.applyTheme(theme);
+        const menu = document.getElementById('main-menu');
+        menu.removeAttribute('inert');
+        for (const child of menu.children) if (child.id !== 'player-mailbox-button') child.inert = true;
+        document.getElementById('player-mailbox-button').click();
+    </script>
+</body>
+</html>

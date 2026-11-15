@@ -1,0 +1,851 @@
+{
+  "version": 1,
+  "generator": "image_gen.imagegen",
+  "style": "3D Soft Neomorphism",
+  "productionSize": {
+    "width": 768,
+    "height": 144
+  },
+  "roles": [
+    "stop",
+    "double",
+    "claim"
+  ],
+  "labels": {
+    "stop": {
+      "sr": "STOP",
+      "en": "STOP"
+    },
+    "double": {
+      "sr": "DUPLIRAJ",
+      "en": "DOUBLE"
+    },
+    "claim": {
+      "sr": "PREUZMI",
+      "en": "CLAIM"
+    }
+  },
+  "geometry": "Use existing Daily button layout, responsive dimensions, padding, border width and typography. The PNG changes the visible material only.",
+  "themes": [
+    {
+      "id": "dark",
+      "name": "Zelena",
+      "material": "soft sculpted fine-grain CLAY, softly inflated corners, organic rolled low ceramic-clay lip, forest green and muted sage with a restrained earthen terracotta accent",
+      "roles": {
+        "stop": {
+          "face": "#31573A",
+          "edge": "#A74731",
+          "ink": "#FFFFFF"
+        },
+        "double": {
+          "face": "#A8BF83",
+          "edge": "#42673D",
+          "ink": "#102315"
+        },
+        "claim": {
+          "face": "#476941",
+          "edge": "#D6C99B",
+          "ink": "#FFFFFF"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/dark-stop-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/daily-buttons/stop-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-8a762e6f-c468-4ef6-a742-a7bb0621ec87.png",
+          "prompt": "Create ONE production transparent PNG game UI button body, no text, for Yamb of the Balkan Daily Challenge STOP, GREEN CLAY theme. Wide horizontal rounded rectangle approximately 6:1, orthographic straight-on face, no perspective. Soft sculpted 3D clay, smooth rounded bevel, subtle tactile material, softly inflated flat readable center, shallow visible lower lip, gentle top-left studio highlight. Face dark forest green #31573A to #476941, restrained warm terracotta clay outer edge #A74731 with darker #713426 lower lip; the green face should remain clearly dominant. Subdued sage reflection #A8BF83. A white live label will be placed over the empty center, so keep center dark, even and quiet. Entire single button fills the image width, tight framing around full button with minimal transparent margin, full object visible. Rounded rectangle ends, corner radius about one third of the button's height, not a pill with semicircular ends. Output very wide image such as 1024x192 if possible. True transparent alpha background. No text, letters, numbers, symbols, icons, dice, jewels, gold ornament, leaves, wreaths, decoration, checkerboard or background scene. This is one final standalone button asset.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 2,
+            "top": 108,
+            "width": 2167,
+            "height": 512
+          },
+          "sha256": "e4b21816254d339a0c8d33610e92e472bf5eaaa441912b5f27df72703fc048bf",
+          "bytes": 110581,
+          "labelContrast": 8.88,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/dark-double-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/daily-buttons/double-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-54980267-8cb4-43e5-bfc1-aa07026b06a2.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Zelena. Material and identity: soft sculpted fine-grain CLAY, softly inflated corners, organic rolled low ceramic-clay lip, forest green and muted sage with a restrained earthen terracotta accent. Main central face color #A8BF83; outer edge color #42673D, subordinate to the face. A live label in #102315 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #A8BF83, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 1,
+            "top": 101,
+            "width": 2170,
+            "height": 519
+          },
+          "sha256": "567dc7d19dc524d618f0d6ca8ccb278cfc1e218c9d021866069aa211630bf0e4",
+          "bytes": 117232,
+          "labelContrast": 6.24,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/dark-claim-v1.png",
+          "production": "www/assets/green-soft-clay/canonical/daily-buttons/claim-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-99626ea3-03c8-4a2e-9a21-0c1e45e9633c.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Zelena. Material and identity: soft sculpted fine-grain CLAY, softly inflated corners, organic rolled low ceramic-clay lip, forest green and muted sage with a restrained earthen terracotta accent. Main central face color #476941; outer edge color #D6C99B, subordinate to the face. A live label in #FFFFFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #476941, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 1,
+            "top": 98,
+            "width": 2170,
+            "height": 511
+          },
+          "sha256": "a9ea7c1b93e24e23f3cb6d4f86040c466a480514ba04fd46a79e46c36032a22f",
+          "bytes": 118085,
+          "labelContrast": 6.3,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "light",
+      "name": "Svetlo zlato",
+      "material": "3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, warm champagne and ivory, gently milled satin edge, minimal architectural inset, understated soft material rather than reflective metal",
+      "roles": {
+        "stop": {
+          "face": "#875024",
+          "edge": "#DBB47B",
+          "ink": "#FFFFFF"
+        },
+        "double": {
+          "face": "#F3D6A8",
+          "edge": "#875024",
+          "ink": "#392817"
+        },
+        "claim": {
+          "face": "#FFF1D7",
+          "edge": "#9B754F",
+          "ink": "#392817"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/light-stop-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/daily-buttons/stop-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-015e824d-afb2-418a-88f3-1d8f9c657abd.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Svetlo zlato. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, warm champagne and ivory, gently milled satin edge, minimal architectural inset, understated soft material rather than reflective metal. Main central face color #875024; outer edge color #DBB47B, subordinate to the face. A live label in #FFFFFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #875024, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 5,
+            "top": 102,
+            "width": 2162,
+            "height": 506
+          },
+          "sha256": "834d7a32995232b104696ef0b2ff2cd21c18ea2283c81c1fe4e01b8dc3b4066a",
+          "bytes": 101541,
+          "labelContrast": 7.39,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/light-double-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/daily-buttons/double-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-5fdd74bd-36ea-4234-bd12-8d7c0d720d6b.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Svetlo zlato. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, warm champagne and ivory, gently milled satin edge, minimal architectural inset, understated soft material rather than reflective metal. Main central face color #F3D6A8; outer edge color #875024, subordinate to the face. A live label in #392817 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #F3D6A8, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 109,
+            "width": 2172,
+            "height": 498
+          },
+          "sha256": "83fca532d9055ba21de957759f004e40cb0a0d7be545b7f8852fa5364023afaf",
+          "bytes": 103165,
+          "labelContrast": 8.78,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/light-claim-v1.png",
+          "production": "www/assets/theme-packs/light/canonical/daily-buttons/claim-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-4b44d007-14a5-47ea-ad79-08576569ce60.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Svetlo zlato. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, warm champagne and ivory, gently milled satin edge, minimal architectural inset, understated soft material rather than reflective metal. Main central face color #FFF1D7; outer edge color #9B754F, subordinate to the face. A live label in #392817 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #FFF1D7, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 3,
+            "top": 131,
+            "width": 2167,
+            "height": 462
+          },
+          "sha256": "2b414c76794aa4b1d4c0c0a0b5f619c2a22e5a03588d6fd34aa99d4b7e4d2bef",
+          "bytes": 86251,
+          "labelContrast": 11.35,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "medium",
+      "name": "Trula višnja",
+      "material": "3D Soft Neomorphism warm matte CLAY, plush dark cherry burgundy material, restrained blush peach lip, a single shallow molded inner groove, no pattern",
+      "roles": {
+        "stop": {
+          "face": "#60252E",
+          "edge": "#AF7777",
+          "ink": "#FFF6F2"
+        },
+        "double": {
+          "face": "#F1C3B2",
+          "edge": "#60252E",
+          "ink": "#3A1424"
+        },
+        "claim": {
+          "face": "#431720",
+          "edge": "#E9AF9E",
+          "ink": "#FFF6F2"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/medium-stop-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/daily-buttons/stop-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-526425e0-6aad-4dac-99c3-195adab97ce7.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Trula višnja. Material and identity: 3D Soft Neomorphism warm matte CLAY, plush dark cherry burgundy material, restrained blush peach lip, a single shallow molded inner groove, no pattern. Main central face color #60252E; outer edge color #AF7777, subordinate to the face. A live label in #FFF6F2 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #60252E, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 99,
+            "width": 2172,
+            "height": 526
+          },
+          "sha256": "d824df6676f839357c02c2f60b24a870a260e98db37f901d39782ff2cbf527b2",
+          "bytes": 90474,
+          "labelContrast": 11.93,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/medium-double-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/daily-buttons/double-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-4fbbda9e-e968-4139-b9f4-9184ad893cd9.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Trula višnja. Material and identity: 3D Soft Neomorphism warm matte CLAY, plush dark cherry burgundy material, restrained blush peach lip, a single shallow molded inner groove, no pattern. Main central face color #F1C3B2; outer edge color #60252E, subordinate to the face. A live label in #3A1424 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #F1C3B2, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 107,
+            "width": 2171,
+            "height": 509
+          },
+          "sha256": "5848851cf523f3be3ba5880daa7f52e34345ed76eeff74e495428e9455ca23b2",
+          "bytes": 94317,
+          "labelContrast": 8.64,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/medium-claim-v1.png",
+          "production": "www/assets/theme-packs/medium/canonical/daily-buttons/claim-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-5ab04385-472a-44fc-a42c-c5541797e43b.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Trula višnja. Material and identity: 3D Soft Neomorphism warm matte CLAY, plush dark cherry burgundy material, restrained blush peach lip, a single shallow molded inner groove, no pattern. Main central face color #431720; outer edge color #E9AF9E, subordinate to the face. A live label in #FFF6F2 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #431720, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 112,
+            "width": 2172,
+            "height": 500
+          },
+          "sha256": "da4d65c928768c534d83e183d59d50d52681562a5c06e6cc209e18ea0081d404",
+          "bytes": 97676,
+          "labelContrast": 13.49,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "winter",
+      "name": "Plavi okean",
+      "material": "3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, Greek harbor blue with porcelain-ivory framing, gentle sea-glass smoothness but matte readable face, an understated shallow inset and compact beveled lip",
+      "roles": {
+        "stop": {
+          "face": "#0B5C8C",
+          "edge": "#BBD8DE",
+          "ink": "#FFFFFF"
+        },
+        "double": {
+          "face": "#DEECEB",
+          "edge": "#0B5C8C",
+          "ink": "#18384B"
+        },
+        "claim": {
+          "face": "#FFF4E5",
+          "edge": "#6D9BA8",
+          "ink": "#18384B"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/winter-stop-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/daily-buttons/stop-v1.png",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-9b8704a4-7b9b-4b11-93f7-14a41296d3f6.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Plavi okean. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, Greek harbor blue with porcelain-ivory framing, gentle sea-glass smoothness but matte readable face, an understated shallow inset and compact beveled lip. Main central face color #0B5C8C; outer edge color #BBD8DE, subordinate to the face. A live label in #FFFFFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #0B5C8C, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "status": "ready",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 98,
+            "width": 2170,
+            "height": 526
+          },
+          "sha256": "86f86033a7af7ec523e3424c584fe25f9294638fab136e2e82750133709f72d3",
+          "bytes": 88859,
+          "labelContrast": 7.24,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/winter-double-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-b800c63d-e969-4b02-af62-0041672af1ca.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Plavi okean. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, Greek harbor blue with porcelain-ivory framing, gentle sea-glass smoothness but matte readable face, an understated shallow inset and compact beveled lip. Main central face color #DEECEB; outer edge color #0B5C8C, subordinate to the face. A live label in #18384B will be drawn over the center, so the broad middle 75% must be quiet, uniformly #DEECEB, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 1,
+            "top": 104,
+            "width": 2170,
+            "height": 515
+          },
+          "sha256": "561f54977cac4c9914584f57c852746ae005aa99285e5710f7942d24417b91a6",
+          "bytes": 92049,
+          "labelContrast": 8.72,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/winter-claim-v1.png",
+          "production": "www/assets/theme-packs/winter/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-1cfcf327-b406-4e76-98b9-c817b2a079f4.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Plavi okean. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, Greek harbor blue with porcelain-ivory framing, gentle sea-glass smoothness but matte readable face, an understated shallow inset and compact beveled lip. Main central face color #FFF4E5; outer edge color #6D9BA8, subordinate to the face. A live label in #18384B will be drawn over the center, so the broad middle 75% must be quiet, uniformly #FFF4E5, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 2,
+            "top": 116,
+            "width": 2168,
+            "height": 489
+          },
+          "sha256": "1da717c4a7c832bc7bc6455baf2f140dad7c9c61e3c406c886ad37f2c44afe74",
+          "bytes": 88523,
+          "labelContrast": 10.58,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "neon",
+      "name": "Neon Cyber",
+      "material": "3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, cyber graphite soft casing, precision-cut shallow edge with restrained cyan and magenta thin inlay, controlled small glow confined to the edge, no busy futuristic decorations",
+      "roles": {
+        "stop": {
+          "face": "#121B2B",
+          "edge": "#F08CE3",
+          "ink": "#F4FAFF"
+        },
+        "double": {
+          "face": "#56E5D2",
+          "edge": "#1A2B40",
+          "ink": "#071923"
+        },
+        "claim": {
+          "face": "#1A2B40",
+          "edge": "#56E5D2",
+          "ink": "#F4FAFF"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/neon-stop-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/daily-buttons/stop-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-8fbae272-b6c1-4ac3-a082-e952fac407f8.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Neon Cyber. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, cyber graphite soft casing, precision-cut shallow edge with restrained cyan and magenta thin inlay, controlled small glow confined to the edge, no busy futuristic decorations. Main central face color #121B2B; outer edge color #F08CE3, subordinate to the face. A live label in #F4FAFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #121B2B, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 136,
+            "width": 2172,
+            "height": 452
+          },
+          "sha256": "1d7d553b891c234033813cf8986d68efeeafec4a943d36c458bbee7b0e1c9739",
+          "bytes": 99485,
+          "labelContrast": 15.41,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/neon-double-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-84c67db7-4fbc-414f-a011-ba42a468a01a.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Neon Cyber. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, cyber graphite soft casing, precision-cut shallow edge with restrained cyan and magenta thin inlay, controlled small glow confined to the edge, no busy futuristic decorations. Main central face color #56E5D2; outer edge color #1A2B40, subordinate to the face. A live label in #071923 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #56E5D2, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 118,
+            "width": 2172,
+            "height": 485
+          },
+          "sha256": "21a42a1e8c3fc0888fb0f7e3191b05fcfbd284ae16d5e04f46047a1d2228a411",
+          "bytes": 96068,
+          "labelContrast": 9.99,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/neon-claim-v1.png",
+          "production": "www/assets/theme-packs/neon/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-bcc195c8-57e6-45d3-b58b-fdb465af87a0.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Neon Cyber. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, cyber graphite soft casing, precision-cut shallow edge with restrained cyan and magenta thin inlay, controlled small glow confined to the edge, no busy futuristic decorations. Main central face color #1A2B40; outer edge color #56E5D2, subordinate to the face. A live label in #F4FAFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #1A2B40, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 148,
+            "width": 2169,
+            "height": 425
+          },
+          "sha256": "7ba34918416726af94fc97331e7e077997bfe1831472420158a5a6ff347a4500",
+          "bytes": 99498,
+          "labelContrast": 13.13,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "amethyst",
+      "name": "Kraljevski ametist",
+      "material": "3D Soft Neomorphism softly molded CLAY, royal amethyst purple with muted honey-gold ceramic edge, rounded cushioned shallow frame with elegant restrained material, never jewel-encrusted or ornate",
+      "roles": {
+        "stop": {
+          "face": "#563660",
+          "edge": "#A37EAE",
+          "ink": "#FBF6FF"
+        },
+        "double": {
+          "face": "#F2C879",
+          "edge": "#563660",
+          "ink": "#2C183A"
+        },
+        "claim": {
+          "face": "#3C284B",
+          "edge": "#D691B5",
+          "ink": "#FBF6FF"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/amethyst-stop-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/daily-buttons/stop-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-39b896f7-dcbc-4a01-baa3-ae4a2b24be20.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Kraljevski ametist. Material and identity: 3D Soft Neomorphism softly molded CLAY, royal amethyst purple with muted honey-gold ceramic edge, rounded cushioned shallow frame with elegant restrained material, never jewel-encrusted or ornate. Main central face color #563660; outer edge color #A37EAE, subordinate to the face. A live label in #FBF6FF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #563660, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 106,
+            "width": 2171,
+            "height": 507
+          },
+          "sha256": "b5d72db5bcfb0e9deedd5cfce91457ebbb3fccfd6af58f5137a24fdb7f091f5f",
+          "bytes": 88981,
+          "labelContrast": 9.61,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/amethyst-double-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-c6b28632-350b-410b-a4d0-0b6893772708.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Kraljevski ametist. Material and identity: 3D Soft Neomorphism softly molded CLAY, royal amethyst purple with muted honey-gold ceramic edge, rounded cushioned shallow frame with elegant restrained material, never jewel-encrusted or ornate. Main central face color #F2C879; outer edge color #563660, subordinate to the face. A live label in #2C183A will be drawn over the center, so the broad middle 75% must be quiet, uniformly #F2C879, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 77,
+            "width": 2172,
+            "height": 569
+          },
+          "sha256": "27d3052b1f2ae1ef07c8f229b93e01693390795ed7f234b63c267d0eafa7362b",
+          "bytes": 102079,
+          "labelContrast": 9.09,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/amethyst-claim-v1.png",
+          "production": "www/assets/theme-packs/amethyst/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-2a12be59-fa4d-4cb8-b71a-a2d01d25397f.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Kraljevski ametist. Material and identity: 3D Soft Neomorphism softly molded CLAY, royal amethyst purple with muted honey-gold ceramic edge, rounded cushioned shallow frame with elegant restrained material, never jewel-encrusted or ornate. Main central face color #3C284B; outer edge color #D691B5, subordinate to the face. A live label in #FBF6FF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #3C284B, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 3,
+            "top": 118,
+            "width": 2166,
+            "height": 486
+          },
+          "sha256": "26dfe454093fccb29e59046828b8e196711ea2dc5bf949b8e0e176367f0860b7",
+          "bytes": 93942,
+          "labelContrast": 11.74,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "easter",
+      "name": "Vaskršnja",
+      "material": "3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, quiet ivory and sage with restrained terracotta, softly matte porcelain-like rubber, rounded compact stepped molding, tasteful clean shape without seasonal decorations",
+      "roles": {
+        "stop": {
+          "face": "#4D6B45",
+          "edge": "#A66443",
+          "ink": "#FFFFFF"
+        },
+        "double": {
+          "face": "#EEE5D3",
+          "edge": "#879373",
+          "ink": "#3D4434"
+        },
+        "claim": {
+          "face": "#FFF8EA",
+          "edge": "#4D6B45",
+          "ink": "#3D4434"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/easter-stop-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/daily-buttons/stop-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-13f55bb3-75c9-4c18-81f2-caa253749cc6.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Vaskršnja. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, quiet ivory and sage with restrained terracotta, softly matte porcelain-like rubber, rounded compact stepped molding, tasteful clean shape without seasonal decorations. Main central face color #4D6B45; outer edge color #A66443, subordinate to the face. A live label in #FFFFFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #4D6B45, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 113,
+            "width": 2172,
+            "height": 497
+          },
+          "sha256": "897dec741ab22b7a94d3d1b8729f576fcfbe785dd68baf56c6f3850cb4d81316",
+          "bytes": 100331,
+          "labelContrast": 6.2,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/easter-double-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-9078ef61-bf4b-45eb-89bf-a48ba34134bd.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Vaskršnja. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, quiet ivory and sage with restrained terracotta, softly matte porcelain-like rubber, rounded compact stepped molding, tasteful clean shape without seasonal decorations. Main central face color #EEE5D3; outer edge color #879373, subordinate to the face. A live label in #3D4434 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #EEE5D3, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 80,
+            "width": 2172,
+            "height": 563
+          },
+          "sha256": "a783390554d6c4cbc02e55279b33cb58c2619bb8451d25c8823837362bab07b8",
+          "bytes": 95573,
+          "labelContrast": 7.01,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/easter-claim-v1.png",
+          "production": "www/assets/theme-packs/easter/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-cb75c54b-aaa2-42e4-945c-f17b989a3458.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Vaskršnja. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, quiet ivory and sage with restrained terracotta, softly matte porcelain-like rubber, rounded compact stepped molding, tasteful clean shape without seasonal decorations. Main central face color #FFF8EA; outer edge color #4D6B45, subordinate to the face. A live label in #3D4434 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #FFF8EA, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 6,
+            "top": 86,
+            "width": 2161,
+            "height": 550
+          },
+          "sha256": "b6a1911d94066e41b2972a23cf1b733fd4f840949cef47d037aa1de9c892ad0e",
+          "bytes": 90579,
+          "labelContrast": 8.55,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "desert",
+      "name": "Pustinjsko staklo",
+      "material": "3D Soft Neomorphism warm smooth CLAY, sand and soft amber with cocoa inset, subtle fused-amber depth in the rounded edge only, smooth softly sculpted plateau, a tiny muted teal undertone only in edge reflection",
+      "roles": {
+        "stop": {
+          "face": "#7D4D38",
+          "edge": "#D79269",
+          "ink": "#FFFFFF"
+        },
+        "double": {
+          "face": "#F0D0AB",
+          "edge": "#A87759",
+          "ink": "#443027"
+        },
+        "claim": {
+          "face": "#FFF0DA",
+          "edge": "#D5B29B",
+          "ink": "#443027"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/desert-stop-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/daily-buttons/stop-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-d520a81d-0853-478f-8d9e-6484703abd5b.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Pustinjsko staklo. Material and identity: 3D Soft Neomorphism warm smooth CLAY, sand and soft amber with cocoa inset, subtle fused-amber depth in the rounded edge only, smooth softly sculpted plateau, a tiny muted teal undertone only in edge reflection. Main central face color #7D4D38; outer edge color #D79269, subordinate to the face. A live label in #FFFFFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #7D4D38, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 2,
+            "top": 83,
+            "width": 2167,
+            "height": 550
+          },
+          "sha256": "f9143ebe55eef25a7c40b44ceb05c9ae096e0749d3402547668925edb89d74f8",
+          "bytes": 89328,
+          "labelContrast": 7.83,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/desert-double-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-71827676-ab59-48af-b22d-6e1ca8507152.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Pustinjsko staklo. Material and identity: 3D Soft Neomorphism warm smooth CLAY, sand and soft amber with cocoa inset, subtle fused-amber depth in the rounded edge only, smooth softly sculpted plateau, a tiny muted teal undertone only in edge reflection. Main central face color #F0D0AB; outer edge color #A87759, subordinate to the face. A live label in #443027 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #F0D0AB, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 117,
+            "width": 2171,
+            "height": 472
+          },
+          "sha256": "234ae8fdad08f9efd9f483df7547f079a25c07e65c7450361bc2633603f57875",
+          "bytes": 104748,
+          "labelContrast": 7.12,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/desert-claim-v1.png",
+          "production": "www/assets/theme-packs/desert/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-de8052c4-a32c-4bef-ab43-ca5a229f7ad6.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Pustinjsko staklo. Material and identity: 3D Soft Neomorphism warm smooth CLAY, sand and soft amber with cocoa inset, subtle fused-amber depth in the rounded edge only, smooth softly sculpted plateau, a tiny muted teal undertone only in edge reflection. Main central face color #FFF0DA; outer edge color #D5B29B, subordinate to the face. A live label in #443027 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #FFF0DA, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 5,
+            "top": 104,
+            "width": 2163,
+            "height": 512
+          },
+          "sha256": "40f477f59cb2733b140f2aa53bb5cec95469895316650d06baeb49ac5a889c91",
+          "bytes": 87097,
+          "labelContrast": 9.84,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "moon",
+      "name": "Mesečev sjaj",
+      "material": "3D Soft Neomorphism matte CLAY, lunar graphite and cool silver-gray, rounded tactile ceramic smooth casing, soft mineral edge with quiet moonlight, a subtle continuous shallow inner contour, no celestial scene or craters",
+      "roles": {
+        "stop": {
+          "face": "#3B3F4B",
+          "edge": "#858895",
+          "ink": "#F5F5F7"
+        },
+        "double": {
+          "face": "#E1E2E7",
+          "edge": "#858895",
+          "ink": "#242630"
+        },
+        "claim": {
+          "face": "#252934",
+          "edge": "#A7A9B8",
+          "ink": "#F5F5F7"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/moon-stop-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/daily-buttons/stop-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-2b6bf4ff-1405-40d2-b859-8eb20880f219.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Mesečev sjaj. Material and identity: 3D Soft Neomorphism matte CLAY, lunar graphite and cool silver-gray, rounded tactile ceramic smooth casing, soft mineral edge with quiet moonlight, a subtle continuous shallow inner contour, no celestial scene or craters. Main central face color #3B3F4B; outer edge color #858895, subordinate to the face. A live label in #F5F5F7 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #3B3F4B, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 1,
+            "top": 113,
+            "width": 2169,
+            "height": 502
+          },
+          "sha256": "947483700e3cb71734f3b5cb715ae2a3d5e3033bb9092f8856e1c6c9ca03fbb6",
+          "bytes": 86768,
+          "labelContrast": 9.03,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/moon-double-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-6722d6af-bb6e-46b1-8b70-dbe19e619ae8.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Mesečev sjaj. Material and identity: 3D Soft Neomorphism matte CLAY, lunar graphite and cool silver-gray, rounded tactile ceramic smooth casing, soft mineral edge with quiet moonlight, a subtle continuous shallow inner contour, no celestial scene or craters. Main central face color #E1E2E7; outer edge color #858895, subordinate to the face. A live label in #242630 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #E1E2E7, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 111,
+            "width": 2172,
+            "height": 499
+          },
+          "sha256": "3376657af31ca5d15458e904aa8a9ef19803f72d2fa97f1dc9695058f1f88c84",
+          "bytes": 84796,
+          "labelContrast": 9.77,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/moon-claim-v1.png",
+          "production": "www/assets/theme-packs/moon/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-176282a3-2745-4904-8ac6-092eef52d9a0.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Mesečev sjaj. Material and identity: 3D Soft Neomorphism matte CLAY, lunar graphite and cool silver-gray, rounded tactile ceramic smooth casing, soft mineral edge with quiet moonlight, a subtle continuous shallow inner contour, no celestial scene or craters. Main central face color #252934; outer edge color #A7A9B8, subordinate to the face. A live label in #F5F5F7 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #252934, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 1,
+            "top": 114,
+            "width": 2170,
+            "height": 496
+          },
+          "sha256": "7d9293b57d57fe618be3362e17004e48f1a40232b1dd415118863ff5c0fcfcc4",
+          "bytes": 89808,
+          "labelContrast": 12.09,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    },
+    {
+      "id": "severna",
+      "name": "Severna maglina",
+      "material": "3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, deep midnight teal casing with restrained pale turquoise and misty muted lavender edge, compact soft cushion with fine continuous bevel, calm aurora tone without glow effects or electric blue",
+      "roles": {
+        "stop": {
+          "face": "#182C44",
+          "edge": "#C3ACEA",
+          "ink": "#F5FBFF"
+        },
+        "double": {
+          "face": "#8AE3E4",
+          "edge": "#24445B",
+          "ink": "#0A2934"
+        },
+        "claim": {
+          "face": "#24445B",
+          "edge": "#8AE3E4",
+          "ink": "#F5FBFF"
+        }
+      },
+      "assets": {
+        "stop": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/severna-stop-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/daily-buttons/stop-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-ef321f5b-51da-4c07-a9be-4fbfad3e6ec6.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY STOP, theme Severna maglina. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, deep midnight teal casing with restrained pale turquoise and misty muted lavender edge, compact soft cushion with fine continuous bevel, calm aurora tone without glow effects or electric blue. Main central face color #182C44; outer edge color #C3ACEA, subordinate to the face. A live label in #F5FBFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #182C44, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 6,
+            "top": 126,
+            "width": 2160,
+            "height": 471
+          },
+          "sha256": "4b2026ee66841ba07f5b85653dae9014a3ac640b63a64ae1288ca1d565e39c00",
+          "bytes": 91575,
+          "labelContrast": 13.94,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "double": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/severna-double-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/daily-buttons/double-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-ca271f28-a8e3-40c4-978c-bf1198e3d9ff.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY DOUBLE, theme Severna maglina. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, deep midnight teal casing with restrained pale turquoise and misty muted lavender edge, compact soft cushion with fine continuous bevel, calm aurora tone without glow effects or electric blue. Main central face color #8AE3E4; outer edge color #24445B, subordinate to the face. A live label in #0A2934 will be drawn over the center, so the broad middle 75% must be quiet, uniformly #8AE3E4, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 1,
+            "top": 109,
+            "width": 2170,
+            "height": 505
+          },
+          "sha256": "3bef2a923c35c1621c35a5fe58ebaa6b0d6cbda116becd603cbc02391832c1a5",
+          "bytes": 92636,
+          "labelContrast": 8.82,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        },
+        "claim": {
+          "master": "source-assets/theme-daily-buttons-v1/masters/severna-claim-v1.png",
+          "production": "www/assets/theme-packs/severna/canonical/daily-buttons/claim-v1.png",
+          "status": "ready",
+          "generatedFrom": "C:\\Users\\andri\\.codex\\generated_images\\01a1116e-ca3a-72c0-864c-166cc3b5e76a\\exec-81c35e26-a4fd-474c-9342-c363b4c52267.png",
+          "prompt": "Create ONE standalone final transparent PNG 3D soft mobile-game button body for Yamb of the Balkan DAILY CLAIM, theme Severna maglina. Material and identity: 3D Soft Neomorphism SMOOTH RUBBER and MATTE PLASTIC, deep midnight teal casing with restrained pale turquoise and misty muted lavender edge, compact soft cushion with fine continuous bevel, calm aurora tone without glow effects or electric blue. Main central face color #24445B; outer edge color #8AE3E4, subordinate to the face. A live label in #F5FBFF will be drawn over the center, so the broad middle 75% must be quiet, uniformly #24445B, with excellent label contrast. Shallow rounded rectangular cushion with soft low-volume bevel and short lower lip, gently lit from upper left. Orthographic direct face view, no perspective. A very wide horizontal object, approx 6:1, rounded rectangular corners about one third of height, NOT semicircular pill ends. Single button tightly fills the width, minimal transparent margin, preserve the whole shape. Fine smooth material with gentle gradients and depth, not a flat vector. Actual alpha transparent background. No text, letters, numbers, symbols, icons, dice, jewels, leaves, wreaths, motifs, background scene, checkerboard, thick clumsy rings or excessive ornament. Fresh unique design for this theme and action, visually restrained and high-quality.",
+          "width": 768,
+          "height": 144,
+          "sourceCrop": {
+            "left": 0,
+            "top": 96,
+            "width": 2171,
+            "height": 531
+          },
+          "sha256": "f9118cf5f950a7f8e54223eae481aee4ed494e12f9bfc461f39dc0750554dffc",
+          "bytes": 88138,
+          "labelContrast": 8.49,
+          "visualReview": "Reviewed at mobile display size in docs/theme-daily-buttons-review.html; production Daily active and result panels rendered in all themes."
+        }
+      }
+    }
+  ],
+  "verification": {
+    "date": "2026-11-15",
+    "review": "docs/theme-daily-buttons-review.html",
+    "runtimeCases": 300,
+    "pngBindingsDecoded": 180,
+    "baselineCasesCompared": 150,
+    "geometryAndTypographyDifferences": 0,
+    "minimumLabelContrast": 6.2,
+    "scope": "Isolated production Daily/Modal renderers and real CSS, 10 themes, SR/EN, 320x568/360x780/412x915; synthetic dice/results, no account, ad or reward transactions. Offline font fallback possible."
+  }
+}

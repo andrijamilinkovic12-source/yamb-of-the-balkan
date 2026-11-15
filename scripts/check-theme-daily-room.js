@@ -10,7 +10,9 @@ const manifest = JSON.parse(read('source-assets/theme-daily-states-v1/manifest.j
 const definitions = JSON.parse(read('docs/theme-definitions.json'));
 const themes = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
 const roles = ['task', 'complete', 'already-played'];
-const activeRoles = ['room', ...roles, 'reward-video', 'ducat'];
+const buttonManifest = JSON.parse(read('source-assets/theme-daily-buttons-v1/manifest.json'));
+const buttonRoles = ['stop', 'double', 'claim'];
+const activeRoles = ['room', ...roles, 'reward-video', 'ducat', ...buttonRoles.map(role => `button-${role}`)];
 const hashes = new Set();
 const activeHashes = new Map(activeRoles.map(role => [role, new Set()]));
 
@@ -132,7 +134,7 @@ for (const role of activeRoles) assertActivePng('dark', role, instance.getDailyA
     }
     documentMock.getElementById = id => id === 'daily-intro' ? introOverlay : null;
 }
-assert.equal(activeRoles.length, 6, 'each theme must expose the same six Daily PNG roles');
+assert.equal(activeRoles.length, 9, 'each theme must expose the same nine Daily PNG roles');
 assert.ok([...activeHashes.values()].every(roleHashes => roleHashes.size === 10));
 
 const html = read('www/index.html').toString();
@@ -146,8 +148,8 @@ const game = read('www/game.js').toString();
 const rules = read('www/pravilaigre.js').toString();
 const roomIcons = read('www/theme-main-room-icons.js').toString();
 const oceanPreview = read('www/themes/ocean/qa-preview.html').toString();
-assert.match(html, /theme-daily-room\.css\?v=4/);
-assert.match(html, /dnevniizazov\.js\?v=3\.4/);
+assert.match(html, /theme-daily-room\.css\?v=5/);
+assert.match(html, /dnevniizazov\.js\?v=3\.5/);
 const dailyAlerts = js.split('\n').filter(line => line.includes('this.app.modal.alert('));
 assert.equal(dailyAlerts.length, 6);
 assert.ok(dailyAlerts.every(line => line.includes("contextClass: 'daily'")), 'Daily notices must opt into scoped Green typography and theme contrast');
@@ -166,9 +168,31 @@ assert.match(js, /this\.prepareDailyAssets\(\)/);
 assert.match(js, /await assetsReady/);
 assert.match(js, /scoreBox\.appendChild\(completeMark\)/);
 assert.match(js, /this\.clearDailyResult\(\)/);
-for (const role of activeRoles) {
+for (const role of activeRoles.filter(role => !role.startsWith('button-'))) {
     assert.ok(js.includes(`getDailyAsset('${role}')`));
 }
+assert.deepEqual(buttonManifest.roles, buttonRoles);
+assert.deepEqual(buttonManifest.themes.map(theme => theme.id), ['dark', ...themes]);
+const buttonHashes = new Set();
+for (const theme of buttonManifest.themes) {
+    for (const role of buttonRoles) {
+        const entry = theme.assets[role], png = read(entry.production);
+        assert.equal(entry.status, 'ready', `${theme.id}/${role} export ready`);
+        assert.equal(png.readUInt32BE(16), 768);
+        assert.equal(png.readUInt32BE(20), 144);
+        assert.equal(png[25], 6);
+        assert.equal(crypto.createHash('sha256').update(png).digest('hex'), entry.sha256);
+        assert.ok(!buttonHashes.has(entry.sha256), 'each theme/action has its own generated PNG');
+        buttonHashes.add(entry.sha256);
+        assert.ok(fs.existsSync(path.join(root, entry.master)), 'separate generated master exists');
+        assert.ok(entry.labelContrast >= 4.5, `${theme.id}/${role} label contrast`);
+        const source = instance.getDailyAsset(`button-${role}`, theme.id);
+        assert.equal(source, entry.production.replace(/^www\//, '') + '?v=1');
+        assert.ok(css.includes(`--daily-${role}-button-png: url('${source}')`));
+        assert.ok(css.includes(`--daily-${role}-button-ink: ${theme.roles[role].ink}`));
+    }
+}
+assert.equal(buttonHashes.size, 30);
 assert.match(js, /data-daily-role="ducat"/);
 for (const theme of themes) {
     assert.ok(css.includes(`body.${theme}-theme #glass-daily-overlay`));
@@ -265,7 +289,8 @@ async function checkAssetLoading() {
     const firstLoad = instance.prepareDailyAssets();
     assert.equal(instance.prepareDailyAssets(), firstLoad, 'same theme should reuse decoded PNG load');
     assert.ok((await firstLoad).every(Boolean));
-    assert.equal(loadedSources.length, 6);
+    assert.equal(loadedSources.length, 9);
+    for (const role of buttonRoles) assert.ok(loadedSources.includes(instance.getDailyAsset(`button-${role}`, 'light')));
 
     instance.app = { requireLogin: () => true, prepareThemeRoomAssets() {} };
     instance.isIntroPlaying = false;
@@ -285,10 +310,10 @@ async function checkAssetLoading() {
     respond({ ok: true, alreadyClaimed: false });
     await opening;
     assert.deepEqual(syncedThemes, ['medium'], 'room PNGs must match the theme at display time');
-    assert.equal(loadedSources.length, 12, 'new theme PNGs must be decoded before display');
+    assert.equal(loadedSources.length, 18, 'new theme PNGs must be decoded before display');
     assert.equal(instance.loadingChallenge, false);
 }
 
 checkAssetLoading().then(() => {
-    console.log('Daily Challenge: 10 themes × 6 distinct active RGBA PNG roles; canonical reuse, reentry, and theme-switch loading OK.');
+    console.log('Daily Challenge: 10 themes × 9 distinct active RGBA PNG roles, including 30 generated buttons; canonical reuse, reentry, and theme-switch loading OK.');
 }).catch(error => { console.error(error); process.exitCode = 1; });

@@ -39,8 +39,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -49,7 +49,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "light": {
       "rooms": {
@@ -79,8 +79,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -89,7 +89,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "medium": {
       "rooms": {
@@ -119,8 +119,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -129,7 +129,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "winter": {
       "rooms": {
@@ -159,8 +159,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -169,7 +169,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "neon": {
       "rooms": {
@@ -199,8 +199,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -209,7 +209,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "amethyst": {
       "rooms": {
@@ -239,8 +239,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -249,7 +249,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "easter": {
       "rooms": {
@@ -279,8 +279,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -289,7 +289,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "desert": {
       "rooms": {
@@ -319,8 +319,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -329,7 +329,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "moon": {
       "rooms": {
@@ -359,8 +359,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -369,7 +369,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     },
     "severna": {
       "rooms": {
@@ -399,8 +399,8 @@
           "missing": []
         },
         "daily-challenge": {
-          "roles": 6,
-          "pngFiles": 6,
+          "roles": 9,
+          "pngFiles": 9,
           "missing": []
         },
         "leaderboard": {
@@ -409,7 +409,7 @@
           "missing": []
         }
       },
-      "uniquePngAcrossRooms": 222
+      "uniquePngAcrossRooms": 225
     }
   },
   "crossThemeIdentical": [],

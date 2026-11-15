@@ -8,43 +8,45 @@
         sr: {
             heading: 'Brisanje naloga', intro: 'Obriši svoj nalog i povezane podatke iz igre Yamb of the Balkan, čak i ako igra više nije instalirana.',
             home: 'Početna', privacy: 'Politika privatnosti', terms: 'Uslovi korišćenja',
-            safeTitle: 'Tvoj Google nalog ostaje aktivan', safeText: 'Briše se samo nalog u igri Yamb of the Balkan. Gmail, Google fotografije i ostale Google usluge ostaju nepromenjeni.',
+            safeTitle: 'Lični nalozi ostaju aktivni', safeText: 'Ovaj postupak briše tvoj Yamb profil i povezane podatke igre. Tvoji lični Google i Facebook nalozi ostaju aktivni.',
+            linkedTitle: 'Povezani Google i Facebook', linkedText: 'Ako si Google i Facebook povezao sa istim Yamb profilom, brisanje obuhvata ceo zajednički profil, Dukate, inventar i napredak. Posle završenog brisanja nijedan povezani način prijave ne omogućava pristup obrisanom profilu. Odjava i deinstaliranje igre nisu zahtev za brisanje.',
             removedTitle: 'Šta se briše', removed: 'Profil i profilna slika, sačuvana statistika i napredak, Dukati i inventar, prijateljstva, tokeni obaveštenja, poruke povezane sa nalogom i rezervne kopije profila koje čuva igra.',
             retainedTitle: 'Šta može ostati', retained: 'Rezultati zajedničkih partija mogu ostati u istoriji drugih igrača bez tvog imena, slike i identifikatora naloga. Stariji tehnički zapisi o prekidima veze mogu ostati do 30 dana. Minimalni zapis sa kriptografskim otiskom starog identifikatora čuva se do 90 dana radi sprečavanja vraćanja obrisanih podataka. Potvrda zahteva dostupna je 30 dana nakon završetka.',
-            provider: 'Za Analytics podatke povezane sa nalogom šaljemo poseban zahtev Google-u, koji ga obrađuje naknadno. Stariji Analytics podaci koji nisu bili povezani sa nalogom ne mogu se naknadno pouzdano pripisati nalogu i podležu rokovima čuvanja. Tvoj Google nalog ostaje aktivan. Detalje i korisničke kontrole pogledaj u politici privatnosti igre.',
-            stepsTitle: 'Potvrdi brisanje', steps: 'Prijavi se istim Google nalogom koji koristiš u igri. Proveri prikazanu adresu, pa potvrdi da želiš trajno brisanje.',
-            login: 'Prijavi se pomoću Google-a', change: 'Promeni nalog', agree: 'Razumem da trajno gubim nalog u igri, Dukate, inventar i napredak i da se brisanje ne može poništiti.',
-            continue: 'Nastavi', review: 'Poslednja potvrda', reviewText: 'Trajno će biti obrisan nalog u igri za ovu Google adresu:',
+            provider: 'Za Analytics podatke povezane sa nalogom šaljemo poseban zahtev Google-u, koji ga obrađuje naknadno. Stariji Analytics podaci koji nisu bili povezani sa nalogom ne mogu se naknadno pouzdano pripisati nalogu i podležu rokovima čuvanja. Nalog kojim se prijavljuješ ostaje aktivan. Detalje i korisničke kontrole pogledaj u politici privatnosti igre.',
+            stepsTitle: 'Potvrdi brisanje', steps: 'Prijavi se Google ili Facebook nalogom povezanim sa Yamb profilom koji želiš da obrišeš. Proveri prikazano ime ili adresu, pa potvrdi trajno brisanje.',
+            login: 'Prijavi se pomoću Google-a', loginFacebook: 'Prijavi se preko Facebooka', change: 'Promeni nalog', agree: 'Razumem da trajno gubim nalog u igri, Dukate, inventar i napredak i da se brisanje ne može poništiti.',
+            continue: 'Nastavi', review: 'Poslednja potvrda', reviewText: 'Trajno će biti obrisan nalog u igri za ovaj identitet:',
             final: 'Trajno obriši nalog u igri', cancel: 'Odustani', check: 'Proveri status zahteva',
             loading: 'Proveravamo dostupnost usluge…', ready: 'Brisanje se pokreće tek nakon tvoje potvrde.',
             unavailable: 'Automatsko brisanje trenutno nije dostupno. Pokušaj kasnije ili kontaktiraj podršku ispod.',
             pending: 'Zahtev je primljen. Brisanje je u toku i nastavlja se na serveru. Možeš se vratiti na ovu stranicu i proveriti status.',
-            complete: 'Nalog u igri i njegovi podaci na serveru igre su obrisani. Tvoj Google nalog ostaje aktivan.',
+            complete: 'Nalog u igri i njegovi podaci na serveru igre su obrisani. Nalog kojim se prijavljuješ ostaje aktivan.',
             analyticsSubmitted: 'Google-u je poslat zahtev za brisanje povezanih Analytics podataka. Google ga obrađuje odvojeno; ova potvrda ne znači da je njihova obrada već završena.',
             error: 'Nismo mogli da potvrdimo rezultat. Ako je zahtev već primljen, obrada se nastavlja. Proveri status ili kontaktiraj podršku.',
-            authError: 'Google prijava nije uspela. Koristi pregledač telefona ili računara i dozvoli iskačući prozor za prijavu.',
-            recent: 'Potrebna je nova Google prijava. Prijavi se ponovo na isti nalog, pa potvrdi brisanje.',
+            authError: 'Prijava nije uspela. Koristi pregledač telefona ili računara i dozvoli iskačući prozor za prijavu.',
+            recent: 'Potrebna je ponovna prijava. Prijavi se ponovo na isti nalog, pa potvrdi brisanje.',
             support: 'Potrebna ti je pomoć?', supportText: 'Za pitanja ili pomoć pri brisanju kontaktiraj:', rights: 'Yamb of the Balkan'
         },
         en: {
             heading: 'Delete your account', intro: 'Delete your Yamb of the Balkan game account and associated data, even if you no longer have the game installed.',
             home: 'Home', privacy: 'Privacy policy', terms: 'Terms of service',
-            safeTitle: 'Your Google account remains active', safeText: 'Only your Yamb of the Balkan game account is deleted. Gmail, Google Photos and other Google services remain unchanged.',
+            safeTitle: 'Your personal accounts remain active', safeText: 'This process deletes your Yamb profile and associated game data. Your personal Google and Facebook accounts remain active.',
+            linkedTitle: 'Linked Google and Facebook accounts', linkedText: 'If you linked Google and Facebook to the same Yamb profile, deletion covers the entire shared profile, Dukati, inventory and progress. Once deletion is complete, neither linked sign-in method provides access to the deleted profile. Signing out and uninstalling the game do not request deletion.',
             removedTitle: 'What is deleted', removed: 'Your profile and profile picture, saved statistics and progress, Dukati and inventory, friendships, notification tokens, associated messages, and profile backups maintained by the game.',
             retainedTitle: 'What may remain', retained: 'Shared match results may remain in other players’ history without your name, picture or account ID. Older connection diagnostics may remain for up to 30 days. A minimal record containing a cryptographic hash of the old identifier is kept for up to 90 days to prevent deleted data from being restored. The request receipt is available for 30 days after completion.',
-            provider: 'We submit a separate request to Google for Analytics data linked to the account; Google processes it afterwards. Older Analytics data that were not associated with an account cannot reliably be attributed afterwards and remain subject to retention periods. Your Google account remains active. See the game’s privacy policy for details and user controls.',
-            stepsTitle: 'Confirm account deletion', steps: 'Sign in with the same Google account you use in the game. Check the displayed address, then confirm that you want permanent deletion.',
-            login: 'Sign in with Google', change: 'Change account', agree: 'I understand that I permanently lose my game account, Dukati, inventory and progress, and that deletion cannot be undone.',
-            continue: 'Continue', review: 'Final confirmation', reviewText: 'The game account for this Google address will be permanently deleted:',
+            provider: 'We submit a separate request to Google for Analytics data linked to the account; Google processes it afterwards. Older Analytics data that were not associated with an account cannot reliably be attributed afterwards and remain subject to retention periods. Your sign-in account remains active. See the game’s privacy policy for details and user controls.',
+            stepsTitle: 'Confirm account deletion', steps: 'Sign in with a Google or Facebook account linked to the Yamb profile you want to delete. Check the displayed name or address, then confirm permanent deletion.',
+            login: 'Sign in with Google', loginFacebook: 'Sign in with Facebook', change: 'Change account', agree: 'I understand that I permanently lose my game account, Dukati, inventory and progress, and that deletion cannot be undone.',
+            continue: 'Continue', review: 'Final confirmation', reviewText: 'The game account for this identity will be permanently deleted:',
             final: 'Permanently delete game account', cancel: 'Cancel', check: 'Check request status',
             loading: 'Checking service availability…', ready: 'Deletion starts only after you confirm.',
             unavailable: 'Automatic deletion is currently unavailable. Please try later or contact support below.',
             pending: 'Your request was received. Deletion is in progress and continues on the server. You can return to this page to check its status.',
-            complete: 'Your game account and its data on the game server have been deleted. Your Google account remains active.',
+            complete: 'Your game account and its data on the game server have been deleted. Your sign-in account remains active.',
             analyticsSubmitted: 'A request to delete linked Analytics data has been submitted to Google. Google processes it separately; this confirmation does not mean that its processing has already finished.',
             error: 'We could not confirm the result. If the request was already received, processing continues. Check its status or contact support.',
-            authError: 'Google sign-in failed. Use your phone or computer browser and allow the sign-in pop-up.',
-            recent: 'A new Google sign-in is required. Sign in again to the same account, then confirm deletion.',
+            authError: 'Sign-in failed. Use your phone or computer browser and allow the sign-in pop-up.',
+            recent: 'Sign in again to verify your identity. Sign in again to the same account, then confirm deletion.',
             support: 'Need help?', supportText: 'For questions or assistance with deletion, contact:', rights: 'Yamb of the Balkan'
         }
     };
@@ -53,6 +55,7 @@
         const lang = language === 'en' ? 'en' : 'sr';
         const text = translations[lang];
         const el = id => document.getElementById(id);
+        const facebookLogin = el('deletion-login-facebook');
         document.documentElement.lang = lang;
         document.title = text.heading + ' | Yamb of the Balkan';
         for (const node of document.querySelectorAll('[data-text]')) node.textContent = text[node.dataset.text] || '';
@@ -71,6 +74,10 @@
         function refresh() {
             const pending = !!client.savedReceipt();
             el('deletion-login').hidden = !auth || pending || !!user || completed;
+            if (facebookLogin) {
+                facebookLogin.hidden = !auth?.signInFacebook || pending || !!user || completed;
+                facebookLogin.disabled = busy;
+            }
             el('deletion-account').hidden = !user || pending || completed;
             el('deletion-check').hidden = !pending;
             el('deletion-continue').disabled = busy || !el('deletion-agree').checked;
@@ -88,17 +95,19 @@
             } catch (_) { show(text.error, 'error'); }
             finally { busy = false; refresh(); }
         }
-        el('deletion-login').addEventListener('click', async () => {
+        async function signIn(method) {
             if (busy || !auth) return;
             busy = true; refresh();
             try {
-                user = await auth.signIn();
+                user = await auth[method]();
                 el('deletion-email').textContent = user.email || user.displayName || '';
                 el('deletion-agree').checked = false;
                 show(text.ready);
             } catch (_) { show(text.authError, 'error'); }
             finally { busy = false; refresh(); }
-        });
+        }
+        el('deletion-login').addEventListener('click', () => signIn('signIn'));
+        facebookLogin?.addEventListener('click', () => signIn('signInFacebook'));
         el('deletion-change').addEventListener('click', async () => {
             if (busy) return;
             await auth?.signOut().catch(() => {});

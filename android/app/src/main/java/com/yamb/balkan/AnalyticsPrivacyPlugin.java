@@ -41,7 +41,8 @@ public class AnalyticsPrivacyPlugin extends Plugin {
 
     private String currentUid() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null || user.getProviderData().stream().noneMatch(item -> "google.com".equals(item.getProviderId()))) return null;
+        if (user == null || user.getProviderData().stream().noneMatch(item ->
+                "google.com".equals(item.getProviderId()) || "facebook.com".equals(item.getProviderId()))) return null;
         return user.getUid();
     }
 
@@ -90,7 +91,7 @@ public class AnalyticsPrivacyPlugin extends Plugin {
         if (!uid.equals(prefs().getString("boundUid", ""))) {
             // A fresh ID prevents one person's deletion from removing another
             // person's Analytics history on a shared phone. Legacy IDs are not
-            // retroactively attributed to the current Google account.
+            // retroactively attributed to the current account.
             analytics().setUserId(null);
             analytics().resetAnalyticsData();
             prefs().edit().putString("boundUid", uid).apply();

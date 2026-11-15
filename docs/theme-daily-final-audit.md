@@ -1,5 +1,19 @@
 # Dnevni izazov — završna provera deset tema
 
+## Nova PNG dugmad, 15. 11. 2026.
+
+STOP, DUPLIRAJ i PREUZMI sada imaju po jedan zasebno generisan PNG za svaku od deset tema, uključujući Zelenu. Ukupno 30 originalnih mastera i 30 optimizovanih produkcionih RGBA PNG fajlova od 768 × 144 px. Izrada je rađena alatom `image_gen.imagegen`, pojedinačnim pozivom za svako dugme. Manifest sa punim promptovima, putanjama, SHA-256 i izmerenim kontrastom je [source-assets/theme-daily-buttons-v1/manifest.json](../source-assets/theme-daily-buttons-v1/manifest.json). [Pregled svih dugmadi](theme-daily-buttons-review.html) sadrži stvarne produkcione PNG fajlove i lokalizovane natpise.
+
+Aktuelan inventar Dnevnog izazova je **9 PNG uloga i 9 PNG fajlova po temi**. Ranijih šest uloga ostaju, a dodate su tri površine dugmadi. Natpisi su živi Montserrat tekst radi srpskog i engleskog jezika. Ikone videa i dukata zadržavaju svoje postojeće kanonske izvore. Nema novog emoji ili SVG sloja na dugmadima.
+
+Poređenje svih 150 početnih i novih prikaza potvrđuje **nula razlika u dimenzijama i tipografskim merama** kartice, dugmadi i ostalih kontrola. Na širinama 320/360/412 px STOP i PREUZMI zadržavaju 266 × 53 / 306 × 53 / 350 × 55 CSS px, a DUPLIRAJ 266 × 60 / 306 × 60 / 350 × 60 CSS px. Redosled, klik zone i akcije ostaju isti. Učitavanje tri PNG dugmeta ulazi u postojeću pripremu i dekodiranje resursa aktivne teme pre prikaza sobe.
+
+Automatska provera stvarnih Daily/Modal renderera obuhvatila je **300 kombinacija**: deset tema, dva jezika, pet stanja i tri viewporta 320 × 568, 360 × 780 i 412 × 915, uz safe-area od 24 px. Svih 180 vidljivih veza dugme–PNG uspešno je dekodirano i pripada pravoj temi. Nema odsecanja, preliva ili skrolovanja kartice. Najmanji kontrast natpisa izmeren na centralnoj površini PNG je **6,20:1**. Svih 30 dugmadi pregledano je u mobilnoj veličini, uz pregled aktivnog i završnog prikaza. Moguća je zamena fonta offline fallbackom u izolovanom testu.
+
+Prolaze `scripts/check-theme-daily-room.js`, `scripts/audit-theme-room-assets.js`, `scripts/test-daily-layout-runtime.cjs` na oba jezika i sintaksne provere izmenjenog JS-a. Ovo je lokalna provera izgleda i povezivanja sa sintetičkim rezultatima. Ne izvodi prijavu, reklamu, preuzimanje nagrade niti novi pokušaj izazova na stvarnom nalogu. Commit i deploy nisu deo ove izmene.
+
+## Raniji zapis, 22. 10. 2026.
+
 Datum: 22. 10. 2026. Referenca geometrije je Zelena tema; boje, materijal i PNG pripadaju aktivnoj temi.
 
 | Stavka | Nalaz |

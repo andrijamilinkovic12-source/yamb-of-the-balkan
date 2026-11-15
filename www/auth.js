@@ -1,5 +1,5 @@
 /**
- * Yamb of the Balkan - Google Auth
+ * Yamb of the Balkan - Firebase Auth
  * Ovaj fajl koristi nativni Capacitor plugin za prijavu i sinhronizuje statistiku sa MongoDB-om.
  */
 
@@ -116,12 +116,18 @@ function normalizeFirebaseAuthUser(user) {
         ? String(localStorage.getItem('yamb_player_name') || '').trim() : '';
     const publicFallback = rememberedName && !/^[^\s@]+@[^\s@]+$/.test(rememberedName)
         ? rememberedName : _t('hs_player', "Igrač");
+    let photoUrl = user.photoUrl || user.photoURL || user.imageUrl || user.photo || '';
+    // Provider credentials must never enter the public avatar field.
+    try {
+        const url = new URL(photoUrl);
+        if (url.searchParams.has('access_token')) photoUrl = '';
+    } catch (_) {}
 
     return {
         ...user,
         uid,
         displayName: user.displayName || user.name || publicFallback,
-        photoUrl: user.photoUrl || user.photoURL || user.imageUrl || user.photo || '',
+        photoUrl,
         email: user.email || ''
     };
 }
@@ -192,6 +198,7 @@ function setYambAuthState(user, options = {}) {
         return null;
     }
 
+    if (localStorage.getItem('yamb_uid') !== normalized.uid) localStorage.removeItem('yamb_player_photo');
     localStorage.setItem('yamb_uid', normalized.uid);
     window.app?.globalChat?.syncActivityIdentity();
     migrateLegacyLocalProgressToUid(normalized.uid);
@@ -389,6 +396,7 @@ function osveziAuthUI(user) {
         }
     }
     window.yambAccountPrivacy?.updateControls();
+    updateFacebookControls(user);
 }
 
 // --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
@@ -782,6 +790,7 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
 
     socket.emit('set_player_data', {
         uid,
+        referralCode: window.yambReferrals?.codeForSync(uid) || undefined,
         name: window.app.playerName,
         photoUrl: localStorage.getItem('yamb_player_photo') || '',
         stats: getFullLocalStats(),
@@ -830,7 +839,93 @@ async function clearAccountLocalCache(uid) {
 }
 
 // --- FUNKCIJA ZA PRIJAVU ---
-async function prijaviSe() {
+let facebookLoginAvailable = false;
+let authActionInProgress = false;
+
+function updateFacebookControls(user = window.yambAuthState?.user) {
+    const button = document.getElementById('dugmeFacebookPrijava');
+    const link = document.getElementById('settings-link-facebook');
+    const googleLink = document.getElementById('settings-link-google');
+    const providerRow = document.getElementById('settings-auth-providers');
+    const providers = (user?.providerData || []).map(provider => provider.providerId);
+    const hasFacebook = providers.includes('facebook.com');
+    const hasGoogle = providers.includes('google.com');
+    const showProviders = facebookLoginAvailable && !!user && (hasFacebook || hasGoogle);
+    if (button) {
+        button.hidden = !facebookLoginAvailable || !!user;
+        button.disabled = authActionInProgress;
+    }
+    if (providerRow) providerRow.hidden = !showProviders;
+    if (link) {
+        link.hidden = !showProviders;
+        link.disabled = authActionInProgress || hasFacebook;
+        link.dataset.connected = String(hasFacebook);
+        const key = hasFacebook ? 'auth_facebook_connected' : 'auth_facebook_link';
+        const label = link.querySelector('.yamb-provider-label');
+        if (label) {
+            label.dataset.lang = key;
+            label.textContent = _t(key, hasFacebook ? 'Povezan si' : 'Poveži se');
+        }
+        const ariaKey = hasFacebook ? 'auth_facebook_connected_label' : 'auth_facebook_link_label';
+        link.dataset.langAria = ariaKey;
+        link.setAttribute('aria-label', _t(ariaKey, hasFacebook
+            ? 'Facebook je povezan sa ovim Yamb nalogom'
+            : 'Poveži Facebook sa ovim Yamb nalogom'));
+    }
+    if (googleLink) {
+        googleLink.hidden = !showProviders || !hasFacebook || hasGoogle;
+        googleLink.disabled = authActionInProgress;
+    }
+}
+
+function facebookAuthConflict(error) {
+    return /account.exists.with.different.credential|credential.already.in.use|email.already.in.use|different sign.in credentials/i
+        .test(`${error?.code || ''} ${error?.message || ''}`);
+}
+
+async function connectAuthAccount() {
+    const uid = window.yambAuthState?.uid;
+    if (authActionInProgress || !facebookLoginAvailable || !uid) return;
+    const providers = window.yambAuthState.user?.providerData || [];
+    if (providers.some(provider => provider.providerId === 'facebook.com') &&
+        providers.some(provider => provider.providerId === 'google.com')) return;
+    authActionInProgress = true;
+    updateFacebookControls();
+    const plugin = window.Capacitor.Plugins.FirebaseAuthentication;
+    const google = window.yambAuthState.user?.providerData?.some(provider => provider.providerId === 'facebook.com');
+    const provider = google ? 'google.com' : 'facebook.com';
+    try {
+        const current = (await plugin.getCurrentUser())?.user;
+        if (current?.uid !== uid) throw new Error('identity_changed');
+        const result = google ? await plugin.signInWithGoogle({ skipNativeAuth: true })
+            : await plugin.signInWithFacebook({ skipNativeAuth: true });
+        const token = google ? result?.credential?.idToken : result?.credential?.accessToken;
+        if (!token) throw new Error('provider_credential_missing');
+        if (window.yambAuthState?.uid !== uid) throw new Error('identity_changed');
+        await window.Capacitor.Plugins.AccountIdentity.linkProvider({ uid, provider, token });
+        const { user } = await plugin.getCurrentUser();
+        if (user?.uid !== uid || window.yambAuthState?.uid !== uid) throw new Error('identity_changed');
+        // Refresh linked providers without reapplying the profile or migrating local game data.
+        window.yambAuthState.user = { ...window.yambAuthState.user, providerData: user.providerData };
+        await getYambFirebaseIdToken(true);
+        await prikaziObavestenje(_t('auth_provider_linked', 'Način prijave je povezan sa ovim Yamb nalogom.'));
+    } catch (error) {
+        if (!/cancel/i.test(error?.message || '')) {
+            await prikaziObavestenje(facebookAuthConflict(error)
+                ? _t('auth_provider_in_use', 'Ovaj način prijave je već povezan sa drugim Yamb nalogom.')
+                : _t('auth_login_failed', 'Prijava trenutno nije uspela. Proveri internet vezu.'));
+        }
+    } finally {
+        authActionInProgress = false;
+        updateFacebookControls();
+    }
+}
+
+async function prijaviSe(provider = 'google.com') {
+    const facebook = provider === 'facebook.com';
+    if (authActionInProgress || (facebook && !facebookLoginAvailable)) return;
+    authActionInProgress = true;
+    updateFacebookControls();
     console.log("Iniciram proces prijave...");
 
     window.yambAuthState = {
@@ -853,15 +948,17 @@ async function prijaviSe() {
             updatedAt: Date.now()
         };
         await prikaziObavestenje(_t('auth_only_mobile', "Google prijava je dostupna samo u mobilnoj aplikaciji."));
+        authActionInProgress = false;
+        updateFacebookControls();
         return;
     }
 
     try {
-        const result = await authPlugin.signInWithGoogle();
+        const result = facebook ? await authPlugin.signInWithFacebook() : await authPlugin.signInWithGoogle();
         const signedInUser = setYambAuthState(await resolveFirebaseAuthUser(result));
 
         if (!signedInUser) {
-            console.warn("Google login je završen bez važećeg Firebase korisnika.");
+            console.warn("Prijava je završena bez važećeg Firebase korisnika.");
             window.yambAuthState = {
                 ...(window.yambAuthState || {}),
                 loginInProgress: false,
@@ -918,23 +1015,30 @@ async function prijaviSe() {
         const playerName = signedInUser.displayName || _t('player_guest', "Igraču");
         await prikaziObavestenje(_t('auth_welcome', "Dobrodošli, ") + playerName + "!");
     } catch (error) {
-        console.error("Greška pri prijavi:", error);
         window.yambAuthState = {
             ...(window.yambAuthState || {}),
             loginInProgress: false,
             checkingLogin: false,
             updatedAt: Date.now()
         };
-        if (error.message && (error.message.includes("10") || error.message.includes("12500"))) {
+        if (facebook && facebookAuthConflict(error)) {
+            await prikaziObavestenje(_t('auth_facebook_existing_account', 'Prijavi se na postojeći Yamb nalog, pa poveži Facebook u Podešavanjima.'));
+        } else if (/cancel|12501/i.test(error?.message || '')) {
+            return;
+        } else if (!facebook && /\b(10|12500)\b/.test(error?.message || '')) {
             await prikaziObavestenje(_t('auth_sha1_error', "Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan."));
         } else {
             await prikaziObavestenje(_t('auth_login_failed', "Prijava trenutno nije uspela. Proveri internet vezu."));
         }
+    } finally {
+        authActionInProgress = false;
+        updateFacebookControls();
     }
 }
 
 // --- FUNKCIJA ZA ODJAVU ---
 async function odjaviSe() {
+    if (authActionInProgress) return;
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
          return; 
     }
@@ -1162,7 +1266,15 @@ async function checkLoginStatus() {
 // Inicijalizacija
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('dugmeGooglePrijava');
-    if (btn) btn.addEventListener('click', prijaviSe);
+    btn?.addEventListener('click', () => prijaviSe());
+    document.getElementById('dugmeFacebookPrijava')?.addEventListener('click', () => prijaviSe('facebook.com'));
+    document.getElementById('settings-link-facebook')?.addEventListener('click', connectAuthAccount);
+    document.getElementById('settings-link-google')?.addEventListener('click', connectAuthAccount);
+    window.Capacitor?.Plugins?.AccountIdentity?.getCapabilities()
+        ?.then(result => {
+            facebookLoginAvailable = result.facebook === true;
+            updateFacebookControls();
+        }).catch(() => {});
     
     checkLoginStatus();
 });

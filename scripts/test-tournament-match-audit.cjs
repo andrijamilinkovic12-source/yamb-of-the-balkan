@@ -81,7 +81,7 @@ function fake(state) {
         userprofiles: state.players.map(player => ({ firebaseUid: player.id, balance: 2000, tournamentWins: 0 })), tourneystats: [],
         tournamententries: state.players.map(player => ({ _id: player.id, cycleId: state.registrationCycleId, uid: player.id,
             tournamentNumber: state.tournamentNumber, startedAt: at, status: 'started', amount: 5500, refundedAmount: 0 })),
-        tournamentreliabilities: [], tournamentnotices: [] };
+        tournamentreliabilities: [], tournamentnotices: [], playergamenotices: [] };
     let fault;
     const val = (doc, key) => key.split('.').reduce((value, segment) => value?.[segment], doc);
     const set = (doc, key, value) => {
@@ -93,7 +93,8 @@ function fake(state) {
         const actual = val(row, key);
         if (value === null) return actual == null;
         if (typeof value === 'object') return Object.entries(value).every(([op, operand]) =>
-            op === '$in' ? operand.includes(actual) : op === '$gt' ? actual > operand : op === '$lte' ? actual <= operand : false);
+            op === '$in' ? operand.includes(actual) : op === '$gt' ? actual > operand : op === '$lte' ? actual <= operand
+                : op === '$ne' && key === 'playerMailbox.id' ? !row.playerMailbox?.some(mail => mail.id === operand) : false);
         return actual === value;
     });
     const connection = { db: { collection: name => ({
@@ -187,7 +188,8 @@ async function persistence() {
         return { uid: player.id, amount, role, notice: { id: 'a'.repeat(64), matchId: 'final-game', role, reward: amount } };
     });
     const plan = { events: [audit.event(final.state, 'f', 0, final.match, 'final_settled', 'awards', options.now)],
-        final: { awards, maxBalance: 100000, record: { winnerId: final.players[0].id, winnerName: 'Winner', wonAt: new Date(at) } } };
+        final: { awards, maxBalance: 100000, record: { winnerId: final.players[0].id, winnerName: 'Winner', wonAt: new Date(at),
+            tournamentNumber: 14, tournamentCycleId: final.state.registrationCycleId } } };
     const finalFilter = { registrationCycleId: final.state.registrationCycleId, readinessRevision: 3 };
     const values = { 'bracket.f.0.prizesAwarded': true, readinessRevision: 4 };
     p.fail('tourneystats');
@@ -195,6 +197,10 @@ async function persistence() {
     assert.deepEqual(p.db.userprofiles.map(row => row.balance), [2000, 2000]);
     assert.ok(p.db.userprofiles.every(row => !row.pendingTournamentPrizes), 'notice rolls back with the wallet');
     assert.equal(p.db.tournamentmatchaudits.length, 0, 'receipt and prize fail together');
+    p.fail('playergamenotices');
+    await assert.rejects(p.store.commitState(finalFilter, values, plan), /fixture_write_failed/);
+    assert.equal(p.db.tourneystats.length, 0, 'public announcement failure rolls back championship and awards');
+    assert.deepEqual(p.db.userprofiles.map(row => row.balance), [2000, 2000]);
     p.fail(null);
     await p.store.commitState(finalFilter, values, plan);
     await assert.rejects(p.store.commitState(finalFilter, values, plan), /revision_conflict/);
@@ -202,6 +208,9 @@ async function persistence() {
     assert.deepEqual(p.db.userprofiles.map(row => row.pendingTournamentPrizes), awards.map(award => [award.notice]));
     assert.equal(p.db.tourneystats[0].wins, 1);
     assert.equal(p.db.tourneystats[0].championships.length, 1);
+    assert.equal(p.db.playergamenotices.length, 1);
+    assert.equal(p.db.playergamenotices[0].type, 'tournament_champion');
+    assert.equal(p.db.playergamenotices[0].champion.playerName, 'Winner');
 
     const voided = fixture();
     const r = fake(voided.state);
@@ -223,7 +232,8 @@ async function persistence() {
 
     const sanctioned = fixture();
     const z = fake(sanctioned.state);
-    const sanction = { events: [audit.event(sanctioned.state, 'qf', 0, sanctioned.match, 'adjudication_double_dq', 'case', options.now)],
+    const dq = audit.event(sanctioned.state, 'qf', 0, sanctioned.match, 'adjudication_double_dq', 'case', options.now, { details: {} });
+    const sanction = { events: [dq], mail: audit.adjudicationMail(dq),
         incident: { cycleId: sanctioned.state.registrationCycleId, tournamentNumber: sanctioned.state.tournamentNumber,
             inactiveUids: [sanctioned.players[0].id, sanctioned.players[1].id], reason: 'both_inactive', at: options.now } };
     const sanctionFilter = { registrationCycleId: sanctioned.state.registrationCycleId, readinessRevision: 3 };
@@ -232,11 +242,18 @@ async function persistence() {
     await assert.rejects(z.store.commitState(sanctionFilter, sanctionValues, sanction), /fixture_write_failed/);
     assert.equal(z.db.tournamentstates[0].bracket.qf[0].review, undefined);
     assert.equal(z.db.tournamentreliabilities.length, 0, 'warning, notice and decision roll back together');
+    z.fail('userprofiles');
+    await assert.rejects(z.store.commitState(sanctionFilter, sanctionValues, sanction), /fixture_write_failed/);
+    assert.equal(z.db.tournamentnotices.length, 0, 'mailbox write failure rolls back decision and warning');
     z.fail(null);
     await z.store.commitState(sanctionFilter, sanctionValues, sanction);
     await assert.rejects(z.store.commitState(sanctionFilter, sanctionValues, sanction), /revision_conflict/);
     assert.equal(z.db.tournamentreliabilities.length, 2);
     assert.deepEqual(z.db.tournamentnotices.map(row => row.kind), ['reliability_warning', 'reliability_warning']);
+    for (const user of z.db.userprofiles) {
+        assert.equal(user.playerMailbox.length, 1);
+        assert.deepEqual(user.playerMailbox[0].tournament, { tournamentNumber: 14, round: 'qf', outcome: 'both_inactive' });
+    }
 }
 
 async function restart() {

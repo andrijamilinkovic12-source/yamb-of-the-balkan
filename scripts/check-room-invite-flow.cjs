@@ -71,7 +71,7 @@ async function checkInviteAcceptanceGuard() {
 
 (async () => {
   const port = await freePort();
-  const env = { ...process.env, PORT: String(port), MONGO_URI: '', GOOGLE_APPLICATION_CREDENTIALS: '', FIREBASE_SERVICE_ACCOUNT: '', FIREBASE_ADMIN_CREDENTIALS: '', FIREBASE_SERVICE_ACCOUNT_BASE64: '', FIREBASE_SERVICE_ACCOUNT_PATH: '', FIREBASE_CONFIG: '', GOOGLE_CLOUD_PROJECT: '', GCLOUD_PROJECT: '' };
+  const env = { ...process.env, PORT: String(port), YAMB_RUNTIME_ENV: 'test', YAMB_TEST_ENV_FILE: '', MONGO_URI: '', GOOGLE_APPLICATION_CREDENTIALS: '', FIREBASE_SERVICE_ACCOUNT: '', FIREBASE_ADMIN_CREDENTIALS: '', FIREBASE_SERVICE_ACCOUNT_BASE64: '', FIREBASE_SERVICE_ACCOUNT_PATH: '', FIREBASE_CONFIG: '', GOOGLE_CLOUD_PROJECT: '', GCLOUD_PROJECT: '' };
   const child = spawn(process.execPath, [path.resolve(__dirname, '../server.js')], { cwd: os.tmpdir(), env, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
   let serverOutput = '';
   for (const stream of [child.stdout, child.stderr]) stream.on('data', chunk => { serverOutput = (serverOutput + chunk.toString()).slice(-1500); });

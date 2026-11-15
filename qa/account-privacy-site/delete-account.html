@@ -19,14 +19,19 @@
         <h1 data-text="heading">Brisanje naloga</h1>
         <p class="lead" data-text="intro">Obriši svoj nalog i povezane podatke iz igre Yamb of the Balkan, čak i ako igra više nije instalirana.</p>
         <section class="panel notice">
-            <h2 data-text="safeTitle">Tvoj Google nalog ostaje aktivan</h2>
-            <p data-text="safeText">Briše se samo nalog u igri Yamb of the Balkan. Gmail, Google fotografije i ostale Google usluge ostaju nepromenjeni.</p>
+            <h2 data-text="safeTitle">Lični nalozi ostaju aktivni</h2>
+            <p data-text="safeText">Ovaj postupak briše tvoj Yamb profil i povezane podatke igre. Tvoji lični Google i Facebook nalozi ostaju aktivni.</p>
+        </section>
+        <section class="panel">
+            <h2 data-text="linkedTitle">Povezani Google i Facebook</h2>
+            <p data-text="linkedText">Ako si Google i Facebook povezao sa istim Yamb profilom, brisanje obuhvata ceo zajednički profil, Dukate, inventar i napredak. Posle završenog brisanja nijedan povezani način prijave ne omogućava pristup obrisanom profilu. Odjava i deinstaliranje igre nisu zahtev za brisanje.</p>
         </section>
         <section class="panel" aria-labelledby="deletion-form-title">
             <h2 id="deletion-form-title" data-text="stepsTitle">Potvrdi brisanje</h2>
-            <p data-text="steps">Prijavi se istim Google nalogom koji koristiš u igri. Proveri prikazanu adresu, pa potvrdi da želiš trajno brisanje.</p>
+            <p data-text="steps">Prijavi se Google ili Facebook nalogom povezanim sa Yamb profilom koji želiš da obrišeš. Proveri prikazano ime ili adresu, pa potvrdi trajno brisanje.</p>
             <p id="deletion-message" class="status" role="status" aria-live="polite" data-text="loading">Proveravamo dostupnost usluge…</p>
             <button id="deletion-login" type="button" data-text="login" hidden>Prijavi se pomoću Google-a</button>
+            <button id="deletion-login-facebook" type="button" data-text="loginFacebook" hidden>Prijavi se preko Facebooka</button>
             <div id="deletion-account" hidden>
                 <p id="deletion-email" class="email"></p>
                 <button id="deletion-change" type="button" class="secondary" data-text="change">Promeni nalog</button>
@@ -35,7 +40,7 @@
             </div>
             <section id="deletion-review" class="review" aria-labelledby="deletion-review-title" hidden>
                 <h2 id="deletion-review-title" data-text="review">Poslednja potvrda</h2>
-                <p data-text="reviewText">Trajno će biti obrisan nalog u igri za ovu Google adresu:</p>
+                <p data-text="reviewText">Trajno će biti obrisan nalog u igri za ovaj identitet:</p>
                 <p id="deletion-review-email" class="email"></p>
                 <div class="actions"><button id="deletion-final" type="button" class="danger" data-text="final">Trajno obriši nalog u igri</button><button id="deletion-cancel" type="button" class="secondary" data-text="cancel">Odustani</button></div>
             </section>
@@ -50,8 +55,8 @@
         <section class="panel"><h2 data-text="support">Potrebna ti je pomoć?</h2><p data-text="supportText">Za pitanja ili pomoć pri brisanju kontaktiraj:</p><a href="mailto:andrija.milinkovic12@gmail.com">andrija.milinkovic12@gmail.com</a></section>
     </main>
     <footer><nav><a href="index.html" data-page="home" data-text="home">Početna</a><a href="privacy.html" data-page="privacy" data-text="privacy">Politika privatnosti</a><a href="terms.html" data-page="terms" data-text="terms">Uslovi korišćenja</a></nav><p class="small" data-text="rights">Yamb of the Balkan</p></footer>
-    <script src="account-deletion-client.js?v=2"></script>
-    <script src="account-deletion-page.js?v=2"></script>
-    <script src="account-deletion-web.js?v=1"></script>
+    <script src="account-deletion-client.js?v=3"></script>
+    <script src="account-deletion-page.js?v=4"></script>
+    <script src="account-deletion-web.js?v=3"></script>
 </body>
 </html>

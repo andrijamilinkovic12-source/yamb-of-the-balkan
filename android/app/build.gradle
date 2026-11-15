@@ -1,17 +1,30 @@
 apply plugin: 'com.android.application'
 
 def yambApplicationId = System.getenv('YAMB_ANDROID_APPLICATION_ID') ?: 'com.yamb.balkan'
+def facebookAppId = System.getenv('YAMB_ANDROID_FACEBOOK_APP_ID') ?: ''
+def facebookClientToken = System.getenv('YAMB_ANDROID_FACEBOOK_CLIENT_TOKEN') ?: ''
+def facebookEnabled = rootProject.ext.rgcfaIncludeFacebook
+if (facebookEnabled && (!(facebookAppId ==~ /[0-9]+/) || !(facebookClientToken ==~ /[a-zA-Z0-9]+/))) {
+    throw new GradleException('Set a valid Meta App ID and Android Client Token.')
+}
 
 android {
     namespace = "com.yamb.balkan"
     compileSdk = rootProject.ext.compileSdkVersion
+    buildFeatures { buildConfig = true }
     
     defaultConfig {
         applicationId yambApplicationId
+        buildConfigField 'boolean', 'YAMB_FACEBOOK_ENABLED', facebookEnabled.toString()
+        if (facebookEnabled) {
+            resValue 'string', 'facebook_app_id', facebookAppId
+            resValue 'string', 'facebook_client_token', facebookClientToken
+            resValue 'string', 'fb_login_protocol_scheme', "fb${facebookAppId}"
+        }
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 114
-        versionName "12.4"
+        versionCode 115
+        versionName "12.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             // Files and dirs to omit from the packaged assets dir
@@ -36,6 +49,11 @@ android {
         qaLocal {
             initWith debug
             matchingFallbacks = ['debug']
+        }
+    }
+    if (facebookEnabled) {
+        buildTypes.each { variant ->
+            sourceSets.getByName(variant.name).manifest.srcFile 'src/facebook/AndroidManifest.xml'
         }
     }
 

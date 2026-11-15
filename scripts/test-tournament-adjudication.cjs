@@ -102,6 +102,8 @@ function bracketAndRefunds() {
     const { deadlineAt } = f.match.scheduling;
     const extension = review.planDecision(f.state, 'qf', 0, f.match, f.decide(deadlineAt), options(deadlineAt));
     const extended = extension.updates['bracket.qf.0'];
+    assert.deepEqual(extension.mail.map(({ uid, entry }) => [uid, entry.tournament.outcome, entry.tournament.deadlineAt]),
+        [['a', 'extended', extended.scheduling.deadlineAt], ['b', 'extended', extended.scheduling.deadlineAt]]);
     assert(extended.scheduling.deadlineAt >= deadlineAt + DAY);
     assert.equal(extended.scheduling.accepted.id, f.match.scheduling.accepted.id);
     assert.equal(extended.scheduling.revision, f.match.scheduling.revision + 1);
@@ -110,6 +112,8 @@ function bracketAndRefunds() {
     const voided = review.evaluate(extended, f.rows, extended.scheduling.deadlineAt, gap, run);
     assert.equal(voided.kind, 'void');
     assert.deepEqual(voided.refundUids, ['a', 'b']);
+    assert.deepEqual(review.planDecision(f.state, 'qf', 0, extended, voided, options(extended.scheduling.deadlineAt))
+        .mail.map(({ uid, entry }) => [uid, entry.tournament.outcome]), [['a', 'void'], ['b', 'void']]);
     assert.equal(voided.inactiveUids, undefined, 'void has no strike evidence');
 
     const last = fixture();
@@ -119,6 +123,7 @@ function bracketAndRefunds() {
     last.state.bracket.qf[3] = noWinner;
     const dq = last.decide(last.match.scheduling.deadlineAt);
     const result = review.planDecision(last.state, 'qf', 0, last.match, dq, options(last.match.scheduling.deadlineAt));
+    assert.deepEqual(result.mail.map(({ uid }) => uid), ['a', 'b'], 'bracket cascade players are not recipients of this match decision');
     assert.equal(result.updates['bracket.qf.0'].winnerId, null);
     assert.equal(result.updates['bracket.sf.0'].winnerId, 'c');
     assert.equal(result.updates['bracket.sf.0'].review.kind, 'bye');
@@ -131,6 +136,14 @@ function bracketAndRefunds() {
     last.state.bracket.qf[0] = result.updates['bracket.qf.0'];
     assert(!scheduling.canStart(last.state.bracket.qf[0], start));
     assert(notifications.collect(last.state, last.match.scheduling.deadlineAt).some(row => row.reviewKind === 'double_dq'));
+
+    for (const reason of ['verified_no_show', 'unanswered_valid_proposal']) {
+        const technical = fixture();
+        const plan = review.planDecision(technical.state, 'qf', 0, technical.match,
+            { kind: 'technical', winnerId: 'b', inactiveUids: ['a'], reason }, options(start));
+        assert.deepEqual(plan.mail.map(({ uid, entry }) => [uid, entry.tournament.outcome, entry.tournament.reason]),
+            [['a', 'technical_loss', reason], ['b', 'technical_win', reason]]);
+    }
 }
 
 async function serverBoundary() {

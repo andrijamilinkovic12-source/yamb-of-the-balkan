@@ -67,6 +67,10 @@ class DnevniIzazov {
     }
 
     getDailyAsset(role, theme = this.getDailyTheme()) {
+        if (role.startsWith('button-')) {
+            const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+            return `${root}/canonical/daily-buttons/${role.slice(7)}-v1.png?v=1`;
+        }
         if (theme === 'dark') {
             if (role === 'room') return 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1';
             if (role === 'reward-video') {
@@ -103,7 +107,7 @@ class DnevniIzazov {
     prepareDailyAssets(theme = this.getDailyTheme()) {
         this.dailyAssetLoads ||= new Map();
         if (this.dailyAssetLoads.has(theme)) return this.dailyAssetLoads.get(theme);
-        const sources = ['room', 'task', 'complete', 'already-played', 'reward-video', 'ducat']
+        const sources = ['room', 'task', 'complete', 'already-played', 'reward-video', 'ducat', 'button-stop', 'button-double', 'button-claim']
             .map(role => this.getDailyAsset(role, theme));
         const loading = Promise.all(sources.map(src => new Promise(resolve => {
             const img = new Image();

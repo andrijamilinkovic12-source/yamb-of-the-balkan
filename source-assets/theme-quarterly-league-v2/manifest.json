@@ -8,6 +8,7 @@
       "assets": [
         {
           "role": "quarterly-league-room",
+          "status": "locked",
           "master": "source-assets/theme-quarterly-league-v2/dark/quarterly-league-room-master-v2.png",
           "masterSha256": "b862e87135efdea00107826fd2e45bd60a50316991e2e961d4c254e12ba94880",
           "production": [

@@ -28,13 +28,27 @@ const tournamentReadinessCore = require('./www/tournamentReadinessCore');
 const tournamentSchedulingCore = require('./www/tournamentSchedulingCore');
 const tournamentNotificationsCore = require('./www/tournamentNotificationsCore');
 const tournamentAudit = require('./lib/tournament-match-audit');
+const { createMail, appendMail, parseGameNotices, registerPlayerMailbox } = require('./lib/player-mailbox');
+const { createMailboxStore, mailboxEntrySchema } = require('./lib/player-mailbox-store');
+const { startPlayUpdateNotices } = require('./lib/play-update-notices');
+const { createPlayerReferrals, REFERRAL_REWARDS } = require('./lib/player-referrals');
+const PLAYER_REFERRALS_ENABLED = process.env.YAMB_REFERRALS_ENABLED !== 'false';
+const FACEBOOK_WEB_ENABLED = process.env.YAMB_FACEBOOK_WEB_ENABLED === 'true';
+const { createTournamentMailWarnings } = require('./lib/tournament-mail-warnings');
+const { tournamentChampionNotice, leagueChampionNotice, persistChampionNotice } = require('./lib/mailbox-champions');
+const { leaderboardRecordNotice, publishLeaderboardRecordNotice } = require('./lib/mailbox-leaderboard');
+const { installLeagueRankMail, publishLeagueRankMail } = require('./lib/league-rank-mail');
+const { installStatisticsMail, publishStatisticsMail } = require('./lib/statistics-mail');
+const { CATEGORIES: SUPPORT_CATEGORIES, createPlayerSupport } = require('./lib/player-support');
 const tournamentAdjudicationCore = require('./www/tournamentAdjudicationCore');
 const tournamentAdjudication = require('./lib/tournament-adjudication');
 const tournamentReliability = require('./www/tournamentReliabilityCore');
 const { createTournamentReadinessService } = require('./lib/tournament-readiness');
 const { createTournamentReadinessStore } = require('./lib/tournament-readiness-store');
 const { createProfileWrites } = require('./lib/profile-writes');
+const { removeFriendship } = require('./lib/friendships');
 const profileWrites = createProfileWrites();
+const leaderboardWrites = createProfileWrites();
 const { createTournamentSchedulingRuntime } = require('./lib/tournament-scheduling-runtime');
 const {
     createAccountDeletion, scrubEmbedded: scrubDeletedAccountReferences,
@@ -758,8 +772,11 @@ const ScoreSchema = new mongoose.Schema({
     mode: String,
     photoUrl: { type: String, default: '' },
     recordAchievements: { type: [String], default: [] },
+    mailboxRecordNotice: { type: mongoose.Schema.Types.Mixed, default: undefined },
+    mailboxRecordPending: { type: Boolean, default: undefined },
     date: { type: Date, default: Date.now }
 });
+ScoreSchema.index({ mailboxRecordPending: 1, date: 1 }, { partialFilterExpression: { mailboxRecordPending: true } });
 ScoreSchema.index({ playerId: 1, score: -1 });
 ScoreSchema.index({ uid: 1, score: -1 });
 ScoreSchema.index(
@@ -1103,13 +1120,60 @@ const TournamentPrizeNoticeSchema = new mongoose.Schema({
     id: String, matchId: String, role: String, reward: Number
 }, { _id: false });
 
+const PlayerMailSchema = new mongoose.Schema({
+    id: String, type: String, createdAt: Number, readAt: { type: Number, default: null },
+    fromUid: String, fromName: String, reward: Number, rank: Number, text: String, reference: String,
+    tournament: { tournamentNumber: Number, round: String, outcome: String, reason: String, deadlineAt: Number },
+    tournamentWarning: { tournamentNumber: Number, round: String, index: Number, cycleId: String,
+        scheduleId: String, stage: String, deadlineAt: Number, actionDeadlineAt: Number, scheduledAt: Number, opponentName: String },
+    leagueRank: { year: Number, quarter: Number, previousRank: String, nextRank: String, score: Number, direction: String },
+    statistics: { milestone: Number, value: Number, next: Number, best: Number }
+}, { _id: false });
+
+const PlayerSupportTicketSchema = new mongoose.Schema({
+    uid: { type: String, required: true }, requestId: { type: String, required: true }, minute: { type: Number, required: true },
+    category: { type: String, enum: SUPPORT_CATEGORIES, required: true }, description: { type: String, required: true },
+    diagnostics: mongoose.Schema.Types.Mixed, createdAt: { type: Number, required: true },
+    reply: String, repliedAt: { type: Number, default: null }
+}, { versionKey: false });
+PlayerSupportTicketSchema.index({ uid: 1, requestId: 1 }, { unique: true });
+PlayerSupportTicketSchema.index({ uid: 1, minute: 1 }, { unique: true });
+PlayerSupportTicketSchema.index({ repliedAt: 1, _id: -1 });
+const PlayerSupportTicket = mongoose.model('PlayerSupportTicket', PlayerSupportTicketSchema);
+
+const PlayerGameNoticeSchema = new mongoose.Schema({
+    _id: String, type: { type: String, default: 'game_notice' }, title: String, text: String, createdAt: Number,
+    versionCode: Number, versionName: String,
+    pinned: { type: Boolean, default: false }, protected: { type: Boolean, default: false },
+    action: { type: { type: String }, url: String },
+    champion: { playerId: String, playerName: String, tournamentNumber: Number, year: Number, quarter: Number, score: Number },
+    leaderboard: { playerId: String, playerName: String, score: Number,
+        periods: { type: [new mongoose.Schema({ period: String, change: String, previousScore: Number, periodStartedAt: Number }, { _id: false })], default: undefined } }
+}, { versionKey: false, minimize: true });
+PlayerGameNoticeSchema.index({ createdAt: -1, _id: -1 });
+const PlayerGameNotice = mongoose.model('PlayerGameNotice', PlayerGameNoticeSchema);
+const PlayerMailboxEntry = mongoose.model('PlayerMailboxEntry', mailboxEntrySchema(mongoose));
+
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
     playerName: String,
     photoUrl: { type: String, default: '' },
     friends: { type: [String], default: [] },
+    referralCode: String,
+    referralRewardsClaimed: { type: Number, default: 0, min: 0, max: REFERRAL_REWARDS.length },
+    referral: { type: new mongoose.Schema({
+        inviterUid: String, startedAt: Date, checkAfter: Date, settledAt: Date,
+        reward: Number, rewardNumber: Number, outcome: String
+    }, { _id: false }), default: undefined },
     friendRequests: { type: [String], default: [] },
     friendNotifications: { type: [FriendNotificationSchema], default: [] },
+    playerMailbox: { type: [PlayerMailSchema], default: undefined },
+    pendingLeagueRankMail: { type: [PlayerMailSchema], default: undefined },
+    pendingStatisticsMail: { type: [PlayerMailSchema], default: undefined },
+    statisticsMailDirty: { type: Boolean, default: false },
+    statisticsMailState: { type: new mongoose.Schema({ powerMilestone: Number, streakMilestone: Number,
+        streakCount: Number, episode: String }, { _id: false }), default: undefined },
+    readMailboxGameNotices: { type: [String], default: undefined },
     wins: { type: Number, default: 0 },
     losses: { type: Number, default: 0 },
     games: { type: Number, default: 0 },
@@ -1173,6 +1237,18 @@ const UserProfileSchema = new mongoose.Schema({
     claimedGameRewardIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
 });
+UserProfileSchema.index({ 'pendingLeagueRankMail.id': 1 }, { sparse: true });
+UserProfileSchema.index({ 'pendingStatisticsMail.id': 1 }, { sparse: true });
+installStatisticsMail(UserProfileSchema, { calculatePowerIndex: powerIndexCore.calculatePowerIndex,
+    publish: uid => queueRecordPush(publishStatisticsMail(UserProfile, uid, notifyPlayerMailbox), 'statistics_mailbox') });
+installLeagueRankMail(UserProfileSchema, {
+    currentPeriod: getServerQuarterInfo,
+    rankFor: score => LEAGUE_RANK_IDS[LEAGUE_RANK_BANDS.findIndex(band => score >= band.min && score <= band.max)],
+    publish: uid => queueRecordPush(publishLeagueRankMail(UserProfile, uid, notifyPlayerMailbox), 'league_rank_mailbox')
+});
+UserProfileSchema.index({ referralCode: 1 }, { unique: true, sparse: true });
+UserProfileSchema.index({ 'referral.checkAfter': 1 }, { sparse: true });
+UserProfileSchema.index({ 'referral.inviterUid': 1 }, { sparse: true });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
 
 const UserProfileBackupSchema = new mongoose.Schema({
@@ -1230,8 +1306,11 @@ if (SERVER_RUNTIME.environment !== 'production') {
         throw new Error('Account-deletion Web config must belong to the staging Firebase project.');
     }
 }
-accountDeletion.mount(app, deletionWebFirebaseConfig);
+accountDeletion.mount(app, deletionWebFirebaseConfig, { facebook: FACEBOOK_WEB_ENABLED });
 analyticsPrivacy.mount(app);
+app.get('/api/referrals/config', (_req, res) => {
+    res.set('Cache-Control', 'no-store').json({ enabled: referralAttributionAvailable() });
+});
 
 // --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; 
@@ -1273,6 +1352,18 @@ const LEAGUE_SETTLEMENT_GRACE_MS = MAX_GAME_DURATION + (5 * 60 * 1000);
 const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
 const MIN_LEAGUE_SESSION_DURATION = 30000;
 const MAX_BALANCE = 5000000;
+function referralAttributionAvailable() {
+    return PLAYER_REFERRALS_ENABLED && !!MONGO_URI && !!firebaseAuth && firebaseAdminCredentialSource !== 'staging_project_id_only';
+}
+const playerReferrals = createPlayerReferrals({ profiles: UserProfile, matches: MatchResult,
+    enabled: PLAYER_REFERRALS_ENABLED, connection: mongoose.connection, profileWrites,
+    guardWrite: accountDeletion.guardWrite, isBlocked: accountDeletion.isBlocked, maxBalance: MAX_BALANCE,
+    onReward: async uid => {
+        notifyPlayerMailbox(uid);
+        const user = await UserProfile.findOne({ firebaseUid: uid });
+        if (user) notifyChatUid(uid, 'sync_local_stats', { balance: user.balance, recipientUid: uid });
+    }
+});
 const MAX_UNDO_TOKENS = 250;
 const MAX_DAILY_REWARD = 2000;
 const MAX_DAILY_BASE_REWARD = 864;
@@ -1663,7 +1754,7 @@ async function getLeaderboardRecordSnapshot(period) {
             }
         },
         { $replaceRoot: { newRoot: "$bestEntry" } },
-        { $sort: { numScore: -1, date: 1 } },
+        { $sort: { numScore: -1, date: 1, stableUid: 1 } },
         { $limit: 1 }
     ]);
 
@@ -1674,7 +1765,8 @@ async function getLeaderboardRecordSnapshot(period) {
         period,
         score: Math.max(0, toSafeInt(top.score, 0)),
         uid: String(top.stableUid || top.playerId || top.uid || ''),
-        playerName: String(top.playerName || 'Nepoznat Igrač')
+        playerName: String(top.playerName || 'Nepoznat Igrač'),
+        date: top.date
     };
 }
 
@@ -1746,6 +1838,8 @@ async function notifyBrokenLeaderboardRecords(previousRecords, newEntry) {
     if (newScore <= 0) return { ok: false, reason: 'invalid_score' };
 
     const changedPeriods = LEADERBOARD_RECORD_PERIODS.filter(period => {
+        const periodStart = getLeaderboardPeriodStart(period);
+        if (periodStart && newEntry.date && new Date(newEntry.date) < periodStart) return false;
         const previous = previousRecords ? previousRecords[period] : null;
         return previous && newScore > Math.max(0, toSafeInt(previous.score, 0));
     });
@@ -1757,7 +1851,7 @@ async function notifyBrokenLeaderboardRecords(previousRecords, newEntry) {
 
     const playerName = sanitizeTournamentName(newEntry.playerName || 'Igrač');
     const jobs = changedPeriods.map(period => {
-        const title = `${getLeaderboardPeriodLabel(period)} rekord je oboren`;
+        const title = `${getLeaderboardRecordTag(period).replace(/^./, letter => letter.toUpperCase())} je oboren`;
         const body = `${playerName} sada drži ${getLeaderboardRecordTag(period)}: ${formatRecordScore(newScore)} poena.`;
         const titleEn = `${getLeaderboardPeriodLabel(period, 'en')} record broken`;
         const bodyEn = `${playerName} now holds the ${getLeaderboardRecordTag(period, 'en')}: ${formatRecordScore(newScore, 'en')} points.`;
@@ -2180,6 +2274,11 @@ async function runLeagueChampionPushCheck() {
     leagueChampionPushCheckInProgress = true;
 
     try {
+        if (MONGO_URI) {
+            const current = getLeagueQuarterInfoForTimestamp(new Date());
+            if (current) await archiveLeagueQuarter(current.quarter === 1 ? current.year - 1 : current.year,
+                current.quarter === 1 ? 4 : current.quarter - 1);
+        }
         const result = await notifyQuarterlyLeagueChampionIfDue();
         if (result?.sent > 0) {
             console.log(`✅ Kvartalna liga push poslat (${result.periodKey}): ${result.playerName}, ${result.sent} uređaja.`);
@@ -4231,6 +4330,9 @@ async function markMatchResultStatsApplied(matchId, uid) {
         }
     );
     if (update.matchedCount !== 1) return false;
+    if (PLAYER_REFERRALS_ENABLED) {
+        await playerReferrals.wake(uid).catch(error => console.warn('[Referral] Retry required:', error.code || error.name));
+    }
 
     const result = await MatchResult.findOne({ matchId }).select('participants statsAppliedUids');
     if (!result) return false;
@@ -4305,6 +4407,7 @@ async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore
 
 async function persistLeaderboardScoreRecord(options = {}) {
     if (!MONGO_URI) return { ok: false, reason: 'db_unavailable' };
+    if (!leaderboardWrites.owns('scores')) return leaderboardWrites.run('scores', () => persistLeaderboardScoreRecord(options));
 
     const finalUid = String(options.uid || '').trim();
     const matchId = String(options.matchId || '').trim().substring(0, 128);
@@ -4325,6 +4428,7 @@ async function persistLeaderboardScoreRecord(options = {}) {
 
     const existingScore = await Score.findOne({ playerId: finalUid, matchId });
     if (existingScore) {
+        if (existingScore.mailboxRecordPending) queueRecordPush(publishLeaderboardMailboxRecord(existingScore), 'leaderboard_mailbox_retry');
         return { ok: true, duplicate: true, score: existingScore,
             recordAchievements: normalizeSoloRecordAchievements(existingScore.recordAchievements) };
     }
@@ -4337,6 +4441,9 @@ async function persistLeaderboardScoreRecord(options = {}) {
     const recordAchievements = isRecordReward
         ? await getSoloRecordAchievementsBeforeInsert(finalUid, score, recordDate, leaderboardRecordSnapshots, mode)
         : [];
+    const recordMail = options.notifyRecords === false ? null : leaderboardRecordNotice(leaderboardRecordSnapshots,
+        { uid: finalUid, matchId, playerName, score, date: recordDate, createdAt: Date.now() },
+        Object.fromEntries(LEADERBOARD_RECORD_PERIODS.map(period => [period, getLeaderboardPeriodStart(period)])));
 
     const savedScore = await Score.findOneAndUpdate(
         { playerId: finalUid, matchId },
@@ -4350,11 +4457,13 @@ async function persistLeaderboardScoreRecord(options = {}) {
                 mode,
                 photoUrl,
                 recordAchievements,
+                ...(recordMail ? { mailboxRecordNotice: recordMail, mailboxRecordPending: true } : {}),
                 date: recordDate
             }
         },
         { upsert: true, new: true }
     );
+    if (savedScore.mailboxRecordPending) queueRecordPush(publishLeaderboardMailboxRecord(savedScore), 'leaderboard_mailbox');
 
     if (!options.silent) {
         console.log(`✅ USPESAN UPIS: ${playerName} (UID: ${finalUid}) -> ${score} (${mode})`);
@@ -4365,7 +4474,8 @@ async function persistLeaderboardScoreRecord(options = {}) {
             notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
                 uid: finalUid,
                 playerName,
-                score
+                score,
+                date: recordDate
             }),
             'leaderboard_record'
         );
@@ -5298,6 +5408,7 @@ async function reviewTournamentDeadlines() {
                 });
                 if (!plan) continue;
                 emitTournamentStateUpdate();
+                for (const { uid } of plan.mail || []) notifyPlayerMailbox(uid);
                 for (const uid of plan.incident?.inactiveUids || []) {
                     const socket = io.sockets.sockets.get(onlinePlayers[uid]);
                     if (socket && getVerifiedUid(socket) === uid) void emitTournamentReliabilityStatus(socket).catch(() => {});
@@ -5493,6 +5604,7 @@ async function settleAuditedTournamentFinal() {
             })] };
     });
     if (!plan) return;
+    if (plan.final.record) io.emit('player_mailbox_official_changed');
     scheduleTournamentAutoReset();
     for (const award of plan.final.awards) {
         const profile = await UserProfile.findOne({ firebaseUid: award.uid }).lean();
@@ -5500,6 +5612,7 @@ async function settleAuditedTournamentFinal() {
             emitProfileSyncToUid(award.uid, profile);
             emitTournamentPrizeToUid(award.uid, { ...award.notice,
                 balance: profile.balance, tournamentWins: profile.tournamentWins });
+            notifyPlayerMailbox(award.uid);
         }
     }
     if (tournamentStateInitialized) {
@@ -5673,6 +5786,15 @@ function reopenTournamentScheduling(match, round) {
 }
 
 let tournamentReadinessStore = null;
+let tournamentMailWarnings = null;
+
+function getTournamentMailWarnings() {
+    return tournamentMailWarnings ||= createTournamentMailWarnings({ profiles: UserProfile, entries: PlayerMailboxEntry,
+        loadState: cycleId => mongoose.connection.db.collection('tournamentstates').findOne({ registrationCycleId: cycleId }),
+        getRuntimeState: () => tournamentState,
+        isMatchInPlay: (round, index, scheduleId) => tournamentState.bracket?.[round]?.[index]?.scheduling?.id === scheduleId
+            && isTournamentMatchInPlay(round, index), notify: notifyPlayerMailbox });
+}
 let tournamentReadinessService = null;
 let tournamentReadinessQueue = Promise.resolve();
 let tournamentReadinessWorkerBusy = false;
@@ -5830,6 +5952,8 @@ async function checkTournamentReadiness() {
         }
         if (tournamentNotificationsCore.isManaged(tournamentState)) {
             for (const notice of await store.syncMatchNotices(tournamentState.registrationCycleId)) emitPrivateTournamentNotice(notice);
+            try { await getTournamentMailWarnings().sync(tournamentState.registrationCycleId); }
+            catch (error) { console.warn('[Tournament mailbox warnings] Retry required:', error.code || error.name); }
         }
         await store.deliver(async (uid, notice) => {
             if (tournamentNotificationsCore.isMatchNotice(notice)) return sendPushToUids([uid], buildTournamentMatchPush(notice));
@@ -7073,6 +7197,11 @@ function emitTournamentPrizeToUid(uid, payload) {
     if (socket && getVerifiedUid(socket) === uid) socket.emit('tourney_prize_awarded', { ...payload, recipientUid: uid });
 }
 
+function notifyPlayerMailbox(uid) {
+    notifyChatUid(uid, 'player_mailbox_changed', { recipientUid: uid });
+    queueRecordPush(mailboxStore.migrate(uid), 'mailbox_history');
+}
+
 async function emitPendingTournamentPrizes(socket) {
     const uid = getVerifiedUid(socket);
     if (!uid || !MONGO_URI) return;
@@ -7133,7 +7262,9 @@ async function applyTournamentPrize(uid, notice) {
         $set: { balance: Math.min(MAX_BALANCE, Math.max(0, toSafeInt(previous.balance)) + notice.reward),
             lastTournamentPrizeId: notice.id },
         ...(notice.role === 'winner' ? { $inc: { tournamentWins: 1 } } : {}),
-        $push: { pendingTournamentPrizes: notice }
+        $push: { pendingTournamentPrizes: notice,
+            playerMailbox: appendMail(createMail(notice.role === 'winner' ? 'tournament_winner' : 'tournament_finalist',
+                { reward: notice.reward }, `tournament:${notice.id}`)) }
     }, { new: true, writeConcern: { w: 'majority' } });
     if (!user) return { ok: false };
 
@@ -7143,6 +7274,7 @@ async function applyTournamentPrize(uid, notice) {
         balance: user.balance,
         tournamentWins: user.tournamentWins
     });
+    notifyPlayerMailbox(uid);
 
     return { ok: true, user };
 }
@@ -7257,7 +7389,13 @@ async function settleTournamentFinalPrizes(match, winnerObj) {
 
 async function recordTournamentChampion(match, winnerObj) {
     if (tournamentState.auditPolicyVersion) return;
-    if (!match || !winnerObj || match.statsRecorded || match.statsRecordInProgress) return;
+    if (!match || !winnerObj || match.statsRecordInProgress) return;
+    if (match.statsRecorded && MONGO_URI) {
+        await publishMailboxChampion(tournamentChampionNotice({ tournamentNumber: safeTournamentNumber(tournamentState.tournamentNumber),
+            tournamentCycleId: tournamentState.registrationCycleId, winnerId: winnerObj.id, winnerName: winnerObj.name,
+            wonAt: tournamentState.finishedAt || match.resultRecordedAt }));
+        return;
+    }
 
     if (!MONGO_URI) {
         match.statsRecorded = true;
@@ -7289,6 +7427,8 @@ async function recordTournamentChampion(match, winnerObj) {
         );
 
         match.statsRecorded = true;
+
+        await publishMailboxChampion(tournamentChampionNotice({ ...championshipRecord, tournamentCycleId: tournamentState.registrationCycleId }));
 
         const stats = await buildTourneyStatsPayload();
         io.emit('tourney_stats_data', stats);
@@ -9657,7 +9797,23 @@ function queueMatchResultReconciliation(delayMs = 1000) {
     if (!MONGO_URI || matchResultReconcileTimer) return;
     matchResultReconcileTimer = setTimeout(async () => {
         matchResultReconcileTimer = null;
-        await reconcileIncompleteServerMatchResults();
+        try {
+            await reconcileIncompleteServerMatchResults();
+            await publishPendingLeaderboardMailboxRecords();
+            const pendingRanks = await UserProfile.find({ 'pendingLeagueRankMail.id': { $exists: true } }).limit(100)
+                .select('firebaseUid').lean();
+            for (const profile of pendingRanks) await publishLeagueRankMail(UserProfile, profile.firebaseUid, notifyPlayerMailbox);
+            const pendingStatistics = await UserProfile.find({ $or: [{ 'pendingStatisticsMail.id': { $exists: true } },
+                { statisticsMailDirty: true }] }).limit(100)
+                .select('firebaseUid').lean();
+            for (const profile of pendingStatistics) {
+                try { await processStatisticsMailbox(profile.firebaseUid); }
+                catch (error) { console.warn('[Statistics mailbox] Retry required:', error.code || error.name); }
+            }
+            await mailboxStore.drain();
+        } catch (error) {
+            console.error('[Match reconciliation] Retry required:', error.code || error.name);
+        }
     }, Math.max(100, toSafeInt(delayMs, 1000)));
     if (matchResultReconcileTimer.unref) matchResultReconcileTimer.unref();
 }
@@ -9669,6 +9825,17 @@ if (MONGO_URI) {
     if (matchResultReconcileInterval.unref) matchResultReconcileInterval.unref();
 }
 
+if (MONGO_URI && PLAYER_REFERRALS_ENABLED) {
+    let processingReferrals = false;
+    setInterval(async () => {
+        if (processingReferrals) return;
+        processingReferrals = true;
+        try { await playerReferrals.processDue(); }
+        catch (error) { console.warn('[Referral] Retry required:', error.code || error.name); }
+        finally { processingReferrals = false; }
+    }, 15_000).unref();
+}
+
 async function archiveLeagueQuarter(year, quarter) {
     if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4) return null;
     if (!isPastLeaguePeriod(year, quarter)) return null;
@@ -9678,7 +9845,10 @@ async function archiveLeagueQuarter(year, quarter) {
     const periodKey = getLeaguePeriodKey(year, quarter);
     const existingArchive = await LeagueHallOfFame.findOne({ periodKey }).lean();
     const archivedAtMs = existingArchive?.archivedAt ? new Date(existingArchive.archivedAt).getTime() : 0;
-    if (existingArchive && archivedAtMs >= settlement.settlesAt.getTime()) return existingArchive;
+    if (existingArchive && archivedAtMs >= settlement.settlesAt.getTime()) {
+        await publishMailboxChampion(leagueChampionNotice(existingArchive));
+        return existingArchive;
+    }
 
     const topScores = await fetchTopLeagueScoresForPeriod(year, quarter, 3);
 
@@ -9696,7 +9866,7 @@ async function archiveLeagueQuarter(year, quarter) {
     }));
 
     const champion = archivedScores[0] || null;
-    return LeagueHallOfFame.findOneAndUpdate(
+    const archive = await LeagueHallOfFame.findOneAndUpdate(
         { periodKey },
         {
             $set: {
@@ -9709,6 +9879,8 @@ async function archiveLeagueQuarter(year, quarter) {
         },
         { upsert: true, new: true }
     ).lean();
+    await publishMailboxChampion(leagueChampionNotice(archive));
+    return archive;
 }
 
 async function archiveCompletedLeagueQuarters() {
@@ -9843,6 +10015,7 @@ async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName,
 
     const migratedLeague = normalizeLeagueMigrationData(submittedStats.leagueData);
     if (!migratedLeague) return;
+    if (user.$locals) user.$locals.statisticsMailSuppressed = true;
 
     const currentPeriod = getServerQuarterInfo();
     const isCurrentPeriod = migratedLeague.year === currentPeriod.year && migratedLeague.quarter === currentPeriod.quarter;
@@ -10904,6 +11077,7 @@ function applyProfileStatsGuard(user, stats) {
     const incoming = normalizeProfileStats(stats);
     const hasPayload = hasProfileStatsPayload(stats, incoming);
     const allowLegacyImport = !user.statsMigrationApplied && hasPayload;
+    if (allowLegacyImport && user.$locals) user.$locals.statisticsMailSuppressed = true;
 
     const oldStats = {
         games: Math.max(0, toSafeInt(user.games)),
@@ -11323,8 +11497,64 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
     io.emit('tourney_state_update', tournamentState);
 }
 
+let mailboxGameNotices = [];
+try { mailboxGameNotices = parseGameNotices(process.env.PLAYER_MAILBOX_ANNOUNCEMENTS); }
+catch (_) { console.warn('PLAYER_MAILBOX_ANNOUNCEMENTS is invalid; personal mail remains available.'); }
+const mailboxStore = createMailboxStore({ profiles: UserProfile, entries: PlayerMailboxEntry,
+    notices: PlayerGameNotice, gameNotices: mailboxGameNotices });
+async function publishMailboxChampion(notice) {
+    if (notice && await persistChampionNotice(PlayerGameNotice, notice)) io.emit('player_mailbox_official_changed');
+}
+function publishLeaderboardMailboxRecord(score) {
+    return publishLeaderboardRecordNotice({ scores: Score, notices: PlayerGameNotice,
+        changed: () => io.emit('player_mailbox_official_changed') }, score);
+}
+async function publishPendingLeaderboardMailboxRecords() {
+    if (!MONGO_URI || mongoose.connection.readyState !== 1) return;
+    const pending = await Score.find({ mailboxRecordPending: true }).sort({ date: 1 }).limit(100)
+        .select('mailboxRecordNotice mailboxRecordPending').lean();
+    for (const score of pending) await publishLeaderboardMailboxRecord(score);
+}
+async function processStatisticsMailbox(uid) {
+    return profileWrites.run(uid, async () => {
+        const profile = await UserProfile.findOne({ firebaseUid: uid });
+        if (!profile) return;
+        if (profile.statisticsMailDirty) await profile.save();
+        await publishStatisticsMail(UserProfile, uid, notifyPlayerMailbox);
+    });
+}
+const playerSupport = createPlayerSupport({ connection: mongoose.connection, tickets: PlayerSupportTicket,
+    profiles: UserProfile, matches: MatchResult, submissions: MatchResultSubmissionDiagnostic,
+    disconnects: DisconnectDiagnostic, notify: notifyPlayerMailbox });
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
+    const mailboxAccess = { verifiedUid: getVerifiedUid, available: () => !!MONGO_URI && mongoose.connection.readyState === 1,
+        ownerUid: GLOBAL_CHAT_OWNER_UID };
+    registerPlayerMailbox(socket, { ...mailboxAccess, profiles: UserProfile, store: mailboxStore,
+        publishOfficialNotice: async ({ id, type, ...notice }) => {
+            const result = await PlayerGameNotice.updateOne({ _id: id }, { $setOnInsert: notice }, { upsert: true });
+            if (result.upsertedCount) io.emit('player_mailbox_official_changed');
+        },
+        notify: uid => {
+            for (const client of io.sockets.sockets.values()) {
+                if (client !== socket && getVerifiedUid(client) === uid) client.emit('player_mailbox_changed', { recipientUid: uid });
+            }
+        } });
+    playerSupport.bind(socket, mailboxAccess);
+    socket.on('player_referral_code', async (_data, ack) => {
+        if (typeof ack !== 'function') return;
+        const uid = getVerifiedUid(socket);
+        if (!uid) return ack({ ok: false, reason: 'auth_required' });
+        if (!referralAttributionAvailable()) return ack({ ok: false, reason: 'unavailable' });
+        try {
+            const code = await playerReferrals.issueCode(uid);
+            return ack(code ? { ok: true, code, recipientUid: uid } : { ok: false, reason: 'unavailable' });
+        } catch (error) {
+            console.warn('[Referral] Code unavailable:', error.code || error.name);
+            return ack({ ok: false, reason: 'unavailable' });
+        }
+    });
     profileWrites.bindSocket(socket, [
         'set_player_data', 'request_profile_sync', 'request_daily_challenge', 'global_chat_msg',
         'claim_trophy_reward', 'claim_daily_reward', 'check_quarter_reward',
@@ -11874,6 +12104,7 @@ io.on('connection', (socket) => {
 
             if (user) {
                 const allowLegacyH2HImport = !user.h2hMigrationApplied && !user.statsMigrationApplied;
+                if (allowLegacyH2HImport) user.$locals.statisticsMailSuppressed = true;
                 const emptyClientSnapshot = isEmptyClientProfileSnapshot(s);
                 const storedProfileHasProgress = hasMeaningfulStoredProfile(user);
                 if (emptyClientSnapshot && storedProfileHasProgress) {
@@ -12120,7 +12351,7 @@ io.on('connection', (socket) => {
                 await user.save();
                 await syncCurrentLeagueScoreFromUserProfile(user, data.name, socket.photoUrl || '');
 
-                emitProfileSync(socket, user);
+                emitProfileSync(socket, user, data.referralCode ? { referralChecked: true, recipientUid: verifiedUid } : {});
             } else {
                 const verifiedTournamentWins = await getVerifiedTournamentWins(verifiedUid);
                 const initialProfile = buildInitialProfileState(s, verifiedTournamentWins);
@@ -12135,8 +12366,12 @@ io.on('connection', (socket) => {
                 const initialHighscore = Math.max(scoreHistoryHighscore, initialProfile.stats.highscore);
                 const initialTotalScoreSum = initialProfile.stats.totalScoreSum;
 
+                const referral = referralAttributionAvailable() && data.referralCode
+                    ? await playerReferrals.prepareAttribution(verifiedUid, data.referralCode, uid => firebaseAuth.getUser(uid))
+                    : undefined;
                 user = new UserProfile({
                     firebaseUid: verifiedUid,
+                    referral,
                     playerName: data.name,
                     photoUrl: socket.photoUrl || '',
                     wins: initialWins, losses: initialLosses, games: initialGames,
@@ -12170,10 +12405,18 @@ io.on('connection', (socket) => {
                 });
                 normalizeActiveSelections(user);
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
-                await user.save();
+                let releaseReferralWrite;
+                if (referral) {
+                    try { releaseReferralWrite = await accountDeletion.guardWrite(referral.inviterUid); }
+                    catch (error) {
+                        if (error.code !== 'account_deleted') throw error;
+                        user.referral = undefined;
+                    }
+                }
+                try { await user.save(); } finally { releaseReferralWrite?.(); }
                 await syncCurrentLeagueScoreFromUserProfile(user, data.name, socket.photoUrl || '');
 
-                emitProfileSync(socket, user);
+                emitProfileSync(socket, user, data.referralCode ? { referralChecked: true, recipientUid: verifiedUid } : {});
             }
             
             socket.playerStats = {
@@ -12663,7 +12906,9 @@ io.on('connection', (socket) => {
                     },
                     {
                         $addToSet: { claimedLeagueRewards: rewardKey },
-                        $inc: { balance: rewardAmount }
+                        $inc: { balance: rewardAmount },
+                        ...(rewardAmount > 0 ? { $push: { playerMailbox: appendMail(
+                            createMail('league_reward', { rank, reward: rewardAmount }, `league:${rewardKey}`)) } } : {})
                     },
                     { new: true }
                 );
@@ -12685,6 +12930,7 @@ io.on('connection', (socket) => {
                 }
 
                 emitProfileSync(socket, updatedUser);
+                if (rewardAmount > 0) notifyPlayerMailbox(playerId);
                 socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
                 return replyQuarterReward({
                     ok: true,
@@ -13252,7 +13498,8 @@ io.on('connection', (socket) => {
                 { $replaceRoot: { newRoot: "$bestEntry" } },
                 { $sort: { numScore: -1, date: 1, stableUid: 1 } },
                 { $skip: offset },
-                { $limit: limit + (legacyRequest ? 0 : 1) }
+                { $limit: limit + (legacyRequest ? 0 : 1) },
+                { $project: { mailboxRecordNotice: 0, mailboxRecordPending: 0 } }
             ]);
 
             const hasMore = !legacyRequest && scores.length > limit;
@@ -14296,7 +14543,7 @@ io.on('connection', (socket) => {
             }));
         }
 
-        return { ok: true, friends: friendsData, requests: requestsData, notifications: notificationsData };
+        return { ok: true, recipientUid: profile.firebaseUid, friends: friendsData, requests: requestsData, notifications: notificationsData };
     };
 
     socket.on('search_player', async (query, ack) => {
@@ -14400,9 +14647,14 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            targetProfile.friendRequests = targetRequests;
-            targetProfile.friendRequests.push(me.firebaseUid);
-            await targetProfile.save();
+            const request = await UserProfile.updateOne({
+                firebaseUid: resolvedTargetUid, friendRequests: { $ne: me.firebaseUid }, friends: { $ne: me.firebaseUid }
+            }, {
+                $addToSet: { friendRequests: me.firebaseUid },
+                $push: { playerMailbox: appendMail(createMail('friend_request', { fromUid: me.firebaseUid, fromName: me.playerName })) }
+            });
+            if (!request.modifiedCount) return replyRequest({ ok: true, status: 'already_pending' });
+            notifyPlayerMailbox(resolvedTargetUid);
 
             const targetSocketId = getConnectedFriendSocketId(resolvedTargetUid);
             if (targetSocketId) {
@@ -14461,37 +14713,32 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            me.friendRequests = meRequests.filter(uid => uid !== challengerUid);
-
-            if (shouldAccept) {
-                if (!Array.isArray(me.friends)) me.friends = [];
-                if (!Array.isArray(friend.friends)) friend.friends = [];
-                if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
-                if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
-            }
-
             const challengerSocketId = getConnectedFriendSocketId(challengerUid);
-            const notificationPayload = {
-                name: me.playerName,
-                uid: me.firebaseUid,
-                photoUrl: me.photoUrl || ''
-            };
-
-            if (challengerSocketId) {
-                io.to(challengerSocketId).emit(shouldAccept ? 'friend_req_accepted' : 'friend_req_declined', notificationPayload);
-            } else {
-                if (!Array.isArray(friend.friendNotifications)) friend.friendNotifications = [];
-                friend.friendNotifications.push({
-                    type: shouldAccept ? 'accepted' : 'declined',
-                    fromUid: me.firebaseUid,
-                    fromName: me.playerName,
-                    photoUrl: me.photoUrl || '',
-                    createdAt: Date.now()
+            const notificationPayload = { name: me.playerName, uid: me.firebaseUid, photoUrl: me.photoUrl || '' };
+            if (hadRequest) {
+                const legacyNotice = { type: shouldAccept ? 'accepted' : 'declined', fromUid: me.firebaseUid,
+                    fromName: me.playerName, photoUrl: me.photoUrl || '', createdAt: Date.now() };
+                const mail = createMail(shouldAccept ? 'friend_accepted' : 'friend_declined', legacyNotice);
+                const applied = await mongoose.connection.transaction(async session => {
+                    const resolved = await UserProfile.updateOne({ firebaseUid: responderUid, friendRequests: challengerUid }, {
+                        $pull: { friendRequests: challengerUid },
+                        ...(shouldAccept ? { $addToSet: { friends: challengerUid } } : {})
+                    }, { session });
+                    if (!resolved.modifiedCount) return false;
+                    const sent = await UserProfile.updateOne({ firebaseUid: challengerUid }, {
+                        ...(shouldAccept ? { $addToSet: { friends: responderUid } } : {}),
+                        $push: { playerMailbox: appendMail(mail),
+                            ...(!challengerSocketId ? { friendNotifications: legacyNotice } : {}) }
+                    }, { session });
+                    if (!sent.matchedCount) throw new Error('friend_profile_missing');
+                    return true;
                 });
+                if (!applied) return replyResolve({ ok: false, reason: 'err_friend_request_missing' });
+                notifyPlayerMailbox(challengerUid);
+                if (challengerSocketId) {
+                    io.to(challengerSocketId).emit(shouldAccept ? 'friend_req_accepted' : 'friend_req_declined', notificationPayload);
+                }
             }
-
-            await me.save();
-            await friend.save();
 
             replyResolve({
                 ok: true,
@@ -14507,6 +14754,30 @@ io.on('connection', (socket) => {
             console.error(err);
             replyResolve({ ok: false, reason: 'err_server_conn' });
         }
+    });
+
+    socket.on('remove_friend', async (data = {}, ack) => {
+        if (typeof ack !== 'function') return;
+        const uid = getVerifiedUid(socket);
+        if (!uid) return ack({ ok: false, reason: 'err_friend_auth_required' });
+        if (!MONGO_URI || mongoose.connection.readyState !== 1) return ack({ ok: false, reason: 'err_friends_unavailable' });
+        const targetUid = data?.targetUid;
+        if (typeof targetUid !== 'string' || !/^[A-Za-z0-9_:-]{1,128}$/.test(targetUid) || targetUid === uid) {
+            return ack({ ok: false, reason: 'err_friend_target_missing' });
+        }
+        try {
+            const result = await profileWrites.run([uid, targetUid], () =>
+                removeFriendship({ connection: mongoose.connection, profiles: UserProfile }, uid, targetUid));
+            ack(getVerifiedUid(socket) === uid ? { ...result, recipientUid: uid } : { ok: false });
+            if (result.ok && result.removed) {
+                for (const client of io.sockets.sockets.values()) {
+                    const recipientUid = getVerifiedUid(client);
+                    if (client !== socket && [uid, targetUid].includes(recipientUid)) {
+                        client.emit('friendships_changed', { recipientUid });
+                    }
+                }
+            }
+        } catch (_) { ack({ ok: false, reason: 'err_server_conn' }); }
     });
 
     socket.on('get_friends_list', async (ack) => {
@@ -16665,6 +16936,11 @@ if (ACCOUNT_DELETION_ENABLED) {
 }
 server.listen(PORT, SERVER_RUNTIME.environment === 'test' ? '127.0.0.1' : undefined, () => {
     console.log(`🚀 Yamb Server sluša na portu ${PORT}`);
+    if (MONGO_URI) startPlayUpdateNotices({ environment: SERVER_RUNTIME.environment, env: process.env,
+        notices: PlayerGameNotice, available: () => mongoose.connection.readyState === 1,
+        onPublished: () => io.emit('player_mailbox_official_changed'),
+        onError: (stage, error) => console.warn('[Play update notice] Retry pending:', stage,
+            typeof error.response?.status === 'number' ? error.response.status : error.name) });
     if (MAINTENANCE_MODE) {
         console.log('🛠️ MAINTENANCE_MODE je uključen: igrači vide YotB ekran održavanja.');
     }

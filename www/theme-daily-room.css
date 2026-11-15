@@ -248,6 +248,115 @@ body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-them
     background: linear-gradient(145deg, #476941, #31573a) !important;
 }
 
+/* Generated PNG materials occupy the existing Daily button boxes. */
+body {
+    --daily-stop-button-png: url('assets/green-soft-clay/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FFFFFF;
+    --daily-double-button-png: url('assets/green-soft-clay/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #102315;
+    --daily-claim-button-png: url('assets/green-soft-clay/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #FFFFFF;
+}
+body.light-theme {
+    --daily-stop-button-png: url('assets/theme-packs/light/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FFFFFF;
+    --daily-double-button-png: url('assets/theme-packs/light/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #392817;
+    --daily-claim-button-png: url('assets/theme-packs/light/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #392817;
+}
+body.medium-theme {
+    --daily-stop-button-png: url('assets/theme-packs/medium/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FFF6F2;
+    --daily-double-button-png: url('assets/theme-packs/medium/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #3A1424;
+    --daily-claim-button-png: url('assets/theme-packs/medium/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #FFF6F2;
+}
+body.winter-theme {
+    --daily-stop-button-png: url('assets/theme-packs/winter/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FFFFFF;
+    --daily-double-button-png: url('assets/theme-packs/winter/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #18384B;
+    --daily-claim-button-png: url('assets/theme-packs/winter/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #18384B;
+}
+body.neon-theme {
+    --daily-stop-button-png: url('assets/theme-packs/neon/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #F4FAFF;
+    --daily-double-button-png: url('assets/theme-packs/neon/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #071923;
+    --daily-claim-button-png: url('assets/theme-packs/neon/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #F4FAFF;
+}
+body.amethyst-theme {
+    --daily-stop-button-png: url('assets/theme-packs/amethyst/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FBF6FF;
+    --daily-double-button-png: url('assets/theme-packs/amethyst/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #2C183A;
+    --daily-claim-button-png: url('assets/theme-packs/amethyst/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #FBF6FF;
+}
+body.easter-theme {
+    --daily-stop-button-png: url('assets/theme-packs/easter/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FFFFFF;
+    --daily-double-button-png: url('assets/theme-packs/easter/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #3D4434;
+    --daily-claim-button-png: url('assets/theme-packs/easter/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #3D4434;
+}
+body.desert-theme {
+    --daily-stop-button-png: url('assets/theme-packs/desert/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #FFFFFF;
+    --daily-double-button-png: url('assets/theme-packs/desert/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #443027;
+    --daily-claim-button-png: url('assets/theme-packs/desert/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #443027;
+}
+body.moon-theme {
+    --daily-stop-button-png: url('assets/theme-packs/moon/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #F5F5F7;
+    --daily-double-button-png: url('assets/theme-packs/moon/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #242630;
+    --daily-claim-button-png: url('assets/theme-packs/moon/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #F5F5F7;
+}
+body.severna-theme {
+    --daily-stop-button-png: url('assets/theme-packs/severna/canonical/daily-buttons/stop-v1.png?v=1');
+    --daily-stop-button-ink: #F5FBFF;
+    --daily-double-button-png: url('assets/theme-packs/severna/canonical/daily-buttons/double-v1.png?v=1');
+    --daily-double-button-ink: #0A2934;
+    --daily-claim-button-png: url('assets/theme-packs/severna/canonical/daily-buttons/claim-v1.png?v=1');
+    --daily-claim-button-ink: #F5FBFF;
+}
+body #glass-daily-overlay .daily-glass-card .daily-glass-btn {
+    background: transparent !important;
+    background-position: center !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+}
+body #glass-daily-overlay .daily-glass-card .daily-glass-btn-stop {
+    background-image: var(--daily-stop-button-png) !important;
+    color: var(--daily-stop-button-ink) !important;
+}
+body #glass-daily-overlay .daily-glass-card .daily-glass-btn-double {
+    background-image: var(--daily-double-button-png) !important;
+    color: var(--daily-double-button-ink) !important;
+}
+body #glass-daily-overlay .daily-glass-card .daily-glass-btn-claim {
+    background-image: var(--daily-claim-button-png) !important;
+    color: var(--daily-claim-button-ink) !important;
+}
+body #glass-daily-overlay .daily-glass-btn:focus-visible {
+    outline: 2px solid var(--daily-text, #fff8eb);
+    outline-offset: 2px;
+}
+
 /* Daily notices share Green's typography; palette and material stay theme-specific. */
 body #custom-modal-overlay.modal-context-daily .custom-modal {
     font-family: 'Montserrat', sans-serif;

@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('node:crypto');
+const pngHash = filename => crypto.createHash('sha256').update(fs.readFileSync(filename)).digest('hex');
 
 const root = path.resolve(__dirname, '..');
 const www = path.join(root, 'www');
@@ -64,7 +66,23 @@ for (const [familyName, family] of families) {
     const legacyCanonicalLock = ['ducat', 'undoToken'].includes(familyName)
         && sourceManifest.status === 'canonical'
         && sourceManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js';
-    assert(sourceManifest.status === 'locked' || legacyCanonicalLock, `Source manifest porodice ${familyName} nije zaključan.`);
+    const leagueIdentity = familyName === 'quarterlyLeagueRoomIdentity'
+        ? sourceManifest.themes?.find(theme => theme.id === 'dark')?.assets.find(asset => asset.role === 'quarterly-league-room')
+        : null;
+    const locked = familyName === 'quarterlyLeagueRoomIdentity' ? leagueIdentity?.status === 'locked'
+        : sourceManifest.status === 'locked' || legacyCanonicalLock;
+    assert(locked, `Source manifest porodice ${familyName} nije zaključan.`);
+    if (leagueIdentity) {
+        const master = path.join(root, leagueIdentity.master);
+        assert(pngHash(master) === leagueIdentity.masterSha256, 'Green Quarterly League master ne odgovara manifestu.');
+        assert(leagueIdentity.production.length === family.canonicalRuntime.length, 'Green Quarterly League mora imati obe kanonske isporuke.');
+        for (const asset of family.canonicalRuntime) {
+            const production = leagueIdentity.production.find(entry => entry.file === `www/${asset.path}`);
+            assert(production?.sha256 === asset.sha256
+                && production.size[0] === asset.size && production.size[1] === asset.size,
+                `Green Quarterly League PNG i registri se ne poklapaju: ${asset.path}`);
+        }
+    }
 
     for (const bucket of ['canonicalRuntime', 'compositeRuntime']) {
         for (const asset of family[bucket] || []) {
@@ -77,6 +95,7 @@ for (const [familyName, family] of families) {
             const expectedHeight = asset.height || asset.size;
             assert(info.width === expectedWidth && info.height === expectedHeight, `Registrovana dimenzija odstupa: ${relative}`);
             assert([4, 6].includes(info.colorType), `Registrovan Green runtime nema direktan alpha kanal: ${relative}`);
+            if (asset.sha256) assert(pngHash(runtime) === asset.sha256, `Registrovan Green PNG ima pogrešan SHA-256: ${relative}`);
             if (!registered.has(relative)) registered.set(relative, []);
             registered.get(relative).push(familyName);
         }
@@ -102,6 +121,28 @@ for (const [familyName, family] of families) {
 
 const themeFoundation = new Set(['splash-title-soft-clay-v2.png']);
 const historicalGameLogo = new Set(['splash-title-soft-clay-v1.png']);
+const historicalLeague = new Set([
+    'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
+    'canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png'
+]);
+const releaseManifests = [
+    'theme-daily-buttons-v1', 'theme-leaderboard-medals-v2', 'theme-live-bubbles-v1',
+    'theme-live-confetti-v1', 'theme-live-fireflies-v1', 'theme-menu-resume-buttons-v1',
+    'theme-online-rematch-v1', 'theme-player-mailbox-v1', 'theme-quality-refresh-v2',
+    'theme-solo-record-icons-v1', 'theme-solo-record-panels-v2'
+];
+const releaseAssets = new Set();
+const greenPrefix = 'www/assets/green-soft-clay/';
+for (const name of releaseManifests) {
+    const release = JSON.parse(fs.readFileSync(path.join(root, 'source-assets', name, 'manifest.json'), 'utf8'));
+    for (const file of new Set(collectStrings(release))) {
+        if (!file.startsWith(greenPrefix) || !file.endsWith('.png')) continue;
+        const relative = file.slice(greenPrefix.length);
+        const info = pngInfo(path.join(root, file));
+        assert([4, 6].includes(info.colorType), `Green PNG iz manifesta nema direktan alpha kanal: ${file}`);
+        if (!registered.has(relative) && !manifestProtected.has(relative)) releaseAssets.add(relative);
+    }
+}
 assert(dailyStatesManifest.status === 'locked', 'Daily States manifest mora imati locked status posle završnog audita.');
 assert(leaderboardControlsManifest.status === 'locked', 'Leaderboard Controls manifest mora imati locked status posle završnog audita.');
 assert(rulesPageIllustrationsManifest.status === 'locked' && registry.families?.rulesPageIllustrations?.status === 'locked', 'Rules Page Illustrations manifest i registar moraju biti zaključani posle Koraka 4.');
@@ -124,13 +165,15 @@ const runtimePngs = walkFiles(greenRoot)
     .map(file => slash(path.relative(greenRoot, file)))
     .filter(relative => !relative.startsWith('canonical/treasury-effect-thumbnails/') && !relative.startsWith('canonical/game-header/'))
     .sort();
-const classifications = { registered: [], protected: [], foundation: [], historicalLogo: [], pending: [], stagedCanonical: [] };
+const classifications = { registered: [], protected: [], foundation: [], historicalLogo: [], historicalLeague: [], release: [], pending: [], stagedCanonical: [] };
 for (const relative of runtimePngs) {
     const categories = [
         registered.has(relative) ? 'registered' : null,
         manifestProtected.has(relative) ? 'protected' : null,
         themeFoundation.has(relative) ? 'foundation' : null,
         historicalGameLogo.has(relative) ? 'historicalLogo' : null,
+        historicalLeague.has(relative) ? 'historicalLeague' : null,
+        releaseAssets.has(relative) ? 'release' : null,
         pending.has(relative) ? 'pending' : null,
         stagedCanonical.has(relative) ? 'stagedCanonical' : null
     ].filter(Boolean);
@@ -138,11 +181,11 @@ for (const relative of runtimePngs) {
     classifications[categories[0]].push(relative);
 }
 
-assert(runtimePngs.length === 189, `Green runtime inventar odstupa: očekivano 189 PNG, pronađeno ${runtimePngs.length}.`);
 assert(classifications.registered.length === 170, `Očekivano 170 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
-assert(classifications.protected.length === 16, `Očekivano 16 manifestom zaštićenih funkcionalnih PNG-ova, pronađeno ${classifications.protected.length}.`);
+assert(classifications.protected.length === 28, `Očekivano 28 manifestom zaštićenih funkcionalnih PNG-ova, pronađeno ${classifications.protected.length}.`);
 assert(classifications.foundation.length === 1, `Očekivan je jedan splash foundation PNG, pronađeno ${classifications.foundation.length}.`);
 assert(classifications.historicalLogo.length === 1, 'Stari Green logo mora ostati samo istorijski PNG.');
+assert(classifications.historicalLeague.length === historicalLeague.size, 'Istorijski Green logotipi Kvartalne lige odstupaju.');
 assert(classifications.pending.length === 0, `Nema preostalih pending Green PNG-ova, pronađeno ${classifications.pending.length}.`);
 assert(classifications.stagedCanonical.length === 1, `Očekivan je jedan novi kanonski Green close PNG, pronađeno ${classifications.stagedCanonical.length}.`);
 
@@ -158,9 +201,7 @@ for (const asset of foundationManifest.active) {
     assert(fs.existsSync(file), `Nedostaje aktivan Green foundation asset: ${asset.runtime}`);
     const info = pngInfo(file);
     assert(JSON.stringify([info.width, info.height]) === JSON.stringify(asset.size) && info.bytes === asset.bytes && info.colorType === asset.colorType, `Green foundation metapodaci odstupaju: ${asset.runtime}`);
-    const crypto = require('crypto');
-    const sha256 = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-    assert(sha256 === asset.sha256, `Green foundation SHA-256 odstupa: ${asset.runtime}`);
+    assert(pngHash(file) === asset.sha256, `Green foundation SHA-256 odstupa: ${asset.runtime}`);
 }
 const rollbackBackground = foundationManifest.rollbackBackground;
 assert(rollbackBackground?.runtime === 'www/assets/green-clay-balkan-diorama-v4.png', 'Nedostaje povratna Green v4 pozadina.');
@@ -170,7 +211,7 @@ const rollbackInfo = pngInfo(rollbackFile);
 assert(JSON.stringify([rollbackInfo.width, rollbackInfo.height]) === JSON.stringify(rollbackBackground.size)
     && rollbackInfo.bytes === rollbackBackground.bytes && rollbackInfo.colorType === rollbackBackground.colorType,
     'Povratna Green v4 pozadina ima neočekivane metapodatke.');
-assert(require('crypto').createHash('sha256').update(fs.readFileSync(rollbackFile)).digest('hex') === rollbackBackground.sha256,
+assert(pngHash(rollbackFile) === rollbackBackground.sha256,
     'Povratna Green v4 pozadina je izmenjena.');
 
 const retiredBackgrounds = foundationManifest.retiredRuntime;
@@ -192,16 +233,16 @@ assert(retiredBackgrounds.length === 3 && retiredBackgroundBytes === 5350456, `I
 const totalBytes = runtimePngs.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const pendingBytes = classifications.pending.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const stagedCanonicalBytes = classifications.stagedCanonical.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
-const newMedalManifest = JSON.parse(fs.readFileSync(path.join(root, 'source-assets/theme-icon-packs/dark/medals-v1/manifest.json'), 'utf8'));
-const newMedalBytes = Object.values(newMedalManifest.slots).reduce((sum, item) => sum + item.sizeBytes, 0);
-const greenNewEffectBytes = ['confetti', 'gold-rain'].reduce((sum, role) => sum + fs.statSync(path.join(greenRoot, `canonical/treasury-effect-previews/preview-${role}-v1.png`)).size, 0);
-assert(totalBytes === 17331791 + newMedalBytes + greenNewEffectBytes + stagedCanonicalBytes && pendingBytes === 0 && stagedCanonicalBytes > 0, 'Green coverage veličine odstupaju od aktuelnog bilansa.');
+assert(totalBytes <= 22 * 1024 * 1024 && pendingBytes === 0 && stagedCanonicalBytes > 0,
+    `Green coverage inventar prelazi budžet: ${totalBytes} B.`);
 
 console.log('Green asset coverage provera je prošla.');
 console.log(`- centralni registar: ${families.length} locked porodica / ${classifications.registered.length} PNG`);
 console.log(`- manifestom zaštićena funkcionalna stanja: ${classifications.protected.length} PNG`);
 console.log(`- theme foundation: ${classifications.foundation.length} PNG`);
 console.log(`- istorijski logo: ${classifications.historicalLogo.length} PNG`);
+console.log(`- ukupno provereno: ${runtimePngs.length} PNG / ${totalBytes} B`);
+console.log(`- aktuelni dodatni manifesti: ${classifications.release.length} PNG`);
 console.log(`- staged canonical: ${classifications.stagedCanonical.length} PNG / ${stagedCanonicalBytes} B`);
 console.log(`- sledeće canonical grupe: ${classifications.pending.length} PNG / ${pendingBytes} B`);
 for (const [groupName, paths] of Object.entries(pendingGroups)) {

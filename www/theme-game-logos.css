@@ -161,3 +161,94 @@ body.easter-theme #splash-screen.has-login .splash-welcome-copy {
         gap: 6px !important;
     }
 }
+.yamb-facebook-login[hidden], .yamb-facebook-link[hidden], #referral-entry[hidden],
+#player-mailbox-referral[hidden] { display: none !important; }
+#referral-entry {
+    color: var(--text-main);
+    font-size: .78rem;
+    text-align: center;
+}
+#referral-entry summary { cursor: pointer; }
+#referral-entry label { display: block; margin: 4px 0; }
+#referral-code {
+    width: 14ch;
+    color: #202124;
+    background: #fff;
+    font-size: 16px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.settings-auth-providers[hidden], .yamb-google-link[hidden] { display: none !important; }
+.yamb-facebook-logo {
+    display: block;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: none;
+}
+html body #splash-screen #splash-login-container :is(#dugmeGooglePrijava, #dugmeFacebookPrijava) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px !important;
+    box-sizing: border-box;
+    width: min(240px, 100%) !important;
+    min-height: 48px !important;
+    margin: 0 !important;
+    padding: 10px 20px !important;
+    border: 1px solid #dadce0 !important;
+    border-radius: 24px !important;
+    background: #fff !important;
+    color: #202124 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: .9rem !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    text-shadow: none !important;
+    box-shadow: 0 3px 9px #0003 !important;
+    cursor: pointer;
+}
+html body #splash-screen #splash-login-container #dugmeFacebookPrijava[hidden] { display: none !important; }
+#settings-screen#settings-screen.settings-fit .settings-auth-providers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+}
+#settings-screen#settings-screen.settings-fit :is(.yamb-facebook-link, .yamb-google-link) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 36px;
+    max-width: 100%;
+    margin: 0;
+    padding: 5px 12px;
+    border: 1px solid var(--settings-picker-line);
+    border-radius: 10px;
+    color: var(--settings-picker-ink);
+    background: var(--settings-picker-raised);
+    font-family: 'Montserrat', sans-serif;
+    font-size: .75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: none;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--settings-picker-ink) 12%, transparent);
+    cursor: pointer;
+}
+#settings-screen .yamb-provider-label { text-transform: uppercase; }
+#settings-screen#settings-screen.settings-fit .yamb-facebook-link[data-connected="true"] {
+    opacity: 1;
+    cursor: default;
+}
+html body #splash-screen #dugmeFacebookPrijava:focus-visible {
+    outline: 2px solid #0866ff;
+    outline-offset: 3px;
+}
+#settings-screen#settings-screen.settings-fit :is(.yamb-facebook-link, .yamb-google-link):focus-visible {
+    outline: 2px solid var(--settings-picker-accent);
+    outline-offset: 2px;
+}

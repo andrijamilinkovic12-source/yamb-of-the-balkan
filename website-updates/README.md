@@ -4,6 +4,8 @@ This directory contains review files for the existing informational Firebase Hos
 
 `node scripts/prepare-account-privacy-site.cjs` regenerates `public/` from the game deletion UI modules and existing website assets. The real Hosting source is `C:\Users\andri\OneDrive\Desktop\YAMB_WEB_SAJT\public`, project `yamb-of-the-balkan---web`. The game authentication project is separately `yamb-of-the-balkan`; do not replace it with the Hosting project.
 
+On 15 November 2026, the SR/EN privacy and terms pages and the account deletion page were updated in this workspace. They describe optional Google/Facebook linking, deletion of the shared Yamb profile, and the three referral rewards. Use `node scripts/prepare-account-privacy-site.cjs --legal-only` to regenerate these pages and the matching QA copies. The release plan schedules synchronization to the Hosting source and publication in step 6.
+
 The prepared local website files were copied to that source on 2026-11-01. A backup is in `tmp/website-before-account-privacy-20261101-231715` inside the game workspace. Subsequent generation does not automatically synchronize the external website folder.
 
 On 2026-11-03, all 11 reviewed HTML/JS/CSS files were synchronized again to the real local Hosting source, including the latest Analytics SR/EN policy drafts. File hashes match. The immediately preceding versions are backed up at `tmp/website-before-analytics-sync-20261103-154555` in the game workspace. No Hosting deploy was run.

@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.YAMB_PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
-const output=path.join(root,'tmp/invite-friend-layout-runtime'),index=read('www/index.html');
+const output=path.join(root,'tmp/invite-friend-layout-runtime'+(process.env.YAMB_FRIEND_REMOVAL_ONLY?'-removal':'')),index=read('www/index.html');
 const themes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
 const sheets=[...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
 const body=index.slice(index.indexOf('<body'),index.lastIndexOf('</body>')+7).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
@@ -16,9 +16,9 @@ async function main(){
   const context=await browser.newContext();
   await context.route('**/*',async route=>{const u=new URL(route.request().url());if(u.hostname!=='invite-fixture.local')return route.abort();if(u.pathname==='/www/fixture.html')return route.fulfill({contentType:'text/html',body:fixture});const file=path.resolve(root,'.'+decodeURIComponent(u.pathname));if(!file.startsWith(path.join(root,'www')+path.sep)||!fs.existsSync(file))return route.abort();return route.fulfill({contentType:({'.css':'text/css','.js':'text/javascript','.png':'image/png'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});});
   const page=await context.newPage();
-  for(const viewport of [{width:320,height:568},{width:360,height:640},{width:360,height:780},{width:390,height:844},{width:430,height:932}]){
+  for(const viewport of (process.env.YAMB_FRIEND_REMOVAL_ONLY?[{width:320,height:568}]:[{width:320,height:568},{width:360,height:640},{width:360,height:780},{width:390,height:844},{width:430,height:932}])){
    await page.setViewportSize(viewport);const baseline={};
-   for(const theme of themes){
+   for(const theme of (process.env.YAMB_FRIEND_REMOVAL_ONLY?themes.slice(0,1):themes)){
     await page.goto('http://invite-fixture.local/www/fixture.html');
     await page.evaluate(({theme,themes})=>{localStorage.clear();localStorage.setItem('yamb_theme',theme);localStorage.setItem('yamb_lang','sr');document.body.className=theme==='dark'?'':theme+'-theme';document.documentElement.dataset.splashTheme=theme;document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));document.querySelectorAll('[id*="splash"],[id*="loading-gate"]').forEach(e=>e.remove());window.YAMB_THEME_IDS=themes;window.YAMB_FREE_THEME_IDS=['dark'];window.filterYambThemeIds=a=>a;}, {theme,themes});
     await page.addScriptTag({content:read('www/theme-quality-assets.js')});
@@ -84,6 +84,93 @@ async function main(){
   }
   fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({scope:'Actual startPrivateHosting/joinPrivateGame/renderFriendsList/renderInviteOwnerRival and socket UI handlers with synthetic data; blocked network, no real account/invite/match. Animations disabled; UTF-8 and possible offline font fallback.',rows,failures},null,2)+'\n');
   assert.equal(failures.length,0,failures.slice(0,35).join('\n'));console.log(`PASS: ${rows.length} Invite Friend states/theme/viewports; Green geometry/type, PNGs, search preservation and safe bounds.`);
+  await page.setViewportSize({width:320,height:568});
+  for(const theme of themes) for(const language of ['sr','en']) {
+   await page.evaluate(({theme,language})=>{
+    clearInterval(app.friendsInterval);app.modal.close();
+    localStorage.setItem('yamb_uid','fixture-owner');localStorage.setItem('yamb_lang',language);localStorage.setItem('yamb_theme',theme);
+    document.body.className=theme==='dark'?'':theme+'-theme';document.documentElement.dataset.splashTheme=theme;
+    document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));
+    document.getElementById('waiting-screen').classList.add('active','is-hosting-invite');
+    fixtureEmits=[];window.failRemoval=false;app.friendRemovalPending=null;
+    app.friendsListUids=fixtureFriends.map(f=>f.uid);
+    app.emitFriendAck=async(event,payload)=>{fixtureEmits.push([event,payload]);return failRemoval?{ok:false,reason:'err_server_conn'}:{ok:true,recipientUid:'fixture-owner'};};
+    app.renderFriendsList(fixtureFriends,[{uid:'pending-player',name:'Pending player'}]);
+   },{theme,language});
+   const button=page.locator('.friend-player-card.is-offline .friend-remove-btn');
+   assert.equal(await button.isEnabled(),true,'Offline friends can also be removed');
+   assert.match(await button.evaluate(e=>getComputedStyle(e).backgroundImage),theme==='dark'?/green-soft-clay/:new RegExp('theme-packs/'+theme));
+   await button.click();
+   assert.equal(await page.locator('#custom-modal-overlay').isVisible(),true);
+   assert.equal(await page.locator('#cm-ok').textContent(),language==='sr'?'Ukloni':'Remove');
+   const confirmBox=await page.locator('#custom-modal-overlay .custom-modal').boundingBox();
+   if(confirmBox)assert.ok(confirmBox.y>=24&&confirmBox.y+confirmBox.height<=568-48,'Confirmation respects mobile safe areas');
+   await page.locator('#cm-cancel').click();
+   assert.equal(await page.evaluate(()=>fixtureEmits.filter(([e])=>e==='remove_friend').length),0,'Cancel sends no removal');
+   await button.click();
+   await page.locator('#cm-ok').click();
+   await page.waitForFunction(()=>document.querySelectorAll('.friend-player-card').length===1);
+   assert.equal(await page.locator('.friend-request-card').count(),1,'Other incoming requests are preserved');
+   assert.equal(await page.evaluate(()=>fixtureEmits.filter(([e])=>e==='remove_friend').length),1);
+   assert.deepEqual(await page.evaluate(()=>app.friendsListUids),['friend-a']);
+   await page.evaluate(()=>{window.failRemoval=true;});
+   await page.locator('.friend-player-card .friend-remove-btn').click();
+   await page.locator('#cm-ok').click();
+   await page.waitForFunction(()=>app.friendRemovalPending===null);
+   assert.equal(await page.locator('.friend-player-card').count(),1,'Failed removal keeps the card for retry');
+   await page.evaluate(()=>{app.modal.close();window.failRemoval=false;});
+   await page.locator('.friend-player-card .friend-remove-btn').click();
+   const calls=await page.evaluate(()=>fixtureEmits.filter(([e])=>e==='remove_friend').length);
+   await page.evaluate(()=>localStorage.setItem('yamb_uid','different-account'));
+   await page.locator('#cm-ok').click();
+   await page.waitForFunction(()=>app.friendRemovalPending===null);
+   assert.equal(await page.evaluate(()=>fixtureEmits.filter(([e])=>e==='remove_friend').length),calls,'Account changes cancel an old confirmation');
+  }
+  console.log('PASS: Friend removal confirmation, cancel, server failure, offline friends, account changes and canonical PNG in all 10 themes / both languages.');
+  // Use the actual Online Players renderer and actual friend-state socket
+  // handlers, with only transport responses supplied by the local fixture.
+  await page.addScriptTag({content:online.slice(online.indexOf('let onlinePlayersRefreshTimer'))});
+  await page.addScriptTag({content:read('www/theme-online-players-room.js')});
+  const friendStateStart=game.indexOf("        this.socket.on('friends_list_data',");
+  const friendStateEnd=game.indexOf("        this.socket.on('search_results',",friendStateStart);
+  assert(friendStateStart>0&&friendStateEnd>friendStateStart);
+  await page.addScriptTag({content:'window.bindFriendStateFixture=function(){'+game.slice(friendStateStart,friendStateEnd)+'};'});
+  await page.evaluate(()=>{
+   app.modal.close();localStorage.setItem('yamb_uid','fixture-owner');
+   app.playerId=app.socketVerifiedUid='fixture-owner';app.socket.id='owner-socket';
+   window.relationshipActive=true;window.friendStateEmits=[];window.friendStateAlerts=[];
+   app.modal.alert=async(...args)=>friendStateAlerts.push(args);
+   app.showServerNotice=(...args)=>friendStateAlerts.push(args);
+   app.socket.emit=(event,...args)=>{
+    friendStateEmits.push([event,...args]);
+    if(event==='get_friends_list')queueMicrotask(()=>fixtureHandlers.friends_list_data({ok:true,recipientUid:'fixture-owner',
+     friends:relationshipActive?[fixtureFriends[0]]:[],requests:[],notifications:[]}));
+    if(event==='get_online_players_list')queueMicrotask(()=>fixtureHandlers.online_players_list_data?.([
+     {uid:'friend-a',socketId:'peer-socket',name:'Aleksandar Petrovic',isFriend:relationshipActive,isPlaying:false}
+    ]));
+   };
+   bindFriendStateFixture.call(app);
+   app.friendsListUids=['friend-a'];app.renderFriendsList([fixtureFriends[0]],[]);
+   openOnlinePlayersModal();
+  });
+  const onlineFriend=page.locator('.online-player-action--friend');
+  await onlineFriend.waitFor();
+  assert.equal(await onlineFriend.isDisabled(),true,'An existing friend cannot receive a duplicate request');
+  await page.evaluate(()=>{relationshipActive=false;fixtureHandlers.friendships_changed({recipientUid:'fixture-owner'});});
+  await page.waitForFunction(()=>document.querySelectorAll('.friend-player-card').length===0);
+  await page.waitForFunction(()=>!document.querySelector('.online-player-action--friend').disabled);
+  assert.deepEqual(await page.evaluate(()=>app.friendsListUids),[],'Silent refresh removes the cached relationship too');
+  assert.deepEqual(await page.evaluate(()=>friendStateAlerts),[],'The peer receives no removal alert');
+  const validCalls=await page.evaluate(()=>friendStateEmits.length);
+  await page.evaluate(()=>fixtureHandlers.friendships_changed({recipientUid:'another-account'}));
+  assert.equal(await page.evaluate(()=>friendStateEmits.length),validCalls,'Foreign-account refresh events are ignored');
+  await page.evaluate(()=>{window.newRequestArgs=null;app.sendFriendRequest=async(...args)=>{newRequestArgs=args;return true;};});
+  await onlineFriend.click();
+  assert.equal(await page.evaluate(()=>newRequestArgs[2]),'friend-a','The enabled button starts a fresh friend request');
+  await page.evaluate(()=>{relationshipActive=true;fixtureHandlers.friendships_changed({recipientUid:'fixture-owner'});});
+  await page.waitForFunction(()=>document.querySelectorAll('.friend-player-card').length===1&&document.querySelector('.online-player-action--friend').disabled);
+  await page.evaluate(()=>closeOnlinePlayersModal());
+  console.log('PASS: Silent peer refresh, open friend cards, Online Players add button, fresh-request wiring, re-friending and account isolation.');
  }finally{await browser.close();}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

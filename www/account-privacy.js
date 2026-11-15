@@ -106,13 +106,28 @@
             if (!await confirmAction(strings().warning)) return;
             const auth = window.Capacitor?.Plugins?.FirebaseAuthentication;
             if (!auth) return await notice(strings().unavailable);
-            const signedIn = await auth.signInWithGoogle();
-            const user = signedIn?.user;
-            if (user?.uid !== uid) {
-                await clearLocalAccount(uid, false);
-                await notice(strings().wrong);
-                window.location.reload();
-                return;
+            const identityPlugin = window.Capacitor?.Plugins?.AccountIdentity;
+            let user;
+            if (identityPlugin) {
+                user = (await auth.getCurrentUser())?.user;
+                if (user?.uid !== uid) return await notice(strings().wrong);
+                const providers = user.providerData || [];
+                const google = providers.some(provider => provider.providerId === 'google.com');
+                const provider = google ? 'google.com' : 'facebook.com';
+                if (!google && !providers.some(item => item.providerId === provider)) return await notice(strings().unavailable);
+                const result = google ? await auth.signInWithGoogle({ skipNativeAuth: true })
+                    : await auth.signInWithFacebook({ skipNativeAuth: true });
+                const token = google ? result?.credential?.idToken : result?.credential?.accessToken;
+                if (!token) throw new Error('reauthentication_failed');
+                await identityPlugin.reauthenticate({ uid, provider, token });
+            } else {
+                user = (await auth.signInWithGoogle())?.user;
+                if (user?.uid !== uid) {
+                    await clearLocalAccount(uid, false);
+                    await notice(strings().wrong);
+                    window.location.reload();
+                    return;
+                }
             }
             const identity = String(user.email || user.displayName || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
             if (!await confirmAction(strings().confirm + '<br><strong>' + identity + '</strong><br><br>' + strings().finalWarning)) return;
@@ -127,7 +142,8 @@
             if (/cancel|12501|popup-closed/i.test(error?.message || '')) return;
             const safeCode = String(error?.code || 'unknown');
             console.warn('[Account deletion] Request failed:', /^[A-Za-z0-9_/-]{1,80}$/.test(safeCode) ? safeCode : 'unknown');
-            await notice(error?.code === 'recent_sign_in_required' ? strings().recent
+            await notice(/reauthentication_failed|identity_changed/.test(error?.message || '') ? strings().wrong
+                : error?.code === 'recent_sign_in_required' ? strings().recent
                 : accepted || api.savedReceipt() ? strings().uncertain : strings().unavailable);
         } finally {
             busy = false;

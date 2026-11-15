@@ -66,6 +66,7 @@ const entries = (theme, room) => {
     } else if (room === 'daily-challenge') {
         add('identity', themed(theme, 'canonical/daily-room-identity/daily-room-v1.png'));
         family('daily-states', ['task', 'complete', 'already-played']);
+        family('daily-buttons', ['stop', 'double', 'claim']);
         add('reward-video', themed(theme, 'daily/reward-video-v3.png'));
         add('ducat', themed(theme, 'canonical/ducat/ducat-inline-v1.png'));
     }
