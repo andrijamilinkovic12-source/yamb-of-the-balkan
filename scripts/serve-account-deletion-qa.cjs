@@ -161,7 +161,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, async () => {
     app.get('/native-preview.html', (_req, res) => res.sendFile(path.join(root, 'qa/account-deletion-native.html')));
     app.get('/delete-account.html', (_req, res) => {
         let html = fs.readFileSync(path.join(root, 'website-updates/public/delete-account.html'), 'utf8');
-        html = html.replace('src="account-deletion-web.js?v=1"', 'src="/__qa__/web-bootstrap.js"');
+        html = html.replace(/src="account-deletion-web\.js\?v=\d+"/, 'src="/__qa__/web-bootstrap.js"');
         html = html.replace('<body>', '<body><div style="padding:10px;text-align:center;background:#e6d298;color:#302b19;font:13px Arial">LOKALNA PROBA — Firebase emulator i privremena baza. Nema stvarnih naloga.</div>');
         res.set('Cache-Control', 'no-store').type('html').send(html);
     });

@@ -2,15 +2,15 @@
 
 Dogovoreni redosled nastavka je [Plan produkcionog puštanja Facebook prijave](facebook-production-release-plan.md). Commit i deploy svih spremnih promena, kao i objava pravnih stranica, prethode izradi nove Android verzije.
 
-## Otvoreno pre produkcionog puštanja — 15. 11. 2026.
+## Odloženi koraci za javnu Facebook prijavu
 
-Korisnik je tražio da se ovaj korak sačuva za nastavak. Commit i Render deploy sami ne potvrđuju dostupnost Facebook prijave svim igračima. Potvrđeno povezivanje postojećeg Google profila sa Facebookom odnosi se na izdvojenu QA aplikaciju. Produkciono stanje Meta/Firebase konzola i potpisanog Android izdanja proveravaju se zasebno.
+Korisnik je odložio korak 7. Android 12.5 i javne stranice pripremaju se sa Google prijavom. Dosadašnja potvrda Facebook povezivanja odnosi se na izdvojenu QA aplikaciju.
 
 1. Proveriti da Meta aplikacija omogućava pristup stvarnim korisnicima, produkcioni Android package `com.yamb.balkan` i Key Hash Play App Signing potpisa. QA package je `com.yamb.balkan.staging`.
 2. Proveriti Facebook provajder u produkcionom Firebase projektu `yamb-of-the-balkan`, odgovarajući Meta App ID/Secret i tačan produkcioni OAuth redirect URI. QA projekat ostaje `yamb-reconnect-qa`.
 3. Izgraditi i testirati produkcionu Android verziju sa uključenom Facebook podrškom i odgovarajućom konfiguracijom, pa je objaviti preko Google Play-a. `capacitor.config.js`, `android/variables.gradle` i `android/app/build.gradle` uključuju podršku putem build okruženja; osnovni config navodi samo Google. Serverski deploy ne ugrađuje novi nativni SDK/plugin u već instaliranu aplikaciju.
 4. Potvrditi prvi ulazak samo preko Facebooka, povezivanje sa postojećim profilom bez promene napretka i brisanje na namenskom test nalogu. Lokalni testovi brisanja prolaze, ali stvarno brisanje Facebook test naloga nije ovim potvrđeno.
-5. Proveriti javno objavljene SR/EN Politiku privatnosti, Uslove i stranicu za brisanje, kao i njihove URL-ove u Meta konzoli. Lokalni `website-updates/public/` već opisuje Facebook prijavu, osnovne podatke profila i brisanje Yamb naloga; javne stranice proveriti pre objave. Sačuvati i jasno objašnjenje da se Google i Facebook povezuju na isti Yamb profil uz potvrdu korisnika.
+5. Kada se nastavi javna Facebook prijava, dopuniti SR/EN Politiku privatnosti, Uslove i stranicu za brisanje i proveriti njihove URL-ove u Meta konzoli. Objasniti povezivanje Google i Facebook naloga na isti Yamb profil i brisanje profila preko dostupnih načina prijave.
 
 ## Meta i Firebase QA
 
@@ -18,7 +18,7 @@ Korisnik je tražio da se ovaj korak sačuva za nastavak. Commit i Render deploy
 2. U projektu [yamb-reconnect-qa](https://console.firebase.google.com/project/yamb-reconnect-qa/authentication/providers) otvori **Authentication → Sign-in method → Facebook**. App ID i App Secret unesi u konzolu. Prekopiraj tačan OAuth redirect URI iz Firebase konzole u Meta Facebook Login podešavanja. Za podrazumevani domen projekta očekuje se `https://yamb-reconnect-qa.firebaseapp.com/__/auth/handler`. Google i pravilo jednog naloga po adresi već su uključeni. Domen `yamb-reconnect-qa.onrender.com` već je na listi dozvoljenih domena.
 3. U Meta aplikaciju dodaj URL Politike privatnosti i javnih uputstava za brisanje naloga, kao i naloge koji će testirati prijavu. Aplikacija od Facebooka traži osnovni profil i imejl.
 4. Za Android build postavi `YAMB_ANDROID_FACEBOOK_APP_ID` i `YAMB_ANDROID_FACEBOOK_CLIENT_TOKEN` u lokalnom QA okruženju. Pokreni `npm run build:reconnect-staging`. App Secret se unosi direktno u Firebase konzolu.
-5. Za test brisanja na sajtu podesi `YAMB_FACEBOOK_WEB_ENABLED=true` na QA serveru i autorizuj domen koji otvara stranicu za brisanje u QA Firebase projektu. Za preporuke postavi `YAMB_REFERRALS_ENABLED=true`. QA server mora imati Firebase Admin sa pravom čitanja Firebase korisnika i MongoDB sa transakcijama.
+5. Brisanje na sajtu koristi Google prijavu. Brisanje Facebook test naloga proverava se nativno na izdvojenom QA kandidatu. Za preporuke postavi `YAMB_REFERRALS_ENABLED=true`. QA server mora imati Firebase Admin sa pravom čitanja Firebase korisnika i MongoDB sa transakcijama.
 
 [Firebase Android prijava](https://firebase.google.com/docs/auth/android/facebook-login) · [Firebase povezivanje provajdera](https://firebase.google.com/docs/auth/android/account-linking)
 

@@ -15,22 +15,18 @@
             await firebase.setPersistence(auth, firebase.browserSessionPersistence);
             const google = new firebase.GoogleAuthProvider();
             google.setCustomParameters({ prompt: 'select_account' });
-            const facebook = config.facebook === true ? new firebase.FacebookAuthProvider() : null;
-            let selectedProvider = google;
-            async function signIn(provider) {
-                const result = await firebase.signInWithPopup(auth, provider);
+            async function signIn() {
+                const result = await firebase.signInWithPopup(auth, google);
                 // A first sign-in to the deletion portal does not create a game account.
                 if (firebase.getAdditionalUserInfo(result)?.isNewUser) {
                     await firebase.deleteUser(result.user);
                     throw new Error('sign_in_required');
                 }
-                selectedProvider = provider;
                 return result.user;
             }
             adapter = {
-                signIn: () => signIn(google),
-                signInFacebook: facebook && (() => signIn(facebook)),
-                reauthenticate: async user => (await firebase.reauthenticateWithPopup(user, selectedProvider)).user,
+                signIn,
+                reauthenticate: async user => (await firebase.reauthenticateWithPopup(user, google)).user,
                 signOut: () => firebase.signOut(auth)
             };
         }

@@ -33,7 +33,6 @@ const { createMailboxStore, mailboxEntrySchema } = require('./lib/player-mailbox
 const { startPlayUpdateNotices } = require('./lib/play-update-notices');
 const { createPlayerReferrals, REFERRAL_REWARDS } = require('./lib/player-referrals');
 const PLAYER_REFERRALS_ENABLED = process.env.YAMB_REFERRALS_ENABLED !== 'false';
-const FACEBOOK_WEB_ENABLED = process.env.YAMB_FACEBOOK_WEB_ENABLED === 'true';
 const { createTournamentMailWarnings } = require('./lib/tournament-mail-warnings');
 const { tournamentChampionNotice, leagueChampionNotice, persistChampionNotice } = require('./lib/mailbox-champions');
 const { leaderboardRecordNotice, publishLeaderboardRecordNotice } = require('./lib/mailbox-leaderboard');
@@ -1306,7 +1305,7 @@ if (SERVER_RUNTIME.environment !== 'production') {
         throw new Error('Account-deletion Web config must belong to the staging Firebase project.');
     }
 }
-accountDeletion.mount(app, deletionWebFirebaseConfig, { facebook: FACEBOOK_WEB_ENABLED });
+accountDeletion.mount(app, deletionWebFirebaseConfig);
 analyticsPrivacy.mount(app);
 app.get('/api/referrals/config', (_req, res) => {
     res.set('Cache-Control', 'no-store').json({ enabled: referralAttributionAvailable() });

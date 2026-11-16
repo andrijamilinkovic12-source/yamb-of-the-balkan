@@ -2,13 +2,30 @@
 
 Dogovoreno 15. 11. 2026. Ovaj dokument je plan rada, a ne potvrda da su koraci izvršeni. **Commit, deploy oba servera i objava pravnih stranica prethode izradi nove Android verzije.**
 
-**Nastavak:** posle svakog završenog koraka korisniku jasno najaviti „Sada prelazimo na korak N“. **Korak 1 je završen.** Lokalni i udaljeni `main` odgovaraju `b764a026`. Pripremljen je Android kandidat 12.5 / versionCode 115. U popis ulaze i preporuke 3.000 + 3.000 + 5.000, najviše 11.000 po nalogu. [Rezultat koraka 1](facebook-production-step-1.md) · [Inventar fajlova](facebook-production-step-1-inventory.json)
+**Aktuelni status — 16. 11. 2026.** Završeni su koraci **1–6** prvobitnog plana. Po odluci korisnika, **korak 7 i javni Facebook Login odloženi su do ponovnog otvaranja ovog koraka**. Osnovna produkciona Meta podešavanja, ikona i veza sa portfolijem su sačuvani. Portfolio je **Unverified**. Poslednji ekran obrasca je **Select a country**. Meta traži dokaz o registrovanoj delatnosti. Ako se uslovi steknu, prvo potvrditi prihvatljive dokaze za stvarni status izdavača, pa nastaviti sa **Review → Verification** na postojećoj Meta aplikaciji. Produkciono podešavanje Facebook provajdera u Firebase-u i App Review pripadaju tom budućem izdanju.
+
+**Sledeće Android izdanje koristi postojeću Google prijavu.** Za ovo izdanje primeniti sledeće delove QA plana. Stavke 7–11 ispod čuvaju redosled za buduće puštanje Facebook prijave.
+
+1. **Potvrditi izvor, verziju i javne stranice.** Na planiranom `12.5` / `versionCode 115` javne stranice SR/EN i postupak brisanja usklađeni su lokalno sa Google prijavom. Objava zvanične Facebook stranice u Pošti je poziv na stranicu igre. Potvrditi Play kod na svim kanalima, evidentirati novi commit, uskladiti oba Render servisa i objaviti usklađene stranice na Firebase Hosting-u.
+2. **Izgraditi i proveriti AAB.** Napraviti potpisani paket bez promenljivih `YAMB_ANDROID_FACEBOOK_APP_ID` i `YAMB_ANDROID_FACEBOOK_CLIENT_TOKEN`. Proveriti identitet aplikacije, verziju, potpis, produkcioni server i Google prijavu na postojećem Yamb profilu. Play Internal testing služi kao opcioni način provere ažuriranja kroz Play prodavnicu. Produkciono izdanje može da se pripremi direktno u kanalu Production.
+3. **Proveriti funkcije koje idu u izdanje.** Proveriti Poštu, linkove, Google prijavu i preporuke na namenskim QA nalozima. Proveriti da javni opis izdanja i prikazane opcije odgovaraju dostupnim funkcijama. Za automatsko obaveštenje o ažuriranju zasebno potvrditi pristup Play API-ju i produkcionu konfiguraciju prema [QA uputstvu](facebook-login-and-referrals-qa.md#automatska-obaveštenja-o-android-izdanjima).
+4. **Objaviti ažuriranje.** Pripremiti beleške na srpskom i engleskom, poslati potpisani paket na Production i potvrditi dostupnost posle puštanja. Ako je automatika uključena, proveriti da je Pošta napravila jednu objavu za taj `versionCode` nakon potpunog puštanja.
+
+**Lokalna provera Androida 12.5 (115).** `npm test`, provere brisanja naloga, Pošte, preporuka i obaveštenja o Play ažuriranju prošle su lokalno. `:app:bundleRelease` je proizveo nepotpisan AAB. Provereni su `com.yamb.balkan`, `versionCode 115`, produkcioni URL, `google.com` kao jedini Firebase provajder i odsustvo Meta SDK-a iz mape Android izdanja. Na Play-u još treba proveriti dostupnost koda 115, potpisati odgovarajućim upload ključem i potvrditi stvarnu Google prijavu na kandidatu.
+
+**Nastavak:** posle svakog završenog koraka korisniku jasno najaviti „Sada prelazimo na korak N“. **Korak 1 je završen.** Prilikom početnog popisa lokalni i udaljeni `main` odgovarali su `b764a026`; kasniji commit izdanja je naveden kod koraka 4. Pripremljen je Android kandidat 12.5 / versionCode 115. U popis ulaze i preporuke 3.000 + 3.000 + 5.000, najviše 11.000 po nalogu. [Rezultat koraka 1](facebook-production-step-1.md) · [Inventar fajlova](facebook-production-step-1-inventory.json)
 
 **Korak 2 je završen.** Usklađeni su generator, srpske i engleske verzije Politike i Uslova, stranica za brisanje naloga i odgovarajuće lokalne QA kopije. Stranice objašnjavaju dobrovoljno povezivanje, pristup istom profilu, brisanje zajedničkog Yamb profila i pravila nagrade za preporuke. Prošlo je 18 lokalnih provera u Edge-u na širinama 320, 390 i 1280 px, kao i `npm run check:account-deletion`. Javna objava i provera javnih linkova su u koraku 6.
 
 **Korak 3 je završen lokalno.** Prošle su ciljane provere prijave i povezivanja provajdera uz simulirane nativne odgovore, brisanja naloga, preporuka, Pošte na privremenoj MongoDB bazi i prikaza SR/EN obaveštenja u svih deset tema. Linkovi sa prijave i iz Podešavanja sada prate jezik aplikacije. Testiranje stvarnog Facebook SDK-a na novom potpisu je u koraku 10.
 
-**Provere asseta pre koraka 4.** Usklađeni su Vaskršnji inventar i kanonski prikaz zajedničkog Solo/Hotseat završetka. Registar beleži ranije povlačenje četiri Solo putanje i Hotseat oznake. Zelena slika u Riznici potvrđena je kroz render kartice na oba jezika. Zelene verzije logotipa Kvartalne lige od 384 i 512 px poklapaju se sa registrom i manifestom po putanji, dimenzijama i SHA-256. Provera performansi koristi stvarne funkcije za učitavanje svih deset tema i ograničenja početnog učitavanja. Zasebne provere u `check:theme-release-assets` pokrivaju aktuelne sobne ikone, stanja i tematske PNG pakete. Kompletan `npm test` prolazi. Prošle su i lokalne provere prikaza u Edge-u, sa 120 kombinacija za Riznicu, 40 za Kvartalnu ligu i 520 za Hotseat. **Sledeći je korak 4.**
+**Provere asseta pre koraka 4.** Usklađeni su Vaskršnji inventar i kanonski prikaz zajedničkog Solo/Hotseat završetka. Registar beleži ranije povlačenje četiri Solo putanje i Hotseat oznake. Zelena slika u Riznici potvrđena je kroz render kartice na oba jezika. Zelene verzije logotipa Kvartalne lige od 384 i 512 px poklapaju se sa registrom i manifestom po putanji, dimenzijama i SHA-256. Provera performansi koristi stvarne funkcije za učitavanje svih deset tema i ograničenja početnog učitavanja. Zasebne provere u `check:theme-release-assets` pokrivaju aktuelne sobne ikone, stanja i tematske PNG pakete. Kompletan `npm test` prošao je u ovoj proveri. Prošle su i lokalne provere prikaza u Edge-u, sa 120 kombinacija za Riznicu, 40 za Kvartalnu ligu i 520 za Hotseat.
+
+**Korak 4 je završen.** Pripremljene izmene su commitovane i poslate na udaljeni repozitorijum kao `ca117beb251c2edb37d161ab6d69892cb3d0c059` — `Prepare Facebook login and player mailbox release [skip render]`. Naknadne lokalne dopune ovog plana o koraku 7 nisu deo tog već objavljenog commita.
+
+**Korak 5 je završen.** Na `yamb-of-the-balkan` i `yamb-reconnect-qa` objavljen je isti commit `ca117beb`, uz potvrđeno stanje Live, zdravlje servisa, klijent 6.56 i isključeno održavanje. Provereno je 49 artefakata na svakom serveru, bez nepoklapanja. QA je objavljen izborom tačnog commita; njegova konfigurisana grana ostala je `codex/tournament-qa-2026-11-12`. Provera ranije Android verzije obuhvatila je WebView prikaz i vezu sa serverom; stvarna nativna Facebook prijava ostaje u koraku 10. Dokaz: lokalni `tmp/facebook-production-step-5-result.json`.
+
+**Korak 6 je završen.** SR/EN pravne stranice objavljene su na informativnom sajtu preko projekta `yamb-of-the-balkan---web`, verzija `cb0bd4645963a465`. Provereno je 14 javnih fajlova, pet podrazumevanih adresa, 18 prikaza bez grešaka i osam kombinacija pravnih linkova iz igre. Dokaz: lokalni `tmp/facebook-production-step-6-result.json`.
 
 Dosadašnja potvrda povezivanja Google profila sa Facebookom odnosi se na izdvojenu QA aplikaciju. Produkciona Meta/Firebase podešavanja i rad izdanja potpisanog za Google Play tek se potvrđuju. Korisnički profil i napredak vezuju se za Firebase UID, uz izričito povezivanje provajdera.
 
@@ -27,6 +44,66 @@ Dosadašnja potvrda povezivanja Google profila sa Facebookom odnosi se na izdvoj
 11. **Javna objava i završna potvrda.** Posle uspešnih testova i potrebnih odobrenja objaviti provereno izdanje preko Google Play-a, po mogućnosti postepenim puštanjem. Pre dovršetka puštanja podesiti [automatska obaveštenja u Pošti](facebook-login-and-referrals-qa.md#automatska-obaveštenja-o-android-izdanjima) i potvrditi jednu objavu po potpuno dostupnom izdanju. Potvrditi javnu dostupnost Facebook prijave, Google prijavu, povezivanje na isti profil, javne pravne URL-ove i odsustvo kritičnih grešaka posle objave. Prijavu za sve igrače označiti završenom tek kada su Meta pristup, produkcioni Firebase, nova instalirana Android verzija i stvarni testovi potvrđeni.
 
 Ako završni test zahteva izmenu izvornog koda, zabeležiti novi SHA i ponoviti potrebne provere/deploy pre izgradnje izmenjenog kandidata. Ne predstavljati drugačiji ili neobjavljeni izvor kao već testirano izdanje.
+
+## Evidencija koraka 7 — Meta ikona
+
+16. 11. 2026: korisnik je potvrdio da je objavio pitanje u kategoriji Developer Tools / App Dashboard zbog neuspešnog postavljanja ikone 1024 × 1024 (greška `1357032`, Meta aplikacija `1111460668363524`). Sačuvana je [objava na Meta Developer Community Forumu](https://developers.facebook.com/community/threads/2217143719160024/?post_id=2217143722493357). Link je dostavio korisnik; odgovor ili preuzimanje slučaja od strane Meta podrške nisu potvrđeni. Korak 7 ostaje otvoren. Pri nastavku proveriti ovu postojeću objavu i stanje slanja ikone.
+
+Ponovna provera 16. 11. 2026: u prijavljenom Edge-u osvežena je postojeća objava; nema odgovora na pitanje, status je **Unresolved**. Stvarno prikazana kategorija je Developer Tools / Bug Tracker. Po nalogu korisnika ponovljeno je slanje iste RGB PNG ikone 1024 × 1024 sa očuvanim celim logotipom. Meta je ponovo prikazala opštu grešku, a ikona ostaje nedostajuća. Korak 7 nije završen.
+
+Istraživanje pet sličnih tema: [nalazi i izvori](meta-app-icon-upload-investigation.md). U temi AEPRAX dva korisnika navode da im je pomogla nova prijava u privatnom/incognito prozoru. **Postupak je zatim uspešno potvrđen i kod nas:** korisnik se ručno prijavio u nov Edge InPrivate, poslat je isti RGB PNG sa punim kadrom, izvršen Save Changes i potvrđeno trajno čuvanje posle osvežavanja stranice. Nestalo je upozorenje o nedostajućoj ikoni. Tačan uzrok prvobitne greške nije potvrđen. Ovo rešava prepreku sa ikonom, ali ne potvrđuje javni pristup niti App Review odobrenje.
+
+**Povezivanje poslovnog portfolija — 16. 11. 2026:** posle izričite potvrde korisnika produkciona Meta aplikacija povezana je sa postojećim portfolijem **Yamb of the Balkan - Igra**, Business ID `2190599021667008`. Meta je prikazala Success; veza je potvrđena posle ponovnog učitavanja Verification stranice. Portfolio je **Unverified**. Meta sada prikazuje Business verification kao zahtev za pristup podacima korisnika i dugme Start verification. Ta verifikacija, test pozivi i App Review još nisu završeni.
+
+## Korak 7 — samostalni autor bez registrovane delatnosti
+
+**Potvrđeno od korisnika 16. 11. 2026:** igru objavljuje kao fizičko lice, samostalni autor Android igre. Nema registrovanu firmu niti preduzetničku delatnost. Naziv poslovnog portfolija nije dokaz o registrovanoj organizaciji.
+
+Po posebnom odobrenju korisnika otvoren je Business verification postupak radi pregleda zahteva. Uvod navodi naziv organizacije, adresu, telefon, imejl, sajt, potvrdu povezanosti i moguće prateće dokumente. Naredni pregledani ekran je **Select a country**. Prikazana podrazumevana država United States nije potvrđen podatak korisnika; nije menjana niti potvrđivana. Poslovni podaci i dokumenti nisu uneti ili poslati. Nema podnete verifikacije niti App Review zahteva. Na Verification stranici nije prikazana opcija za individualnu verifikaciju.
+
+Aktuelna [Meta dokumentacija o poslovnoj verifikaciji](https://developers.facebook.com/documentation/development/release/business-verification) povezuje Advanced Access sa verifikovanim poslovnim subjektom. Stranica pominje ranije završenu Individual Verification, ali ne pruža potvrđen nov postupak za autora bez registrovane delatnosti. [Data Handling FAQ](https://developers.facebook.com/docs/resp-plat-initiatives/individual-processes/data-handling-questions/faqs) navodi poslovnu verifikaciju za novi Advanced Access i podršku kroz **Need Help? → Go to Developer Support** u obrascu. Dostupnost tog kanala za ovaj nalog tek treba proveriti. Stariji tekstovi iz 2018. o automatskom pristupu osnovnim dozvolama ne poništavaju zahtev koji se sada prikazuje na konkretnoj aplikaciji.
+
+**Sledeća zavisnost:** potvrda od Meta podrške postoji li prihvaćen postupak za fizičko lice bez registracije, tačni prihvatljivi dokazi i kanal podnošenja. Nije potvrđeno da lična karta ili dokaz vlasništva nad Play aplikacijom mogu zameniti poslovnu verifikaciju. Ne izmišljati poslovne podatke, ne tražiti lične dokumente unapred, ne preporučivati registraciju delatnosti kao nužan korak bez razjašnjenja Meta uslova.
+
+Posle restarta ponovo je potvrđeno da **Review → Verification** za produkcionu aplikaciju prikazuje samo Business verification. Obrazac traži zemlju organizacije. [Zvanična lista dokumenata](https://www.facebook.com/business/help/159334372093366), pročitana u prijavljenoj sesiji preko linka iz obrasca, izričito traži dokaz registracije. U Developer Support-u pregledan je obrazac za tiket sa produkcionim App ID-jem. Nudi samo Data Handling Questions, Data Protection Assessment i App Re-review. Obrazac poziva da se doda imejl u poslovni profil radi primanja odgovora.
+
+Po potvrdi korisnika opis je unet u **Contact support** u [Meta Business Support Home](https://www.facebook.com/business-support-home/) i obrađen preko **Next Step**. Meta je svrstala upit u **Verify business**. Izabran je portfolio **Yamb of the Balkan - Igra**. Posle ponovnog klika na kontakt prikazan je samo link ka Centru za pomoć. Lista aktivnih zahteva ostala je prazna, a broj tiketa i opcije za razgovor ili imejl nisu se pojavili. Opis je prosleđen za automatsko usmeravanje. Nema potvrde da je otvoren slučaj kod podrške, niti je podnet zahtev za verifikaciju.
+
+### Tekst upita za Meta podršku
+
+**Subject:** Facebook Login verification for an individual Android game developer without a registered business
+
+I am the individual author and publisher of the Android game Yamb of the Balkan. I do not have a registered company or sole proprietorship.
+
+- Production Meta App ID: `1111460668363524`.
+- Connected business portfolio ID: `2190599021667008` (Unverified).
+- Android package: `com.yamb.balkan`.
+- Purpose: Facebook Login for players of my own game, requesting only `public_profile` and `email`. I am not providing business integrations for third-party businesses.
+- The app's Verification page requires Business verification. Its wizard asks for organization details and possible business documents; no individual verification option is shown on the app's Verification page.
+
+Can an individual developer without a registered business obtain public Facebook Login access for this app? If so, please specify the supported verification route, exact accepted documents and where to start the process. Can proof that I publish and control the Google Play application be used, and is individual identity verification available for this app? If registration of a business or sole proprietorship is mandatory, please confirm that explicitly and link the applicable policy.
+
+Ikona, kontakt, pravni URL-ovi, Android identitet i Play hash ostaju završeni. Preostaju prihvaćena verifikacija izdavača, dovršavanje Meta kontrolne liste, stvarni testovi traženih dozvola i dokazi za pregled gde ih Meta zahteva. Dokazi novog produkcionog izdanja zavise od Firebase podešavanja i Android/Play testova iz koraka 8–10. Korak 7 zato ne sme biti označen završenim samo zato što su osnovna podešavanja sačuvana. Čekanje na Meta odluku i buduće tehničke testove evidentirati odvojeno.
+
+U Meta Developer Community forumu pripremljeno je pitanje u kategoriji **FB Login**. Javna verzija izostavlja naziv igre, identifikatore aplikacije i portfolija, kontakt podatke i priloge. Po zahtevu korisnika prvo su pregledane slične rasprave. Pitanje nije objavljeno.
+
+**How can an independent Android game developer get public Facebook Login access?**
+
+An independent Android game is published on Google Play and requests only public_profile and email for Facebook Login. In Review → Verification, the Meta app shows only Business Verification. The linked portfolio is unverified, and the form asks for proof that the business is registered.
+
+Is there a supported verification process for an individual publisher without a registered business? If so, where do you start it, and what documents are accepted? Can proof of control of the Google Play listing be used? If a registered business is required for this use case, a link to the current Meta policy would help.
+
+### Slični slučajevi na Meta forumu
+
+U prijavljenoj sesiji pretraženo je šest izraza i otvorena je 21 tema. Najbliži slučajevi za Yamb:
+
+- [Samostalni autor igre koja koristi Facebook SDK](https://developers.facebook.com/community/threads/1790189154989694/) prijavio je zahtev za dokumentima firme i pitao kako da vrati pristup kao fizičko lice. Tema je bez odgovora i označena Unresolved.
+- [Facebook Login samo sa `email` i `public_profile`](https://developers.facebook.com/community/threads/597486329946564/). Mobilna aplikacija prikazuje Verification Required za obe dozvole. Drugi programer je potvrdio isti problem i naveo da nema firmu. Nema rešenja u temi.
+- [Prijava na javnu aplikaciju fizičkog lica bez firme](https://developers.facebook.com/community/threads/1467794568067170/). Drugi autor se javio sa istim problemom. Odgovor opisuje zastoj registrovanog preduzeća i ne potvrđuje individualni postupak.
+- [Samostalni autor sajta](https://developers.facebook.com/community/threads/909453470660531/) odgovorio je da nije našao rešenje. Njegova pretpostavka o registraciji i PDV broju nije odgovor Mete.
+- [Zahtev za Facebook Login na iOS-u](https://developers.facebook.com/community/threads/1179068519416068/) sadrži komentar autora igre iz 2024. koji navodi da mu Meta traži poslovnu verifikaciju iako koristi samo `public_profile`. Tema je Unresolved.
+
+U [zvaničnom repozitorijumu Meta Android SDK-a](https://github.com/meta/facebook-android-sdk/issues/1246) saradnik je 23. 6. 2026. uputio samostalnog Android autora na Developer Support. Nije potvrdio individualni postupak. Starije teme o pauziranoj Individual Verification opisuju istorijski obrazac. U pregledanim slučajevima nije nađeno novije odobrenje za javni Facebook Login autoru bez registrovane delatnosti, ni potvrda da Meta prihvata lični dokument ili Play Console kao zamenu. Za Yamb trenutno ostaje zahtev iz njegovog Meta obrasca i zvanične liste dokumenata. Korak 7 ostaje otvoren.
 
 ## Izvori
 
