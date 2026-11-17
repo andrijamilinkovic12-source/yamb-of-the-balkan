@@ -5752,9 +5752,10 @@ function authorizeManagedTournamentJoin(socket, roomId) {
     const info = parseTournamentRoomId(roomId);
     if (!info) return true;
     if (!tournamentStateInitialized) return false;
+    const match = getTournamentMatch(info.round, info.index)?.match;
+    if (!match) return false;
     if (!tournamentSchedulingCore.isManaged(tournamentState)) return true;
     const uid = getVerifiedUid(socket);
-    const match = getTournamentMatch(info.round, info.index)?.match;
     const ticket = authorizedTournamentRooms.get(roomId);
     return Boolean(uid && ticket && ticket.expiresAt > Date.now() && ticket.seats.some(seat => seat.uid === uid && seat.socketId === socket.id)
         && ticket.cycleId === tournamentState.registrationCycleId && match
@@ -16703,9 +16704,15 @@ io.on('connection', (socket) => {
             return;
         }
 
+        const match = getTournamentMatch(invite.round, invite.index)?.match;
+        if (!match) {
+            socket.emit('error_msg', 'err_invalid_room');
+            starterSocket.emit('error_msg', 'err_invalid_room');
+            return;
+        }
+
         if (tournamentSchedulingCore.isManaged(tournamentState)) {
-            const match = getTournamentMatch(invite.round, invite.index)?.match;
-            if (!match || getVerifiedUid(starterSocket) !== invite.starterUid || invite.cycleId !== tournamentState.registrationCycleId
+            if (getVerifiedUid(starterSocket) !== invite.starterUid || invite.cycleId !== tournamentState.registrationCycleId
                 || invite.scheduleId !== match.scheduling?.id || invite.acceptedId !== match.scheduling?.accepted?.id
                 || !canStartManagedTournamentMatch(match, invite.round, invite.index) || isTournamentMatchInPlay(invite.round, invite.index)) {
                 socket.emit('error_msg', 'tourney_schedule_stale');

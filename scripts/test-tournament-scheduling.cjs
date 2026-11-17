@@ -279,6 +279,20 @@ async function serverRules() {
         assert.equal(context.getTournamentAttentionReminderState(closed, now), null);
         await context.checkUpcomingTournamentMatchReminders(now);
         assert.deepEqual(events.splice(0), [], kind + ' cannot send an appointment reminder');
+        const closedRoomId = 'tourney_qf_0_closed_' + kind;
+        assert(!context.authorizeManagedTournamentJoin(starter, closedRoomId),
+            kind + ' blocks a remembered private room link');
+        context.pendingTournamentDuelInvites[closedRoomId] = {
+            round: 'qf', index: 0, starterSocketId: starter.id, starterUid: 'a',
+            targetSocketId: target.id, targetUid: 'b', expiresAt: now + 60000
+        };
+        context.socket = target;
+        handlers.get('tourney_duel_response')({ matchRoomId: closedRoomId, accepted: true });
+        assert.deepEqual(events.splice(0), [
+            ['target', 'error_msg', 'err_invalid_room'], ['starter', 'error_msg', 'err_invalid_room']
+        ], kind + ' blocks acceptance of an invitation created before closure');
+        assert(!context.pendingTournamentDuelInvites[closedRoomId]);
+        context.socket = starter;
     }
     assert.equal(context.getTournamentMatch('f', 0).match, legacyFinal, 'the unresolved final remains available');
     assert.equal(context.getTournamentAttentionReminderState(legacyFinal, now).kind, 'unscheduled');
@@ -296,6 +310,15 @@ async function serverRules() {
     assert(Object.values(context.pendingTournamentDuelInvites).some(invite => invite.round === 'f'),
         'the final can still issue its normal duel invitation');
     events.splice(0);
+    const finalRoomId = Object.entries(context.pendingTournamentDuelInvites)
+        .find(([, invite]) => invite.round === 'f')[0];
+    context.socket = target;
+    handlers.get('tourney_duel_response')({ matchRoomId: finalRoomId, accepted: true });
+    assert.deepEqual(events.splice(0), [
+        ['starter', 'tourney_join_allowed', finalRoomId], ['target', 'tourney_join_allowed', finalRoomId]
+    ], 'the unresolved legacy final still accepts its duel invitation');
+    assert(context.authorizeManagedTournamentJoin(starter, finalRoomId));
+    context.socket = starter;
     await context.checkUpcomingTournamentMatchReminders(now);
     assert.deepEqual(events.splice(0), ['legacy-reminder'], 'the open final retains its appointment reminder');
     const completed = { ...pair(), winnerId: 'a', prizesAwarded: true };
