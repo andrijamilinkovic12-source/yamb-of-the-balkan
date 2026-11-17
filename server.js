@@ -6393,7 +6393,7 @@ function getTournamentAttentionReminderSlot(now = new Date()) {
 }
 
 function getTournamentAttentionReminderState(match, now) {
-    if (!match || match.winnerId || !match.p1?.id || !match.p2?.id) return null;
+    if (!match || tournamentAdjudicationCore.terminal(match) || !match.p1?.id || !match.p2?.id) return null;
     if (match.scheduling && now >= match.scheduling.deadlineAt) return null;
 
     const scheduledAt = match.timeAccepted ? parseTournamentTimeMs(match.time) : NaN;
@@ -6532,7 +6532,7 @@ async function checkUpcomingTournamentMatchReminders(now) {
         if (!Array.isArray(matches)) return;
 
         matches.forEach((match, index) => {
-            if (!match || match.winnerId || !match.timeAccepted || !match.time) return;
+            if (!match || tournamentAdjudicationCore.terminal(match) || !match.timeAccepted || !match.time) return;
             if (match.scheduling && now >= match.scheduling.deadlineAt) return;
 
             const matchTime = parseTournamentTimeMs(match.time);
@@ -6839,6 +6839,7 @@ function getTournamentMatch(round, index) {
 
     const match = matches[matchIndex];
     if (!match || !match.p1 || !match.p2) return null;
+    if (['double_dq', 'void', 'empty'].includes(match.review?.kind)) return null;
 
     return { match, index: matchIndex };
 }

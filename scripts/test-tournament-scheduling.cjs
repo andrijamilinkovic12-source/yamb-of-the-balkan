@@ -163,6 +163,7 @@ async function serverRules() {
     const sockets = new Map([[starter.id, starter], [target.id, target]]);
     let uid = 'a', saves = 0;
     const context = vm.createContext({ tournamentSchedulingCore: core, tournamentState: state, tournamentStateInitialized: true,
+        tournamentAdjudicationCore: require('../www/tournamentAdjudicationCore'),
         TOURNEY_ROUNDS: new Set(['qf', 'sf', 'f']), ACCOUNT_DELETION_ENABLED: false,
         Date: { now: () => now }, crypto: { randomUUID }, roomState: { [roomId]: room },
         authorizedTournamentRooms: new Map(), pendingTournamentDuelInvites: {}, privateRooms: {},
@@ -177,16 +178,23 @@ async function serverRules() {
         getTournamentRoomMatchScores: () => ({ p1Score: 812, p2Score: 812 }),
         saveTournamentToDb: async () => { saves++; }, scheduleTournamentAutoReset() {},
         toSafeInt: value => Number(value || 0), emitTournamentStateUpdate: () => events.push('state'),
+        normalizeTournamentTime: value => value, queueTournamentPush() {},
+        parseTournamentTimeMs: value => Date.parse(value), TOURNAMENT_OVERDUE_MATCH_MS: 86400000,
+        TOURNAMENT_REMINDER_WINDOWS: [{ key: 'reminder30', beforeMs: 1800000, minDiffMs: 300000, minutes: 30 }],
+        getTournamentMatchParticipantUids: candidate => [candidate.p1.id, candidate.p2.id],
+        getTournamentRoundLabel: round => round, buildLocalizedPushContent: () => ({}),
+        sendPushToUids: async () => { events.push('legacy-reminder'); return { ok: true, sent: 2 }; },
         handleTournamentScheduling: (_socket, command, _data, verified) => events.push([command, verified]),
         socket: { ...starter, on: (event, handler) => handlers.set(event, handler) },
         io: { emit: () => events.push('legacy-state'), to: id => sockets.get(id), sockets: { sockets } }
     });
     for (const name of ['createTournamentMatch', 'advanceTournamentBracket', 'openNextTournamentScheduling', 'reopenTournamentScheduling',
         'getTournamentMatch', 'getTournamentPlayer', 'getTournamentOpponent', 'isTournamentParticipant', 'parseTournamentRoomId', 'isCurrentTournamentRoomAttempt', 'canStartManagedTournamentMatch',
-        'isTournamentMatchInPlay', 'authorizeManagedTournamentJoin', 'recordTournamentDrawReplay', 'isTournamentDrawRematchAllowed', 'recordTournamentNetworkReplay']) {
+        'isTournamentMatchInPlay', 'authorizeManagedTournamentJoin', 'recordTournamentDrawReplay', 'isTournamentDrawRematchAllowed', 'recordTournamentNetworkReplay',
+        'getTournamentAttentionReminderState', 'checkUpcomingTournamentMatchReminders']) {
         vm.runInContext(actual(name), context);
     }
-    for (const event of ['tourney_propose_time', 'tourney_accept_time', 'tourney_start_duel', 'tourney_duel_response']) {
+    for (const event of ['tourney_propose_time', 'tourney_accept_time', 'tourney_start_duel', 'tourney_duel_response', 'tourney_submit_winner']) {
         const start = source.indexOf("    socket.on('" + event + "',");
         vm.runInContext(source.slice(start, source.indexOf('\n    });', start) + 8), context);
     }
@@ -251,6 +259,54 @@ async function serverRules() {
     state.schedulingPolicyVersion = '';
     assert(context.authorizeManagedTournamentJoin({}, 'tourney_qf_0_legacy'));
 
+    const legacyFinal = pair();
+    state.bracket = { qf: [], sf: [], f: [legacyFinal] };
+    context.socket = starter;
+    context.pendingTournamentDuelInvites = {};
+    events.splice(0);
+    for (const kind of ['double_dq', 'void', 'empty']) {
+        const closed = { ...pair(), review: { kind }, timeAccepted: true,
+            time: new Date(now + 1200000).toISOString(), proposedTime: new Date(now + 1200000).toISOString() };
+        state.bracket.qf[0] = closed;
+        const unchanged = JSON.stringify(closed);
+        const savedBefore = saves;
+        for (const event of ['tourney_propose_time', 'tourney_accept_time', 'tourney_start_duel', 'tourney_submit_winner']) {
+            await handlers.get(event)({ round: 'qf', index: 0, proposedTime: closed.proposedTime, winnerId: 'a' });
+            assert.deepEqual(events.splice(0), [['starter', 'error_msg', 'err_invalid_room']], kind + ': ' + event);
+        }
+        assert.equal(JSON.stringify(closed), unchanged, kind + ' cannot be reopened by legacy actions');
+        assert.equal(saves, savedBefore, 'rejected actions never persist a change');
+        assert.equal(context.getTournamentAttentionReminderState(closed, now), null);
+        await context.checkUpcomingTournamentMatchReminders(now);
+        assert.deepEqual(events.splice(0), [], kind + ' cannot send an appointment reminder');
+    }
+    assert.equal(context.getTournamentMatch('f', 0).match, legacyFinal, 'the unresolved final remains available');
+    assert.equal(context.getTournamentAttentionReminderState(legacyFinal, now).kind, 'unscheduled');
+    const finalTime = new Date(now + 1200000).toISOString();
+    await handlers.get('tourney_propose_time')({ round: 'f', index: 0, proposedTime: finalTime });
+    assert.equal(legacyFinal.proposedTime, finalTime, 'the final can still be scheduled');
+    uid = 'b';
+    context.socket = target;
+    await handlers.get('tourney_accept_time')({ round: 'f', index: 0 });
+    assert.equal(legacyFinal.timeAccepted, true, 'the finalist can accept the appointment');
+    uid = 'a';
+    context.socket = starter;
+    events.splice(0);
+    handlers.get('tourney_start_duel')({ round: 'f', index: 0 });
+    assert(Object.values(context.pendingTournamentDuelInvites).some(invite => invite.round === 'f'),
+        'the final can still issue its normal duel invitation');
+    events.splice(0);
+    await context.checkUpcomingTournamentMatchReminders(now);
+    assert.deepEqual(events.splice(0), ['legacy-reminder'], 'the open final retains its appointment reminder');
+    const completed = { ...pair(), winnerId: 'a', prizesAwarded: true };
+    state.bracket.f[0] = completed;
+    assert.equal(context.getTournamentMatch('f', 0).match, completed, 'completed winners remain readable for result retries');
+    await handlers.get('tourney_submit_winner')({ round: 'f', index: 0, winnerId: 'a' });
+    assert.equal(completed.winnerId, 'a');
+    assert.deepEqual(events.splice(0), [], 'a completed final retry stays idempotent');
+    state.bracket.qf[1] = { ...pair(), rematchRequired: true };
+    assert.equal(context.getTournamentMatch('qf', 1).match, state.bracket.qf[1], 'an unresolved draw remains replayable');
+
     const writeMatch = open();
     const writeState = { ...state, schedulingPolicyVersion: core.VERSION, readinessRevision: 4, bracket: { qf: [writeMatch] } };
     const writes = [], notices = [], socketEvents = [];
@@ -293,5 +349,5 @@ async function serverRules() {
     businessRules();
     await runtimeRules();
     await serverRules();
-    console.log('PASS: round clocks, DST, proposal identity, mutual rescheduling, serialized durable writes, bracket advance, room entry and replays.');
+    console.log('PASS: round clocks, DST, proposal identity, mutual rescheduling, serialized durable writes, bracket advance, room entry, replays and legacy administrative closures.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
