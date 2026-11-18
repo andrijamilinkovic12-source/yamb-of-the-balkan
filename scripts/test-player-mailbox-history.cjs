@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const { randomUUID } = require('node:crypto');
 const { createMailboxStore, mailboxEntrySchema, PAGE_SIZE } = require('../lib/player-mailbox-store');
 const { createMail, appendMail, registerPlayerMailbox } = require('../lib/player-mailbox');
-const { FACEBOOK_NOTICE_ID, FACEBOOK_URL } = require('../lib/mailbox-system-notices');
+const { FACEBOOK_NOTICE_ID, REFERRAL_NOTICE_ID, FACEBOOK_URL } = require('../lib/mailbox-system-notices');
 const { createPlayUpdateWatcher, startPlayUpdateNotices, STORE_URL } = require('../lib/play-update-notices');
 
 async function main() {
@@ -136,6 +136,9 @@ async function main() {
         verified = null;
         assert.deepEqual(await call('player_mailbox_manage', { id: 'valid', action: 'delete' }), { ok: false });
 
+        // Existing Facebook announcement predates the new separate referral.
+        await notices.create({ _id: FACEBOOK_NOTICE_ID, type: 'facebook_follow', createdAt: 1,
+            pinned: true, protected: true, action: { type: 'facebook', url: FACEBOOK_URL } });
         const announcementStore = createMailboxStore({ profiles, entries, notices });
         let firstPage = await announcementStore.get('burst');
         const pinned = firstPage.messages[0];
@@ -143,13 +146,19 @@ async function main() {
         assert.deepEqual(pinned.action, { type: 'facebook', url: FACEBOOK_URL });
         assert.equal(pinned.pinned, true);
         assert.equal(pinned.protected, true);
-        assert.equal(firstPage.unread, 1078);
+        const referral = firstPage.messages[1];
+        assert.equal(referral.id, REFERRAL_NOTICE_ID);
+        assert.equal(referral.type, 'referral_invite');
+        assert.equal(referral.pinned, true);
+        assert.equal(referral.protected, true);
+        assert.equal(pinned.createdAt, 1, 'Existing Facebook date survives seeding');
+        assert.equal(firstPage.unread, 1079);
         assert.equal(firstPage.messages.length, PAGE_SIZE);
-        assert.equal((await announcementStore.get('burst', { before: firstPage.next })).messages[0].id, 'burst-981');
+        assert.equal((await announcementStore.get('burst', { before: firstPage.next })).messages[0].id, 'burst-982');
 
         registerPlayerMailbox(socket, { store: announcementStore, profiles, available: () => true, verifiedUid: () => verified });
         verified = 'burst';
-        for (const action of ['archive', 'delete']) assert.deepEqual(await call('player_mailbox_manage', { id: pinned.id, action }),
+        for (const id of [pinned.id, referral.id]) for (const action of ['archive', 'delete']) assert.deepEqual(await call('player_mailbox_manage', { id, action }),
             { ok: false, reason: 'mailbox_protected' });
         assert.equal((await call('player_mailbox_get', { folder: 'archive' })).messages.length, 0);
         assert.equal((await call('player_mailbox_read', { ids: [pinned.id] })).ok, true);
@@ -157,10 +166,15 @@ async function main() {
         await notices.create({ _id: 'game:newer-than-pinned', type: 'game_notice', text: 'Newer notice', createdAt: Date.now() });
         firstPage = await restarted.get('burst');
         assert.equal(firstPage.messages[0].id, FACEBOOK_NOTICE_ID);
-        assert.equal(firstPage.messages[1].id, 'game:newer-than-pinned');
         assert.ok(firstPage.messages[0].readAt);
-        assert.equal(firstPage.unread, 1078);
+        assert.equal(firstPage.messages[1].id, REFERRAL_NOTICE_ID);
+        assert.equal(firstPage.messages[1].readAt, null, 'Reading Facebook does not mark referrals read');
+        assert.equal(firstPage.messages[2].id, 'game:newer-than-pinned');
+        assert.equal(firstPage.unread, 1079);
         assert.equal(await notices.countDocuments({ _id: FACEBOOK_NOTICE_ID }), 1);
+        assert.equal(await notices.countDocuments({ _id: REFERRAL_NOTICE_ID }), 1);
+        assert.equal((await call('player_mailbox_read', { ids: [referral.id] })).ok, true);
+        assert.equal((await restarted.get('burst')).unread, 1078);
         assert.equal((await restarted.get('alice')).messages[0].readAt, null, 'Reading the announcement is scoped to the player');
 
         let lifecycle = 'RELEASE_LIFECYCLE_STATE_APPROVED_NOT_PUBLISHED';
@@ -244,7 +258,7 @@ async function main() {
         assert.equal(await notices.countDocuments({ type: 'android_update' }), 2);
         assert.equal(notified, 2);
         console.log('Google Play release notices: published and completed, skip internal/staged/halted/draft or rollback, retry safely, preserve per-player read state.');
-        console.log('Pinned Facebook announcement: durable first place, pagination, read status, restart, archive/delete protection and exact URL passed.');
+        console.log('Pinned Facebook and referral announcements: fixed first/second place, pagination, independent read state, restart and archive/delete protection passed.');
         console.log('Mailbox history: 1,077 messages paged without loss, tied cursors, durable retries, migration, private archive/delete, read badges and UID isolation passed.');
     } finally {
         if (conn.readyState === 1) await conn.dropDatabase();

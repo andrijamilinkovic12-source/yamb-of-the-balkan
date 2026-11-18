@@ -53,19 +53,24 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
 #player-mailbox-unread[hidden] { display: none; }
 
 #player-mailbox-button:focus-visible,
-#player-mailbox :is(button, a, textarea, select, summary):focus-visible {
+#player-mailbox :is(button, a, input, textarea, select, summary):focus-visible {
     outline: 2px solid var(--theme-card-primary, #f4dc9d);
     outline-offset: 2px;
     border-radius: 8px;
 }
 
 #player-mailbox {
+    --mailbox-side: max(10px, var(--safe-left, 0px), var(--safe-right, 0px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+    --mailbox-top: max(10px, var(--safe-top, 0px), env(safe-area-inset-top, 0px));
+    --mailbox-bottom: max(16px, calc(var(--safe-bottom, 0px) + 8px), calc(env(safe-area-inset-bottom, 0px) + 8px));
     position: fixed;
-    inset: 0;
-    margin: auto;
-    width: min(440px, calc(100vw - 2 * max(12px, env(safe-area-inset-left), env(safe-area-inset-right)) - 8px));
-    max-height: calc(100dvh - max(20px, env(safe-area-inset-top)) - max(20px, env(safe-area-inset-bottom)));
-    padding: 14px;
+    inset: var(--mailbox-top) var(--mailbox-side) var(--mailbox-bottom);
+    margin: 0;
+    width: calc(100vw - 2 * var(--mailbox-side));
+    height: calc(100dvh - var(--mailbox-top) - var(--mailbox-bottom));
+    max-width: none;
+    max-height: none;
+    padding: 0;
     box-sizing: border-box;
     overflow: hidden;
     border: 1px solid var(--theme-card-line, #83946f);
@@ -80,15 +85,29 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
 #player-mailbox::backdrop { background: #0008; }
 
 #player-mailbox > header {
+    box-sizing: border-box;
     display: flex;
     flex: 0 0 auto;
+    min-height: 58px;
     align-items: center;
     gap: 8px;
-    margin-bottom: 8px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--theme-card-line, #83946f);
+    background: var(--theme-card-raised, #31543a);
 }
 
-#player-mailbox > header img { width: 46px; height: 46px; object-fit: contain; }
-#player-mailbox-title { flex: 1; margin: 0; font-size: 1rem; }
+#player-mailbox > header img { display: block; width: 32px; height: 32px; flex: 0 0 32px; object-fit: contain; }
+#player-mailbox-title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: clamp(1.05rem, 4.2vw, 1.22rem);
+    font-weight: 850;
+    line-height: 1.2;
+    letter-spacing: .025em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
 
 #player-mailbox-close {
     border: 0;
@@ -100,7 +119,17 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
     cursor: pointer;
 }
 
-.player-mailbox-content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.player-mailbox-content {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 12px 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+}
 #player-mailbox-status { margin: 12px 4px; line-height: 1.4; }
 #player-mailbox-retry { padding: 8px 12px; min-height: 44px; border: 0; border-radius: 8px; cursor: pointer;
     color: var(--theme-card-surface, #193e2b); background: var(--theme-card-primary, #f4dc9d); font: inherit; }
@@ -115,7 +144,19 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
 #player-mailbox-list time { grid-column: 1; grid-row: 2; }
 #player-mailbox-list button span { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: .72rem; font-weight: 700; }
 #player-mailbox-list .player-mailbox-row-flags { grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+#player-mailbox-list button.has-tournament-icon { grid-template-columns: 28px minmax(0, 1fr) auto; }
+#player-mailbox-list button.has-tournament-icon > .player-mailbox-tournament-icon { grid-column: 1; grid-row: 1 / 3; align-self: center; width: 28px; height: 28px; }
+#player-mailbox-list button.has-tournament-icon > :is(strong, time) { grid-column: 2; }
+#player-mailbox-list button.has-tournament-icon > .player-mailbox-row-flags { grid-column: 3; }
+#player-mailbox .player-mailbox-tournament-icon { display: block; object-fit: contain; flex: 0 0 32px; width: 32px; height: 32px; }
+#player-mailbox-subject { display: flex; align-items: center; gap: 8px; }
 #player-mailbox-list li.is-pinned { border-color: var(--theme-card-primary, #f4dc9d); }
+#player-mailbox-list button.has-tournament-icon { grid-template-columns: 30px minmax(0, 1fr) auto; }
+#player-mailbox-list .has-tournament-icon .player-mailbox-tournament-icon { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+#player-mailbox-list .has-tournament-icon :is(strong, time) { grid-column: 2; }
+#player-mailbox-list .has-tournament-icon .player-mailbox-row-flags { grid-column: 3; }
+#player-mailbox .player-mailbox-tournament-icon { display: block; width: 30px; height: 30px; flex: 0 0 30px; object-fit: contain; }
+#player-mailbox-subject:has(.player-mailbox-tournament-icon) { display: flex; gap: 8px; align-items: center; }
 #player-mailbox-protected-note { color: var(--theme-card-muted, #eee4c6); font-size: .78rem; }
 #player-mailbox #player-mailbox-action.is-facebook { display: inline-flex; gap: 8px; align-items: center; justify-content: center; text-align: center; }
 .player-mailbox-facebook-mark { display: block; flex: 0 0 24px; width: 24px; height: 24px; object-fit: contain; }
@@ -129,6 +170,7 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
 #player-mailbox time, #player-mailbox small { font-size: .75rem; color: var(--theme-card-muted, #eee4c6); }
 #player-mailbox [hidden] { display: none !important; }
 #player-mailbox .player-mailbox-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 2px 8px; }
+#player-mailbox .player-mailbox-actions > button { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
 #player-mailbox .player-mailbox-folders { display: flex; gap: 6px; margin: 6px 2px 10px; }
 #player-mailbox :is(#player-mailbox-report, #player-mailbox-support, #player-mailbox-compose, #player-mailbox-back, #player-mailbox-action,
     #player-mailbox-read-retry, #player-mailbox-retry, #player-mailbox-support-more, #player-mailbox-support-retry, #player-mailbox-more,
@@ -143,7 +185,7 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
 }
 #player-mailbox-delete { border-style: dashed !important; }
 #player-mailbox-more { width: 100%; margin-block: 8px; }
-#player-mailbox-back { flex: 0 0 auto; align-self: start; margin: 0 0 5px 2px; }
+#player-mailbox #player-mailbox-back { flex: 0 0 auto; align-self: start; max-width: calc(100% - 28px); margin: 8px 14px 0; }
 #player-mailbox :is(#player-mailbox-action, button[type='submit']) {
     color: var(--theme-card-surface, #193e2b); background: var(--theme-card-primary, #f4dc9d); }
 #player-mailbox button:disabled { opacity: .65; cursor: default; }
@@ -155,9 +197,16 @@ body.easter-theme #player-mailbox-button { --mailbox-menu-icon-size: 47px; }
 #player-mailbox :is(select, textarea, input:not([type='checkbox'])) { display: block; min-height: 44px; width: 100%; box-sizing: border-box; margin: 4px 0 9px;
     padding: 7px; background: var(--theme-card-raised, #31543a); color: var(--theme-card-ink, #fff8e7);
     border: 1px solid var(--theme-card-line, #83946f); border-radius: 7px; font: inherit; }
+#player-mailbox :is(textarea, pre) { max-width: 100%; }
+#player-mailbox textarea { resize: vertical; }
 #player-mailbox select option { color: var(--theme-card-ink, #fff8e7); background: var(--theme-card-surface, #193e2b); }
 #player-mailbox form { margin: 10px 0 3px; }
 #player-mailbox form small { display: block; margin: 0 0 8px; }
 #player-mailbox .player-mailbox-consent { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 #player-mailbox-support-list article { margin-block: 8px; padding: 8px; border: 1px solid var(--theme-card-line, #83946f); border-radius: 9px; }
 #player-mailbox-support-list pre { font: inherit; font-size: .75rem; }
+
+/* Use the same wide room cap as the other rooms on tablets. */
+@media (min-width: 760px) {
+    #player-mailbox { width: min(760px, calc(100vw - 2 * max(22px, var(--mailbox-side)))); margin-inline: auto; }
+}

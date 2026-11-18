@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="theme-card-surfaces.css?v=7">
     <link rel="stylesheet" href="theme-room-close-controls.css?v=3">
     <link rel="stylesheet" href="theme-global-chat-room.css?v=8">
-    <link rel="stylesheet" href="player-mailbox.css?v=6">
+    <link rel="stylesheet" href="player-mailbox.css?v=9">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=9">
 </head>
 <body>
@@ -201,6 +201,9 @@
                 <p id="player-mailbox-protected-note" data-lang="mailbox_protected" hidden>Ova stalna objava ostaje na vrhu Pošte i ne može da se obriše ni arhivira.</p>
                 <p id="player-mailbox-reference"></p>
                 <a id="player-mailbox-action" target="_blank" rel="noopener noreferrer" hidden></a>
+                <section id="player-mailbox-referral-panel" aria-labelledby="player-mailbox-subject" hidden>
+                    <button id="player-mailbox-referral" type="button" data-lang="referral_invite" hidden>Podeli svoj Yamb poziv</button>
+                </section>
                 <button type="button" id="player-mailbox-read-retry" data-lang="mailbox_read_retry" hidden>Označi kao pročitano</button>
                 <div class="player-mailbox-actions">
                     <button type="button" id="player-mailbox-archive" data-lang="mailbox_archive">Arhiviraj</button>
@@ -251,9 +254,14 @@
             </form>
         </div>
     </dialog>
-    <script src="languages.js?v=5.48"></script>
-    <script src="player-mailbox.js?v=13"></script>
-    <script src="theme-main-room-icons.js?v=26"></script>
+    <script src="languages.js?v=5.55"></script>
+    <script src="tournamentReadinessCore.js?v=1"></script>
+    <script src="tournamentSchedulingCore.js?v=2"></script>
+    <script src="tournamentNotificationsCore.js?v=3"></script>
+    <script src="tournamentReliabilityCore.js?v=1"></script>
+    <script src="tournamentMailCore.js?v=1"></script>
+    <script src="player-mailbox.js?v=19"></script>
+    <script src="theme-main-room-icons.js?v=27"></script>
     <script src="theme-quarterly-league-room.js?v=2"></script>
 
     <script>
@@ -263,6 +271,12 @@
         const messages = [
             { id: 'game:official-facebook-follow-v1', type: 'facebook_follow', pinned: true, protected: true,
                 action: { type: 'facebook', url: 'https://www.facebook.com/profile.php?id=61588191682382' }, createdAt: now - day },
+            { id: 'game:official-referral-invite-v1', type: 'referral_invite', pinned: true, protected: true, createdAt: now - day },
+            { id: 'game:final-time-preview', type: 'tournament_event', createdAt: now,
+                tournamentEvent: { tournamentNumber: 14, kind: 'final_scheduled', p1: 'Mina', p2: 'Luka', scheduledAt: now + day } },
+            { id: 'own-result-preview', type: 'tournament_event', createdAt: now - 60000,
+                tournamentEvent: { tournamentNumber: 14, kind: 'match_result', round: 'qf', won: true,
+                    opponent: 'Luka', resultType: 'regular', score: '1450-1380' } },
             { id: 'notice', type: 'game_notice', title: 'Nova verzija igre', text: 'Nova verzija igre je dostupna na Google Play-u. Ažuriraj aplikaciju pre sledeće partije.', action: { type: 'update', url: storeLink }, createdAt: now - 60 * 60000 },
             { id: 'moderation', type: 'moderation_resolved', text: 'Hvala na prijavi. Pregledao sam poruku i uklonio je iz Globalnog četa.', reference: 'QA-2045', createdAt: now - 2 * 60 * 60000 },
             { id: 'support', type: 'support_reply', text: 'Pregledao sam zapis o prekidu veze. Rezultat partije je uredno sačuvan i vidi se u Statistici.', reference: 'QA-2041', createdAt: now - 3 * 60 * 60000 },
@@ -304,7 +318,9 @@
                 switch (event) {
                     case 'player_mailbox_get': {
                         const rows = messages.filter(message => !message.deleted && !!message.archived === (data.folder === 'archive'))
-                            .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || b.createdAt - a.createdAt);
+                            .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned)
+                                || (a.pinned && b.pinned ? Number(b.type === 'facebook_follow') - Number(a.type === 'facebook_follow') : 0)
+                                || b.createdAt - a.createdAt);
                         const start = Number(data.before) || 0;
                         return response({ ...(data.summary ? {} : { messages: structuredClone(rows.slice(start, start + 20)),
                             next: rows.length > start + 20 ? String(start + 20) : '', folder: data.folder || 'inbox' }),

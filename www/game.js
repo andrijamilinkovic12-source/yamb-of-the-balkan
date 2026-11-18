@@ -3976,7 +3976,7 @@ class YambApp {
 
                 const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
                 const btnDisabled = (!isOnline || !f.socketId) ? 'disabled' : '';
-                const btnText = isOnline ? (gt('btn_invite_friend') || 'POZOVI') : (gt('btn_offline') || 'OFFLINE');
+                const btnText = gt('btn_invite_friend') || 'POZOVI';
                 const statusText = isOnline ? (gt('ui_online_short') || 'Online') : (gt('btn_offline') || 'OFFLINE');
                 const friendName = String(f.name || getFallbackPlayerName());
                 const safeName = this.escapeHtml(friendName);
@@ -3994,7 +3994,7 @@ class YambApp {
 
                 html += `
                     <div class="friend-card friend-player-card${isOnline ? ' is-online' : ' is-offline'}">
-                        <div style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
+                        <button type="button" class="friend-remove-btn" onclick="app.removeFriend('${safeUid}', '${safeFriendNameJs}')" aria-label="${this.escapeHtml((gt('friend_remove_aria') || 'Ukloni prijatelja {0}').replace('{0}', () => friendName))}" title="${this.escapeHtml(gt('friend_remove') || 'Ukloni prijatelja')}"></button>
                         <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid ${statusColor};">
                         <span class="friend-card-name" title="${safeName}">${safeName}</span>
                         <div class="friend-card-stats">
@@ -4007,7 +4007,6 @@ class YambApp {
                         </div>
                         <div class="friend-card-actions">
                             <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')"><img class="theme-invite-send-icon green-invite-send-icon" data-invite-role="send" src="${window.themeInviteFriend.asset('send')}" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
-                            <button type="button" class="friend-remove-btn" onclick="app.removeFriend('${safeUid}', '${safeFriendNameJs}')" aria-label="${this.escapeHtml((gt('friend_remove_aria') || 'Ukloni prijatelja {0}').replace('{0}', () => friendName))}" title="${this.escapeHtml(gt('friend_remove') || 'Ukloni prijatelja')}"></button>
                         </div>
                         <span class="green-friend-presence" aria-label="${this.escapeHtml(statusText)}">${this.escapeHtml(statusText)}</span>
                     </div>
@@ -4051,7 +4050,7 @@ class YambApp {
             const name = this.escapeHtml(friendName || getFallbackPlayerName());
             const confirmed = await this.modal.confirm((gt('friend_remove_confirm') || 'Ukloniti {0} iz prijatelja?').replace('{0}', () => name), {
                 title: gt('friend_remove') || 'Ukloni prijatelja', okText: gt('friend_remove_action') || 'Ukloni',
-                cancelText: gt('btn_cancel') || 'Otkaži', contextClass: 'invite-friend'
+                cancelText: gt('modal_btn_cancel') || 'OTKAŽI', contextClass: 'invite-friend'
             });
             if (!confirmed || !sameAccount()) return false;
             const result = await this.emitFriendAck('remove_friend', { targetUid });

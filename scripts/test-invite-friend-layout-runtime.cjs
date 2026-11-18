@@ -4,6 +4,7 @@ const {chromium}=require(process.env.YAMB_PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const output=path.join(root,'tmp/invite-friend-layout-runtime'+(process.env.YAMB_FRIEND_REMOVAL_ONLY?'-removal':'')),index=read('www/index.html');
 const themes=['dark','light','medium','winter','neon','amethyst','easter','desert','moon','severna'];
+const viewports=[{width:320,height:568},{width:360,height:640},{width:360,height:650},{width:360,height:700},{width:360,height:761},{width:360,height:780},{width:360,height:861},{width:390,height:844},{width:412,height:915},{width:430,height:932}];
 const sheets=[...index.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
 const body=index.slice(index.indexOf('<body'),index.lastIndexOf('</body>')+7).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
 const fixture=`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${sheets.map(f=>`<link rel="stylesheet" href="${f}">`).join('')}<style>:root{--safe-top:24px;--safe-bottom:48px;--safe-left:0px;--safe-right:0px}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}</style>${body}`;
@@ -16,7 +17,7 @@ async function main(){
   const context=await browser.newContext();
   await context.route('**/*',async route=>{const u=new URL(route.request().url());if(u.hostname!=='invite-fixture.local')return route.abort();if(u.pathname==='/www/fixture.html')return route.fulfill({contentType:'text/html',body:fixture});const file=path.resolve(root,'.'+decodeURIComponent(u.pathname));if(!file.startsWith(path.join(root,'www')+path.sep)||!fs.existsSync(file))return route.abort();return route.fulfill({contentType:({'.css':'text/css','.js':'text/javascript','.png':'image/png'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});});
   const page=await context.newPage();
-  for(const viewport of (process.env.YAMB_FRIEND_REMOVAL_ONLY?[{width:320,height:568}]:[{width:320,height:568},{width:360,height:640},{width:360,height:780},{width:390,height:844},{width:430,height:932}])){
+  for(const viewport of (process.env.YAMB_FRIEND_REMOVAL_ONLY?viewports.slice(0,1):viewports)){
    await page.setViewportSize(viewport);const baseline={};
    for(const theme of (process.env.YAMB_FRIEND_REMOVAL_ONLY?themes.slice(0,1):themes)){
     await page.goto('http://invite-fixture.local/www/fixture.html');
@@ -63,21 +64,28 @@ async function main(){
      const result=await page.evaluate(state=>{
       const screen=document.getElementById('waiting-screen'),scope=state==='notice'?document.getElementById('custom-modal-overlay'):state==='toast'?document.getElementById('custom-notification-container'):screen,metric={};
       const visible=e=>{const r=e.getBoundingClientRect();return r.width&&r.height;};
-      const selectors=state==='notice'?['.custom-modal','.cm-title','.cm-msg','.cm-btn-ok']:state==='toast'?['.invite-room-toast','.custom-toast-soft-clay-icon','.toast-title','.toast-msg']:['.waiting-header','.green-invite-header-icon','#waiting-title','.waiting-status-panel','#wait-msg','.ws-vs-area-horizontal','.ws-glass-card','#waiting-my-img','#waiting-my-name','.ws-glass-stats','.ws-g-stat .lbl','.ws-g-stat .val','.easter-invite-rival-card','.easter-invite-rival-name','.easter-invite-rival-title','#friends-list-container','#friends-list-container > h3','.friend-card','.friend-card-name','.friend-card-img','.friend-card-btn','.green-friend-presence','.easter-friend-records','.easter-friend-record-row','.friend-request-label','.friend-request-actions button','.invite-friend-add-action','.invite-friend-search-form','.invite-friend-search-input','.invite-friend-search-submit','.theme-invite-add-icon','.theme-invite-send-icon','.theme-invite-empty-icon','.invite-power-icon','.invite-friend-search-icon'];
+      const selectors=state==='notice'?['.custom-modal','.cm-title','.cm-msg','.cm-btn-ok']:state==='toast'?['.invite-room-toast','.custom-toast-soft-clay-icon','.toast-title','.toast-msg']:['.waiting-header','.green-invite-header-icon','#waiting-title','.waiting-status-panel','#wait-msg','.ws-vs-area-horizontal','.ws-glass-card','#waiting-my-img','#waiting-my-name','.ws-glass-stats','.ws-g-stat .lbl','.ws-g-stat .val','.easter-invite-rival-card','.easter-invite-rival-name','.easter-invite-rival-title','#friends-list-container','#friends-list-container > h3','.friend-card','.friend-card-name','.friend-card-img','.friend-card-btn','.friend-remove-btn','.green-friend-presence','.easter-friend-records','.easter-friend-record-row','.friend-request-label','.friend-request-actions button','.invite-friend-add-action','.invite-friend-search-form','.invite-friend-search-input','.invite-friend-search-submit','.theme-invite-add-icon','.theme-invite-send-icon','.theme-invite-empty-icon','.invite-power-icon','.invite-friend-search-icon'];
       for(const sel of selectors){const e=scope.querySelector(sel);if(!e||!visible(e))continue;const b=e.getBoundingClientRect(),s=getComputedStyle(e);metric[sel]={x:b.x,y:b.y,width:b.width,height:b.height,fontFamily:s.fontFamily,fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing,padding:s.padding,margin:s.margin,gap:s.gap,borderRadius:s.borderRadius};}
       const outside=[...screen.querySelectorAll('.waiting-header,.waiting-status-panel,.ws-vs-area-horizontal,#friends-list-container')].filter(e=>{const r=e.getBoundingClientRect();return visible(e)&&(r.left<0||r.right>innerWidth+.5||r.bottom>innerHeight-48+.5);}).map(e=>e.className);
       const cardOverflow=[...screen.querySelectorAll('.friend-card')].filter(e=>visible(e)&&[...e.querySelectorAll('button,input,.green-friend-presence,.easter-friend-record-row')].some(c=>{const a=c.getBoundingClientRect(),b=e.getBoundingClientRect();return a.bottom>b.bottom+1||a.right>b.right+1||a.left<b.left-1;})).map(e=>e.className);
+      const friendLayout=[...screen.querySelectorAll('.friend-player-card')].filter(visible).map(e=>{
+       const box=e.getBoundingClientRect(),remove=e.querySelector('.friend-remove-btn').getBoundingClientRect();
+       const parts=['.friend-card-img','.friend-card-name','.friend-card-stats','.friend-card-actions','.green-friend-presence'].map(s=>e.querySelector(s).getBoundingClientRect());
+       return{corner:Math.abs(box.right-remove.right-7)<2&&Math.abs(remove.top-box.top-7)<2,stacked:parts[0].top>=remove.bottom-.5&&parts.every((p,i)=>!i||p.top>=parts[i-1].bottom-.5),statusCount:(e.textContent.match(/\b(?:online|offline)\b/gi)||[]).length,inviteText:e.querySelector('.friend-card-btn').textContent.trim()};
+      });
       const images=[...scope.querySelectorAll('img')].filter(visible).map(i=>({src:i.getAttribute('src'),loaded:i.complete&&i.naturalWidth>0,width:i.getBoundingClientRect().width,height:i.getBoundingClientRect().height}));
-      return{metric,images,outside,cardOverflow,scroll:screen.scrollHeight>screen.clientHeight+1,shareVisible:visible(document.getElementById('share-area')),searchCount:screen.querySelectorAll('.invite-friend-search-input').length,disabledOffline:screen.querySelector('.friend-player-card.is-offline button')?.disabled,onlineEnabled:!screen.querySelector('.friend-player-card.is-online button')?.disabled};
+      return{metric,images,outside,cardOverflow,friendLayout,scroll:screen.scrollHeight>screen.clientHeight+1,shareVisible:visible(document.getElementById('share-area')),searchCount:screen.querySelectorAll('.invite-friend-search-input').length,disabledOffline:screen.querySelector('.friend-player-card.is-offline .friend-card-btn')?.disabled,onlineEnabled:!screen.querySelector('.friend-player-card.is-online .friend-card-btn')?.disabled};
      },state);
      if(result.images.some(i=>!i.loaded))failures.push(`${theme}/${state}: broken visible PNG`);
      if(result.scroll||result.outside.length||result.cardOverflow.length)failures.push(`${theme}/${state}/${viewport.width}x${viewport.height}: scroll/bounds/cards ${result.outside};${result.cardOverflow}`);
+     if(result.friendLayout.some(c=>!c.corner||!c.stacked||c.statusCount!==1||c.inviteText!=='POZOVI'))failures.push(`${theme}/${state}/${viewport.width}x${viewport.height}: friend corner/stack/status ${JSON.stringify(result.friendLayout)}`);
      assert(!result.shareVisible,'Share link must stay hidden');
      if(state.startsWith('host-'))assert.equal(result.searchCount,1);
      if(['host-friends','host-focus-refresh'].includes(state))assert(result.disabledOffline&&result.onlineEnabled,'Only an online friend can be invited');
      if(!baseline[state])baseline[state]=result.metric;
      for(const[sel,m]of Object.entries(result.metric))for(const[prop,v]of Object.entries(m)){const expected=baseline[state][sel]?.[prop];if(typeof v==='number'?Math.abs(v-expected)>=1.1:v!==expected)failures.push(`${theme}/${state}/${viewport.width} ${sel}.${prop}: ${v} != Green ${expected}`);}
      if(viewport.width===360&&viewport.height===780)await page.screenshot({path:path.join(output,`${theme}-${state}.png`)});
+     if(state==='host-friends'&&[320,390,412,430].includes(viewport.width))await page.screenshot({path:path.join(output,`${theme}-${viewport.width}x${viewport.height}-friends.png`)});
      rows.push({theme,case:state,viewport,...result});
     }
    }
@@ -97,12 +105,14 @@ async function main(){
     app.emitFriendAck=async(event,payload)=>{fixtureEmits.push([event,payload]);return failRemoval?{ok:false,reason:'err_server_conn'}:{ok:true,recipientUid:'fixture-owner'};};
     app.renderFriendsList(fixtureFriends,[{uid:'pending-player',name:'Pending player'}]);
    },{theme,language});
+   assert.deepEqual(await page.locator('.friend-player-card').evaluateAll(cards=>cards.map(e=>({statusCount:(e.textContent.match(/\b(?:online|offline)\b/gi)||[]).length,inviteText:e.querySelector('.friend-card-btn').textContent.trim()}))),[{statusCount:1,inviteText:language==='sr'?'POZOVI':'INVITE'},{statusCount:1,inviteText:language==='sr'?'POZOVI':'INVITE'}]);
    const button=page.locator('.friend-player-card.is-offline .friend-remove-btn');
    assert.equal(await button.isEnabled(),true,'Offline friends can also be removed');
    assert.match(await button.evaluate(e=>getComputedStyle(e).backgroundImage),theme==='dark'?/green-soft-clay/:new RegExp('theme-packs/'+theme));
    await button.click();
    assert.equal(await page.locator('#custom-modal-overlay').isVisible(),true);
    assert.equal(await page.locator('#cm-ok').textContent(),language==='sr'?'Ukloni':'Remove');
+   assert.equal(await page.locator('#cm-cancel').textContent(),language==='sr'?'OTKAŽI':'CANCEL');
    const confirmBox=await page.locator('#custom-modal-overlay .custom-modal').boundingBox();
    if(confirmBox)assert.ok(confirmBox.y>=24&&confirmBox.y+confirmBox.height<=568-48,'Confirmation respects mobile safe areas');
    await page.locator('#cm-cancel').click();

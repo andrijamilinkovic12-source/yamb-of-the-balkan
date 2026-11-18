@@ -28,7 +28,10 @@
     const rpc = (event, data) => window.app.emitSocketAck(event, data, 7000);
     const connectedAs = account => Boolean(account && boundSocket?.connected && window.app?.socketVerifiedUid === account && uid() === account);
     const privateReply = message => /^(moderation_|support_reply$)/.test(message.type);
-    const subject = message => message.title || label(`${message.type}_title`);
+    const tournamentCopy = message => message.type === 'tournament_event'
+        ? window.tournamentMailCore?.copy(message.tournamentEvent, language() === 'en' ? 'en' : 'sr') : null;
+    const subject = message => message.title || tournamentCopy(message)?.title
+        || (message.type === 'referral_invite' ? t('referral_title') : label(`${message.type}_title`));
     const errorLabel = response => label(response?.reason || 'unavailable');
     let dateLanguage;
     let dateFormatter;
@@ -42,6 +45,9 @@
         return Number.isFinite(date.getTime()) ? dateFormatter.format(date) : '';
     };
     function messageBody(message) {
+        const copy = tournamentCopy(message);
+        if (copy) return copy.body;
+        if (message.type === 'referral_invite') return t('referral_info');
         if (message.type === 'game_notice' || (privateReply(message) && message.text)) return message.text;
         if (message.type === 'android_update') {
             return label('android_update').replace('{version}', () => String(message.versionName || message.versionCode));
@@ -87,12 +93,19 @@
         if (['tournament_champion', 'league_champion'].includes(message.type) && message.champion) {
             const champion = message.champion;
             const name = champion.playerName || label('player');
-            return label(message.type)
+            const body = label(message.type)
                 .replace('{name}', () => name)
                 .replace('{number}', () => String(champion.tournamentNumber))
                 .replace('{year}', () => String(champion.year))
                 .replace('{quarter}', () => String(champion.quarter))
                 .replace('{score}', () => Number(champion.score || 0).toLocaleString(language()));
+            if (message.type === 'tournament_champion' && champion.runnerUpName) {
+                const en = language() === 'en';
+                return body + '\n\n' + (en ? 'Final: ' : 'Finale: ') + name + ' — ' + champion.runnerUpName
+                    + (champion.resultType === 'technical' ? (en ? '\nTechnical result.' : '\nTehnički rezultat.')
+                        : champion.finalScore ? '\n' + champion.finalScore : '');
+            }
+            return body;
         }
         if (message.type === 'tournament_unplayed' && message.tournament) {
             const { tournamentNumber, round, outcome, reason, deadlineAt } = message.tournament;
@@ -114,6 +127,15 @@
         const node = document.createElement(tag);
         node.textContent = text;
         return node;
+    }
+    function tournamentIcon(message) {
+        if (!message.type?.startsWith('tournament_')) return null;
+        const icon = document.createElement('img');
+        icon.className = 'player-mailbox-tournament-icon';
+        icon.alt = ''; icon.setAttribute('aria-hidden', 'true'); icon.decoding = 'async';
+        icon.src = window.getCanonicalTournamentTrophySource?.()
+            || 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1';
+        return icon;
     }
     let boundSocket;
     let activeUid = '';
@@ -169,6 +191,8 @@
             button.type = 'button';
             button.dataset.messageId = message.id;
             button.append(element('strong', subject(message)), element('time', timeText(message.createdAt)));
+            const icon = tournamentIcon(message);
+            if (icon) { button.prepend(icon); button.classList.add('has-tournament-icon'); }
             const flags = document.createElement('div');
             flags.className = 'player-mailbox-row-flags';
             if (message.pinned) flags.append(element('span', label('pinned')));
@@ -205,6 +229,8 @@
 
     function renderDetail() {
         byId('subject').textContent = subject(selected);
+        const icon = tournamentIcon(selected);
+        if (icon) byId('subject').prepend(icon);
         byId('date').textContent = timeText(selected.createdAt);
         byId('body').textContent = messageBody(selected);
         byId('reference').textContent = selected.reference ? label('reference').replace('{0}', selected.reference) : '';
@@ -225,7 +251,7 @@
             } else action.textContent = caption;
         } else action.removeAttribute('href');
         const referral = byId('referral');
-        const referralsEnabled = selected.type === 'facebook_follow' && window.yambReferrals?.isEnabled();
+        const referralsEnabled = selected.type === 'referral_invite' && window.yambReferrals?.isEnabled();
         if (referral) referral.hidden = !referralsEnabled;
         if (byId('referral-panel')) byId('referral-panel').hidden = !referralsEnabled;
         byId('protected-note').hidden = selected.protected !== true;
@@ -645,6 +671,10 @@
         applyTheme(theme) {
             const source = this.iconSource(theme);
             icons.forEach(icon => { if (icon.getAttribute('src') !== source) icon.src = source; });
+            room.querySelectorAll('.player-mailbox-tournament-icon').forEach(icon => {
+                icon.src = window.getCanonicalTournamentTrophySource?.(theme)
+                    || 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1';
+            });
         },
         navigate(screen) {
             menuActive = screen === 'main-menu';

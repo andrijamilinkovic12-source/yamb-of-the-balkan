@@ -22,6 +22,11 @@
     const currentTheme = () => [...themes].find(theme => document.body.classList.contains(`${theme}-theme`))
         || document.documentElement.dataset.splashTheme
         || localStorage.getItem('yamb_theme') || 'dark';
+    window.getCanonicalTournamentTrophySource = (theme = currentTheme()) => {
+        const source = themes.has(theme) ? sourceFor(theme, 'tournament', 'room')
+            : 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1';
+        return globalThis.resolveThemeQualityAsset?.(source) || source;
+    };
     const visibilityBeforeSwap = new WeakMap();
     const observedImages = new WeakSet();
 

@@ -126,7 +126,7 @@
     <link rel="stylesheet" href="theme-treasury-room.css?v=8">
     <link rel="stylesheet" href="theme-room-close-controls.css?v=3">
     <link rel="stylesheet" href="theme-global-chat-room.css?v=8">
-    <link rel="stylesheet" href="player-mailbox.css?v=7">
+    <link rel="stylesheet" href="player-mailbox.css?v=9">
     <link rel="stylesheet" href="theme-global-chat-moderation.css?v=1">
     <link rel="stylesheet" href="theme-duel-chat.css?v=1">
     <link rel="stylesheet" href="theme-online-players-room.css?v=4">
@@ -142,7 +142,7 @@
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=9">
     <link rel="stylesheet" href="theme-online-random-room.css?v=4">
     <link rel="stylesheet" href="theme-online-random-finish.css?v=7">
-    <link rel="stylesheet" href="theme-invite-friend-room.css?v=7">
+    <link rel="stylesheet" href="theme-invite-friend-room.css?v=8">
     <link rel="stylesheet" href="theme-finish-compact.css?v=6">
     <link rel="stylesheet" href="theme-statistics-layout.css?v=4">
     <link rel="stylesheet" href="theme-statistics-leaderboards.css?v=4">
@@ -152,7 +152,7 @@
     <link rel="stylesheet" href="theme-tournament-readiness.css?v=1">
     <link rel="stylesheet" href="theme-tournament-scheduling.css?v=1">
     
-    <script src="languages.js?v=5.54"></script>
+    <script src="languages.js?v=5.55"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -1671,9 +1671,7 @@
                 <p id="player-mailbox-protected-note" data-lang="mailbox_protected" hidden>Ova stalna objava ostaje na vrhu Pošte i ne može da se obriše ni arhivira.</p>
                 <p id="player-mailbox-reference"></p>
                 <a id="player-mailbox-action" target="_blank" rel="noopener noreferrer" hidden></a>
-                <section id="player-mailbox-referral-panel" aria-labelledby="player-mailbox-referral-title" hidden>
-                    <h4 id="player-mailbox-referral-title" data-lang="referral_title">Pozovi prijatelja i osvoji 10.000 dukata</h4>
-                    <p data-lang="referral_info">Podeli svoj lični Yamb poziv. Novi igrač unosi tvoj kod pre prve prijave. Kada završi prvu regularnu onlajn partiju koju server potvrdi, dobijaš 10.000 dukata i potvrdu u Pošti.</p>
+                <section id="player-mailbox-referral-panel" aria-labelledby="player-mailbox-subject" hidden>
                     <button id="player-mailbox-referral" type="button" data-lang="referral_invite" hidden>Podeli svoj Yamb poziv</button>
                 </section>
                 <button type="button" id="player-mailbox-read-retry" data-lang="mailbox_read_retry" hidden>Označi kao pročitano</button>
@@ -1844,6 +1842,7 @@
     <script src="tournamentNotificationsCore.js?v=3"></script>
     <script src="tournamentAdjudicationCore.js?v=1"></script>
     <script src="tournamentReliabilityCore.js?v=1"></script>
+    <script src="tournamentMailCore.js?v=1"></script>
     <script src="turnir.js?v=1043"></script>
     <script src="pravilaigre.js?v=1.38"></script>
     <script src="vracanjeupisa.js?v=1.8"></script>
@@ -1859,8 +1858,8 @@
     <script src="theme-invite-friend-room.js?v=4"></script>
     <script src="duel-chat.js?v=1"></script>
     <script src="player-referrals.js?v=2"></script>
-    <script src="player-mailbox.js?v=17"></script>
-    <script src="game.js?v=6.56"></script>
+    <script src="player-mailbox.js?v=19"></script>
+    <script src="game.js?v=6.57"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
@@ -1869,7 +1868,7 @@
     <script src="theme-settings-room.js?v=5"></script>
     <script src="theme-statistics-room.js?v=2"></script>
     <script src="theme-settings-picker.js?v=3"></script>
-    <script src="theme-main-room-icons.js?v=26"></script>
+    <script src="theme-main-room-icons.js?v=27"></script>
     <script src="theme-online-players-room.js?v=6"></script>
     <script src="theme-ducat-pack.js?v=5"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>

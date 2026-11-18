@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require(process.env.YAMB_PLAYWRIGHT_PATH || 'playwright');
+const { systemMailboxNotices } = require('../lib/mailbox-system-notices');
 const root = path.resolve(__dirname, '../www');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const index = read('index.html');
@@ -10,9 +11,17 @@ const styles = index.match(/<link rel="stylesheet" href="[^"]+">/g).join('');
 const menu = section('<div id="main-menu"', '<div id="quote-screen"');
 const dialog = section('<dialog id="player-mailbox"', '<div id="online-players-overlay"');
 const intro = index.match(/<div id="easter-room-intro"[\s\S]*?<div class="easter-room-intro-title"[^>]*><\/div>\s*<\/div>/)[0];
+const references = section('<div id="stats-screen"', '<div id="riznica-screen"')
+    + section('<div id="highscores-screen"', '<div id="settings-screen"')
+    + section('<div id="settings-screen"', '<div id="game-over-screen"');
 const fixture = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${styles}
-    ${menu.replace('id="main-menu" class="screen"', 'id="main-menu" class="screen active"')}${intro}${dialog}`;
+    <style>:root{--safe-top:24px;--safe-bottom:48px;--safe-left:0px;--safe-right:0px}
+    :is(#highscores-screen,#stats-screen,#settings-screen),:is(#highscores-screen,#stats-screen,#settings-screen) *{animation:none!important;transition:none!important}</style>
+    ${menu.replace('id="main-menu" class="screen"', 'id="main-menu" class="screen active"')}${intro}${dialog}${references}`;
 const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const sizes = [[320, 568], [360, 640], [360, 780], [390, 844], [430, 932], [800, 1024]];
+const output = path.resolve(root, '../tmp/player-mailbox-review');
+const layoutRows = [];
 
 (async () => {
     const browser = await chromium.launch({ headless: true, ...(process.env.YAMB_CHROMIUM ? { executablePath: process.env.YAMB_CHROMIUM } : {}) });
@@ -27,7 +36,8 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
             return route.fulfill({ path: file });
         });
         await page.goto('http://mailbox.local/fixture');
-        for (const file of ['languages.js', 'theme-main-room-icons.js', 'player-mailbox.js']) {
+        for (const file of ['languages.js', 'theme-main-room-icons.js', 'tournamentReadinessCore.js', 'tournamentSchedulingCore.js',
+            'tournamentNotificationsCore.js', 'tournamentReliabilityCore.js', 'tournamentMailCore.js', 'player-mailbox.js']) {
             await page.addScriptTag({ content: read(file) });
         }
         await page.evaluate(() => {
@@ -78,7 +88,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
                     return { ok: true, recipientUid: 'test' };
                 }
                 if (event === 'player_support_list') return window.failSupport ? { ok: false }
-                    : { ok: true, recipientUid: 'test', rows: [], next: '' };
+                    : { ok: true, recipientUid: 'test', rows: structuredClone(window.layoutSupportRows || []), next: '' };
             } };
             playerMailbox.bindSocket(socket);
             window.mailEvent = () => handlers.get('player_mailbox_changed')({ recipientUid: 'test' });
@@ -89,7 +99,6 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         assert.equal(await badge.innerText(), '2');
         assert.equal(await page.evaluate(() => mailReads), 0);
         assert.deepEqual(await page.evaluate(() => mailFetches), [true]);
-        const sizes = [[320, 568], [360, 780], [430, 932]];
         let screenshots = false;
         for (const [width, height] of sizes) for (const theme of themes) {
             await page.setViewportSize({ width, height });
@@ -143,7 +152,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
             assert.ok(await room.isVisible());
             await page.locator('[data-message-id="new"]').waitFor();
             const box = await room.boundingBox();
-            assert.ok(box.x >= 12 && box.x + box.width <= width - 12 && box.y >= 12 && box.y + box.height <= height - 12);
+            assert.ok(box.x >= 10 && box.x + box.width <= width - 10 && box.y >= 24 && box.y + box.height <= height - 56);
             const standards = await page.evaluate(() => {
                 const heading = document.querySelector('#player-mailbox-title');
                 const panel = document.querySelector('#player-mailbox');
@@ -163,13 +172,18 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
                 const muted = getComputedStyle(row.querySelector('time')).color;
                 const activeFolder = getComputedStyle(document.querySelector('#player-mailbox [aria-pressed="true"]'));
                 const inactiveFolder = getComputedStyle(document.querySelector('#player-mailbox [aria-pressed="false"]'));
-                return { titleSize: getComputedStyle(heading).fontSize, buttonSize: getComputedStyle(report).fontSize,
+                return { titleSize: getComputedStyle(heading).fontSize, titleWeight: getComputedStyle(heading).fontWeight,
+                    titleCase: getComputedStyle(heading).textTransform,
+                    iconWidth: panel.querySelector('header img').getBoundingClientRect().width, buttonSize: getComputedStyle(report).fontSize,
                     closeWidth: close.getBoundingClientRect().width, closeAsset: getComputedStyle(close).backgroundImage,
                     folderDistinct: activeFolder.backgroundColor !== inactiveFolder.backgroundColor,
                     contrast: [contrast(ink, surface), contrast(ink, raised), contrast(muted, raised),
                         contrast(activeFolder.color, activeFolder.backgroundColor)] };
             });
-            assert.equal(standards.titleSize, '16px');
+            assert.ok(Math.abs(parseFloat(standards.titleSize) - Math.max(16.8, Math.min(width * .042, 19.52))) < .02);
+            assert.equal(standards.titleWeight, '850');
+            assert.equal(standards.titleCase, 'uppercase');
+            assert.equal(standards.iconWidth, 32);
             assert.equal(standards.buttonSize, '13.12px');
             assert.equal(standards.closeWidth, 44);
             assert.equal(standards.folderDistinct, true, 'The active mail folder is visibly highlighted');
@@ -562,16 +576,18 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         await page.waitForFunction(() => qaAdCalls === 3);
         assert.equal(await mailRoom.isHidden(), true, 'Unavailable ads cannot keep the mailbox open');
         assert.ok(screenshots);
-        await page.evaluate(() => {
-            mailRows.unshift({ id: 'game:official-facebook-follow-v1', type: 'facebook_follow', pinned: true, protected: true,
-                createdAt: 1, action: { type: 'facebook', url: 'https://www.facebook.com/profile.php?id=61588191682382' } });
+        await page.evaluate(notices => {
+            mailRows.unshift(...notices);
             setLanguage('sr');
             mailEvent();
-        });
+        }, systemMailboxNotices(1));
         await page.locator('#player-mailbox-button').click();
         const pinned = page.locator('[data-message-id="game:official-facebook-follow-v1"]');
         await pinned.waitFor();
         assert.equal(await page.locator('#player-mailbox-list button').first().getAttribute('data-message-id'), 'game:official-facebook-follow-v1');
+        const referralNotice = page.locator('[data-message-id="game:official-referral-invite-v1"]');
+        assert.equal(await page.locator('#player-mailbox-list button').nth(1).getAttribute('data-message-id'), 'game:official-referral-invite-v1');
+        assert.match(await referralNotice.innerText(), /11.000 dukata/);
         assert.match(await pinned.innerText(), /Zakačeno/);
         await pinned.click();
         assert.match(await page.locator('#player-mailbox-body').innerText(), /zapratiti i lajkovati.*i podeliti/);
@@ -590,11 +606,16 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         });
         const referralPanel = page.locator('#player-mailbox-referral-panel');
         const referralButton = page.locator('#player-mailbox-referral');
+        assert.equal(await referralPanel.isVisible(), false, 'Facebook contains no referral panel');
+        assert.doesNotMatch(await page.locator('#player-mailbox-body').innerText(), /11,000|server-verified/);
+        await page.locator('#player-mailbox-back').click();
+        await referralNotice.click();
         assert.equal(await referralPanel.isVisible(), true);
-        assert.match(await referralPanel.innerText(), /11,000 ducats/);
-        assert.match(await referralPanel.innerText(), /3,000.*3,000.*5,000/);
-        assert.match(await referralPanel.innerText(), /Google or Facebook/);
-        assert.match(await referralPanel.innerText(), /voluntary support/);
+        assert.equal(await facebookAction.isVisible(), false, 'Referral invitation contains no Facebook action');
+        const referralBody = page.locator('#player-mailbox-body');
+        assert.match(await referralBody.innerText(), /11,000 ducats/);
+        assert.match(await referralBody.innerText(), /3,000.*3,000.*5,000/);
+        assert.doesNotMatch(await referralBody.innerText(), /Facebook/);
         for (const theme of themes) for (const language of ['sr', 'en']) {
             await page.setViewportSize({ width: 320, height: 568 });
             await page.evaluate(({ theme, language }) => {
@@ -604,7 +625,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
                 setLanguage(language);
             }, { theme, language });
             assert.equal(await referralButton.isVisible(), true);
-            assert.equal(await facebookAction.isVisible(), true);
+            assert.equal(await facebookAction.isVisible(), false);
             assert.equal(await page.locator('#player-mailbox-archive').isVisible(), false);
             assert.equal(await page.locator('#player-mailbox-delete').isVisible(), false);
             const layout = await referralButton.evaluate(button => {
@@ -622,7 +643,12 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
             window.dispatchEvent(new Event('yamb:referralConfig'));
         });
         assert.equal(await referralPanel.isVisible(), false, 'hide the reward offer if referrals are disabled');
-        assert.equal(await facebookAction.isVisible(), true, 'the Facebook appeal remains available');
+        assert.equal(await facebookAction.isVisible(), false);
+        assert.match(await referralBody.innerText(), /11,000/);
+        await page.locator('#player-mailbox-back').click();
+        await pinned.click();
+        assert.equal(await facebookAction.isVisible(), true, 'the separate Facebook appeal remains available');
+        assert.equal(await referralPanel.isVisible(), false);
         await page.locator('#player-mailbox-back').click();
         assert.match(await pinned.innerText(), /Pinned/);
         assert.doesNotMatch(await pinned.innerText(), /\bNew\b/);
@@ -642,7 +668,113 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         assert.equal(await page.locator('#player-mailbox-subject').innerText(), 'Dostupna je nova verzija igre');
         assert.match(await page.locator('#player-mailbox-body').innerText(), /Verzija 12\.5/);
         assert.equal(await updateAction.innerText(), 'Otvori Google Play');
-        console.log('Player Mailbox: 10 themes, inner scrolling, 137 paged messages, archive/restore/delete, stale folder responses, safe area, unread state, shared intros and deliberate exit ad calls passed.');
+        await page.locator('#player-mailbox-back').click();
+        await page.evaluate(() => {
+            mailRows.unshift({ id: 'tournament-final-time-qa', type: 'tournament_event', createdAt: Date.now(),
+                tournamentEvent: { tournamentNumber: 12, kind: 'final_scheduled', p1: 'Mina <b>$&</b>', p2: 'Luka', scheduledAt: Date.parse('2026-11-20T17:00:00Z') } });
+            mailEvent();
+        });
+        for (const theme of themes) for (const language of ['sr', 'en']) {
+            await page.evaluate(({ theme, language }) => {
+                document.body.className = theme === 'dark' ? '' : theme + '-theme';
+                document.documentElement.dataset.splashTheme = theme; playerMailbox.applyTheme(theme); setLanguage(language);
+            }, { theme, language });
+            const row = page.locator('[data-message-id="tournament-final-time-qa"]');
+            await row.waitFor(); await row.click();
+            assert.match(await page.locator('#player-mailbox-subject').innerText(), language === 'sr' ? /Finale je zakazano/ : /Final scheduled/);
+            assert.match(await page.locator('#player-mailbox-body').innerText(), /Mina <b>\$&<\/b>/);
+            assert.equal(await page.locator('#player-mailbox-body b').count(), 0);
+            for (const icon of [page.locator('#player-mailbox-subject img'), row.locator('img')]) {
+                await icon.evaluate(image => image.decode());
+                assert.equal(await icon.getAttribute('src'), await page.evaluate(() => getCanonicalTournamentTrophySource()));
+                assert.equal(await icon.evaluate(image => image.naturalWidth > 0), true);
+            }
+            await page.locator('#player-mailbox-back').click();
+        }
+        for (const resultType of ['regular', 'technical']) {
+            await page.evaluate(resultType => {
+                mailRows.unshift({ id: 'champion-result-' + resultType, type: 'tournament_champion', createdAt: Date.now(),
+                    champion: { tournamentNumber: 12, playerName: 'Mina', runnerUpName: 'Luka', resultType,
+                        finalScore: resultType === 'regular' ? '1450-1400' : '' } }); mailEvent();
+            }, resultType);
+            await page.locator('[data-message-id="champion-result-' + resultType + '"]').click();
+            for (const language of ['sr', 'en']) {
+                await page.evaluate(language => setLanguage(language), language);
+                const body = await page.locator('#player-mailbox-body').innerText();
+                assert.match(body, /Mina — Luka/);
+                assert.match(body, resultType === 'regular' ? /1450-1400/ : language === 'sr' ? /Tehnički rezultat/ : /Technical result/);
+                if (resultType === 'technical') assert.doesNotMatch(body, /1-0/);
+            }
+            await page.locator('#player-mailbox-back').click();
+        }
+        await page.locator('#player-mailbox-close').click();
+        for (const [width, height] of sizes) for (const theme of themes) for (const language of ['sr', 'en']) {
+            await page.setViewportSize({ width, height });
+            await page.evaluate(({ theme, language }) => {
+                document.body.className = theme === 'dark' ? '' : theme + '-theme';
+                document.documentElement.dataset.splashTheme = theme;
+                playerMailbox.applyTheme(theme); setLanguage(language);
+                window.mailOwner = true;
+                mailRows = Array.from({ length: 35 }, (_, i) => ({ id: 'layout-' + i, type: 'game_notice',
+                    title: 'Obaveštenje / Notification ' + i, text: 'Duži sadržaj poruke / Longer message content. '.repeat(50), createdAt: 200000 - i }));
+                mailEvent();
+            }, { theme, language });
+            await page.locator('#player-mailbox-button').click();
+            await page.locator('[data-message-id="layout-0"]').waitFor();
+            for (const state of ['inbox', 'detail', 'report', 'publish', 'support', 'empty']) {
+                if (state === 'detail') await page.locator('[data-message-id="layout-0"]').click();
+                if (['report', 'publish', 'support', 'empty'].includes(state)) {
+                    await page.locator('#player-mailbox-back').click();
+                    if (state === 'empty') {
+                        await page.evaluate(() => { mailRows = []; mailEvent(); });
+                        await page.waitForFunction(() => !document.querySelector('#player-mailbox-list button'));
+                    } else {
+                        await page.locator('#player-mailbox-' + ({ report: 'report', publish: 'compose', support: 'support' }[state])).click();
+                        if (state === 'support') await page.waitForFunction(() => document.querySelector('#player-mailbox-support-status').textContent === t('mailbox_support_empty'));
+                    }
+                }
+                const layout = await page.evaluate(() => {
+                    const panel = document.querySelector('#player-mailbox'), header = panel.querySelector('header');
+                    const content = panel.querySelector('.player-mailbox-content'), box = panel.getBoundingClientRect();
+                    const heading = panel.querySelector('h2'), close = panel.querySelector('#player-mailbox-close');
+                    const headerY = header.getBoundingClientRect().y;
+                    content.scrollTop = content.scrollHeight;
+                    const fixedHeader = Math.abs(header.getBoundingClientRect().y - headerY) < .1;
+                    const scrollable = content.scrollHeight > content.clientHeight + 1;
+                    const innerScroll = !scrollable || content.scrollTop > 0;
+                    const clipped = [...content.querySelectorAll('*')].filter(e => {
+                        const r = e.getBoundingClientRect(), s = getComputedStyle(e);
+                        return r.width && r.height && s.visibility !== 'hidden' && (r.left < box.left - .5 || r.right > box.right + .5);
+                    }).map(e => e.id || e.tagName);
+                    content.scrollTop = 0;
+                    const references = [['highscores-screen', '.hs-card'], ['stats-screen', '.stats-shell'], ['settings-screen', '.settings-shell']].map(([id, selector]) => {
+                        const screen = document.getElementById(id); screen.classList.add('active');
+                        const width = screen.querySelector(selector).getBoundingClientRect().width; screen.classList.remove('active'); return width;
+                    });
+                    return { box: { x: box.x, y: box.y, width: box.width, height: box.height }, references, fixedHeader, innerScroll, scrollable, clipped,
+                        panelScroll: panel.scrollHeight > panel.clientHeight + 1, horizontal: content.scrollWidth > content.clientWidth + 1,
+                        headerHeight: header.getBoundingClientRect().height, title: heading.textContent, titleCase: getComputedStyle(heading).textTransform,
+                        icon: header.querySelector('img').getBoundingClientRect().width, close: close.getBoundingClientRect().width };
+                });
+                const context = `${theme}/${language}/${width}x${height}/${state}`;
+                assert.ok(layout.box.x >= 10 && layout.box.x + layout.box.width <= width - 10 + .5 && layout.box.y >= 24 && layout.box.y + layout.box.height <= height - 56 + .5, context + ' safe areas');
+                assert.ok(Math.abs(layout.box.height - (height - 80)) < .5, context + ' full room height');
+                if (width < 760) assert.ok(layout.references.every(w => Math.abs(w - layout.box.width) < 1.1), context + ' reference widths ' + layout.references);
+                assert.ok(layout.fixedHeader && layout.innerScroll && !layout.panelScroll && !layout.horizontal && !layout.clipped.length, context + ' overflow ' + JSON.stringify(layout));
+                assert.equal(layout.title, language === 'sr' ? 'Pošta' : 'Inbox'); assert.equal(layout.titleCase, 'uppercase');
+                assert.equal(layout.icon, 32); assert.equal(layout.close, 44); assert.equal(layout.headerHeight, 69);
+                if (state === 'inbox') assert.ok(layout.scrollable, context + ' long message list scrolls internally');
+                layoutRows.push({ theme, language, viewport: { width, height }, state, ...layout });
+                if (state === 'inbox' && language === 'sr' && ['dark', 'neon', 'easter'].includes(theme) && [320, 390].includes(width)) {
+                    fs.mkdirSync(output, { recursive: true }); await page.screenshot({ path: path.join(output, `room-${theme}-${width}x${height}.png`) });
+                }
+            }
+            await page.locator('#player-mailbox-close').click();
+        }
+        fs.mkdirSync(output, { recursive: true });
+        fs.writeFileSync(path.join(output, 'layout-report.json'), JSON.stringify({ scope: 'Local actual client/CSS with synthetic messages and blocked external requests; safe-top24/safe-bottom48; no live accounts, messages or ads.', rows: layoutRows }, null, 2) + '\n');
+        console.log(`Player Mailbox: ${layoutRows.length} room layouts across 10 themes, both languages, 5 phones and a tablet; reference widths, fixed header, safe areas and inner scrolling passed.`);
+        console.log('Player Mailbox: inner scrolling, 137 paged messages, archive/restore/delete, stale folder responses, unread state, shared intros and deliberate exit ad calls passed.');
     } finally {
         await browser.close();
     }

@@ -1,5 +1,11 @@
 # Završna provera — Pozovi prijatelja
 
+## Kartice prijatelja — 17. novembar 2026.
+
+Lokalna dorada za svih deset tema: širina kartica ostaje 150 CSS px, a visina raste na 210–280 px prema visini ekrana. Kanonsko tematsko X dugme premešteno je gore desno. Ispod slede avatar, ime, četiri reda statistike, poziv i jedan status. Uklonjena je dodatna svetleća tačka; offline dugme sada označava radnju „POZOVI/INVITE” i ostaje onemogućeno. Potvrda brisanja koristi „Ukloni / OTKAŽI” odnosno „Remove / CANCEL”. Palete i PNG identiteti ostaju tematski.
+
+**PASS: 900 izolovanih stvarnih prikaza** kroz deset tema, devet stanja i deset portretnih dimenzija: 320×568, 360×640/650/700/761/780/861, 390×844, 412×915 i 430×932 CSS px. Test `scripts/test-invite-friend-layout-runtime.cjs` učitava stvarni renderer i CSS uz sintetičke profile i blokirane spoljne zahteve. Provereni su položaj X, vertikalni redosled bez preklapanja, jedan status, ispravne pozivne kontrole, PNG učitavanje, ista geometrija i fontovi po temi, očuvana pretraga i horizontalna lista bez uspravnog skrola sobe. Uz simuliranu donju safe zonu od 48 px, najmanji dodatni razmak liste iznad nje je 17,39 px. Provere uklanjanja, odustajanja, greške servera i promene naloga prolaze u svih deset tema na oba jezika. Rezultati i snimci su u `tmp/invite-friend-layout-runtime/`; ovo je lokalna provera, bez produkcionih poziva, commita ili deploya.
+
 ## Novi prolaz — 29. oktobar 2026.
 
 [Galerija Android i lokalnih prikaza](theme-visual-audit/invite-friend-2026-10-29/index.html), [80 PNG putanja i precizne granice provere](theme-visual-audit/invite-friend-2026-10-29/report.json).

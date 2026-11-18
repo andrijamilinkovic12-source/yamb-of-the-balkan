@@ -30,6 +30,7 @@ const tournamentNotificationsCore = require('./www/tournamentNotificationsCore')
 const tournamentAudit = require('./lib/tournament-match-audit');
 const { createMail, appendMail, parseGameNotices, registerPlayerMailbox } = require('./lib/player-mailbox');
 const { createMailboxStore, mailboxEntrySchema } = require('./lib/player-mailbox-store');
+const { createTournamentMailbox } = require('./lib/tournament-mailbox');
 const { startPlayUpdateNotices } = require('./lib/play-update-notices');
 const { createPlayerReferrals, REFERRAL_REWARDS } = require('./lib/player-referrals');
 const PLAYER_REFERRALS_ENABLED = process.env.YAMB_REFERRALS_ENABLED !== 'false';
@@ -1143,9 +1144,11 @@ const PlayerSupportTicket = mongoose.model('PlayerSupportTicket', PlayerSupportT
 const PlayerGameNoticeSchema = new mongoose.Schema({
     _id: String, type: { type: String, default: 'game_notice' }, title: String, text: String, createdAt: Number,
     versionCode: Number, versionName: String,
+    tournamentEvent: mongoose.Schema.Types.Mixed,
     pinned: { type: Boolean, default: false }, protected: { type: Boolean, default: false },
     action: { type: { type: String }, url: String },
-    champion: { playerId: String, playerName: String, tournamentNumber: Number, year: Number, quarter: Number, score: Number },
+    champion: { playerId: String, playerName: String, tournamentNumber: Number, year: Number, quarter: Number,
+        score: Number, runnerUpName: String, resultType: String, finalScore: String },
     leaderboard: { playerId: String, playerName: String, score: Number,
         periods: { type: [new mongoose.Schema({ period: String, change: String, previousScore: Number, periodStartedAt: Number }, { _id: false })], default: undefined } }
 }, { versionKey: false, minimize: true });
@@ -11503,6 +11506,18 @@ try { mailboxGameNotices = parseGameNotices(process.env.PLAYER_MAILBOX_ANNOUNCEM
 catch (_) { console.warn('PLAYER_MAILBOX_ANNOUNCEMENTS is invalid; personal mail remains available.'); }
 const mailboxStore = createMailboxStore({ profiles: UserProfile, entries: PlayerMailboxEntry,
     notices: PlayerGameNotice, gameNotices: mailboxGameNotices });
+let tournamentMailbox;
+async function syncTournamentMailbox() {
+    if (!MONGO_URI || mongoose.connection.readyState !== 1 || !tournamentStateInitialized) return;
+    tournamentMailbox ||= createTournamentMailbox({ connection: mongoose.connection,
+        currentNotice: notice => getTournamentReadinessStore().currentNotice(notice),
+        guardWrite: values => accountDeletion.guardWrite(values), notify: notifyPlayerMailbox,
+        changed: () => io.emit('player_mailbox_official_changed') });
+    try { await tournamentMailbox.sync(); }
+    catch (error) { console.warn('[Tournament mailbox] Delivery will retry:', error.code || error.name); }
+}
+const tournamentMailboxInterval = setInterval(() => { void syncTournamentMailbox(); }, 15000);
+if (tournamentMailboxInterval.unref) tournamentMailboxInterval.unref();
 async function publishMailboxChampion(notice) {
     if (notice && await persistChampionNotice(PlayerGameNotice, notice)) io.emit('player_mailbox_official_changed');
 }

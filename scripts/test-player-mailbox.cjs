@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const { createMail, appendMail, mailboxSnapshot, parseGameNotices, registerPlayerMailbox } = require('../lib/player-mailbox');
 const { tournamentChampionNotice, leagueChampionNotice, persistChampionNotice } = require('../lib/mailbox-champions');
+const { systemMailboxNotices, FACEBOOK_NOTICE_ID, REFERRAL_NOTICE_ID } = require('../lib/mailbox-system-notices');
 
 async function checkLeagueAnnouncement() {
     const source = fs.readFileSync(require.resolve('../server'), 'utf8').replace(/\r\n/g, '\n');
@@ -45,6 +46,14 @@ async function checkLeagueAnnouncement() {
 }
 
 async function main() {
+    const permanent = systemMailboxNotices(100);
+    assert.deepEqual(permanent.map(row => row.id), [FACEBOOK_NOTICE_ID, REFERRAL_NOTICE_ID]);
+    assert.ok(permanent.every(row => row.pinned && row.protected));
+    assert.equal(permanent[1].type, 'referral_invite');
+    assert.equal(permanent[1].action, undefined, 'Referral notice does not open Facebook');
+    const ordered = mailboxSnapshot([{ ...permanent[1], createdAt: 999 }, { id: 'ordinary', createdAt: 2000 },
+        { ...permanent[0], createdAt: 1 }, { id: 'other-pinned', pinned: true, createdAt: 3000 }]).messages;
+    assert.deepEqual(ordered.map(row => row.id), [FACEBOOK_NOTICE_ID, REFERRAL_NOTICE_ID, 'other-pinned', 'ordinary']);
     const hooks = new Map();
     const socket = { connected: true, on: (event, listener) => hooks.set(event, listener) };
     const personal = createMail('friend_accepted', { fromUid: 'private-uid', fromName: '<Player>' }, 'friend-test');

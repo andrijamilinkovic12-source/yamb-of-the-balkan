@@ -63,7 +63,7 @@
     "check:theme-quality-refresh": "node scripts/check-theme-quality-refresh.cjs --complete",
     "check:tournament-registration": "node scripts/check-tournament-registration.js && node scripts/test-tournament-readiness.cjs && node scripts/test-tournament-readiness-store.cjs && node scripts/test-tournament-readiness-runtime.cjs && npm run check:tournament-scheduling && npm run check:tournament-notifications && npm run check:tournament-audit && npm run check:tournament-adjudication && npm run check:tournament-reliability",
     "check:tournament-scheduling": "node scripts/test-tournament-scheduling.cjs",
-    "check:tournament-notifications": "node scripts/test-tournament-notifications.cjs && node scripts/test-tournament-prize-notice.cjs",
+    "check:tournament-notifications": "node scripts/test-tournament-notifications.cjs && node scripts/test-tournament-prize-notice.cjs && node scripts/test-tournament-mailbox.cjs",
     "check:tournament-audit": "node scripts/test-tournament-match-audit.cjs",
     "check:tournament-adjudication": "node scripts/test-tournament-adjudication.cjs",
     "check:tournament-reliability": "node scripts/test-tournament-reliability.cjs",

@@ -15,7 +15,10 @@ body #waiting-screen#waiting-screen.is-hosting-invite .friend-card-actions > .fr
 }
 body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn {
     box-sizing: border-box;
-    flex: 0 0 32px;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
     width: 32px;
     height: 32px;
     min-height: 0 !important;
@@ -25,20 +28,27 @@ body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn {
     box-shadow: none !important;
     cursor: pointer;
 }
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card {
+    display: flex;
+    justify-content: flex-start;
+}
+body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-img {
+    margin-top: 34px;
+}
 body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn:focus-visible {
     outline: 2px solid var(--invite-primary);
     outline-offset: 1px;
 }
 @media (max-height: 649px) {
     body #waiting-screen#waiting-screen.is-hosting-invite .friend-card-actions {
-        grid-column: 1 / -1;
-        grid-row: 3;
-        flex-basis: 24px;
+        flex-basis: 28px;
     }
     body #waiting-screen#waiting-screen.is-hosting-invite .friend-remove-btn {
-        flex-basis: 24px;
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
+    }
+    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-img {
+        margin-top: 30px;
     }
 }
 #custom-notification-container > .custom-toast.invite-room-toast {
@@ -390,13 +400,13 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     padding-bottom: 0 !important;
     transform: translateY(-1.5mm);
 }
-#waiting-screen#waiting-screen.is-hosting-invite .friend-card {
+#waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card {
     box-sizing: border-box;
     flex: 0 0 150px !important;
     width: 150px !important;
     min-width: 150px !important;
     max-width: 150px !important;
-    height: 230px;
+    height: 280px !important;
     padding: 8px 9px !important;
     gap: 3px;
 }
@@ -746,7 +756,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
         grid-template-rows: 48px minmax(0, 1fr) auto !important;
     }
-    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 200px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 256px !important; }
 }
 @media (min-height: 821px) and (max-height: 860px) and (max-width: 375px) {
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
@@ -756,7 +766,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
         grid-template-rows: 48px minmax(0, 1fr) auto !important;
     }
-    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 200px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 256px !important; }
 }
 @media (min-height: 700px) and (max-height: 760px) and (max-width: 599px) {
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
@@ -766,7 +776,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
         grid-template-rows: 44px minmax(0, 1fr) auto !important;
     }
-    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 190px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 246px !important; }
 }
 @media (min-height: 650px) and (max-height: 699px) and (max-width: 599px) {
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
@@ -776,7 +786,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
         grid-template-rows: 42px minmax(0, 1fr) auto !important;
     }
-    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 180px !important; }
+    #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card { height: 236px !important; }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-img {
         width: 34px;
         height: 34px;
@@ -861,7 +871,7 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container { margin-top: 3px !important; }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container > h3 { margin-bottom: 4px !important; }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card {
-        height: 138px !important;
+        height: 210px !important;
         padding: 5px 6px !important;
         gap: 2px;
     }
@@ -871,27 +881,27 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
         flex-basis: 28px;
     }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-name {
-        height: 2em;
-        flex-basis: 2em;
+        height: 2.4em;
+        flex-basis: 2.4em;
         margin-bottom: 0;
-        font-size: .65rem;
-        line-height: 1;
+        font-size: .68rem;
+        line-height: 1.2;
     }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
-        min-height: 46px;
-        height: 46px;
-        flex-basis: 46px;
+        min-height: 56px;
+        height: 56px;
+        flex-basis: 56px;
         padding: 1px 4px;
     }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .easter-friend-record-row {
         min-height: 10px;
-        font-size: .57rem !important;
+        font-size: .62rem !important;
         line-height: 1 !important;
     }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-card-btn {
-        flex-basis: 24px;
-        min-height: 24px;
-        height: 24px;
+        flex-basis: 28px;
+        min-height: 28px;
+        height: 28px;
     }
     #waiting-screen#waiting-screen#waiting-screen.is-hosting-invite .friend-request-actions button { min-height: 24px; }
 }
@@ -962,21 +972,6 @@ body #custom-notification-container > .custom-toast.invite-room-toast .toast-msg
 }
 @media (max-height: 649px) {
     body #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel { border: 0 !important; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card {
-        display: grid;
-        grid-template-columns: 28px minmax(0, 1fr);
-        grid-template-rows: 28px 46px 24px 12px;
-        align-content: start;
-        column-gap: 4px;
-        row-gap: 2px;
-    }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-img { grid-column: 1; grid-row: 1; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-name { grid-column: 2; grid-row: 1; width: 100%; align-self: center; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats { grid-column: 1 / -1; grid-row: 2; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-btn { grid-column: 1 / -1; grid-row: 3; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .green-friend-presence { grid-column: 1 / -1; grid-row: 4; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .easter-friend-records { grid-template-rows: repeat(4, minmax(0, 1fr)); height: 100%; gap: 0; }
-    body #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .easter-friend-record-row { min-height: 0; }
 }
 @media (max-width: 360px) {
     body #waiting-screen#waiting-screen.is-friend-invite:not(.is-hosting-invite) .ws-glass-avatar { width: 52px !important; height: 52px !important; }
