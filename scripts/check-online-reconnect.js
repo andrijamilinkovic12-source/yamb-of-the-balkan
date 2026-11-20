@@ -348,7 +348,7 @@ async function run() {
         gameActive: true, onlineMode: true, roomId: 'room_closed', isSpectator: false,
         claimPendingRewardBeforeExternalNavigation() { throw new Error('Terminal exit must not wait for reward'); },
         autoSaveGame() { throw new Error('Terminal exit must not save a closed duel'); },
-        clearOnlineGameOverDelay() {}, setInviteBusyState() {}, stopWaitingHofRotation() {},
+        clearOnlineGameOverDelay() {}, clearOpponentReconnectGraceCountdown() {}, setInviteBusyState() {}, stopWaitingHofRotation() {},
         navigateTo(screen) { menuEvents.push(`navigate:${screen}`); },
         socket: { connected: true, emit(event) { menuEvents.push(`socket:${event}`); } },
         showMainMenu: menuSandbox.showMainMenu

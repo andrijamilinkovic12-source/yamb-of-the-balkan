@@ -104,7 +104,7 @@ for (const theme of themes) {
     querySelector:() => null
   };
   vm.runInNewContext(script, {
-    document, localStorage:{ getItem:() => theme },
+    window:{}, document, localStorage:{ getItem:() => theme },
     MutationObserver:class { observe() {} }, Node:{ ELEMENT_NODE:1 }
   }, { filename:'theme-main-room-icons.js' });
   for (const image of images) {

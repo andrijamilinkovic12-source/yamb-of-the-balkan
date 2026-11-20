@@ -41,7 +41,7 @@ const introOverlay = {
 };
 const timers = [];
 const loadedSources = [];
-const documentMock = { body, getElementById: id => id === 'daily-intro' ? introOverlay : null };
+const documentMock = { body, getElementById: id => id === 'daily-intro' ? introOverlay : null, querySelector: () => null };
 class MockImage {
     set src(value) {
         loadedSources.push(value);
@@ -53,16 +53,19 @@ class MockImage {
 const DailyChallenge = vm.runInNewContext(
     read('www/dnevniizazov.js').toString() + '\nDnevniIzazov',
     {
-        window: {},
+        window: { dailyChallengeCore: require('../www/dailyChallengeCore') },
         document: documentMock,
         localStorage: { getItem: () => activeTheme },
         Image: MockImage,
         setTimeout: (fn, delay) => { timers.push({ fn, delay }); },
+        clearTimeout() {},
+        clearInterval() {},
         t: key => key,
         console
     }
 );
 const instance = Object.create(DailyChallenge.prototype);
+instance.sessionRevision = 0;
 
 for (const theme of manifest.themes) {
     activeTheme = theme.id;
@@ -104,7 +107,7 @@ for (const theme of manifest.themes) {
         querySelector: selector => selector === '.daily-complete-mark' ? completeMark : null
     });
     documentMock.getElementById = id => id === 'glass-daily-card'
-        ? { appendChild() {}, querySelector: selector => selector === '.daily-glass-score-box' ? scoreBox : null }
+        ? { classList: { toggle() {} }, appendChild() {}, querySelector: selector => selector === '.daily-glass-score-box' ? scoreBox : null }
         : id === 'glass-btn-action' ? { style: {} } : null;
     instance.showResultModal();
     for (const role of ['complete', 'reward-video', 'ducat']) {
@@ -126,7 +129,7 @@ for (const role of activeRoles) assertActivePng('dark', role, instance.getDailyA
         querySelector: selector => selector === '.daily-complete-mark' ? completeMark : null
     });
     documentMock.getElementById = id => id === 'glass-daily-card'
-        ? { appendChild() {}, querySelector: selector => selector === '.daily-glass-score-box' ? scoreBox : null }
+        ? { classList: { toggle() {} }, appendChild() {}, querySelector: selector => selector === '.daily-glass-score-box' ? scoreBox : null }
         : id === 'glass-btn-action' ? { style: {} } : null;
     instance.showResultModal();
     for (const role of ['complete', 'reward-video', 'ducat']) {
@@ -148,10 +151,11 @@ const game = read('www/game.js').toString();
 const rules = read('www/pravilaigre.js').toString();
 const roomIcons = read('www/theme-main-room-icons.js').toString();
 const oceanPreview = read('www/themes/ocean/qa-preview.html').toString();
-assert.match(html, /theme-daily-room\.css\?v=5/);
-assert.match(html, /dnevniizazov\.js\?v=3\.5/);
+assert.match(html, /theme-daily-room\.css\?v=7/);
+assert.match(html, /dnevniizazov\.js\?v=3\.7/);
+assert.ok(html.indexOf('dailyChallengeCore.js?v=1') < html.indexOf('dnevniizazov.js?v=3.7'));
 const dailyAlerts = js.split('\n').filter(line => line.includes('this.app.modal.alert('));
-assert.equal(dailyAlerts.length, 6);
+assert.equal(dailyAlerts.length, 7);
 assert.ok(dailyAlerts.every(line => line.includes("contextClass: 'daily'")), 'Daily notices must opt into scoped Green typography and theme contrast');
 assert.match(config, /ROOM_INTRO_TIMING = Object\.freeze\(\{ openAtMs: 2400, durationMs: 3200 \}\)/);
 assert.match(sharedCss, /--room-intro-duration: 3\.2s/);
@@ -198,6 +202,9 @@ for (const theme of themes) {
     assert.ok(css.includes(`body.${theme}-theme #glass-daily-overlay`));
 }
 assert.match(css, /font-family: 'Montserrat', sans-serif/);
+assert.match(css, /\.daily-reward-breakdown dt \{[^}]*text-transform: uppercase/);
+assert.match(css, /\.daily-yamb-heading span \{[^}]*text-transform: none/);
+assert.match(css, /\.daily-reward-breakdown dd \{[^}]*font-variant-numeric: tabular-nums/);
 assert.match(css, /\.daily-glass-card \{\s*width: min\(430px, 100%\);\s*max-height: 100%/);
 assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
 assert.match(css, /padding: max\(12px, env\(safe-area-inset-top\)\)/);

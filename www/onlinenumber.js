@@ -35,6 +35,9 @@ function setOnlineActionButtonDisabled(button, isDisabled) {
     button.classList.toggle('is-disabled', !!isDisabled);
 }
 
+const onlineFriendRequestsInFlight = new Set();
+const onlineFriendRequestKey = (uid, socketId) => `${window.app?.playerId || ''}:${uid || socketId}`;
+
 window.handleOnlinePlayerFriendRequest = async function(button, socketId, name, uid) {
     const tr = (key, fallback) => {
         const value = window.t ? window.t(key) : key;
@@ -46,6 +49,9 @@ window.handleOnlinePlayerFriendRequest = async function(button, socketId, name, 
         return;
     }
 
+    const requestKey = onlineFriendRequestKey(uid, socketId);
+    if (onlineFriendRequestsInFlight.has(requestKey)) return;
+    onlineFriendRequestsInFlight.add(requestKey);
     setOnlineActionButtonDisabled(button, true);
 
     try {
@@ -55,6 +61,9 @@ window.handleOnlinePlayerFriendRequest = async function(button, socketId, name, 
         console.warn('Zahtev za prijateljstvo iz online liste nije uspeo:', err);
         setOnlineActionButtonDisabled(button, false);
         showNotification(tr('err_title', 'GREŠKA'), tr('err_server_conn', 'Greška pri povezivanju sa serverom.'), { className: 'online-players-notice' });
+    } finally {
+        onlineFriendRequestsInFlight.delete(requestKey);
+        if (typeof onlinePlayersRenderCurrent === 'function') onlinePlayersRenderCurrent({ preserveScroll: true });
     }
 };
 
@@ -175,6 +184,12 @@ let onlinePlayersSearchTimer = null;
 let onlinePlayersConnectionTimer = null;
 let onlinePlayersPendingConnectHandler = null;
 let onlinePlayersDisconnectHandler = null;
+let onlinePlayersBoundSocket = null;
+let onlinePlayersListHandler = null;
+let onlinePlayersStatusHandler = null;
+let onlinePlayersResponseTimer = null;
+let onlinePlayersListPending = false;
+let onlinePlayersRenderError = null;
 let onlinePlayersOpenedAt = 0;
 
 function normalizeOnlinePlayerSearch(value) {
@@ -227,6 +242,13 @@ function isOnlinePlayersModalOpen() {
 
 function requestOnlinePlayersList() {
     if (window.app && window.app.socket && window.app.socket.connected) {
+        if (onlinePlayersListPending) return true;
+        onlinePlayersListPending = true;
+        onlinePlayersResponseTimer = setTimeout(() => {
+            onlinePlayersResponseTimer = null;
+            onlinePlayersListPending = false;
+            if (isOnlinePlayersModalOpen() && onlinePlayersRenderError) onlinePlayersRenderError();
+        }, 8000);
         window.app.socket.emit('get_online_players_list');
         return true;
     }
@@ -241,23 +263,26 @@ function stopOnlinePlayersAutoRefresh() {
 }
 
 function cleanupOnlinePlayersSocketListeners() {
-    const socket = window.app && window.app.socket;
+    const socket = onlinePlayersBoundSocket;
     if (onlinePlayersConnectionTimer) {
         clearTimeout(onlinePlayersConnectionTimer);
         onlinePlayersConnectionTimer = null;
     }
-    if (!socket || typeof socket.off !== 'function') return;
-
-    socket.off('online_players_list_data');
-    socket.off('online_players_status_changed');
-    if (onlinePlayersDisconnectHandler) {
-        socket.off('disconnect', onlinePlayersDisconnectHandler);
-        onlinePlayersDisconnectHandler = null;
+    if (onlinePlayersResponseTimer) clearTimeout(onlinePlayersResponseTimer);
+    onlinePlayersResponseTimer = null;
+    onlinePlayersListPending = false;
+    onlinePlayersRenderError = null;
+    if (socket && typeof socket.off === 'function') {
+        if (onlinePlayersListHandler) socket.off('online_players_list_data', onlinePlayersListHandler);
+        if (onlinePlayersStatusHandler) socket.off('online_players_status_changed', onlinePlayersStatusHandler);
+        if (onlinePlayersDisconnectHandler) socket.off('disconnect', onlinePlayersDisconnectHandler);
+        if (onlinePlayersPendingConnectHandler) socket.off('connect', onlinePlayersPendingConnectHandler);
     }
-    if (onlinePlayersPendingConnectHandler) {
-        socket.off('connect', onlinePlayersPendingConnectHandler);
-        onlinePlayersPendingConnectHandler = null;
-    }
+    onlinePlayersListHandler = null;
+    onlinePlayersStatusHandler = null;
+    onlinePlayersDisconnectHandler = null;
+    onlinePlayersPendingConnectHandler = null;
+    onlinePlayersBoundSocket = null;
 }
 
 function startOnlinePlayersAutoRefresh() {
@@ -303,6 +328,7 @@ window.refreshOnlinePlayersModal = function() {
 
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
+    stopOnlinePlayersAutoRefresh();
     cleanupOnlinePlayersSocketListeners();
     const sec = getOnlineNumberSecurity();
     const tr = (key, fallback) => {
@@ -310,7 +336,7 @@ window.openOnlinePlayersModal = function() {
         return value && value !== key ? value : fallback;
     };
     const overlay = document.getElementById('online-players-overlay');
-    window.themeOnlinePlayers.preload();
+    window.themeOnlinePlayers.preload().catch(() => {});
 
     if (overlay) {
         overlay.style.display = 'flex';
@@ -333,6 +359,7 @@ window.openOnlinePlayersModal = function() {
             </div>`;
         window.themeOnlinePlayers.apply(body);
     };
+    onlinePlayersRenderError = () => renderPlayersState('error', tr('online_no_conn', 'Niste povezani na server.'));
     if (body) {
         body.style.flex = '1';
         body.style.overflowY = 'auto';
@@ -374,18 +401,22 @@ window.openOnlinePlayersModal = function() {
     }
 
     if (window.app && window.app.socket) {
+        const socket = window.app.socket;
+        onlinePlayersBoundSocket = socket;
         const bindOnlinePlayersList = () => {
             if (onlinePlayersConnectionTimer) {
                 clearTimeout(onlinePlayersConnectionTimer);
                 onlinePlayersConnectionTimer = null;
             }
-            onlinePlayersPendingConnectHandler = null;
             if (!isOnlinePlayersModalOpen()) return;
             const renderOnlinePlayers = (players, options = {}) => {
             if (!body) return;
 
             if (Array.isArray(players)) {
-                onlinePlayersSnapshot = players;
+                if (onlinePlayersResponseTimer) clearTimeout(onlinePlayersResponseTimer);
+                onlinePlayersResponseTimer = null;
+                onlinePlayersListPending = false;
+                onlinePlayersSnapshot = players.filter(player => player && typeof player === 'object');
             }
 
             const allPlayers = onlinePlayersSnapshot;
@@ -417,6 +448,7 @@ window.openOnlinePlayersModal = function() {
                 const playerUid = String(p.uid || p.playerId || '');
                 const roomId = String(p.roomId || '');
                 const status = String(p.status || '').toLowerCase();
+                const isTournamentMatch = p.isTournamentMatch === true && p.isPlaying === true;
                 const isMe = p.socketId === window.app.socket.id || (myUid && playerUid && myUid === playerUid);
                 const youText = tr('online_you', '(Vi)');
                 const rawName = String(p.name || 'Igrac');
@@ -438,7 +470,7 @@ window.openOnlinePlayersModal = function() {
                     const hasLiveRoom = !!roomId && !roomId.startsWith('local_');
                     const alreadyPlayingOnline = !!(window.app && window.app.gameActive && window.app.onlineMode && !window.app.isSpectator);
                     const canSpectate = !alreadyPlayingOnline && (!!p.canSpectate || (hasLiveRoom && (!!p.isPlaying || status === 'playing')));
-                    const isBusy = !!p.isBusy || !!p.isPlaying || status === 'playing';
+                    const isBusy = !!p.isBusy || !!p.isPlaying || status === 'playing' || status === 'busy';
                     // Znamo sigurno sa servera da li su već prijatelji!
                     const isAlreadyFriend = p.isFriend;
                     const errorTitleArg = sec.jsString(tr('err_title', 'GREŠKA'));
@@ -462,17 +494,17 @@ window.openOnlinePlayersModal = function() {
                                 src="${window.themeOnlinePlayers.asset(role)}" alt="" aria-hidden="true" decoding="async">
                         </button>`;
                     const friendButton = actionButton('friend', isAlreadyFriend ? alreadyFriendTitle : addFriendTitle,
-                        addFriendHandler, !!isAlreadyFriend);
+                        addFriendHandler, !!isAlreadyFriend || onlineFriendRequestsInFlight.has(onlineFriendRequestKey(playerUid, p.socketId)));
                     const spectateButton = actionButton('spectate', canSpectate ? spectateTitleText
                         : (alreadyPlayingOnline ? spectateBusySelfTitle : spectateNotPlayingTitle),
                         spectateHandler, !canSpectate);
-                    const duelButton = actionButton('duel', isBusy ? playerBusyTitle : challengeTitleText,
-                        challengeHandler, isBusy);
+                    const duelButton = actionButton('duel', alreadyPlayingOnline ? spectateBusySelfTitle
+                        : (isBusy ? playerBusyTitle : challengeTitleText),
+                        challengeHandler, isBusy || alreadyPlayingOnline);
                     actionButtons = `<div class="online-player-actions">${friendButton}${spectateButton}${duelButton}</div>`;
                 }
 
-                html += `
-                <div class="online-player-card" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
+                const playerContent = `
                     <div class="online-player-identity" style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
                         <img class="theme-online-avatar${p.isPlaying ? ' is-playing' : (p.isBusy ? ' is-busy' : '')}"
                             src="${photoSrc}"${avatarRole} onerror="window.themeOnlinePlayers.handleAvatarError(this)"
@@ -481,7 +513,17 @@ window.openOnlinePlayersModal = function() {
                             ${safeNameHtml} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${sec.escapeHtml(youText)}</span>` : ''}
                         </span>
                     </div>
-                    ${actionButtons}
+                    ${actionButtons}`;
+                const tournamentContent = isTournamentMatch ? `
+                    <div class="online-player-main">${playerContent}</div>
+                    <div class="online-player-tournament-status">
+                        <img class="online-player-tournament-icon" data-online-role="tournament"
+                            src="${sec.escapeAttr(window.themeOnlinePlayers.asset('tournament'))}" alt="" aria-hidden="true" decoding="async">
+                        <span>${sec.escapeHtml(tr('online_tournament_match', 'Turnirski meč'))}</span>
+                    </div>` : '';
+                html += `
+                <div class="online-player-card${isTournamentMatch ? ' is-tournament-match' : ''}" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
+                    ${isTournamentMatch ? tournamentContent : playerContent}
                 </div>`;
             });
 
@@ -506,38 +548,43 @@ window.openOnlinePlayersModal = function() {
         };
 
             onlinePlayersRenderCurrent = (options = {}) => renderOnlinePlayers(null, options);
-            window.app.socket.off('online_players_list_data');
-            window.app.socket.on('online_players_list_data', renderOnlinePlayers);
+            if (onlinePlayersListHandler) socket.off('online_players_list_data', onlinePlayersListHandler);
+            onlinePlayersListHandler = renderOnlinePlayers;
+            socket.on('online_players_list_data', onlinePlayersListHandler);
 
-            window.app.socket.off('online_players_status_changed');
-            window.app.socket.on('online_players_status_changed', () => {
+            if (onlinePlayersStatusHandler) socket.off('online_players_status_changed', onlinePlayersStatusHandler);
+            onlinePlayersStatusHandler = () => {
                 if (isOnlinePlayersModalOpen()) requestOnlinePlayersList();
-            });
-            if (onlinePlayersDisconnectHandler) window.app.socket.off('disconnect', onlinePlayersDisconnectHandler);
+            };
+            socket.on('online_players_status_changed', onlinePlayersStatusHandler);
+            if (onlinePlayersDisconnectHandler) socket.off('disconnect', onlinePlayersDisconnectHandler);
             onlinePlayersDisconnectHandler = () => {
+                if (onlinePlayersResponseTimer) clearTimeout(onlinePlayersResponseTimer);
+                onlinePlayersResponseTimer = null;
+                onlinePlayersListPending = false;
                 if (isOnlinePlayersModalOpen()) {
-                    renderPlayersState('error', tr('online_no_conn', 'Niste povezani na server.'));
+                    onlinePlayersRenderError();
                 }
             };
-            window.app.socket.on('disconnect', onlinePlayersDisconnectHandler);
+            socket.on('disconnect', onlinePlayersDisconnectHandler);
 
             startOnlinePlayersAutoRefresh();
             requestOnlinePlayersList();
         };
 
-        if (window.app.socket.connected) {
+        onlinePlayersPendingConnectHandler = bindOnlinePlayersList;
+        socket.on('connect', bindOnlinePlayersList);
+        if (socket.connected) {
             bindOnlinePlayersList();
         } else {
-            onlinePlayersPendingConnectHandler = bindOnlinePlayersList;
-            window.app.socket.once('connect', bindOnlinePlayersList);
             onlinePlayersConnectionTimer = setTimeout(() => {
                 onlinePlayersConnectionTimer = null;
-                if (!isOnlinePlayersModalOpen() || window.app.socket.connected) return;
+                if (!isOnlinePlayersModalOpen() || socket.connected) return;
                 if (body?.querySelector('[data-online-state="loading"]')) {
                     renderPlayersState('error', tr('online_no_conn', 'Niste povezani na server.'));
                 }
             }, 8000);
-            if (window.app.socket.disconnected) window.app.socket.connect();
+            if (socket.disconnected) socket.connect();
         }
     } else {
         if (body) {

@@ -77,8 +77,12 @@ sync.call(syncContext, 'easter', { hydrate: true });
 assert(images.every(image => image.currentSource.includes('/easter/')));
 assert(game.includes("if (roomId === 'opponent' || roomId === 'onlineRandom')")
     && game.includes("this.syncOnlineRandomStateImages(theme, { hydrate: true })"));
-assert(game.includes("this.getOnlineRandomStateSource(theme, 'disconnected')")
-    && game.includes("this.getOnlineRandomStateSource(localStorage.getItem('yamb_theme') || 'dark', 'reconnected')"));
+assert(game.includes('this.showOpponentReconnectGraceCountdown({ ...data, noticeDelayMs: 1500 });')
+    && game.includes("timerDisplay.classList.add('timer-turn--disconnected');")
+    && game.includes("gt('connection_paused_notice')"),
+    'Disconnect must use the delayed pause notice and authoritative grace countdown');
+assert(game.includes("this.getOnlineRandomStateSource(localStorage.getItem('yamb_theme') || 'dark', 'reconnected')"),
+    'Recovery notice must keep the themed reconnected icon');
 assert(game.includes('}, window.ROOM_INTRO_TIMING?.openAtMs ?? 2400);') && game.includes('}, window.ROOM_INTRO_TIMING?.durationMs ?? 3200);')
     && game.includes("overlay.classList.toggle('easter-room-intro--icon-only', isIconOnly)"),
     'room intro must keep the Green icon-only behavior and timing');

@@ -93,8 +93,12 @@ io.on('connection', socket => {
         for (const client of io.sockets.sockets.values()) if (moderation.isOwner(client)) client.emit('global_chat_moderation_changed', { kind: 'report' });
     });
     socket.on('request_global_chat_history', () => socket.emit('global_chat_history', history));
-    socket.on('global_chat_msg', async data => {
-        if (await moderationStore.restriction(uid, Date.now())) return socket.emit('error_msg', 'err_chat_suspended');
+    socket.on('global_chat_msg', async (data, ack) => {
+        if (await moderationStore.restriction(uid, Date.now())) {
+            if (typeof ack === 'function') ack({ ok: false, reason: 'err_chat_suspended' });
+            else socket.emit('error_msg', 'err_chat_suspended');
+            return;
+        }
         const msg = typeof data?.msg === 'string' ? data.msg.trim().slice(0, 550) : '';
         if (!msg) return;
         const message = { id: `qa-${++nextId}`, createdAt: Date.now(), sender: socket.playerName, senderId: socket.id, senderUid: uid, msg };
@@ -102,6 +106,7 @@ io.on('connection', socket => {
         if (history.length > 50) history.shift();
         activity.stop(socket);
         io.emit('global_chat_msg', message);
+        if (typeof ack === 'function') ack({ ok: true, message });
     });
 });
 const port = Number(process.env.CHAT_QA_PORT || 3142);

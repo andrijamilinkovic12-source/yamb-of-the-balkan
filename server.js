@@ -24,6 +24,7 @@ const { createGlobalChatModeration } = require('./lib/global-chat-moderation');
 const { createGlobalChatModerationStore } = require('./lib/global-chat-moderation-store');
 const { createDuelChat } = require('./lib/duel-chat');
 const powerIndexCore = require('./www/powerIndexCore');
+const dailyChallengeCore = require('./www/dailyChallengeCore');
 const tournamentReadinessCore = require('./www/tournamentReadinessCore');
 const tournamentSchedulingCore = require('./www/tournamentSchedulingCore');
 const tournamentNotificationsCore = require('./www/tournamentNotificationsCore');
@@ -279,9 +280,10 @@ app.get('/healthz', (req, res) => {
 app.use((req, res, next) => {
     if (!MAINTENANCE_MODE) return next();
 
-    const isMaintenanceAsset = req.path === '/assets/moonlight-lunar-bg.png';
+    const isMaintenanceUiResource = req.path === '/maintenance.css' || req.path === '/maintenance-mode.js';
+    const isMaintenanceAsset = req.path.startsWith('/assets/');
     const isAndroidAppLink = req.path === '/.well-known/assetlinks.json';
-    if (isMaintenanceAsset || isAndroidAppLink) return next();
+    if (isMaintenanceUiResource || isMaintenanceAsset || isAndroidAppLink) return next();
 
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
     res.setHeader('Retry-After', String(MAINTENANCE_RETRY_AFTER_SECONDS));
@@ -301,74 +303,7 @@ app.use((req, res, next) => {
 // ==================================================================
 // 0. FILTER VULGARNOSTI ZA GLOBALNI CHAT I IMENA (PAMETNI FILTER)
 // ==================================================================
-const zabranjeneReci = [
-    "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
-    "kurv", "jeb", "pizd", "kurac", "sranj", "govn", "pick", "pedere", "pederu", "pedercin",
-    "gej", "gejc", "lezb", "drolj", "kuck", "drk", "pusikur", "supak", "cmar",
-    "verskauvreda1", "nacionalnauvreda1", "rasnauvreda1", "balij", "ustas", "chetnik", "siptar", "cigan", "skart",
-    "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "slut", "whore", 
-    "faggot", "nigger", "nigga", "bastard", "retard", "crap", "douche", "motherfucker"
-];
-
-const charMap = {
-    'a': '[aA@4]', 'b': '[bB8]', 'c': '[cCčČćĆ]', 'd': '[dDđĐ]', 'e': '[eE3]',
-    'g': '[gG6]', 'i': '[iI1l!L]', 'j': '[jJyY]', 'l': '[lL1iI]', 'o': '[oO0]',
-    's': '[sSšŠ5\\$]', 't': '[tT7]', 'u': '[uUvV]', 'z': '[zZžŽ]'
-};
-
-const profanityCharFoldMap = {
-    'а': 'a', 'А': 'a', 'б': 'b', 'Б': 'b', 'в': 'v', 'В': 'v',
-    'г': 'g', 'Г': 'g', 'д': 'd', 'Д': 'd', 'ђ': 'dj', 'Ђ': 'dj',
-    'е': 'e', 'Е': 'e', 'ж': 'z', 'Ж': 'z', 'з': 'z', 'З': 'z',
-    'и': 'i', 'И': 'i', 'ј': 'j', 'Ј': 'j', 'к': 'k', 'К': 'k',
-    'л': 'l', 'Л': 'l', 'љ': 'lj', 'Љ': 'lj', 'м': 'm', 'М': 'm',
-    'н': 'n', 'Н': 'n', 'њ': 'nj', 'Њ': 'nj', 'о': 'o', 'О': 'o',
-    'п': 'p', 'П': 'p', 'р': 'r', 'Р': 'r', 'с': 's', 'С': 's',
-    'т': 't', 'Т': 't', 'ћ': 'c', 'Ћ': 'c', 'у': 'u', 'У': 'u',
-    'ф': 'f', 'Ф': 'f', 'х': 'h', 'Х': 'h', 'ц': 'c', 'Ц': 'c',
-    'ч': 'c', 'Ч': 'c', 'џ': 'dz', 'Џ': 'dz', 'ш': 's', 'Ш': 's'
-};
-
-function normalizeProfanityText(value) {
-    return String(value || '')
-        .normalize('NFKD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^\x00-\x7F]/g, char => profanityCharFoldMap[char] || char)
-        .toLowerCase();
-}
-
-function napraviPametniRegex(rec) {
-    let regexStr = '';
-    for (let i = 0; i < rec.length; i++) {
-        let slovo = rec[i].toLowerCase();
-        let pattern = charMap[slovo] || `[${slovo.toLowerCase()}${slovo.toUpperCase()}]`;
-        regexStr += pattern + '+';
-        if (i < rec.length - 1) {
-            regexStr += '[\\W_]*';
-        }
-    }
-    return new RegExp(regexStr, 'gi');
-}
-
-const zabranjeniRegexi = zabranjeneReci.map(rec => napraviPametniRegex(rec));
-
-function cenzurisiPoruku(poruka) {
-    let filtriranaPoruka = poruka;
-    zabranjeniRegexi.forEach(regex => {
-        filtriranaPoruka = filtriranaPoruka.replace(regex, '***');
-    });
-    if (filtriranaPoruka === poruka && sadrziPsovku(normalizeProfanityText(poruka))) {
-        return '***';
-    }
-    return filtriranaPoruka;
-}
-
-function sadrziPsovku(tekst) {
-    const rawText = String(tekst || '');
-    const normalizedText = normalizeProfanityText(rawText);
-    return zabranjeniRegexi.some(regex => rawText.match(regex) !== null) ||
-        (normalizedText !== rawText && zabranjeniRegexi.some(regex => normalizedText.match(regex) !== null));
-}
+const { containsProfanity: sadrziPsovku, filterProfanity: cenzurisiPoruku } = require('./lib/profanity');
 
 // ==================================================================
 // 1. RUTA ZA ANDROID APP LINKS (ASSETLINKS.JSON)
@@ -1367,8 +1302,8 @@ const playerReferrals = createPlayerReferrals({ profiles: UserProfile, matches: 
     }
 });
 const MAX_UNDO_TOKENS = 250;
-const MAX_DAILY_REWARD = 2000;
-const MAX_DAILY_BASE_REWARD = 864;
+const MAX_DAILY_BASE_REWARD = dailyChallengeCore.MAX_REWARD;
+const MAX_DAILY_REWARD = MAX_DAILY_BASE_REWARD * 2;
 const MAX_REWARD_PER_GAME = 8000;
 const SOLO_RECORD_BONUS_BPS = Object.freeze({ personal: 1000, weekly: 1000, monthly: 1000, all_time: 2000 });
 const SOLO_RECORD_ORDER = Object.freeze(['weekly', 'monthly', 'all_time', 'personal']);
@@ -1605,6 +1540,7 @@ async function sendPushToUids(uids, baseMessage = {}) {
         if (tokenGroups.size === 0) return { ok: true, sent: 0 };
 
         let successCount = 0;
+        let failedCount = 0;
         const invalidTokens = [];
 
         for (const [language, group] of tokenGroups) {
@@ -1617,28 +1553,42 @@ async function sendPushToUids(uids, baseMessage = {}) {
                 const batch = tokens.slice(i, i + 500);
                 const message = buildPushMessage(localizedMessage, batch);
 
-                if (typeof firebaseMessaging.sendEachForMulticast === 'function') {
-                    const response = await firebaseMessaging.sendEachForMulticast(message);
-                    successCount += response.successCount || 0;
-                    response.responses.forEach((item, index) => {
-                        if (!item.success && isInvalidFcmTokenError(item.error)) invalidTokens.push(batch[index]);
-                    });
-                } else {
-                    await Promise.all(batch.map(async token => {
-                        try {
-                            const { tokens: _tokens, ...singleMessage } = message;
-                            await firebaseMessaging.send({ ...singleMessage, token });
-                            successCount += 1;
-                        } catch (error) {
-                            if (isInvalidFcmTokenError(error)) invalidTokens.push(token);
-                        }
-                    }));
+                try {
+                    if (typeof firebaseMessaging.sendEachForMulticast === 'function') {
+                        const response = await firebaseMessaging.sendEachForMulticast(message);
+                        successCount += response.successCount || 0;
+                        response.responses.forEach((item, index) => {
+                            if (item.success) return;
+                            if (isInvalidFcmTokenError(item.error)) invalidTokens.push(batch[index]);
+                            else failedCount += 1;
+                        });
+                    } else {
+                        await Promise.all(batch.map(async token => {
+                            try {
+                                const { tokens: _tokens, ...singleMessage } = message;
+                                await firebaseMessaging.send({ ...singleMessage, token });
+                                successCount += 1;
+                            } catch (error) {
+                                if (isInvalidFcmTokenError(error)) invalidTokens.push(token);
+                                else failedCount += 1;
+                            }
+                        }));
+                    }
+                } catch (error) {
+                    failedCount += batch.length;
+                    console.warn('FCM paket nije prihvacen:', error?.code || 'push_send_failed');
                 }
             }
         }
 
         await removeInvalidPushTokens(invalidTokens);
-        return { ok: true, sent: successCount, invalid: invalidTokens.length };
+        if (failedCount > 0) {
+            console.warn(`FCM isporuka nije potpuna: prihvaceno=${successCount}, neuspesno=${failedCount}, nevazeci=${invalidTokens.length}`);
+        }
+        // Repeating an entire partially accepted broadcast would duplicate successful deliveries.
+        const ok = successCount > 0 || failedCount === 0;
+        return { ok, sent: successCount, invalid: invalidTokens.length, failed: failedCount,
+            ...(!ok ? { reason: 'push_send_failed' } : {}) };
     } catch (err) {
         console.error('Greška pri slanju push notifikacije:', err);
         return { ok: false, reason: 'push_send_failed' };
@@ -2051,10 +2001,7 @@ function getDailyChallengeDice(uid, dayKey) {
 }
 
 function calculateDailyChallengeReward(dice = []) {
-    if (!Array.isArray(dice) || dice.length < 6) return 0;
-    const safeDice = dice.map(value => Math.max(1, Math.min(6, toSafeInt(value, 1))));
-    const sumFirstFour = safeDice[0] + safeDice[1] + safeDice[2] + safeDice[3];
-    return sumFirstFour * safeDice[4] * safeDice[5];
+    return dailyChallengeCore.calculateReward(dice).reward;
 }
 
 function getDailyChallengeForUid(uid, now = new Date()) {
@@ -2064,7 +2011,7 @@ function getDailyChallengeForUid(uid, now = new Date()) {
         dayKey,
         timeZone: DAILY_CHALLENGE_TIME_ZONE,
         dice,
-        reward: calculateDailyChallengeReward(dice)
+        ...dailyChallengeCore.calculateReward(dice)
     };
 }
 
@@ -2225,49 +2172,53 @@ async function notifyQuarterlyLeagueChampionIfDue(now = new Date()) {
 
     if (!claimedArchive) return { ok: true, skipped: 'already_sent', periodKey: target.periodKey };
 
-    const claimedScores = Array.isArray(claimedArchive.topScores) ? claimedArchive.topScores : [];
-    const claimedChampion = claimedArchive.champion || claimedScores[0] || champion;
-    const cycle = await getLeagueChampionCycleNumber(target.year, target.quarter);
-    const payload = buildLeagueChampionPushPayload(claimedChampion, cycle);
-    const uids = await getPushEnabledUids('league');
-    const result = uids.length > 0
-        ? await sendPushToUids(uids, {
-            category: 'league',
-            scope: 'league',
-            type: 'league_champion_announced',
-            tag: `league_champion_${target.periodKey}`,
-            title: payload.title,
-            body: payload.body,
-            localizations: payload.localizations,
-            data: {
-                year: target.year,
-                quarter: target.quarter,
-                periodKey: target.periodKey,
-                cycle: cycle || '',
-                cycleRoman: payload.romanCycle,
-                playerName: payload.playerName,
-                score: payload.score,
-                photoUrl: claimedChampion.photoUrl || ''
-            }
-        })
-        : { ok: true, sent: 0 };
+    let pushCompleted = false;
+    try {
+        const claimedScores = Array.isArray(claimedArchive.topScores) ? claimedArchive.topScores : [];
+        const claimedChampion = claimedArchive.champion || claimedScores[0] || champion;
+        const cycle = await getLeagueChampionCycleNumber(target.year, target.quarter);
+        const payload = buildLeagueChampionPushPayload(claimedChampion, cycle);
+        const uids = await getPushEnabledUids('league');
+        const result = uids.length > 0
+            ? await sendPushToUids(uids, {
+                category: 'league',
+                scope: 'league',
+                type: 'league_champion_announced',
+                tag: `league_champion_${target.periodKey}`,
+                title: payload.title,
+                body: payload.body,
+                localizations: payload.localizations,
+                data: {
+                    year: target.year,
+                    quarter: target.quarter,
+                    periodKey: target.periodKey,
+                    cycle: cycle || '',
+                    cycleRoman: payload.romanCycle,
+                    playerName: payload.playerName,
+                    score: payload.score,
+                    photoUrl: claimedChampion.photoUrl || ''
+                }
+            })
+            : { ok: true, sent: 0 };
 
-    if (!result?.ok) {
-        await LeagueHallOfFame.updateOne(
-            { periodKey: target.periodKey, championPushDateKey: target.dateKey },
-            { $set: { championPushDateKey: '', championPushSentAt: null } }
-        );
-        return { ...result, periodKey: target.periodKey };
+        if (!result?.ok) return { ...result, periodKey: target.periodKey };
+        pushCompleted = true;
+        return {
+            ok: true,
+            periodKey: target.periodKey,
+            sent: Math.max(0, toSafeInt(result.sent, 0)),
+            playerName: payload.playerName,
+            score: payload.score,
+            cycle
+        };
+    } finally {
+        if (!pushCompleted) {
+            await LeagueHallOfFame.updateOne(
+                { periodKey: target.periodKey, championPushDateKey: target.dateKey },
+                { $set: { championPushDateKey: '', championPushSentAt: null } }
+            );
+        }
     }
-
-    return {
-        ok: true,
-        periodKey: target.periodKey,
-        sent: Math.max(0, toSafeInt(result.sent, 0)),
-        playerName: payload.playerName,
-        score: payload.score,
-        cycle
-    };
 }
 
 let leagueChampionPushCheckInProgress = false;
@@ -2503,6 +2454,18 @@ function normalizeGlobalChatMessage(raw, index = 0) {
     };
 }
 
+function publishGlobalChat(event, data) {
+    for (const client of io.sockets.sockets.values()) {
+        if (client.connected && client.verifiedUid && client.playerName) client.emit(event, data);
+    }
+}
+
+function enqueueGlobalChatWrite(operation) {
+    const result = globalChatSaveQueue.catch(() => {}).then(operation);
+    globalChatSaveQueue = result.catch(() => {});
+    return result;
+}
+
 function getGlobalChatWeekKey(now = new Date()) {
     const weekStart = getLeaderboardPeriodStart('weekly', now, GLOBAL_CHAT_RESET_TIME_ZONE);
     if (!weekStart) return '';
@@ -2531,52 +2494,36 @@ function clearGlobalChatWeeklyResetTimer() {
 }
 
 async function resetGlobalChatHistory(reason = 'weekly') {
-    const weekKey = getGlobalChatWeekKey();
-    const resetAt = Date.now();
-
-    globalChatHistory = [];
-    globalChatLastResetWeekKey = weekKey;
-    globalChatLastResetAt = resetAt;
-
-    if (MONGO_URI) {
-        globalChatSaveQueue = globalChatSaveQueue
-            .then(async () => {
-                const GlobalChatDb = mongoose.model('GlobalChat');
-                await GlobalChatDb.findOneAndUpdate(
-                    {},
-                    {
-                        $set: {
-                            messages: [],
-                            lastResetWeekKey: weekKey,
-                            lastResetAt: resetAt
-                        }
-                    },
-                    { upsert: true }
-                );
-            })
-            .catch(err => {
-                console.error("Greška pri nedeljnom resetu Global chat-a:", err);
-            });
-        await globalChatSaveQueue;
-    }
-
-    if (io && typeof io.emit === 'function') {
-        io.emit('global_chat_history', globalChatHistory);
-    }
-    console.log(`💬 Global chat istorija resetovana (${reason}, week=${weekKey}).`);
+    return enqueueGlobalChatWrite(async () => {
+        const weekKey = getGlobalChatWeekKey();
+        const resetAt = Date.now();
+        if (MONGO_URI) {
+            const GlobalChatDb = mongoose.model('GlobalChat');
+            await GlobalChatDb.findOneAndUpdate({}, {
+                $set: { messages: [], lastResetWeekKey: weekKey, lastResetAt: resetAt }
+            }, { upsert: true });
+        }
+        globalChatHistory = [];
+        globalChatLastResetWeekKey = weekKey;
+        globalChatLastResetAt = resetAt;
+        publishGlobalChat('global_chat_history', globalChatHistory);
+        console.log(`💬 Global chat istorija resetovana (${reason}, week=${weekKey}).`);
+    });
 }
 
-function scheduleGlobalChatWeeklyReset() {
+function scheduleGlobalChatWeeklyReset(retryMs = 0) {
     clearGlobalChatWeeklyResetTimer();
-    const resetAt = getNextGlobalChatResetAt();
+    const resetAt = retryMs ? new Date(Date.now() + retryMs) : getNextGlobalChatResetAt();
     const remainingMs = resetAt.getTime() - Date.now();
     const delay = Math.min(Math.max(1000, remainingMs), 2147483647);
 
     globalChatWeeklyResetTimer = setTimeout(() => {
         globalChatWeeklyResetTimer = null;
         resetGlobalChatHistory('weekly_timer')
-            .catch(err => console.error('Greška pri automatskom nedeljnom resetu Global chat-a:', err))
-            .finally(() => scheduleGlobalChatWeeklyReset());
+            .then(() => scheduleGlobalChatWeeklyReset(), err => {
+                console.error('Greška pri automatskom nedeljnom resetu Global chat-a:', err);
+                scheduleGlobalChatWeeklyReset(60000);
+            });
     }, delay);
     if (typeof globalChatWeeklyResetTimer.unref === 'function') globalChatWeeklyResetTimer.unref();
 
@@ -2691,11 +2638,9 @@ async function saveChatToDb() {
 }
 
 async function appendGlobalChatMessageToDb(message) {
-    if (!process.env.MONGO_URI) return;
-    try {
-        const normalizedMessage = normalizeGlobalChatMessage(message, globalChatHistory.length);
-        if (!normalizedMessage) return;
-
+    const normalizedMessage = normalizeGlobalChatMessage(message, globalChatHistory.length);
+    if (!normalizedMessage) throw new Error('invalid_global_chat_message');
+    if (MONGO_URI) {
         const GlobalChatDb = mongoose.model('GlobalChat');
         await GlobalChatDb.findOneAndUpdate(
             {},
@@ -2709,31 +2654,17 @@ async function appendGlobalChatMessageToDb(message) {
             },
             { upsert: true }
         );
-    } catch (err) {
-        console.error("Greška pri dodavanju chat poruke u bazu:", err);
     }
-}
-
-function queueGlobalChatMessageSave(message) {
-    if (!process.env.MONGO_URI) return;
-    globalChatSaveQueue = globalChatSaveQueue
-        .then(() => appendGlobalChatMessageToDb(message))
-        .catch(err => {
-            console.error("Greška u redu za čuvanje chat poruka:", err);
-        });
+    return normalizedMessage;
 }
 
 const globalChatMutations = createGlobalChatMutations({
     getHistory: () => globalChatHistory,
-    enqueue: operation => {
-        const result = globalChatSaveQueue.catch(() => {}).then(operation);
-        globalChatSaveQueue = result.catch(() => {});
-        return result;
-    },
+    enqueue: enqueueGlobalChatWrite,
     persist: change => MONGO_URI
         ? persistGlobalChatMutation(mongoose.model('GlobalChat'), change)
         : Promise.resolve(true),
-    publish: (event, data) => io.emit(event, data),
+    publish: publishGlobalChat,
     filterText: text => cenzurisiPoruku(text),
     checkRate: uid => {
         const now = Date.now();
@@ -2766,13 +2697,9 @@ const globalChatModeration = createGlobalChatModeration({
     store: createGlobalChatModerationStore({ connection: mongoose.connection, profileWrites,
         models: { Profile: UserProfile, Chat: mongoose.model('GlobalChat'),
             Report: mongoose.model('GlobalChatReport'), Audit: mongoose.model('GlobalChatModerationLog') } }),
-    enqueue: operation => {
-        const result = globalChatSaveQueue.catch(() => {}).then(operation);
-        globalChatSaveQueue = result.catch(() => {});
-        return result;
-    },
+    enqueue: enqueueGlobalChatWrite,
     getHistory: () => globalChatHistory,
-    publish: (event, data) => io.emit(event, data),
+    publish: publishGlobalChat,
     notify: notifyChatUid
 });
 
@@ -7117,6 +7044,7 @@ function buildProfileSyncPayload(user) {
     const todayKey = getDailyChallengeDayKey();
     const legacyTodayKey = getLegacyDailyDayKey();
     return {
+        recipientUid: user.firebaseUid,
         statsAuthoritative: true,
         h2hAuthoritative: true,
         wins: Math.max(0, toSafeInt(user.wins)),
@@ -7137,6 +7065,7 @@ function buildProfileSyncPayload(user) {
         unlockedEffects: Array.isArray(user.unlockedEffects) ? user.unlockedEffects : [],
         yamb_unlocked: Array.isArray(user.yamb_unlocked) ? user.yamb_unlocked : [],
         unlockedThemes: filterIdsByCategory(user.yamb_unlocked, THEME_UNLOCK_IDS),
+        shopDiscounts: normalizeShopDiscounts(user.shopDiscounts),
         shopAdUnlocks: normalizeShopAdUnlocks(user.shopAdUnlocks),
         lastDaily: normalizeDailyKeyForSync(user.lastDaily, todayKey, legacyTodayKey),
         lastDailyRewardClaimed: normalizeDailyKeyForSync(user.lastDailyRewardClaimed, todayKey, legacyTodayKey),
@@ -7707,8 +7636,7 @@ function getOnlineThemeUsage() {
     const activeUsers = new Map();
     io.sockets.sockets.forEach((clientSocket, id) => {
         if (!clientSocket.playerName) return;
-        const ip = activeConnections.get(id) || `socket:${id}`;
-        const key = clientSocket.playerId || registeredSockets[id] || ip;
+        const key = getPublicPlayerUid(clientSocket, id) || id;
         activeUsers.set(key, normalizeMonitorTheme(clientSocket.activeTheme));
     });
     const counts = {};
@@ -7723,8 +7651,7 @@ function getUniqueOnlinePlayersCount() {
     const uniqueKeys = new Set();
     io.sockets.sockets.forEach((clientSocket, id) => {
         if (!clientSocket.playerName) return;
-        const ip = activeConnections.get(id) || 'unknown_ip';
-        uniqueKeys.add(clientSocket.playerId || registeredSockets[id] || ip);
+        uniqueKeys.add(getPublicPlayerUid(clientSocket, id) || id);
     });
     return uniqueKeys.size;
 }
@@ -8506,6 +8433,13 @@ function getWaitingBusyState(socketId, uid = '', options = {}) {
     return null;
 }
 
+function leaveWaitingMatchmakingForPlayer(socketId, uid = '') {
+    if (!getWaitingBusyState(socketId, uid)) return false;
+    waitingPlayer = null;
+    notifyOnlinePlayersStatusChanged();
+    return true;
+}
+
 function isWaitingPrivateRoomParticipant(roomId, socketId = '', uid = '') {
     const room = roomId ? privateRooms[roomId] : null;
     if (!room || room.p2) return false;
@@ -8543,7 +8477,10 @@ function getActiveGameStateForSocket(socketId, uid = '', options = {}) {
                     return makeBusyState('online_game', directRoom);
                 }
 
-                if (state.gameFinished) return null;
+                if (state.gameFinished) {
+                    return getWaitingBusyState(socketId, uid, options)
+                        || (options.ignoreClientBusy ? null : getClientBusyState(socketId));
+                }
             }
 
             if (privateRooms[directRoom]) {
@@ -8806,6 +8743,7 @@ function buildOnlinePlayerPresence(clientSocket, socketId, myFriends = []) {
         uid: playerUid,
         roomId: spectatableRoomId || fallbackRoomId || '',
         isPlaying: !!spectatableRoomId,
+        isTournamentMatch: isActiveOnlineRoom(spectatableRoomId) && isTournamentRoomId(spectatableRoomId),
         canSpectate: !!spectatableRoomId,
         isBusy: !!busyState,
         isFriend: Array.isArray(myFriends) && myFriends.includes(playerUid),
@@ -11480,8 +11418,9 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
         await mongoose.model('TournamentState').findOneAndUpdate({}, tournamentState, { upsert: true });
     }
 
-    globalChatHistory = globalChatHistory.filter(message => message.senderUid !== uid && message.senderId !== uid);
-    await globalChatSaveQueue.catch(() => {});
+    await enqueueGlobalChatWrite(() => {
+        globalChatHistory = globalChatHistory.filter(message => message.senderUid !== uid && message.senderId !== uid);
+    });
     delete onlinePlayers[uid];
     for (const socket of sockets) {
         clearChallengesForSocket(socket.id);
@@ -11497,7 +11436,7 @@ async function prepareRuntimeForAccountDeletion(uid, replacement) {
         socket.playerStats = null;
         socket.disconnect(true);
     }
-    io.emit('global_chat_history', globalChatHistory);
+    publishGlobalChat('global_chat_history', globalChatHistory);
     io.emit('tourney_state_update', tournamentState);
 }
 
@@ -11572,7 +11511,7 @@ io.on('connection', (socket) => {
         }
     });
     profileWrites.bindSocket(socket, [
-        'set_player_data', 'request_profile_sync', 'request_daily_challenge', 'global_chat_msg',
+        'set_player_data', 'request_profile_sync', 'request_daily_challenge',
         'claim_trophy_reward', 'claim_daily_reward', 'check_quarter_reward',
         'claim_shop_ad_reward', 'claim_shop_discount', 'claim_shop_ad_unlock',
         'claim_undo_token_reward', 'submit_match_result', 'submit_score', 'submit_league_score', 'undo_last_move'
@@ -11993,7 +11932,7 @@ io.on('connection', (socket) => {
             }
 
             emitProfileSync(socket, user);
-            reply({ ok: true });
+            reply({ ok: true, uid: verifiedUid, cloudStats: buildProfileSyncPayload(user) });
         } catch (err) {
             console.error("Greška pri povlačenju profila:", err);
             reply({ ok: false, reason: 'server_error' });
@@ -12060,8 +11999,9 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('set_player_data', async (data) => {
+    socket.on('set_player_data', async (data, ack) => {
         data = data || {};
+        const reply = typeof ack === 'function' ? ack : () => {};
         const verifiedUid = socket.verifiedUid;
         const stariPlayerId = socket.playerId;
 
@@ -12097,6 +12037,7 @@ io.on('connection', (socket) => {
         if (!verifiedUid) {
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
             updateOnlineCount();
+            reply({ ok: false, reason: 'firebase_token_required' });
             if (data.uid || data.playerId) {
                 socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
             }
@@ -12110,6 +12051,7 @@ io.on('connection', (socket) => {
         try {
             if (!MONGO_URI) {
                 socket.emit('sync_unavailable', { ok: false, reason: 'mongo_unavailable' });
+                reply({ ok: false, reason: 'mongo_unavailable' });
                 updateOnlineCount(); 
                 flushPendingOnlineRoomResume(socket);
                 return;
@@ -12452,8 +12394,10 @@ io.on('connection', (socket) => {
 
             updateOnlineCount();
             flushPendingOnlineRoomResume(socket);
+            reply({ ok: true, uid: verifiedUid, cloudStats: buildProfileSyncPayload(user) });
         } catch (err) {
             console.error("Greška pri sinhronizaciji korisnika:", err);
+            reply({ ok: false, reason: 'server_error' });
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
             updateOnlineCount();
             flushPendingOnlineRoomResume(socket);
@@ -12469,7 +12413,7 @@ io.on('connection', (socket) => {
 
         try {
             const rawReward = toSafeInt(data?.amount, 0);
-            const reward = Math.max(0, rawReward);
+            let reward = Math.max(0, rawReward);
 
             if (reward <= 0 || reward > MAX_DAILY_REWARD) {
                 return replyDailyReward({ ok: false, reason: 'invalid_reward', permanent: true });
@@ -12484,10 +12428,23 @@ io.on('connection', (socket) => {
             const challenge = getDailyChallengeForUid(uid);
             const todayStr = challenge.dayKey;
             const legacyTodayStr = getLegacyDailyDayKey();
+            const replyExpiredChallenge = () => replyDailyReward({
+                ok: false,
+                reason: 'daily_challenge_expired',
+                dayKey: getDailyChallengeDayKey(),
+                permanent: true
+            });
+            // Older clients omit dayKey; updated clients bind the claim to its original day.
+            if (data?.dayKey !== undefined && data.dayKey !== todayStr) {
+                return replyExpiredChallenge();
+            }
             const expectedReward = data?.doubled ? challenge.reward * 2 : challenge.reward;
-            if (reward !== expectedReward || expectedReward <= 0 || expectedReward > MAX_DAILY_REWARD) {
+            const legacyReward = data?.doubled ? challenge.baseReward * 2 : challenge.baseReward;
+            if ((reward !== expectedReward && reward !== legacyReward) || expectedReward <= 0 || expectedReward > MAX_DAILY_REWARD) {
                 return replyDailyReward({ ok: false, reason: 'invalid_reward', permanent: true });
             }
+            // A pre-update client can still submit the old base amount; the server awards the full reward.
+            reward = expectedReward;
 
             if (!MONGO_URI) {
                 return replyDailyReward({ ok: true, reward, localFallback: true });
@@ -12497,6 +12454,7 @@ io.on('connection', (socket) => {
             if (!user) {
                 return replyDailyReward({ ok: false, reason: 'auth_required' });
             }
+            if (getDailyChallengeDayKey() !== todayStr) return replyExpiredChallenge();
 
             if (isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr)) {
                 if (user.lastDailyRewardClaimed !== todayStr) {
@@ -12523,6 +12481,7 @@ io.on('connection', (socket) => {
                     return replyDailyReward(adVerification);
                 }
             }
+            if (getDailyChallengeDayKey() !== todayStr) return replyExpiredChallenge();
 
             const updatedUser = await UserProfile.findOneAndUpdate(
                 {
@@ -12575,9 +12534,10 @@ io.on('connection', (socket) => {
 
     socket.on('get_online_players_list', async () => {
         let myFriends = [];
-        if (MONGO_URI && socket.playerId) {
+        const requesterUid = getVerifiedUid(socket);
+        if (MONGO_URI && requesterUid) {
             try {
-                const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
+                const me = await UserProfile.findOne({ firebaseUid: requesterUid });
                 if (me && me.friends) {
                     myFriends = me.friends;
                 }
@@ -12609,7 +12569,7 @@ io.on('connection', (socket) => {
             const presence = buildOnlinePlayerPresence(clientSocket, id);
             if (!presence) return;
             
-            let uniqueKey = presence.uid || activeConnections.get(id) || id;
+            const uniqueKey = presence.uid || id;
 
             const playerData = {
                 id,
@@ -12620,6 +12580,7 @@ io.on('connection', (socket) => {
                 stats: clientSocket.playerStats || { wins: 0, losses: 0 },
                 status: presence.status,
                 isPlaying: presence.isPlaying,
+                isTournamentMatch: presence.isTournamentMatch,
                 isBusy: presence.isBusy,
                 canSpectate: presence.canSpectate
             };
@@ -12764,6 +12725,23 @@ io.on('connection', (socket) => {
             return replySpectate({ ok: false, reason: 'err_spectate_not_in_game' });
         }
 
+        const requesterUid = getSocketUid(socket.id);
+        const isParticipant = isLocalRoomId(roomId)
+            ? isSpectatableLocalRoom(roomId, socket.id, requesterUid)
+            : getParticipantIndexForSocketOrUid(state, socket.id, requesterUid) !== -1;
+        if (isParticipant) {
+            socket.emit('error_msg', 'err_spectate_participant');
+            return replySpectate({ ok: false, reason: 'err_spectate_participant' });
+        }
+        const activeGame = getPlayerBusyState(socket.id, requesterUid, {
+            ignoreWaitingSocketId: socket.id, ignoreWaitingUid: requesterUid, ignoreClientBusy: true
+        });
+        if (activeGame) {
+            socket.emit('error_msg', 'err_spectate_already_in_game');
+            return replySpectate({ ok: false, reason: 'err_spectate_already_in_game' });
+        }
+        leaveWaitingMatchmakingForPlayer(socket.id, requesterUid);
+
         if (isLocalRoomId(roomId)) {
             if (socket.spectatingRoom && socket.spectatingRoom !== roomId) {
                 clearSpectatingRoom(socket);
@@ -12778,12 +12756,6 @@ io.on('connection', (socket) => {
             console.log(`👁️ Igrač ${socket.id} počeo da gleda lokalnu sobu ${roomId} (Client Sync)`);
             updateRoomSpectators(roomId);
             return replySpectate({ ok: true, roomId, spectating: true, local: true });
-        }
-
-        const requesterUid = getSocketUid(socket.id);
-        if (getParticipantIndexForSocketOrUid(state, socket.id, requesterUid) !== -1) {
-            socket.emit('error_msg', 'err_spectate_participant');
-            return replySpectate({ ok: false, reason: 'err_spectate_participant' });
         }
 
         if (socket.spectatingRoom && socket.spectatingRoom !== roomId) {
@@ -14616,14 +14588,14 @@ io.on('connection', (socket) => {
 
         try {
             const targetSocket = targetId ? io.sockets.sockets.get(targetId) : null;
-            const requesterUid = getSocketUid(socket.id) || socket.playerId;
+            const requesterUid = getVerifiedUid(socket);
             const resolvedTargetUid = targetUid || (targetSocket && getSocketUid(targetSocket.id)) || (targetSocket && targetSocket.playerId);
 
             if (!requesterUid) {
                 replyRequest({ ok: false, reason: 'err_friend_auth_required' });
                 return;
             }
-            if (!resolvedTargetUid) {
+            if (typeof resolvedTargetUid !== 'string' || !/^[A-Za-z0-9_:-]{1,128}$/.test(resolvedTargetUid)) {
                 replyRequest({ ok: false, reason: 'err_friend_target_missing' });
                 return;
             }
@@ -14702,12 +14674,12 @@ io.on('connection', (socket) => {
         }
 
         try {
-            const responderUid = getSocketUid(socket.id) || socket.playerId;
+            const responderUid = getVerifiedUid(socket);
             if (!responderUid) {
                 replyResolve({ ok: false, reason: 'err_friend_auth_required' });
                 return;
             }
-            if (!challengerUid) {
+            if (typeof challengerUid !== 'string' || !/^[A-Za-z0-9_:-]{1,128}$/.test(challengerUid)) {
                 replyResolve({ ok: false, reason: 'err_friend_request_missing' });
                 return;
             }
@@ -14959,6 +14931,8 @@ io.on('connection', (socket) => {
             return;
         }
 
+        clearSpectatingRoom(socket);
+
         // Random matchmaking nije direktna pozivnica. Ako se isti nalog ponovo
         // povezao dok je samo čekao, nova konekcija preuzima njegovo mesto u redu.
         if (waitingPlayer && requesterUid && waitingPlayer.uid === requesterUid) {
@@ -15057,8 +15031,19 @@ io.on('connection', (socket) => {
             return;
         }
 
+        const existingState = roomState[roomId];
+        if (existingState) {
+            const playerIndex = existingState.players?.indexOf(socket.id) ?? -1;
+            if (playerIndex !== -1) emitAuthoritativeRoomState(socket, roomId, playerIndex);
+            else socket.emit('room_full');
+            return;
+        }
+
         const requesterUid = getSocketUid(socket.id);
-        const busyState = getPlayerBusyState(socket.id, requesterUid);
+        const busyState = getPlayerBusyState(socket.id, requesterUid, {
+            ignoreWaitingSocketId: socket.id,
+            ignoreWaitingUid: requesterUid
+        });
         if (busyState && busyState.roomId !== roomId) {
             if (busyState.reason === 'private_room' && isWaitingPrivateRoomParticipant(busyState.roomId, socket.id, requesterUid)) {
                 cleanupOnlineRoom(busyState.roomId);
@@ -15067,6 +15052,9 @@ io.on('connection', (socket) => {
                 return;
             }
         }
+
+        clearSpectatingRoom(socket);
+        leaveWaitingMatchmakingForPlayer(socket.id, requesterUid);
 
         if (tournamentState.auditPolicyVersion) {
             const ticket = authorizedTournamentRooms.get(roomId);
@@ -15353,13 +15341,18 @@ io.on('connection', (socket) => {
                         relayData = { roomId, type: 'start', pIdx: playerIndex };
                     }
                     else if (announceType === 'cancel') {
+                        if (state.brojBacanja !== 1) {
+                            emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                            return;
+                        }
                         state.najavaAktivna = false;
                         state.najavljenoPolje = null;
                         relayData = { roomId, type: 'cancel', pIdx: playerIndex };
                     }
                     else if (announceType === 'selected') {
                         const announceRow = typeof data?.row === 'string' ? data.row : '';
-                        if (!state.najavaAktivna || !REDOVI_IGRA.includes(announceRow)) {
+                        if (!state.najavaAktivna || state.brojBacanja !== 1 || !REDOVI_IGRA.includes(announceRow)
+                            || state.allScores?.[playerIndex]?.Najava?.[announceRow] !== null) {
                             console.warn(`🚨 BLOKIRAN IZBOR NAJAVE: socket=${socket.id}, row=${announceRow}, room=${roomId}`);
                             emitAuthoritativeRoomState(socket, roomId, playerIndex);
                             return;
@@ -15506,7 +15499,8 @@ io.on('connection', (socket) => {
             }
 
             const state = roomState[roomId];
-            if (!state || state.gameFinished) {
+            if (!state || state.gameFinished || state.completionSettlementPromise ||
+                state.technicalTimeoutInProgress || state.disconnectResolutionInProgress || state.menuExitInProgress) {
                 reply({ ok: false, reason: 'undo_unavailable', permanent: true });
                 return;
             }
@@ -15515,6 +15509,13 @@ io.on('connection', (socket) => {
             const playerIndex = state.players.indexOf(socket.id);
             if (!undoMove || undoMove.socketId !== socket.id || undoMove.playerIndex !== playerIndex) {
                 reply({ ok: false, reason: 'undo_unavailable', permanent: true });
+                return;
+            }
+
+            if ((data.row !== undefined && data.row !== undoMove.row) ||
+                (data.col !== undefined && data.col !== undoMove.col) ||
+                (data.pIdx !== undefined && toSafeInt(data.pIdx, -1) !== playerIndex)) {
+                reply({ ok: false, reason: 'undo_expired', permanent: true });
                 return;
             }
 
@@ -15554,6 +15555,27 @@ io.on('connection', (socket) => {
                         ok: false,
                         reason: 'undo_no_tokens',
                         undoTokens: currentUser ? Math.max(0, toSafeInt(currentUser.undoTokens, 0)) : 0,
+                        permanent: true
+                    });
+                    return;
+                }
+
+                // Opponent gameplay is not covered by this account's profile write lock.
+                if (roomState[roomId] !== state || playerRooms[socket.id] !== roomId ||
+                    state.lastUndoMove !== undoMove || state.turnIndex !== expectedNextTurn ||
+                    Math.max(0, toSafeInt(state.brojBacanja, 0)) !== 0 || state.gameFinished ||
+                    state.completionSettlementPromise || state.technicalTimeoutInProgress ||
+                    state.disconnectResolutionInProgress || state.menuExitInProgress) {
+                    const refundedUser = await UserProfile.findOneAndUpdate(
+                        { firebaseUid: uid },
+                        { $inc: { undoTokens: 1 } },
+                        { new: true }
+                    );
+                    if (refundedUser) emitProfileSync(socket, refundedUser);
+                    reply({
+                        ok: false,
+                        reason: 'undo_expired',
+                        undoTokens: refundedUser ? Math.max(0, toSafeInt(refundedUser.undoTokens, 0)) : undefined,
                         permanent: true
                     });
                     return;
@@ -15673,139 +15695,116 @@ io.on('connection', (socket) => {
         socket.emit('global_chat_history', globalChatHistory);
     });
 
-    socket.on('global_chat_msg', async (data) => {
-        if (!data || !data.msg) return;
-
-        if (!socket.playerName || !socket.verifiedUid) {
-            socket.emit('error_msg', 'err_chat_auth_required');
-            return;
-        }
-        
-        let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
-        if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
-
-        const now = Date.now();
-        let chatProfile = null;
-
-        if (MONGO_URI) {
-            try {
-                chatProfile = await UserProfile.findOne({ firebaseUid: socket.verifiedUid })
-                    .select('chatBanUntil chatBanStrikes chatBanPermanent')
-                    .lean();
-
-                if (chatProfile?.chatBanPermanent || toSafeInt(chatProfile?.chatBanUntil, 0) > now) {
-                    socket.emit('error_msg', 'err_chat_suspended');
-                    return;
-                }
-            } catch (err) {
-                console.error('Greška pri proveri chat bana:', err);
-                socket.emit('global_chat_post_rejected', { reason: 'err_server_conn' });
-                return;
-            }
-        }
-
-        if (!MONGO_URI && chatBans[clientIp] && chatBans[clientIp].banUntil > now) {
-            socket.emit('error_msg', 'err_chat_suspended');
-            return; 
-        }
-
-        const originalMsg = data.msg.toString().replace(/\s+/g, ' ').trim().substring(0, 550).trim();
-        if (!originalMsg) return;
-
-        const rateKey = socket.verifiedUid;
-        const rateState = globalChatRateLimits[rateKey] || { lastAt: 0, spamStrikes: 0, mutedUntil: 0 };
-
-        if (rateState.mutedUntil && rateState.mutedUntil > now) {
-            socket.emit('error_msg', 'err_chat_slow_down');
-            return;
-        }
-
-        const lastGlobalChatAt = rateState.lastAt || 0;
-        if (now - lastGlobalChatAt < GLOBAL_CHAT_MIN_INTERVAL_MS) {
-            rateState.spamStrikes = (rateState.spamStrikes || 0) + 1;
-            rateState.lastSeenAt = now;
-            if (rateState.spamStrikes >= GLOBAL_CHAT_SPAM_STRIKE_LIMIT) {
-                rateState.mutedUntil = now + GLOBAL_CHAT_SPAM_MUTE_MS;
-                rateState.spamStrikes = 0;
-            }
-            globalChatRateLimits[rateKey] = rateState;
-            socket.emit('error_msg', 'err_chat_slow_down');
-            return;
-        }
-
-        rateState.lastAt = now;
-        rateState.lastSeenAt = now;
-        rateState.spamStrikes = 0;
-        globalChatRateLimits[rateKey] = rateState;
-
-        const safeSender = socket.playerName.toString().substring(0, 20);
-
-        const safeMsg = cenzurisiPoruku(originalMsg);
-
-        if (safeMsg !== originalMsg) {
-            if (MONGO_URI) {
-                const currentStrikes = Math.max(0, toSafeInt(chatProfile?.chatBanStrikes, 0));
-                const nextStrikes = currentStrikes + 1;
-                const banDurationMs = Math.pow(2, nextStrikes - 1) * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS;
-                const banUntil = now + banDurationMs;
-
-                try {
-                    await UserProfile.findOneAndUpdate(
-                        { firebaseUid: socket.verifiedUid },
-                        { $set: { chatBanUntil: banUntil, chatBanPermanent: false,
-                            chatBanReason: 'chat_auto_profanity', chatBanActorUid: '', chatBanAt: now }, $inc: { chatBanStrikes: 1 } },
-                        { upsert: false }
-                    );
-
-                    const GlobalChatModerationLog = mongoose.model('GlobalChatModerationLog');
-                    await GlobalChatModerationLog.create({
-                        uid: socket.verifiedUid,
-                        playerName: safeSender,
-                        socketId: socket.id,
-                        ip: clientIp || '',
-                        originalMsg,
-                        filteredMsg: safeMsg,
-                        previousStrikes: currentStrikes,
-                        nextStrikes,
-                        banUntil,
-                        banDurationMs,
-                        createdAt: now
-                    });
-                } catch (err) {
-                    console.error('Greška pri upisu chat bana ili moderation loga:', err);
-                }
-            } else {
-                if (!chatBans[clientIp]) {
-                    chatBans[clientIp] = { strikes: 0, banUntil: 0 };
-                }
-                chatBans[clientIp].strikes += 1;
-
-                const satiBana = Math.pow(2, chatBans[clientIp].strikes - 1);
-                chatBans[clientIp].banUntil = now + (satiBana * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS);
-            }
-
-            socket.emit('error_msg', 'err_chat_banned');
-            void globalChatModeration.pushCapabilities(socket);
-            return; 
-        }
-
-        const chatObj = {
-            id: createGlobalChatMessageId(),
-            sender: safeSender,
-            senderId: socket.id,
-            senderUid: socket.verifiedUid,
-            msg: safeMsg,
-            createdAt: now
+    socket.on('global_chat_msg', async (data, ack) => {
+        const reject = reason => {
+            if (typeof ack === 'function') return ack({ ok: false, reason });
+            if (['err_chat_auth_required', 'err_chat_slow_down', 'err_chat_suspended', 'err_chat_banned'].includes(reason)) {
+                socket.emit('error_msg', reason);
+            } else socket.emit('global_chat_post_rejected', { reason });
         };
+        try {
+            if (!socket.connected || !socket.playerName || !socket.verifiedUid) return reject('err_chat_auth_required');
+            if (!data || typeof data !== 'object' || Array.isArray(data) || typeof data.msg !== 'string')
+                return reject('err_chat_invalid_message');
+            if (!data.msg.trim() || data.msg.length > 550) return reject('err_chat_edit_length');
 
-        globalChatHistory.push(chatObj);
-        if (globalChatHistory.length > MAX_CHAT_HISTORY) {
-            globalChatHistory.shift();
+            const uid = socket.verifiedUid;
+            const playerName = socket.playerName;
+            const isCurrentIdentity = () => socket.connected && socket.verifiedUid === uid && socket.playerName === playerName;
+            const originalMsg = data.msg.replace(/\s+/g, ' ').trim();
+            let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+            if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
+
+            const now = Date.now();
+            const rateState = globalChatRateLimits[uid] || { lastAt: 0, spamStrikes: 0, mutedUntil: 0 };
+            if (rateState.mutedUntil > now) return reject('err_chat_slow_down');
+            if (now - (rateState.lastAt || 0) < GLOBAL_CHAT_MIN_INTERVAL_MS) {
+                rateState.spamStrikes = (rateState.spamStrikes || 0) + 1;
+                rateState.lastSeenAt = now;
+                if (rateState.spamStrikes >= GLOBAL_CHAT_SPAM_STRIKE_LIMIT) {
+                    rateState.mutedUntil = now + GLOBAL_CHAT_SPAM_MUTE_MS;
+                    rateState.spamStrikes = 0;
+                }
+                globalChatRateLimits[uid] = rateState;
+                return reject('err_chat_slow_down');
+            }
+            rateState.lastAt = now;
+            rateState.lastSeenAt = now;
+            rateState.spamStrikes = 0;
+            globalChatRateLimits[uid] = rateState;
+
+            // Always acquire the chat queue before the profile scope, never in reverse order.
+            const result = await enqueueGlobalChatWrite(() => profileWrites.run(uid, async () => {
+                if (!isCurrentIdentity()) return { ok: false, reason: 'err_chat_auth_required' };
+                let chatProfile = null;
+                if (MONGO_URI) {
+                    try {
+                        chatProfile = await UserProfile.findOne({ firebaseUid: uid })
+                            .select('chatBanUntil chatBanStrikes chatBanPermanent').lean();
+                    } catch (err) {
+                        console.error('Greška pri proveri chat bana:', err);
+                        return { ok: false, reason: 'err_server_conn' };
+                    }
+                    if (!isCurrentIdentity()) return { ok: false, reason: 'err_chat_auth_required' };
+                    if (chatProfile?.chatBanPermanent || toSafeInt(chatProfile?.chatBanUntil, 0) > Date.now())
+                        return { ok: false, reason: 'err_chat_suspended' };
+                } else if (chatBans[clientIp]?.banUntil > now) return { ok: false, reason: 'err_chat_suspended' };
+
+                const safeSender = playerName.substring(0, 20);
+                const safeMsg = cenzurisiPoruku(originalMsg);
+                if (safeMsg !== originalMsg) {
+                    if (MONGO_URI) {
+                        const currentStrikes = Math.max(0, toSafeInt(chatProfile?.chatBanStrikes, 0));
+                        const nextStrikes = currentStrikes + 1;
+                        const banDurationMs = Math.pow(2, nextStrikes - 1) * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS;
+                        const banUntil = now + banDurationMs;
+                        try {
+                            await UserProfile.findOneAndUpdate(
+                                { firebaseUid: uid },
+                                { $set: { chatBanUntil: banUntil, chatBanPermanent: false,
+                                    chatBanReason: 'chat_auto_profanity', chatBanActorUid: '', chatBanAt: now }, $inc: { chatBanStrikes: 1 } },
+                                { upsert: false }
+                            );
+                            const GlobalChatModerationLog = mongoose.model('GlobalChatModerationLog');
+                            await GlobalChatModerationLog.create({
+                                uid, playerName: safeSender, socketId: socket.id, ip: clientIp || '',
+                                originalMsg, filteredMsg: safeMsg, previousStrikes: currentStrikes, nextStrikes,
+                                banUntil, banDurationMs, createdAt: now
+                            });
+                        } catch (err) {
+                            console.error('Greška pri upisu chat bana ili moderation loga:', err);
+                        }
+                    } else {
+                        if (!chatBans[clientIp]) chatBans[clientIp] = { strikes: 0, banUntil: 0 };
+                        chatBans[clientIp].strikes += 1;
+                        chatBans[clientIp].banUntil = now + Math.pow(2, chatBans[clientIp].strikes - 1) * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS;
+                    }
+                    if (isCurrentIdentity()) {
+                        void globalChatModeration.pushCapabilities(socket).catch(() => {});
+                        return { ok: false, reason: 'err_chat_banned' };
+                    }
+                    return { ok: false, reason: 'err_chat_auth_required' };
+                }
+
+                if (!isCurrentIdentity()) return { ok: false, reason: 'err_chat_auth_required' };
+                const message = await appendGlobalChatMessageToDb({
+                    id: createGlobalChatMessageId(), sender: safeSender, senderId: socket.id,
+                    senderUid: uid, msg: safeMsg, createdAt: Date.now()
+                });
+                // Publish only committed messages, in the same order as edits and weekly resets.
+                globalChatHistory.push(message);
+                if (globalChatHistory.length > MAX_CHAT_HISTORY) globalChatHistory.shift();
+                if (isCurrentIdentity()) globalChatActivity.stop(socket);
+                publishGlobalChat('global_chat_msg', message);
+                return { ok: true, message };
+            }));
+            if (!isCurrentIdentity()) return reject('err_chat_auth_required');
+            if (!result.ok) return reject(result.reason);
+            if (typeof ack === 'function') ack(result);
+        } catch (err) {
+            console.error('Greška pri slanju Global chat poruke:', err);
+            reject('err_chat_save_failed');
         }
-
-        queueGlobalChatMessageSave(chatObj);
-        globalChatActivity.stop(socket);
-        io.emit('global_chat_msg', chatObj);
     });
 
     socket.on('report_global_chat_msg', async (data = {}) => {
@@ -15819,8 +15818,10 @@ io.on('connection', (socket) => {
             return;
         }
 
+        const uid = socket.verifiedUid;
+        const playerName = socket.playerName;
         const now = Date.now();
-        const lastReportAt = globalChatReportLimits[socket.verifiedUid] || 0;
+        const lastReportAt = globalChatReportLimits[uid] || 0;
         if (now - lastReportAt < GLOBAL_CHAT_REPORT_COOLDOWN_MS) {
             socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_report_slow_down' });
             return;
@@ -15833,17 +15834,19 @@ io.on('connection', (socket) => {
             return;
         }
 
-        if (reportedMessage.senderUid && reportedMessage.senderUid === socket.verifiedUid) {
+        if (reportedMessage.senderUid && reportedMessage.senderUid === uid) {
             socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_report_self' });
             return;
         }
 
+        // Reserve the cooldown before the first await; parallel requests share this UID.
+        globalChatReportLimits[uid] = now;
         try {
             const GlobalChatReport = mongoose.model('GlobalChatReport');
             await GlobalChatReport.create({
                 messageId: reportedMessage.id,
-                reportedByUid: socket.verifiedUid,
-                reportedByName: socket.playerName,
+                reportedByUid: uid,
+                reportedByName: playerName,
                 senderUid: reportedMessage.senderUid || '',
                 senderName: reportedMessage.sender || 'Nepoznat',
                 msg: reportedMessage.msg || '',
@@ -15852,12 +15855,12 @@ io.on('connection', (socket) => {
                 reportReason: typeof data?.reason === 'string' ? data.reason.trim().slice(0, 300) : '',
                 reportedAt: now
             });
-            globalChatReportLimits[socket.verifiedUid] = now;
-            socket.emit('global_chat_report_result', { ok: true, reason: 'chat_report_sent' });
+            if (socket.verifiedUid === uid) socket.emit('global_chat_report_result', { ok: true, reason: 'chat_report_sent' });
             notifyChatUid(GLOBAL_CHAT_OWNER_UID, 'global_chat_moderation_changed', { kind: 'report' });
         } catch (err) {
+            if (globalChatReportLimits[uid] === now) delete globalChatReportLimits[uid];
             console.error('Greška pri čuvanju prijave chat poruke:', err);
-            socket.emit('global_chat_report_result', { ok: false, reason: 'err_server_conn' });
+            if (socket.verifiedUid === uid) socket.emit('global_chat_report_result', { ok: false, reason: 'err_server_conn' });
         }
     });
 
@@ -15887,7 +15890,10 @@ io.on('connection', (socket) => {
         
         if (targetSocket && targetSocket.id !== socket.id) {
             const resolvedTargetUid = getSocketUid(resolvedTargetId) || requestedTargetUid || '';
-            if (isPlayerBusyForInvite(socket.id, challengerUid)) {
+            if (isPlayerBusyForInvite(socket.id, challengerUid, {
+                ignoreWaitingSocketId: socket.id,
+                ignoreWaitingUid: challengerUid
+            })) {
                 emitPlayerBusy(socket, ack);
                 return;
             }
@@ -15902,6 +15908,7 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const leftMatchmaking = leaveWaitingMatchmakingForPlayer(socket.id, challengerUid);
             const challengeKey = getChallengeKey(socket.id, resolvedTargetId);
             clearPendingChallenge(challengeKey);
 
@@ -15925,14 +15932,15 @@ io.on('connection', (socket) => {
                 challengeId: challengeKey,
                 expiresAt
             });
-            replyChallenge({ ok: true });
+            replyChallenge({ ok: true, leftMatchmaking });
         } else {
             replyChallenge({ ok: false, reason: 'err_player_not_on_server' });
         }
     });
 
-    socket.on('challenge_response', (data) => {
-        const { challengerId, accepted, challengeId } = data;
+    socket.on('challenge_response', (data = {}) => {
+        const { challengerId, challengeId } = data || {};
+        const accepted = data?.accepted === true;
         const challengerSocket = io.sockets.sockets.get(challengerId);
         const pending = findPendingChallengeForResponse(challengerId, socket.id, challengeId);
 
@@ -15962,8 +15970,6 @@ io.on('connection', (socket) => {
 
             const challengerUid = pending.challenge.challengerUid || getSocketUid(challengerId);
             const responderUid = pending.challenge.targetUid || getSocketUid(socket.id);
-            socket.clientBusyForInvites = false;
-            socket.clientBusyReason = '';
             if (isPlayerBusyForInvite(challengerId, challengerUid) || isPlayerBusyForInvite(socket.id, responderUid)) {
                 clearPendingChallengesBetweenPlayers(challengerId, challengerUid, socket.id, responderUid);
                 socket.emit('error_msg', 'err_player_busy');
@@ -15971,9 +15977,13 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            socket.clientBusyForInvites = false;
+            socket.clientBusyReason = '';
             clearPendingChallengesBetweenPlayers(challengerId, challengerUid, socket.id, responderUid);
             const roomName = `duel_${challengerId}_${socket.id}`;
-            
+
+            clearSpectatingRoom(socket);
+            clearSpectatingRoom(challengerSocket);
             socket.join(roomName);
             challengerSocket.join(roomName);
 
@@ -16034,8 +16044,6 @@ io.on('connection', (socket) => {
             if (pending && challengeId && pending.key !== challengeId) return;
             if (pending) clearPendingChallenge(pending.key);
             if (!data || !data.busy) {
-                socket.clientBusyForInvites = false;
-                socket.clientBusyReason = '';
                 notifyOnlinePlayersStatusChanged();
             }
             if (challengerSocket) {

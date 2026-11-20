@@ -116,7 +116,7 @@
     <link rel="stylesheet" href="theme-solo-results.css?v=16">
     <link rel="stylesheet" href="theme-menu-resume-buttons.css?v=2">
     <link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
-    <link rel="stylesheet" href="kockice.css?v=1.10">
+    <link rel="stylesheet" href="kockice.css?v=1.11">
     <link rel="stylesheet" href="dice-skin-png.css?v=5">
     <link rel="stylesheet" href="efekti.css?v=3.7">
     <link rel="stylesheet" href="theme-card-surfaces.css?v=7">
@@ -129,14 +129,14 @@
     <link rel="stylesheet" href="player-mailbox.css?v=9">
     <link rel="stylesheet" href="theme-global-chat-moderation.css?v=1">
     <link rel="stylesheet" href="theme-duel-chat.css?v=1">
-    <link rel="stylesheet" href="theme-online-players-room.css?v=4">
+    <link rel="stylesheet" href="theme-online-players-room.css?v=6">
     <link rel="stylesheet" href="theme-economy-room.css?v=1">
     <link rel="stylesheet" href="theme-leaderboard-room.css?v=5">
     <link rel="stylesheet" href="skin-action-buttons.css?v=1">
     <link rel="stylesheet" href="skin-roll-counter.css?v=1">
-    <link rel="stylesheet" href="theme-game-header.css?v=6">
+    <link rel="stylesheet" href="theme-game-header.css?v=8">
     <link rel="stylesheet" href="theme-quote-contrast.css?v=1">
-    <link rel="stylesheet" href="theme-daily-room.css?v=5">
+    <link rel="stylesheet" href="theme-daily-room.css?v=7">
     <link rel="stylesheet" href="theme-settings-room.css?v=8">
     <link rel="stylesheet" href="theme-statistics-room.css?v=5">
     <link rel="stylesheet" href="theme-quarterly-league-room.css?v=9">
@@ -151,8 +151,9 @@
     <link rel="stylesheet" href="theme-tournament-registration-rules.css?v=1">
     <link rel="stylesheet" href="theme-tournament-readiness.css?v=1">
     <link rel="stylesheet" href="theme-tournament-scheduling.css?v=1">
+    <link rel="stylesheet" href="maintenance.css?v=2">
     
-    <script src="languages.js?v=5.55"></script>
+    <script src="languages.js?v=5.59"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -667,6 +668,8 @@
             </div>
             <button id="game-quick-skin-open" class="game-quick-skin-row" type="button" onclick="app.openQuickSkinPicker()" aria-haspopup="dialog" aria-controls="game-skin-picker"><img class="game-quick-png" data-game-header-role="skin" alt="" aria-hidden="true" decoding="async"><span class="game-quick-skin-label" data-lang="game_skin_select">Skin kockica</span><span id="game-quick-skin-current" class="game-quick-skin-current"></span></button>
         </div>
+
+        <div id="game-connection-notice" role="status" aria-live="polite" hidden></div>
 
         <div id="game-skin-picker" class="game-skin-picker" role="dialog" aria-modal="true" aria-labelledby="game-skin-picker-title" onclick="if(event.target===this) app.closeQuickSkinPicker()" hidden>
             <div class="game-skin-picker-panel">
@@ -1828,11 +1831,13 @@
     <script src="theme-quality-assets.js?v=q2-f9c4cd7db412"></script>
     <script src="theme-loading-diagnostics.js?v=1"></script>
     <script src="config.js?v=5.41"></script>
+    <script src="maintenance-mode.js?v=2"></script>
     <script src="live-effects-stage.js?v=11"></script>
-    <script src="managers.js?v=6.53"></script>
-    <script src="dnevniizazov.js?v=3.5"></script>
+    <script src="managers.js?v=6.54"></script>
+    <script src="dailyChallengeCore.js?v=1"></script>
+    <script src="dnevniizazov.js?v=3.7"></script>
     <script src="riznica.js?v=1.22"></script>
-    <script src="trophyManager.js?v=4.13"></script>
+    <script src="trophyManager.js?v=4.14"></script>
     <script src="features.js?v=3.9"></script>
     <script src="theme-leaderboard-room.js?v=4"></script>
     <script src="toplista.js?v=5.0"></script>
@@ -1844,12 +1849,12 @@
     <script src="tournamentReliabilityCore.js?v=1"></script>
     <script src="tournamentMailCore.js?v=1"></script>
     <script src="turnir.js?v=1043"></script>
-    <script src="pravilaigre.js?v=1.38"></script>
+    <script src="pravilaigre.js?v=1.39"></script>
     <script src="vracanjeupisa.js?v=1.8"></script>
     <script src="globalchat.js?v=1.13"></script>
     <script src="globalchat-moderation.js?v=3"></script>
     <script src="appCheck.js?v=1.0"></script>
-    <script src="auth.js?v=1022"></script>
+    <script src="auth.js?v=1024"></script>
     <script src="account-deletion-client.js?v=3"></script>
     <link rel="stylesheet" href="analytics-privacy.css?v=3">
     <script src="analytics-privacy.js?v=2"></script>
@@ -1859,7 +1864,7 @@
     <script src="duel-chat.js?v=1"></script>
     <script src="player-referrals.js?v=2"></script>
     <script src="player-mailbox.js?v=19"></script>
-    <script src="game.js?v=6.57"></script>
+    <script src="game.js?v=6.63"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
@@ -1869,14 +1874,14 @@
     <script src="theme-statistics-room.js?v=2"></script>
     <script src="theme-settings-picker.js?v=3"></script>
     <script src="theme-main-room-icons.js?v=27"></script>
-    <script src="theme-online-players-room.js?v=6"></script>
+    <script src="theme-online-players-room.js?v=7"></script>
     <script src="theme-ducat-pack.js?v=5"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>
     <script src="theme-rewarded-video-pack.js?v=3"></script>
     <script src="theme-solo-results.js?v=5"></script>
     <script src="theme-quarterly-league-room.js?v=2"></script>
     <script src="kvartalnaliga.js?v=1033"></script>
-    <script src="onlinenumber.js?v=1015"></script>
+    <script src="onlinenumber.js?v=1017"></script>
     <script src="vatreniniz.js?v=1011"></script>
     <script src="powerindex.js?v=1.11"></script>
 

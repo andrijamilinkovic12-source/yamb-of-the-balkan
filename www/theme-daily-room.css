@@ -34,6 +34,96 @@
     font-family: 'Montserrat', sans-serif;
 }
 #glass-daily-overlay .daily-glass-btn { font-family: inherit; }
+#glass-daily-overlay .has-yamb-bonus .daily-glass-score-box { display: none; }
+.daily-yamb-summary {
+    width: 100%;
+    color: inherit;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    text-shadow: none;
+}
+#glass-daily-overlay .daily-yamb-summary { color: var(--daily-text, #e7efda); }
+.daily-yamb-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px 8px;
+    min-height: 32px;
+    line-height: 1.2;
+}
+.daily-yamb-heading strong {
+    color: inherit;
+    font-size: .85rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+.daily-yamb-heading span {
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+}
+#glass-daily-overlay .daily-yamb-heading .daily-complete-mark {
+    position: static;
+    width: 32px;
+    height: 32px;
+    transform: none;
+}
+.daily-reward-breakdown { margin: 6px 0 0; }
+.daily-reward-breakdown > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    min-height: 26px;
+    text-align: left;
+}
+.daily-reward-breakdown dt {
+    font-size: .72rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
+.daily-reward-breakdown dd {
+    margin: 0;
+    font-size: .875rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.daily-reward-breakdown .daily-yamb-bonus dt,
+.daily-reward-breakdown .daily-reward-total dt { font-weight: 800; }
+.daily-reward-breakdown .daily-yamb-bonus dd { font-weight: 900; }
+.daily-reward-breakdown .daily-reward-total dd { font-size: 1rem; font-weight: 900; }
+.daily-reward-breakdown .daily-reward-total {
+    border-top: 1px solid rgba(128, 128, 128, .35);
+    margin-top: 3px;
+    padding-top: 3px;
+    font-weight: 800;
+}
+#custom-modal-overlay .daily-yamb-summary { margin-top: 12px; }
+.daily-bonus-confirmation {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+}
+@media (max-height: 620px) {
+    #glass-daily-overlay .has-yamb-bonus .daily-glass-header { margin-bottom: 8px; }
+    #glass-daily-overlay .has-yamb-bonus .daily-glass-dice-grid { margin-bottom: 6px; }
+    #glass-daily-overlay .has-yamb-bonus .daily-reward-breakdown { margin-top: 4px; }
+}
 #glass-daily-overlay .daily-glass-dice-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     justify-items: center;

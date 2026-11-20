@@ -63,3 +63,13 @@ Panel se otvara u Globalnom chatu dugmetom **Moderacija**. Pristup ima potvrđen
 Četiri prikaza pokrivaju otvorene prijave, aktivne poruke, aktivne zabrane i evidenciju. Prijava čuva tekst iz trenutka prijave i opcioni razlog. Odluka traži potvrdu i razlog. Zabrana može trajati 15 minuta, sat, 24 sata, sedam dana ili neograničeno. Uklanjanje poruke osvežava chat svim povezanim klijentima. Aktivnu zabranu i razlog korisnik vidi i posle ponovnog povezivanja.
 
 MongoDB transakcija zajedno čuva odluku i evidenciju. Rok zabrane odnosi se samo na pisanje u Globalnom chatu. Uslov za objavu je serverska konfiguracija UID-a i MongoDB koji podržava transakcije. Izgled i tok odlučivanja proveravaju `test-global-chat-moderation-ui.cjs` i `test-global-chat-moderation-db.cjs`.
+
+Poseban prekidač za aktivaciju moderatora ne postoji: prava određuje podudaranje potvrđenog Firebase UID-a i `GLOBAL_CHAT_OWNER_UID` u procesu servera. Lokalna `.env` konfiguracija nije dokaz iste vrednosti na hostingu. Posle promene serverske varijable potreban je restart procesa.
+
+## Filter poruka i imena
+
+Zajednički filter je u `lib/profanity.js`; koriste ga Global chat, postojeći filter privatnog duela i provere imena. Lista sadrži konkretne oblike uvreda, vulgarnosti i određenih pretnji na srpskom i engleskom. Kratki koreni i neutralni izrazi nisu zamena za procenu sadržaja. Granice reči sprečavaju, na primer, da obični izrazi „je bio“ i „pick a game“ aktiviraju zabranu.
+
+Prepoznavanje obuhvata velika/mala slova, dijakritike, srpsku ćirilicu, česte zamene slovima/brojevima/simbolima, ponovljena slova, nevidljive formatne znakove i određene mešavine pisama. Razmaknuti nizovi pojedinačnih slova proveravaju se odvojeno od običnih rečenica. Brza predprovera sužava skuplje poklapanje, a klase slova i razdvajača se ne preklapaju.
+
+`npm run check:profanity` proverava svaki konfigurisani izraz u više oblika, poznate pokušaje prikrivanja, obične poruke i imena, odbijanje poruke kroz stvarni Global chat handler i opterećenje simbolima. Ova provera je deo `npm run check:global-chat` i `npm test`. Filter nije potpuna zaštita od svih kontekstualnih uvreda ili novih načina prikrivanja; prijave i moderatorske odluke ostaju potrebne. Pravila trajanja automatskih zabrana nisu promenjena.

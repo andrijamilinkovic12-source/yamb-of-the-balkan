@@ -173,6 +173,11 @@ function setYambAuthState(user, options = {}) {
         return setYambAuthState(null, options);
     }
     if (normalized && localStorage.getItem('yamb_deletion_disabled_uid')) localStorage.removeItem('yamb_deletion_disabled_uid');
+    const previousUid = previousState.uid || localStorage.getItem('yamb_uid') || window.app?.playerId || null;
+    if (previousUid !== (normalized?.uid || null)) {
+        window.yambAuthSessionVersion = (Number(window.yambAuthSessionVersion) || 0) + 1;
+        window.dnevniIzazov?.resetSession?.();
+    }
 
     if (!normalized) {
         localStorage.removeItem('yamb_uid');
@@ -183,6 +188,7 @@ function setYambAuthState(user, options = {}) {
         if (window.app) {
             window.app.playerId = null;
             window.app.playerName = "";
+            window.app.socketVerifiedUid = null;
         }
 
         window.yambAuthState = {
@@ -467,28 +473,6 @@ function refreshLeagueDashboardForCurrentUser() {
     }
 }
 
-function waitForCloudProfileSync(socket, timeoutMs = 4000) {
-    return new Promise(resolve => {
-        if (!socket || !socket.connected) {
-            resolve(null);
-            return;
-        }
-
-        let settled = false;
-        const finish = (payload) => {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timer);
-            socket.off('sync_local_stats', onSync);
-            resolve(payload || null);
-        };
-        const onSync = (payload) => finish(payload);
-        const timer = setTimeout(() => finish(null), timeoutMs);
-
-        socket.once('sync_local_stats', onSync);
-    });
-}
-
 function hasMeaningfulLocalProfileForSync() {
     if (window.app && typeof window.app.hasMeaningfulLocalProfile === 'function') {
         return window.app.hasMeaningfulLocalProfile();
@@ -546,6 +530,7 @@ function getAccountSnapshotStorageKeys(uid) {
         'yamb_vibration',
         'yamb_music',
         'yamb_music_volume',
+        'yamb_music_last_volume',
         'yamb_lang',
         'yamb_player_name',
         'yamb_player_photo'
@@ -553,6 +538,7 @@ function getAccountSnapshotStorageKeys(uid) {
 
     if (uid) {
         keys.push(
+            'yamb_audio_pending_sync_' + uid,
             'yamb_quarter_data_' + uid,
             'yamb_last_daily_' + uid,
             'yamb_daily_reward_claimed_' + uid,
@@ -604,25 +590,24 @@ function readAccountLocalSnapshot(uid) {
     if (!snapshotKey) return null;
     try {
         const raw = localStorage.getItem(snapshotKey);
-        return raw ? JSON.parse(raw) : null;
+        const snapshot = raw ? JSON.parse(raw) : null;
+        return snapshot?.uid === uid && snapshot.values && typeof snapshot.values === 'object'
+            ? snapshot : null;
     } catch (err) {
         console.warn("Neispravan lokalni account snapshot:", err);
         return null;
     }
 }
 
-function saveAccountLocalSnapshot(uid) {
+function saveAccountLocalSnapshot(uid, options = {}) {
     if (window.yambAccountDeletionInProgress) return null;
-    if (!uid) return false;
+    if (!uid || localStorage.getItem('yamb_uid') !== uid) return false;
 
     const stats = getFullLocalStats();
     const weight = calculateProfileSnapshotWeight(stats);
-    if (weight <= 0) return false;
-
     const existing = readAccountLocalSnapshot(uid);
-    if (existing && Number(existing.weight || 0) > weight) {
-        return false;
-    }
+    const progressBackup = existing?.progressBackup || existing;
+    if (weight <= 0 && Number(existing?.weight || 0) > 0 && !options.authoritative) return false;
 
     const values = {};
     getAccountSnapshotStorageKeys(uid).forEach(key => {
@@ -630,24 +615,36 @@ function saveAccountLocalSnapshot(uid) {
         if (value !== null) values[key] = value;
     });
 
-    localStorage.setItem(getAccountSnapshotKey(uid), JSON.stringify({
+    const snapshot = {
         uid,
         createdAt: Date.now(),
         weight,
         values
+    };
+    // Keep recovery progress separately: a legitimate spend must still update the latest state.
+    const protectedProgress = Number(progressBackup?.weight || 0) > weight ? progressBackup : snapshot;
+    localStorage.setItem(getAccountSnapshotKey(uid), JSON.stringify({
+        ...snapshot,
+        progressBackup: {
+            uid,
+            createdAt: protectedProgress.createdAt,
+            weight: protectedProgress.weight,
+            values: protectedProgress.values
+        }
     }));
 
     return true;
 }
 
 function restoreAccountLocalSnapshot(uid) {
+    if (localStorage.getItem('yamb_uid') !== uid) return false;
     const snapshot = readAccountLocalSnapshot(uid);
     if (!snapshot || !snapshot.values || typeof snapshot.values !== 'object') return false;
 
-    Object.entries(snapshot.values).forEach(([key, value]) => {
-        if (typeof key === 'string' && typeof value === 'string') {
-            localStorage.setItem(key, value);
-        }
+    getAccountSnapshotStorageKeys(uid).forEach(key => {
+        const value = snapshot.values[key];
+        if (typeof value === 'string') localStorage.setItem(key, value);
+        else localStorage.removeItem(key);
     });
 
     if (window.app) {
@@ -658,10 +655,28 @@ function restoreAccountLocalSnapshot(uid) {
         if (restoredTheme && typeof window.app.applyTheme === 'function') {
             window.app.applyTheme(restoredTheme, { initialLoad: true });
         }
+        // Local recovery must also replace live preferences before the next profile push.
+        window.app.soundEnabled = localStorage.getItem('yamb_sound') !== 'false';
+        window.app.vibrationEnabled = localStorage.getItem('yamb_vibration') !== 'false';
+        const sound = window.app.soundMgr;
+        if (sound) {
+            sound.enabled = window.app.soundEnabled;
+            const musicEnabled = localStorage.getItem('yamb_music') !== 'false';
+            sound.musicEnabled = musicEnabled;
+            sound.lastAudibleMusicVolume = sound.normalizeMusicVolume(localStorage.getItem('yamb_music_last_volume')) || 0.4;
+            sound.setMusicVolume(sound.normalizeMusicVolume(localStorage.getItem('yamb_music_volume')));
+            sound.setMusicEnabled(musicEnabled);
+        }
+        window.app.updateQuickMenuIcons?.();
     }
     if (window.statsManager && typeof window.statsManager.loadStats === 'function') {
         window.statsManager.stats = window.statsManager.loadStats() || window.statsManager.stats;
         window.statsManager.previousBalance = window.statsManager.stats.balance || 0;
+    }
+    const restoredLanguage = localStorage.getItem('yamb_lang');
+    if (restoredLanguage === 'sr' || restoredLanguage === 'en') {
+        if (document.documentElement) document.documentElement.lang = restoredLanguage;
+        if (typeof applyTranslations === 'function') applyTranslations();
     }
     refreshLeagueDashboardForCurrentUser();
     return true;
@@ -710,6 +725,12 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         return false;
     }
 
+    const app = window.app;
+    const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+    const isCurrent = () => window.app === app && localStorage.getItem('yamb_uid') === uid &&
+        (Number(window.yambAuthSessionVersion) || 0) === sessionVersion && !window.yambAccountDeletionInProgress;
+    if (!isCurrent()) return false;
+
     const displayName = user?.displayName || localStorage.getItem('yamb_player_name') || _t('hs_player', "Igrač");
     window.app.playerId = uid;
     window.app.playerName = displayName;
@@ -734,8 +755,12 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
                 resolve(value);
             };
             const onConnect = async () => {
-                const synced = await syncLoggedInProfileToCloud(user, options);
-                finish(synced);
+                try {
+                    finish(isCurrent() ? await syncLoggedInProfileToCloud(user, options) : false);
+                } catch (error) {
+                    console.warn('Cloud sync posle povezivanja nije uspeo:', error);
+                    finish(false);
+                }
             };
             const timer = setTimeout(() => {
                 rememberCloudSyncResult({ ok: false, reason: 'socket_connect_timeout' });
@@ -753,6 +778,7 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
     }
 
     const authResult = await window.app.authenticateSocketIdentity(!!options.forceRefresh);
+    if (!isCurrent() || (authResult?.ok && authResult.uid !== uid)) return false;
     if (!authResult || !authResult.ok) {
         console.warn(`Cloud sync blokiran dok Firebase identitet nije potvrđen: ${authResult?.reason || 'unknown_error'}`);
         rememberCloudSyncResult({
@@ -772,6 +798,7 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
             timeoutMs: options.timeoutMs || 4000
         });
     }
+    if (!isCurrent()) return false;
 
     if (shouldRestore &&
         (!restoreResult || !restoreResult.ok) &&
@@ -786,37 +813,41 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         return false;
     }
 
-    const syncWait = options.waitForSync ? waitForCloudProfileSync(socket, options.timeoutMs || 4000) : null;
-
-    socket.emit('set_player_data', {
+    const profileData = {
         uid,
         referralCode: window.yambReferrals?.codeForSync(uid) || undefined,
         name: window.app.playerName,
         photoUrl: localStorage.getItem('yamb_player_photo') || '',
         stats: getFullLocalStats(),
         playerId: window.app.playerId
-    });
+    };
+    const syncRequest = options.waitForSync
+        ? app.requestProfileSync('set_player_data', profileData, options.timeoutMs || 4000)
+        : null;
+    if (!syncRequest) socket.emit('set_player_data', profileData);
 
     if (window.yambPushNotifications && typeof window.yambPushNotifications.ensureRegistered === 'function') {
         window.yambPushNotifications.ensureRegistered(window.app)
             .catch(error => console.warn("Push registracija nije uspela:", error));
     }
 
-    if (!syncWait) {
+    if (!syncRequest) {
         rememberCloudSyncResult({ ok: true, reason: 'sent_without_wait' });
         return true;
     }
 
-    const cloudStats = await syncWait;
+    const syncResult = await syncRequest;
+    if (!isCurrent()) return false;
+    const cloudStats = syncResult?.ok ? syncResult.cloudStats : null;
     if (cloudStats && window.app && typeof window.app.applyCloudProfileSync === 'function') {
         window.app.applyCloudProfileSync(cloudStats);
     }
     refreshLeagueDashboardForCurrentUser();
     if (cloudStats) {
-        saveAccountLocalSnapshot(uid);
+        saveAccountLocalSnapshot(uid, { authoritative: cloudStats.statsAuthoritative === true });
         rememberCloudSyncResult({ ok: true, reason: 'profile_synced' });
     } else {
-        rememberCloudSyncResult({ ok: false, reason: 'profile_sync_timeout' });
+        rememberCloudSyncResult({ ok: false, reason: syncResult?.reason || 'profile_sync_timeout' });
     }
 
     return !!cloudStats;
@@ -1043,16 +1074,14 @@ async function odjaviSe() {
          return; 
     }
 
-    const msgText = _t('msg_logout_confirm', "Da li ste sigurni da želite da se odjavite?");
-
-    if (window.modalManager && typeof window.modalManager.confirm === 'function') {
-        const potvrda = await window.modalManager.confirm(msgText);
-        if (!potvrda) return;
-    } else {
-        if (!confirm(msgText)) return;
-    }
-
+    authActionInProgress = true;
+    updateFacebookControls();
     try {
+        const msgText = _t('msg_logout_confirm', "Da li ste sigurni da želite da se odjavite?");
+        const confirmed = window.modalManager?.confirm
+            ? await window.modalManager.confirm(msgText) : confirm(msgText);
+        if (!confirmed) return;
+
         const logoutUid = localStorage.getItem('yamb_uid');
         const logoutTheme = localStorage.getItem('yamb_theme') || localStorage.getItem('yamb_last_theme') || 'dark';
         if (window.app && typeof window.app.autoSaveGame === 'function') {
@@ -1095,6 +1124,9 @@ async function odjaviSe() {
         }
 
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
+        setYambAuthState(null);
+        if (window.app?.settingsSyncTimer) clearTimeout(window.app.settingsSyncTimer);
+        window.app?.socket?.disconnect();
         console.log("Korisnik uspešno odjavljen.");
         await clearAccountLocalCache(logoutUid);
         localStorage.setItem('yamb_force_cloud_restore_next_login', 'true');
@@ -1166,12 +1198,18 @@ async function odjaviSe() {
     } catch (error) {
         console.error("Greška pri odjavi:", error);
         await prikaziObavestenje(_t('auth_logout_error', "Došlo je do greške pri odjavi."));
+    } finally {
+        authActionInProgress = false;
+        updateFacebookControls();
     }
 }
 
 // --- PROVERA STATUSA PRILIKOM UČITAVANJA (GOTO KEEPER) ---
 async function checkLoginStatus() {
     const splashLoginContainer = document.getElementById('splash-login-container');
+    const checkingSessionVersion = Number(window.yambAuthSessionVersion) || 0;
+    const checkIsCurrent = () => (Number(window.yambAuthSessionVersion) || 0) === checkingSessionVersion &&
+        !authActionInProgress;
 
     window.yambAuthState = {
         ...(window.yambAuthState || {}),
@@ -1198,6 +1236,7 @@ async function checkLoginStatus() {
 
     try {
         const result = await authPlugin.getCurrentUser();
+        if (!checkIsCurrent()) return;
         const signedInUser = setYambAuthState(normalizeFirebaseAuthUser(result?.user));
 
         if (signedInUser) {
@@ -1209,9 +1248,13 @@ async function checkLoginStatus() {
                 waitForSync: true,
                 timeoutMs: 3500
             });
+            const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+            const isCurrent = () => localStorage.getItem('yamb_uid') === signedInUser.uid &&
+                (Number(window.yambAuthSessionVersion) || 0) === sessionVersion;
 
             setTimeout(async () => {
                 const syncOk = await initialCloudSync;
+                if (!isCurrent()) return;
                 if (window.yambAuthState) window.yambAuthState.checkingLogin = false;
                 refreshLeagueDashboardForCurrentUser();
                 if (!syncOk &&
@@ -1232,6 +1275,7 @@ async function checkLoginStatus() {
                 const stillOnSplash = !activeScreen || activeScreen.id === 'splash-screen';
                 if (window.app && !window.app.inviteDetected && stillOnSplash) {
                     const finishSplash = () => {
+                        if (!isCurrent()) return;
                         if (window.yambThemedSplashAssetPending || window.yambEasterSplashAssetPending) {
                             setTimeout(finishSplash, 100);
                             return;
@@ -1257,6 +1301,7 @@ async function checkLoginStatus() {
             if (window.app) window.app.navigateTo('splash-screen');
         }
     } catch (e) {
+        if (!checkIsCurrent()) return;
         setYambAuthState(null);
         setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
         if (window.app) window.app.navigateTo('splash-screen');

@@ -269,7 +269,7 @@ async function checkRewardedAdClientFallback() {
     assert(managersSource.includes("{ ssvNonce, clientRewarded: true }"), 'Shop coin rewarded claim does not send clientRewarded');
     assert(managersSource.includes("{ itemId, ssvNonce, clientRewarded: true }"), 'Shop discount/ad-unlock claims do not send clientRewarded');
     assert(undoSource.includes("{ type, ssvNonce, clientRewarded: true }"), 'Undo token rewarded claim does not send clientRewarded');
-    assert(dailySource.includes("{ amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled }"), 'Daily double rewarded claim does not send clientRewarded');
+    assert(dailySource.includes("{ amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled, dayKey }"), 'Daily double rewarded claim must send clientRewarded and the challenge day');
     assert(gameSource.includes('clientRewarded: !!doubled'), 'Game-over double rewarded claim does not send clientRewarded');
 
     const rewardWait = extractClassMethod(managersSource, 'async waitForRewardVideoReadyFor');

@@ -413,6 +413,13 @@
         }
     }
 
+    async function syncCurrentDevice(app = window.app, options = {}) {
+        if (!isNativePushAvailable()) return { ok: false, reason: 'push_unavailable' };
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (!token) return { ok: false, reason: 'push_token_missing' };
+        return sendTokenToServer(app || activeApp, token, options);
+    }
+
     async function unregisterCurrentDevice(app = window.app) {
         const token = localStorage.getItem(TOKEN_KEY);
 
@@ -435,6 +442,7 @@
 
     window.yambPushNotifications = {
         ensureRegistered,
+        syncCurrentDevice,
         unregisterCurrentDevice,
         openTournamentFromNotification,
         openRecordsFromNotification,

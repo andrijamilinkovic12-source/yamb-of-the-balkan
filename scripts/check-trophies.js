@@ -529,6 +529,197 @@ async function checkLedgerFailureHandling() {
     }), /database unavailable/, 'Ledger database failure was swallowed');
 }
 
+async function checkClaimLifecycle() {
+    const trophy = clientConfig.trophies.find(item => item.id === 'first_play');
+    const failures = [];
+    const run = async (name, test) => {
+        storage.clear();
+        clientContext.localStorage.setItem('yamb_uid', 'claim-owner');
+        delete clientContext.window.riznicaManager;
+        try { await test(); }
+        catch (err) { failures.push(`${name}: ${err.message}`); }
+    };
+
+    await run('durable proof and overlapping retry', async () => {
+        clientContext.window.app = { socket: { connected: true } };
+        const manager = new TrophyManager(new StatsStub({ balance: 1000 }), null);
+        let finishClaim;
+        let requests = 0;
+        manager.claimServerReward = () => {
+            requests++;
+            return new Promise(resolve => { finishClaim = resolve; });
+        };
+        const unlock = manager.unlock(trophy, { stats: { games: 1 } }, { silent: true });
+        const savedBeforeReply = manager.loadPendingClaims();
+        const retry = manager.retryPendingClaims();
+        finishClaim({ ok: true, balance: 1500 });
+        await Promise.all([unlock.claimPromise, retry]);
+        assert.strictEqual(savedBeforeReply.length, 1, 'Proof must survive closing the app before the server replies');
+        assert.strictEqual(requests, 1, 'Profile sync retried an in-flight claim');
+        assert.strictEqual(manager.loadPendingClaims().length, 0);
+    });
+
+    for (const response of [{ ok: true, balance: 1500 }, { ok: true, localFallback: true }]) {
+        await run(`account switch (${response.localFallback ? 'offline' : 'server'})`, async () => {
+            const stats = new StatsStub({ balance: 1000 });
+            const manager = new TrophyManager(stats, null);
+            let finishClaim;
+            manager.claimServerReward = () => new Promise(resolve => { finishClaim = resolve; });
+            const unlock = manager.unlock(trophy, {}, { silent: true });
+            clientContext.localStorage.setItem('yamb_uid', 'other-account');
+            stats.stats = { balance: 700, unlockedTrophies: [] };
+            finishClaim(response);
+            await unlock.claimPromise;
+            assert.strictEqual(stats.stats.balance, 700, 'Previous account changed the new account balance');
+            assert.strictEqual(manager.loadPendingClaims().length, 0, 'Previous claim leaked into the new account queue');
+        });
+    }
+
+    await run('account switch during authentication', async () => {
+        let finishAuth;
+        const sent = [];
+        clientContext.window.app = {
+            socket: { connected: true, emit: (...args) => { sent.push(args); args.at(-1)({ ok: true }); } },
+            authenticateSocketIdentity: () => new Promise(resolve => { finishAuth = resolve; })
+        };
+        const manager = new TrophyManager(new StatsStub({}), null);
+        const claim = manager.claimServerReward(trophy, {});
+        clientContext.localStorage.setItem('yamb_uid', 'other-account');
+        finishAuth({ ok: true, uid: 'claim-owner' });
+        await claim;
+        assert.strictEqual(sent.length, 0, 'Claim was sent under a changed socket identity');
+    });
+
+    await run('account switch during queued retry', async () => {
+        clientContext.window.app = { socket: { connected: true } };
+        const stats = new StatsStub({ balance: 1000 });
+        const manager = new TrophyManager(stats, null);
+        manager.queuePendingClaim(trophy, {});
+        manager.queuePendingClaim(clientConfig.trophies.find(item => item.id === 'kafana'), {});
+        let finishClaim;
+        const requests = [];
+        manager.claimServerReward = item => {
+            requests.push(item.id);
+            return requests.length === 1
+                ? new Promise(resolve => { finishClaim = resolve; })
+                : Promise.resolve({ ok: true });
+        };
+        const retry = manager.retryPendingClaims();
+        clientContext.localStorage.setItem('yamb_uid', 'other-account');
+        stats.stats = { balance: 700, unlockedTrophies: [] };
+        finishClaim({ ok: true, balance: 1500 });
+        await retry;
+        assert.strictEqual(stats.stats.balance, 700, 'Retry changed the new account balance');
+        assert.strictEqual(requests.length, 1, 'Old pending claims continued under a new account');
+        clientContext.localStorage.setItem('yamb_uid', 'claim-owner');
+        assert.strictEqual(manager.loadPendingClaims().length, 2, 'Unconfirmed owner queue was removed');
+    });
+
+    await run('open treasury refresh', async () => {
+        clientContext.window.app = { socket: { connected: false } };
+        const stats = new StatsStub({ balance: 1000 });
+        const manager = new TrophyManager(stats, null);
+        let visibleBalance = 1000;
+        clientContext.window.riznicaManager = { shop: {
+            refreshTreasuryView() { visibleBalance = stats.stats.balance; }
+        } };
+        await manager.unlock(trophy, {}, { silent: true }).claimPromise;
+        assert.strictEqual(visibleBalance, 1500, 'Open treasury kept the previous balance and locked card');
+    });
+
+    await run('rejected trophy notification', async () => {
+        const manager = new TrophyManager(new StatsStub({ balance: 1000 }), null);
+        let notifications = 0;
+        manager.showNotification = () => { notifications++; };
+        manager.claimServerReward = async () => ({ ok: false, reason: 'trophy_not_earned' });
+        await manager.unlock(trophy).claimPromise;
+        assert.strictEqual(notifications, 0, 'Permanently rejected trophy was announced as won');
+    });
+
+    for (const response of [{ ok: true, balance: 1500 }, { ok: true, localFallback: true }]) {
+        await run(`cloud restore during ${response.localFallback ? 'offline' : 'server'} award`, async () => {
+            const stats = new StatsStub({ balance: 1000 });
+            const manager = new TrophyManager(stats, null);
+            let finishClaim;
+            manager.claimServerReward = () => new Promise(resolve => { finishClaim = resolve; });
+            const unlock = manager.unlock(trophy, {}, { silent: true });
+            stats.stats.unlockedTrophies = [];
+            finishClaim(response);
+            await unlock.claimPromise;
+            assert(stats.stats.unlockedTrophies.includes(trophy.id), 'Confirmed trophy was lost after cloud restore');
+        });
+    }
+
+    await run('offline award is not credited twice after a restore', async () => {
+        clientContext.window.app = { socket: { connected: false } };
+        const stats = new StatsStub({ balance: 1000 });
+        const manager = new TrophyManager(stats, null);
+        await manager.unlock(trophy, {}, { silent: true }).claimPromise;
+        stats.stats.unlockedTrophies = [];
+        await manager.unlock(trophy, {}, { silent: true }).claimPromise;
+        assert.strictEqual(stats.stats.balance, 1500, 'Already applied pending reward was credited twice');
+        assert.strictEqual(manager.loadPendingClaims().length, 1);
+    });
+
+    await run('notification error cannot repeat a confirmed payout', async () => {
+        const stats = new StatsStub({ balance: 1000 });
+        const manager = new TrophyManager(stats, null);
+        manager.claimServerReward = async () => ({ ok: true, balance: 1500, reward: 500 });
+        manager.showNotification = () => { throw new Error('notification failed'); };
+        await assert.rejects(manager.unlock(trophy).claimPromise, /notification failed/);
+        assert.strictEqual(stats.stats.balance, 1500, 'Notification failure triggered a second payout');
+        assert.strictEqual(manager.loadPendingClaims().length, 0, 'Confirmed payout was requeued');
+    });
+
+    delete clientContext.window.riznicaManager;
+    assert.deepStrictEqual(failures, [], 'Trophy lifecycle regressions:\n' + failures.join('\n'));
+}
+
+async function checkServerClaimIdempotency() {
+    const state = { firebaseUid: 'claim-owner', balance: 1000, unlockedTrophies: [], claimedTrophyRewards: [] };
+    const handlers = {};
+    const snapshot = () => ({ ...state, unlockedTrophies: [...state.unlockedTrophies],
+        claimedTrophyRewards: [...state.claimedTrophyRewards] });
+    const context = {
+        socket: { verifiedUid: state.firebaseUid, on: (name, handler) => { handlers[name] = handler; }, emit() {} },
+        MONGO_URI: 'isolated-fixture', MAX_BALANCE: 1000000,
+        ALL_TROPHY_IDS: new Set(serverIds), TROPHY_REWARDS: serverRewards,
+        toSafeInt: value => Math.max(0, Math.floor(Number(value) || 0)),
+        sanitizeTrophyIds: ids => ids.filter(id => serverIds.includes(id)),
+        ensureTrophyRewardLedger: async user => user.claimedTrophyRewards,
+        isTrophyClaimEarned: (id, user, proof) => serverClaimEarned(id, user, proof),
+        emitProfileSync() {}, console,
+        UserProfile: {
+            findOne: async () => snapshot(),
+            async findOneAndUpdate(query, update) {
+                assert.strictEqual(query.firebaseUid, state.firebaseUid);
+                const id = update.$addToSet.unlockedTrophies;
+                if (state.claimedTrophyRewards.includes(query.claimedTrophyRewards?.$ne)) return null;
+                state.balance += update.$inc.balance;
+                state.unlockedTrophies.push(id);
+                state.claimedTrophyRewards.push(...update.$addToSet.claimedTrophyRewards.$each);
+                return snapshot();
+            }
+        }
+    };
+    vm.createContext(context);
+    const start = serverSource.indexOf("    socket.on('claim_trophy_reward'");
+    const end = serverSource.indexOf("    socket.on('request_profile_sync'", start);
+    assert(start >= 0 && end > start, 'Missing trophy claim socket handler');
+    vm.runInContext(serverSource.slice(start, end), context);
+    const claim = (trophyId, proof = {}) => new Promise((resolve, reject) => {
+        Promise.resolve(handlers.claim_trophy_reward({ trophyId, proof }, resolve)).catch(reject);
+    });
+    const results = await Promise.all(Array.from({ length: 6 }, () => claim('first_play', { stats: { games: 1 } })));
+    assert(results.every(result => result.ok), 'Concurrent duplicate claims must return a valid acknowledgement');
+    assert.strictEqual(results.filter(result => result.reward > 0).length, 1, 'Server paid the same trophy twice');
+    assert.strictEqual(state.balance, 1500);
+    assert.strictEqual(state.claimedTrophyRewards.length, 1);
+    assert.strictEqual((await claim('godlike')).reason, 'trophy_not_earned');
+    assert.strictEqual((await claim('unknown')).reason, 'invalid_trophy');
+    assert.strictEqual(state.balance, 1500, 'Rejected claims changed the server balance');
+}
+
 checkFeatureFallbackProof();
 
 (async () => {
@@ -536,9 +727,11 @@ checkFeatureFallbackProof();
     await checkPermanentClaimRollback();
     await checkPendingPermanentRollback();
     await checkLedgerFailureHandling();
+    await checkClaimLifecycle();
+    await checkServerClaimIdempotency();
 })()
     .then(() => {
-        console.log(`Trophy checks passed: ${clientIds.length} definitions, ${cases.length} condition cases, feature fallback, pending retry, permanent rollback, ledger failure, and initial profile guard flows.`);
+        console.log(`Trophy checks passed: ${clientIds.length} definitions, ${cases.length} condition cases, feature fallback, pending retry, permanent rollback, ledger failure, initial profile guards, 11 claim lifecycle scenarios, and concurrent server claim idempotency.`);
     })
     .catch(err => {
         console.error(err);

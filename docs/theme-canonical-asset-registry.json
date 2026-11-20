@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedOn": "2026-11-01",
-  "definitionSchemaVersion": 97,
+  "updatedOn": "2026-11-05",
+  "definitionSchemaVersion": 103,
   "name": "Kanonski registar asseta po temi",
   "description": "Indeks nad postojecim katalogom, mapom implementacije i manifestima; ne proglasava sve PNG vizuelno odobrenim.",
   "contract": {
@@ -24,17 +24,17 @@
     "blackHoleEffect": "source-assets/theme-live-black-hole-v1/manifest.json",
     "supernovaEffect": "source-assets/theme-live-supernova-v2/manifest.json",
     "liveStage": "source-assets/theme-live-stage-v1/manifest.json",
-    "supplementaryPacks": 28
+    "supplementaryPacks": 30
   },
   "sourceSha256": {
-    "themeDefinitions": "4774856efd49852e733b1097ea6f4885b0c91f2990a16b0cbcf16e295fb3f88a",
-    "roleCatalog": "bc5e6cf4b7a89c0ab630294057164c45abd827ede18a914e202a709ac9376bcc",
+    "themeDefinitions": "0a8ca32b6ccec7d6a0f843ce393a281355041ed21d06fed0924b44d4a4c5d519",
+    "roleCatalog": "de9450442265ac9437eee4aea47d9b0936967fe05634dad5abddce6b00b0101b",
     "implementationMap": "89bfaeec155651aa3922b1edb556c89b04e4665969ee2e9a16876d91c13fd003",
     "greenRegistry": "eae2fb3dc838cf6a0ff444c05a8b8875f8f8c06f793e62180a0578fc8f0407a2",
     "criticalEconomyRefresh": "df6beac330e20f4a7c567f1625fc01b53a2e3d1ed4486d0da8462e475f826ad9",
     "economyCompositeRefresh": "c02f4cc32528ba3a0b06862de1ad0d458e41c4d7fc591994c0d6b6e27ed32b6b",
     "leaderboardMedalsRefresh": "eff44f19559e8bd032b312291f753fd0f6476fbca934ea69877a3658e90ce7f1",
-    "quarterlyLeagueRefresh": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd",
+    "quarterlyLeagueRefresh": "9f50c212cd504ff745c043b0eb263a08affccd3d8cc321400965e38ec1180994",
     "goldRainRefresh": "fef48d6d2eb1628ffedb22910627b56ba783c20d1cbca5a142b701b4ba614aab",
     "blackHoleEffect": "4e619bd8f43cf08b3283f2055e09ac2b33dbe67cab16d1cf1ffc647cc149d145",
     "supernovaEffect": "ba2fcf571d6945cccaf94905b17b94bbeab2c9f60f37746daf8d193244566def",
@@ -436,6 +436,10 @@
       "sha256": "94dc477871b5f444f215bee42f2667662bbdd670cef5bd05f41fa4c1ba9e1c3f"
     },
     {
+      "path": "source-assets/theme-daily-buttons-v1/manifest.json",
+      "sha256": "cedbf1837e2acc1729cb15d25269baf4b114c1c046db0f46e947a3fcd3d788d4"
+    },
+    {
       "path": "source-assets/theme-easter-game-megaphone-v1/manifest.json",
       "sha256": "1b74187161eb0d71c1b5d7931fae3375efa020c4075cf43bcbb5c3d8f0a6010c"
     },
@@ -508,12 +512,16 @@
       "sha256": "c8cf8abd910836af92ef0125e2c69a75eed77344e6739d5cfade92dcb8794a18"
     },
     {
+      "path": "source-assets/theme-player-mailbox-v1/manifest.json",
+      "sha256": "496b863359c8eb796a8af4a65cbe2e589a01bd895620938c1cd23e6cd2feb44d"
+    },
+    {
       "path": "source-assets/theme-quality-refresh-v2/manifest.json",
       "sha256": "f43b4b1344ca98e27c42e0d00135f9f50cfbf66bf0d3679931bccebd0eed9684"
     },
     {
       "path": "source-assets/theme-quarterly-league-v2/manifest.json",
-      "sha256": "9841456ecad844880514163963b55376ec3777d9033756c9a0c9af8b72e84cfd"
+      "sha256": "9f50c212cd504ff745c043b0eb263a08affccd3d8cc321400965e38ec1180994"
     },
     {
       "path": "source-assets/theme-settings-room-v2/manifest.json",

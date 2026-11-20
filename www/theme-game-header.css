@@ -88,6 +88,12 @@ body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
 }
 
 #game-scene:is(#game-scene) #turn-timer-display {
+    box-sizing:border-box;
+    flex:0 0 min(88px, 24vw) !important;
+    width:min(88px, 24vw) !important;
+    min-width:0 !important;
+    max-width:min(88px, 24vw) !important;
+    padding:2px 6px !important;
     color: var(--gh-ink) !important;
     background: color-mix(in srgb, var(--gh-panel) 95%, var(--gh-ink) 5%) !important;
     border: 1px solid var(--gh-edge) !important;
@@ -112,21 +118,75 @@ body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
     flex:0 1 auto;
     color:var(--gh-ink) !important;
     font-size:.82rem !important;
+    letter-spacing:0 !important;
     text-shadow:none !important;
 }
 #game-scene:is(#game-scene) #turn-timer-display.timer-turn--urgent > span {
     color:var(--gh-urgent-ink) !important;
 }
-#game-scene:is(#game-scene) #turn-timer-display .spectator-live-pill {
+#game-scene:is(#game-scene) #turn-timer-display.timer-turn--spectator {
     color:var(--gh-panel) !important;
     background:var(--gh-accent) !important;
+    border-color:var(--gh-accent) !important;
     box-shadow:0 0 7px color-mix(in srgb, var(--gh-accent) 42%, transparent) !important;
+}
+#game-scene:is(#game-scene) #turn-timer-display .spectator-live-pill {
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    width:100% !important;
+    padding:0 !important;
+    color:var(--gh-panel) !important;
+    background:transparent !important;
+    box-shadow:none !important;
+}
+#game-scene:is(#game-scene) #turn-timer-display .spectator-live-pill .theme-online-spectator-icon {
+    width:18px !important;
+    height:18px !important;
+    flex:0 0 18px;
+    object-fit:contain;
 }
 #game-scene:is(#game-scene) #turn-timer-display.timer-turn--urgent {
     border-color: var(--gh-urgent-ink) !important;
     box-shadow: 0 0 8px color-mix(in srgb, var(--gh-urgent-ink) 35%, transparent), inset 0 1px 0 color-mix(in srgb, var(--gh-ink) 18%, transparent) !important;
     animation: gh-urgent-breathe 2.2s ease-in-out infinite !important;
 }
+/* Keep the grace countdown in the header; explanations get a wrapping row.
+   Override older theme rules that turn this pill into a fixed overlay. */
+#game-scene:is(#game-scene) #turn-timer-display.timer-turn--disconnected {
+    position:static !important;
+    inset:auto !important;
+    flex:0 0 min(88px, 24vw) !important;
+    width:min(88px, 24vw) !important;
+    min-width:0 !important;
+    max-width:min(88px, 24vw) !important;
+    height:32px !important;
+    min-height:32px !important;
+    margin:0 2px !important;
+    padding:2px 6px !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    animation:none !important;
+    font-variant-numeric:tabular-nums;
+}
+#game-scene:is(#game-scene) #game-connection-notice {
+    box-sizing:border-box;
+    flex:0 0 auto;
+    width:100%;
+    padding:7px max(12px, var(--safe-right)) 7px max(12px, var(--safe-left));
+    color:var(--gh-ink);
+    background:var(--gh-panel);
+    border-bottom:1px solid var(--gh-edge);
+    font-size:.8rem;
+    font-weight:600;
+    line-height:1.35;
+    text-align:center;
+    white-space:normal;
+    overflow-wrap:anywhere;
+}
+#game-scene #game-connection-notice[hidden] { display:none !important; }
 @keyframes gh-urgent-breathe { 50% { filter: brightness(1.08); } }
 
 #game-scene #gh-spectator-icon.gh-btn-inactive { opacity:1 !important; filter:none !important; }

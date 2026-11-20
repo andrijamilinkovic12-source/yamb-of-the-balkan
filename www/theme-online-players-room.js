@@ -6,8 +6,9 @@
     const ready = new Set();
     const activeTheme = () => THEMES.find(theme => theme !== 'dark' && document.body.classList.contains(`${theme}-theme`)) || 'dark';
     const asset = (role, theme = activeTheme()) => {
-        if (!ROLES.has(role)) throw new Error(`Unknown Online Players icon role: ${role}`);
         if (!THEMES.includes(theme)) theme = 'dark';
+        if (role === 'tournament') return window.getCanonicalTournamentTrophySource(theme);
+        if (!ROLES.has(role)) throw new Error(`Unknown Online Players icon role: ${role}`);
         const source = `assets/theme-packs/${theme}/canonical/online-players-internal/${role}-v1.png?v=2`;
         return globalThis.resolveThemeQualityAsset?.(source) || source;
     };

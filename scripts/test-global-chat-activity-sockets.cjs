@@ -20,13 +20,14 @@ io.on('connection', socket => {
     socket.playerName = socket.verifiedUid;
     activity.bind(socket);
     socket.on('request_global_chat_history', () => socket.emit('global_chat_history', history));
-    socket.on('global_chat_msg', data => {
+    socket.on('global_chat_msg', (data, ack) => {
         if (!socket.verifiedUid) return;
         const message = { id: String(++id), createdAt: Date.now(), senderUid: socket.verifiedUid,
             senderId: socket.id, sender: socket.playerName, msg: data.msg };
         history.push(message);
         activity.stop(socket);
         io.emit('global_chat_msg', message);
+        if (typeof ack === 'function') ack({ ok: true, message });
     });
 });
 (async () => {

@@ -538,8 +538,10 @@ class GlobalChatManager {
                 const disconnected = () => finish({ ok: false, reason: 'sys_no_conn' });
                 const timer = setTimeout(() => finish({ ok: false, reason: 'err_chat_save_failed' }), 8000);
                 socket.on('disconnect', disconnected);
-                socket.emit(event, payload, result => finish(result && typeof result.ok === 'boolean'
-                    ? result : { ok: false, reason: 'err_chat_save_failed' }));
+                try {
+                    socket.emit(event, payload, result => finish(result && typeof result.ok === 'boolean'
+                        ? result : { ok: false, reason: 'err_chat_save_failed' }));
+                } catch (_) { finish({ ok: false, reason: 'err_chat_save_failed' }); }
             });
         } catch (_) { return { ok: false, reason: 'err_chat_save_failed' }; }
         finally { this.mutationPending = false; this.syncEditor(); }
@@ -693,26 +695,26 @@ class GlobalChatManager {
         if (this.moderation?.isRestricted()) return this.showStatus('err_chat_suspended');
         if (this.mutationPending) return;
         if (this.editingMessage) return this.saveEditedMessage();
-        const input = document.getElementById('global-chat-input'); 
-        let text = input.value.trim(); 
-        if (!text) return; 
+        const input = document.getElementById('global-chat-input');
+        if (!input) return;
+        const draft = input.value;
+        const text = draft.trim();
+        if (!text) return;
+        if (draft.length > 550) return this.showStatus('err_chat_edit_length');
+        const uid = localStorage.getItem('yamb_uid');
         this.clearStatus();
-
-        const ready = await this.ensureChatReady();
-        if (!ready) return;
-
-        if (!this.app.socket || !this.app.socket.connected) {
-            this.showStatus('sys_no_conn');
+        this.stopTyping();
+        const result = await this.mutateMessage('global_chat_msg', { msg: text });
+        if (uid !== localStorage.getItem('yamb_uid')) return;
+        if (!result.ok) {
+            this.showStatus(result.reason || 'err_chat_save_failed');
+            if (result.reason === 'err_chat_save_failed') this.requestHistory();
             return;
         }
-        this.stopTyping();
-        input.value = ""; 
+        // A late confirmation must not erase a replacement draft or another account's input.
+        if (input.value === draft && !this.editingMessage) input.value = '';
         this.resizeInput(input);
-        
-        const charCountEl = document.getElementById('global-chat-char-count');
-        if (charCountEl) charCountEl.innerText = "0/550";
-        
-        this.app.socket.emit('global_chat_msg', { msg: text });
+        this.syncEditor();
     }
 
     // Funkcija koja vezuje Socket listener-e za Globalni chat

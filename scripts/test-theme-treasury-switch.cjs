@@ -5,7 +5,7 @@ const context={window:{app:{themeSwitchRequestToken:0,prepareTreasuryTheme:()=>n
  document:{addEventListener(){},getElementById:()=>null},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,String(v))},console,_safeT:key=>key};
 vm.runInNewContext(fs.readFileSync('www/managers.js','utf8')+'\nglobalThis.Shop=ShopManager;',context);
 const shop=Object.create(context.Shop.prototype);
-Object.assign(shop,{type:'theme',items:[{id:'light'},{id:'moon'}],unlocked:['light','moon'],activeKey:'yamb_theme',activeItem:'easter',render(){},getItemById(id){return this.items.find(i=>i.id===id);}});
+Object.assign(shop,{type:'theme',items:[{id:'light'},{id:'moon'}],unlocked:['light','moon'],activeKey:'yamb_theme',activeItem:'easter',refreshState(){},render(){},getItemById(id){return this.items.find(i=>i.id===id);}});
 (async()=>{
  const first=shop.equip('light');assert.equal(storage.get('yamb_theme'),'easter');assert.equal(applied.length,0);
  const second=shop.equip('moon');pending[0](true);await first;

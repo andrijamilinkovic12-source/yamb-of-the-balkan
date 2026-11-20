@@ -4,6 +4,10 @@ class UndoManager {
     constructor(appInstance) {
         this.app = appInstance;
         this.currentMenuPage = 0;
+        this.menuOpenTimer = null;
+        this.bannerTimer = null;
+        this.rewardPrepareTimer = null;
+        this.undoInProgress = false;
     }
 
     // --- OTVARANJE I ZATVARANJE MENIJA ---
@@ -11,14 +15,17 @@ class UndoManager {
         const overlay = document.getElementById('undo-menu-overlay');
         this.updateMenuCounts();
         if (overlay) overlay.style.display = 'flex';
-        setTimeout(() => {
-            this.switchMenuTab(0);
+        clearTimeout(this.menuOpenTimer);
+        this.menuOpenTimer = setTimeout(() => {
+            if (overlay?.style.display === 'flex') this.switchMenuTab(0);
         }, 0);
     }
 
     closeMenu() {
         const overlay = document.getElementById('undo-menu-overlay');
         if (overlay) overlay.style.display = 'none';
+        clearTimeout(this.menuOpenTimer);
+        clearTimeout(this.rewardPrepareTimer);
         this.syncEconomyBanner(1);
     }
 
@@ -89,12 +96,18 @@ class UndoManager {
         }
 
         this.syncEconomyBanner(normalizedIndex);
+        clearTimeout(this.rewardPrepareTimer);
         const adMob = window.adMobGlobal;
         if (adMob && typeof adMob.prepareReward === 'function') {
             const rewardOptions = normalizedIndex === 1
                 ? this.getUndoTokenRewardOptions()
                 : this.getCoinRewardOptions();
-            setTimeout(() => adMob.prepareReward(rewardOptions), 150);
+            this.rewardPrepareTimer = setTimeout(() => {
+                const overlay = document.getElementById('undo-menu-overlay');
+                if (overlay?.style.display === 'flex' && this.currentMenuPage === normalizedIndex) {
+                    adMob.prepareReward(rewardOptions);
+                }
+            }, 150);
         }
     }
 
@@ -107,6 +120,7 @@ class UndoManager {
     }
 
     syncEconomyBanner(index) {
+        clearTimeout(this.bannerTimer);
         const adMob = window.adMobGlobal;
         if (!adMob) return;
 
@@ -114,7 +128,11 @@ class UndoManager {
         const bannerSlotId = Number(index) === 1 ? 'economy-undo-banner-slot' : 'economy-banner-slot';
         const bannerSlot = document.getElementById(bannerSlotId);
         if (overlay?.style.display === 'flex' && bannerSlot) {
-            setTimeout(() => adMob.showEconomyBanner && adMob.showEconomyBanner(bannerSlot), 120);
+            this.bannerTimer = setTimeout(() => {
+                if (overlay.style.display === 'flex' && this.currentMenuPage === Number(index)) {
+                    adMob.showEconomyBanner?.(bannerSlot);
+                }
+            }, 120);
         } else if (adMob.hideEconomyBanner) {
             adMob.hideEconomyBanner();
         }
@@ -130,7 +148,8 @@ class UndoManager {
         }
 
         const shop = window.shop || (window.riznicaManager && window.riznicaManager.shop);
-        if (shop && typeof shop.watchAdForCoins === 'function') {
+        if (shop && typeof shop.watchAdForCoins === 'function'
+            && (typeof shop.isCurrentAccount !== 'function' || shop.isCurrentAccount())) {
             await shop.watchAdForCoins();
             this.updateMenuCounts();
             return;
@@ -379,12 +398,17 @@ class UndoManager {
         if (!this.app || !snapshot || !this.app.socket || !this.app.socket.connected || !this.app.roomId) {
             return { ok: false, reason: 'err_server_conn' };
         }
+        const roomId = this.app.roomId;
 
         if (typeof this.app.authenticateSocketIdentity === 'function') {
             const authResult = await this.app.authenticateSocketIdentity();
             if (!authResult || !authResult.ok) {
                 return { ok: false, reason: 'auth_required' };
             }
+        }
+
+        if (this.app.roomId !== roomId || this.app.lastMoveSnapshot !== snapshot) {
+            return { ok: false, reason: 'undo_expired' };
         }
 
         return new Promise(resolve => {
@@ -396,7 +420,7 @@ class UndoManager {
             }, 12000);
 
             this.app.socket.emit('undo_last_move', {
-                roomId: this.app.roomId,
+                roomId,
                 row: snapshot.row,
                 col: snapshot.col,
                 pIdx: snapshot.pIdx
@@ -441,8 +465,22 @@ class UndoManager {
 
     // --- GLAVNA FUNKCIJA ZA VRAĆANJE POTEZA ---
     async executeUndo() {
+        if (this.undoInProgress) return;
+        this.undoInProgress = true;
+        try {
+            await this.restoreLastMove();
+        } finally {
+            this.undoInProgress = false;
+        }
+    }
+
+    async restoreLastMove() {
         if (!this.app.lastMoveSnapshot) return;
         const snap = this.app.lastMoveSnapshot;
+        const roomId = this.app.roomId;
+        const onlineMode = this.app.onlineMode;
+        const isCurrentMove = () => this.app.lastMoveSnapshot === snap &&
+            this.app.roomId === roomId && this.app.onlineMode === onlineMode;
 
         if (this.app.onlineMode) {
             // ONLINE MOD: Koristi tokene
@@ -454,7 +492,7 @@ class UndoManager {
             
             let confirmMsg = (gt('undo_use_confirm') || "Potroši 1 token za vraćanje? Preostalo: {0}").replace('{0}', tokens);
             const confirmUndo = await this.app.modal.confirm(confirmMsg);
-            if (!confirmUndo) return;
+            if (!confirmUndo || !isCurrentMove()) return;
 
             const rollbackResult = await this.requestOnlineUndoRollback(snap);
             if (!rollbackResult.ok) {
@@ -470,10 +508,13 @@ class UndoManager {
                 this.setUndoTokenBalance(tokens - 1);
             }
 
+            // The server state event precedes the acknowledgement; do not overwrite it.
+            if (isCurrentMove()) this.finishUndo(snap);
+            return;
         } else {
             // Solo i Dva Igrača: ispravka se daje tek posle potvrđene rewarded reklame.
             const confirmUndo = await this.app.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem nagradnog videa?");
-            if (!confirmUndo) return;
+            if (!confirmUndo || !isCurrentMove()) return;
 
             const isNative = typeof window.Capacitor?.isNativePlatform === 'function'
                 ? window.Capacitor.isNativePlatform()
@@ -486,6 +527,7 @@ class UndoManager {
             }
         }
 
+        if (!isCurrentMove()) return;
         // --- RESTORE LOKALNOG STANJA ---
         this.app.currentPlayerIdx = snap.pIdx;
         this.app.allScores[snap.pIdx][snap.col][snap.row] = null;
@@ -495,12 +537,6 @@ class UndoManager {
         this.app.najavljenoPolje = snap.najavljenoPolje;
         
         this.app.najavaAktivna = snap.najavaAktivna;
-        this.app.hasSvetiIlija = snap.hasSvetiIlija;
-        this.app.hasProphet = snap.hasProphet === true;
-        this.app.consecutiveNajava = snap.consecutiveNajava;
-
-        this.app.effectMgr.stop();
-        this.app.loadEquippedEffect();
         this.app.highlightCurrentPlayer();
         this.app.updateTableVisuals();
         this.app.updateDiceVisuals();
@@ -540,7 +576,15 @@ class UndoManager {
         }
 
         this.app.updateStatusLabel();
+        this.finishUndo(snap);
+    }
 
+    finishUndo(snap) {
+        this.app.hasSvetiIlija = snap.hasSvetiIlija;
+        this.app.hasProphet = snap.hasProphet === true;
+        this.app.consecutiveNajava = snap.consecutiveNajava;
+        this.app.effectMgr.stop();
+        this.app.loadEquippedEffect();
         // Resetovanje samog dugmeta za undo
         this.app.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');

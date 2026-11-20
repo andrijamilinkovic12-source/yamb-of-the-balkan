@@ -18,6 +18,17 @@ function getPlayerId() {
     return uid;
 }
 
+function normalizeAudioProfileSettings(settings) {
+    const result = {};
+    for (const field of ['soundEnabled', 'vibrationEnabled', 'musicEnabled']) {
+        if (typeof settings?.[field] === 'boolean') result[field] = settings[field];
+    }
+    if (typeof settings?.musicVolume === 'number' && Number.isFinite(settings.musicVolume)) {
+        result.musicVolume = Math.max(0, Math.min(1, settings.musicVolume));
+    }
+    return result;
+}
+
 const gt = (key) => {
     if (typeof t === 'function') return t(key);
     return key; 
@@ -202,6 +213,7 @@ class YambApp {
         // Klijentski tajmer za Anti-Troll zaštitu
         this.timeLeft = 90; 
         this.turnTimerInterval = null;
+        this.turnTimerDeadline = 0;
 
         this.aiMode = false;
         this.aiDifficulty = "medium";
@@ -585,6 +597,7 @@ class YambApp {
         this.soundEnabled = !this.soundEnabled;
         if (this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
         localStorage.setItem('yamb_sound', this.soundEnabled);
+        this.rememberManualAudioSettings({ soundEnabled: this.soundEnabled });
         
         this.updateQuickMenuIcons();
         
@@ -598,21 +611,18 @@ class YambApp {
             this.soundMgr.stopIntro();
         }
         
-        const mainSetting = document.getElementById('setting-sound');
-        if (mainSetting) mainSetting.checked = this.soundEnabled;
         this.syncProfileSettingsToCloud();
     }
 
     toggleQuickVib() {
         this.vibrationEnabled = !this.vibrationEnabled;
         localStorage.setItem('yamb_vibration', this.vibrationEnabled);
+        this.rememberManualAudioSettings({ vibrationEnabled: this.vibrationEnabled });
         
         this.updateQuickMenuIcons();
         
         if(this.vibrationEnabled) this.vibrate(30);
 
-        const mainSetting = document.getElementById('setting-vibration');
-        if (mainSetting) mainSetting.checked = this.vibrationEnabled;
         this.syncProfileSettingsToCloud();
     }
 
@@ -620,13 +630,12 @@ class YambApp {
         if (!this.soundMgr) return;
         
         const isEnabled = !this.soundMgr.musicEnabled;
-        this.soundMgr.setMusicEnabled(isEnabled);
+        this.soundMgr.setMusicEnabled(isEnabled, { restoreVolume: true });
         localStorage.setItem('yamb_music', isEnabled);
+        this.rememberManualAudioSettings({ musicEnabled: isEnabled, musicVolume: this.soundMgr.musicVolume });
         
         this.updateQuickMenuIcons();
         
-        const mainSetting = document.getElementById('setting-music');
-        if (mainSetting) mainSetting.checked = isEnabled;
         this.syncProfileSettingsToCloud();
     }
 
@@ -635,32 +644,63 @@ class YambApp {
         
         this.soundMgr.setMusicVolume(val);
         
-        const mainSetting = document.getElementById('setting-music');
-        
         // Ako korisnik svuče slajder na 0, tretiraj kao 'Muted'
-        if (parseFloat(val) === 0) {
+        if (this.soundMgr.musicVolume === 0) {
             this.soundMgr.setMusicEnabled(false);
             localStorage.setItem('yamb_music', 'false');
-            if (mainSetting) mainSetting.checked = false;
         } else {
             // Ako korisnik pojača sa 0, automatski upali muziku
             if (!this.soundMgr.musicEnabled) {
                 this.soundMgr.setMusicEnabled(true);
                 localStorage.setItem('yamb_music', 'true');
-                if (mainSetting) mainSetting.checked = true;
             }
         }
+        this.rememberManualAudioSettings({ musicEnabled: this.soundMgr.musicEnabled, musicVolume: this.soundMgr.musicVolume });
         this.updateQuickMenuIcons();
         this.syncProfileSettingsToCloud();
     }
 
+    rememberManualAudioSettings(settings) {
+        const uid = localStorage.getItem('yamb_uid') || '';
+        const key = uid ? `yamb_audio_pending_sync_${uid}` : '';
+        const pending = normalizeAudioProfileSettings(key ? this.readLocalJson(key, {}) : {});
+        const selected = this.manualAudioSettings?.uid === uid ? this.manualAudioSettings.values : {};
+        const changes = normalizeAudioProfileSettings(settings);
+        if (changes.musicVolume !== undefined) localStorage.setItem('yamb_music_volume', changes.musicVolume);
+        this.manualAudioSettings = { uid, values: { ...pending, ...selected, ...changes } };
+        if (key) localStorage.setItem(key, JSON.stringify({ ...pending, ...changes }));
+    }
+
+    resolveSyncedAudioSettings(data) {
+        const uid = localStorage.getItem('yamb_uid') || '';
+        const key = uid ? `yamb_audio_pending_sync_${uid}` : '';
+        const pending = normalizeAudioProfileSettings(key ? this.readLocalJson(key, {}) : {});
+        const selected = this.manualAudioSettings?.uid === uid ? this.manualAudioSettings.values : {};
+        const values = { ...pending, ...selected };
+        const settings = normalizeAudioProfileSettings(data);
+        for (const [field, cloudValue] of Object.entries(settings)) {
+            if (cloudValue === pending[field]) delete pending[field];
+            if (values[field] !== undefined) settings[field] = values[field];
+        }
+        // Keep acknowledged choices for this session: an older reply may arrive later.
+        this.manualAudioSettings = { uid, values };
+        if (key) {
+            if (Object.keys(pending).length) localStorage.setItem(key, JSON.stringify(pending));
+            else localStorage.removeItem(key);
+        }
+        return settings;
+    }
+
     syncProfileSettingsToCloud(delayMs = 350) {
-        if (!getPlayerId()) return;
+        if (this.settingsSyncTimer) clearTimeout(this.settingsSyncTimer);
+        this.settingsSyncTimer = null;
+        const uid = getPlayerId();
+        if (!uid) return;
         if (!this.socket || !this.socket.connected) return;
 
-        if (this.settingsSyncTimer) clearTimeout(this.settingsSyncTimer);
         this.settingsSyncTimer = setTimeout(() => {
             this.settingsSyncTimer = null;
+            if (getPlayerId() !== uid || !this.socket?.connected) return;
             this.emitPlayerData(false).catch(err => {
                 console.warn("Podešavanja nisu odmah sinhronizovana:", err);
             });
@@ -668,16 +708,18 @@ class YambApp {
     }
 
     updateQuickMenuIcons() {
-        const setState = (id, enabled, labelKey) => {
+        const setState = (id, enabled, labelKey, settingId) => {
+            const setting = document.getElementById(settingId);
+            if (setting) setting.checked = !!enabled;
             const button = document.getElementById(id);
             if (!button) return;
             button.dataset.enabled = String(!!enabled);
             button.setAttribute('aria-pressed', String(!!enabled));
             button.title = `${gt(labelKey)}: ${gt(enabled ? 'game_control_on' : 'game_control_off')}`;
         };
-        setState('btn-gh-sound', this.soundEnabled, 'tooltip_sound');
-        setState('btn-gh-vib', this.vibrationEnabled, 'tooltip_vibration');
-        setState('btn-gh-music', this.soundMgr?.musicEnabled, 'tooltip_music');
+        setState('btn-gh-sound', this.soundEnabled, 'tooltip_sound', 'setting-sound');
+        setState('btn-gh-vib', this.vibrationEnabled, 'tooltip_vibration', 'setting-vibration');
+        setState('btn-gh-music', this.soundMgr?.musicEnabled, 'tooltip_music', 'setting-music');
         
         const sliderMusic = document.getElementById('music-volume-slider');
         if(sliderMusic && this.soundMgr) {
@@ -3507,6 +3549,7 @@ class YambApp {
 
     applyCloudProfileSync(data = {}) {
         const uid = localStorage.getItem('yamb_uid');
+        if (data.recipientUid && data.recipientUid !== uid) return false;
 
         if (!uid) {
             console.log("🛑 Prijavljivanje obavezno: Ignorišem Cloud Sync jer korisnik nije ulogovan.");
@@ -3622,6 +3665,16 @@ class YambApp {
         const mergedThemes = [...new Set([...localThemes, ...cloudThemes, ...skinThemeLeak, ...generalThemes])]
             .filter(theme => validThemeIds.includes(theme));
         localStorage.setItem('yamb_unlocked_themes', JSON.stringify(mergedThemes));
+        this.stats.unlockedThemes = mergedThemes;
+        if (window.statsManager) window.statsManager.stats.unlockedThemes = mergedThemes;
+        localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
+
+        if (data.shopDiscounts && typeof data.shopDiscounts === 'object') {
+            localStorage.setItem(`yamb_shop_discounts_${uid}`, JSON.stringify(data.shopDiscounts));
+            if (window.riznicaManager?.shop?.isCurrentAccount()) {
+                window.riznicaManager.shop.discountedItems = data.shopDiscounts;
+            }
+        }
 
         if (data.shopAdUnlocks && typeof data.shopAdUnlocks === 'object') {
             Object.entries(data.shopAdUnlocks).forEach(([id, entry]) => {
@@ -3653,29 +3706,27 @@ class YambApp {
         if (data.activeEffect) localStorage.setItem('yamb_active_effect', data.activeEffect);
         if (data.activeTheme) this.applySyncedThemeSelection(data.activeTheme);
 
-        if (data.soundEnabled !== undefined) {
-            localStorage.setItem('yamb_sound', data.soundEnabled);
-            if (this.soundMgr) this.soundMgr.enabled = data.soundEnabled;
-            this.soundEnabled = data.soundEnabled;
+        const audioSettings = this.resolveSyncedAudioSettings(data);
+        if (audioSettings.soundEnabled !== undefined) {
+            localStorage.setItem('yamb_sound', audioSettings.soundEnabled);
+            if (this.soundMgr) this.soundMgr.enabled = audioSettings.soundEnabled;
+            this.soundEnabled = audioSettings.soundEnabled;
         }
 
-        if (data.vibrationEnabled !== undefined) {
-            localStorage.setItem('yamb_vibration', data.vibrationEnabled);
-            this.vibrationEnabled = data.vibrationEnabled;
+        if (audioSettings.vibrationEnabled !== undefined) {
+            localStorage.setItem('yamb_vibration', audioSettings.vibrationEnabled);
+            this.vibrationEnabled = audioSettings.vibrationEnabled;
         }
 
-        if (data.musicEnabled !== undefined) {
-            const musicEnabled = data.musicEnabled !== false;
+        if (audioSettings.musicEnabled !== undefined) {
+            const musicEnabled = audioSettings.musicEnabled;
             localStorage.setItem('yamb_music', musicEnabled);
             if (this.soundMgr) this.soundMgr.setMusicEnabled(musicEnabled);
         }
 
-        if (data.musicVolume !== undefined) {
-            const volume = Math.max(0, Math.min(1, Number(data.musicVolume)));
-            if (Number.isFinite(volume)) {
-                localStorage.setItem('yamb_music_volume', volume);
-                if (this.soundMgr) this.soundMgr.setMusicVolume(volume);
-            }
+        if (audioSettings.musicVolume !== undefined) {
+            localStorage.setItem('yamb_music_volume', audioSettings.musicVolume);
+            if (this.soundMgr) this.soundMgr.setMusicVolume(audioSettings.musicVolume);
         }
 
         if (data.language === 'sr' || data.language === 'en') {
@@ -3747,6 +3798,7 @@ class YambApp {
             updateMainMenuDashboard();
         }
 
+        window.riznicaManager?.shop?.refreshTreasuryView();
         return true;
     }
 
@@ -4364,6 +4416,17 @@ class YambApp {
             return;
         }
 
+        const ready = await this.ensureSocketReadyForOnline(8000);
+        if (!ready.ok) {
+            const reason = ready.reason === 'err_friend_timeout' ? 'err_spectate_open_failed' : ready.reason;
+            this.showServerNotice(reason || 'sys_no_conn', 'err_title', options);
+            return;
+        }
+        if (this.gameActive && this.onlineMode && !this.isSpectator) {
+            this.showServerNotice('err_spectate_already_in_game', 'modal_title_info', options);
+            return;
+        }
+
         if (typeof window.closeOnlinePlayersModal === 'function') {
             window.closeOnlinePlayersModal();
         } else {
@@ -4380,8 +4443,8 @@ class YambApp {
             }
         };
 
-        this.initSocketConnection();
         this.setupSocketListeners(this.playerName);
+        const socket = this.socket;
 
         const doSpectate = () => {
             let settled = false;
@@ -4390,9 +4453,9 @@ class YambApp {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
-                this.socket.off('spectate_started', finish);
-                this.socket.off('online_room_resume_available', finish);
-                this.socket.off('error_msg', finishOnSpectateError);
+                socket.off('spectate_started', finish);
+                socket.off('online_room_resume_available', finish);
+                socket.off('error_msg', finishOnSpectateError);
             };
             const finishOnSpectateError = (msgKey) => {
                 if (String(msgKey || '').includes('spectate')) {
@@ -4408,10 +4471,10 @@ class YambApp {
                 reopenOnlinePlayersList();
             }, 8000);
 
-            this.socket.once('spectate_started', finish);
-            this.socket.once('online_room_resume_available', finish);
-            this.socket.on('error_msg', finishOnSpectateError);
-            this.socket.emit('request_spectate', target, (result = {}) => {
+            socket.once('spectate_started', finish);
+            socket.once('online_room_resume_available', finish);
+            socket.on('error_msg', finishOnSpectateError);
+            socket.emit('request_spectate', target, (result = {}) => {
                 if (result && result.ok === false) {
                     finish();
                     if (!spectateErrorHandled) {
@@ -4425,15 +4488,11 @@ class YambApp {
             });
         };
 
-        if (this.socket && this.socket.connected) {
+        if (socket && socket.connected) {
             doSpectate();
-        } else if (this.socket) {
-            this.socket.once('connect', doSpectate);
-            if (this.socket.disconnected) {
-                this.socket.connect();
-            }
         } else {
-            this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", gt('err_title') || "GREŠKA");
+            this.showServerNotice('sys_no_conn', 'err_title', options);
+            reopenOnlinePlayersList();
         }
     }
 
@@ -4553,6 +4612,9 @@ class YambApp {
                 this.socket.on('connect', async () => {
                     console.log("✅ Socket povezan! ID:", this.socket.id);
                     this.socketVerifiedUid = null;
+                    if (this.clientInviteBusy) {
+                        this.setInviteBusyState(true, this.clientInviteBusyReason || 'client_busy');
+                    }
                     this.reportCurrentConnectionDiagnosticSnapshot();
                     
                     if (!this.playerId) return;
@@ -4725,6 +4787,13 @@ class YambApp {
                         return;
                     }
 
+                    if (this.isDoNotDisturbActive()) {
+                        socketAtPrompt.emit('challenge_response', {
+                            challengerId, challengeId, accepted: false, busy: true
+                        });
+                        return;
+                    }
+
                     if (accepted && expiresAt && Date.now() > expiresAt) {
                         this.setInviteBusyState(false);
                         this.modal.alert(gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.', gt('modal_title_info') || "INFO");
@@ -4850,6 +4919,7 @@ class YambApp {
 
                 this.socket.on('connect_error', (err) => {
                     console.warn("Socket connection error:", err);
+                    if (window.yambMaintenance?.handleSocketError?.(err)) return;
                 });
             }
         } catch (e) { console.error("Greška pri inicijalizaciji socketa:", e); }
@@ -4859,6 +4929,12 @@ class YambApp {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
         const uid = getPlayerId() || this.playerId;
         if (!uid) return { ok: false, reason: 'not_logged_in' };
+        const socket = this.socket;
+        const connectionId = socket.id;
+        const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+        const isCurrent = () => this.socket === socket && socket.connected && socket.id === connectionId &&
+            getPlayerId() === uid && (Number(window.yambAuthSessionVersion) || 0) === sessionVersion &&
+            !window.yambAccountDeletionInProgress;
         localStorage.setItem('yamb_uid', uid);
         this.playerId = uid;
         if (this.socketVerifiedUid === uid && !forceRefresh) {
@@ -4872,11 +4948,13 @@ class YambApp {
             attempts: forceRefresh ? 8 : 4,
             delayMs: 400
         });
+        if (!isCurrent()) return { ok: false, reason: 'account_changed' };
         if (!token) return { ok: false, reason: 'missing_firebase_token' };
 
         const appCheckToken = window.yambAppCheck?.getToken
             ? await window.yambAppCheck.getToken(forceRefresh)
             : '';
+        if (!isCurrent()) return { ok: false, reason: 'account_changed' };
 
         return new Promise((resolve) => {
             let settled = false;
@@ -4890,6 +4968,10 @@ class YambApp {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
+                if (!isCurrent() || (result?.ok && result.uid !== uid)) {
+                    resolve({ ok: false, reason: 'account_changed' });
+                    return;
+                }
                 if (result && result.ok) {
                     this.socketVerifiedUid = result.uid;
                     this.playerId = result.uid;
@@ -4978,25 +5060,50 @@ class YambApp {
         }
     }
 
-    waitForProfileSync(timeoutMs = 4000) {
+    requestProfileSync(event, data = {}, timeoutMs = 4000) {
         return new Promise(resolve => {
             if (!this.socket || !this.socket.connected) {
-                resolve(null);
+                resolve({ ok: false, reason: 'socket_disconnected' });
+                return;
+            }
+            const socket = this.socket;
+            const uid = getPlayerId();
+            const connectionId = socket.id;
+            const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+            if (!uid) {
+                resolve({ ok: false, reason: 'not_logged_in' });
                 return;
             }
 
             let settled = false;
-            const finish = (payload) => {
+            const finish = (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
-                this.socket.off('sync_local_stats', onSync);
-                resolve(payload || null);
+                socket.off('disconnect', onDisconnect);
+                resolve(result);
             };
-            const onSync = (payload) => finish(payload);
-            const timer = setTimeout(() => finish(null), timeoutMs);
+            const onDisconnect = () => finish({ ok: false, reason: 'socket_disconnected' });
+            const timer = setTimeout(() => finish({ ok: false, reason: 'profile_sync_timeout' }), timeoutMs);
 
-            this.socket.once('sync_local_stats', onSync);
+            socket.once('disconnect', onDisconnect);
+            socket.emit(event, data, (result = {}) => {
+                if (settled) return;
+                if (this.socket !== socket || !socket.connected || socket.id !== connectionId ||
+                    getPlayerId() !== uid || (Number(window.yambAuthSessionVersion) || 0) !== sessionVersion ||
+                    window.yambAccountDeletionInProgress) {
+                    finish({ ok: false, reason: 'account_changed' });
+                } else if (!result || typeof result !== 'object') {
+                    finish({ ok: false, reason: 'invalid_profile_response' });
+                } else if (!result.ok) {
+                    finish({ ok: false, reason: result.reason || 'profile_sync_failed' });
+                } else if (result.uid !== uid || result.cloudStats?.recipientUid !== uid ||
+                    result.cloudStats.statsAuthoritative !== true) {
+                    finish({ ok: false, reason: 'invalid_profile_response' });
+                } else {
+                    finish(result);
+                }
+            });
         });
     }
 
@@ -5051,41 +5158,29 @@ class YambApp {
 
     async pullCloudProfile(options = {}) {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+        const uid = getPlayerId();
+        const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+        const isCurrent = () => getPlayerId() === uid &&
+            (Number(window.yambAuthSessionVersion) || 0) === sessionVersion;
 
         const authResult = await this.authenticateSocketIdentity(!!options.forceRefresh);
+        if (!isCurrent() || (authResult?.ok && authResult.uid !== uid)) return { ok: false, reason: 'account_changed' };
         if (!authResult || !authResult.ok) {
             return { ok: false, reason: authResult?.reason || 'auth_failed' };
         }
 
-        return new Promise(resolve => {
-            let settled = false;
-            const finish = (result) => {
-                if (settled) return;
-                settled = true;
-                clearTimeout(timer);
-                this.socket.off('sync_local_stats', onSync);
-                resolve(result || { ok: false, reason: 'profile_sync_timeout' });
-            };
-            const onSync = (payload) => {
-                if (payload) {
-                    this.applyCloudProfileSync(payload);
-                    localStorage.removeItem('yamb_force_cloud_restore_next_login');
-                    finish({ ok: true, cloudStats: payload });
-                } else {
-                    finish({ ok: false, reason: 'empty_profile_payload' });
-                }
-            };
-            const timer = setTimeout(() => finish({ ok: false, reason: 'profile_sync_timeout' }), options.timeoutMs || 4000);
-
-            this.socket.once('sync_local_stats', onSync);
-            this.socket.emit('request_profile_sync', {}, (result = {}) => {
-                if (!result.ok) finish(result);
-            });
-        });
+        const result = await this.requestProfileSync('request_profile_sync', {}, options.timeoutMs || 4000);
+        if (!isCurrent()) return { ok: false, reason: 'account_changed' };
+        if (result.ok) this.applyCloudProfileSync(result.cloudStats);
+        return result;
     }
 
     async emitPlayerData(forceRefreshAuth = false, options = {}) {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+        const requestUid = getPlayerId();
+        const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+        const isCurrent = () => getPlayerId() === requestUid &&
+            (Number(window.yambAuthSessionVersion) || 0) === sessionVersion;
 
         const shouldRestore = options.preferCloudRestore || this.shouldRestoreCloudBeforeProfilePush();
         let restoreResult = null;
@@ -5094,6 +5189,7 @@ class YambApp {
                 forceRefresh: forceRefreshAuth,
                 timeoutMs: options.timeoutMs || 4000
             });
+            if (!isCurrent()) return { ok: false, reason: 'account_changed' };
 
             if ((!restoreResult || !restoreResult.ok) &&
                 restoreResult?.reason !== 'profile_not_found' &&
@@ -5108,6 +5204,7 @@ class YambApp {
         }
 
         const authResult = await this.authenticateSocketIdentity(forceRefreshAuth);
+        if (!isCurrent()) return { ok: false, reason: 'account_changed' };
         if (!authResult || !authResult.ok) {
             console.warn(`Ne šaljem profil serveru dok Firebase identitet nije potvrđen: ${authResult?.reason || 'unknown_error'}`);
             return authResult || { ok: false, reason: 'auth_failed' };
@@ -5116,6 +5213,7 @@ class YambApp {
         if (window.trophyManager && typeof window.trophyManager.retryPendingClaims === 'function') {
             try {
                 const pendingResult = await window.trophyManager.retryPendingClaims();
+                if (pendingResult?.reason === 'account_changed') return pendingResult;
                 if (pendingResult && pendingResult.remaining > 0) {
                     console.warn(`Odlažem profile sync dok se ne potvrdi ${pendingResult.remaining} pending trofej(a).`);
                     return {
@@ -5131,27 +5229,34 @@ class YambApp {
         }
 
         const uid = authResult.uid;
-        const syncWait = options.waitForSync ? this.waitForProfileSync(options.timeoutMs || 4000) : null;
-
-        this.socket.emit('set_player_data', {
+        if (!isCurrent() || getPlayerId() !== uid) return { ok: false, reason: 'account_changed' };
+        const profileData = {
             uid: uid,
             referralCode: window.yambReferrals?.codeForSync(uid) || undefined,
             name: this.playerName,
             photoUrl: localStorage.getItem('yamb_player_photo') || '',
             stats: this.getFullLocalStats(),
             playerId: this.playerId
-        });
+        };
+        const syncRequest = options.waitForSync
+            ? this.requestProfileSync('set_player_data', profileData, options.timeoutMs || 4000)
+            : null;
+        if (!syncRequest) this.socket.emit('set_player_data', profileData);
 
         if (authResult && authResult.ok && window.yambPushNotifications && typeof window.yambPushNotifications.ensureRegistered === 'function') {
             window.yambPushNotifications.ensureRegistered(this)
                 .catch(err => console.warn("Push registracija nije uspela:", err));
         }
 
-        if (syncWait) {
-            const cloudStats = await syncWait;
+        if (syncRequest) {
+            const syncResult = await syncRequest;
+            if (!isCurrent()) return { ok: false, synced: false, reason: 'account_changed' };
+            const cloudStats = syncResult.ok ? syncResult.cloudStats : null;
+            if (cloudStats) this.applyCloudProfileSync(cloudStats);
             return {
                 ...(authResult || {}),
-                ok: !!(authResult && authResult.ok),
+                ok: !!syncResult.ok,
+                reason: syncResult.reason,
                 synced: !!cloudStats,
                 cloudStats
             };
@@ -5890,6 +5995,14 @@ class YambApp {
                 return;
             }
 
+            const waitingScreen = document.getElementById('waiting-screen');
+            if (result.leftMatchmaking && !this.gameActive && !this.isSpectator
+                && waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-random-online')) {
+                this.stopWaitingHofRotation();
+                waitingScreen.classList.remove('is-random-online');
+                this.navigateTo('main-menu');
+            }
+
             let sentText = gt('duel_sent');
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
 
@@ -5990,16 +6103,19 @@ class YambApp {
             this.soundEnabled = value;
             if (this.soundMgr) this.soundMgr.enabled = value;
             localStorage.setItem('yamb_sound', value);
+            this.rememberManualAudioSettings({ soundEnabled: this.soundEnabled });
             if (value && this.soundMgr) this.soundMgr.click(); 
         } 
         // DODATA LOGIKA ZA MUZIKU
         else if (type === 'music') {
-            if (this.soundMgr) this.soundMgr.setMusicEnabled(value);
+            if (this.soundMgr) this.soundMgr.setMusicEnabled(value, { restoreVolume: true });
             localStorage.setItem('yamb_music', value);
+            this.rememberManualAudioSettings({ musicEnabled: value, musicVolume: this.soundMgr?.musicVolume });
         }
         else if (type === 'vibration') {
             this.vibrationEnabled = value;
             localStorage.setItem('yamb_vibration', value);
+            this.rememberManualAudioSettings({ vibrationEnabled: this.vibrationEnabled });
             if (value) this.vibrate(50);
         }
         else if (type === 'theme') {
@@ -6542,6 +6658,10 @@ class YambApp {
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
         const wasSpectator = this.isSpectator;
+        this.clearOpponentReconnectGraceCountdown();
+        if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+        this.turnTimerInterval = null;
+        this.turnTimerDeadline = 0;
         const hadLiveGameContext = !wasSpectator && (this.gameActive || this.onlineMode || !!this.roomId);
         const wasLocalLiveGame = hadLiveGameContext && this.gameActive && !this.onlineMode;
 
@@ -7114,6 +7234,7 @@ class YambApp {
     }
 
     clearOpponentReconnectGraceCountdown() {
+        this.opponentReconnectNoticeVersion = (this.opponentReconnectNoticeVersion || 0) + 1;
         if (this.opponentReconnectGraceTimer) {
             clearInterval(this.opponentReconnectGraceTimer);
             this.opponentReconnectGraceTimer = null;
@@ -7125,6 +7246,11 @@ class YambApp {
         this.opponentReconnectNoticeVisible = false;
         this.opponentReconnectGraceDeadline = 0;
         const timerDisplay = document.getElementById('turn-timer-display');
+        const notice = document.getElementById('game-connection-notice');
+        if (notice) {
+            notice.hidden = true;
+            notice.textContent = '';
+        }
         if (timerDisplay?.classList.contains('timer-turn--disconnected')) {
             timerDisplay.classList.remove('timer-turn--disconnected');
             timerDisplay.replaceChildren();
@@ -7136,59 +7262,67 @@ class YambApp {
 
     showOpponentReconnectGraceCountdown(data = {}) {
         const remainingMs = Number(data.remainingMs ?? data.disconnectGraceRemainingMs ?? data.graceMs);
-        const safeRemainingMs = Number.isFinite(remainingMs) && remainingMs > 0 ? remainingMs : 0;
+        const hasDeadline = Number.isFinite(remainingMs) && remainingMs >= 0;
+        const safeRemainingMs = hasDeadline ? remainingMs : 0;
 
         this.clearOpponentReconnectGraceCountdown();
-        if (safeRemainingMs > 0) {
+        this.onlineTurnTimerPaused = true;
+        const noticeVersion = this.opponentReconnectNoticeVersion;
+        const roomId = this.roomId;
+        if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+        this.turnTimerInterval = null;
+        this.turnTimerDeadline = 0;
+        if (hasDeadline) {
             this.opponentReconnectGraceDeadline = Date.now() + safeRemainingMs;
         }
 
         const render = () => {
+            if (this.opponentReconnectNoticeVersion !== noticeVersion || this.roomId !== roomId) return;
             const timerDisplay = document.getElementById('turn-timer-display');
             if (!timerDisplay) return;
 
             const msLeft = this.opponentReconnectGraceDeadline
                 ? Math.max(0, this.opponentReconnectGraceDeadline - Date.now())
                 : 0;
-            const template = gt('opp_network_issue_countdown') || '⚠️ Protivnik nije u igri. Čekamo povratak još {0}.';
-            const fallbackText = gt('opp_network_issue') || '⚠️ Protivnik ima problema sa mrežom...';
-            const text = this.opponentReconnectGraceDeadline
-                ? template.replace('{0}', this.formatReconnectGraceTime(msLeft))
-                : fallbackText;
+            const waiting = gt('connection_wait_short');
+            const text = hasDeadline ? this.formatReconnectGraceTime(msLeft)
+                : (waiting && waiting !== 'connection_wait_short' ? waiting : 'Pauza');
 
             timerDisplay.style.display = 'flex';
+            timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent', 'timer-turn--expired', 'timer-turn--spectator');
             timerDisplay.classList.add('timer-turn--disconnected');
-            const theme = localStorage.getItem('yamb_theme') || 'dark';
-            const isRandom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
-            const icon = isRandom ? this.getOnlineRandomStateSource(theme, 'disconnected') : '';
             timerDisplay.replaceChildren();
-            if (icon) {
-                const image = document.createElement('img');
-                image.className = 'online-random-connection-icon';
-                image.src = icon;
-                image.alt = '';
-                image.setAttribute('aria-hidden', 'true');
-                timerDisplay.appendChild(image);
-            }
             const label = document.createElement('span');
             label.textContent = text;
             timerDisplay.appendChild(label);
-            timerDisplay.style.animation = 'pulse 1s infinite';
+            timerDisplay.style.animation = 'none';
 
-            if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
-                this.clearOpponentReconnectGraceCountdown();
+            // Only the server can confirm recovery or the final result. Keep 0:00
+            // visible instead of returning to a stale turn timer at grace expiry.
+            if (hasDeadline && msLeft <= 0 && this.opponentReconnectGraceTimer) {
+                clearInterval(this.opponentReconnectGraceTimer);
+                this.opponentReconnectGraceTimer = null;
             }
         };
 
         const showNotice = () => {
+            if (this.opponentReconnectNoticeVersion !== noticeVersion || this.roomId !== roomId) return;
             this.opponentReconnectNoticeTimer = null;
             this.opponentReconnectNoticeVisible = true;
             const gameScene = document.getElementById('game-scene');
             const isRandomOpponentRoom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
             if (gameScene) gameScene.classList.toggle('opponent-reconnecting', isRandomOpponentRoom);
+            const notice = document.getElementById('game-connection-notice');
+            if (notice) {
+                // The server broadcasts this signal to both players.
+                const translated = gt('connection_paused_notice');
+                notice.textContent = translated && translated !== 'connection_paused_notice' ? translated
+                    : 'Partija je pauzirana zbog prekida veze. Čekamo ponovno povezivanje.';
+                notice.hidden = false;
+            }
 
             render();
-            if (this.opponentReconnectGraceDeadline) {
+            if (hasDeadline && this.opponentReconnectGraceDeadline > Date.now()) {
                 this.opponentReconnectGraceTimer = setInterval(render, 1000);
             }
         };
@@ -7208,38 +7342,51 @@ class YambApp {
     }
 
     startClientTimer(initialTimeLeft = 90) {
-        if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+        this.turnTimerInterval = null;
+        this.turnTimerDeadline = 0;
         this.clearOpponentReconnectGraceCountdown();
+        if (!this.onlineMode || this.isSpectator || !this.gameActive) {
+            this.updateStatusLabel();
+            return;
+        }
         this.onlineTurnTimerPaused = false;
 
         const parsedInitialTimeLeft = Number(initialTimeLeft);
-        this.timeLeft = Number.isFinite(parsedInitialTimeLeft)
-            ? Math.max(-3, Math.min(90, Math.ceil(parsedInitialTimeLeft)))
+        const secondsLeft = Number.isFinite(parsedInitialTimeLeft)
+            ? Math.max(-3, Math.min(90, parsedInitialTimeLeft))
             : 90;
+        this.timeLeft = Math.ceil(secondsLeft);
+        this.turnTimerDeadline = Date.now() + secondsLeft * 1000;
         this.lastTimeoutCheckAt = 0;
         this.updateStatusLabel();
         this.emitOnlinePresencePing(true);
 
-        this.turnTimerInterval = setInterval(() => {
-            this.timeLeft--;
+        const roomId = this.roomId;
+        let nextStateSyncAt = Date.now() + 10000;
+        const interval = setInterval(() => {
+            // A queued callback from an old room/turn must not change the new one.
+            if (this.turnTimerInterval !== interval || this.roomId !== roomId
+                || !this.onlineMode || !this.gameActive || this.isSpectator || this.onlineTurnTimerPaused) return;
+            const now = Date.now();
+            this.timeLeft = Math.max(-3, Math.ceil((this.turnTimerDeadline - now) / 1000));
             this.updateStatusLabel();
             this.emitOnlinePresencePing();
 
             const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
             
             // ---> FIX: ANTI-DESYNC POLLING (Popravlja Deadlock pri gubitku paketa) <---
-            if (!isMyTurn && this.socket && this.roomId) {
+            if (!isMyTurn && this.socket?.connected && this.roomId) {
                 // Ako čekamo protivnika, tiho pitamo server za pravo stanje svakih 10 sekundi
-                if (this.timeLeft % 10 === 0) {
+                if (now >= nextStateSyncAt) {
+                    nextStateSyncAt = now + 10000;
                     console.log("🔄 ANTI-DESYNC: Tiha provera stanja sa serverom da sprečimo zaglavljivanje...");
                     this.socket.emit('request_state_sync', { roomId: this.roomId });
                 }
             }
 
             if (this.timeLeft <= -3) {
-                if (!isMyTurn && this.socket && this.roomId) {
-                    const now = Date.now();
+                if (!isMyTurn && this.socket?.connected && this.roomId) {
                     if (this.lastTimeoutCheckAt && now - this.lastTimeoutCheckAt < 3000) return;
                     this.lastTimeoutCheckAt = now;
                     console.log("🛡️ SAFETY NET: Tajmer na nuli! Tražim tehničku pobedu od servera...");
@@ -7247,6 +7394,7 @@ class YambApp {
                 }
             }
         }, 1000);
+        this.turnTimerInterval = interval;
     }
     
     announcedRowButtonLabel(row) {
@@ -7714,7 +7862,7 @@ class YambApp {
                 const serverNow = Number(data.serverNow);
                 const turnTimeLimitMs = Number(data.turnTimeLimitMs) || 90000;
                 const syncedTimeLeft = Number.isFinite(turnStartTime) && Number.isFinite(serverNow)
-                    ? Math.ceil((turnTimeLimitMs - Math.max(0, serverNow - turnStartTime)) / 1000)
+                    ? (turnTimeLimitMs - Math.max(0, serverNow - turnStartTime)) / 1000
                     : undefined;
                 const fallbackTimeLeft = this.currentPlayerIdx === previousTurnIdx ? previousTimeLeft : 90;
                 if (turnTimerPaused) {
@@ -8618,6 +8766,12 @@ class YambApp {
         this.effectMgr.stop(); this.loadEquippedEffect(); 
         
         this.startClientTimer();
+
+        // Matchmaking/replay dialogs may outlast the start of the server's turn.
+        // Immediately replace the provisional 90s with the authoritative remainder.
+        if (this.onlineMode && !this.isSpectator && this.roomId && this.socket?.connected) {
+            this.socket.emit('request_state_sync', { roomId: this.roomId });
+        }
 
         // ---> DODATO: Puštanje muzike na startu za sve modove (fallback) <---
         if(this.soundMgr) this.soundMgr.playMusic();

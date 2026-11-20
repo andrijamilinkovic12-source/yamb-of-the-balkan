@@ -54,7 +54,13 @@ class DnevniIzazov {
         this.serverDiceValues = [];
         this.currentDayKey = "";
         this.currentBaseReward = 0;
+        this.currentYambBonus = 0;
         this.dailyAssetLoads = new Map();
+        this.sessionRevision = 0;
+        this.challengeSession = null;
+        this.introStartTimer = null;
+        this.introEndTimer = null;
+        this.finishTimer = null;
         
         this.injectGlassCSS();
         this.buildUI();
@@ -102,6 +108,9 @@ class DnevniIzazov {
         const scoreBox = document.querySelector('#glass-daily-card .daily-glass-score-box');
         scoreBox?.querySelector('.daily-complete-mark')?.remove();
         scoreBox?.classList.remove('is-complete');
+        document.getElementById('glass-daily-card')?.classList.remove('has-yamb-bonus');
+        const label = scoreBox?.querySelector('.daily-glass-score-lbl');
+        if (label) label.textContent = t('dc_sum');
     }
 
     prepareDailyAssets(theme = this.getDailyTheme()) {
@@ -552,6 +561,45 @@ class DnevniIzazov {
         return localStorage.getItem('yamb_uid') || this.app?.playerId || "";
     }
 
+    getSession() {
+        return { uid: this.getCurrentUid(), revision: this.sessionRevision };
+    }
+
+    isSessionCurrent(session) {
+        return !!session?.uid && session.uid === this.getCurrentUid() && session.revision === this.sessionRevision;
+    }
+
+    resetSession() {
+        const wasBusy = this.isActive || this.isIntroPlaying || this.app?.clientInviteBusyReason === 'daily_challenge';
+        const hadOverlay = document.getElementById('glass-daily-overlay')?.classList.contains('active');
+        this.sessionRevision++;
+        clearInterval(this.interval);
+        this.interval = null;
+        for (const name of ['introStartTimer', 'introEndTimer', 'finishTimer']) {
+            clearTimeout(this[name]);
+            this[name] = null;
+        }
+        this.isActive = false;
+        this.isIntroPlaying = false;
+        this.loadingChallenge = false;
+        this.claimInProgress = false;
+        this.rewardClaimed = false;
+        this.adInProgress = false;
+        this.challengeSession = null;
+        this.serverDiceValues = [];
+        this.currentDayKey = "";
+        this.currentBaseReward = 0;
+        this.currentYambBonus = 0;
+        this.calculatedReward = 0;
+        this.clearDailyResult();
+        this.hideIntroBackdrop();
+        const intro = document.getElementById('daily-intro');
+        intro?.classList.add('hidden');
+        intro?.setAttribute('aria-hidden', 'true');
+        if (wasBusy) this.app?.setInviteBusyState?.(false);
+        if (wasBusy || hadOverlay) this.app?.effectMgr?.stop();
+    }
+
     normalizeDiceValues(values) {
         if (!Array.isArray(values) || values.length < 6) return [];
         const dice = values.slice(0, 6).map(value => parseInt(value, 10));
@@ -560,8 +608,7 @@ class DnevniIzazov {
 
     calculateRewardFromDice(dice = []) {
         const safeDice = this.normalizeDiceValues(dice);
-        if (safeDice.length < 6) return 0;
-        return (safeDice[0] + safeDice[1] + safeDice[2] + safeDice[3]) * safeDice[4] * safeDice[5];
+        return window.dailyChallengeCore.calculateReward(safeDice).reward;
     }
 
     isRewardClaimedForDay(uid, dayKey = this.getTodayKey()) {
@@ -601,10 +648,12 @@ class DnevniIzazov {
     }
 
     async requestDailyChallengeFromServer() {
+        const session = this.getSession();
         const socket = this.app?.socket;
         if (!socket) return { ok: false, reason: 'err_server_conn' };
 
         const ready = await this.ensureSocketReady(7000);
+        if (!this.isSessionCurrent(session)) return { ok: false, reason: 'auth_required' };
         if (!ready) return { ok: false, reason: 'auth_required' };
 
         return new Promise(resolve => {
@@ -625,37 +674,50 @@ class DnevniIzazov {
     }
 
     setChallengeState(challenge = {}) {
+        this.challengeSession = this.getSession();
         const dice = this.normalizeDiceValues(challenge.dice);
         this.serverDiceValues = dice;
         this.currentDayKey = challenge.dayKey || this.getTodayKey();
         this.currentBaseReward = Math.max(0, parseInt(challenge.reward, 10) || this.calculateRewardFromDice(dice));
+        const breakdown = window.dailyChallengeCore.calculateReward(dice);
+        this.currentYambBonus = this.currentBaseReward === breakdown.reward ? breakdown.yambBonus : 0;
     }
 
     async open() {
         if (!this.app.requireLogin()) return;
         if (typeof this.app.reportMonitorRoomVisit === 'function') this.app.reportMonitorRoomVisit('daily');
-        if (this.isIntroPlaying || this.isActive || this.loadingChallenge) return;
+        if (this.isIntroPlaying || this.isActive || this.loadingChallenge || this.claimInProgress || this.adInProgress) return;
         if (typeof this.app.prepareThemeRoomAssets === 'function') this.app.prepareThemeRoomAssets('dailyChallenge');
 
+        this.resetSession();
+        const session = this.getSession();
+        if (!session.uid) return;
         const assetsReady = this.prepareDailyAssets();
 
-        const uid = this.getCurrentUid();
+        const uid = session.uid;
         const locallyClaimedToday = this.isRewardClaimedForDay(uid);
         this.loadingChallenge = true;
 
         let challenge;
         try {
             challenge = await this.requestDailyChallengeFromServer();
+            if (!this.isSessionCurrent(session)) return;
             await assetsReady;
+            if (!this.isSessionCurrent(session)) return;
             let loadedTheme;
             do {
                 loadedTheme = this.getDailyTheme();
                 await this.prepareDailyAssets(loadedTheme);
+                if (!this.isSessionCurrent(session)) return;
             } while (loadedTheme !== this.getDailyTheme());
             this.syncDailyThemeAssets();
+        } catch (err) {
+            console.warn('Daily challenge loading failed:', err);
+            challenge = { ok: false, reason: 'err_server_conn' };
         } finally {
-            this.loadingChallenge = false;
+            if (session.revision === this.sessionRevision) this.loadingChallenge = false;
         }
+        if (!this.isSessionCurrent(session)) return;
 
         if (!challenge || !challenge.ok) {
             if (locallyClaimedToday) {
@@ -703,6 +765,7 @@ class DnevniIzazov {
     }
 
     playIntro(onComplete, options = {}) {
+        const session = this.getSession();
         const overlay = document.getElementById('daily-intro');
         const leftWord = overlay?.querySelector('.daily-intro-word-left');
         const rightWord = overlay?.querySelector('.daily-intro-word-right');
@@ -728,16 +791,17 @@ class DnevniIzazov {
             : (Number.isFinite(options.openBehindOverlayAt) ? options.openBehindOverlayAt : (window.ROOM_INTRO_TIMING?.openAtMs ?? 2400));
         const introDuration = window.ROOM_INTRO_TIMING?.durationMs ?? 3200;
         const completeOnce = () => {
-            if (completed) return;
+            if (completed || !this.isSessionCurrent(session)) return;
             completed = true;
             onComplete();
         };
 
         if (openBehindOverlayAt !== null && openBehindOverlayAt < introDuration) {
-            setTimeout(completeOnce, Math.max(0, openBehindOverlayAt));
+            this.introStartTimer = setTimeout(completeOnce, Math.max(0, openBehindOverlayAt));
         }
 
-        setTimeout(() => {
+        this.introEndTimer = setTimeout(() => {
+            if (!this.isSessionCurrent(session)) return;
             completeOnce();
             overlay.classList.add('hidden');
             overlay.setAttribute('aria-hidden', 'true');
@@ -770,12 +834,23 @@ class DnevniIzazov {
     }
 
     showAlreadyPlayedInfo() {
+        const session = this.getSession();
         const message = `<div class="daily-already"><img class="daily-already-icon" src="${this.getDailyAsset('already-played')}" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`;
         const alertPromise = this.app?.modal?.alert
             ? this.app.modal.alert(message, t('info_title'), { contextClass: 'daily' })
             : Promise.resolve(window.alert(t('dc_done')));
 
-        Promise.resolve(alertPromise).finally(() => this.hideIntroBackdrop());
+        Promise.resolve(alertPromise).finally(() => {
+            if (this.isSessionCurrent(session)) this.hideIntroBackdrop();
+        });
+    }
+
+    async recoverExpiredChallenge(session) {
+        if (!this.isSessionCurrent(session)) return;
+        this.resetSession();
+        const recoverySession = this.getSession();
+        await this.app.modal.alert(t('dc_expired'), t('info_title'), { contextClass: 'daily' });
+        if (this.isSessionCurrent(recoverySession)) await this.open();
     }
 
     applyIntroTheme(overlay) {
@@ -828,10 +903,12 @@ class DnevniIzazov {
     }
 
     syncDailyProgress(extraStats = {}) {
+        const session = this.getSession();
         const socket = this.app?.socket;
         if (!socket) return;
 
         const emitVerifiedProfile = () => {
+            if (!this.isSessionCurrent(session)) return;
             if (typeof this.app.emitPlayerData === 'function') {
                 this.app.emitPlayerData(false).catch(err => {
                     console.warn('Daily sync nije potvrđen:', err);
@@ -865,7 +942,10 @@ class DnevniIzazov {
 
     startDailyChallenge() {
         const overlay = document.getElementById('glass-daily-overlay');
-        if(overlay) overlay.classList.add('active');
+        if (overlay) {
+            overlay.classList.remove('daily-glass-overlay--blank');
+            overlay.classList.add('active');
+        }
         if (this.app && typeof this.app.setInviteBusyState === 'function') {
             this.app.setInviteBusyState(true, 'daily_challenge');
         }
@@ -879,6 +959,7 @@ class DnevniIzazov {
         const overlay = document.getElementById('glass-daily-overlay');
         if (overlay && overlay.classList.contains('active')) {
             overlay.classList.remove('active');
+            overlay.classList.remove('daily-glass-overlay--blank');
             if (this.app.effectMgr) this.app.effectMgr.stop();
         }
     }
@@ -953,7 +1034,10 @@ class DnevniIzazov {
         } else {
             this.isActive = false; 
             document.getElementById('glass-btn-action').disabled = true; 
-            setTimeout(() => this.finishGame(), 600); 
+            const session = this.getSession();
+            this.finishTimer = setTimeout(() => {
+                if (this.isSessionCurrent(session)) this.finishGame();
+            }, 600);
         }
     }
 
@@ -984,6 +1068,8 @@ class DnevniIzazov {
         const expectedReward = this.currentBaseReward || this.calculateRewardFromDice(this.diceValues);
         if (expectedReward > 0) {
             this.calculatedReward = expectedReward;
+            const breakdown = window.dailyChallengeCore.calculateReward(this.serverDiceValues);
+            this.currentYambBonus = expectedReward === breakdown.reward ? breakdown.yambBonus : 0;
             const scoreEl = document.getElementById('glass-daily-sum');
             if (scoreEl) scoreEl.innerText = expectedReward;
         }
@@ -996,6 +1082,7 @@ class DnevniIzazov {
 
     showResultModal() {
         const card = document.getElementById('glass-daily-card');
+        card.classList.toggle('has-yamb-bonus', this.currentYambBonus > 0);
         document.getElementById('glass-btn-action').style.display = 'none';
         
         const resDiv = document.createElement('div');
@@ -1006,6 +1093,7 @@ class DnevniIzazov {
 
         resDiv.innerHTML = `
             <img class="daily-complete-mark" data-daily-role="complete" src="${this.getDailyAsset('complete')}" alt="" aria-hidden="true" decoding="async">
+            ${this.getYambRewardBreakdownHtml()}
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <img class="daily-reward-video-mark" data-daily-role="reward-video" src="${this.getDailyAsset('reward-video')}" alt="" aria-hidden="true" decoding="async">
                 ${t('btn_double_short')} ${this.getDailyRewardDukatIconHtml()}
@@ -1018,7 +1106,10 @@ class DnevniIzazov {
         card.appendChild(resDiv);
         const scoreBox = card.querySelector('.daily-glass-score-box');
         const completeMark = resDiv.querySelector('.daily-complete-mark');
-        if (scoreBox && completeMark) {
+        const bonusHeading = resDiv.querySelector('.daily-yamb-heading');
+        if (bonusHeading && completeMark) {
+            bonusHeading.prepend(completeMark);
+        } else if (scoreBox && completeMark) {
             scoreBox.classList.add('is-complete');
             scoreBox.appendChild(completeMark);
         }
@@ -1034,7 +1125,34 @@ class DnevniIzazov {
         return `<img class="daily-ducat-icon${endClass}" data-daily-role="ducat" src="${src}" alt="" aria-hidden="true" decoding="async">`;
     }
 
+    formatDailyRewardAmount(amount) {
+        return amount.toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
+    }
+
+    getYambRewardBreakdownHtml(doubled = false) {
+        if (!this.currentYambBonus) return '';
+        const { yambCount } = window.dailyChallengeCore.calculateReward(this.serverDiceValues);
+        const factor = doubled ? 2 : 1;
+        const icon = this.getDailyRewardDukatIconHtml();
+        const base = this.formatDailyRewardAmount((this.calculatedReward - this.currentYambBonus) * factor);
+        const bonus = this.formatDailyRewardAmount(this.currentYambBonus * factor);
+        const total = this.formatDailyRewardAmount(this.calculatedReward * factor);
+        return `<div class="daily-yamb-summary">
+            <div class="daily-yamb-heading"><strong>YAMB!</strong><span>${t(yambCount === 6 ? 'dc_yamb_six' : 'dc_yamb_five')}</span></div>
+            <dl class="daily-reward-breakdown">
+                <div><dt>${t('dc_base_reward')}</dt><dd>${base} ${icon}</dd></div>
+                <div class="daily-yamb-bonus"><dt>${t('dc_yamb_bonus')}${doubled ? ' &times;2' : ''}</dt><dd>+${bonus} ${icon}</dd></div>
+                <div class="daily-reward-total"><dt>${t('dc_total_reward')}</dt><dd>${total} ${icon}</dd></div>
+            </dl>
+        </div>`;
+    }
+
     getDailyRewardMessage(key, amount) {
+        const bonusSummary = this.getYambRewardBreakdownHtml(key === 'dc_reward_doubled');
+        if (bonusSummary) {
+            const notice = t(key === 'dc_reward_doubled' ? 'dc_bonus_doubled' : 'dc_bonus_claimed');
+            return `<div class="daily-bonus-confirmation">${notice}</div>${bonusSummary}`;
+        }
         const genericIcon = dukatIconHtml();
         const isEasterTheme = document.body && document.body.classList.contains('easter-theme');
         const isGreenTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'dark';
@@ -1068,6 +1186,8 @@ class DnevniIzazov {
 
     async watchAdToDouble() {
         if (this.rewardClaimed || this.claimInProgress || this.adInProgress) return;
+        const session = this.challengeSession || this.getSession();
+        if (!this.isSessionCurrent(session)) return;
 
         this.adInProgress = true;
         this.setResultButtonsDisabled(true);
@@ -1076,6 +1196,7 @@ class DnevniIzazov {
             try {
                 const rewardOptions = this.getDoubleRewardOptions();
                 const success = await window.adMobGlobal.showRewardVideo(rewardOptions);
+                if (!this.isSessionCurrent(session)) return;
                 if (success) {
                     const ssvNonce = typeof window.adMobGlobal.consumeLastRewardSsvNonce === 'function'
                         ? window.adMobGlobal.consumeLastRewardSsvNonce()
@@ -1084,8 +1205,10 @@ class DnevniIzazov {
                     return;
                 }
             } finally {
-                this.adInProgress = false;
-                if (!this.rewardClaimed) this.setResultButtonsDisabled(false);
+                if (this.isSessionCurrent(session)) {
+                    this.adInProgress = false;
+                    if (!this.rewardClaimed) this.setResultButtonsDisabled(false);
+                }
             }
         } else {
             this.app.modal.alert(t('dc_ads_unavailable'), t('info_title'), { contextClass: 'daily' });
@@ -1100,7 +1223,8 @@ class DnevniIzazov {
         });
     }
 
-    async claimDailyRewardOnServer(amount, doubled = false, ssvNonce = '') {
+    async claimDailyRewardOnServer(amount, doubled = false, ssvNonce = '', session = this.getSession(), dayKey = this.currentDayKey || this.getTodayKey()) {
+        if (!this.isSessionCurrent(session)) return { ok: false, reason: 'auth_required' };
         const app = this.app;
         const socket = app?.socket;
         if (!socket) return { ok: false, reason: 'err_server_conn' };
@@ -1123,6 +1247,7 @@ class DnevniIzazov {
 
             if (!connected) return { ok: false, reason: 'err_server_conn' };
         }
+        if (!this.isSessionCurrent(session)) return { ok: false, reason: 'auth_required' };
 
         if (typeof app.authenticateSocketIdentity === 'function') {
             const authResult = await app.authenticateSocketIdentity();
@@ -1130,6 +1255,7 @@ class DnevniIzazov {
                 return { ok: false, reason: 'auth_required' };
             }
         }
+        if (!this.isSessionCurrent(session)) return { ok: false, reason: 'auth_required' };
 
         return new Promise(resolve => {
             let settled = false;
@@ -1140,7 +1266,7 @@ class DnevniIzazov {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, claimTimeoutMs);
 
-            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled }, (result) => {
+            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled, dayKey }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -1167,6 +1293,8 @@ class DnevniIzazov {
 
     async claim(doubled, ssvNonce = '') {
         if (this.rewardClaimed || this.claimInProgress) return;
+        const session = this.challengeSession || this.getSession();
+        if (!this.isSessionCurrent(session)) return;
 
         this.claimInProgress = true;
         this.rewardClaimed = true;
@@ -1174,18 +1302,31 @@ class DnevniIzazov {
 
         const baseAmount = Math.max(0, parseInt(this.calculatedReward, 10) || 0);
         let finalAmount = doubled ? baseAmount * 2 : baseAmount;
-        const uid = this.getCurrentUid();
+        const uid = session.uid;
         const today = this.currentDayKey || this.getTodayKey();
         
-        const rewardResult = doubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
-            ? await window.adMobGlobal.claimRewardWithSsvRetry(
-                () => this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce),
-                { nonce: ssvNonce, context: 'daily_double' }
-            )
-            : await this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce);
+        let rewardResult;
+        try {
+            rewardResult = doubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
+                ? await window.adMobGlobal.claimRewardWithSsvRetry(
+                    () => this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce, session, today),
+                    { nonce: ssvNonce, context: 'daily_double', shouldCancel: () => !this.isSessionCurrent(session) }
+                )
+                : await this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce, session, today);
+        } catch (err) {
+            console.warn('Daily reward claim failed:', err);
+            rewardResult = { ok: false, reason: 'err_server_conn' };
+        }
+        if (!this.isSessionCurrent(session)) return;
+        this.claimInProgress = false;
         if (!rewardResult.ok) {
+            if (rewardResult.reason === 'daily_challenge_expired') {
+                await this.recoverExpiredChallenge(session);
+                return;
+            }
             if (rewardResult.reason === 'daily_already_claimed') {
-                const serverBalance = Math.max(0, parseInt(rewardResult.balance) || parseInt(localStorage.getItem('yamb_dukati')) || 0);
+                const parsedBalance = parseInt(rewardResult.balance, 10);
+                const serverBalance = Math.max(0, Number.isFinite(parsedBalance) ? parsedBalance : (parseInt(localStorage.getItem('yamb_dukati'), 10) || 0));
                 this.setLocalRewardState(uid, today, 0, serverBalance);
                 this.close();
                 this.showAlreadyPlayedInfo();
@@ -1206,6 +1347,11 @@ class DnevniIzazov {
         }
 
         const awardedAmount = parseInt(rewardResult.reward) || finalAmount;
+        const breakdown = window.dailyChallengeCore.calculateReward(this.serverDiceValues);
+        if (awardedAmount === breakdown.reward * (doubled ? 2 : 1)) {
+            this.calculatedReward = breakdown.reward;
+            this.currentYambBonus = breakdown.yambBonus;
+        }
         let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
         if (rewardResult.balance !== undefined) {
             currentDukati = Math.max(0, parseInt(rewardResult.balance) || 0);

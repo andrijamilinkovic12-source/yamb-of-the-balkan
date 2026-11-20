@@ -35,6 +35,7 @@ function makeHarness(rewardReady) {
         effectMgr: { stop() { events.push('stop'); } },
         soundMgr: { stopMusic() { events.push('stopMusic'); } },
         clearOnlineGameOverDelay() {},
+        clearOpponentReconnectGraceCountdown() { events.push('clearReconnect'); },
         async claimPendingRewardBeforeExternalNavigation() {
             events.push('rewardCheck');
             return rewardReady;
@@ -58,6 +59,8 @@ async function main() {
         assert.equal(approved.events.filter(event => event === 'stop').length, 1);
         assert(approved.events.indexOf('stop') > approved.events.indexOf('rewardCheck'));
         assert(approved.events.indexOf('stop') < approved.events.indexOf('navigate:main-menu'));
+        assert(approved.events.includes('clearReconnect')
+            && approved.events.indexOf('clearReconnect') < approved.events.indexOf('navigate:main-menu'));
 
         const pending = makeHarness(false);
         global.document = pending.document;

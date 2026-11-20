@@ -119,6 +119,22 @@ async function checkInviteAcceptanceGuard() {
     assert.equal(hostGame.myIndex, 0);
     assert.equal(targetGame.myIndex, 1);
 
+    const outsider = await connect();
+    const fullRoom = waitEvent(outsider, 'room_full');
+    outsider.emit('join_private_game', { nickname: 'Outsider', roomId });
+    await fullRoom;
+    let leakedRolls = 0;
+    outsider.on('remote_roll', () => leakedRolls++);
+    host.emit('join_private_game', { nickname: 'Host', roomId });
+    const hostRoll = waitEvent(host, 'remote_roll');
+    const targetRoll = waitEvent(target, 'remote_roll');
+    host.emit('dice_roll', { roomId });
+    await Promise.all([hostRoll, targetRoll]);
+    const hostSync = waitEvent(host, 'sync_state_response');
+    host.emit('request_state_sync', { roomId });
+    assert.equal((await hostSync).brojBacanja, 1, 'Duplicate join must preserve the active match');
+    assert.equal(leakedRolls, 0, 'Rejected clients must not receive private gameplay');
+
     const host2 = await connect();
     const target2 = await connect();
     const room2 = 'yamb-local-decline-check';
@@ -149,7 +165,7 @@ async function checkInviteAcceptanceGuard() {
     assert.equal(cancelledResponse.ok, false);
     assert.equal(cancelledResponse.reason, 'room_invite_expired_self');
     await checkInviteAcceptanceGuard();
-    console.log('Invite flow passed: send, duplicate prevention, accept, two-player match, busy target, DND response, offline, decline and cancelled host.');
+    console.log('Invite flow passed: send, duplicate prevention, accept, two-player match, full-room isolation, repeated join, busy target, DND response, offline, decline and cancelled host.');
   } finally {
     for (const client of clients) client.close();
     child.kill();

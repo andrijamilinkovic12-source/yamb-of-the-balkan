@@ -201,17 +201,30 @@ class RiznicaManager {
 
     // Povezujemo funkcije sa postojećim ModalManager-om
     initGlobalModals() {
-        window.openConfirmModal = (id, name, price) => {
+        window.openConfirmModal = (id, name, price, sourceShop = this.shop) => {
+            if (!sourceShop) return;
+            const purchase = () => {
+                if (!sourceShop.isCurrentAccount()) return;
+                sourceShop.refreshState();
+                const item = sourceShop.getItemById(id);
+                if (item && sourceShop.getCurrentItemPrice(item) !== price) {
+                    sourceShop.tryBuy(id, name, price);
+                    return;
+                }
+                sourceShop.processTransaction(id, price);
+            };
             if (window.modalManager) {
                 let msg = (typeof t === 'function') ? `${t('msg_confirm_buy')} <b style="color:var(--gold-main)">${name}</b>?` : `Želite li kupiti <b>${name}</b>?`;
+                msg += `<br><b>${price} ${typeof dukatIconHtml === 'function' ? dukatIconHtml() : ''}</b>`;
                 window.modalManager.confirm(msg, { contextClass: 'treasury' }).then(isConfirmed => {
                     if (isConfirmed) {
-                        this.shop.processTransaction(id, price);
+                        purchase();
                     }
                 });
             } else {
                 let fallbackMsg = (typeof t === 'function') ? `${t('msg_confirm_buy')} ${name}?` : `Želite li kupiti ${name}?`;
-                if(confirm(fallbackMsg)) this.shop.processTransaction(id, price);
+                fallbackMsg += ` (${price})`;
+                if(confirm(fallbackMsg)) purchase();
             }
         };
 

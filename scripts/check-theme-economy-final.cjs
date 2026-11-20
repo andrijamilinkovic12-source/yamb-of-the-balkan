@@ -45,7 +45,7 @@ assert(ducatCss.includes("#economy-header-ducats-green-icon.hidden +")
 assert(!undoManager.includes("getElementById('economy-header-ducats-icon')"));
 assert(rewardedPack.includes('rewarded-video-active-v1.png')
     && rewardedPack.includes('rewarded-video-unavailable-v1.png'));
-assert(managers.includes("economyOpen ? 'economy' : treasuryOpen ? 'treasury' : tournamentOpen ? 'tournament' : ''"));
+assert.match(managers, /economyOpen\s*\?\s*'economy'\s*:\s*treasuryOpen\s*\?\s*'treasury'\s*:\s*tournamentOpen\s*\?\s*'tournament'\s*:/);
 assert(notices.includes("toast.classList.add('economy-notice')"));
 assert(roomCss.includes('modal-context-economy') && roomCss.includes('.custom-toast.economy-notice'));
 assert(roomCss.includes('grid-template-columns: minmax(0, 1fr)')

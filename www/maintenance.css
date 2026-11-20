@@ -1,0 +1,340 @@
+/* Fullscreen maintenance surface shared by the live app and maintenance.html. */
+html.yamb-maintenance-active,
+body.yamb-maintenance-active {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+
+.yamb-maintenance[hidden] { display: none !important; }
+
+.yamb-maintenance {
+    --maintenance-bg: url('/assets/green-clay-balkan-diorama-v5.png');
+    --maintenance-bg-position: center;
+    --maintenance-surface: linear-gradient(150deg, rgba(224, 246, 190, 0.94), rgba(91, 148, 67, 0.88));
+    --maintenance-surface-edge: rgba(238, 255, 211, 0.72);
+    --maintenance-surface-shadow: rgba(17, 61, 27, 0.36);
+    --maintenance-ink: #132f18;
+    --maintenance-muted: #365d38;
+    --maintenance-accent: #1f6d2b;
+    --maintenance-accent-soft: rgba(31, 109, 43, 0.13);
+    --maintenance-badge-border: rgba(31, 109, 43, 0.32);
+    --maintenance-button: linear-gradient(180deg, #efffb9, #75b84d);
+    --maintenance-button-ink: #102d16;
+    --maintenance-button-edge: #3f7b32;
+    --maintenance-button-highlight: rgba(255, 255, 255, 0.76);
+    --maintenance-focus: #173d1d;
+    --maintenance-radius: 30px;
+    --maintenance-button-radius: 18px;
+    --maintenance-title-spacing: -0.035em;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    color: var(--maintenance-ink);
+    background-color: #142619;
+    background-image: linear-gradient(180deg, rgba(3, 12, 7, 0.08), rgba(3, 12, 7, 0.3)), var(--maintenance-bg);
+    background-position: center, var(--maintenance-bg-position);
+    background-repeat: no-repeat;
+    background-size: cover;
+    isolation: isolate;
+    overflow: hidden;
+    font-family: Montserrat, "Segoe UI", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.yamb-maintenance::before,
+.yamb-maintenance::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.yamb-maintenance::before {
+    inset: 0;
+    background:
+        radial-gradient(circle at 18% 12%, var(--maintenance-accent-soft), transparent 38%),
+        radial-gradient(circle at 82% 88%, var(--maintenance-accent-soft), transparent 42%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.24));
+}
+
+.yamb-maintenance::after {
+    inset: -14%;
+    box-shadow: inset 0 0 18vw rgba(0, 0, 0, 0.32);
+}
+
+.yamb-maintenance__safe-stage {
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: max(14px, env(safe-area-inset-top), var(--safe-top, 0px));
+    padding-right: max(14px, env(safe-area-inset-right), var(--safe-right, 0px));
+    padding-bottom: max(14px, env(safe-area-inset-bottom), var(--safe-bottom, 0px));
+    padding-left: max(14px, env(safe-area-inset-left), var(--safe-left, 0px));
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+}
+
+.yamb-maintenance__safe-stage::-webkit-scrollbar { display: none; }
+
+.yamb-maintenance__panel {
+    position: relative;
+    width: min(100%, 440px);
+    margin: auto;
+    padding: clamp(20px, 4.2vh, 34px) clamp(18px, 6vw, 30px) clamp(18px, 3.6vh, 28px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--maintenance-surface-edge);
+    border-radius: var(--maintenance-radius);
+    background: var(--maintenance-surface);
+    box-shadow: 0 22px 55px var(--maintenance-surface-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px) saturate(125%);
+    -webkit-backdrop-filter: blur(20px) saturate(125%);
+}
+
+.yamb-maintenance__brand {
+    width: min(90%, 330px);
+    height: clamp(58px, 11vh, 92px);
+    margin: 0 auto clamp(12px, 2.2vh, 19px);
+    object-fit: contain;
+    object-position: center;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.24));
+}
+
+.yamb-maintenance__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 31px;
+    margin-bottom: clamp(12px, 2.2vh, 18px);
+    padding: 7px 13px;
+    color: var(--maintenance-accent);
+    font-size: clamp(0.64rem, 2.55vw, 0.72rem);
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    line-height: 1.15;
+    text-transform: uppercase;
+    border: 1px solid var(--maintenance-badge-border);
+    border-radius: 999px;
+    background: var(--maintenance-accent-soft);
+}
+
+.yamb-maintenance__pulse {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: var(--maintenance-accent);
+    box-shadow: 0 0 0 5px var(--maintenance-accent-soft), 0 0 18px var(--maintenance-accent);
+    animation: yamb-maintenance-pulse 1.9s ease-in-out infinite;
+}
+
+.yamb-maintenance__title {
+    width: 100%;
+    margin: 0;
+    color: var(--maintenance-ink);
+    font-size: clamp(1.72rem, 7.6vw, 2.38rem);
+    font-weight: 900;
+    letter-spacing: var(--maintenance-title-spacing);
+    line-height: 1.05;
+    text-wrap: balance;
+}
+
+.yamb-maintenance__message {
+    max-width: 350px;
+    margin: clamp(13px, 2.4vh, 19px) auto 0;
+    color: var(--maintenance-muted);
+    font-size: clamp(0.88rem, 3.75vw, 1rem);
+    font-weight: 600;
+    line-height: 1.55;
+    text-wrap: pretty;
+}
+
+.yamb-maintenance__return {
+    display: block;
+    margin-top: 4px;
+    color: var(--maintenance-ink);
+    font-weight: 900;
+}
+
+.yamb-maintenance__retry {
+    width: 100%;
+    min-height: 52px;
+    margin-top: clamp(20px, 3.5vh, 28px);
+    padding: 13px 18px;
+    cursor: pointer;
+    color: var(--maintenance-button-ink);
+    font: inherit;
+    font-size: clamp(0.76rem, 3.2vw, 0.86rem);
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    line-height: 1.15;
+    text-transform: uppercase;
+    border: 1px solid var(--maintenance-button-highlight);
+    border-radius: var(--maintenance-button-radius);
+    background: var(--maintenance-button);
+    box-shadow: 0 6px 0 var(--maintenance-button-edge), 0 13px 26px var(--maintenance-surface-shadow), inset 0 1px 0 var(--maintenance-button-highlight);
+    transform: translateY(0);
+    transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.yamb-maintenance__retry:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 var(--maintenance-button-edge), 0 7px 14px var(--maintenance-surface-shadow), inset 0 1px 0 var(--maintenance-button-highlight);
+}
+
+.yamb-maintenance__retry:focus-visible { outline: 3px solid var(--maintenance-focus); outline-offset: 4px; }
+.yamb-maintenance__retry:disabled { cursor: wait; filter: saturate(0.55) opacity(0.82); }
+
+.yamb-maintenance__note {
+    min-height: 1.2em;
+    margin: 15px 4px 0;
+    color: var(--maintenance-muted);
+    font-size: clamp(0.67rem, 2.8vw, 0.75rem);
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+/* Theme DNA: each surface keeps the native background, contrast, geometry and material language. */
+.yamb-maintenance[data-maintenance-theme="light"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/light-v9.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(255, 249, 235, 0.94), rgba(225, 190, 132, 0.9));
+    --maintenance-surface-edge: rgba(255, 255, 255, 0.86); --maintenance-surface-shadow: rgba(90, 55, 17, 0.3);
+    --maintenance-ink: #3c2815; --maintenance-muted: #6f5334; --maintenance-accent: #9a5e18;
+    --maintenance-accent-soft: rgba(154, 94, 24, 0.13); --maintenance-badge-border: rgba(154, 94, 24, 0.3);
+    --maintenance-button: linear-gradient(180deg, #fff4c8, #dcae58); --maintenance-button-ink: #382410;
+    --maintenance-button-edge: #a36b26; --maintenance-focus: #6f4313;
+}
+
+.yamb-maintenance[data-maintenance-theme="medium"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/medium-v9.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(67, 19, 28, 0.94), rgba(111, 35, 40, 0.9));
+    --maintenance-surface-edge: rgba(255, 206, 185, 0.28); --maintenance-surface-shadow: rgba(34, 5, 10, 0.56);
+    --maintenance-ink: #fff6ef; --maintenance-muted: #f0c8bc; --maintenance-accent: #ffb394;
+    --maintenance-accent-soft: rgba(255, 179, 148, 0.12); --maintenance-badge-border: rgba(255, 179, 148, 0.28);
+    --maintenance-button: linear-gradient(180deg, #ffd4be, #b94d43); --maintenance-button-ink: #371017;
+    --maintenance-button-edge: #75232b; --maintenance-focus: #ffe1d2;
+}
+
+.yamb-maintenance[data-maintenance-theme="winter"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/winter-v13.png');
+    --maintenance-surface: linear-gradient(150deg, rgba(229, 248, 255, 0.92), rgba(105, 179, 220, 0.86));
+    --maintenance-surface-edge: rgba(255, 255, 255, 0.84); --maintenance-surface-shadow: rgba(7, 49, 83, 0.38);
+    --maintenance-ink: #073553; --maintenance-muted: #285f7c; --maintenance-accent: #086a9c;
+    --maintenance-accent-soft: rgba(8, 106, 156, 0.12); --maintenance-badge-border: rgba(8, 106, 156, 0.28);
+    --maintenance-button: linear-gradient(180deg, #f3fdff, #6fc4ea); --maintenance-button-ink: #062e49;
+    --maintenance-button-edge: #2c7eaa; --maintenance-focus: #064f79;
+}
+
+.yamb-maintenance[data-maintenance-theme="neon"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/neon-v4.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(4, 10, 18, 0.94), rgba(15, 20, 34, 0.92));
+    --maintenance-surface-edge: rgba(38, 255, 222, 0.56); --maintenance-surface-shadow: rgba(0, 0, 0, 0.72);
+    --maintenance-ink: #f2ffff; --maintenance-muted: #a9d7d9; --maintenance-accent: #29ffdc;
+    --maintenance-accent-soft: rgba(41, 255, 220, 0.1); --maintenance-badge-border: rgba(41, 255, 220, 0.46);
+    --maintenance-button: linear-gradient(100deg, #21f4d1, #a758ff); --maintenance-button-ink: #040812;
+    --maintenance-button-edge: #7131a8; --maintenance-focus: #29ffdc; --maintenance-radius: 18px;
+    --maintenance-button-radius: 10px; --maintenance-title-spacing: 0.01em;
+}
+.yamb-maintenance[data-maintenance-theme="neon"] .yamb-maintenance__panel { box-shadow: 0 22px 58px rgba(0, 0, 0, 0.72), 0 0 34px rgba(41, 255, 220, 0.16), inset 0 0 28px rgba(167, 88, 255, 0.08); }
+
+.yamb-maintenance[data-maintenance-theme="amethyst"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/amethyst-v6.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(59, 35, 76, 0.93), rgba(100, 58, 117, 0.9));
+    --maintenance-surface-edge: rgba(226, 179, 255, 0.34); --maintenance-surface-shadow: rgba(30, 12, 43, 0.58);
+    --maintenance-ink: #fff4ff; --maintenance-muted: #e6c9ed; --maintenance-accent: #e3a8ff;
+    --maintenance-accent-soft: rgba(227, 168, 255, 0.12); --maintenance-badge-border: rgba(227, 168, 255, 0.32);
+    --maintenance-button: linear-gradient(180deg, #f3d5ff, #a15cbd); --maintenance-button-ink: #32183e;
+    --maintenance-button-edge: #6b377e; --maintenance-focus: #f2d7ff;
+}
+
+.yamb-maintenance[data-maintenance-theme="easter"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/easter-v6-1.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(255, 244, 239, 0.94), rgba(229, 191, 211, 0.9));
+    --maintenance-surface-edge: rgba(255, 255, 255, 0.88); --maintenance-surface-shadow: rgba(117, 73, 110, 0.28);
+    --maintenance-ink: #593c5d; --maintenance-muted: #765c78; --maintenance-accent: #9d5d91;
+    --maintenance-accent-soft: rgba(157, 93, 145, 0.12); --maintenance-badge-border: rgba(157, 93, 145, 0.26);
+    --maintenance-button: linear-gradient(180deg, #fff1bd, #dfa8c5); --maintenance-button-ink: #4e344f;
+    --maintenance-button-edge: #ad718f; --maintenance-focus: #78476f; --maintenance-radius: 34px; --maintenance-button-radius: 22px;
+}
+
+.yamb-maintenance[data-maintenance-theme="desert"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/desert-v8-2.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(80, 48, 25, 0.92), rgba(128, 75, 39, 0.9));
+    --maintenance-surface-edge: rgba(255, 223, 167, 0.32); --maintenance-surface-shadow: rgba(45, 24, 10, 0.54);
+    --maintenance-ink: #fff1d2; --maintenance-muted: #e9cda6; --maintenance-accent: #f0c377;
+    --maintenance-accent-soft: rgba(240, 195, 119, 0.12); --maintenance-badge-border: rgba(240, 195, 119, 0.32);
+    --maintenance-button: linear-gradient(180deg, #ffe4a8, #c98247); --maintenance-button-ink: #422512;
+    --maintenance-button-edge: #8a4c29; --maintenance-focus: #ffe0a0; --maintenance-radius: 25px; --maintenance-button-radius: 15px;
+}
+
+.yamb-maintenance[data-maintenance-theme="moon"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/moon-v14.png'); --maintenance-bg-position: center 42%;
+    --maintenance-surface: linear-gradient(145deg, rgba(10, 15, 24, 0.93), rgba(43, 52, 66, 0.9));
+    --maintenance-surface-edge: rgba(220, 232, 248, 0.3); --maintenance-surface-shadow: rgba(0, 0, 0, 0.68);
+    --maintenance-ink: #f3f7fc; --maintenance-muted: #c1cfdf; --maintenance-accent: #dce8f7;
+    --maintenance-accent-soft: rgba(220, 232, 247, 0.1); --maintenance-badge-border: rgba(220, 232, 247, 0.26);
+    --maintenance-button: linear-gradient(180deg, #f5f8fb, #9aa9ba); --maintenance-button-ink: #1b2532;
+    --maintenance-button-edge: #5e6c7c; --maintenance-focus: #f4f8ff;
+}
+
+.yamb-maintenance[data-maintenance-theme="severna"] {
+    --maintenance-bg: url('/assets/theme-backgrounds/severna-v4.png');
+    --maintenance-surface: linear-gradient(145deg, rgba(7, 24, 43, 0.93), rgba(21, 57, 75, 0.9));
+    --maintenance-surface-edge: rgba(103, 236, 225, 0.3); --maintenance-surface-shadow: rgba(1, 10, 24, 0.65);
+    --maintenance-ink: #f2fbff; --maintenance-muted: #b9d9df; --maintenance-accent: #5ee5d8;
+    --maintenance-accent-soft: rgba(94, 229, 216, 0.11); --maintenance-badge-border: rgba(94, 229, 216, 0.3);
+    --maintenance-button: linear-gradient(180deg, #f5d99c, #42b9b5); --maintenance-button-ink: #08252e;
+    --maintenance-button-edge: #226d74; --maintenance-focus: #72f3e5;
+}
+
+@keyframes yamb-maintenance-pulse { 0%, 100% { opacity: 0.58; transform: scale(0.86); } 50% { opacity: 1; transform: scale(1); } }
+
+@media (max-width: 359px) {
+    .yamb-maintenance__safe-stage { padding-right: max(10px, env(safe-area-inset-right), var(--safe-right, 0px)); padding-left: max(10px, env(safe-area-inset-left), var(--safe-left, 0px)); }
+    .yamb-maintenance__panel { padding-right: 16px; padding-left: 16px; border-radius: calc(var(--maintenance-radius) * 0.82); }
+    .yamb-maintenance__title { font-size: 1.62rem; }
+}
+
+@media (max-height: 650px) {
+    .yamb-maintenance__safe-stage { justify-content: flex-start; }
+    .yamb-maintenance__panel { padding-top: 16px; padding-bottom: 15px; }
+    .yamb-maintenance__brand { height: 54px; margin-bottom: 9px; }
+    .yamb-maintenance__badge { min-height: 28px; margin-bottom: 10px; padding: 6px 11px; }
+    .yamb-maintenance__message { margin-top: 10px; line-height: 1.42; }
+    .yamb-maintenance__retry { min-height: 47px; margin-top: 16px; }
+    .yamb-maintenance__note { margin-top: 11px; }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+    .yamb-maintenance__panel {
+        width: min(100%, 720px); display: grid; grid-template-columns: minmax(150px, 0.76fr) minmax(270px, 1.24fr);
+        grid-template-areas: "brand badge" "brand title" "brand message" "brand retry" "brand note";
+        column-gap: clamp(18px, 5vw, 38px); padding: 15px 22px 16px; text-align: left;
+    }
+    .yamb-maintenance__brand { grid-area: brand; width: 100%; height: min(31vh, 112px); margin: auto; }
+    .yamb-maintenance__badge { grid-area: badge; justify-self: start; margin-bottom: 8px; }
+    .yamb-maintenance__title { grid-area: title; font-size: clamp(1.45rem, 4.6vw, 2rem); }
+    .yamb-maintenance__message { grid-area: message; margin: 8px 0 0; font-size: 0.82rem; line-height: 1.35; }
+    .yamb-maintenance__retry { grid-area: retry; min-height: 42px; margin-top: 12px; }
+    .yamb-maintenance__note { grid-area: note; margin: 9px 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yamb-maintenance__pulse { animation: none; }
+    .yamb-maintenance__retry { transition: none; }
+}

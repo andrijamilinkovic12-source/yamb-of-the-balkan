@@ -41,7 +41,8 @@ function harness(status = 'registration') {
     const names = ['createTournamentMatch', 'removePlayerFromTournamentBracket', 'advanceTournamentBracket',
         'getTournamentMatch', 'isTournamentParticipant', 'parseTournamentRoomId', 'sanitizeTournamentMatchScore',
         'resolveTournamentReplayState', 'setTournamentMatchResult', 'applyTournamentTechnicalWinner',
-        'isDeletedTournamentPlayer', 'settleDeletedTournamentParticipants', 'cleanupOnlineRoom', 'prepareRuntimeForAccountDeletion'];
+        'isDeletedTournamentPlayer', 'settleDeletedTournamentParticipants', 'cleanupOnlineRoom',
+        'publishGlobalChat', 'enqueueGlobalChatWrite', 'prepareRuntimeForAccountDeletion'];
     vm.runInContext(names.map(actual).join('\n'), context);
     return { c: context, events, prizes, timers, writes };
 }

@@ -1645,8 +1645,11 @@ class SoundManager {
         this.enabled = localStorage.getItem('yamb_sound') !== 'false';
         this.musicEnabled = localStorage.getItem('yamb_music') !== 'false'; 
         
-        // NOVO: Učitavanje sačuvane glasnoće muzike (podrazumevano 0.4)
-        this.musicVolume = parseFloat(localStorage.getItem('yamb_music_volume') ?? 0.4);
+        const savedMusicVolume = localStorage.getItem('yamb_music_volume');
+        this.musicVolume = this.normalizeMusicVolume(savedMusicVolume);
+        if (savedMusicVolume !== null) localStorage.setItem('yamb_music_volume', this.musicVolume);
+        const lastVolume = this.normalizeMusicVolume(localStorage.getItem('yamb_music_last_volume'));
+        this.lastAudibleMusicVolume = this.musicVolume > 0 ? this.musicVolume : (lastVolume || 0.4);
         
         this.ctx = null;
         this.balkanNodes = [];
@@ -1758,8 +1761,18 @@ class SoundManager {
         this.bgMusic.currentTime = 0;
     }
 
-    setMusicEnabled(enabled) {
-        this.musicEnabled = enabled;
+    normalizeMusicVolume(value, fallback = 0.4) {
+        const volume = typeof value === 'number' ? value
+            : (typeof value === 'string' && value.trim() ? Number(value) : NaN);
+        return Number.isFinite(volume) ? Math.max(0, Math.min(1, volume)) : fallback;
+    }
+
+    setMusicEnabled(enabled, { restoreVolume = false } = {}) {
+        this.musicEnabled = !!enabled;
+        if (this.musicEnabled && restoreVolume && this.musicVolume === 0) {
+            this.setMusicVolume(this.lastAudibleMusicVolume);
+            return;
+        }
         if (!enabled) {
             this.bgMusic.pause();
         } else if (window.app && window.app.gameActive && this.musicVolume > 0) {
@@ -1768,9 +1781,13 @@ class SoundManager {
     }
 
     setMusicVolume(vol) {
-        this.musicVolume = parseFloat(vol);
+        this.musicVolume = this.normalizeMusicVolume(vol, this.musicVolume);
         this.bgMusic.volume = this.musicVolume;
         localStorage.setItem('yamb_music_volume', this.musicVolume);
+        if (this.musicVolume > 0) {
+            this.lastAudibleMusicVolume = this.musicVolume;
+        }
+        localStorage.setItem('yamb_music_last_volume', this.lastAudibleMusicVolume);
         
         if (this.musicVolume === 0) {
             this.bgMusic.pause();
@@ -2819,6 +2836,7 @@ class SoundManager {
 class ShopManager {
     constructor(config) {
         this.type = config.type;
+        this.accountId = localStorage.getItem('yamb_uid') || 'guest';
         this.items = config.items;
         this.container = document.getElementById(config.containerId);
         this.balanceEl = document.getElementById(config.balanceId);
@@ -2913,10 +2931,82 @@ class ShopManager {
             this.activeItem = localStorage.getItem(this.activeKey) || 'confetti';
         }
 
-        this.discountedItems = {}; 
+        this.discountedItems = this.readStoredObject(this.getDiscountStorageKey());
         
         this.updateBalanceDisplay();
         this.render();
+    }
+
+    readStoredObject(key) {
+        try {
+            const value = JSON.parse(localStorage.getItem(key) || '{}');
+            return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+        } catch (_) { return {}; }
+    }
+
+    isCurrentAccount() {
+        return this.accountId === undefined || this.accountId === (localStorage.getItem('yamb_uid') || 'guest');
+    }
+
+    getDiscountStorageKey() {
+        return `yamb_shop_discounts_${this.accountId || 'guest'}`;
+    }
+
+    saveDiscounts() {
+        localStorage.setItem(this.getDiscountStorageKey(), JSON.stringify(this.discountedItems));
+    }
+
+    refreshState() {
+        if (!this.isCurrentAccount()) return;
+        const readArray = key => {
+            try {
+                const value = JSON.parse(localStorage.getItem(key) || '[]');
+                return Array.isArray(value) ? value : [];
+            } catch (_) { return []; }
+        };
+        this.discountedItems = this.readStoredObject(this.getDiscountStorageKey());
+        const stored = this.readStoredObject('yamb_stats');
+        const stats = window.statsManager?.stats || stored;
+        const field = { skin: 'unlockedSkins', effect: 'unlockedEffects', trophy: 'unlockedTrophies' }[this.type];
+        const typedKey = { skin: 'yamb_unlocked_skins', effect: 'yamb_unlocked_effects' }[this.type];
+        let unlocked = [
+            ...readArray('yamb_unlocked'),
+            ...(typedKey ? readArray(typedKey) : []),
+            ...(Array.isArray(stats[field]) ? stats[field] : []),
+            ...(Array.isArray(stats.unlockedTrophies) ? stats.unlockedTrophies : []),
+            ...YAMB_FREE_THEME_IDS, 'default', 'confetti', 'green_clay'
+        ];
+        if (this.type === 'theme') unlocked = this.getOwnedThemeIds();
+        if (this.type === 'skin') {
+            const ownedThemes = this.getOwnedThemeIds();
+            const retired = new Set(['desert_glass', 'easter_neumorphic', 'severna_nebula']);
+            unlocked = unlocked.filter(id => !retired.has(id)
+                && (!this.getItemById(id)?.themeGift || ownedThemes.includes(this.getItemById(id).themeGift)));
+            unlocked.push(...this.items.filter(item => item.themeGift && ownedThemes.includes(item.themeGift)).map(item => item.id));
+        }
+        this.unlocked = [...new Set(unlocked)];
+        this.balance = Math.max(0, parseInt(localStorage.getItem('yamb_dukati'), 10) || 0);
+        if (this.type !== 'trophy') {
+            const fallback = { skin: 'default', effect: 'confetti', theme: 'dark' }[this.type];
+            this.activeItem = localStorage.getItem(this.activeKey) || fallback;
+            if (!this.getItemById(this.activeItem) || !this.unlocked.includes(this.activeItem)) {
+                this.activeItem = fallback;
+                localStorage.setItem(this.activeKey, fallback);
+            }
+        }
+    }
+
+    refreshTreasuryView() {
+        const visibleShop = window.riznicaManager?.shop || this;
+        if (!visibleShop.isCurrentAccount()) return;
+        visibleShop.refreshState();
+        visibleShop.updateBalanceDisplay();
+        if (document.getElementById('riznica-screen')?.classList.contains('active')) visibleShop.render();
+    }
+
+    canPurchaseItem(item) {
+        return !!item && ['skin', 'effect', 'theme'].includes(this.type)
+            && !item.adUnlock && !item.themeGift && (!item.req || this.unlocked.includes(item.req));
     }
 
     updateBalanceDisplay() {
@@ -2980,6 +3070,7 @@ class ShopManager {
         const expiresAt = Math.max(0, parseInt(discount.expiresAt, 10) || 0);
         if (expiresAt > 0 && expiresAt <= Date.now()) {
             delete this.discountedItems[id];
+            this.saveDiscounts();
             return null;
         }
 
@@ -3271,11 +3362,13 @@ class ShopManager {
     }
 
     async equip(id) {
+        if (!this.isCurrentAccount()) return;
+        this.refreshState();
         const itemId = String(id || '').trim();
         const itemExists = this.items.some(item => item.id === itemId);
         const item = this.getItemById(itemId);
-        if (!itemExists || !this.unlocked.includes(itemId) || (this.type === 'skin' && item?.themeGift && !this.getOwnedThemeIds().includes(item.themeGift))) {
-            this.render();
+        if (this.type === 'trophy' || !itemExists || !this.unlocked.includes(itemId) || (this.type === 'skin' && item?.themeGift && !this.getOwnedThemeIds().includes(item.themeGift))) {
+            this.refreshTreasuryView();
             return;
         }
 
@@ -3285,7 +3378,9 @@ class ShopManager {
             let ready = false;
             try { ready = await app.prepareTreasuryTheme(itemId); }
             catch (error) { console.warn('Treasury theme artwork unavailable:', itemId, error); }
+            this.refreshState();
             if (token !== app.themeSwitchRequestToken || this.type !== 'theme'
+                || !this.isCurrentAccount()
                 || !this.items.some(entry => entry.id === itemId) || !this.unlocked.includes(itemId)) return;
             if (!ready) {
                 window.showNotification?.(_safeT('modal_title_info'),
@@ -3302,7 +3397,7 @@ class ShopManager {
             localStorage.setItem('yamb_manual_active_skin', itemId);
             localStorage.setItem('yamb_manual_active_skin_at', String(Date.now()));
         }
-        this.render();
+        this.refreshTreasuryView();
         
         if(window.app && window.app.soundMgr) window.app.soundMgr.click();
 
@@ -3328,7 +3423,7 @@ class ShopManager {
             });
         }
 
-        if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
+        if (window.app?.socket?.connected && localStorage.getItem('yamb_uid')) {
             window.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid'),
                 name: window.app.playerName,
@@ -3339,10 +3434,14 @@ class ShopManager {
     }
 
     async tryBuy(id, name, price) {
+        if (!this.isCurrentAccount()) return false;
+        this.refreshState();
         const item = this.getItemById(id);
+        if (!this.canPurchaseItem(item) || this.unlocked.includes(item.id)) return false;
         const currentPrice = item ? this.getCurrentItemPrice(item) : Math.max(0, parseInt(price, 10) || 0);
 
         if (this.balance < currentPrice) {
+            this.refreshTreasuryView();
             if (typeof window.showNotification === 'function') {
                 window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!", {
                     icon: this.getTreasuryInsufficientIconPath(),
@@ -3357,28 +3456,28 @@ class ShopManager {
         }
         
         if (typeof window.openConfirmModal === 'function') {
-            window.openConfirmModal(id, name, currentPrice);
-        } else if (window.modalManager && window.modalManager.overlay) {
+            window.openConfirmModal(id, name, currentPrice, this);
+        } else if (window.modalManager && typeof window.modalManager.confirm === 'function') {
             const isConfirmed = await window.modalManager.confirm(`${_safeT('msg_confirm_buy')} ${name}?`);
             if (isConfirmed) {
                 this.processTransaction(id, currentPrice);
             }
+        } else if (confirm(`${_safeT('msg_confirm_buy')} ${name}?`)) {
+            this.processTransaction(id, currentPrice);
         }
     }
 
     processTransaction(id, price) {
+        if (!this.isCurrentAccount()) return false;
+        this.refreshState();
         const itemId = String(id || '').trim();
         const item = this.getItemById(itemId);
         const safePrice = item ? this.getCurrentItemPrice(item) : Math.max(0, parseInt(price, 10) || 0);
 
-        if (!itemId || !item) return false;
-
-        // Tematski poklon se dobija uz otključanu temu, ne kupovinom za 0 dukata.
-        if (this.type === 'skin' && item.themeGift && !this.unlocked.includes(itemId)) return false;
+        if (!itemId || !this.canPurchaseItem(item)) return false;
 
         if (this.unlocked.includes(itemId)) {
-            this.updateBalanceDisplay();
-            this.render();
+            this.refreshTreasuryView();
             return false;
         }
 
@@ -3393,13 +3492,14 @@ class ShopManager {
             } else {
                 alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!");
             }
-            this.updateBalanceDisplay();
+            this.refreshTreasuryView();
             return false;
         }
 
         this.balance -= safePrice;
         this.unlocked.push(itemId);
         delete this.discountedItems[itemId];
+        this.saveDiscounts();
         
         localStorage.setItem('yamb_dukati', this.balance);
         localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
@@ -3446,7 +3546,7 @@ class ShopManager {
 
         if (this.type === 'theme') this.grantThemeDiceSkinForTheme(itemId);
 
-        if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
+        if (window.app?.socket?.connected && localStorage.getItem('yamb_uid')) {
             window.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid'),
                 name: window.app.playerName,
@@ -3455,8 +3555,7 @@ class ShopManager {
             });
         }
 
-        this.updateBalanceDisplay();
-        this.render();
+        this.refreshTreasuryView();
         
         if(window.app && window.app.soundMgr) window.app.soundMgr.trophy(); 
 
@@ -3465,6 +3564,7 @@ class ShopManager {
         } else if (window.modalManager && window.modalManager.overlay) {
             window.modalManager.alert(_safeT('msg_purchase_success'), _safeT('modal_title_info'));
         }
+        return true;
     }
 
     getAdController() {
@@ -3472,8 +3572,10 @@ class ShopManager {
     }
 
     async watchAdDiscount(id) {
+        if (!this.isCurrentAccount()) return;
+        this.refreshState();
         const item = this.getItemById(id);
-        if (!item || this.unlocked.includes(item.id) || this.getItemBasePrice(item) <= 0) return;
+        if (!this.canPurchaseItem(item) || this.unlocked.includes(item.id) || this.getItemBasePrice(item) <= 0) return;
 
         const adCtrl = this.getAdController();
         if (adCtrl) {
@@ -3485,7 +3587,7 @@ class ShopManager {
             if (!isRewardReady) adCtrl.prepareReward(rewardOptions);
 
             const success = await adCtrl.showRewardVideo(rewardOptions);
-            if (success) {
+            if (success && this.isCurrentAccount()) {
                 const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
                     ? adCtrl.consumeLastRewardSsvNonce()
                     : '';
@@ -3496,16 +3598,19 @@ class ShopManager {
                     )
                     : await this.claimServerShopDiscount(item.id, ssvNonce);
 
+                if (!this.isCurrentAccount()) return;
                 if (!discountResult.ok) {
                     this.showAdClaimError(discountResult);
                     return;
                 }
 
+                this.discountedItems = this.readStoredObject(this.getDiscountStorageKey());
                 this.discountedItems[item.id] = {
                     discountedPrice: discountResult.discountedPrice,
                     expiresAt: discountResult.expiresAt
                 };
-                this.render();
+                this.saveDiscounts();
+                this.refreshTreasuryView();
                 this.showRewardMessage(_safeT('msg_discount_applied') || "Popust primenjen! -20%", _safeT('modal_title_info') || "INFO");
             }
         }
@@ -3513,9 +3618,11 @@ class ShopManager {
     
     // NOVO: Funkcija za otključavanje predmeta/teme gledanjem serije reklama
     async watchAdForUnlock(id, target) {
+        if (!this.isCurrentAccount()) return;
+        this.refreshState();
         const item = this.getItemById(id);
         const requiredTarget = Math.max(1, parseInt(item?.adUnlock || target, 10) || 0);
-        if (!item || this.unlocked.includes(item.id) || requiredTarget <= 0) return;
+        if (!item?.adUnlock || this.unlocked.includes(item.id) || (item.req && !this.unlocked.includes(item.req))) return;
 
         const adCtrl = this.getAdController();
         if (adCtrl) {
@@ -3527,7 +3634,7 @@ class ShopManager {
             if (!isRewardReady) adCtrl.prepareReward(rewardOptions);
 
             const success = await adCtrl.showRewardVideo(rewardOptions);
-            if (success) {
+            if (success && this.isCurrentAccount()) {
                 const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
                     ? adCtrl.consumeLastRewardSsvNonce()
                     : '';
@@ -3538,6 +3645,7 @@ class ShopManager {
                     )
                     : await this.claimServerShopAdUnlock(item.id, ssvNonce);
 
+                if (!this.isCurrentAccount()) return;
                 if (!unlockResult.ok) {
                     this.showAdClaimError(unlockResult);
                     return;
@@ -3552,6 +3660,7 @@ class ShopManager {
                 progress = Math.min(requiredTarget, progress);
                 
                 if (unlocked) {
+                    this.refreshState();
                     // Otključano
                     if (!this.unlocked.includes(item.id)) {
                         this.unlocked.push(item.id);
@@ -3597,33 +3706,29 @@ class ShopManager {
                     localStorage.setItem(`yamb_adprogress_${item.id}`, progress);
                     if(window.app && window.app.soundMgr) window.app.soundMgr.win();
                 }
-                this.render();
+                this.refreshTreasuryView();
             }
         }
     }
 
     addBalance(amount, syncToServer = true) {
+        if (!this.isCurrentAccount()) return false;
+        this.refreshState();
         this.balance += amount;
         localStorage.setItem('yamb_dukati', this.balance);
         if (window.statsManager) {
             window.statsManager.stats.balance = this.balance;
             window.statsManager.saveStats();
         }
-        this.updateBalanceDisplay();
+        this.refreshTreasuryView();
         
-        if (syncToServer && window.app && window.app.socket && window.app.socket.connected) {
-            window.app.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid') || window.app.playerId,
-                name: window.app.playerName,
-                stats: window.app.getFullLocalStats(),
-                playerId: window.app.playerId
-            });
-        }
+        if (syncToServer) this.syncShopStateToServer();
 
         return true;
     }
 
     setServerBalance(balance) {
+        if (!this.isCurrentAccount()) return;
         const safeBalance = Math.max(0, parseInt(balance) || 0);
         this.balance = safeBalance;
         localStorage.setItem('yamb_dukati', safeBalance);
@@ -3631,7 +3736,7 @@ class ShopManager {
             window.statsManager.stats.balance = safeBalance;
             window.statsManager.saveStats();
         }
-        this.updateBalanceDisplay();
+        this.refreshTreasuryView();
     }
 
     async claimServerAdReward(ssvNonce = '') {
@@ -3764,6 +3869,7 @@ class ShopManager {
     }
 
     async watchAdForCoins() {
+        if (!this.isCurrentAccount()) return;
         const adCtrl = this.getAdController();
         if (adCtrl) {
              const rewardOptions = { context: 'shop_ad_reward', amount: 500 };
@@ -3773,7 +3879,7 @@ class ShopManager {
               if (!isRewardReady) adCtrl.prepareReward(rewardOptions);
 
               const success = await adCtrl.showRewardVideo(rewardOptions);
-              if (success) {
+              if (success && this.isCurrentAccount()) {
                   const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
                       ? adCtrl.consumeLastRewardSsvNonce()
                       : '';
@@ -3783,6 +3889,7 @@ class ShopManager {
                           { nonce: ssvNonce, context: 'shop_ad_reward' }
                       )
                       : await this.claimServerAdReward(ssvNonce);
+                  if (!this.isCurrentAccount()) return;
                   if (!rewardResult.ok) {
                       const cooldown = Math.ceil((rewardResult.retryAfterMs || 0) / 1000);
                       let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
@@ -3835,6 +3942,8 @@ class AdMobController {
         this.lastBannerMargin = null;
         this.bannerLoadTimer = null;
         this.bannerSyncTimer = null;
+        this.bannerRequestVersion = 0;
+        this.bannerTask = Promise.resolve();
         this.bannerTestMode = localStorage.getItem('yamb_admob_test_ads') === '1';
         
         this.ads = {
@@ -3997,7 +4106,7 @@ class AdMobController {
                 this.ads[type].isReady = false;
                 this.ads[type].isLoading = false;
             }
-            await this.removeCurrentBanner();
+            await this.hideEconomyBanner();
             if (!this.canRequestAds) {
                 this.updateUI(false);
             } else if (!this.adMobPlugin) {
@@ -4576,7 +4685,19 @@ class AdMobController {
         }
     }
 
-    async showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
+    queueEconomyBannerUpdate(operation) {
+        const task = this.bannerTask.then(operation);
+        this.bannerTask = task.catch(err => console.warn('Banner update failed.', err));
+        return task;
+    }
+
+    showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
+        const version = ++this.bannerRequestVersion;
+        return this.queueEconomyBannerUpdate(() => this.updateEconomyBanner(slotEl, version));
+    }
+
+    async updateEconomyBanner(slotEl, version) {
+        if (version !== this.bannerRequestVersion) return;
         if (!this.canRequestAds || !this.adMobPlugin || !slotEl || !navigator.onLine) return;
 
         const isSameSlot = this.bannerSlot === slotEl;
@@ -4588,7 +4709,7 @@ class AdMobController {
         this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
 
         await this.removeCurrentBanner();
-        if (!this.canRequestAds) return;
+        if (!this.canRequestAds || version !== this.bannerRequestVersion) return;
         this.bannerSlot = slotEl;
         this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
         this.startBannerLoadTimer();
@@ -4601,6 +4722,10 @@ class AdMobController {
                 margin,
                 isTesting: this.bannerTestMode
             });
+            if (!this.canRequestAds || version !== this.bannerRequestVersion) {
+                await this.removeCurrentBanner();
+                return;
+            }
             this.bannerVisible = true;
             this.lastBannerMargin = margin;
             console.info(`AdMob banner zatražen (${this.bannerTestMode ? 'test' : 'production'} mode).`);
@@ -4614,11 +4739,15 @@ class AdMobController {
         }
     }
 
-    async hideEconomyBanner() {
-        if (!this.adMobPlugin) return;
-
-        await this.removeCurrentBanner();
-        this.setBannerSlotState('idle', _safeT('economy_ad_label') || 'Oglas');
+    hideEconomyBanner() {
+        const version = ++this.bannerRequestVersion;
+        return this.queueEconomyBannerUpdate(async () => {
+            if (!this.adMobPlugin || version !== this.bannerRequestVersion) return;
+            await this.removeCurrentBanner();
+            if (version === this.bannerRequestVersion) {
+                this.setBannerSlotState('idle', _safeT('economy_ad_label') || 'Oglas');
+            }
+        });
     }
 
     updateUI(ready) {

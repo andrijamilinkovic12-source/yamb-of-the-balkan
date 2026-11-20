@@ -3,6 +3,8 @@ class TrophyManager {
         this.statsMgr = statsManager;
         this.soundMgr = soundManager;
         this.trophies = SHOP_DATA.TROPHIES; // Učitava definicije iz config.js
+        this.inFlightClaims = new Map();
+        this.pendingClaimRetries = new Map();
     }
 
     getProjectedStats(score) {
@@ -50,6 +52,7 @@ class TrophyManager {
         if (balanceEl && this.statsMgr && this.statsMgr.stats) {
             balanceEl.innerText = this.statsMgr.stats.balance;
         }
+        window.riznicaManager?.shop?.refreshTreasuryView?.();
     }
 
     applyLocalReward(trophy) {
@@ -100,9 +103,13 @@ class TrophyManager {
         return `yamb_pending_trophy_claims_${uid}`;
     }
 
-    loadPendingClaims() {
+    isCurrentAccount(storageKey) {
+        return this.getPendingClaimStorageKey() === storageKey;
+    }
+
+    loadPendingClaims(storageKey = this.getPendingClaimStorageKey()) {
         try {
-            const parsed = JSON.parse(localStorage.getItem(this.getPendingClaimStorageKey()) || '[]');
+            const parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
             return Array.isArray(parsed) ? parsed.filter(entry => entry && typeof entry.trophyId === 'string') : [];
         } catch (err) {
             return [];
@@ -138,7 +145,8 @@ class TrophyManager {
     }
 
     async retryPendingClaims() {
-        if (this.pendingClaimsRetry) return this.pendingClaimsRetry;
+        const storageKey = this.getPendingClaimStorageKey();
+        if (this.pendingClaimRetries.has(storageKey)) return this.pendingClaimRetries.get(storageKey);
 
         const app = window.app;
         if (!app || !app.socket || !app.socket.connected) {
@@ -150,11 +158,20 @@ class TrophyManager {
             };
         }
 
-        this.pendingClaimsRetry = (async () => {
+        const retry = (async () => {
             let claimed = 0;
             const permanentReasons = new Set(['invalid_trophy', 'trophy_not_earned']);
+            const accountChanged = () => ({ ok: false, reason: 'account_changed', claimed,
+                remaining: this.loadPendingClaims(storageKey).length });
 
             for (const entry of this.loadPendingClaims()) {
+                if (!this.isCurrentAccount(storageKey)) return accountChanged();
+                const inFlight = this.inFlightClaims.get(`${storageKey}:${entry.trophyId}`);
+                if (inFlight) {
+                    await inFlight;
+                    if (!this.isCurrentAccount(storageKey)) return accountChanged();
+                    continue;
+                }
                 const trophy = this.trophies.find(item => item.id === entry.trophyId);
                 if (!trophy) {
                     this.removePendingClaim(entry.trophyId);
@@ -162,8 +179,11 @@ class TrophyManager {
                 }
 
                 const result = await this.claimServerReward(trophy, entry.proof || {});
+                if (!this.isCurrentAccount(storageKey)) return accountChanged();
                 if (result && result.ok && !result.localFallback) {
+                    this.statsMgr.unlockTrophy(trophy.id);
                     if (typeof result.balance === 'number') this.setServerBalance(result.balance);
+                    else this.updateBalanceDisplay();
                     this.removePendingClaim(entry.trophyId);
                     claimed++;
                     continue;
@@ -181,16 +201,18 @@ class TrophyManager {
 
             return { ok: true, claimed, remaining: this.loadPendingClaims().length };
         })();
+        this.pendingClaimRetries.set(storageKey, retry);
 
         try {
-            return await this.pendingClaimsRetry;
+            return await retry;
         } finally {
-            this.pendingClaimsRetry = null;
+            this.pendingClaimRetries.delete(storageKey);
         }
     }
 
     async claimServerReward(trophy, proof) {
         const app = window.app;
+        const storageKey = this.getPendingClaimStorageKey();
         const reward = Math.max(0, Number(trophy.reward) || 0);
 
         if (!app || !app.socket || !app.socket.connected) {
@@ -202,6 +224,9 @@ class TrophyManager {
         }
 
         const authResult = await app.authenticateSocketIdentity();
+        if (!this.isCurrentAccount(storageKey)) {
+            return { ok: false, reason: 'account_changed', trophyId: trophy.id };
+        }
         if (!authResult || !authResult.ok) {
             return { ok: true, localFallback: true, trophyId: trophy.id, reward, reason: authResult?.reason || 'auth_failed' };
         }
@@ -428,6 +453,13 @@ class TrophyManager {
         
         // 1. Sačuvaj u stats
         if (!this.statsMgr.unlockTrophy(trophy.id)) return;
+        const storageKey = this.getPendingClaimStorageKey();
+        const claimKey = `${storageKey}:${trophy.id}`;
+        if (this.inFlightClaims.has(claimKey)) return;
+        const localRewardApplied = this.loadPendingClaims().some(entry =>
+            entry.trophyId === trophy.id && entry.localRewardApplied);
+        // Persist the proof before authentication/network waits so a restart can retry it.
+        this.queuePendingClaim(trophy, proof);
         const shouldNotify = options.silent !== true;
 
         const notify = (rewardAmount = Math.max(0, Number(trophy.reward) || 0)) => {
@@ -437,36 +469,47 @@ class TrophyManager {
         };
 
         const claimPromise = this.claimServerReward(trophy, proof)
+            .catch(err => {
+                console.warn("Greška pri server isplati trofeja, koristim lokalni fallback:", err);
+                return { ok: true, localFallback: true, trophyId: trophy.id, reward: trophy.reward };
+            })
             .then(result => {
+                if (!this.isCurrentAccount(storageKey)) {
+                    return { ok: false, reason: 'account_changed', trophyId: trophy.id };
+                }
                 if (result && result.ok && result.localFallback) {
+                    this.statsMgr.unlockTrophy(trophy.id);
                     this.queuePendingClaim(trophy, proof, true);
-                    this.applyLocalReward(trophy);
-                    notify(trophy.reward);
+                    if (!localRewardApplied) this.applyLocalReward(trophy);
+                    else this.updateBalanceDisplay();
+                    notify(localRewardApplied ? 0 : trophy.reward);
                     return result;
                 }
 
                 if (result && result.ok) {
+                    this.statsMgr.unlockTrophy(trophy.id);
                     if (typeof result.balance === 'number') this.setServerBalance(result.balance);
+                    else this.updateBalanceDisplay();
+                    this.removePendingClaim(trophy.id);
                     notify(Math.max(0, Number(result.reward) || 0));
                     return result;
                 }
 
                 console.warn(`Trofej ${trophy.id} nije isplaćen na serveru: ${result?.reason || 'unknown_error'}`);
                 if (['invalid_trophy', 'trophy_not_earned'].includes(result?.reason)) {
-                    this.rollbackLocalTrophy(trophy.id);
+                    this.rollbackLocalTrophy(trophy.id, localRewardApplied ? trophy.reward : 0);
+                    this.removePendingClaim(trophy.id);
+                    return result;
                 } else {
                     this.queuePendingClaim(trophy, proof);
                 }
                 notify(0);
                 return result;
             })
-            .catch(err => {
-                console.warn("Greška pri server isplati trofeja, koristim lokalni fallback:", err);
-                this.queuePendingClaim(trophy, proof, true);
-                this.applyLocalReward(trophy);
-                notify(trophy.reward);
-                return { ok: true, localFallback: true, trophyId: trophy.id, reward: trophy.reward };
+            .finally(() => {
+                this.inFlightClaims.delete(claimKey);
             });
+        this.inFlightClaims.set(claimKey, claimPromise);
 
         return { trophy, claimPromise };
     }

@@ -121,6 +121,7 @@ const document = {
 };
 let observerCallback;
 vm.runInNewContext(script, {
+    window: {},
     document,
     localStorage: { getItem: () => null },
     MutationObserver: class { constructor(callback) { observerCallback = callback; } observe() {} },

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yamb — pregled tajmera i prekida igre</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f1eb;color:#302b25;font:15px/1.5 system-ui,sans-serif}main{max-width:1080px;margin:0 auto;padding:28px;display:grid;grid-template-columns:minmax(280px,390px) minmax(280px,1fr);gap:30px;align-items:start}h1{font-size:25px;line-height:1.2;margin:0 0 10px}p{margin:0 0 18px;color:#625a50}label{display:block;font-size:13px;margin-bottom:12px}select{display:block;width:100%;font:inherit;padding:8px;margin-top:4px;color:inherit;background:#fffdf7;border:1px solid #cbc2b4;border-radius:8px}.choices{display:grid;gap:7px;margin:18px 0}button{font:inherit;line-height:1.3;text-align:left;padding:11px 13px;color:inherit;background:#fffdf8;border:1px solid #d6cbbd;border-radius:10px;cursor:pointer}button[aria-pressed=true]{background:#493626;color:#fff7ea;border-color:#493626}button:focus-visible,select:focus-visible{outline:3px solid #b78540;outline-offset:2px}.explanation{border-top:1px solid #d6cbbd;padding-top:16px;min-height:94px}.explanation strong{display:block;margin-bottom:7px}.explanation p{color:#302b25;margin:0}.preview{position:sticky;top:20px}.phone{width:100%;height:780px;border:1px solid #c6b9a6;border-radius:24px;overflow:hidden;background:#e3d1a9;box-shadow:0 12px 28px #3928171c}iframe{display:block;width:100%;height:100%;border:0}.caption{font-size:12px;margin:10px 4px 0;color:#736a5e}.toggles{display:grid;grid-template-columns:1fr 1fr;gap:12px}#animate{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:12px}#animate input{width:18px;height:18px}.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#786346;margin:0 0 10px}@media(max-width:760px){main{padding:18px;grid-template-columns:1fr;gap:18px}.preview{position:static;grid-row:2;width:min(390px,100%);margin:auto}.phone{height:740px}.choices{grid-template-columns:repeat(2,minmax(0,1fr))}.choices button{font-size:13px}h1{font-size:22px}}
+.preview{width:min(390px,100%);justify-self:center}
+</style></head><body><main>
+<section><div class="eyebrow">Yamb of the Balkan · lokalni pregled</div><h1>Tajmer i prekid partije</h1><p>Izaberi situaciju i pogledaj kako se sada prikazuje u igri.</p>
+<div class="toggles"><label>Tema<select id="theme"><option value="light">Svetlo zlato</option><option value="dark">Zelena</option><option value="medium">Trula višnja</option><option value="winter">Plavi okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option><option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option></select></label>
+<label>Jezik igre<select id="language"><option value="sr">Srpski</option><option value="en">English</option></select></label></div>
+<label>Online mod<select id="mode"><option value="random">Slučajan protivnik</option><option value="friend_invite">Poziv prijatelju</option><option value="challenge">Direktan duel</option><option value="tournament">Turnirski meč</option></select></label>
+<div class="choices" id="states">
+<button data-state="disconnect" aria-pressed="true">Prekid veze — čeka se povratak</button>
+<button data-state="left" aria-pressed="false">Protivnik je napustio partiju</button>
+<button data-state="mine" aria-pressed="false">Moj potez · 62s</button>
+<button data-state="opponent" aria-pressed="false">Protivnikov potez · 42s</button>
+<button data-state="urgent" aria-pressed="false">Poslednjih 10 sekundi</button>
+<button data-state="expired" aria-pressed="false">Vreme za potez je isteklo</button>
+<button data-state="grace-ended" aria-pressed="false">Rok za povratak · 0:00</button>
+<button data-state="recovered" aria-pressed="false">Igrač se vratio u meč</button>
+<button data-state="timeout-win" aria-pressed="false">Istek vremena — moja pobeda</button>
+<button data-state="timeout-loss" aria-pressed="false">Istek vremena — moj poraz</button>
+<button data-state="mutual" aria-pressed="false">Prekid veze oba igrača</button>
+<button data-state="spectator" aria-pressed="false">Gledanje meča · UŽIVO</button>
+<button data-state="local" aria-pressed="false">Solo — bez tajmera za potez</button>
+</div><label id="animate"><input id="running" type="checkbox">Pokreni odbrojavanje u pregledu</label>
+<div class="explanation" aria-live="polite"><strong id="state-title">Prekid veze — čeka se povratak</strong><p id="state-detail"></p></div>
+</section><section class="preview"><div class="phone"><iframe id="game" src="/game-preview" title="Stvarni prikaz igre sa probnim stanjem tajmera"></iframe></div><p class="caption">Prikaz koristi postojeći izgled i funkcije igre. Podaci i iznosi su primeri; nema pravog meča ni promene naloga.</p></section>
+</main><script>
+const frame=document.getElementById('game');
+let selected=new URLSearchParams(location.search).get('state')||'disconnect';
+if(!document.querySelector('[data-state="'+CSS.escape(selected)+'"]'))selected='disconnect';
+const details={
+disconnect:'Kratko vreme ostaje u tajmeru. Celo objašnjenje prekida veze stoji ispod zaglavlja i prelama se u više redova.',
+left:'Namerno napuštanje partije vodi na završni ekran sa obaveštenjem o tehničkoj pobedi. Ne prikazuje se duga poruka u tajmeru.',
+mine:'Redovno preostalo vreme za tvoj potez.',opponent:'Preostalo vreme protivnika prikazuje se u istom polju.',
+urgent:'Na 10 sekundi uključuje se upozorenje tajmera.',expired:'Kratka oznaka isteka ostaje dok se čeka konačan ishod partije.',
+'grace-ended':'Prikazuje se 0:00; partija se ne nastavlja sama. Čeka se potvrda povratka ili konačnog završetka.',
+recovered:'Obaveštenje nestaje i vraća se preostalo vreme poteza. Ovde je prikazan primer sa 18 sekundi.',
+'timeout-win':'Tebi se prikazuje poruka da je protivniku isteklo vreme i da si ostvario tehničku pobedu.',
+'timeout-loss':'Tebi se prikazuje poruka da je tvoje vreme isteklo i da si izgubio partiju.',
+mutual:'Obostrani prekid ima zasebno obaveštenje. Za turnir se prikazuje poruka o ponavljanju meča.',
+spectator:'Gledalac vidi oznaku UŽIVO umesto svog odbrojavanja.',local:'U Solo režimu nema ograničenja vremena za potez, pa je polje tajmera skriveno.'};
+function update(){document.querySelectorAll('[data-state]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===selected)));document.getElementById('state-title').textContent=document.querySelector('[data-state="'+selected+'"]').textContent;document.getElementById('state-detail').textContent=details[selected];frame.contentWindow.postMessage({type:'timer-preview',state:selected,theme:document.getElementById('theme').value,language:document.getElementById('language').value,mode:document.getElementById('mode').value,running:document.getElementById('running').checked},location.origin);}
+document.getElementById('states').addEventListener('click',event=>{const button=event.target.closest('[data-state]');if(button){selected=button.dataset.state;update();}});
+document.querySelectorAll('select,input').forEach(control=>control.addEventListener('change',update));
+window.addEventListener('message',event=>{if(event.origin===location.origin&&event.source===frame.contentWindow&&event.data?.type==='timer-preview-ready')update();});
+document.getElementById('state-detail').textContent=details[selected];
+</script></body></html>
