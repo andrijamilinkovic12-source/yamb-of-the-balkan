@@ -159,12 +159,18 @@ function nativeHarness(choices = [true, true], selectedUid = uid, pendingReceipt
     assert.equal(wrong.localStorage.getItem('yamb_account_snapshot_' + uid), 'preserved-before-account-change');
     assert(wrong.savedGames.has('yamb_saved_game_' + uid + '_1'));
     const deleted = nativeHarness();
+    deleted.localStorage.setItem('yamb_pending_economy_' + uid, '["own-reward"]');
+    deleted.localStorage.setItem('yamb_pending_game_rewards_' + uid, '["own-game"]');
+    deleted.localStorage.setItem('yamb_pending_economy_' + other, '["other-reward"]');
     await deleted.window.yambAccountPrivacy.begin();
     assert.equal(deleted.counts().requests, 1);
     assert.equal(deleted.counts().signOuts, 1);
     assert.equal(deleted.localStorage.getItem('yamb_uid'), null);
     assert.equal(deleted.localStorage.getItem('yamb_account_snapshot_' + uid), null);
     assert.equal(deleted.localStorage.getItem('yamb_account_snapshot_' + other), 'other-snapshot');
+    assert.equal(deleted.localStorage.getItem('yamb_pending_economy_' + uid), null);
+    assert.equal(deleted.localStorage.getItem('yamb_pending_game_rewards_' + uid), null);
+    assert.equal(deleted.localStorage.getItem('yamb_pending_economy_' + other), '["other-reward"]');
     assert.equal(deleted.localStorage.getItem('yamb_lang'), 'en');
     assert.equal(deleted.savedGames.has('yamb_saved_game_' + uid + '_1'), false);
     assert.equal(deleted.savedGames.has('yamb_saved_game_' + other + '_1'), true);

@@ -5,11 +5,18 @@ const LIVE_STAGE_EFFECT_DURATIONS = Object.freeze({
 });
 const LIVE_STAGE_EFFECT_IDS = Object.freeze(Object.keys(LIVE_STAGE_EFFECT_DURATIONS));
 const ICE_AGE_GROWTH_SECONDS = 2.8;
+const UFO_BEAM_START = 1.35, UFO_RELEASE_START = 5;
 const ROYAL_YAMB_CREST_SECONDS = 3.2;
+const WEDDING_BEAT = 60 / 144;
+const WEDDING_PICKUP = 0.045;
+// Transparent gaps between the eight shoes below row 330 of the 800 x 410 cast sprite.
+const WEDDING_SHOES = [0, 66, 174, 245, 350, 450, 574, 658, 800];
 const THUNDER_STRIKE_SECONDS = 1.35;
 const THUNDER_GROW_SECONDS = 0.13;
 const THUNDER_COLORS = Object.freeze({ blue: '136, 195, 255', violet: '170, 151, 255', white: '244, 250, 255' });
 const FIREWORK_COLORS = Object.freeze(['255, 198, 83', '255, 91, 111', '82, 224, 245', '129, 239, 158', '244, 249, 255']);
+const FIREWORK_CRACKLES = Object.freeze([0.32, 0.57, 0.84]);
+const FIREWORK_PIVOTS = Object.freeze([[0.502, 0.51], [0.52, 0.49], [0.5, 0.245], [0.49, 0.4]]);
 const FIREWORK_SHOW = Object.freeze([
     { launch: 0, rise: 0.72, kind: 'sphere', x: 0.28, y: 0.29, color: 1 },
     { launch: 0.52, rise: 0.7, kind: 'ring', x: 0.72, y: 0.28, color: 2 },
@@ -17,14 +24,11 @@ const FIREWORK_SHOW = Object.freeze([
     { launch: 1.83, rise: 0.68, kind: 'sphere', x: 0.23, y: 0.37, color: 3 },
     { launch: 2.36, rise: 0.72, kind: 'ring', x: 0.76, y: 0.35, color: 1 },
     { launch: 2.86, rise: 0.7, kind: 'sphere', x: 0.54, y: 0.29, color: 2 },
-    { launch: 3.48, rise: 0.69, kind: 'sphere', x: 0.24, y: 0.26, color: 1, finale: true },
-    { launch: 3.55, rise: 0.69, kind: 'ring', x: 0.76, y: 0.28, color: 3, finale: true },
-    { launch: 3.81, rise: 0.74, kind: 'willow', x: 0.5, y: 0.3, color: 0, finale: true }
+    { launch: 3.48, rise: 0.69, kind: 'sphere', x: 0.26, y: 0.48, color: 1, finale: true },
+    { launch: 3.55, rise: 0.69, kind: 'ring', x: 0.74, y: 0.40, color: 2, finale: true },
+    { launch: 3.81, rise: 0.74, kind: 'willow', x: 0.5, y: 0.25, color: 0, finale: true }
 ]);
-const DRAGON_BREATH_RIG = Object.freeze({
-    headPivot: [0.51597, 0.58412], jawPivot: [0.09735, 0.31559],
-    upperMouth: [0.9697, 0.58294], lowerMouth: [0.94985, 0.55133], jawWidth: 0.55528
-});
+const DRAGON_JAW = Object.freeze({ upper: 0.55, throat: 0.65, lower: 0.78 });
 const NEON_PULSE_COLORS = Object.freeze({ cyan: '0, 244, 255', pink: '255, 40, 188', white: '245, 255, 255' });
 const DRONE_FORMATION = Object.freeze([
     { column: -1, row: 0, side: -1, entry: 0.19 },
@@ -39,6 +43,15 @@ const DRONE_LIGHT_ANCHORS = Object.freeze({
     easter: [0.4997, 0.7838], desert: [0.4994, 0.881], moon: [0.4997, 0.7596],
     severna: [0.499, 0.8685]
 });
+// Junctions are numbered left-to-right across three rows. Shared junctions need only one drone.
+const DRONE_DIGITS = Object.freeze({
+    1: [[3, 1, 7], [6, 7, 8]],
+    2: [[0, 2, 5, 3, 6, 8]],
+    3: [[0, 2, 5, 8, 6], [4, 5]],
+    4: [[0, 3, 5], [2, 5, 8]],
+    5: [[2, 0, 3, 5, 8, 6]],
+    6: [[2, 0, 3, 6, 8, 5, 3]]
+});
 
 class LiveEffectsStage {
     static imageCache = new Map();
@@ -47,11 +60,17 @@ class LiveEffectsStage {
         const root = 'assets/effects/stage-v1/';
         const png = name => root + name + '.png?v=1';
         if (type === 'ice_age') return { frost: png('frost-corner') };
-        if (type === 'balkan') return { trumpet: png('trumpet') };
+        if (type === 'fireworks') return { blooms: 'assets/effects/fireworks-blooms-v1/blooms.png' };
+        if (type === 'balkan') {
+            const pack = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
+            return { trumpet: pack + '/canonical/treasury-effect-previews/preview-wedding-v1.png',
+                dancers: 'assets/effects/wedding-kolo-v1/dancers.webp' };
+        }
         if (type === 'thunder') return { cloud: 'assets/effects/thunder-storm-v1/storm-cloud-v1.png' };
+        if (type === 'cosmic_dust') return { flecks: 'assets/effects/cosmic-dust-v1/near-field.png' };
         if (type === 'dragon_fire') return {
-            head: 'assets/effects/dragon-breath-v1/head-v1.png',
-            jaw: 'assets/effects/dragon-breath-v1/jaw-v1.png', flame: png('flame')
+            head: 'assets/effects/dragon-projection-v2/visage.webp',
+            plume: 'assets/effects/dragon-projection-v2/plume.webp', flame: png('flame')
         };
         if (type === 'drones') return { drone: `assets/effects/drones-v1/${theme}-drone-v1.png` };
         if (type === 'ufo_abduction') return { ship: png(`ufo-${theme}`) };
@@ -59,8 +78,8 @@ class LiveEffectsStage {
             const ducatRoot = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
             const version = ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1;
             return {
-                logo: theme === 'dark' ? 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1'
-                    : `assets/theme-packs/${theme}/splash-title-soft-clay-v1.png?v=1`,
+                seal: 'Logo_green.png', logo: `assets/effects/royal-stage-v2/${theme}.webp`,
+                spotlight: 'assets/effects/royal-stage-v2/spotlight.png',
                 coin: `${ducatRoot}/canonical/ducat/ducat-front-v${version}.png`,
                 coinLeft: `${ducatRoot}/canonical/ducat/ducat-angle-left-v${version}.png`,
                 coinRight: `${ducatRoot}/canonical/ducat/ducat-angle-right-v${version}.png`
@@ -84,7 +103,7 @@ class LiveEffectsStage {
         this.imageCache.set(source, promise);
         // Retain shared components, but only the selected theme's ship/logo/coin.
         for (const key of this.imageCache.keys()) {
-            if (this.imageCache.size <= 7) break;
+            if (this.imageCache.size <= 9) break; // Six royal components plus the three retained stage textures.
             if (key !== source && !/stage-v1\/(?:trumpet|flame|frost-corner)\.png/.test(key)) this.imageCache.delete(key);
         }
         return promise;
@@ -96,9 +115,10 @@ class LiveEffectsStage {
         return Object.fromEntries(entries);
     }
 
-    constructor(owner, type) {
+    constructor(owner, type, yambFace) {
         this.owner = owner;
         this.type = type;
+        this.droneFace = type === 'drones' && Number.isInteger(yambFace) && DRONE_DIGITS[yambFace] ? yambFace : null;
         this.theme = owner.getGoldRainThemeId();
         this.palette = SUPERNOVA_THEME_PROFILES[this.theme];
         this.reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
@@ -116,14 +136,18 @@ class LiveEffectsStage {
     }
 
     async start() {
+        // The scoring turn may already have advanced when the ship PNG finishes loading.
+        const player = window.app?.currentPlayerIdx;
+        const ufoTable = this.type === 'ufo_abduction' && ((Number.isInteger(player) && document.getElementById('ptable-' + player))
+            || this.owner.getTargetTable?.() || document.querySelector('.player-table'));
         this.images = await LiveEffectsStage.preload(this.type, this.theme);
         if (this.stopped || document.hidden || this.theme !== this.owner.getGoldRainThemeId()) return this.stop();
         const needed = Object.keys(LiveEffectsStage.sources(this.type, this.theme));
-        if (needed.some(role => !this.images[role])) {
+        if (needed.some(role => !this.images[role] && !(this.type === 'cosmic_dust' && role === 'flecks'))) {
             console.warn(`Effect component unavailable: ${this.type}/${this.theme}`);
             return this.stop();
         }
-        this.table = this.owner.getTargetTable?.() || document.querySelector('.player-table');
+        this.table = this.type === 'ufo_abduction' ? ufoTable : this.owner.getTargetTable?.() || document.querySelector('.player-table');
         this.overlay = document.createElement('div');
         this.overlay.className = 'live-stage-effect';
         this.overlay.dataset.effect = this.type;
@@ -135,7 +159,8 @@ class LiveEffectsStage {
         this.ctx = this.canvas.getContext('2d', { alpha: true });
         if (!this.ctx) return this.stop();
         this.resize();
-        this.scores = [...(this.table?.querySelectorAll?.('.score-btn.filled, .qa-board-grid span') || [])]
+        if (this.type === 'cosmic_dust') this.dustParticles = this.prepareDust();
+        if (this.type === 'ufo_abduction' && !this.reduced) this.scores = [...(this.table?.querySelectorAll?.('.score-btn.filled, .qa-board-grid span:not(:nth-child(7n + 1))') || [])]
             .filter(node => /^\d+$/.test(node.textContent.trim())).slice(0, this.mobile ? 24 : 40)
             .map(node => ({ node, text: node.textContent.trim(), rect: node.getBoundingClientRect() }));
         window.addEventListener('resize', this.resize, { passive: true });
@@ -148,10 +173,7 @@ class LiveEffectsStage {
             this.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
             this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
         }
-        if (!this.reduced) {
-            const sound = { balkan: 'balkanTrumpet', drones: 'epicDroneShow', ufo_abduction: 'ufoAbduction' }[this.type];
-            if (sound) window.app?.soundMgr?.[sound]?.();
-        }
+        if (!this.reduced && this.type === 'drones') window.app?.soundMgr?.epicDroneShow?.();
         this.timer = setTimeout(() => this.stop(), this.duration + 1000);
         this.raf = requestAnimationFrame(this.frame);
     }
@@ -177,6 +199,7 @@ class LiveEffectsStage {
         this.canvas.height = Math.round(this.height * dpr);
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         if (this.type === 'ice_age') this.prepareIceFrost();
+        if (this.type === 'balkan') this.prepareWedding();
         if (this.type === 'neon_pulse') this.prepareNeonFrame();
         if (this.type === 'drones') this.prepareDroneFormation();
         if (this.type === 'royal_yamb') this.prepareRoyalScene();
@@ -196,8 +219,12 @@ class LiveEffectsStage {
         this.mutedNodes.forEach(node => node.classList.remove('live-ufo-score-muted'));
         this.mutedNodes.clear();
         this.overlay?.remove();
+        this.ufoAudioCleanup?.();
+        this.ufoAudioCleanup = null;
         this.iceAudioCleanup?.();
         this.iceAudioCleanup = null;
+        this.iceCrackCleanup?.();
+        this.iceCrackCleanup = null;
         this.royalAudioCleanup?.();
         this.royalAudioCleanup = null;
         this.dragonAudioCleanup?.();
@@ -206,7 +233,10 @@ class LiveEffectsStage {
         this.fireworkAudioCleanups?.clear();
         this.thunderAudioCleanup?.();
         this.thunderAudioCleanup = null;
-        if (this.type === 'balkan') window.app?.soundMgr?.stopBalkanMusic?.(true);
+        if (this.weddingMusic) {
+            this.weddingMusic = false;
+            window.app?.soundMgr?.stopBalkanMusic?.(true);
+        }
         if (this.owner.stageScene === this) this.owner.stageScene = null;
     }
 
@@ -294,6 +324,67 @@ class LiveEffectsStage {
             texture.drawImage(this.images.frost, 0, 0, b.width * 0.86, b.height * 0.86);
             texture.restore();
         }
+        const light = texture.createLinearGradient(0, 0, b.width, b.height * 0.52);
+        for (const [at, opacity] of [[0, 0.21], [0.28, 0.025], [0.31, 0.12], [0.44, 0.02], [0.78, 0.08], [1, 0.19]]) {
+            light.addColorStop(at, this.rgba('186, 236, 255', opacity));
+        }
+        texture.fillStyle = light; texture.fillRect(0, 0, b.width, b.height);
+
+        const cornerRadius = (node, w, h) => {
+            const value = node && window.getComputedStyle?.(node).borderTopLeftRadius;
+            return Math.min(w / 2, h / 2, (parseFloat(value) || 0) * (value?.endsWith('%') ? Math.min(w, h) / 100 : 1));
+        };
+        this.iceBoardRadius = cornerRadius(this.table, b.width, b.height);
+        this.iceControls = [];
+        const nodes = document.querySelectorAll('#dice-container > .dice, .action-btn-group > #btn-najava, .action-btn-group > #btn-bacaj');
+        for (const node of nodes) {
+            const rect = node.getBoundingClientRect();
+            if (!rect.width || !rect.height) continue;
+            const style = getComputedStyle(node);
+            if (style.visibility === 'hidden') continue;
+            this.iceControls.push({ node, r: cornerRadius(node, rect.width, rect.height),
+                delay: Math.min(0.54, 0.27 + this.iceControls.length * 0.037) });
+        }
+        // Normalized, connected fractures: the larger faults travel first, then thin side fissures.
+        this.iceFaults = [];
+        const fault = (start, delta, count, seed, delay, weight) => {
+            const points = [start];
+            for (let i = 1; i <= count; i++) {
+                const k = i / count, j = (this.seed(seed + i) - 0.5) * Math.sin(k * Math.PI) * 0.12;
+                points.push([start[0] + k * delta[0] - j * delta[1], start[1] + k * delta[1] + j * delta[0]]);
+            }
+            this.iceFaults.push({ points, delay, weight });
+            return points;
+        };
+        [[-0.42,-0.30], [0.39,-0.14], [0.16,0.39], [-0.24,0.17]].forEach(([x, y], i) => {
+            const stem = fault([0.50, 0.50], [x, y], 10, 71 * i, 0.018 * i, 1.35);
+            fault(stem[5], [x * 0.34 - y * 0.30, y * 0.34 + x * 0.30], 5, 21 * i + 7, 0.13 + 0.018 * i, 0.75);
+        });
+    }
+
+    iceControlFrost(progress) {
+        const c = this.ctx;
+        for (const { node, delay, r } of this.iceControls) {
+            const amount = this.ease((progress - delay) / (1 - delay));
+            if (!amount || !node.isConnected) continue;
+            const { left: x, top: y, width: w, height: h } = node.getBoundingClientRect();
+            if (w < 2 || h < 2 || x >= this.width || y >= this.height || x + w <= 0 || y + h <= 0) continue;
+            c.save(); c.translate(x, y);
+            c.beginPath(); c.roundRect(0, 0, w, h, Math.min(r, w / 2, h / 2)); c.clip();
+            if (amount < 1) {
+                const front = (w + h * 0.54) * amount;
+                c.beginPath(); c.moveTo(0, 0); c.lineTo(front, 0);
+                c.lineTo(front - h * 0.54, h); c.lineTo(-h, h); c.closePath(); c.clip();
+            }
+            c.globalAlpha = this.alpha;
+            c.fillStyle = 'rgba(118,198,227,0.23)'; c.fillRect(0, 0, w, h);
+            const edge = Math.min(w, h) * 0.95;
+            c.globalAlpha = this.alpha * 0.82;
+            c.drawImage(this.images.frost, 0, 0, edge, edge);
+            c.translate(w, h); c.rotate(Math.PI); c.drawImage(this.images.frost, 0, 0, edge * 0.74, edge * 0.74);
+            c.beginPath(); c.roundRect(0, 0, w, h, Math.min(r, w / 2, h / 2));
+            c.strokeStyle = 'rgba(222,250,255,0.9)'; c.lineWidth = 2.5; c.stroke(); c.restore();
+        }
     }
 
     ice(t, p) {
@@ -305,13 +396,19 @@ class LiveEffectsStage {
             this.once('ice-grow', () => {
                 this.iceAudioCleanup = window.app?.soundMgr?.iceAge?.(ICE_AGE_GROWTH_SECONDS);
             });
-            if (t >= ICE_AGE_GROWTH_SECONDS) this.once('ice-lock', () => window.app?.soundMgr?.iceAgeCrack?.());
+            if (t >= ICE_AGE_GROWTH_SECONDS) this.once('ice-lock', () => {
+                if (t - ICE_AGE_GROWTH_SECONDS < 0.5) this.iceCrackCleanup = window.app?.soundMgr?.iceAgeCrack?.();
+            });
         }
         if (progress <= 0) return;
         const front = Math.hypot(b.width, b.height) * 0.5 * progress;
         const radius = front + Math.min(front * 0.75, 32);
-        this.shade(0.09);
-        c.save(); c.beginPath(); c.rect(b.x, b.y, b.width, b.height); c.clip();
+        c.fillStyle = this.rgba('6, 24, 38', this.alpha * 0.13);
+        c.fillRect(0, 0, this.width, this.height);
+        c.save(); c.beginPath();
+        if (this.iceBoardRadius) c.roundRect(b.x, b.y, b.width, b.height, this.iceBoardRadius);
+        else c.rect(b.x, b.y, b.width, b.height);
+        c.clip();
         for (const [x, y] of this.iceCorners) {
             const ice = c.createRadialGradient(b.x + x, b.y + y, 0, b.x + x, b.y + y, radius);
             ice.addColorStop(0, this.rgba('210, 236, 247', 0.48 * this.alpha));
@@ -350,11 +447,27 @@ class LiveEffectsStage {
             this.dot(x, y, 0.8, '243, 252, 255', glint * 0.7 * this.ease((1 - progress) / 0.08));
         }
         if (!this.reduced && t >= ICE_AGE_GROWTH_SECONDS) {
-            const lockGlow = 1 - this.ease((t - ICE_AGE_GROWTH_SECONDS) / 0.42);
+            const age = t - ICE_AGE_GROWTH_SECONDS;
+            for (const { points, delay, weight } of this.iceFaults) {
+                const last = this.clamp((age - delay) / 0.22) * (points.length - 1);
+                if (last <= 0) continue;
+                const whole = Math.floor(last), fraction = last - whole;
+                c.save(); c.translate(b.x, b.y); c.globalAlpha = this.alpha * (0.64 + 0.36 * Math.exp(-age * 2));
+                c.beginPath(); c.moveTo(points[0][0] * b.width, points[0][1] * b.height);
+                for (let i = 1; i <= whole; i++) c.lineTo(points[i][0] * b.width, points[i][1] * b.height);
+                if (fraction) {
+                    const a = points[whole], z = points[whole + 1];
+                    c.lineTo((a[0] + (z[0] - a[0]) * fraction) * b.width, (a[1] + (z[1] - a[1]) * fraction) * b.height);
+                }
+                c.strokeStyle = 'rgba(32,83,111,0.74)'; c.lineWidth = weight + 1.3; c.stroke();
+                c.strokeStyle = 'rgba(226,251,255,0.94)'; c.lineWidth = weight; c.stroke(); c.restore();
+            }
+            const lockGlow = 1 - this.ease(age / 0.42);
             this.glow(b.x + b.width / 2, b.y + b.height / 2, Math.min(b.width, b.height) * 0.27,
                 '229, 250, 255', lockGlow * 0.32);
         }
         c.restore();
+        this.iceControlFrost(progress);
     }
 
     prepareNeonFrame() {
@@ -367,27 +480,70 @@ class LiveEffectsStage {
             return;
         }
 
-        const { cyan, pink } = NEON_PULSE_COLORS;
+        const { cyan, pink, white } = NEON_PULSE_COLORS;
         const radius = Math.min(22, width * 0.09, height * 0.09);
         const perimeter = 2 * (width + height - 4 * radius) + 2 * Math.PI * radius;
-        const rail = this.ctx.createLinearGradient(x, y, right, bottom);
+        const pad = 18, backingWidth = width + pad * 2, backingHeight = height + pad * 2;
+        const density = Math.min(this.canvas.width / this.width, 1280 / Math.max(backingWidth, backingHeight));
+        const texture = (w, h) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.ceil(w * density); canvas.height = Math.ceil(h * density);
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(canvas.width / w, 0, 0, canvas.height / h, 0, 0);
+            return { canvas, ctx };
+        };
+        // Bake the glass, its shadow and diffuse light only on start/resize.
+        const tube = texture(backingWidth, backingHeight), g = tube.ctx;
+        const rail = g.createLinearGradient(pad, pad, pad + width, pad + height);
         rail.addColorStop(0, this.rgba(cyan, 1));
         rail.addColorStop(0.37, this.rgba(cyan, 1));
         rail.addColorStop(0.63, this.rgba(pink, 1));
         rail.addColorStop(1, this.rgba(pink, 1));
-        const scan = this.ctx.createLinearGradient(x, 0, right, 0);
-        scan.addColorStop(0, this.rgba(cyan, 0));
-        scan.addColorStop(0.12, this.rgba(cyan, 1));
-        scan.addColorStop(0.5, this.rgba(NEON_PULSE_COLORS.white, 1));
-        scan.addColorStop(0.88, this.rgba(pink, 1));
-        scan.addColorStop(1, this.rgba(pink, 0));
-        this.neonFrame = { x, y, width, height, radius, perimeter, rail, scan };
+        g.beginPath(); g.roundRect(pad, pad, width, height, radius);
+        g.strokeStyle = '#120f27'; g.lineWidth = 7; g.globalAlpha = .83; g.stroke();
+        g.strokeStyle = rail;
+        for (let weight = 30; weight >= 4; weight -= 2) {
+            g.lineWidth = weight; g.globalAlpha = .13 * Math.exp(-weight / 13); g.stroke();
+        }
+        g.globalAlpha = .93; g.lineWidth = 3.8; g.stroke();
+        g.globalAlpha = .78; g.strokeStyle = this.rgba(white, 1); g.lineWidth = 1; g.stroke();
+
+        let beam = null;
+        const tail = Math.min(37, Math.max(15, height * .07));
+        if (!this.reduced) {
+            const strip = texture(backingWidth, tail + pad), s = strip.ctx;
+            const spectrum = s.createLinearGradient(pad, 0, pad + width, 0);
+            spectrum.addColorStop(0, this.rgba(cyan, 1));
+            spectrum.addColorStop(.36, this.rgba(cyan, 1));
+            spectrum.addColorStop(.64, this.rgba(pink, 1));
+            spectrum.addColorStop(1, this.rgba(pink, 1));
+            // One continuous reflection, with a short dark lip for pale boards.
+            s.fillStyle = spectrum;
+            for (let dy = 0; dy < tail; dy++) {
+                s.globalAlpha = .28 * Math.exp(-dy / (tail * .32));
+                s.fillRect(pad, tail - dy - 1, width, 1);
+            }
+            s.globalAlpha = .34; s.fillStyle = '#211a40'; s.fillRect(pad, tail + 1, width, 1.5);
+            s.globalAlpha = .92; s.fillStyle = spectrum; s.fillRect(pad, tail - 1.5, width, 3);
+            s.globalAlpha = .72; s.fillStyle = this.rgba(white, 1); s.fillRect(pad, tail - .5, width, 1);
+            s.globalAlpha = 1;
+            for (const [cx, color] of [[pad, cyan], [pad + width, pink]]) {
+                const light = s.createRadialGradient(cx, tail, 0, cx, tail, 14);
+                light.addColorStop(0, this.rgba(white, 1));
+                light.addColorStop(.17, this.rgba(color, .98));
+                light.addColorStop(.43, this.rgba(color, .48));
+                light.addColorStop(1, this.rgba(color, 0));
+                s.fillStyle = light; s.fillRect(cx - 14, tail - 14, 28, 28);
+            }
+            beam = strip.canvas;
+        }
+        this.neonFrame = { x, y, width, height, radius, perimeter, pad, tail, tube: tube.canvas, beam };
     }
 
     neon(t) {
         if (!this.neonFrame) return;
         const c = this.ctx;
-        const { x, y, width, height, radius, perimeter, rail, scan } = this.neonFrame;
+        const { x, y, width, height, radius, perimeter, pad, tail, tube, beam } = this.neonFrame;
         const { cyan, pink, white } = NEON_PULSE_COLORS;
         const stroke = (color, weight, alpha) => {
             c.strokeStyle = color;
@@ -395,96 +551,77 @@ class LiveEffectsStage {
             c.globalAlpha = alpha * this.alpha;
             c.stroke();
         };
-        const framePath = inset => {
-            c.beginPath();
-            c.roundRect(x + inset, y + inset, width - 2 * inset, height - 2 * inset, Math.max(0, radius - inset));
-        };
-
         c.save();
+        c.globalAlpha = this.alpha;
+        c.drawImage(tube, x - pad, y - pad, width + 2 * pad, height + 2 * pad);
+        if (!beam) { c.restore(); return; }
         c.lineCap = 'round';
-        c.lineJoin = 'round';
-        framePath(5);
-        stroke(rail, 1, 0.36);
-
-        framePath(0);
-        // The dark rail beneath the light keeps its silhouette on bright boards.
-        stroke('#100d24', 10, 0.87);
-        stroke(rail, 21, 0.08);
-        stroke(rail, 12, 0.18);
-        stroke(rail, 6, 0.44);
-        stroke(rail, 2.6, 0.92);
-        if (!this.reduced) {
-            const length = Math.min(250, perimeter * 0.14);
-            const lead = perimeter * (0.08 + t * 0.27);
-            const trail = (size, head) => {
+        c.beginPath(); c.roundRect(x, y, width, height, radius);
+        const length = Math.min(145, perimeter * .105);
+        const lead = perimeter * (.08 + t * .27);
+        [cyan, pink].forEach((color, i) => {
+            const head = lead + perimeter * .5 * i;
+            const trail = size => {
                 c.setLineDash([size, perimeter - size]);
                 c.lineDashOffset = size - head;
             };
-            [cyan, pink].forEach((color, i) => {
-                const head = lead + perimeter * 0.5 * i;
-                trail(length, head);
-                stroke(this.rgba(color, 1), 25, 0.15);
-                stroke(this.rgba(color, 1), 11, 0.6);
-                trail(length * 0.7, head);
-                stroke(this.rgba(color, 1), 5.5, 0.97);
-                trail(length * 0.32, head);
-                stroke(this.rgba(white, 1), 2.1, 0.98);
-            });
-        }
+            trail(length); stroke(this.rgba(color, 1), 7, .34);
+            trail(length * .58); stroke(this.rgba(color, 1), 5.2, .88);
+            trail(length * .24); stroke(this.rgba(white, 1), 2.1, .96);
+            trail(2); stroke(this.rgba(white, 1), 4, .99);
+        });
         c.restore();
 
-        if (this.reduced) return;
         const secondPass = t >= 2.52;
         const progress = (t - (secondPass ? 2.52 : 0.56)) / 1.68;
         if (progress <= 0 || progress >= 1) return;
-        const beamY = y + height * (secondPass ? 1 - progress : progress);
+        const beamY = y + radius + (height - 2 * radius) * (secondPass ? 1 - progress : progress);
         const strength = Math.sin(Math.PI * progress) * this.alpha;
         c.save();
-        framePath(6);
-        c.clip();
-        c.fillStyle = scan;
-        // A short falloff behind the scan leaves the score underneath readable.
-        const direction = secondPass ? 1 : -1;
-        for (let band = 1; band <= 12; band++) {
-            c.globalAlpha = strength * 0.18 * (1 - band / 13) ** 1.5;
-            c.fillRect(x, beamY + direction * band * 2, width, 2);
-        }
-        c.globalAlpha = strength * 0.85;
-        c.fillRect(x, beamY - 0.75, width, 1.5);
+        c.beginPath(); c.roundRect(x - 10, y - 10, width + 20, height + 20, radius + 10); c.clip();
+        c.translate(x, beamY); c.scale(1, secondPass ? -1 : 1);
+        c.globalAlpha = strength;
+        c.drawImage(beam, -pad, -tail, width + 2 * pad, tail + pad);
         c.restore();
     }
 
     prepareThunder() {
         const w = this.width, h = this.height, b = this.board;
         this.thunderImpact = [b.x + b.width * 0.57, Math.min(h - 40, b.y + b.height * 0.62)];
-        const start = [w * 0.43, h * 0.11], end = this.thunderImpact;
-        let trunk = [start, end];
-        const displacement = Math.min(w * 0.12, (end[1] - start[1]) * 0.15, 58);
-        for (let depth = 0; depth < 6; depth++) {
-            const split = [trunk[0]];
-            for (let i = 1; i < trunk.length; i++) {
-                const a = trunk[i - 1], b = trunk[i];
-                split.push([(a[0] + b[0]) / 2 + (this.seed(i * 17 + depth * 97 + 81) - 0.5)
-                    * displacement * Math.pow(0.55, depth), (a[1] + b[1]) / 2], b);
+        const end = this.thunderImpact, span = Math.min(w * 0.73, h * 0.46);
+        const start = [Math.max(18, end[0] - span * 0.54), h * 0.085];
+        // Large directional changes give the channel its silhouette. Add finer
+        // displacements perpendicular to each segment without moving its endpoints.
+        const jag = (anchors, levels, key) => {
+            let points = anchors;
+            for (let level = 0; level < levels; level++) {
+                const split = [points[0]];
+                for (let i = 1; i < points.length; i++) {
+                    const [ax, ay] = points[i - 1], [bx, by] = points[i];
+                    const bend = (this.seed(key + i * 17 + level * 97) - 0.5) * 0.52;
+                    split.push([Math.max(5, Math.min(w - 5, (ax + bx) / 2 - (by - ay) * bend)),
+                        Math.max(2, Math.min(h - 2, (ay + by) / 2 + (bx - ax) * bend))], points[i]);
+                }
+                points = split;
             }
-            trunk = split;
-        }
+            return points;
+        };
+        const trunk = jag([[0, 0], [0.16, 0.43], [0.27, 0.22], [0.41, 0.70], [0.53, 0.47],
+            [0.61, 0.38], [0.75, 0.84], [0.81, 0.64], [1, 1]].map(([y, x]) =>
+            [start[0] + (end[0] - start[0]) * x, start[1] + (end[1] - start[1]) * y]), 3, 81);
         this.thunderTrunk = trunk;
         this.thunderBranches = [];
-        for (let branch = 0; branch < 6; branch++) {
-            const origin = this.thunderTrunk[10 + branch * 8], side = branch % 2 ? 1 : -1;
-            const length = Math.min(w * (0.16 + this.seed(branch + 51) * 0.1), h * 0.18);
-            const points = Array.from({ length: 10 }, (_, i) => {
-                const u = i / 9;
-                return [Math.max(12, Math.min(w - 12, origin[0] + side * length * u
-                    + Math.sin(u * Math.PI) * (this.seed(i + branch * 37) - 0.5) * length * 0.38)),
-                origin[1] + length * u * 0.83 + Math.sin(u * Math.PI) * (this.seed(i + branch * 29 + 2) - 0.5) * 14];
-            });
+        for (const [branch, [index, reach, drop]] of [[7, -0.27, 0.4], [15, 0.61, 0.55],
+            [24, -0.45, 0.59], [31, 0.28, 0.23], [46, 0.42, 0.46], [53, -0.26, 0.31]].entries()) {
+            const origin = trunk[index];
+            const offset = (p, x, y) => [Math.max(9, Math.min(w - 9, p[0] + x * span)),
+                Math.max(5, Math.min(h - 5, p[1] + y * span))];
+            const points = jag([origin, offset(origin, reach * 0.48, drop * 0.21),
+                offset(origin, reach * 0.55, drop * 0.57), offset(origin, reach, drop)], 3, branch * 127);
             this.thunderBranches.push(points);
-            const fork = points[4];
-            this.thunderBranches.push([fork, [fork[0] - side * length * 0.14, fork[1] + length * 0.14],
-                [fork[0] - side * length * 0.09, fork[1] + length * 0.24],
-                [fork[0] - side * length * 0.24, fork[1] + length * 0.39]]);
+            const fork = points[8 + branch];
+            this.thunderBranches.push(jag([fork, offset(fork, reach * 0.31, drop * 0.09),
+                offset(fork, reach * 0.53, drop * 0.21)], 2, 200 + branch));
         }
         // Rasterize all glowing branches once; frames reveal and fade this cached layer.
         this.thunderBolt ||= document.createElement('canvas');
@@ -493,20 +630,34 @@ class LiveEffectsStage {
         const c = this.thunderBolt.getContext('2d');
         c.setTransform(scale, 0, 0, scale, 0, 0);
         c.lineCap = 'round'; c.lineJoin = 'round';
-        const stroke = (points, color, alpha, width) => {
-            c.strokeStyle = this.rgba(color, alpha); c.lineWidth = width;
-            c.beginPath(); points.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke();
+        const ribbon = (points, width, color, alpha, tip) => {
+            const sides = points.map(([x, y], i) => {
+                const a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
+                const dx = b[0] - a[0], dy = b[1] - a[1], length = Math.hypot(dx, dy) || 1;
+                const r = width * (1 - (1 - tip) * i / (points.length - 1)) * (0.87 + 0.24 * this.seed(i + 31)) / length;
+                return [[x - dy * r, y + dx * r], [x + dy * r, y - dx * r]];
+            });
+            c.fillStyle = this.rgba(color, alpha);
+            c.beginPath(); c.moveTo(...sides[0][0]);
+            sides.forEach(pair => c.lineTo(...pair[0]));
+            for (let i = sides.length - 1; i >= 0; i--) c.lineTo(...sides[i][1]);
+            c.closePath(); c.fill();
         };
-        for (const points of this.thunderBranches) {
-            c.shadowColor = this.rgba(THUNDER_COLORS.blue, 0.85); c.shadowBlur = 11;
-            stroke(points, THUNDER_COLORS.blue, 0.65, 1.7);
-            c.shadowBlur = 0; stroke(points, THUNDER_COLORS.white, 0.82, 0.65);
-        }
-        c.shadowColor = this.rgba(THUNDER_COLORS.violet, 0.8); c.shadowBlur = 25;
-        stroke(this.thunderTrunk, THUNDER_COLORS.blue, 0.76, 4);
-        c.shadowColor = this.rgba(THUNDER_COLORS.blue, 1); c.shadowBlur = 10;
-        stroke(this.thunderTrunk, THUNDER_COLORS.blue, 0.95, 2.8);
-        c.shadowBlur = 0; stroke(this.thunderTrunk, THUNDER_COLORS.white, 1, 1.6);
+        const core = Math.min(3.8, Math.max(2.2, span * 0.011));
+        this.thunderBranches.forEach((path, i) => {
+            const weight = i % 2 ? 0.32 : 0.8;
+            c.shadowColor = this.rgba(THUNDER_COLORS.blue, 0.95); c.shadowBlur = 9;
+            ribbon(path, core * weight, THUNDER_COLORS.blue, 0.74, 0.04);
+            c.shadowBlur = 0; ribbon(path, core * weight * 0.56, THUNDER_COLORS.white, 0.97, 0.02);
+        });
+        c.shadowColor = this.rgba(THUNDER_COLORS.violet, 0.9); c.shadowBlur = 22;
+        c.filter = 'blur(6px)';
+        ribbon(trunk, core * 2.6, THUNDER_COLORS.blue, 0.48, 0.6);
+        c.shadowColor = this.rgba(THUNDER_COLORS.blue, 1); c.shadowBlur = 9;
+        c.filter = 'blur(1.8px)';
+        ribbon(trunk, core * 1.4, THUNDER_COLORS.blue, 0.95, 0.55);
+        c.filter = 'none'; c.shadowBlur = 0;
+        ribbon(trunk, core * 0.79, '255, 255, 255', 1, 0.5);
         if (!this.thunderGlow) {
             this.thunderGlow = document.createElement('canvas');
             this.thunderGlow.width = this.thunderGlow.height = 96;
@@ -517,20 +668,12 @@ class LiveEffectsStage {
             light.addColorStop(1, this.rgba(THUNDER_COLORS.blue, 0));
             g.fillStyle = light; g.fillRect(0, 0, 96, 96);
         }
-        this.thunderSparks = Array.from({ length: this.reduced ? 0 : this.mobile ? 48 : 76 }, (_, i) => {
-            const angle = Math.PI + this.seed(i + 198) * Math.PI;
-            const speed = 35 + this.seed(i + 29) * Math.min(w * 0.3, 130);
-            return { vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                life: 0.85 + this.seed(i + 73) * 0.8, size: 2.5 + this.seed(i + 36) * 3 };
-        });
         this.thunderCloudHeight = Math.min(200, h * 0.25, w * 0.42);
         this.thunderClouds = [
             { x: w * 0.13, y: h * 0.035, size: 0.96, speed: 1.8, opacity: 0.64 },
             { x: w * 0.85, y: h * 0.045, size: 1.06, speed: -2.1, opacity: 0.67 },
             { x: w * 0.49, y: h * 0.075, size: 1, speed: 1.2, opacity: 0.88 }
         ];
-        this.thunderCloudArcs = [0.34, 0.66].map((offset, index) => Array.from({ length: 9 }, (_, i) =>
-            [w * (offset + i * 0.023), h * 0.1 + (this.seed(i + index * 43) - 0.5) * this.thunderCloudHeight * 0.16]));
         this.overlay.dataset.thunderBranches = String(this.thunderBranches.length);
     }
 
@@ -540,13 +683,16 @@ class LiveEffectsStage {
         const impactAge = age - THUNDER_GROW_SECONDS;
         const strength = calm ? 0.32 : age < 0 ? 0 : age < THUNDER_GROW_SECONDS
             ? 0.2 + 0.8 * this.ease(age / THUNDER_GROW_SECONDS) : Math.exp(-impactAge * 3.3);
-        const charged = calm ? 0 : Math.exp(-Math.pow((t - 0.68) / 0.16, 2)) * 0.3
-            + Math.exp(-Math.pow((t - 1.21) / 0.16, 2)) * 0.5;
-        const flash = calm || impactAge < 0 ? 0 : Math.exp(-impactAge * 11);
+        const charged = calm ? 0 : this.ease(t / THUNDER_STRIKE_SECONDS) * 0.57 * Math.exp(-Math.max(age, 0) * 3);
+        const flash = calm ? 0 : impactAge < 0 ? this.ease(age / THUNDER_GROW_SECONDS) : Math.exp(-impactAge * 7);
         this.overlay.dataset.thunderPhase = calm ? 'holding' : t < THUNDER_STRIKE_SECONDS ? 'gathering'
             : impactAge < 0.65 ? 'strike' : t < 3.5 ? 'afterglow' : 'clearing';
-        c.fillStyle = this.rgba('4, 8, 18', this.alpha * (calm ? 0.3 : 0.6));
+        c.fillStyle = this.rgba('4, 8, 18', this.alpha * (calm ? 0.3 : 0.24 + 0.43 * this.ease(t / 0.8) * Math.exp(-Math.max(impactAge, 0) * 0.9)));
         c.fillRect(0, 0, this.width, this.height);
+        if (flash > 0.005) {
+            c.fillStyle = this.rgba('207, 224, 255', this.alpha * flash * 0.36);
+            c.fillRect(0, 0, this.width, this.height);
+        }
         if (!calm) this.once('thunder-audio', () => {
             if (t < 0.15) this.thunderAudioCleanup = window.app?.soundMgr?.thunder?.(THUNDER_STRIKE_SECONDS + THUNDER_GROW_SECONDS);
         });
@@ -557,77 +703,123 @@ class LiveEffectsStage {
             this.sprite(this.thunderBolt, this.width / 2, this.height / 2, this.width, 0, strength, 1, this.height);
             c.restore();
         }
-        const cloudLight = Math.max(charged, flash * 0.68);
+        const cloudLight = Math.max(charged, flash);
         for (const cloud of this.thunderClouds) {
             const height = this.thunderCloudHeight * cloud.size;
             const x = cloud.x + (calm ? 0 : Math.sin(t * 0.45) * cloud.speed * 4);
             const y = cloud.y + (calm ? 0 : Math.sin(t * 0.36 + cloud.size) * 3);
             this.sprite(this.images.cloud, x, y, height * 3, 0, cloud.opacity, 1, height);
-            if (cloudLight > 0.01) {
-                c.save(); c.globalCompositeOperation = 'screen';
-                this.sprite(this.thunderGlow, x, y + height * 0.15, height * 1.55, 0, cloudLight * 0.42, 1, height * 0.65);
-                c.restore();
-            }
         }
-        if (!calm) for (let i = 0; i < this.thunderCloudArcs.length; i++) {
-            const pulse = Math.exp(-Math.pow((t - (i ? 1.19 : 0.66)) / 0.095, 2));
-            if (pulse > 0.02) this.line(this.thunderCloudArcs[i], THUNDER_COLORS.blue, pulse * 0.48, 0.9);
+        if (cloudLight > 0.01) {
+            const [x, y] = this.thunderTrunk[0], size = this.thunderCloudHeight;
+            c.save(); c.globalCompositeOperation = 'screen';
+            this.sprite(this.thunderGlow, x, y, size * 2.3, 0, cloudLight * 0.78, 1, size * 0.9);
+            c.restore();
         }
-        if (!calm && impactAge >= 0) {
+        if (!calm && impactAge >= 0 && impactAge < 1.6) {
             this.once('thunder-impact', () => { if (impactAge < 0.16) window.app?.vibrate?.([35, 40, 65]); });
             const [x, y] = this.thunderImpact;
             c.save(); c.globalCompositeOperation = 'screen';
-            this.sprite(this.thunderGlow, x, y, Math.min(this.width * 0.72, 300), 0, flash * 0.83);
-            if (impactAge < 1.1) {
-                const radius = 8 + Math.min(this.width * 0.38, 170) * this.ease(impactAge / 1.1);
-                c.beginPath(); c.ellipse(x, y, radius, radius * 0.31, 0, 0, Math.PI * 2);
-                c.strokeStyle = this.rgba(THUNDER_COLORS.blue, (1 - impactAge / 1.1) * 0.6 * this.alpha);
-                c.lineWidth = 1.3; c.stroke();
-            }
-            for (const spark of this.thunderSparks) {
-                if (impactAge > spark.life) continue;
-                const at = time => [x + spark.vx * time, y + spark.vy * time + 45 * time * time];
-                const point = at(impactAge), tail = at(Math.max(0, impactAge - 0.055));
-                const opacity = Math.pow(1 - impactAge / spark.life, 1.3);
-                this.line([tail, point], THUNDER_COLORS.blue, opacity * 0.7, 0.9);
-                this.sprite(this.thunderGlow, point[0], point[1], spark.size, 0, opacity);
-            }
+            const spread = Math.min(510, this.board.width * 0.94) * (0.78 + 0.36 * this.ease(impactAge / 0.6));
+            this.sprite(this.thunderGlow, x, y, spread, 0, 0.92 * Math.exp(-impactAge * 3.1), 1, spread * 0.28);
+            this.sprite(this.thunderGlow, x, y, spread * 0.46, 0, flash);
             c.restore();
         }
     }
 
-    wedding(t, p) {
-        this.shade(0.08);
-        const beat = Math.sin(t * Math.PI * 5);
-        const entry = this.ease(p / 0.14) * this.ease((1 - p) / 0.15);
-        const instrumentWidth = Math.min(146, this.width * 0.31);
-        const edge = instrumentWidth * 0.27;
-        for (let i = 0; i < 4; i++) {
-            const left = i % 2 === 0;
-            const x = left ? -instrumentWidth * (1 - entry) + edge : this.width + instrumentWidth * (1 - entry) - edge;
-            const y = this.height * (i < 2 ? 0.26 : 0.65) + (this.reduced ? 0 : Math.sin(t * 8 + i) * 5);
-            this.sprite(this.images.trumpet, x, y, instrumentWidth, (left ? -1 : 1) * beat * 0.035,
-                entry, left ? 1 : -1);
-            for (let wave = 0; wave < 3 && !this.reduced; wave++) {
-                const phase = (t * 1.9 + wave / 3) % 1;
-                const radius = 12 + phase * 45;
-                this.ctx.beginPath();
-                this.ctx.strokeStyle = this.rgba(this.palette.main, (1 - phase) * 0.35 * this.alpha);
-                this.ctx.lineWidth = 1.5;
-                this.ctx.arc(x + (left ? 1 : -1) * instrumentWidth * 0.42, y - 15, radius,
-                    left ? -0.7 : Math.PI - 0.7, left ? 0.7 : Math.PI + 0.7); this.ctx.stroke();
+    prepareWedding() {
+        const b = this.board, w = this.width, h = this.height;
+        const width = Math.min(w * 0.94, Math.max(b.width * 1.12, w * 0.48), 660);
+        const mid = Math.max(width / 2, Math.min(w - width / 2, b.x + b.width / 2));
+        const floor = Math.min(h * 0.77, Math.max(h * 0.45, b.y + b.height * 0.78));
+        const cast = Math.min(width * 0.70, h * 0.59);
+        this.weddingSet = { width, mid, floor, cast, hem: Math.min(76, width * 0.17, h * 0.12) };
+        if (this.weddingCloth) return;
+        const cloth = this.weddingCloth = document.createElement('canvas');
+        cloth.width = 640; cloth.height = 90;
+        const c = cloth.getContext('2d'), { main, accent, shade } = this.palette;
+        const ink = (color, alpha = 1) => this.rgba(color, alpha);
+        c.fillStyle = ink(accent); c.fillRect(0, 0, 640, 79);
+        c.fillStyle = ink(shade, 0.46); c.fillRect(0, 0, 640, 79);
+        c.fillStyle = ink(main, 0.62);
+        for (let x = 0; x < 640; x += 36) c.fillRect(x, 0, 18, 48);
+        for (let y = 0; y < 48; y += 24) c.fillRect(0, y, 640, 12);
+        const folds = c.createLinearGradient(0, 0, 640, 0);
+        for (let i = 0; i <= 20; i++) folds.addColorStop(i / 20, i % 2 ? ink(shade, 0.24) : ink(accent, 0.08));
+        c.fillStyle = folds; c.fillRect(0, 0, 640, 79);
+        c.fillStyle = ink(shade, 0.9); c.fillRect(0, 48, 640, 25);
+        for (let x = 0; x < 640; x += 4) {
+            c.fillStyle = ink(accent, 0.14); c.fillRect(x, 0, 1, 78);
+            c.fillStyle = ink(main, 0.8); c.fillRect(x, 78, 2, 7 + ((x / 4) % 3) * 2);
+        }
+        c.fillStyle = ink(accent, 0.86);
+        for (const y of [1, 48, 72, 76]) c.fillRect(0, y, 640, 1.6);
+        c.translate(0, 36);
+        // A stepped lozenge woven from short stitches, not a stretched PNG border.
+        for (let x = 0; x < 640; x += 32) {
+            for (let row = -3; row <= 3; row++) {
+                const n = 3 - Math.abs(row);
+                c.fillStyle = ink(main); c.fillRect(x + 14 - n * 3, 23 + row * 3, n * 6 + 4, 3);
+                c.fillStyle = ink(accent);
+                if (n > 1) c.fillRect(x + 15 - (n - 2) * 3, 23 + row * 3, (n - 2) * 6 + 2, 3);
+            }
+            c.fillStyle = ink(accent); c.fillRect(x, 23, 3, 3);
+        }
+        this.weddingPetals = Array.from({ length: this.mobile ? 28 : 44 }, (_, i) => ({
+            side: i % 2 ? 1 : -1, beat: (i % 3 === 0 ? 4 : i % 3 === 1 ? 10 : 16) + this.seed(i + 40) * 0.85,
+            lift: 0.66 + this.seed(i + 7) * 0.52, speed: 0.11 + this.seed(i + 63) * 0.27, spin: this.seed(i + 31) * 8
+        }));
+    }
+
+    wedding(t) {
+        const c = this.ctx, { mid, floor, cast, width, hem } = this.weddingSet, calm = this.reduced;
+        if (!calm) this.once('wedding-music', () => {
+            this.weddingMusic = true;
+            window.app?.soundMgr?.balkanTrumpet?.(WEDDING_BEAT, WEDDING_PICKUP);
+        });
+        const beat = calm ? 6 : Math.max(0, (t - WEDDING_PICKUP) / WEDDING_BEAT);
+        const entry = calm ? 1 : this.ease((beat + 0.1) / 1.6);
+        const step = calm ? 0 : Math.sin(beat * Math.PI / 4);
+        const hop = calm ? 0 : Math.sin(Math.PI * (beat % 1)) ** 2;
+        const castH = cast * this.images.dancers.naturalHeight / this.images.dancers.naturalWidth;
+        this.shade(0.30 * entry);
+        // Unfurl the runner out from the centre, keeping its weave at full size.
+        c.save(); c.beginPath(); c.rect(mid - width * entry / 2, floor - 2, width * entry, hem + 4); c.clip();
+        this.sprite(this.weddingCloth, mid, floor + hem / 2, width, 0, 1, 1, hem); c.restore();
+        const horns = Math.min(width * 0.19, this.height * 0.22);
+        for (const side of [-1, 1]) {
+            const lift = calm ? 0 : Math.sin((beat - (side === 1 ? 0.5 : 0)) * Math.PI);
+            this.sprite(this.images.trumpet, mid + side * width * (0.395 + (1 - entry) * 0.2),
+                floor - castH * 0.84 - horns * 0.22 - lift * 2, horns,
+                side * (0.07 + 0.075 * lift), entry, -side);
+        }
+        c.save(); c.translate(mid + step * width * 0.044, floor + 1 - hop * Math.min(6, cast * 0.018));
+        c.transform(1, 0, -step * 0.034, 1 - hop * 0.012, 0, 0);
+        if (calm) this.sprite(this.images.dancers, 0, -castH / 2, cast);
+        else {
+            const castImage = this.images.dancers, unit = cast / 800;
+            c.translate(-cast / 2, -castH + (1 - entry) * 9); c.scale(unit, unit);
+            c.globalAlpha = this.alpha * entry;
+            c.drawImage(castImage, 0, 0, 800, 331, 0, 0, 800, 331);
+            for (let i = 0; i < 8; i++) {
+                const x = WEDDING_SHOES[i], w = WEDDING_SHOES[i + 1] - x;
+                const lift = Math.max(0, Math.sin(beat * Math.PI) * (i % 2 ? 1 : -1));
+                c.save(); c.translate(x, 330); c.transform(1, 0, lift * 0.16, 1 - lift * 0.16, 0, 0);
+                c.drawImage(castImage, x, 330, w, 80, 0, 0, w, 80); c.restore();
             }
         }
-        // A narrow woven band nods to a Balkan tablecloth while leaving the game readable.
-        this.ctx.fillStyle = this.rgba(this.palette.shade, 0.14 * this.alpha);
-        this.ctx.fillRect(0, this.height * 0.91, this.width, this.height * 0.09);
-        for (let x = 0; x < this.width; x += 12) this.line([[x, this.height * 0.91], [x + 12, this.height]], this.palette.main, 0.12, 1);
-        for (let i = 0; i < (this.reduced ? 15 : this.mobile ? 65 : 105); i++) {
-            const x = (this.seed(i + 5) * this.width + Math.sin(t * 1.8 + i) * 18 + this.width) % this.width;
-            const y = ((t * (65 + this.seed(i + 33) * 90) + this.seed(i + 72) * this.height * 2) % (this.height + 50)) - 30;
-            this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(t * 2 + i);
-            this.ctx.fillStyle = this.rgba(i % 3 ? this.palette.main : this.palette.accent, 0.65 * this.alpha);
-            this.ctx.fillRect(-2, -4, 3.5 * Math.cos(t * 4 + i), 8); this.ctx.restore();
+        c.restore();
+        if (!calm) for (const petal of this.weddingPetals) {
+            const a = (beat - petal.beat) / 3.6;
+            if (a <= 0 || a >= 1) continue;
+            const x = mid + petal.side * width * (0.37 - a * petal.speed);
+            const y = floor - castH * (0.88 + 2.5 * a * (1 - a) * petal.lift - a * 0.75);
+            c.save(); c.translate(x, y); c.rotate(petal.spin + 4 * a);
+            c.scale(0.42 + 0.58 * Math.abs(Math.cos(petal.spin + a * 5)), 1);
+            c.globalAlpha = this.alpha * this.ease((1 - a) / 0.23);
+            c.fillStyle = this.rgba(petal.side > 0 ? this.palette.accent : '255, 211, 196', 1);
+            c.beginPath(); c.moveTo(0, 4); c.bezierCurveTo(-7, 0, -3, -6, 0, -3);
+            c.bezierCurveTo(4, -7, 6, -1, 0, 4); c.fill(); c.restore();
         }
     }
 
@@ -653,13 +845,15 @@ class LiveEffectsStage {
             });
         }
         this.fireworkShells = FIREWORK_SHOW.map((cue, index) => {
-            const x = cue.x * this.width, y = cue.y * this.height;
+            const stageWidth = Math.min(this.width, this.height * 1.3);
+            const x = this.width * 0.5 + (cue.x - 0.5) * stageWidth, y = cue.y * this.height;
             const willow = cue.kind === 'willow', ring = cue.kind === 'ring';
             const duration = willow ? 2.25 : ring ? 1.85 : 1.75;
-            const count = this.reduced ? 26 : Math.round((this.mobile ? (willow ? 112 : ring ? 80 : 96)
-                : (willow ? 176 : ring ? 120 : 144)) * (cue.finale ? 1.15 : 1));
-            const radius = Math.max(20, Math.min(this.width * (cue.finale && willow ? 0.34 : 0.26),
-                this.height * (cue.finale && willow ? 0.3 : 0.23), x - 12, this.width - x - 12, y - 16));
+            const slot = willow ? 2 : ring ? 1 : cue.color === 3 || cue.color === 2 ? 3 : 0;
+            const count = this.reduced ? 0 : Math.round((this.mobile ? 20 : 34) * (willow ? 1.35 : 1));
+            const radius = Math.max(12, Math.min(stageWidth * (cue.finale && willow ? 0.44 : 0.32),
+                this.height * (willow ? 0.36 : 0.26), x - 12, this.width - x - 12,
+                (y - 12) / (2 * FIREWORK_PIVOTS[slot][1])));
             const particles = Array.from({ length: count }, (_, j) => {
                 const seed = this.seed(index * 991 + j + 11);
                 const angle = ring ? j * Math.PI * 2 / count + seed * 0.025 : j * 2.3999632297 + index;
@@ -672,13 +866,12 @@ class LiveEffectsStage {
                     vy: ring ? vx * 0.3 + vy * 0.95 : vy,
                     ttl: duration * (0.83 + this.seed(j + index * 79 + 23) * 0.17),
                     color: willow ? (j % 11 ? 0 : 4) : j % 8 ? cue.color : 4,
-                    size: 4.2 + seed * 3.1,
+                    size: 2.8 + seed * 3.1,
                     glint: j % 23 === 0,
-                    tail: willow ? 0.22 + seed * 0.11 : ring ? 0.08 : 0.12,
                     phase: this.seed(j + index * 47 + 14) * Math.PI * 2
                 };
             });
-            return { ...cue, index, x, y, radius, particles, duration,
+            return { ...cue, index, x, y, slot, radius, particles, duration,
                 drag: willow ? 1.35 : ring ? 2.2 : 1.9,
                 gravity: Math.min(this.height * (willow ? 0.105 : ring ? 0.025 : 0.044), willow ? 85 : ring ? 20 : 36) };
         });
@@ -702,9 +895,33 @@ class LiveEffectsStage {
         if (typeof cleanup === 'function') this.fireworkAudioCleanups.add(cleanup);
     }
 
+    fireworkBloom(shell, life) {
+        const c = this.ctx, [px, py] = FIREWORK_PIVOTS[shell.slot];
+        const u = life / shell.duration, willow = shell.kind === 'willow';
+        const spread = 0.045 + 0.955 * (1 - Math.exp(-life * (willow ? 4.3 : 5.8)));
+        const size = 2 * shell.radius * spread, fall = shell.gravity * life * life;
+        c.save(); c.translate(shell.x, shell.y + fall * (willow ? 0.28 : 0.18));
+        if (shell.index % 2) c.scale(-1, 1);
+        if (!willow) c.rotate((shell.index % 3 - 1) * 0.09 * spread);
+        const layer = (row, w, h, alpha) => {
+            if (alpha <= 0.002) return;
+            c.globalAlpha = this.alpha * alpha;
+            c.drawImage(this.images.blooms, shell.slot * 320, row * 320, 320, 320, -px * w, -py * h, w, h);
+        };
+        // The incandescent body burns out before its outer pearls drift down.
+        layer(0, size, size * (willow ? 0.72 + 0.46 * u : 0.96 + 0.08 * u),
+            1 - this.ease((u - 0.23) / 0.68));
+        const shimmer = willow && !this.reduced ? FIREWORK_CRACKLES.reduce((v, cue) =>
+            Math.max(v, 1 - this.clamp(Math.abs(life - cue) / 0.09)), 0) : 0;
+        const pearls = size * (0.92 + 0.14 * this.ease(u / 0.55));
+        layer(1, pearls, pearls * (willow ? 0.70 + 0.62 * u : 0.96 + 0.15 * u),
+            this.ease(life / 0.13) * (1 - this.ease((u - 0.55) / 0.45)) * (0.72 + 0.28 * shimmer));
+        c.restore();
+    }
+
     fireworks(t) {
         const c = this.ctx;
-        c.fillStyle = this.rgba('3, 6, 14', this.alpha * (this.reduced ? 0.3 : 0.66));
+        c.fillStyle = this.rgba('3, 6, 14', this.alpha * (this.reduced ? 0.56 : 0.83));
         c.fillRect(0, 0, this.width, this.height);
         this.overlay.dataset.fireworksPhase = this.reduced ? 'holding' : t < 3.48 ? 'launches' : t < 5.25 ? 'finale' : 'embers';
         let active = 0;
@@ -714,7 +931,7 @@ class LiveEffectsStage {
             if (age < 0 || age > shell.rise + shell.duration) continue;
             if (age < shell.rise) {
                 this.once('firework-launch-' + shell.index, () => {
-                    if (age < 0.13) this.fireworkSound('fireworkLaunch', shell.rise, shell.index);
+                    if (age < 0.13) this.fireworkSound('fireworkLaunch', shell.rise - age, shell.index);
                 });
                 const at = seconds => {
                     const u = this.clamp(seconds / shell.rise), rise = 1 - Math.pow(1 - u, 1.8);
@@ -733,8 +950,10 @@ class LiveEffectsStage {
             const life = age - shell.rise;
             active++;
             if (!this.reduced) this.once('firework-burst-' + shell.index, () => {
-                if (life < 0.15) this.fireworkSound('fireworkExplode', shell.kind, shell.index, shell.finale ? 0.78 : 1);
+                if (life < 0.15) this.fireworkSound('fireworkExplode', shell.kind, shell.index,
+                    shell.finale ? 0.78 : 1, shell.kind === 'willow' ? FIREWORK_CRACKLES : [], life);
             });
+            this.fireworkBloom(shell, life);
             for (const spark of shell.particles) {
                 if (life >= spark.ttl) continue;
                 const [x, y] = this.fireworkPoint(shell, spark, life);
@@ -742,9 +961,6 @@ class LiveEffectsStage {
                 const twinkle = this.reduced ? 1 : 0.82 + Math.sin(life * 17 + spark.phase) * 0.18;
                 const fade = Math.pow(1 - life / spark.ttl, 0.38) * this.ease((spark.ttl - life) / 0.34);
                 const alpha = fade * twinkle;
-                const trail = [3, 2, 1, 0].map(step => this.fireworkPoint(shell, spark, Math.max(0, life - spark.tail * step / 3)));
-                this.line(trail, FIREWORK_COLORS[spark.color], alpha * (shell.kind === 'willow' ? 0.78 : 0.58),
-                    shell.kind === 'willow' ? 1.15 : 0.95);
                 this.fireworkSpark(x, y, spark.size, spark.color, alpha);
                 if (spark.glint) this.fireworkSpark(x, y, spark.size * 1.35, 4, alpha * 0.6, true);
             }
@@ -761,10 +977,25 @@ class LiveEffectsStage {
         const size = Math.min(160, this.width * 0.235, this.height * 0.205);
         const rowSpacing = size * (ratio + 0.34);
         const centerY = this.height * 0.405;
-        this.droneTargets = DRONE_FORMATION.map(target => ({ ...target, size, ratio,
-            x: this.width / 2 + target.column * size * 1.25,
-            y: centerY + (target.row - 0.5) * rowSpacing
-        }));
+        if (this.droneFace) {
+            const paths = DRONE_DIGITS[this.droneFace];
+            const nodes = [...new Set(paths.flat())];
+            const halfWidth = Math.min(this.width * .28, size * 1.65);
+            const halfHeight = Math.min(this.height * .21, halfWidth * 1.28);
+            this.droneTargets = nodes.map((node, i) => {
+                const column = node % 3 - 1, row = Math.floor(node / 3);
+                const dy = this.droneFace === 1 && node === 3 ? -.38 : row - 1;
+                return { size, ratio, column, row, side: column, entry: .07 + i * .09,
+                    x: this.width / 2 + column * halfWidth, y: this.height * .48 + dy * halfHeight };
+            });
+            this.droneLinks = paths.flatMap(path => path.slice(1).map((node, i) => [nodes.indexOf(path[i]), nodes.indexOf(node)]));
+            this.overlay.dataset.face = String(this.droneFace);
+        } else {
+            this.droneTargets = DRONE_FORMATION.map(target => ({ ...target, size, ratio,
+                x: this.width / 2 + target.column * size * 1.25,
+                y: centerY + (target.row - 0.5) * rowSpacing
+            }));
+        }
         this.overlay.dataset.drones = String(this.droneTargets.length);
         this.overlay.dataset.droneSource = LiveEffectsStage.sources('drones', this.theme).drone;
         if (this.droneLight) return;
@@ -806,14 +1037,14 @@ class LiveEffectsStage {
                 ly: py + dx * Math.sin(tilt) + dy * Math.cos(tilt) };
         });
         this.overlay.dataset.lit = String(drones.filter(drone => drone.light > 0.5).length);
-        if (pulse > 0) this.glow(this.width / 2, this.height * 0.405, this.droneTargets[0].size * 2.4,
+        if (pulse > 0) this.glow(this.width / 2, this.height * (this.droneFace ? .48 : .405), this.droneTargets[0].size * 2.4,
             this.palette.main, pulse * 0.31);
 
-        // Draw the beams behind all five bodies so the PNG details stay readable.
+        // Short downlights leave room for the luminous strokes between the ships.
         for (const { lx, ly, width, column, light } of drones) {
             if (light < 0.02 || this.reduced) continue;
-            const depth = width * (1.14 + pulse * 0.65);
-            const spread = width * (0.22 + pulse * 0.14);
+            const depth = width * (this.droneFace ? .50 + pulse * .24 : 1.14 + pulse * .65);
+            const spread = width * (this.droneFace ? .12 + pulse * .07 : .22 + pulse * .14);
             const endX = lx + column * depth * 0.23;
             const beam = c.createLinearGradient(lx, ly, endX, ly + depth);
             beam.addColorStop(0, this.rgba(this.palette.accent, (0.37 + pulse * 0.28) * light * this.alpha));
@@ -824,6 +1055,25 @@ class LiveEffectsStage {
             c.lineTo(endX + spread, ly + depth); c.lineTo(endX - spread, ly + depth);
             c.closePath(); c.fill();
         }
+        if (this.droneLinks) {
+            const reveal = this.reduced ? 1 : this.ease((t - 2.35) / 1.38);
+            const opacity = this.reduced ? .82 : 1 - this.ease((t - 5.55) / .45);
+            if (reveal > 0 && opacity > 0) {
+                const weight = Math.max(2.6, this.droneTargets[0].size * .047);
+                c.save(); c.lineCap = 'round'; c.beginPath();
+                this.droneLinks.forEach(([from, to], i) => {
+                    const u = this.clamp(reveal * this.droneLinks.length - i);
+                    if (!u) return;
+                    const a = drones[from], b = drones[to];
+                    c.moveTo(a.lx, a.ly);
+                    c.lineTo(a.lx + (b.lx - a.lx) * u, a.ly + (b.ly - a.ly) * u);
+                });
+                c.globalAlpha = opacity * this.alpha;
+                c.strokeStyle = this.rgba(this.palette.main, .20); c.lineWidth = weight * (3.5 + pulse); c.stroke();
+                c.strokeStyle = this.rgba(this.palette.accent, .92); c.lineWidth = weight; c.stroke();
+                c.strokeStyle = 'rgba(255,255,245,.88)'; c.lineWidth = weight * .36; c.stroke(); c.restore();
+            }
+        }
         for (const { px, py, lx, ly, width, tilt, light } of drones) {
             this.sprite(this.images.drone, px, py, width, tilt);
             this.sprite(this.droneLight, lx, ly, width * (0.29 + pulse * 0.35), 0, 0.08 + light * 0.84);
@@ -833,14 +1083,16 @@ class LiveEffectsStage {
 
     prepareDust() {
         const atlas = this.dustAtlas = document.createElement('canvas');
-        const cell = 24;
-        atlas.width = atlas.height = cell * 3;
+        const cell = 48;
+        const flecks = !this.reduced && this.images.flecks;
+        atlas.width = cell * 3; atlas.height = cell * (flecks ? 7 : 3);
         const c = atlas.getContext('2d');
         const colors = [this.palette.main, this.palette.accent, '238, 248, 255'];
         for (const [tone, color] of colors.entries()) {
             for (let shape = 0; shape < 3; shape++) {
                 c.save();
                 c.translate((tone + 0.5) * cell, (shape + 0.5) * cell);
+                c.scale(2, 2);
                 c.fillStyle = this.rgba(color, 1);
                 c.beginPath();
                 if (shape === 0) {
@@ -860,20 +1112,37 @@ class LiveEffectsStage {
                 c.fill();
                 c.restore();
             }
+            if (flecks) {
+                // Tint once without flattening the facets or translucent edges.
+                const tile = flecks.naturalWidth / 3;
+                c.save();
+                for (let variant = 0; variant < 3; variant++) {
+                    const x = tone * cell, y = (4 + variant) * cell;
+                    c.drawImage(flecks, variant * tile, 0, tile, flecks.naturalHeight, x, y, cell, cell);
+                    c.globalCompositeOperation = 'source-atop';
+                    c.fillStyle = this.rgba(color, 0.34); c.fillRect(x, y, cell, cell);
+                    c.globalCompositeOperation = 'source-over';
+                }
+                c.restore();
+            }
         }
 
-        const count = this.reduced ? 45 : this.mobile ? 420 : 720;
+        const base = this.mobile ? 420 : 720;
+        const count = this.reduced ? 45 : base + (this.mobile ? 36 : 60);
         return Array.from({ length: count }, (_, i) => {
             const layer = i % 3;
             const variety = this.seed(i + 217);
-            const shape = variety < 0.69 ? 0 : variety < 0.86 ? 1 : variety < 0.92 ? 2 : 3;
+            const extra = i - base;
+            const shape = flecks && extra >= 0 && extra % 3 === 2 ? 4 + Math.floor(extra / 3) % 3
+                : variety < 0.69 ? 0 : variety < 0.86 ? 1 : variety < 0.92 ? 2 : 3;
             const tone = shape === 2 ? 2 : i % 5 === 0 ? 1 : i % 7 === 0 ? 2 : 0;
             return {
                 angle: this.seed(i + 22) * Math.PI * 2,
                 radius: 0.08 + this.seed(i + 74) * 0.75,
                 speed: this.reduced ? 0 : 0.1 + layer * 0.09,
                 shape, tone, color: colors[tone],
-                size: [1.5 + layer * 1.1, 6.8 + layer * 2.7, 4.8 + layer * 1.7, 4 + layer * 1.8][shape]
+                size: shape >= 4 ? 18 + this.seed(i + 151) * 11
+                    : [1.5 + layer * 1.1, 6.8 + layer * 2.7, 4.8 + layer * 1.7, 4 + layer * 1.8][shape]
             };
         });
     }
@@ -882,22 +1151,25 @@ class LiveEffectsStage {
         const c = this.ctx;
         c.fillStyle = this.rgba('4, 7, 13', (this.reduced ? 0.3 : 0.6) * this.alpha);
         c.fillRect(0, 0, this.width, this.height);
+        const gain = this.ease((this.alpha - .12) / .88);
+        if (!gain) return;
         for (let cloud = 0; cloud < 3; cloud++) {
             const x = this.width * (0.2 + cloud * 0.3) + Math.sin(t * 0.28 + cloud * 2) * this.width * 0.18;
             const y = this.height * (0.25 + cloud * 0.22) + Math.cos(t * 0.24 + cloud) * 45;
             this.glow(x, y, Math.min(this.width, this.height) * 0.7,
-                cloud === 1 ? this.palette.accent : this.palette.main, 0.085);
+                cloud === 1 ? this.palette.accent : this.palette.main, 0.085 * gain);
         }
-        const particles = this.dustParticles ||= this.prepareDust();
+        const particles = this.dustParticles;
         const cell = this.dustAtlas.width / 3;
-        for (const [i, particle] of particles.entries()) {
+        for (let i = 0; i < particles.length; i++) {
+            const particle = particles[i];
             const angle = particle.angle + t * particle.speed;
             const cos = Math.cos(angle), sin = Math.sin(angle);
             const x = this.width / 2 + cos * particle.radius * this.width * 0.78 + Math.sin(t * 0.5 + i) * 8;
             const y = this.height / 2 + sin * particle.radius * this.height * 0.75;
             const { size, shape } = particle;
             if (x < -size || x > this.width + size || y < -size || y > this.height + size) continue;
-            const alpha = 0.32 + (Math.sin(t + i) + 1) * 0.2;
+            const alpha = gain * (0.32 + (Math.sin(t + i) + 1) * 0.2);
             if (shape === 3) {
                 c.globalAlpha = 1;
                 this.line([[x - sin * size, y + cos * size * 0.72], [x, y]], particle.color, alpha * 0.64, 0.9);
@@ -918,212 +1190,216 @@ class LiveEffectsStage {
         const x = -160 + (hoverX + 160) * enter + leave * (this.width + 160);
         const y = hoverY - (1 - enter) * 110 - leave * 180 + (this.reduced ? 0 : Math.sin(t * 2.4) * 5);
         const width = Math.min(235, this.width * 0.56);
-        const beam = this.ease((p - 0.18) / 0.1) * this.ease((0.83 - p) / 0.1);
+        if (!this.reduced) this.once('ufo-engine', () => {
+            this.ufoAudioCleanup = window.app?.soundMgr?.ufoAbduction?.(UFO_BEAM_START, UFO_RELEASE_START);
+        });
+        const beam = this.reduced ? .46 : this.ease((t - UFO_BEAM_START) / .65) * this.ease((6.32 - t) / .46);
+        const tilt = this.reduced ? 0 : Math.sin(t * 1.4) * .035;
+        const offset = width * this.images.ship.naturalHeight / this.images.ship.naturalWidth * .40;
+        const emitterX = x - Math.sin(tilt) * offset;
+        const emitterY = y - width * .07 + Math.cos(tilt) * offset;
         if (beam > 0) {
             const bottom = b.bottom, spread = b.width * 0.51;
-            const gradient = this.ctx.createLinearGradient(x, y, x, bottom);
+            const gradient = this.ctx.createLinearGradient(emitterX, emitterY, x, bottom);
             gradient.addColorStop(0, this.rgba(this.palette.accent, 0.32 * beam * this.alpha));
             gradient.addColorStop(1, this.rgba(this.palette.main, 0.025 * beam * this.alpha));
-            this.ctx.fillStyle = gradient; this.ctx.beginPath(); this.ctx.moveTo(x - 17, y);
-            this.ctx.lineTo(x + 17, y); this.ctx.lineTo(x + spread, bottom); this.ctx.lineTo(x - spread, bottom);
+            this.ctx.fillStyle = gradient; this.ctx.beginPath(); this.ctx.moveTo(emitterX - 17, emitterY);
+            this.ctx.lineTo(emitterX + 17, emitterY); this.ctx.lineTo(x + spread, bottom); this.ctx.lineTo(x - spread, bottom);
             this.ctx.closePath(); this.ctx.fill();
+            if (!this.reduced && bottom > emitterY) {
+                // The ripples converge on the emitter, then spread out with the returning scores.
+                const phase = -(Math.min(t, UFO_RELEASE_START) - UFO_BEAM_START) * .47
+                    + Math.max(0, t - UFO_RELEASE_START) * .72;
+                for (let i = 0; i < 3; i++) {
+                    const cycle = phase + i / 3, u = cycle - Math.floor(cycle);
+                    const rx = 12 + (spread - 12) * u;
+                    this.ctx.beginPath();
+                    this.ctx.ellipse(emitterX + (x - emitterX) * u, emitterY + (bottom - emitterY) * u,
+                        rx, rx * .10, 0, 0, Math.PI * 2);
+                    this.ctx.lineWidth = 1.1;
+                    this.ctx.strokeStyle = this.rgba(this.palette.accent, .28 * beam * this.alpha * Math.sin(u * Math.PI));
+                    this.ctx.stroke();
+                }
+            }
             for (let i = 0; i < (this.reduced ? 12 : 60); i++) {
                 const life = (t * (0.22 + this.seed(i + 9) * 0.2) + this.seed(i + 15)) % 1;
-                const py = bottom - (bottom - y) * life;
+                const py = bottom - (bottom - emitterY) * life;
                 const px = x + Math.sin(life * 8 + i) * spread * (1 - life) * 0.75;
                 this.dot(px, py, 0.7 + this.seed(i + 52), this.palette.main, beam * 0.55);
             }
-            this.scores.forEach((score, i) => {
-                const life = this.clamp((t - 1.7 - i * 0.055) / 2.75);
-                if (!life || life >= 1 || this.reduced) return;
-                if (!this.mutedNodes.has(score.node)) { score.node.classList.add('live-ufo-score-muted'); this.mutedNodes.add(score.node); }
-                const travel = this.ease(life), sx = score.rect.left + score.rect.width / 2, sy = score.rect.top + score.rect.height / 2;
-                const px = sx + (x - sx) * travel + Math.sin(life * 9 + i) * 18 * Math.sin(life * Math.PI);
-                const py = sy + (y - sy) * travel;
-                this.ctx.fillStyle = this.rgba(this.palette.accent, (1 - life) * this.alpha);
-                this.ctx.font = `700 ${12 * (1 - life * 0.6)}px Arial`; this.ctx.textAlign = 'center';
-                this.ctx.fillText(score.text, px, py);
-            });
         }
-        this.sprite(this.images.ship, x, y - width * 0.07, width, this.reduced ? 0 : Math.sin(t * 1.4) * 0.035);
-        this.glow(x, y + 9, 32, this.palette.main, beam * 0.25);
+        if (!this.reduced) {
+            const c = this.ctx;
+            c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+            this.scores.forEach(({node, text, rect}, i) => {
+                const order = i / Math.max(1, this.scores.length - 1);
+                const lift = this.clamp((t - 1.70 - order * 1.05) / 2.12);
+                const drop = this.clamp((t - UFO_RELEASE_START - (1 - order) * .28) / .76);
+                if (!lift || drop === 1 || node.textContent.trim() !== text) {
+                    if (this.mutedNodes.delete(node)) node.classList.remove('live-ufo-score-muted');
+                    return;
+                }
+                if (!this.mutedNodes.has(node)) {
+                    node.classList.add('live-ufo-score-muted');
+                    this.mutedNodes.add(node);
+                }
+                if (lift === 1 && !drop) return;
+                const travel = drop ? 1 - this.ease(drop) : this.ease(lift);
+                const sx = rect.left + rect.width / 2, sy = rect.top + rect.height / 2;
+                const px = sx + (emitterX - sx) * travel + Math.sin(travel * 9 + i) * 16 * Math.sin(travel * Math.PI);
+                const py = sy + (emitterY - sy) * travel;
+                c.globalAlpha = (1 - this.ease((travel - .80) / .20)) * this.alpha;
+                const fontSize = Math.max(12, Math.min(19, rect.height * .56)) * (1 - travel * .40);
+                c.font = `700 ${fontSize}px Arial`;
+                c.strokeStyle = 'rgba(8,12,23,.85)'; c.lineWidth = 2; c.strokeText(text, px, py);
+                c.fillStyle = this.rgba(this.palette.accent, 1); c.fillText(text, px, py);
+            });
+            c.restore();
+        }
+        this.sprite(this.images.ship, x, y - width * 0.07, width, tilt);
+        this.glow(emitterX, emitterY, width * .13, this.palette.main, beam * .78);
     }
 
     prepareDragonBreath() {
-        const width = Math.min(470, this.width * 0.67, this.height * 0.56);
-        const image = this.images.head;
-        const jaw = this.images.jaw;
-        this.dragonLayout = {
-            width, height: width * (image.naturalHeight || image.height) / (image.naturalWidth || image.width),
-            jawHeight: width * DRAGON_BREATH_RIG.jawWidth * (jaw.naturalHeight || jaw.height) / (jaw.naturalWidth || jaw.width),
-            left: this.mobile ? -width * 0.16 : this.width * 0.035,
-            top: Math.max(50, this.height * 0.095)
-        };
-        if (!this.dragonHeat) {
-            const heat = this.dragonHeat = document.createElement('canvas');
-            heat.width = 320; heat.height = 96;
-            const ctx = heat.getContext('2d');
-            const pixels = ctx.createImageData(heat.width, heat.height);
-            for (let px = 0; px < heat.width; px++) {
-                const progress = px / (heat.width - 1), spread = 3 + progress * 43;
-                for (let py = 0; py < heat.height; py++) {
-                    const distance = (py - 47.5) / spread;
-                    const core = Math.exp(-distance * distance * 3.5);
-                    const at = (py * heat.width + px) * 4;
-                    pixels.data[at] = 255;
-                    pixels.data[at + 1] = 155 + core * 85 - progress * 55;
-                    pixels.data[at + 2] = 18 + core * 100 * (1 - progress);
-                    pixels.data[at + 3] = Math.round(core * Math.pow(1 - progress, 0.8) * this.ease(progress / 0.04) * 230);
-                }
-            }
-            ctx.putImageData(pixels, 0, 0);
-        }
-        this.dragonParticles ||= Array.from({ length: this.mobile ? 52 : 76 }, (_, i) => ({
-            born: 1.5 + i / (this.mobile ? 52 : 76) * 2.45,
-            duration: 0.44 + this.seed(i + 37) * 0.3,
-            spread: this.seed(i + 89) * 2 - 1, turn: this.seed(i + 71) * 0.28 - 0.14,
-            size: 0.8 + this.seed(i + 61) * 0.5
+        const b = this.board, width = Math.min(b.width * 0.52, this.width * 0.48, this.height * 0.31, 206);
+        const cx = Math.max(width / 2, Math.min(this.width - width / 2, b.x + b.width * 0.47));
+        const top = Math.max(12, Math.min(this.height * 0.39 - width * 0.62, b.y + b.height * 0.08));
+        this.dragonLayout = { width, cx, top,
+            span: Math.min(this.width * 1.12, this.height * 0.94, b.width * 1.85),
+            run: Math.min(this.height * 0.59, Math.max(b.height * 0.93, this.height * 0.44)) };
+        this.dragonPackets ||= Array.from({ length: 22 }, (_, i) => ({
+            born: 1.5 + i * 0.113, tile: [0, 1, 2, 1, 0, 3, 2][i % 7],
+            phase: this.seed(i + 61) * Math.PI * 2, side: this.seed(i + 95) * 2 - 1,
+            turn: (this.seed(i + 17) - 0.5) * 0.95, flip: i % 3 ? 1 : -1
         }));
+        this.dragonCinders ||= Array.from({ length: this.mobile ? 32 : 50 }, (_, i) => ({
+            born: 1.57 + this.seed(i + 7) * 2.37, ttl: 0.82 + this.seed(i + 18) * 0.64,
+            side: this.seed(i + 94) * 2 - 1, phase: this.seed(i + 74) * Math.PI * 2
+        }));
+        for (const stream of [this.dragonPackets, this.dragonCinders]) {
+            for (const item of stream) item.origin = this.dragonPose(item.born).mouth;
+        }
+        this.dragonBounce = this.ctx.createLinearGradient(0, this.height * 0.38, 0, this.height);
+        this.dragonBounce.addColorStop(0, 'rgba(255,127,36,0)');
+        this.dragonBounce.addColorStop(0.7, 'rgba(255,128,35,0.12)');
+        this.dragonBounce.addColorStop(1, 'rgba(255,192,90,0.28)');
     }
 
-    dragonPose(t) {
-        const rig = DRAGON_BREATH_RIG, layout = this.dragonLayout;
-        const entry = this.reduced ? 1 : this.ease((t - 0.05) / 0.85);
-        const leave = this.reduced ? 0 : this.ease((t - 4.55) / 0.8);
-        const inhale = this.reduced ? 0 : this.ease((t - 0.8) / 0.65);
-        const breath = this.reduced ? 0.22 : this.ease((t - 1.5) / 0.3) * this.ease((4.15 - t) / 0.55);
-        const angle = this.reduced ? 0.08 : 0.11 - inhale * 0.07 + breath * 0.14;
-        const jawAngle = this.reduced ? 0.1 : 0.025 + inhale * (1 - this.ease((t - 4.05) / 0.38)) * 0.3;
-        const x = layout.left + layout.width * rig.headPivot[0] - (1 - entry + leave) * layout.width * 1.25
-            - inhale * (1 - breath) * layout.width * 0.025;
-        const y = layout.top + layout.height * rig.headPivot[1] - inhale * (1 - breath) * 5;
-        const jawWidth = layout.width * rig.jawWidth;
-        const upper = [(rig.upperMouth[0] - rig.headPivot[0]) * layout.width,
-            (rig.upperMouth[1] - rig.headPivot[1]) * layout.height];
-        const lower = [(rig.lowerMouth[0] - rig.jawPivot[0]) * jawWidth,
-            (rig.lowerMouth[1] - rig.jawPivot[1]) * layout.jawHeight];
-        const lipX = lower[0] * Math.cos(jawAngle) - lower[1] * Math.sin(jawAngle);
-        const lipY = lower[0] * Math.sin(jawAngle) + lower[1] * Math.cos(jawAngle);
-        const mouthX = (upper[0] + lipX) / 2, mouthY = (upper[1] + lipY) / 2;
-        const mouth = { x: x + mouthX * Math.cos(angle) - mouthY * Math.sin(angle),
-            y: y + mouthX * Math.sin(angle) + mouthY * Math.cos(angle) };
-        const dx = this.width * 0.9 - mouth.x, dy = this.height * 0.72 - mouth.y;
-        return { x, y, mouth, angle, jawAngle, jawWidth, entry, leave, breath,
-            direction: Math.atan2(dy, dx), reach: Math.hypot(dx, dy) };
+    dragonPose(time) {
+        const t = this.reduced ? 2 : time, l = this.dragonLayout;
+        const entry = this.reduced ? 1 : this.ease(t / 0.78), leave = this.reduced ? 0 : this.ease((t - 4.55) / 0.8);
+        const inhale = this.ease((t - 0.67) / 0.74) * (1 - this.ease((t - 1.52) / 0.35));
+        const breath = this.reduced ? 0.29 : this.ease((t - 1.5) / 0.2) * (1 - this.ease((t - 3.74) / 0.41));
+        const gape = 0.44 + inhale * 0.36 + breath * 0.56;
+        const size = l.width * (0.93 + 0.07 * entry - 0.035 * inhale);
+        const top = l.top + (1 - entry) * 7 + inhale * 3 - leave * 8;
+        const mouth = { x: l.cx, y: top + size * (DRAGON_JAW.upper + (DRAGON_JAW.throat - DRAGON_JAW.upper) * gape) };
+        return { size, top, mouth, entry, leave, breath, inhale, gape };
     }
 
-    fire(t) {
-        const c = this.ctx, layout = this.dragonLayout, rig = DRAGON_BREATH_RIG;
-        const pose = this.dragonPose(t);
-        const { x, y, mouth, angle, jawAngle, jawWidth, entry, leave, breath, direction, reach } = pose;
+    dragonProjection(origin, life, side = 0, phase = 0) {
+        const l = this.dragonLayout, u = this.clamp(life);
+        // Perspective enlarges and separates the nearest curls faster than the ones at the throat.
+        const magnification = 1 / (1 - 0.835 * u), travel = u * magnification * 0.165;
+        return { x: origin.x + travel * l.span * (0.12 + side * 0.26 + 0.10 * Math.sin(phase + u * 4.8)),
+            y: origin.y + travel * l.run, size: l.span * (0.034 + u * 0.138) * magnification };
+    }
+
+    fire(time) {
+        const t = this.reduced ? 2 : time, c = this.ctx, l = this.dragonLayout, j = DRAGON_JAW;
+        const { size, top, mouth, entry, leave, breath, inhale, gape } = this.dragonPose(t);
         this.overlay.dataset.dragonPhase = this.reduced ? 'holding' : t < 0.8 ? 'arrival'
             : t < 1.5 ? 'inhale' : t < 4.15 ? 'breath' : t < 4.55 ? 'embers' : 'exit';
-        this.overlay.dataset.mouth = mouth.x.toFixed(1) + ',' + mouth.y.toFixed(1);
-        this.overlay.dataset.jawAngle = jawAngle.toFixed(3);
         if (!this.reduced && t >= 0.6) this.once('dragon-breath', () => {
-            this.dragonAudioCleanup = window.app?.soundMgr?.dragonBreath?.(Math.max(0, 1.5 - t));
+            if (t < 1.65) this.dragonAudioCleanup = window.app?.soundMgr?.dragonBreath?.(Math.max(0, 1.5 - t));
         });
-        c.fillStyle = this.rgba('8, 10, 14', this.alpha * (this.reduced ? 0.24 : 0.56));
+        c.fillStyle = this.rgba('5, 13, 20', this.alpha * (this.reduced ? 0.32 : 0.45 + 0.18 * breath));
         c.fillRect(0, 0, this.width, this.height);
+
+        // Deform only the mouth band. Its sampled throat and the emission point share the same transform.
+        const head = this.images.head, sw = head.naturalWidth, sh = head.naturalHeight;
+        const visible = entry * (1 - leave), mid = (j.lower - j.upper) * gape;
+        c.save(); c.translate(l.cx - size / 2, top);
+        c.globalAlpha = this.alpha * visible * (0.75 - 0.13 * breath);
+        const band = (a, b, y, h) => c.drawImage(head, 0, a * sh, sw, (b - a) * sh, 0, y * size, size, h * size);
+        band(0, j.upper, 0, j.upper);
+        band(j.upper, j.lower, j.upper, mid);
+        band(j.lower, 1, j.upper + mid, 1 - j.lower);
+        c.restore();
+        this.glow(mouth.x, mouth.y, size * (0.055 + inhale * 0.11 + 0.09 * breath),
+            '255, 156, 56', visible * (0.10 + 0.45 * inhale + 0.75 * breath));
+
         if (breath > 0) {
-            const wash = c.createLinearGradient(mouth.x, mouth.y, this.width * 0.9, this.height);
-            wash.addColorStop(0, this.rgba('255, 176, 63', breath * this.alpha * 0.1));
-            wash.addColorStop(0.7, this.rgba('244, 105, 29', breath * this.alpha * 0.075));
-            wash.addColorStop(1, 'rgba(255,100,20,0)');
-            c.fillStyle = wash; c.fillRect(0, 0, this.width, this.height);
-            c.save(); c.translate(mouth.x, mouth.y); c.rotate(direction);
-            const length = reach * (this.reduced ? 0.5 : 0.6 + breath * 0.4);
-            const spread = reach * 0.16;
-            c.globalAlpha = breath * this.alpha * 0.82;
-            c.drawImage(this.dragonHeat, 0, -spread, length, spread * 2);
+            const root = this.dragonProjection(mouth, 0.59);
+            const dx = root.x - mouth.x, dy = root.y - mouth.y;
+            c.save(); c.translate(mouth.x, mouth.y); c.rotate(Math.atan2(dy, dx) + Math.PI / 2);
+            c.globalAlpha = this.alpha * breath * 0.9;
+            const w = size * (0.18 + 0.09 * breath), h = Math.hypot(dx, dy) * (0.7 + 0.3 * breath);
+            c.drawImage(this.images.flame, -w / 2, -h, w, h);
             c.restore();
-            this.glow(mouth.x, mouth.y, layout.width * 0.07, '255, 183, 69', breath * 0.6);
         }
-
-        if (!this.reduced) this.dragonParticles.forEach((particle, i) => {
-            const life = (t - particle.born) / particle.duration;
-            if (life <= 0 || t > particle.born + particle.duration + 0.65) return;
-            const emitted = this.dragonPose(particle.born);
-            const progress = life * (0.78 + particle.size * 0.2);
-            const distance = emitted.reach * progress;
-            const lateral = Math.sin(life * 8 + i) * emitted.reach * 0.07 * life * particle.spread;
-            const px = emitted.mouth.x + Math.cos(emitted.direction) * distance - Math.sin(emitted.direction) * lateral;
-            const py = emitted.mouth.y + Math.sin(emitted.direction) * distance + Math.cos(emitted.direction) * lateral;
-            const size = emitted.reach * (0.08 + life * 0.24) * particle.size;
-            if (life < 1) this.sprite(this.images.flame, px, py, size * 0.5,
-                emitted.direction + Math.PI / 2 + particle.turn, Math.sin(life * Math.PI) * 0.78, 1, size);
-            const sparkLife = (t - particle.born) / (particle.duration + 0.65);
-            if (sparkLife < 1) {
-                const sx = emitted.mouth.x + Math.cos(emitted.direction) * emitted.reach * sparkLife
-                    + particle.spread * sparkLife * emitted.reach * 0.2;
-                const sy = emitted.mouth.y + Math.sin(emitted.direction) * emitted.reach * sparkLife
-                    - sparkLife * sparkLife * 60;
-                this.line([[sx, sy], [sx - 2, sy + 5]], i % 4 ? '255, 195, 81' : this.palette.accent,
-                    Math.sin(sparkLife * Math.PI) * 0.9, 1.1);
-            }
-        });
-        if (this.reduced) this.sprite(this.images.flame, mouth.x + Math.cos(direction) * reach * 0.22,
-            mouth.y + Math.sin(direction) * reach * 0.22, reach * 0.16, direction + Math.PI / 2, 0.3, 1, reach * 0.35);
-
-        // Both parts share the cheek pivot; the flame origin is the moving lip midpoint.
-        c.save(); c.translate(x, y); c.rotate(angle); c.globalAlpha = this.alpha * entry;
-        c.save(); c.rotate(jawAngle);
-        c.drawImage(this.images.jaw, -jawWidth * rig.jawPivot[0], -layout.jawHeight * rig.jawPivot[1], jawWidth, layout.jawHeight);
-        c.restore();
-        c.drawImage(this.images.head, -layout.width * rig.headPivot[0], -layout.height * rig.headPivot[1], layout.width, layout.height);
-        c.restore();
+        // Later emissions sit further away: paint them before the approaching, older curls.
+        for (let i = this.dragonPackets.length - 1; i >= 0; i--) {
+            const p = this.dragonPackets[i], u = (t - p.born) / 0.98;
+            if (u <= 0 || u >= 1 || (this.reduced && i % 2)) continue;
+            const point = this.dragonProjection(p.origin, u, p.side, p.phase);
+            const crest = this.reduced ? 0 : this.ease((p.born - 2.85) / 0.48) * this.ease((3.91 - p.born) / 0.32);
+            const close = crest * this.ease((u - 0.52) / 0.46);
+            point.size *= 1 + 0.94 * close;
+            point.y += close * l.run * 0.12;
+            const fadeAt = 0.79 + crest * 0.095;
+            const opacity = this.ease(u / 0.12) * (1 - this.ease((u - fadeAt) / (1 - fadeAt)));
+            c.save(); c.translate(point.x, point.y); c.rotate(p.turn + 0.43 * u * Math.sin(p.phase));
+            c.scale(p.flip, 1); c.globalAlpha = this.alpha * opacity * (this.reduced ? 0.38 : 0.87);
+            c.drawImage(this.images.plume, (p.tile % 2) * 320, Math.floor(p.tile / 2) * 320, 320, 320,
+                -point.size / 2, -point.size / 2, point.size, point.size);
+            c.restore();
+        }
+        if (!this.reduced) for (const ember of this.dragonCinders) {
+            const u = (t - ember.born) / ember.ttl;
+            if (u <= 0 || u >= 1) continue;
+            const p = this.dragonProjection(ember.origin, u, ember.side * 2.7, ember.phase);
+            const radius = 0.65 + u * u * 2.7;
+            this.dot(p.x, p.y - u * u * l.run * 0.16, radius, '255, 205, 94', Math.sin(u * Math.PI) * 0.94);
+        }
+        if (!this.reduced && t > 3.4 && t < 4.65) {
+            c.save(); c.fillStyle = this.dragonBounce;
+            c.globalAlpha = this.alpha * this.ease((t - 3.4) / 0.58) * (1 - this.ease((t - 4.16) / 0.49));
+            c.fillRect(0, 0, this.width, this.height); c.restore();
+        }
     }
 
     prepareRoyalScene() {
         if (!this.royalLogo) {
-            const image = this.images.logo;
-            const source = document.createElement('canvas');
-            source.width = Math.min(1024, image.naturalWidth || image.width);
-            source.height = Math.round(source.width * (image.naturalHeight || image.height) / (image.naturalWidth || image.width));
-            const c = source.getContext('2d', { willReadFrequently: true });
-            c.drawImage(image, 0, 0, source.width, source.height);
-            const pixels = c.getImageData(0, 0, source.width, source.height).data;
-            let left = source.width, right = 0, top = source.height, bottom = 0;
-            for (let y = 0; y < source.height; y++) for (let x = 0; x < source.width; x++) {
-                if (pixels[(y * source.width + x) * 4 + 3] < 12) continue;
-                left = Math.min(left, x); right = Math.max(right, x);
-                top = Math.min(top, y); bottom = Math.max(bottom, y);
-            }
-            const logo = this.royalLogo = document.createElement('canvas');
-            logo.width = Math.max(1, right - left + 1);
-            logo.height = Math.max(1, bottom - top + 1);
-            logo.getContext('2d').drawImage(source, left, top, logo.width, logo.height, 0, 0, logo.width, logo.height);
-            this.royalShine = document.createElement('canvas');
-            this.royalShine.width = logo.width; this.royalShine.height = logo.height;
+            const logo = this.royalLogo = this.images.logo;
+            this.royalPoses = [this.images.coin, this.images.coinLeft, this.images.coinRight];
 
             const beam = this.royalBeam = document.createElement('canvas');
-            beam.width = 160; beam.height = 640;
+            beam.width = this.images.spotlight.naturalWidth; beam.height = this.images.spotlight.naturalHeight;
             const bc = beam.getContext('2d');
-            const light = bc.createImageData(beam.width, beam.height);
-            const color = this.palette.accent.split(',').map(Number);
-            for (let py = 0; py < beam.height; py++) {
-                const length = py / (beam.height - 1);
-                const spread = 80 * (1 - length) + 4 * length;
-                const brightness = this.ease(length / 0.36) * (0.45 + length * 0.2);
-                for (let px = 0; px < beam.width; px++) {
-                    const across = (px - 79.5) / spread;
-                    const alpha = Math.exp(-across * across * 5) * brightness;
-                    const at = (py * beam.width + px) * 4;
-                    for (let channel = 0; channel < 3; channel++) light.data[at + channel] = 248 * 0.6 + color[channel] * 0.4;
-                    light.data[at + 3] = Math.round(alpha * 255);
-                }
+            bc.drawImage(this.images.spotlight, 0, 0);
+            bc.globalCompositeOperation = 'source-atop'; bc.fillStyle = this.rgba(this.palette.accent, .46);
+            bc.fillRect(0, 0, beam.width, beam.height);
+            if (!this.reduced) {
+                this.royalShine = document.createElement('canvas');
+                this.royalShine.width = Math.ceil(logo.naturalWidth * .29);
+                this.royalShine.height = logo.naturalHeight;
+                const shine = this.royalShine.getContext('2d');
+                const band = this.royalBand = shine.createLinearGradient(0, 0, this.royalShine.width, this.royalShine.width * .16);
+                band.addColorStop(0, 'rgba(255,255,240,0)');
+                band.addColorStop(.48, 'rgba(255,251,222,.62)');
+                band.addColorStop(1, 'rgba(255,255,240,0)');
+                this.royalCoins = Array.from({ length: this.mobile ? 84 : 124 }, (_, i) => ({
+                    side: i % 2 ? 1 : -1, pose: i % 3,
+                    delay: 1.2 + this.seed(i + 8) * 2.85,
+                    duration: 2.8 + this.seed(i + 15) * 0.72,
+                    lift: 0.76 + this.seed(i + 29) * 0.17,
+                    arc: 0.15 + this.seed(i + 45) * 0.14,
+                    size: (this.mobile ? 15 : 21) + this.seed(i + 66) * (this.mobile ? 12 : 15)
+                }));
             }
-            bc.putImageData(light, 0, 0);
-            this.royalCoins = Array.from({ length: this.mobile ? 84 : 124 }, (_, i) => ({
-                side: i % 2 ? 1 : -1, pose: i % 3,
-                delay: 1.2 + this.seed(i + 8) * 2.85,
-                duration: 2.8 + this.seed(i + 15) * 0.72,
-                lift: 0.76 + this.seed(i + 29) * 0.17,
-                arc: 0.15 + this.seed(i + 45) * 0.14,
-                size: (this.mobile ? 15 : 21) + this.seed(i + 66) * (this.mobile ? 12 : 15)
-            }));
         }
-        const ratio = this.royalLogo.height / this.royalLogo.width;
+        const ratio = this.royalLogo.naturalHeight / this.royalLogo.naturalWidth;
         const width = Math.min(660, this.width * 0.88, this.height * 0.38 / ratio);
         this.royalLayout = { x: this.width / 2, y: this.height * 0.385, width, height: width * ratio };
     }
@@ -1132,16 +1408,16 @@ class LiveEffectsStage {
         const c = this.ctx;
         const layout = this.royalLayout;
         const { x, y } = layout;
-        const entry = this.reduced ? 1 : this.ease((t - 0.6) / 1.05);
+        const entry = this.reduced ? 1 : this.ease((t - 1.48) / 1.24);
         const crestTime = t - ROYAL_YAMB_CREST_SECONDS;
         const crest = this.reduced ? 0 : this.ease(crestTime / 0.12) * (1 - this.ease((crestTime - 0.12) / 0.75));
         const width = layout.width * (0.94 + entry * 0.06);
-        const height = width * this.royalLogo.height / this.royalLogo.width;
+        const height = layout.height * width / layout.width;
         const logoY = y + (1 - entry) * 18;
         this.overlay.dataset.ceremony = this.reduced ? 'holding' : t < 1.65 ? 'arrival'
             : crestTime >= 0 && crestTime < 0.9 ? 'crest' : t > 6.8 ? 'exit' : 'holding';
         if (!this.reduced && t >= 0.6) this.once('royal-fanfare', () => {
-            this.royalAudioCleanup = window.app?.soundMgr?.royalFanfare?.(Math.max(0, ROYAL_YAMB_CREST_SECONDS - t));
+            if (crestTime < .12) this.royalAudioCleanup = window.app?.soundMgr?.royalFanfare?.(Math.max(0, -crestTime));
         });
         c.fillStyle = this.rgba('5, 8, 14', this.alpha * (this.reduced ? 0.4 : 0.64));
         c.fillRect(0, 0, this.width, this.height);
@@ -1152,19 +1428,21 @@ class LiveEffectsStage {
             const outer = i < 2 ? 1 : 0.72;
             const originX = this.width * (0.5 + side * 0.43 * outer);
             const originY = this.height * 0.94;
-            const sweep = this.reduced ? 0 : Math.sin(t * 0.53 + i * 1.9) * (1 - crest) * this.width * 0.12;
-            const aimX = x - side * width * 0.16 + sweep;
+            const focus = this.reduced ? 1 : this.ease((t - 1.72) / 1.48);
+            const sweep = this.reduced ? 0 : Math.sin(t * 0.53 + i * 1.9) * (1 - .85 * focus) * this.width * 0.12;
+            const aimX = x + side * width * ((1 - focus) * .55 - .22 + (i < 2 ? .08 : -.08)) + sweep;
             const aimY = y - height * 0.65;
             const length = Math.hypot(aimX - originX, aimY - originY) * 1.35;
             c.save(); c.translate(originX, originY);
             c.rotate(Math.atan2(aimY - originY, aimX - originX) + Math.PI / 2);
             c.globalAlpha = this.alpha * (this.reduced ? 0.5 : this.ease((t - i * 0.08) / 0.8)) * (0.74 + crest * 0.26);
-            c.drawImage(this.royalBeam, -width * 0.18, -length, width * 0.36, length);
+            const fan = width * (i < 2 ? .53 : .33);
+            c.drawImage(this.royalBeam, -fan / 2, -length, fan, length);
             c.restore();
         }
         c.restore();
 
-        const poses = [this.images.coin, this.images.coinLeft, this.images.coinRight];
+        const poses = this.royalPoses;
         if (!this.reduced) for (const coin of this.royalCoins) {
             const life = (t - coin.delay) / coin.duration;
             if (life <= 0 || life >= 1) continue;
@@ -1179,22 +1457,35 @@ class LiveEffectsStage {
         if (this.reduced) {
             poses.forEach((image, i) => this.sprite(image, x + (i - 1) * 46, y + height / 2 + 45, 30));
         }
-        this.sprite(this.royalLogo, x, logoY, width, 0, entry, 1, height);
+        const seal = this.reduced ? 0 : this.ease((t - .12) / .53) * (1 - this.ease((t - 1.28) / .55));
+        if (seal > 0) {
+            const size = Math.min(width * .57, this.height * .32, 248);
+            this.sprite(this.images.seal, x, y - entry * 14, size, 0, seal);
+        }
+        if (entry > 0) this.sprite(this.royalLogo, x, logoY, width, 0, entry, 1, height);
 
         if (!this.reduced && crestTime >= 0 && crestTime < 0.95) {
             const shine = this.royalShine.getContext('2d');
             const w = this.royalShine.width, h = this.royalShine.height;
             shine.globalCompositeOperation = 'source-over'; shine.clearRect(0, 0, w, h);
-            const position = (crestTime / 0.95 * 1.5 - 0.25) * w;
-            const band = shine.createLinearGradient(position - w * 0.16, 0, position + w * 0.16, h * 0.25);
-            band.addColorStop(0, 'rgba(255,255,255,0)');
-            band.addColorStop(0.5, 'rgba(255,255,255,0.62)');
-            band.addColorStop(1, 'rgba(255,255,255,0)');
-            shine.fillStyle = band; shine.fillRect(0, 0, w, h);
-            shine.globalCompositeOperation = 'destination-in'; shine.drawImage(this.royalLogo, 0, 0);
-            this.sprite(this.royalShine, x, logoY, width, 0, entry, 1, height);
+            const offset = (this.royalLogo.naturalWidth + w) * crestTime / .95 - w;
+            shine.fillStyle = this.royalBand; shine.fillRect(0, 0, w, h);
+            shine.globalCompositeOperation = 'destination-in'; shine.drawImage(this.royalLogo, -offset, 0);
+            const scale = width / this.royalLogo.naturalWidth;
+            this.sprite(this.royalShine, x - width / 2 + (offset + w / 2) * scale, logoY, w * scale, 0, entry, 1, height);
         }
-        if (!this.reduced) for (let i = 0; i < 20; i++) {
+        const unfold = this.reduced ? 1 : this.ease(crestTime / .58);
+        if (unfold > 0) {
+            const baseline = y + height / 2 + 12, span = width * .24 * unfold;
+            c.save(); c.translate(x, baseline); c.globalAlpha = this.alpha * unfold;
+            c.fillStyle = this.rgba(this.palette.accent, .85);
+            c.beginPath(); c.moveTo(0,-4); c.lineTo(5,0); c.lineTo(0,4); c.lineTo(-5,0); c.closePath(); c.fill();
+            for (const side of [-1, 1]) {
+                c.beginPath(); c.moveTo(side * 9, -.9); c.lineTo(side * (9 + span), 0); c.lineTo(side * 9, .9); c.closePath(); c.fill();
+            }
+            c.restore();
+        }
+        if (!this.reduced && crestTime >= 0 && crestTime < 1.1) for (let i = 0; i < 20; i++) {
             const born = ROYAL_YAMB_CREST_SECONDS + this.seed(i + 98) * 0.25;
             const life = (t - born) / 0.85;
             if (life <= 0 || life >= 1) continue;

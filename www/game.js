@@ -3336,6 +3336,7 @@ class YambApp {
 
         if (leagueUpdated) {
             localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
+            window.kvartalnaLiga?.refreshOpenScores?.();
             if (window.kvartalnaLiga) {
                 window.kvartalnaLiga.init();
             }
@@ -3615,6 +3616,15 @@ class YambApp {
             localStorage.setItem('yamb_dukati', balance);
         }
 
+        if (data.pendingDucats !== undefined) {
+            const previousReserve = Math.max(0, toNumber(nextStats.pendingDucats, 0));
+            nextStats.pendingDucats = Math.max(0, toNumber(data.pendingDucats, 0));
+            if (nextStats.pendingDucats > previousReserve && typeof window.showNotification === 'function') {
+                const locale = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
+                window.showNotification(gt('modal_title_info'), gt('economy_reserved_ducats').replace('{0}', nextStats.pendingDucats.toLocaleString(locale)));
+            }
+        }
+
         if (data.undoTokens !== undefined) {
             const undoTokens = Math.max(0, toNumber(data.undoTokens, 0));
             nextStats.undoTokens = undoTokens;
@@ -3744,9 +3754,10 @@ class YambApp {
                 localStorage.setItem('yamb_lang', data.language);
                 if (pendingLanguageSync === data.language) localStorage.removeItem('yamb_lang_pending_sync');
                 document.documentElement.lang = data.language;
-                if (typeof applyTranslations === 'function') applyTranslations();
-            } else if (currentLanguage === data.language) {
-                localStorage.removeItem('yamb_lang_pending_sync');
+                if (currentLanguage !== data.language) {
+                    if (typeof applyTranslations === 'function') applyTranslations();
+                    if (typeof notifyLanguageChange === 'function') notifyLanguageChange(data.language, currentLanguage || 'sr');
+                }
             }
         }
 
@@ -4605,6 +4616,7 @@ class YambApp {
                 // Friend invitations must also arrive in a freshly opened main menu.
                 this.socket.on('account_deletion_started', data => window.yambAccountPrivacy?.handleStarted(data));
                 this.socket.on('previous_quarter_winner_data', data => this.receiveQuarterWinner(data));
+                this.socket.on('admob_reward_verified', () => window.adMobGlobal?.scheduleEconomyRecovery?.({ discover: true }));
                 window.playerMailbox?.bindSocket(this.socket);
                 this.setupRoomInviteListeners();
                 this.bindConnectionDiagnosticListeners();
@@ -4718,7 +4730,10 @@ class YambApp {
                     if (authResult && authResult.ok && this.topListManager) {
                         await this.topListManager.syncOfflineScores();
                     }
-                    if (authResult && authResult.ok) await this.recoverPendingGameRewards();
+                    if (authResult && authResult.ok) {
+                        await window.adMobGlobal?.recoverPendingEconomyClaims?.();
+                        await this.recoverPendingGameRewards();
+                    }
                     
                     const params = new URLSearchParams(window.location.search);
                     if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
@@ -5414,6 +5429,7 @@ class YambApp {
             .find(item => item.clientResultId === entry.clientResultId && item.syncRejected);
         return {
             clientResultId: entry.clientResultId,
+            finishedAt: entry.finishedAt,
             accepted: Array.isArray(syncResult?.acceptedClientResultIds) &&
                 syncResult.acceptedClientResultIds.includes(entry.clientResultId),
             powerIndexGain: syncResult?.acceptedResponses?.[entry.clientResultId]?.powerIndexGain,
@@ -7693,7 +7709,7 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
 
-                if (window.kvartalnaLiga && !data.serverApplied) {
+                if (window.kvartalnaLiga && !data.serverApplied && !data.leagueStatus) {
                     window.kvartalnaLiga.addPoints(winnerReward);
                 }
 
@@ -7721,11 +7737,11 @@ class YambApp {
                 let penStr = (gt('penalty_msg') || "Kazna zbog odugovlačenja: -{0} Power Index poena.").replace('{0}', penalty);
                 let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">${penStr}</span>` : '';
 
-                if (window.kvartalnaLiga && !data.serverApplied) {
+                if (window.kvartalnaLiga && !data.serverApplied && !data.leagueStatus) {
                     window.kvartalnaLiga.addPoints(-coinPenalty);
                 }
 
-                if (window.kvartalnaLiga) {
+                if (window.kvartalnaLiga && data.leagueStatus !== 'quarter_closed') {
                     let ptsLostStr = (gt('league_pts_lost') || `-{0} poena u Ligi<br>-{0} ${dukatIconHtml()} Dukata`).replace(/\{0\}/g, coinPenalty);
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
@@ -8297,7 +8313,7 @@ class YambApp {
             if (myAvg > 2000) myAvg = 2000;
             const rewardAmount = Number.isFinite(Number(data.reward)) ? Math.max(0, Math.floor(Number(data.reward))) : myAvg;
 
-            if (window.kvartalnaLiga && !data.serverApplied) {
+            if (window.kvartalnaLiga && !data.serverApplied && !data.leagueStatus) {
                 window.kvartalnaLiga.addPoints(rewardAmount);
             }
 
@@ -9365,7 +9381,7 @@ class YambApp {
                     if (isProfileMove) this.hasSvetiIlija = true;
                     this.effectMgr.trigger('thunder');
                 } else {
-                    this.effectMgr.celebrateYamb();
+                    this.effectMgr.celebrateYamb(best5[0]);
                 }
 
                 this.vibrate([50, 100, 50, 100, 50]);
@@ -10291,6 +10307,7 @@ class YambApp {
         let unlockedTrophiesNow = [];
         let saveMode = detectedMode;
         let matchResultRef = this.onlineMode ? String(onlineResult?.matchId || '') : '';
+        let scoreFinishedAt = onlineResult?.finishedAt || Date.now();
         this.refreshLocalStats();
         const isLocalFinish = !this.onlineMode && !this.aiMode && (this.players.length === 1 || detectedMode === 'Hotseat');
         const isOnlineDuelFinish = this.onlineMode && !this.isSpectator;
@@ -10384,6 +10401,7 @@ class YambApp {
                      playerIndex: myIndex >= 0 ? myIndex : 0
                  });
                  matchResultRef = queuedResult?.clientResultId || '';
+                 scoreFinishedAt = queuedResult?.finishedAt || scoreFinishedAt;
                  localResultAccepted = queuedResult?.accepted === true;
                  this.pendingRewardRejectedReason = queuedResult?.rejectedReason || '';
                  if (isLocalFinish && Number.isFinite(queuedResult?.powerIndexGain)) {
@@ -10426,10 +10444,14 @@ class YambApp {
         }
 
         try {
+            if (detectedMode === 'Hotseat' && this.topListManager) {
+                await this.topListManager.saveHotseatGuests(finalResults, accountPlayerIndex, matchResultRef, scoreFinishedAt);
+            }
             if (myScoreEntry && myScoreEntry.score > 0) {
                 const myPhoto = localStorage.getItem('yamb_player_photo') || '';
                 const scoreResult = await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef, {
-                    serverVerified: this.onlineMode || localResultAccepted
+                    serverVerified: this.onlineMode ? Boolean(onlineResult?.matchId) : localResultAccepted,
+                    finishedAt: scoreFinishedAt
                 });
                 if (isSharedFinish && scoreResult?.ok) {
                     soloRecordAchievements = Array.isArray(scoreResult.recordAchievements)
@@ -10443,7 +10465,8 @@ class YambApp {
         if (window.adMobGlobal && myScoreEntry?.score > 0) {
             window.adMobGlobal.prepareReward({
                 context: 'game_double',
-                amount: this.soloRewardPreview?.adReward ?? Math.min(8000, myScoreEntry.score * 2)
+                amount: this.soloRewardPreview?.adReward ?? Math.min(8000, myScoreEntry.score * 2),
+                claimData: { matchId: this.pendingRewardMatchId, score: this.pendingScore }
             });
         }
 
@@ -10641,7 +10664,7 @@ class YambApp {
                     Nagore: 'go_column_up', 'Ručno': 'go_column_manual', Najava: 'go_column_announce'
                 };
                 const col = summary.bestColumnKey;
-                const score = summary.bestColumn.toLocaleString('sr-RS');
+                const score = summary.bestColumn.toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
                 const mark = bestColumnEl.querySelector('.solo-finish-column-mark');
                 const points = bestColumnEl.querySelector('.solo-finish-column-points');
                 if (mark) {
@@ -10778,7 +10801,7 @@ class YambApp {
             let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
             if (options.serverVerified === true) this.recordSubmittedScoreAsHighscore(finalScore);
             if(this.topListManager) {
-                return await this.topListManager.submitScore(name, finalScore, mode, photoUrl, matchId);
+                return await this.topListManager.submitScore(name, finalScore, mode, photoUrl, matchId, options.finishedAt);
             }
         } catch(e) {
             console.warn("Nije moguće poslati rezultat u ovom trenutku:", e);
@@ -10787,7 +10810,7 @@ class YambApp {
     }
 
     getPendingGameRewardsKey() {
-        const uid = getPlayerId() || this.playerId;
+        const uid = getPlayerId();
         return uid ? `yamb_pending_game_rewards_${uid}` : '';
     }
 
@@ -10805,19 +10828,22 @@ class YambApp {
     writePendingGameRewards(items) {
         const key = this.getPendingGameRewardsKey();
         if (!key) return;
-        localStorage.setItem(key, JSON.stringify(Array.isArray(items) ? items.slice(-20) : []));
+        localStorage.setItem(key, JSON.stringify(Array.isArray(items) ? items : []));
     }
 
-    rememberPendingGameReward(matchId, score) {
+    rememberPendingGameReward(matchId, score, extra = {}) {
         const safeMatchId = String(matchId || '').trim();
         const safeScore = Math.max(0, Math.floor(Number(score) || 0));
         if (!safeMatchId || safeScore <= 0) return;
-        const items = this.readPendingGameRewards().filter(item => item.matchId !== safeMatchId);
+        const all = this.readPendingGameRewards();
+        const previous = all.find(item => item.matchId === safeMatchId);
+        const items = all.filter(item => item.matchId !== safeMatchId);
         items.push({
+            ...previous,
             matchId: safeMatchId,
             score: safeScore,
-            runtimeId: this.rewardRuntimeId,
-            createdAt: Date.now()
+            runtimeId: previous?.runtimeId || this.rewardRuntimeId,
+            createdAt: previous?.createdAt || Date.now(), ...extra
         });
         this.writePendingGameRewards(items);
     }
@@ -10872,16 +10898,51 @@ class YambApp {
 
     async recoverPendingGameRewards() {
         if (!this.socket || !this.socket.connected) return;
+        const uid = getPlayerId(), version = Number(window.yambAuthSessionVersion) || 0;
+        const current = () => uid && getPlayerId() === uid && version === (Number(window.yambAuthSessionVersion) || 0);
+        const economy = window.adMobGlobal;
+        if (typeof economy?.sendEconomyRequest === 'function') {
+            let after = '';
+            do {
+                const page = await economy.sendEconomyRequest('get_pending_game_rewards', { after }, economy.economyIdentity(), 18000);
+                if (!current() || !page.ok) break;
+                for (const entry of page.entries || []) {
+                    if (entry.matchId === this.pendingRewardMatchId && !this.rewardClaimed) continue;
+                    if (!this.readPendingGameRewards().some(item => item.matchId === entry.matchId)) {
+                        this.rememberPendingGameReward(entry.matchId, entry.score, { runtimeId: 'server-recovery', deferred: true });
+                    }
+                }
+                after = page.next || '';
+            } while (after);
+        }
+        if (!current()) return;
         const recoverable = this.readPendingGameRewards()
             .filter(item => item.deferred === true || item.runtimeId !== this.rewardRuntimeId);
 
         for (const item of recoverable) {
+            if (!current()) return;
             const matchResult = await this.ensurePendingRewardMatchSubmitted(item.matchId);
             if (!matchResult.ok) continue;
-            const result = await this.claimServerGameReward(item.score, false, '', item.matchId);
+            if (!current()) return;
+            let ad = (economy?.readEconomyClaims?.(uid) || []).find(entry => !entry.blocked && entry.context === 'game_double' && entry.claimData?.matchId === item.matchId);
+            const nonce = ad?.nonce || item.ssvNonce || '';
+            const doubled = !!nonce && (item.doubled || !!ad);
+            if (doubled && !ad && typeof economy?.rememberEconomyClaim === 'function') {
+                ad = economy.rememberEconomyClaim({ uid, context: 'game_double', nonce,
+                    claimData: { matchId: item.matchId, score: item.score } });
+            }
+            let result = await this.claimServerGameReward(item.score, doubled, doubled ? nonce : '', item.matchId);
+            if (!current()) return;
+            const doubleConfirmed = doubled && result?.ok;
+            if (doubled && !result?.ok) {
+                if (ad) economy.finishEconomyClaim(ad, result);
+                result = await this.claimServerGameReward(item.score, false, '', item.matchId);
+            }
+            if (!current()) return;
             if (result && result.ok && typeof result.balance === 'number') {
                 this.applyAuthoritativeGameRewardBalance(result.balance);
                 this.forgetPendingGameReward(item.matchId);
+                if (ad && doubleConfirmed) economy.finishEconomyClaim(ad, result);
             } else {
                 console.warn(`Odložena nagrada još nije potvrđena: ${result?.reason || 'unknown_error'}`);
             }
@@ -10889,6 +10950,7 @@ class YambApp {
     }
 
     claimServerGameReward(score, doubled, ssvNonce = '', matchId = this.pendingRewardMatchId) {
+        const uid = getPlayerId(), version = Number(window.yambAuthSessionVersion) || 0;
         return new Promise(resolve => {
             if (!this.socket || !this.socket.connected) {
                 resolve({ ok: false, reason: 'socket_disconnected', localFallback: true });
@@ -10900,7 +10962,9 @@ class YambApp {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
-                resolve(result || { ok: false, reason: 'empty_reward_response', permanent: false });
+                resolve(getPlayerId() === uid && version === (Number(window.yambAuthSessionVersion) || 0)
+                    ? (result || { ok: false, reason: 'empty_reward_response', permanent: false })
+                    : { ok: false, reason: 'account_changed' });
             };
             const claimTimeoutMs = doubled ? 45000 : 18000;
             const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), claimTimeoutMs);
@@ -11016,13 +11080,16 @@ class YambApp {
                     context: 'game_double',
                     amount: this.lastGameType === 'normal' && this.soloRewardPreview
                         ? this.soloRewardPreview.adReward
-                        : Math.min(8000, (parseInt(this.pendingScore, 10) || 0) * 2)
+                        : Math.min(8000, (parseInt(this.pendingScore, 10) || 0) * 2),
+                    claimData: { matchId: this.pendingRewardMatchId, score: this.pendingScore }
                 }));
             // A base claim made while the ad was loading takes precedence over a late ad callback.
             if (!success || attemptId !== this.rewardAdAttemptId || this.rewardClaimed || this.rewardClaimInProgress) return;
             this.pendingRewardSsvNonce = typeof this.adMob.consumeLastRewardSsvNonce === 'function'
                 ? this.adMob.consumeLastRewardSsvNonce()
                 : '';
+            this.rememberPendingGameReward(this.pendingRewardMatchId, this.pendingScore,
+                { doubled: true, ssvNonce: this.pendingRewardSsvNonce });
             await this.claimReward(true);
         } catch (err) {
             console.warn('Dupliranje nagrade nije uspelo; osnovna nagrada ostaje dostupna.', err);

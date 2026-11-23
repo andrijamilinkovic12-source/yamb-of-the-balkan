@@ -141,7 +141,9 @@ assert.equal((topList.match(/data-leaderboard-control="local"/g) || []).length, 
 assert.ok(topList.includes('data-lang="hs_global_plain"'));
 assert.ok(topList.includes('data-lang="hs_local_list"'));
 assert.ok(html.includes('theme-leaderboard-room.css?v=5'));
-assert.ok(html.indexOf('theme-leaderboard-room.js?v=2') < html.indexOf('toplista.js?v=5.0'));
+const scriptOrder = [...html.matchAll(/<script\b[^>]*\bsrc="([^"?]+)(?:\?[^"]*)?"/g)].map(match => match[1]);
+assert.ok(scriptOrder.includes('theme-leaderboard-room.js') &&
+    scriptOrder.indexOf('theme-leaderboard-room.js') < scriptOrder.indexOf('toplista.js'));
 for (const file of ['www/index.html', 'www/toplista.js', 'www/game.js']) {
     const source = read(file).toString();
     assert.doesNotMatch(source, /assets\/(?:easter|desert|severna)-soft-clay\/leaderboard\//);

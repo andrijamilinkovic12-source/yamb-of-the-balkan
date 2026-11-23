@@ -26,6 +26,16 @@ const { makeHarness, root } = require('./live-stage-test-harness.cjs');
         assert(Math.abs(clip[3] - h.board.width) < .01 && Math.abs(clip[4] - h.board.height) < .01, 'full board mask');
         scene.stop(); assert.equal(h.frames.size, 0); assert.equal(h.body.children.length, 0);
     }
+    for (const [frame, shouldCrack] of [[2100, false], [2800, true], [2820, true], [4500, false]]) {
+        const h = makeHarness(), audio = [];
+        h.setSoundManager({
+            iceAge() { audio.push('grow'); return () => audio.push('stop-grow'); },
+            iceAgeCrack() { audio.push('crack'); return () => audio.push('stop-crack'); }
+        });
+        const scene = new h.Stage(h.owner, 'ice_age'); await scene.start();
+        h.step(0); h.step(frame); scene.stop(); scene.stop();
+        assert.deepEqual(audio, shouldCrack ? ['grow', 'crack', 'stop-grow', 'stop-crack'] : ['grow', 'stop-grow']);
+    }
     const reduced = makeHarness({ reduced: true });
     const scene = new reduced.Stage(reduced.owner, 'ice_age'); await scene.start();
     assert(scene.duration <= 2600); reduced.step(0); reduced.step(2601);

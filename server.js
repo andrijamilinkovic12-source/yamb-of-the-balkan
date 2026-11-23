@@ -47,9 +47,15 @@ const tournamentReliability = require('./www/tournamentReliabilityCore');
 const { createTournamentReadinessService } = require('./lib/tournament-readiness');
 const { createTournamentReadinessStore } = require('./lib/tournament-readiness-store');
 const { createProfileWrites } = require('./lib/profile-writes');
+const { createAdMobRewardClaims } = require('./lib/admob-reward-claims');
+const { createLegacyTournamentWithdrawals } = require('./lib/legacy-tournament-withdrawals');
+const { createLegacyTournamentRegistration, registrationSnapshotFilter } = require('./lib/legacy-tournament-registration');
+const { walletState, changeDucats, walletUpdate } = require('./lib/ducat-wallet');
+const { createShopPurchases } = require('./lib/shop-purchases');
 const { removeFriendship } = require('./lib/friendships');
 const profileWrites = createProfileWrites();
 const leaderboardWrites = createProfileWrites();
+const legacyTournamentWrites = createProfileWrites();
 const { createTournamentSchedulingRuntime } = require('./lib/tournament-scheduling-runtime');
 const {
     createAccountDeletion, scrubEmbedded: scrubDeletedAccountReferences,
@@ -525,6 +531,14 @@ async function saveTournamentToDb() {
                 && tournamentState.readinessRevision === revision) tournamentState.readinessRevision = revision + 1;
             return;
         }
+        if (tournamentState.status === 'registration' && !tournamentState.readinessPolicyVersion) {
+            // A late PI or push-flag save must not restore an older paid roster.
+            const snapshot = structuredClone(tournamentState);
+            await TournamentStateDb.updateOne(registrationSnapshotFilter(snapshot), {
+                $set: { players: snapshot.players, bracket: snapshot.bracket, pushFlags: snapshot.pushFlags }
+            });
+            return;
+        }
         await TournamentStateDb.findOneAndUpdate({}, tournamentState, { upsert: true });
     } catch (err) {
         console.error("Greška pri čuvanju turnira u bazu:", err);
@@ -617,12 +631,11 @@ async function resetTournamentForNextCycle(reason = 'auto') {
             ...(previous.status === 'finished' ? { 'bracket.f.0.prizesAwarded': true } : { players: { $size: 0 } }) },
         { $set: nextState }, { writeConcern: { w: 'majority' } });
         if (!reset) throw new Error('tournament_reset_revision_conflict');
-    } else if (MONGO_URI && tournamentReadinessCore.isManaged(nextState)) {
+    } else if (MONGO_URI) {
         await mongoose.model('TournamentState').findOneAndUpdate({}, nextState, { upsert: true });
     }
     tournamentState = nextState;
     console.log(`🏆 Turnir resetovan za ${nextNumber}. turnir (${reason}).`);
-    if (!previous.auditPolicyVersion && !tournamentReadinessCore.isManaged(nextState)) await saveTournamentToDb();
     emitTournamentStateUpdate();
 }
 
@@ -714,6 +727,7 @@ const ScoreSchema = new mongoose.Schema({
 ScoreSchema.index({ mailboxRecordPending: 1, date: 1 }, { partialFilterExpression: { mailboxRecordPending: true } });
 ScoreSchema.index({ playerId: 1, score: -1 });
 ScoreSchema.index({ uid: 1, score: -1 });
+ScoreSchema.index({ date: -1 });
 ScoreSchema.index(
     { playerId: 1, matchId: 1 },
     { unique: true, partialFilterExpression: { matchId: { $type: 'string', $gt: '' } } }
@@ -725,6 +739,7 @@ const MatchParticipantSchema = new mongoose.Schema({
     name: { type: String, default: 'Nepoznat' },
     score: { type: Number, default: null },
     result: { type: String, enum: ['win', 'loss', 'draw', 'solo'], required: true },
+    recordAchievements: { type: [String], default: undefined },
     playerIndex: { type: Number, default: -1 }
 }, { _id: false });
 
@@ -744,9 +759,11 @@ const MatchResultSchema = new mongoose.Schema({
     isDraw: { type: Boolean, default: false },
     winnerReward: { type: Number, default: 0 },
     loserCoinPenalty: { type: Number, default: 0 },
+    leagueBooking: { type: Object, default: null },
     penaltyPoints: { type: Number, default: 0 },
     statsAppliedUids: { type: [String], default: [] },
     rewardClaimedUids: { type: [String], default: [] },
+    rewardPayouts: { type: Object, default: {} },
     statsComplete: { type: Boolean, default: false },
     lastReconcileAt: { type: Date, default: null },
     reconcileAttempts: { type: Number, default: 0 },
@@ -890,6 +907,9 @@ LeagueScoreSchema.index(
 );
 LeagueScoreSchema.index({ year: 1, quarter: 1, score: -1 });
 const LeagueScore = mongoose.model('LeagueScore', LeagueScoreSchema);
+const LeagueClosing = mongoose.model('LeagueClosing', new mongoose.Schema({
+    _id: String, sealed: Boolean, revision: Number
+}, { versionKey: false }));
 
 const LeagueHallOfFameSchema = new mongoose.Schema({
     periodKey: { type: String, unique: true, required: true },
@@ -1117,6 +1137,7 @@ const UserProfileSchema = new mongoose.Schema({
     highscore: { type: Number, default: 0 },
     totalScoreSum: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
+    pendingDucats: { type: Number, default: 0 },
     undoTokens: { type: Number, default: 0 },
     currentWinStreak: { type: Number, default: 0 },
     maxWinStreak: { type: Number, default: 0 },
@@ -1134,6 +1155,7 @@ const UserProfileSchema = new mongoose.Schema({
     activeTheme: { type: String, default: 'dark' },
     lastDaily: { type: String, default: "" },
     lastDailyRewardClaimed: { type: String, default: "" },
+    dailyRewardPayouts: { type: Object, default: {} },
     lastShopAdRewardAt: { type: Number, default: 0 },
     lastShopInterstitialRewardAt: { type: Number, default: 0 },
     lastUndoRewardedRewardAt: { type: Number, default: 0 },
@@ -1174,6 +1196,7 @@ const UserProfileSchema = new mongoose.Schema({
     claimedGameRewardIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
 });
+UserProfileSchema.pre('save', function () { Object.assign(this, walletState(this, MAX_BALANCE)); });
 UserProfileSchema.index({ 'pendingLeagueRankMail.id': 1 }, { sparse: true });
 UserProfileSchema.index({ 'pendingStatisticsMail.id': 1 }, { sparse: true });
 installStatisticsMail(UserProfileSchema, { calculatePowerIndex: powerIndexCore.calculatePowerIndex,
@@ -1230,10 +1253,20 @@ const AdMobRewardVerificationSchema = new mongoose.Schema({
     receivedAt: { type: Date, default: Date.now },
     claimedAt: { type: Date, default: null },
     claimedBy: { type: String, default: '' },
+    claimKey: { type: String, default: '' },
+    claimResult: { type: Object, default: null },
+    claimData: { type: Object, default: {} },
     raw: { type: Object, default: {} }
 });
 AdMobRewardVerificationSchema.index({ claimedAt: -1 });
 const AdMobRewardVerification = mongoose.model('AdMobRewardVerification', AdMobRewardVerificationSchema);
+const ShopPurchaseSchema = new mongoose.Schema({
+    _id: String, uid: { type: String, index: true }, requestId: String, itemId: String, price: Number, createdAt: Date
+}, { versionKey: false });
+const ShopPurchase = mongoose.model('ShopPurchase', ShopPurchaseSchema);
+const adMobRewardClaims = createAdMobRewardClaims({ connection: mongoose.connection,
+    receipts: AdMobRewardVerification, profiles: UserProfile, profileWrites,
+    guardWrite: accountDeletion.guardWrite });
 accountDeletion.protectModelBatches(mongoose.models);
 let deletionWebFirebaseConfig = require('./www/account-deletion-firebase.json');
 if (SERVER_RUNTIME.environment !== 'production') {
@@ -1314,6 +1347,14 @@ const TOURNEY_ENTRY_FEE = 5500;
 const TOURNEY_PARTICIPATION_RULES_VERSION = '2026-10-23';
 const TOURNEY_WINNER_REWARD = 44000;
 const TOURNEY_RUNNER_UP_REWARD = 5500;
+const legacyTournamentRegistration = createLegacyTournamentRegistration({ connection: mongoose.connection,
+    profiles: UserProfile, states: mongoose.model('TournamentState'), profileWrites,
+    guardWrite: accountDeletion.guardWrite, entryFee: TOURNEY_ENTRY_FEE, maxBalance: MAX_BALANCE,
+    seatPlayer: seatLegacyTournamentPlayer });
+const legacyTournamentWithdrawals = createLegacyTournamentWithdrawals({ connection: mongoose.connection,
+    profiles: UserProfile, states: mongoose.model('TournamentState'), profileWrites,
+    guardWrite: accountDeletion.guardWrite, entryFee: TOURNEY_ENTRY_FEE, maxBalance: MAX_BALANCE,
+    removeFromBracket: removePlayerFromTournamentBracket });
 const TOURNEY_FINISHED_RESET_DELAY_MS = 24 * 60 * 60 * 1000;
 const PUSH_TOKEN_STALE_DAYS = Number.isFinite(parseInt(process.env.PUSH_TOKEN_STALE_DAYS || '90', 10))
     ? parseInt(process.env.PUSH_TOKEN_STALE_DAYS || '90', 10)
@@ -1330,7 +1371,6 @@ const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
 const ADMOB_SSV_POLL_MS = 750;
 const ADMOB_SSV_MAX_AGE_MS = Math.max(60000, Math.min(15 * 60 * 1000, parseInt(process.env.ADMOB_SSV_MAX_AGE_MS || '600000', 10)));
-const ADMOB_CLIENT_FALLBACK_GRACE_MS = Math.max(1000, Math.min(30000, parseInt(process.env.ADMOB_CLIENT_FALLBACK_GRACE_MS || '2000', 10)));
 function parseRequiredAdMobSsv(value) {
     const normalized = String(value ?? '').trim().toLowerCase();
     if (!normalized) return true;
@@ -1345,13 +1385,14 @@ function parseOptionalBooleanEnv(value, defaultValue = false) {
 }
 const REQUIRE_ADMOB_SSV = parseRequiredAdMobSsv(process.env.REQUIRE_ADMOB_SSV);
 if (!REQUIRE_ADMOB_SSV) {
-    console.warn('⚠️ REQUIRE_ADMOB_SSV je isključen. Rewarded ad ekonomija koristi bypass bez server-side verifikacije.');
+    console.warn(SERVER_RUNTIME.environment === 'production'
+        ? 'Production ignores REQUIRE_ADMOB_SSV=false; signed SSV is required.'
+        : 'Local rewarded-ad verification bypass is enabled.');
 }
-// Client SDK signal is not proof that Google verified the reward.
-// Keep the fallback available only as an explicit emergency override.
+// Kept for configuration compatibility; unsigned client signals never authorize a payout.
 const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);
 if (REQUIRE_ADMOB_SSV && ALLOW_ADMOB_CLIENT_REWARD_FALLBACK) {
-    console.warn('⚠️ ALLOW_ADMOB_CLIENT_REWARD_FALLBACK je uključen. Koristim SDK rewarded fallback ako SSV callback zakasni ili nije konfigurisan.');
+    console.warn('AdMob client fallback is ignored: signed SSV is required for rewarded payouts.');
 }
 const ADMOB_REWARDED_AD_UNIT_ID = process.env.ADMOB_REWARDED_AD_UNIT_ID || 'ca-app-pub-4319963185096437/7896891915';
 const ADMOB_REWARDED_AD_UNIT_NUMERIC_ID = ADMOB_REWARDED_AD_UNIT_ID.includes('/')
@@ -1755,17 +1796,20 @@ function calculateSoloRecordPayout(score, achievements = []) {
     };
 }
 
-async function getSoloRecordAchievementsBeforeInsert(uid, score, recordDate, snapshots, mode = 'Solo') {
+async function getSoloRecordAchievementsBeforeInsert(uid, score, recordDate, snapshots, mode = 'Solo', history = {}) {
     const flags = [];
     const personalModes = ['random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(String(mode).toLowerCase())
         ? /^(random|online|friend_invite|challenge|tournament|duel|prijatelj|turnir)$/i : /^(solo|hotseat)$/i;
     const previousSolo = await Score.findOne({
         $or: [{ playerId: uid }, { uid }],
+        ...(history.scoreFilter || { date: { $lte: recordDate } }),
         mode: personalModes
     }).sort({ score: -1 }).select('score').lean();
-    if (!previousSolo || score > Math.max(0, toSafeInt(previousSolo.score, 0))) flags.push('personal');
+    if ((!previousSolo || score > Math.max(0, toSafeInt(previousSolo.score, 0))) &&
+        !(history.matchFilter && await MatchResult.exists({ ...history.matchFilter, mode: personalModes,
+            participants: { $elemMatch: { uid, score: { $gte: score } } } }))) flags.push('personal');
     for (const period of LEADERBOARD_RECORD_PERIODS) {
-        const start = getLeaderboardPeriodStart(period);
+        const start = getLeaderboardPeriodStart(period, recordDate);
         if (start && recordDate < start) continue;
         // A valid all-time top score also exceeds this account's earlier local best.
         if (period === 'all_time' && !flags.includes('personal')) continue;
@@ -1773,6 +1817,59 @@ async function getSoloRecordAchievementsBeforeInsert(uid, score, recordDate, sna
         if (!previous || score > Math.max(0, toSafeInt(previous.score, 0))) flags.push(period);
     }
     return normalizeSoloRecordAchievements(flags);
+}
+
+async function freezeMatchRecordAchievements(uid, matchId, score) {
+    const eligible = { resultType: 'regular', economyEligible: true, verification: { $in: ['server', 'authenticated_client'] } };
+    const match = await MatchResult.findOne({ matchId, ...eligible,
+        'participants.uid': uid }).select('participants mode finishedAt createdAt').lean();
+    const index = match?.participants.findIndex(p => p.uid === uid && p.score === score) ?? -1;
+    if (index < 0) throw new Error('verified_record_participant_missing');
+    const saved = match.participants[index].recordAchievements;
+    if (Array.isArray(saved)) return saved;
+
+    const date = match.finishedAt || match.createdAt;
+    if (!(date instanceof Date) || !Number.isFinite(date.getTime())) throw new Error('verified_record_date_missing');
+    // Equal timestamps use match ID, then the stored participant order, even on recovery.
+    const before = field => ({ $and: [{ $or: [
+        { [field]: { $lt: date } }, { [field]: date, matchId: { $lt: matchId } },
+        ...(field === 'date' ? [{ date, matchId: null }, { date: null }] : [])
+    ] }] });
+    const scoreFilter = before('date');
+    const matchFilter = { ...before('finishedAt'), ...eligible };
+    const earlierOpponent = match.participants.slice(0, index).some(p =>
+        STABLE_LEADERBOARD_UID_REGEX.test(p.uid) && p.score >= score);
+    // The most recent equal-or-higher score tells us which historical periods it blocks.
+    // Check verified matches too: their leaderboard rows may still be awaiting recovery.
+    const [scored, verified] = earlierOpponent ? [null, null] : await Promise.all([
+        Score.aggregate([
+            { $match: { ...getLeaderboardRecordMatchFilter('all_time'), ...scoreFilter } },
+            { $sort: { date: -1 } },
+            { $addFields: getLeaderboardScoreAddFields() },
+            { $match: { stableUid: { $ne: null }, numScore: { $gte: score } } },
+            { $limit: 1 }, { $project: { date: 1 } }
+        ]).then(rows => rows[0]),
+        MatchResult.findOne({ ...matchFilter, participants: { $elemMatch: {
+            uid: STABLE_LEADERBOARD_UID_REGEX, score: { $gte: score }
+        } } }).sort({ finishedAt: -1 }).select('finishedAt').lean()
+    ]);
+    const last = earlierOpponent ? date.getTime() : Math.max(scored ? Number(scored.date || 0) : -Infinity,
+        verified ? Number(verified.finishedAt) : -Infinity);
+    const snapshots = Object.fromEntries(LEADERBOARD_RECORD_PERIODS.map(period => {
+        const start = getLeaderboardPeriodStart(period, date);
+        return [period, last !== -Infinity && (!start || last >= start.getTime()) ? { score } : null];
+    }));
+    const achievements = await getSoloRecordAchievementsBeforeInsert(uid, score, date, snapshots, match.mode,
+        { scoreFilter, matchFilter });
+    const key = 'participants.' + index;
+    const path = key + '.recordAchievements';
+    const stored = await MatchResult.updateOne({ _id: match._id, [key + '.uid']: uid, [path]: { $exists: false } },
+        { $set: { [path]: achievements } });
+    if (stored.matchedCount) return achievements;
+    const winner = await MatchResult.findOne({ _id: match._id }).select('participants').lean();
+    const frozen = winner?.participants.find(p => p.uid === uid)?.recordAchievements;
+    if (!Array.isArray(frozen)) throw new Error('verified_record_award_pending');
+    return frozen;
 }
 
 function formatRecordScore(score, language = 'sr') {
@@ -1885,6 +1982,7 @@ const LOCAL_GAME_SESSION_SECRET = process.env.LOCAL_GAME_SESSION_SECRET ||
     process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 ||
     process.env.MONGO_URI ||
     crypto.randomBytes(32).toString('hex');
+const DAILY_REWARD_CLAIM_SECRET = process.env.DAILY_REWARD_CLAIM_SECRET || LOCAL_GAME_SESSION_SECRET;
 if (!process.env.LOCAL_GAME_SESSION_SECRET) {
     console.warn('⚠️ LOCAL_GAME_SESSION_SECRET nije podešen; koristi se privatna serverska konfiguracija ili privremeni ključ.');
 }
@@ -2009,10 +2107,19 @@ function getDailyChallengeForUid(uid, now = new Date()) {
     const dice = getDailyChallengeDice(uid, dayKey);
     return {
         dayKey,
+        claimToken: crypto.createHmac('sha256', DAILY_REWARD_CLAIM_SECRET).update(JSON.stringify(['daily-claim', uid, dayKey])).digest('hex'),
         timeZone: DAILY_CHALLENGE_TIME_ZONE,
         dice,
         ...dailyChallengeCore.calculateReward(dice)
     };
+}
+
+function verifyDailyClaimToken(uid, dayKey, token) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dayKey || '') || !/^[a-f0-9]{64}$/.test(token || '')) return false;
+    const date = new Date(dayKey + 'T12:00:00Z');
+    if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== dayKey || dayKey > getDailyChallengeDayKey()) return false;
+    const expected = crypto.createHmac('sha256', DAILY_REWARD_CLAIM_SECRET).update(JSON.stringify(['daily-claim', uid, dayKey])).digest('hex');
+    return crypto.timingSafeEqual(Buffer.from(token), Buffer.from(expected));
 }
 
 function getTimeZoneOffsetMs(date, timeZone) {
@@ -3337,6 +3444,8 @@ async function handleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId) {
             roomId: activeRoomId,
             reason: 'disconnect_grace_expired'
         });
+        if (technicalResult.obsolete) return;
+        if (technicalResult.conflict) return endConflictingOnlineRoom(activeRoomId);
         resolveDisconnectDiagnostic(ghost.diagnosticEventId, {
             outcome: 'technical_result',
             matchId: String(technicalResult.matchId || stateAfterGrace.matchId || '').substring(0, 128),
@@ -3373,7 +3482,8 @@ async function handleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId) {
         loserName: technicalLoser?.name || 'Igrac',
         reward: technicalResult.winnerReward,
         coinPenalty: technicalResult.loserCoinPenalty,
-        serverApplied: technicalResult.serverApplied
+        serverApplied: technicalResult.serverApplied,
+        leagueStatus: technicalResult.leagueStatus
     });
 
     cleanupOnlineRoom(activeRoomId);
@@ -3543,7 +3653,6 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
         () => applyServerSidePenalty(playerId, penaltyAmount, h2hKey, coinPenalty, opponentMeta, syncExtra));
     try {
         const UserProfile = mongoose.model('UserProfile');
-        const leaguePeriodDate = syncExtra.periodDate;
         const publicSyncExtra = { ...syncExtra };
         delete publicSyncExtra.periodDate;
 
@@ -3562,8 +3671,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             applyTechnicalDuelH2H(user, opponentMeta, 'loss');
 
             if (coinPenalty > 0) {
-                user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
-                await applyTechnicalLeagueDelta(user, -coinPenalty, { periodDate: leaguePeriodDate });
+                changeDucats(user, -coinPenalty, MAX_BALANCE);
             }
 
             if (syncExtra.matchId) rememberUserAppliedMatchResult(user, syncExtra.matchId);
@@ -3595,7 +3703,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
         );
 
         if (user && coinPenalty > 0) {
-            user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
+            changeDucats(user, -coinPenalty, MAX_BALANCE);
             await user.save();
         }
 
@@ -3610,8 +3718,19 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
 }
 
 async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount = 50, h2hKey = null, h2hContext = {}) {
-    if (!profileWrites.owns([winnerId, loserId])) return profileWrites.run([winnerId, loserId],
-        () => applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount, h2hKey, h2hContext));
+    h2hContext.finishedAt ??= Date.now();
+    if (!profileWrites.owns([winnerId, loserId])) {
+        const room = roomState[h2hContext.roomId];
+        for (let attempt = 0; ; attempt++) {
+            if (attempt && roomState[h2hContext.roomId] !== room) return { obsolete: true };
+            const result = await profileWrites.run([winnerId, loserId],
+                () => applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount, h2hKey, h2hContext));
+            if (!result.storagePending) return result;
+            if (!room || roomState[h2hContext.roomId] !== room) return { obsolete: true };
+            if (!attempt) console.warn('Technical result awaiting durable storage:', h2hContext.roomId);
+            await new Promise(resolve => setTimeout(resolve, Math.min(30000, 1000 * 2 ** Math.min(5, attempt))));
+        }
+    }
     const calculatedWinnerReward = await getTechnicalCoinAmount(winnerId);
     const calculatedLoserCoinPenalty = await getTechnicalCoinAmount(loserId);
 
@@ -3645,8 +3764,8 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
         loserCoinPenalty: calculatedLoserCoinPenalty,
         penaltyPoints: penaltyAmount,
         startedAt: room?.matchStartedAt || null,
-        finishedAt: Date.now()
-    }, { majority: Boolean(room?.tournamentAuditGame) });
+        finishedAt: h2hContext.finishedAt
+    });
 
     const storedResult = ledgerWrite.result;
     const winnerReward = ledgerWrite.created
@@ -3664,6 +3783,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
             winnerReward,
             loserCoinPenalty,
             serverApplied: expectedUids.length > 0 && expectedUids.every(uid => appliedUids.has(uid)),
+            storagePending: !storedResult,
             conflict: ledgerWrite.reason === 'match_result_conflict'
         };
     }
@@ -3676,7 +3796,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
                     await markMatchResultStatsApplied(matchId, winnerId);
                     appliedUids.add(winnerId);
                 } else {
-                    winner.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(winner.balance, 0)) + winnerReward);
+                    changeDucats(winner, winnerReward, MAX_BALANCE);
                     winner.games = Math.max(0, toSafeInt(winner.games, 0)) + 1;
                     winner.totalScoreSum = Math.max(0, toSafeInt(winner.totalScoreSum, 0)) + winnerReward;
                     winner.wins = Math.max(0, toSafeInt(winner.wins, 0)) + 1;
@@ -3687,7 +3807,6 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
                     );
                     const winnerOpponent = h2hContext.winnerOpponent || (loserId ? { uid: loserId, name: 'Nepoznat' } : null);
                     if (winnerOpponent) applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
-                    await applyTechnicalLeagueDelta(winner, winnerReward, { periodDate: storedResult?.finishedAt });
                     rememberUserAppliedMatchResult(winner, matchId);
                     await winner.save();
                     await markMatchResultStatsApplied(matchId, winnerId);
@@ -3726,6 +3845,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
         matchId,
         winnerReward,
         loserCoinPenalty,
+        leagueStatus: storedResult?.leagueBooking?.status,
         serverApplied
     };
 }
@@ -4173,7 +4293,7 @@ function getMatchResultIdentitySignature(payload = {}) {
     });
 }
 
-async function ensureMatchResult(payload = {}, { majority = false } = {}) {
+async function ensureMatchResult(payload = {}) {
     if (!MONGO_URI) return { ok: false, reason: 'db_unavailable', created: false, result: null };
 
     const normalized = normalizeMatchResultPayload(payload);
@@ -4189,40 +4309,43 @@ async function ensureMatchResult(payload = {}, { majority = false } = {}) {
             }
         }
 
-        const writeResult = await MatchResult.updateOne(
-            { matchId: normalized.matchId },
-            { $setOnInsert: normalized },
-            { upsert: true, ...(majority ? { writeConcern: { w: 'majority' } } : {}) }
-        );
-        const result = await MatchResult.findOne({ matchId: normalized.matchId });
-        if (!result) return { ok: false, reason: 'match_result_not_found', created: false, result: null };
+        return await mongoose.connection.transaction(async session => {
+            const writeResult = await MatchResult.updateOne(
+                { matchId: normalized.matchId },
+                { $setOnInsert: normalized },
+                { upsert: true, session }
+            );
+            const result = await MatchResult.findOne({ matchId: normalized.matchId }).session(session);
+            if (!result) return { ok: false, reason: 'match_result_not_found', created: false, result: null };
 
-        const sameIdentity = getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) ===
-            getMatchResultIdentitySignature(normalized);
-        if (!sameIdentity) {
-            console.error(`MATCH RESULT CONFLICT: ${normalized.matchId} je ponovo poslat sa drugačijim ishodom.`);
-            return { ok: false, reason: 'match_result_conflict', created: false, result };
-        }
+            const sameIdentity = getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) ===
+                getMatchResultIdentitySignature(normalized);
+            if (!sameIdentity) {
+                console.error(`MATCH RESULT CONFLICT: ${normalized.matchId} je ponovo poslat sa drugačijim ishodom.`);
+                return { ok: false, reason: 'match_result_conflict', created: false, result };
+            }
 
-        return {
-            ok: true,
-            created: writeResult.upsertedCount === 1,
-            result
-        };
+            await bookMatchLeague(result, session);
+            return {
+                ok: true,
+                created: writeResult.upsertedCount === 1,
+                result
+            };
+        }, { readPreference: 'primary', writeConcern: { w: 'majority' } });
     } catch (err) {
         if (err && err.code === 11000) {
             const result = await MatchResult.findOne(normalized.gameSessionId
                 ? { $or: [{ matchId: normalized.matchId }, { gameSessionId: normalized.gameSessionId }] }
                 : { matchId: normalized.matchId });
-            if (result && getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) === getMatchResultIdentitySignature(normalized)) {
+            if (result?.leagueBooking && getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) === getMatchResultIdentitySignature(normalized)) {
                 return { ok: true, created: false, result };
             }
-            if (result && result.gameSessionId === normalized.gameSessionId) {
+            if (normalized.gameSessionId && result && result.matchId !== normalized.matchId && result.gameSessionId === normalized.gameSessionId) {
                 return { ok: false, reason: 'game_session_already_used', created: false, result };
             }
         }
         console.error('Greška pri trajnom upisu rezultata partije:', err);
-        return { ok: false, reason: 'server_error', created: false, result: null };
+        return { ok: false, reason: err.code === 'league_profile_missing' ? 'profile_not_found' : 'server_error', created: false, result: null };
     }
 }
 
@@ -4365,10 +4488,10 @@ async function persistLeaderboardScoreRecord(options = {}) {
     const isLocalRecord = ['solo', 'hotseat'].includes(mode.toLowerCase());
     const isOnlineDuelRecord = ['random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(mode.toLowerCase());
     const isRecordReward = isLocalRecord || isOnlineDuelRecord;
-    const leaderboardRecordSnapshots = (isRecordReward || options.notifyRecords !== false)
+    const leaderboardRecordSnapshots = options.notifyRecords !== false
         ? await captureLeaderboardRecordSnapshots() : null;
     const recordAchievements = isRecordReward
-        ? await getSoloRecordAchievementsBeforeInsert(finalUid, score, recordDate, leaderboardRecordSnapshots, mode)
+        ? await freezeMatchRecordAchievements(finalUid, matchId, score)
         : [];
     const recordMail = options.notifyRecords === false ? null : leaderboardRecordNotice(leaderboardRecordSnapshots,
         { uid: finalUid, matchId, playerName, score, date: recordDate, createdAt: Date.now() },
@@ -4475,6 +4598,7 @@ function emitCompletedOnlineGame(roomId) {
 
     io.to(roomId).emit('online_game_finished', {
         matchId: ensureRoomMatchId(roomId, state),
+        finishedAt: state.completedBoardsAt || Date.now(),
         roomId,
         duelType: getOnlineDuelType(roomId),
         players,
@@ -4755,9 +4879,10 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
     }));
 
     if (participants.some(player => !player.uid || player.uid.startsWith('guest_'))) return [];
+    state.completedBoardsAt ??= Date.now();
     const profileUids = participants.map(player => player.uid);
     if (!profileWrites.owns(profileUids)) return profileWrites.run(profileUids,
-        () => applyServerSideCompletedDuel(roomId, finisherSocketId));
+        () => applyServerSideCompletedDuel(roomId));
 
     const isDraw = participants[0].score === participants[1].score;
     const matchId = ensureRoomMatchId(roomId, state);
@@ -4783,16 +4908,12 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
         loserUid: winner ? participants.find(player => player.uid !== winner.uid)?.uid || '' : '',
         isDraw,
         startedAt: state.matchStartedAt || null,
-        finishedAt: Date.now()
-    }, { majority: Boolean(state.tournamentAuditGame) });
+        finishedAt: state.completedBoardsAt
+    });
 
     if (!ledgerWrite.ok) {
-        const existingApplied = ledgerWrite.result && Array.isArray(ledgerWrite.result.statsAppliedUids)
-            ? ledgerWrite.result.statsAppliedUids.filter(uid => participants.some(player => player.uid === uid))
-            : [];
-        state.completedDuelStatsAppliedUids = [...existingApplied];
-        state.completedDuelStatsApplied = existingApplied.length === participants.length;
-        return [...existingApplied];
+        if (ledgerWrite.reason === 'match_result_conflict') return null;
+        throw new Error(ledgerWrite.reason || 'match_result_not_saved');
     }
 
     const appliedUids = new Set(Array.isArray(ledgerWrite.result.statsAppliedUids)
@@ -4840,10 +4961,9 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
                 continue;
             }
 
-            const powerIndexBefore = powerIndexCore.calculatePowerIndex(user);
+            const powerIndexBefore = powerIndexBeforeLeagueBooking(user, ledgerWrite.result);
             applyCompletedDuelProfileStats(user, resultType, player.score);
             applyCompletedDuelH2H(user, opponent, resultType, player.score, opponent.score);
-            await applyTechnicalLeagueDelta(user, player.score, { periodDate: ledgerWrite.result?.finishedAt || Date.now() });
             const powerIndexGain = powerIndexCore.calculatePowerIndex(user) - powerIndexBefore;
             rememberRecentPowerIndexGain(user, matchId, powerIndexGain);
             rememberUserAppliedMatchResult(user, matchId);
@@ -4879,9 +4999,19 @@ function hasCompletedOnlineDuelScores(state) {
         state.allScores.slice(0, 2).every(sheet => calculateCompletedDuelTotal(sheet) !== null);
 }
 
+function endConflictingOnlineRoom(roomId) {
+    const state = roomState[roomId];
+    if (!state) return false;
+    queueMatchResultReconciliation(1000);
+    io.to(roomId).emit('force_cancel_online', { roomId, matchId: state.matchId, reason: 'match_result_conflict' });
+    cleanupOnlineRoom(roomId);
+    return false;
+}
+
 async function settleCompletedOnlineRoom(roomId, finisherSocketId = null) {
     const state = roomId ? roomState[roomId] : null;
     if (!state || state.gameFinished || !hasCompletedOnlineDuelScores(state)) return false;
+    if (finisherSocketId && !state.players.includes(finisherSocketId)) return false;
 
     if (state.completionSettlementPromise) {
         return state.completionSettlementPromise;
@@ -4892,7 +5022,16 @@ async function settleCompletedOnlineRoom(roomId, finisherSocketId = null) {
     }
 
     const settlementPromise = (async () => {
-        await applyServerSideCompletedDuel(roomId, finisherSocketId);
+        for (let attempt = 0; ; attempt++) {
+            try {
+                if (await applyServerSideCompletedDuel(roomId) === null) return endConflictingOnlineRoom(roomId);
+                break;
+            } catch (error) {
+                if (attempt === 0) console.error('Online result awaiting durable storage:', roomId, error.message);
+                await new Promise(resolve => setTimeout(resolve, Math.min(30000, 1000 * 2 ** Math.min(5, attempt))));
+                if (roomState[roomId] !== state || state.gameFinished) return false;
+            }
+        }
         if (state.tournamentAuditGame) {
             const settled = await settleAuditedTournamentGame(state.tournamentAuditGame);
             if (!settled) {
@@ -5120,6 +5259,8 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
             roomId,
             reason: 'turn_timeout'
         });
+        if (technicalResult.obsolete) return;
+        if (technicalResult.conflict) return endConflictingOnlineRoom(roomId);
         const bracketSettled = await applyTournamentTechnicalWinner(roomId, winnerUid, 'turn_timeout');
         if (state.tournamentAuditGame && !bracketSettled) {
             interruptAuditedTournamentRoom(roomId, state);
@@ -5139,6 +5280,7 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
             winnerReward: technicalResult.winnerReward,
             coinPenalty: technicalResult.loserCoinPenalty,
             serverApplied: technicalResult.serverApplied,
+            leagueStatus: technicalResult.leagueStatus,
             penalty: penaltyAmount,
             message: 'Protivniku je isteklo vreme! Tehnička pobeda.'
         });
@@ -5170,39 +5312,27 @@ function sweepTurnTimeouts() {
 setInterval(sweepTurnTimeouts, TURN_TIMEOUT_WATCHDOG_MS);
 // ==================================================================
 
-function generateTournamentBracket() {
-    if (!hasFullTournamentRoster()) {
-        tournamentState.status = 'registration';
-        tournamentState.finishedAt = null;
-        tournamentState.resetAt = null;
-        ensureTournamentRegistrationBracket();
-        saveTournamentToDb();
-        scheduleTournamentAutoReset();
-        return false;
-    }
+function seatLegacyTournamentPlayer(state, player) {
+    if (!assignPlayerToRandomTournamentSlot(player, state)) throw new Error('tournament_bracket_full');
+    state.players.push(player);
+    if (state.players.length < 8) return;
 
-    tournamentState.status = 'active';
-    tournamentState.finishedAt = null;
-    tournamentState.resetAt = null;
-    scheduleTournamentAutoReset();
-    ensureTournamentRegistrationBracket();
-
-    const registrationSlots = tournamentState.bracket.qf
+    state.status = 'active';
+    const registrationSlots = state.bracket.qf
         .flatMap(match => match ? [match.p1, match.p2] : [null, null])
         .filter(Boolean);
     const slotIds = new Set(registrationSlots.map(player => player.id));
     const hasRandomRegistrationBracket = (
         registrationSlots.length === 8 &&
         slotIds.size === 8 &&
-        tournamentState.players.length === 8 &&
-        tournamentState.players.every(player => slotIds.has(player.id))
+        state.players.every(player => slotIds.has(player.id))
     );
 
     const qfPlayers = hasRandomRegistrationBracket
         ? registrationSlots
-        : shuffleTournamentPlayers(tournamentState.players);
+        : shuffleTournamentPlayers(state.players);
 
-    tournamentState.bracket = {
+    state.bracket = {
         qf: [
             createTournamentMatch(qfPlayers[0], qfPlayers[1]),
             createTournamentMatch(qfPlayers[2], qfPlayers[3]),
@@ -5212,8 +5342,6 @@ function generateTournamentBracket() {
         sf: [null, null],
         f: [null]
     };
-    saveTournamentToDb();
-    return true;
 }
 
 function createTournamentMatch(p1 = null, p2 = null) {
@@ -6586,26 +6714,26 @@ function shuffleTournamentPlayers(players) {
     return shuffled;
 }
 
-function ensureTournamentRegistrationBracket() {
-    if (!tournamentState.bracket || typeof tournamentState.bracket !== 'object') {
-        tournamentState.bracket = createEmptyTournamentBracket();
+function ensureTournamentRegistrationBracket(state) {
+    if (!state.bracket || typeof state.bracket !== 'object') {
+        state.bracket = createEmptyTournamentBracket();
     }
 
-    if (!Array.isArray(tournamentState.bracket.qf)) {
-        tournamentState.bracket.qf = [null, null, null, null];
+    if (!Array.isArray(state.bracket.qf)) {
+        state.bracket.qf = [null, null, null, null];
     } else {
-        tournamentState.bracket.qf = tournamentState.bracket.qf.slice(0, 4);
-        while (tournamentState.bracket.qf.length < 4) tournamentState.bracket.qf.push(null);
+        state.bracket.qf = state.bracket.qf.slice(0, 4);
+        while (state.bracket.qf.length < 4) state.bracket.qf.push(null);
     }
 
-    if (!Array.isArray(tournamentState.bracket.sf)) tournamentState.bracket.sf = [null, null];
-    if (!Array.isArray(tournamentState.bracket.f)) tournamentState.bracket.f = [null];
+    if (!Array.isArray(state.bracket.sf)) state.bracket.sf = [null, null];
+    if (!Array.isArray(state.bracket.f)) state.bracket.f = [null];
 }
 
-function assignPlayerToRandomTournamentSlot(player) {
-    ensureTournamentRegistrationBracket();
+function assignPlayerToRandomTournamentSlot(player, state) {
+    ensureTournamentRegistrationBracket(state);
 
-    for (const match of tournamentState.bracket.qf) {
+    for (const match of state.bracket.qf) {
         if (!match) continue;
         if ((match.p1 && match.p1.id === player.id) || (match.p2 && match.p2.id === player.id)) {
             return true;
@@ -6614,7 +6742,7 @@ function assignPlayerToRandomTournamentSlot(player) {
 
     const emptySlots = [];
     for (let matchIndex = 0; matchIndex < 4; matchIndex++) {
-        const match = tournamentState.bracket.qf[matchIndex];
+        const match = state.bracket.qf[matchIndex];
         if (!match) {
             emptySlots.push({ matchIndex, position: 'p1' }, { matchIndex, position: 'p2' });
             continue;
@@ -6626,18 +6754,18 @@ function assignPlayerToRandomTournamentSlot(player) {
     if (emptySlots.length === 0) return false;
 
     const slot = emptySlots[Math.floor(Math.random() * emptySlots.length)];
-    if (!tournamentState.bracket.qf[slot.matchIndex]) {
-        tournamentState.bracket.qf[slot.matchIndex] = createTournamentMatch();
+    if (!state.bracket.qf[slot.matchIndex]) {
+        state.bracket.qf[slot.matchIndex] = createTournamentMatch();
     }
-    tournamentState.bracket.qf[slot.matchIndex][slot.position] = player;
+    state.bracket.qf[slot.matchIndex][slot.position] = player;
     return true;
 }
 
-function removePlayerFromTournamentBracket(uid) {
-    if (!uid || !tournamentState.bracket) return;
+function removePlayerFromTournamentBracket(uid, state = tournamentState) {
+    if (!uid || !state.bracket) return;
 
     ['qf', 'sf', 'f'].forEach(round => {
-        const matches = tournamentState.bracket[round];
+        const matches = state.bracket[round];
         if (!Array.isArray(matches)) return;
 
         matches.forEach((match, index) => {
@@ -7052,7 +7180,7 @@ function buildProfileSyncPayload(user) {
         games: Math.max(0, toSafeInt(user.games)),
         highscore: Math.max(0, toSafeInt(user.highscore)),
         totalScoreSum: Math.max(0, toSafeInt(user.totalScoreSum)),
-        balance: Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance))),
+        ...walletState(user, MAX_BALANCE),
         undoTokens: Math.max(0, Math.min(MAX_UNDO_TOKENS, toSafeInt(user.undoTokens))),
         currentWinStreak: Math.max(0, toSafeInt(user.currentWinStreak)),
         maxWinStreak: Math.max(0, toSafeInt(user.maxWinStreak)),
@@ -7144,41 +7272,6 @@ async function emitPendingTournamentPrizes(socket) {
     }
 }
 
-async function debitTournamentEntryFee(uid) {
-    if (!MONGO_URI) return { ok: true, user: null };
-    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => debitTournamentEntryFee(uid));
-
-    const existingUser = await UserProfile.findOne({ firebaseUid: uid }).select('balance').lean();
-    if (!existingUser) return { ok: false, reason: 'auth_required' };
-    if (toSafeInt(existingUser.balance) < TOURNEY_ENTRY_FEE) {
-        return { ok: false, reason: 'tourney_not_enough_money' };
-    }
-
-    const user = await UserProfile.findOneAndUpdate(
-        { firebaseUid: uid, balance: { $gte: TOURNEY_ENTRY_FEE } },
-        { $inc: { balance: -TOURNEY_ENTRY_FEE } },
-        { new: true }
-    );
-
-    if (!user) return { ok: false, reason: 'tourney_not_enough_money' };
-    return { ok: true, user };
-}
-
-async function refundTournamentEntryFee(uid) {
-    if (!MONGO_URI) return null;
-    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => refundTournamentEntryFee(uid));
-
-    const user = await UserProfile.findOne({ firebaseUid: uid });
-    if (!user) return null;
-
-    user.balance = Math.min(
-        MAX_BALANCE,
-        Math.max(0, toSafeInt(user.balance)) + TOURNEY_ENTRY_FEE
-    );
-    await user.save();
-    return user;
-}
-
 async function applyTournamentPrize(uid, notice) {
     if (!uid) return { ok: false };
     if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => applyTournamentPrize(uid, notice));
@@ -7188,12 +7281,11 @@ async function applyTournamentPrize(uid, notice) {
         return { ok: true, user: null };
     }
 
-    const previous = await UserProfile.findOne({ firebaseUid: uid }).select('balance tournamentWins lastTournamentPrizeId').lean();
+    const previous = await UserProfile.findOne({ firebaseUid: uid }).select('balance pendingDucats tournamentWins lastTournamentPrizeId').lean();
     if (!previous) return { ok: false };
     if (previous.lastTournamentPrizeId === notice.id) return { ok: true, user: previous };
     const user = await UserProfile.findOneAndUpdate({ firebaseUid: uid, lastTournamentPrizeId: { $ne: notice.id } }, {
-        $set: { balance: Math.min(MAX_BALANCE, Math.max(0, toSafeInt(previous.balance)) + notice.reward),
-            lastTournamentPrizeId: notice.id },
+        $set: { ...walletState(changeDucats(previous, notice.reward, MAX_BALANCE), MAX_BALANCE), lastTournamentPrizeId: notice.id },
         ...(notice.role === 'winner' ? { $inc: { tournamentWins: 1 } } : {}),
         $push: { pendingTournamentPrizes: notice,
             playerMailbox: appendMail(createMail(notice.role === 'winner' ? 'tournament_winner' : 'tournament_finalist',
@@ -7230,8 +7322,16 @@ function sanitizeTournamentHistoryPlayer(player) {
     };
 }
 
+function sanitizeTournamentHistoryScore(value) {
+    if (typeof value !== 'number' && !(typeof value === 'string' && value.trim())) return null;
+    const score = Number(value);
+    return Number.isFinite(score) ? Math.max(0, Math.floor(score)) : null;
+}
+
 function sanitizeTournamentHistoryMatch(match) {
-    if (!match || (!match.p1 && !match.p2)) return null;
+    const kind = match?.review?.kind;
+    const hasDecision = ['technical', 'double_dq', 'void', 'bye', 'empty'].includes(kind);
+    if (!match || (!match.p1 && !match.p2 && !hasDecision)) return null;
     const resultType = match.resultType === 'technical' ? 'technical' : (match.resultType === 'regular' ? 'regular' : '');
     const drawCount = Number.isFinite(Number(match.drawCount)) ? Math.max(0, Math.floor(Number(match.drawCount))) : 0;
     return {
@@ -7240,8 +7340,9 @@ function sanitizeTournamentHistoryMatch(match) {
         winnerId: sanitizeTournamentHistoryText(match.winnerId || '', 160),
         resultType,
         scoreLabel: sanitizeTournamentHistoryText(match.scoreLabel || '', 40),
-        p1Score: Number.isFinite(Number(match.p1Score)) ? Math.max(0, Math.floor(Number(match.p1Score))) : null,
-        p2Score: Number.isFinite(Number(match.p2Score)) ? Math.max(0, Math.floor(Number(match.p2Score))) : null,
+        p1Score: sanitizeTournamentHistoryScore(match.p1Score),
+        p2Score: sanitizeTournamentHistoryScore(match.p2Score),
+        ...(hasDecision ? { review: { kind } } : {}),
         technicalWinReason: sanitizeTournamentHistoryText(match.technicalWinReason || '', 60),
         drawCount,
         lastDrawScoreLabel: sanitizeTournamentHistoryText(match.lastDrawScoreLabel || '', 40)
@@ -7270,7 +7371,7 @@ async function buildTournamentChampionshipRecord(match, winnerObj) {
         winnerName: sanitizeTournamentName(winnerObj.name || 'Igrac'),
         winnerPhotoUrl: sanitizeTournamentHistoryText(winnerObj.photoUrl || '', 500),
         runnerUpId: sanitizeTournamentHistoryText(runnerUpObj?.id || '', 160),
-        runnerUpName: sanitizeTournamentName(runnerUpObj?.name || 'Finalista'),
+        runnerUpName: runnerUpObj?.name ? sanitizeTournamentName(runnerUpObj.name) : '',
         scoreLabel: sanitizeTournamentHistoryText(match.scoreLabel || '', 40),
         resultType: match.resultType === 'technical' ? 'technical' : 'regular',
         bracket: sanitizeTournamentHistoryBracket(tournamentState.bracket)
@@ -7403,7 +7504,7 @@ function buildCurrentFinishedChampionshipFallback(statsItem) {
         winnerName: sanitizeTournamentName(winnerObj.name || statsItem.playerName || 'Igrac'),
         winnerPhotoUrl: sanitizeTournamentHistoryText(winnerObj.photoUrl || statsItem.photoUrl || '', 500),
         runnerUpId: sanitizeTournamentHistoryText(runnerUpObj?.id || '', 160),
-        runnerUpName: sanitizeTournamentName(runnerUpObj?.name || 'Finalista'),
+        runnerUpName: runnerUpObj?.name ? sanitizeTournamentName(runnerUpObj.name) : '',
         scoreLabel: sanitizeTournamentHistoryText(finalMatch.scoreLabel || '', 40),
         resultType: finalMatch.resultType === 'technical' ? 'technical' : 'regular',
         bracket: sanitizeTournamentHistoryBracket(tournamentState.bracket),
@@ -9202,8 +9303,8 @@ function normalizeLeagueData(rawLeagueData, options = {}) {
     };
 }
 
-function getDefaultCurrentLeagueData() {
-    const currentPeriod = getServerQuarterInfo();
+function getDefaultCurrentLeagueData(asOf) {
+    const currentPeriod = getServerQuarterInfo(asOf);
     return {
         year: currentPeriod.year,
         quarter: currentPeriod.quarter,
@@ -9226,8 +9327,8 @@ function isPastLeaguePeriod(year, quarter) {
     return compareLeaguePeriod({ year, quarter }, getServerQuarterInfo()) < 0;
 }
 
-function isCurrentLeaguePeriod(leagueData) {
-    const currentPeriod = getServerQuarterInfo();
+function isCurrentLeaguePeriod(leagueData, asOf) {
+    const currentPeriod = getServerQuarterInfo(asOf);
     return Boolean(
         leagueData &&
         leagueData.year === currentPeriod.year &&
@@ -9235,12 +9336,12 @@ function isCurrentLeaguePeriod(leagueData) {
     );
 }
 
-function coerceLeagueDataToCurrentPeriod(rawLeagueData) {
-    const currentLeague = getDefaultCurrentLeagueData();
+function coerceLeagueDataToCurrentPeriod(rawLeagueData, asOf) {
+    const currentLeague = getDefaultCurrentLeagueData(asOf);
     const normalized = normalizeLeagueData(rawLeagueData);
     if (!normalized) return currentLeague;
 
-    if (isCurrentLeaguePeriod(normalized)) {
+    if (isCurrentLeaguePeriod(normalized, asOf)) {
         return normalized;
     }
 
@@ -9278,14 +9379,14 @@ function buildInitialLeagueData(rawLeagueData) {
     return mergeLeagueDataValues(getDefaultCurrentLeagueData(), rawLeagueData);
 }
 
-function normalizeUserLeagueDataForCurrentPeriod(user) {
-    return coerceLeagueDataToCurrentPeriod(user?.leagueData);
+function normalizeUserLeagueDataForCurrentPeriod(user, asOf) {
+    return coerceLeagueDataToCurrentPeriod(user?.leagueData, asOf);
 }
 
-function ensureUserLeagueDataCurrentPeriod(user) {
+function ensureUserLeagueDataCurrentPeriod(user, asOf) {
     if (!user) return null;
 
-    const currentLeague = normalizeUserLeagueDataForCurrentPeriod(user);
+    const currentLeague = normalizeUserLeagueDataForCurrentPeriod(user, asOf);
     const existingLeague = normalizeLeagueData(user.leagueData);
     const changed = !existingLeague ||
         existingLeague.year !== currentLeague.year ||
@@ -9443,12 +9544,53 @@ async function fetchLeagueHighscoresForRankBands(year, quarter) {
         .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
 }
 
+function powerIndexBeforeLeagueBooking(user, result) {
+    const booked = result.leagueBooking?.entries?.find(entry => entry.uid === user.firebaseUid);
+    const leaguePts = powerIndexCore.calculateLeaguePowerPoints(user.leagueData) - (booked?.delta || 0);
+    return powerIndexCore.calculatePowerIndex(user, { leaguePts });
+}
+
+// The result receipt, both standings rows and both profile totals commit together.
+async function bookMatchLeague(result, session) {
+    if (result.leagueBooking) return;
+    const asOf = new Date();
+    const period = getLeagueQuarterInfoForTimestamp(result.finishedAt);
+    let closed = false;
+    if (compareLeaguePeriod(period, getServerQuarterInfo(asOf)) < 0) {
+        closed = getLeagueSettlementInfo(period.year, period.quarter, asOf).settled;
+        if (!closed) {
+            const gate = await LeagueClosing.findOneAndUpdate(
+                { _id: getLeaguePeriodKey(period.year, period.quarter) },
+                { $inc: { revision: 1 } }, { upsert: true, new: true, session }
+            );
+            closed = gate.sealed === true;
+        }
+    }
+    const entries = [];
+    if (!closed && !result.statsComplete) {
+        for (const uid of new Set(result.participants.map(p => p.uid).filter(Boolean))) {
+            if (uid.startsWith('guest_')) continue;
+            if (result.statsAppliedUids?.includes(uid)) continue;
+            const user = await UserProfile.findOne({ firebaseUid: uid }).session(session);
+            if (!user) throw Object.assign(new Error('Missing match profile'), { code: 'league_profile_missing' });
+            if (hasUserAppliedMatchResult(user, result.matchId)) continue;
+            const before = powerIndexCore.calculateLeaguePowerPoints(user.leagueData);
+            const league = await applyTechnicalLeagueDelta(user, getLeaguePointsFromStoredMatchResult(result, uid),
+                { periodDate: result.finishedAt, session, asOf });
+            if (user.isModified('leagueData')) await user.save({ session });
+            entries.push({ uid, delta: powerIndexCore.calculateLeaguePowerPoints(league) - before });
+        }
+    }
+    result.leagueBooking = { status: closed ? 'quarter_closed' : 'booked', entries };
+    await result.save({ session });
+}
+
 async function applyTechnicalLeagueDelta(user, delta, options = {}) {
     if (!user || !user.firebaseUid || !Number.isFinite(Number(delta)) || Number(delta) === 0) {
-        return normalizeUserLeagueDataForCurrentPeriod(user);
+        return ensureUserLeagueDataCurrentPeriod(user, options.asOf);
     }
 
-    const currentPeriod = getServerQuarterInfo();
+    const currentPeriod = getServerQuarterInfo(options.asOf);
     const targetPeriod = Number.isInteger(Number(options.year)) && Number.isInteger(Number(options.quarter))
         ? { year: Number(options.year), quarter: Number(options.quarter) }
         : getLeagueQuarterInfoForTimestamp(options.periodDate || options.finishedAt);
@@ -9466,13 +9608,13 @@ async function applyTechnicalLeagueDelta(user, delta, options = {}) {
     const isCurrentPeriod = targetPeriod.year === currentPeriod.year && targetPeriod.quarter === currentPeriod.quarter;
 
     if (!isCurrentPeriod) {
-        const currentLeague = ensureUserLeagueDataCurrentPeriod(user);
+        const currentLeague = ensureUserLeagueDataCurrentPeriod(user, options.asOf);
         const existingScore = MONGO_URI
             ? await LeagueScore.findOne({
                 playerId: user.firebaseUid,
                 year: targetPeriod.year,
                 quarter: targetPeriod.quarter
-            }).sort({ score: -1 })
+            }).sort({ score: -1 }).session(options.session)
             : null;
         const previousScore = Math.max(0, toSafeInt(existingScore?.score, 0));
         const nextScore = Math.max(0, Math.min(MAX_LEAGUE_SCORE, previousScore + deltaValue));
@@ -9487,13 +9629,13 @@ async function applyTechnicalLeagueDelta(user, delta, options = {}) {
                             playerName: sanitizeTournamentName(user.playerName || 'Igrac'),
                             photoUrl: String(user.photoUrl || '').substring(0, 500),
                             score: nextScore,
-                            date: Date.now()
+                            date: options.asOf
                         }
                     },
-                    { upsert: true, new: true }
+                    { upsert: true, new: true, session: options.session }
                 );
             } else {
-                await LeagueScore.deleteMany({ playerId: user.firebaseUid, year: targetPeriod.year, quarter: targetPeriod.quarter });
+                await LeagueScore.deleteMany({ playerId: user.firebaseUid, year: targetPeriod.year, quarter: targetPeriod.quarter }, { session: options.session });
             }
         }
 
@@ -9505,10 +9647,10 @@ async function applyTechnicalLeagueDelta(user, delta, options = {}) {
             user.markModified('leagueData');
         }
 
-        return normalizeUserLeagueDataForCurrentPeriod(user);
+        return normalizeUserLeagueDataForCurrentPeriod(user, options.asOf);
     }
 
-    const leagueData = ensureUserLeagueDataCurrentPeriod(user);
+    const leagueData = ensureUserLeagueDataCurrentPeriod(user, options.asOf);
     const nextScore = Math.max(
         0,
         Math.min(MAX_LEAGUE_SCORE, Math.floor((Number(leagueData.quarterlyScore) || 0) + deltaValue))
@@ -9530,13 +9672,13 @@ async function applyTechnicalLeagueDelta(user, delta, options = {}) {
                     playerName: sanitizeTournamentName(user.playerName || 'Igrac'),
                     photoUrl: String(user.photoUrl || '').substring(0, 500),
                     score: nextScore,
-                    date: Date.now()
+                    date: options.asOf
                 }
             },
-            { upsert: true, new: true }
+            { upsert: true, new: true, session: options.session }
         );
     } else if (MONGO_URI) {
-        await LeagueScore.deleteMany({ playerId: user.firebaseUid, year: nextLeagueData.year, quarter: nextLeagueData.quarter });
+        await LeagueScore.deleteMany({ playerId: user.firebaseUid, year: nextLeagueData.year, quarter: nextLeagueData.quarter }, { session: options.session });
     }
 
     return nextLeagueData;
@@ -9556,6 +9698,13 @@ async function reconcileStoredServerMatchResult(result) {
         silent: true
     });
     if (result.statsComplete) return leaderboardAppliedCount;
+    if (!result.leagueBooking) {
+        await mongoose.connection.transaction(async session => {
+            const stored = await MatchResult.findOne({ matchId: result.matchId }).session(session);
+            if (!stored) throw new Error('Missing match for league reconciliation');
+            await bookMatchLeague(stored, session);
+        }, { writeConcern: { w: 'majority' } });
+    }
 
     const participants = Array.isArray(result.participants)
         ? result.participants.map(participant => participant.toObject ? participant.toObject() : participant)
@@ -9581,14 +9730,13 @@ async function reconcileStoredServerMatchResult(result) {
         if (result.resultType === 'technical') {
             if (participant.result === 'win') {
                 const reward = Math.max(0, toSafeInt(result.winnerReward, 0));
-                user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
+                changeDucats(user, reward, MAX_BALANCE);
                 user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
                 user.totalScoreSum = Math.max(0, toSafeInt(user.totalScoreSum, 0)) + reward;
                 user.wins = Math.max(0, toSafeInt(user.wins, 0)) + 1;
                 user.currentWinStreak = Math.max(0, toSafeInt(user.currentWinStreak, 0)) + 1;
                 user.maxWinStreak = Math.max(toSafeInt(user.maxWinStreak, 0), user.currentWinStreak);
                 if (opponent) applyTechnicalDuelH2H(user, opponent, 'win');
-                await applyTechnicalLeagueDelta(user, reward, { periodDate: result.finishedAt });
             } else if (participant.result === 'loss') {
                 const coinPenalty = Math.max(0, toSafeInt(result.loserCoinPenalty, 0));
                 user.penaltyPoints = Math.max(0, toSafeInt(user.penaltyPoints, 0)) + Math.max(0, toSafeInt(result.penaltyPoints, 0));
@@ -9596,8 +9744,7 @@ async function reconcileStoredServerMatchResult(result) {
                 user.losses = Math.max(0, toSafeInt(user.losses, 0)) + 1;
                 user.currentWinStreak = 0;
                 if (opponent) applyTechnicalDuelH2H(user, opponent, 'loss');
-                user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
-                await applyTechnicalLeagueDelta(user, -coinPenalty, { periodDate: result.finishedAt });
+                changeDucats(user, -coinPenalty, MAX_BALANCE);
             }
         } else {
             const score = Math.max(0, Math.min(MAX_SCORE, toSafeInt(participant.score, 0)));
@@ -9611,7 +9758,6 @@ async function reconcileStoredServerMatchResult(result) {
                     Math.max(0, Math.min(MAX_SCORE, toSafeInt(opponent.score, 0)))
                 );
             }
-            await applyTechnicalLeagueDelta(user, score, { periodDate: result.finishedAt });
         }
 
         rememberUserAppliedMatchResult(user, result.matchId);
@@ -9792,6 +9938,9 @@ async function archiveLeagueQuarter(year, quarter) {
         return existingArchive;
     }
 
+    // Wait for any last grace-period booking before taking the podium snapshot.
+    await LeagueClosing.updateOne({ _id: periodKey }, { $set: { sealed: true } },
+        { upsert: true, writeConcern: { w: 'majority' } });
     const topScores = await fetchTopLeagueScoresForPeriod(year, quarter, 3);
 
     if (!topScores.length) return null;
@@ -9865,9 +10014,9 @@ async function syncCurrentLeagueScoreFromUserProfile(user, playerName, photoUrl)
             {
                 $set: {
                     playerName: safeName,
-                    photoUrl: safePhotoUrl,
-                    date: Date.now()
+                    photoUrl: safePhotoUrl
                 },
+                $setOnInsert: { date: new Date() },
                 $max: { score }
             },
             { upsert: true, new: true }
@@ -10268,6 +10417,7 @@ async function recordVerifiedAdMobReward(params) {
         uid,
         nonce,
         context,
+        claimData: normalizeAdRewardClaimData(context, customData.claimData),
         adUnit: typeof params.ad_unit === 'string' ? params.ad_unit.substring(0, 120) : '',
         adNetwork: typeof params.ad_network === 'string' ? params.ad_network.substring(0, 120) : '',
         rewardAmount,
@@ -10287,7 +10437,7 @@ async function recordVerifiedAdMobReward(params) {
 }
 
 async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
-    if (!REQUIRE_ADMOB_SSV) {
+    if (!REQUIRE_ADMOB_SSV && SERVER_RUNTIME.environment !== 'production') {
         recordMonitorAdOutcome('success');
         return { ok: true, bypassed: true };
     }
@@ -10301,10 +10451,7 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
     const allowedContexts = Array.isArray(contexts) && contexts.length > 0
         ? [...new Set(contexts.map(sanitizeAdMobContext).filter(Boolean))]
         : [];
-    const clientFallbackAllowed = ALLOW_ADMOB_CLIENT_REWARD_FALLBACK && options.clientRewarded === true;
-    const waitMs = clientFallbackAllowed
-        ? Math.min(options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS, ADMOB_CLIENT_FALLBACK_GRACE_MS)
-        : (options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS);
+    const waitMs = options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS;
     const deadline = Date.now() + waitMs;
     const minAdTimestamp = Math.max(
         0,
@@ -10315,43 +10462,41 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
     while (Date.now() <= deadline) {
         const query = {
             uid: cleanUid,
-            nonce: cleanNonce,
-            claimedAt: null
+            nonce: cleanNonce
         };
 
         if (allowedContexts.length > 0) query.context = { $in: allowedContexts };
-        if (minAdTimestamp > 0) query.adTimestamp = { $gte: minAdTimestamp };
+        const reward = await AdMobRewardVerification.findOne(query);
 
-        const reward = await AdMobRewardVerification.findOneAndUpdate(
-            query,
-            { $set: { claimedAt: new Date(), claimedBy: options.claimedBy || allowedContexts[0] || 'rewarded_ad' } },
-            { new: true }
-        );
-
-        if (reward) {
+        const recoverable = reward && (reward.context.startsWith('shop_') || reward.context === 'undo_tokens' ||
+            (reward.context === 'game_double' && reward.claimData?.matchId) ||
+            (reward.context === 'daily_double' && reward.claimData?.claimToken));
+        if (reward && (reward.claimedAt || (recoverable
+            ? reward.adTimestamp >= Math.max(0, toSafeInt(options.minAdTimestamp, 0))
+            : reward.adTimestamp >= minAdTimestamp))) {
             recordMonitorAdOutcome('success');
             return { ok: true, reward };
         }
         await sleep(ADMOB_SSV_POLL_MS);
     }
 
-    if (clientFallbackAllowed) {
-        const fallbackContext = allowedContexts[0] || 'rewarded_ad';
-        console.warn(`⚠️ AdMob SSV nije stigao na vreme; prihvatam client rewarded fallback za ${cleanUid} (${fallbackContext}).`);
-        recordMonitorAdOutcome('success');
-        return {
-            ok: true,
-            clientFallback: true,
-            reward: {
-                uid: cleanUid,
-                nonce: cleanNonce,
-                context: fallbackContext
-            }
-        };
-    }
-
     recordMonitorAdOutcome('error');
     return { ok: false, reason: 'ad_verification_pending', permanent: false, retryAfterMs: 2000 };
+}
+
+async function grantVerifiedAdMobReward(uid, verification, claimKey, operation) {
+    return adMobRewardClaims.claim(uid, verification, claimKey, operation);
+}
+
+function normalizeAdRewardClaimData(context, data = {}) {
+    if (context === 'game_double') return {
+        matchId: String(data?.matchId || '').slice(0, 128), score: Math.max(0, Math.min(MAX_SCORE, toSafeInt(data?.score, 0)))
+    };
+    if (context === 'daily_double') return {
+        dayKey: String(data?.dayKey || '').slice(0, 10), claimToken: String(data?.claimToken || '').slice(0, 64),
+        amount: Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(data?.amount, 0)))
+    };
+    return {};
 }
 
 app.get('/api/admob/reward-ssv', async (req, res) => {
@@ -10541,6 +10686,15 @@ function addUnlockedShopItemToUser(user, itemId) {
     return changed;
 }
 
+const shopPurchases = createShopPurchases({ connection: mongoose.connection, profiles: UserProfile, purchases: ShopPurchase,
+    profileWrites, guardWrite: accountDeletion.guardWrite, limit: MAX_BALANCE,
+    itemFor: id => typeof SHOP_ITEM_PRICES[id] === 'number' ? {
+        id, price: SHOP_ITEM_PRICES[id], adUnlock: SHOP_AD_UNLOCK_IDS.has(id), themeGift: !!GIFT_SKIN_THEMES[id],
+        req: id === 'thunder' ? 'sveti_ilija' : ''
+    } : null,
+    ownedItems: getExistingUnlockSet, discountFor: (user, id) => normalizeShopDiscounts(user.shopDiscounts)[id],
+    addItem: addUnlockedShopItemToUser });
+
 function getPaidUnlockPurchaseSummary(requestedUnlocks, existingUnlocks, requestedTrophies, pendingDiscounts = {}) {
     const trophySet = new Set(sanitizeIdArray(requestedTrophies));
     const discountState = normalizeShopDiscounts(pendingDiscounts);
@@ -10679,49 +10833,45 @@ async function resolvePendingGameRewardSession(uid, socketId, data = {}) {
     return { ok: true, rewardSession, restored: true };
 }
 
-async function claimVerifiedGameRewardBalance(uid, matchId, reward) {
-    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => claimVerifiedGameRewardBalance(uid, matchId, reward));
-    const safeReward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, toSafeInt(reward, 0)));
-    const claimedUser = await UserProfile.findOneAndUpdate(
-        {
-            firebaseUid: uid,
-            claimedGameRewardIds: { $ne: matchId }
-        },
-        [
-            {
-                $set: {
-                    balance: {
-                        $min: [
-                            MAX_BALANCE,
-                            { $max: [0, { $add: [{ $ifNull: ['$balance', 0] }, safeReward] }] }
-                        ]
-                    },
-                    claimedGameRewardIds: {
-                        $slice: [
-                            {
-                                $concatArrays: [
-                                    {
-                                        $filter: {
-                                            input: { $ifNull: ['$claimedGameRewardIds', []] },
-                                            as: 'claimedMatchId',
-                                            cond: { $ne: ['$$claimedMatchId', matchId] }
-                                        }
-                                    },
-                                    [matchId]
-                                ]
-                            },
-                            -RECENT_MATCH_RESULT_MEMORY
-                        ]
-                    }
-                }
-            }
-        ],
-        { new: true }
-    );
+async function ensureGameRewardScoreRecord(uid, matchId) {
+    const storedScore = await Score.findOne({ playerId: uid, matchId }).select('recordAchievements').lean();
+    if (storedScore) return storedScore;
 
-    if (claimedUser) return { ok: true, claimed: true, user: claimedUser };
-    const existingUser = await UserProfile.findOne({ firebaseUid: uid });
-    return { ok: !!existingUser, claimed: false, user: existingUser };
+    // Reuse the verified score writer before finalizing an economic entitlement.
+    const verified = await findVerifiedMatchParticipant(uid, matchId);
+    if (!verified.ok) return null;
+    const persisted = await persistLeaderboardScoreRecord({
+        uid, matchId: verified.matchId, playerName: verified.participant.name,
+        score: verified.score, mode: verified.result.mode,
+        date: verified.result.finishedAt || verified.result.createdAt || Date.now(),
+        notifyRecords: false, silent: true
+    });
+    return persisted.ok ? persisted.score : null;
+}
+
+async function claimVerifiedGameRewardBalance(uid, matchId, reward, session = null) {
+    if (!profileWrites.owns(uid)) return profileWrites.run(uid, () => claimVerifiedGameRewardBalance(uid, matchId, reward, session));
+    if (!session) return mongoose.connection.transaction(tx => claimVerifiedGameRewardBalance(uid, matchId, reward, tx),
+        { readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' } });
+    const safeReward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, toSafeInt(reward, 0)));
+    const match = await MatchResult.findOne({ matchId, 'participants.uid': uid }, null, { session });
+    const user = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+    if (!match || !user) return { ok: false, claimed: false, user };
+    const key = crypto.createHash('sha256').update(uid).digest('hex');
+    const previous = match.rewardPayouts?.[key];
+    const legacyClaimed = !previous && ((match.rewardClaimedUids || []).includes(uid) || hasUserClaimedGameReward(user, matchId));
+    const delta = legacyClaimed ? 0 : Math.max(0, safeReward - Math.max(0, toSafeInt(previous?.amount, 0)));
+    if (delta > 0) {
+        changeDucats(user, delta, MAX_BALANCE);
+        user.claimedGameRewardIds = [...new Set([...(user.claimedGameRewardIds || []), matchId])].slice(-RECENT_MATCH_RESULT_MEMORY);
+        user.markModified('claimedGameRewardIds');
+        await user.save({ session });
+    }
+    await MatchResult.updateOne({ matchId, 'participants.uid': uid }, {
+        $addToSet: { rewardClaimedUids: uid },
+        $set: { updatedAt: new Date(), ...(delta > 0 ? { [`rewardPayouts.${key}`]: { amount: safeReward } } : {}) }
+    }, { session });
+    return { ok: true, claimed: delta > 0, reward: delta, user };
 }
 
 function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks, ownedThemes = []) {
@@ -11514,7 +11664,8 @@ io.on('connection', (socket) => {
         'set_player_data', 'request_profile_sync', 'request_daily_challenge',
         'claim_trophy_reward', 'claim_daily_reward', 'check_quarter_reward',
         'claim_shop_ad_reward', 'claim_shop_discount', 'claim_shop_ad_unlock',
-        'claim_undo_token_reward', 'submit_match_result', 'submit_score', 'submit_league_score', 'undo_last_move'
+        'claim_undo_token_reward', 'claim_game_reward', 'submit_match_result', 'submit_score', 'submit_league_score', 'undo_last_move',
+        'purchase_shop_item', 'check_reward_eligibility', 'get_pending_ad_rewards', 'get_pending_game_rewards', 'get_pending_quarter_rewards'
     ]);
 
     socket.use(async (_packet, next) => {
@@ -11882,7 +12033,7 @@ io.on('connection', (socket) => {
             }
 
             if (toSafeInt(updatedUser.balance) > MAX_BALANCE) {
-                updatedUser.balance = MAX_BALANCE;
+                Object.assign(updatedUser, walletState(updatedUser, MAX_BALANCE));
                 await updatedUser.save();
             }
 
@@ -11972,7 +12123,8 @@ io.on('connection', (socket) => {
             }
 
             const alreadyStarted = isDailyKeyToday(user.lastDaily, challenge.dayKey, legacyTodayStr);
-            const alreadyClaimed = isDailyKeyToday(user.lastDailyRewardClaimed, challenge.dayKey, legacyTodayStr);
+            const alreadyClaimed = isDailyKeyToday(user.lastDailyRewardClaimed, challenge.dayKey, legacyTodayStr) ||
+                !!user.dailyRewardPayouts?.[challenge.dayKey];
             let changed = false;
 
             if (!alreadyStarted || user.lastDaily !== challenge.dayKey) {
@@ -12220,10 +12372,10 @@ io.on('connection', (socket) => {
                         : 0;
                     const allowedUndoIncrease = legacyUndoAllowance;
 
-                    if (undoDelta <= 0 || undoDelta <= allowedUndoIncrease) {
+                    if (!user.economyMigrationApplied && undoDelta >= 0 && undoDelta <= allowedUndoIncrease) {
                         user.undoTokens = requestedUndoTokens;
-                    } else {
-                        console.log(`🚨 ECONOMY GUARD: Odbijen skok undo tokena sa ${oldUndoTokens} na ${requestedUndoTokens}.`);
+                    } else if (undoDelta !== 0) {
+                        console.log(`ECONOMY GUARD: Ignored token snapshot ${requestedUndoTokens}; server balance remains ${oldUndoTokens}.`);
                     }
                 }
 
@@ -12425,9 +12577,10 @@ io.on('connection', (socket) => {
                 return replyDailyReward({ ok: false, reason: 'auth_required' });
             }
 
-            const challenge = getDailyChallengeForUid(uid);
+            const signedDay = verifyDailyClaimToken(uid, data?.dayKey, data?.claimToken);
+            const challenge = getDailyChallengeForUid(uid, signedDay ? new Date(data.dayKey + 'T12:00:00Z') : new Date());
             const todayStr = challenge.dayKey;
-            const legacyTodayStr = getLegacyDailyDayKey();
+            const legacyTodayStr = getLegacyDailyDayKey(signedDay ? new Date(data.dayKey + 'T12:00:00Z') : new Date());
             const replyExpiredChallenge = () => replyDailyReward({
                 ok: false,
                 reason: 'daily_challenge_expired',
@@ -12454,10 +12607,12 @@ io.on('connection', (socket) => {
             if (!user) {
                 return replyDailyReward({ ok: false, reason: 'auth_required' });
             }
-            if (getDailyChallengeDayKey() !== todayStr) return replyExpiredChallenge();
+            if (getDailyChallengeDayKey() !== todayStr && !signedDay) return replyExpiredChallenge();
 
-            if (isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr)) {
-                if (user.lastDailyRewardClaimed !== todayStr) {
+            const recordedDaily = user.dailyRewardPayouts?.[todayStr];
+            if ((isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr) && !recordedDaily) ||
+                (recordedDaily && recordedDaily.amount >= reward)) {
+                if (user.lastDailyRewardClaimed !== todayStr && getDailyChallengeDayKey() === todayStr) {
                     user.lastDailyRewardClaimed = todayStr;
                     await user.save();
                 }
@@ -12470,8 +12625,9 @@ io.on('connection', (socket) => {
                 });
             }
 
+            let adVerification = null;
             if (data?.doubled || reward > MAX_DAILY_BASE_REWARD) {
-                const adVerification = await waitForVerifiedAdMobReward(
+                adVerification = await waitForVerifiedAdMobReward(
                     uid,
                     data?.ssvNonce,
                     ['daily_double', 'generic_reward'],
@@ -12481,51 +12637,55 @@ io.on('connection', (socket) => {
                     return replyDailyReward(adVerification);
                 }
             }
-            if (getDailyChallengeDayKey() !== todayStr) return replyExpiredChallenge();
-
-            const updatedUser = await UserProfile.findOneAndUpdate(
-                {
-                    firebaseUid: uid,
-                    lastDailyRewardClaimed: { $nin: [todayStr, legacyTodayStr] }
-                },
-                {
-                    $set: {
-                        lastDaily: todayStr,
-                        lastDailyRewardClaimed: todayStr
+            const awardDailyReward = async session => {
+                if (getDailyChallengeDayKey() !== todayStr && !signedDay) return {
+                    ok: false, reason: 'daily_challenge_expired', dayKey: getDailyChallengeDayKey(), permanent: true
+                };
+                const fresh = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+                if (!fresh) return { ok: false, reason: 'auth_required' };
+                const previous = fresh.dailyRewardPayouts?.[todayStr];
+                const legacyClaim = !previous && isDailyKeyToday(fresh.lastDailyRewardClaimed, todayStr, legacyTodayStr);
+                const delta = legacyClaim ? 0 : Math.max(0, reward - Math.max(0, toSafeInt(previous?.amount, 0)));
+                if (!delta) return { ok: false, reason: 'daily_already_claimed', permanent: true, balance: fresh.balance, user: fresh };
+                const payoutPath = `dailyRewardPayouts.${todayStr}.amount`;
+                const updatedUser = await UserProfile.findOneAndUpdate(
+                    {
+                        firebaseUid: uid,
+                        [payoutPath]: previous ? previous.amount : { $exists: false }
                     },
-                    $inc: { balance: reward }
-                },
-                { new: true }
-            );
+                    walletUpdate(delta, MAX_BALANCE, {
+                        dailyRewardPayouts: { $mergeObjects: [{ $ifNull: ['$dailyRewardPayouts', {}] }, { [todayStr]: { amount: reward } }] },
+                        ...(getDailyChallengeDayKey() === todayStr ? { lastDaily: todayStr, lastDailyRewardClaimed: todayStr } : {})
+                    }),
+                    { new: true, session }
+                );
 
-            if (!updatedUser) {
-                const freshUser = await UserProfile.findOne({ firebaseUid: uid });
-                if (freshUser) emitProfileSync(socket, freshUser);
-                return replyDailyReward({
-                    ok: false,
-                    reason: 'daily_already_claimed',
-                    balance: freshUser ? Math.max(0, toSafeInt(freshUser.balance, 0)) : Math.max(0, toSafeInt(user.balance, 0)),
-                    permanent: true
-                });
-            }
-
-            if (toSafeInt(updatedUser.balance, 0) > MAX_BALANCE) {
-                updatedUser.balance = MAX_BALANCE;
-                await updatedUser.save();
-            }
-
-            emitProfileSync(socket, updatedUser, {
-                dailyReward: {
-                    reward,
-                    balance: updatedUser.balance
+                if (!updatedUser) {
+                    const freshUser = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+                    return {
+                        ok: false,
+                        reason: 'daily_already_claimed',
+                        balance: freshUser ? Math.max(0, toSafeInt(freshUser.balance, 0)) : Math.max(0, toSafeInt(user.balance, 0)),
+                        permanent: true, user: freshUser
+                    };
                 }
-            });
 
-            return replyDailyReward({
-                ok: true,
-                reward,
-                balance: updatedUser.balance
+                if (toSafeInt(updatedUser.balance, 0) > MAX_BALANCE) {
+                    Object.assign(updatedUser, walletState(updatedUser, MAX_BALANCE));
+                    await updatedUser.save({ session });
+                }
+
+                return { ok: true, reward: delta, totalReward: reward, balance: updatedUser.balance,
+                    pendingDucats: updatedUser.pendingDucats, user: updatedUser };
+            };
+            const awarded = adVerification
+                ? await grantVerifiedAdMobReward(uid, adVerification, `daily_double:${todayStr}`, awardDailyReward)
+                : await awardDailyReward(null);
+            const { user: awardedUser, ...result } = awarded;
+            if (awardedUser) emitProfileSync(socket, awardedUser, {
+                ...(result.ok ? { dailyReward: { reward: result.reward, balance: awardedUser.balance } } : {})
             });
+            return replyDailyReward(result);
         } catch (err) {
             console.error('❌ claim_daily_reward greška:', err);
             return replyDailyReward({ ok: false, reason: 'server_error', permanent: false });
@@ -12663,6 +12823,8 @@ io.on('connection', (socket) => {
                         roomId: activeRoomId,
                         reason: 'back_to_menu'
                     });
+                    if (technicalResult.obsolete) return;
+                    if (technicalResult.conflict) return endConflictingOnlineRoom(activeRoomId);
                     const bracketSettled = await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'back_to_menu');
                     if (state.tournamentAuditGame && !bracketSettled) {
                         interruptAuditedTournamentRoom(activeRoomId, state);
@@ -12681,7 +12843,8 @@ io.on('connection', (socket) => {
                 loserName: technicalLoser?.name || 'Igrac',
                 reward: technicalResult.winnerReward,
                 coinPenalty: technicalResult.loserCoinPenalty,
-                serverApplied: technicalResult.serverApplied
+                serverApplied: technicalResult.serverApplied,
+                leagueStatus: technicalResult.leagueStatus
             });
 
             cleanupOnlineRoom(activeRoomId);
@@ -12913,7 +13076,7 @@ io.on('connection', (socket) => {
                 }
 
                 if (toSafeInt(updatedUser.balance, 0) > MAX_BALANCE) {
-                    updatedUser.balance = MAX_BALANCE;
+                    Object.assign(updatedUser, walletState(updatedUser, MAX_BALANCE));
                     await updatedUser.save();
                 }
 
@@ -12937,6 +13100,123 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('purchase_shop_item', async (data = {}, ack) => {
+        const reply = payload => { if (typeof ack === 'function') ack(payload); };
+        const uid = getVerifiedUid(socket);
+        if (!uid) return reply({ ok: false, reason: 'auth_required' });
+        if (!MONGO_URI) return reply({ ok: false, reason: 'db_unavailable' });
+        try {
+            const { user, ...result } = await shopPurchases.purchase(uid, data);
+            if (user) emitProfileSync(socket, user);
+            reply({ ...result, recipientUid: uid, ...(user ? { cloudStats: buildProfileSyncPayload(user) } : {}) });
+        } catch (error) {
+            console.error('Shop purchase failed:', error.code || error.name);
+            reply({ ok: false, reason: 'server_error' });
+        }
+    });
+
+    socket.on('check_reward_eligibility', async (data = {}, ack) => {
+        const reply = payload => { if (typeof ack === 'function') ack(payload); };
+        const uid = getVerifiedUid(socket);
+        if (!uid) return reply({ ok: false, reason: 'auth_required' });
+        if (!MONGO_URI) return reply({ ok: false, reason: 'db_unavailable' });
+        try {
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) return reply({ ok: false, reason: 'auth_required' });
+            const context = sanitizeAdMobContext(data.context);
+            let amount = 0, cooldownAt = 0, cooldownMs = 0;
+            if (context === 'undo_tokens') {
+                if (user.undoTokens >= MAX_UNDO_TOKENS) return reply({ ok: false, reason: 'undo_tokens_max' });
+                cooldownAt = user.lastUndoRewardedRewardAt; cooldownMs = UNDO_REWARDED_REWARD_COOLDOWN_MS;
+            } else if (context === 'shop_ad_reward') {
+                amount = SHOP_AD_REWARD_AMOUNT;
+                cooldownAt = user.lastShopAdRewardAt; cooldownMs = SHOP_AD_REWARD_COOLDOWN_MS;
+            } else if (context === 'game_double') {
+                const verified = await findVerifiedMatchParticipant(uid, data.claimData?.matchId, toSafeInt(data.claimData?.score, -1));
+                if (!verified.ok) return reply({ ok: false, reason: verified.reason });
+                const scoreRecord = await ensureGameRewardScoreRecord(uid, verified.matchId);
+                if (!scoreRecord) return reply({ ok: false, reason: 'game_reward_metadata_pending', permanent: false, retryAfterMs: 2000 });
+                const payout = calculateSoloRecordPayout(verified.score, scoreRecord?.recordAchievements || []);
+                const key = crypto.createHash('sha256').update(uid).digest('hex');
+                const previous = verified.result.rewardPayouts?.[key];
+                if (!previous && ((verified.result.rewardClaimedUids || []).includes(uid) || hasUserClaimedGameReward(user, verified.matchId))) {
+                    return reply({ ok: false, reason: 'ad_reward_already_claimed' });
+                }
+                amount = Math.max(0, payout.adReward - toSafeInt(previous?.amount, 0));
+                if (!amount) return reply({ ok: false, reason: 'ad_reward_already_claimed' });
+            } else if (context === 'daily_double') {
+                const dayKey = data.claimData?.dayKey;
+                if (!verifyDailyClaimToken(uid, dayKey, data.claimData?.claimToken)) return reply({ ok: false, reason: 'daily_challenge_expired' });
+                const challenge = getDailyChallengeForUid(uid, new Date(dayKey + 'T12:00:00Z'));
+                if (!user.dailyRewardPayouts?.[dayKey] && isDailyKeyToday(user.lastDailyRewardClaimed, dayKey, getLegacyDailyDayKey(new Date(dayKey + 'T12:00:00Z')))) {
+                    return reply({ ok: false, reason: 'daily_already_claimed' });
+                }
+                amount = Math.max(0, challenge.reward * 2 - toSafeInt(user.dailyRewardPayouts?.[dayKey]?.amount, 0));
+                if (!amount) return reply({ ok: false, reason: 'daily_already_claimed' });
+            } else if (context.startsWith('shop_discount:') || context.startsWith('shop_ad_unlock:')) {
+                const id = context.split(':')[1];
+                const isUnlock = context.startsWith('shop_ad_unlock:');
+                if (!(isUnlock ? SHOP_AD_UNLOCK_IDS.has(id) : SHOP_ITEM_PRICES[id] > 0)) return reply({ ok: false, reason: 'invalid_shop_item' });
+                if (getExistingUnlockSet(user).has(id)) return reply({ ok: false, reason: 'already_unlocked' });
+            } else return reply({ ok: false, reason: 'invalid_reward_context' });
+            const wait = cooldownMs - (Date.now() - Math.max(0, toSafeInt(cooldownAt, 0)));
+            if (cooldownAt > 0 && wait > 0) return reply({ ok: false, reason: 'ad_reward_cooldown', retryAfterMs: wait });
+            if (walletState(user, MAX_BALANCE).balance + amount > MAX_BALANCE) return reply({ ok: false, reason: 'wallet_capacity' });
+            reply({ ok: true, recipientUid: uid });
+        } catch (_) { reply({ ok: false, reason: 'server_error' }); }
+    });
+
+    socket.on('get_pending_ad_rewards', async (data = {}, ack) => {
+        const reply = payload => { if (typeof ack === 'function') ack(payload); };
+        const uid = getVerifiedUid(socket);
+        if (!uid || !MONGO_URI) return reply({ ok: false, reason: uid ? 'db_unavailable' : 'auth_required' });
+        if (data.after && !/^[a-f0-9]{24}$/.test(data.after)) return reply({ ok: false, reason: 'invalid_request', permanent: true });
+        try {
+            const records = await AdMobRewardVerification.find({ uid, claimedAt: null,
+                ...(data.after ? { _id: { $gt: data.after } } : {}) }).sort({ _id: 1 }).limit(101).lean();
+            const page = records.slice(0, 100);
+            reply({ ok: true, recipientUid: uid, entries: page.map(record => ({ nonce: record.nonce, context: record.context,
+                claimData: record.claimData || normalizeAdRewardClaimData(record.context, parseAdMobCustomData(record.raw?.custom_data)?.claimData) })),
+                next: records.length > 100 ? String(page[page.length - 1]._id) : '' });
+        } catch (_) { reply({ ok: false, reason: 'server_error' }); }
+    });
+
+    socket.on('get_pending_game_rewards', async (data = {}, ack) => {
+        const reply = payload => { if (typeof ack === 'function') ack(payload); };
+        const uid = getVerifiedUid(socket);
+        if (!uid || !MONGO_URI) return reply({ ok: false, reason: uid ? 'db_unavailable' : 'auth_required' });
+        if (data.after && !/^[a-f0-9]{24}$/.test(data.after)) return reply({ ok: false, reason: 'invalid_request', permanent: true });
+        try {
+            const records = await MatchResult.find({ resultType: 'regular', economyEligible: true, rewardClaimedUids: { $ne: uid },
+                participants: { $elemMatch: { uid, score: { $gt: 0 } } }, ...(data.after ? { _id: { $gt: data.after } } : {})
+            }).sort({ _id: 1 }).limit(101).lean();
+            const page = records.slice(0, 100);
+            reply({ ok: true, recipientUid: uid, entries: page.map(record => ({ matchId: record.matchId,
+                score: record.participants.find(participant => participant.uid === uid).score })),
+                next: records.length > 100 ? String(page[page.length - 1]._id) : '' });
+        } catch (_) { reply({ ok: false, reason: 'server_error' }); }
+    });
+
+    socket.on('get_pending_quarter_rewards', async (_data = {}, ack) => {
+        const reply = payload => { if (typeof ack === 'function') ack(payload); };
+        const uid = getVerifiedUid(socket);
+        if (!uid || !MONGO_URI) return reply({ ok: false, reason: uid ? 'db_unavailable' : 'auth_required' });
+        try {
+            const user = await UserProfile.findOne({ firebaseUid: uid }).select('claimedLeagueRewards').lean();
+            if (!user) return reply({ ok: false, reason: 'auth_required' });
+            const periods = await LeagueScore.find({ playerId: uid }).select('year quarter').lean();
+            const archived = await LeagueHallOfFame.find({ 'topScores.playerId': uid }).select('year quarter').lean();
+            const pending = new Map();
+            for (const period of [...periods, ...archived]) {
+                const key = getLeaguePeriodKey(period.year, period.quarter);
+                if (isPastLeaguePeriod(period.year, period.quarter) && !(user.claimedLeagueRewards || []).includes(key)) {
+                    pending.set(key, { year: period.year, quarter: period.quarter });
+                }
+            }
+            reply({ ok: true, recipientUid: uid, entries: [...pending.values()] });
+        } catch (_) { reply({ ok: false, reason: 'server_error' }); }
+    });
+
     socket.on('claim_shop_ad_reward', async (data = {}, ack) => {
         const reply = (payload) => {
             socket.emit('shop_ad_reward_result', payload);
@@ -12956,45 +13236,33 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const user = await UserProfile.findOne({ firebaseUid: uid });
-            if (!user) {
-                reply({ ok: false, reason: 'auth_required' });
-                return;
-            }
-
-            const now = Date.now();
-            const lastRewardAt = Math.max(0, toSafeInt(user.lastShopAdRewardAt, 0));
-            const elapsed = now - lastRewardAt;
-
-            if (lastRewardAt > 0 && elapsed < SHOP_AD_REWARD_COOLDOWN_MS) {
-                reply({
-                    ok: false,
-                    reason: 'ad_reward_cooldown',
-                    retryAfterMs: SHOP_AD_REWARD_COOLDOWN_MS - elapsed
-                });
-                return;
-            }
-
             const adVerification = await waitForVerifiedAdMobReward(
                 uid,
                 data?.ssvNonce,
                 ['shop_ad_reward', 'generic_reward'],
-                { claimedBy: 'shop_ad_reward', minAdTimestamp: lastRewardAt, clientRewarded: data?.clientRewarded === true }
+                { claimedBy: 'shop_ad_reward' }
             );
             if (!adVerification.ok) {
                 reply(adVerification);
                 return;
             }
 
-            user.lastShopAdRewardAt = now;
-            user.balance = Math.min(
-                MAX_BALANCE,
-                Math.max(0, toSafeInt(user.balance, 0)) + SHOP_AD_REWARD_AMOUNT
-            );
-            await user.save();
-
-            emitProfileSync(socket, user);
-            reply({ ok: true, reward: SHOP_AD_REWARD_AMOUNT, balance: user.balance });
+            const awarded = await grantVerifiedAdMobReward(uid, adVerification, 'shop_ad_reward', async session => {
+                const user = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+                if (!user) return { ok: false, reason: 'auth_required' };
+                const now = Date.now();
+                const elapsed = now - Math.max(0, toSafeInt(user.lastShopAdRewardAt, 0));
+                if (user.lastShopAdRewardAt > 0 && elapsed < SHOP_AD_REWARD_COOLDOWN_MS) {
+                    return { ok: false, reason: 'ad_reward_cooldown', retryAfterMs: SHOP_AD_REWARD_COOLDOWN_MS - elapsed };
+                }
+                user.lastShopAdRewardAt = now;
+                changeDucats(user, SHOP_AD_REWARD_AMOUNT, MAX_BALANCE);
+                await user.save({ session });
+                return { ok: true, reward: SHOP_AD_REWARD_AMOUNT, balance: user.balance, user };
+            });
+            const { user: awardedUser, ...result } = awarded;
+            if (awardedUser) emitProfileSync(socket, awardedUser);
+            reply(result);
         } catch (err) {
             console.error("Greška pri shop ad nagradi:", err);
             reply({ ok: false, reason: 'err_server_conn' });
@@ -13031,17 +13299,6 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const user = await UserProfile.findOne({ firebaseUid: uid });
-            if (!user) {
-                reply({ ok: false, reason: 'auth_required' });
-                return;
-            }
-
-            if (getExistingUnlockSet(user).has(itemId)) {
-                reply({ ok: false, reason: 'already_unlocked', permanent: true });
-                return;
-            }
-
             const adVerification = await waitForVerifiedAdMobReward(
                 uid,
                 data?.ssvNonce,
@@ -13053,13 +13310,26 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const pendingDiscounts = normalizeShopDiscounts(user.shopDiscounts);
-            pendingDiscounts[itemId] = { claimedAt: Date.now(), expiresAt };
-            user.shopDiscounts = pendingDiscounts;
-            if (typeof user.markModified === 'function') user.markModified('shopDiscounts');
-            await user.save();
-
-            reply({ ok: true, itemId, originalPrice: price, discountedPrice, expiresAt });
+            const awarded = await grantVerifiedAdMobReward(uid, adVerification, discountContext, async session => {
+                const user = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+                if (!user) return { ok: false, reason: 'auth_required' };
+                if (getExistingUnlockSet(user).has(itemId)) return { ok: false, reason: 'already_unlocked', permanent: true };
+                const expiresAt = Date.now() + SHOP_DISCOUNT_WINDOW_MS;
+                const pendingDiscounts = normalizeShopDiscounts(user.shopDiscounts);
+                pendingDiscounts[itemId] = { claimedAt: Date.now(), expiresAt };
+                user.shopDiscounts = pendingDiscounts;
+                user.markModified('shopDiscounts');
+                await user.save({ session });
+                return { ok: true, itemId, originalPrice: price, discountedPrice, expiresAt, user };
+            });
+            const { user: awardedUser, ...result } = awarded;
+            if (awardedUser && result.alreadyClaimed) {
+                const activeDiscount = normalizeShopDiscounts(awardedUser.shopDiscounts)[itemId];
+                result.expiresAt = activeDiscount?.expiresAt || 0;
+                result.discountedPrice = activeDiscount ? discountedPrice : price;
+            }
+            if (awardedUser) emitProfileSync(socket, awardedUser);
+            reply(result);
         } catch (err) {
             console.error("Greška pri shop popustu:", err);
             reply({ ok: false, reason: 'err_server_conn' });
@@ -13094,18 +13364,6 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const user = await UserProfile.findOne({ firebaseUid: uid });
-            if (!user) {
-                reply({ ok: false, reason: 'auth_required' });
-                return;
-            }
-
-            if (getExistingUnlockSet(user).has(itemId)) {
-                const existingProgress = normalizeShopAdUnlocks(user.shopAdUnlocks)[itemId]?.progress || target;
-                reply({ ok: true, itemId, progress: Math.max(existingProgress, target), target, unlocked: true, alreadyUnlocked: true });
-                return;
-            }
-
             const adVerification = await waitForVerifiedAdMobReward(
                 uid,
                 data?.ssvNonce,
@@ -13117,24 +13375,35 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const unlocks = normalizeShopAdUnlocks(user.shopAdUnlocks);
-            const current = unlocks[itemId] || { progress: 0, target };
-            const progress = Math.min(target, Math.max(0, toSafeInt(current.progress, 0)) + 1);
-            const unlocked = progress >= target;
-
-            unlocks[itemId] = { progress, target, updatedAt: Date.now() };
-            user.shopAdUnlocks = unlocks;
-            if (unlocked) addUnlockedShopItemToUser(user, itemId);
-            if (typeof user.markModified === 'function') {
+            const awarded = await grantVerifiedAdMobReward(uid, adVerification, adContext, async session => {
+                const user = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+                if (!user) return { ok: false, reason: 'auth_required' };
+                if (getExistingUnlockSet(user).has(itemId)) {
+                    return { ok: true, itemId, progress: target, target, unlocked: true, alreadyUnlocked: true, user };
+                }
+                const unlocks = normalizeShopAdUnlocks(user.shopAdUnlocks);
+                const current = unlocks[itemId] || { progress: 0, target };
+                const progress = Math.min(target, Math.max(0, toSafeInt(current.progress, 0)) + 1);
+                const unlocked = progress >= target;
+                unlocks[itemId] = { progress, target, updatedAt: Date.now() };
+                user.shopAdUnlocks = unlocks;
+                if (unlocked) addUnlockedShopItemToUser(user, itemId);
                 user.markModified('shopAdUnlocks');
                 user.markModified('yamb_unlocked');
                 user.markModified('unlockedSkins');
                 user.markModified('unlockedEffects');
+                await user.save({ session });
+                return { ok: true, itemId, progress, target, unlocked, user };
+            });
+            const { user: awardedUser, ...result } = awarded;
+            if (awardedUser) {
+                if (result.alreadyClaimed) {
+                    result.progress = normalizeShopAdUnlocks(awardedUser.shopAdUnlocks)[itemId]?.progress || 0;
+                    result.unlocked = getExistingUnlockSet(awardedUser).has(itemId);
+                }
+                emitProfileSync(socket, awardedUser);
             }
-            await user.save();
-
-            emitProfileSync(socket, user);
-            reply({ ok: true, itemId, progress, target, unlocked });
+            reply(result);
         } catch (err) {
             console.error("Greška pri shop ad unlock-u:", err);
             reply({ ok: false, reason: 'err_server_conn' });
@@ -13176,57 +13445,38 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const user = await UserProfile.findOne({ firebaseUid: uid });
-            if (!user) {
-                reply({ ok: false, reason: 'auth_required' });
-                return;
-            }
-
-            const currentTokens = Math.max(0, Math.min(MAX_UNDO_TOKENS, toSafeInt(user.undoTokens, 0)));
-            if (currentTokens >= MAX_UNDO_TOKENS) {
-                emitProfileSync(socket, user);
-                reply({ ok: false, reason: 'undo_tokens_max', undoTokens: currentTokens, permanent: true });
-                return;
-            }
-
-            const now = Date.now();
-            const lastRewardField = 'lastUndoRewardedRewardAt';
-            const cooldownMs = UNDO_REWARDED_REWARD_COOLDOWN_MS;
-            const lastRewardAt = Math.max(0, toSafeInt(user[lastRewardField], 0));
-            const elapsed = now - lastRewardAt;
-
-            if (lastRewardAt > 0 && elapsed < cooldownMs) {
-                reply({
-                    ok: false,
-                    reason: 'ad_reward_cooldown',
-                    retryAfterMs: cooldownMs - elapsed
-                });
-                return;
-            }
-
             const adVerification = await waitForVerifiedAdMobReward(
                 uid,
                 data?.ssvNonce,
                 ['undo_tokens', 'generic_reward'],
-                { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt, clientRewarded: data?.clientRewarded === true }
+                { claimedBy: 'undo_tokens' }
             );
             if (!adVerification.ok) {
                 reply(adVerification);
                 return;
             }
 
-            const grantedTokens = Math.min(rewardAmount, MAX_UNDO_TOKENS - currentTokens);
-            user[lastRewardField] = now;
-            user.undoTokens = currentTokens + grantedTokens;
-            await user.save();
-
-            emitProfileSync(socket, user);
-            reply({
-                ok: true,
-                reward: grantedTokens,
-                undoTokens: user.undoTokens,
-                type: rewardType
+            const awarded = await grantVerifiedAdMobReward(uid, adVerification, 'undo_tokens', async session => {
+                const user = await UserProfile.findOne({ firebaseUid: uid }, null, { session });
+                if (!user) return { ok: false, reason: 'auth_required' };
+                const currentTokens = Math.max(0, Math.min(MAX_UNDO_TOKENS, toSafeInt(user.undoTokens, 0)));
+                if (currentTokens >= MAX_UNDO_TOKENS) {
+                    return { ok: false, reason: 'undo_tokens_max', undoTokens: currentTokens, permanent: false, user };
+                }
+                const now = Date.now();
+                const elapsed = now - Math.max(0, toSafeInt(user.lastUndoRewardedRewardAt, 0));
+                if (user.lastUndoRewardedRewardAt > 0 && elapsed < UNDO_REWARDED_REWARD_COOLDOWN_MS) {
+                    return { ok: false, reason: 'ad_reward_cooldown', retryAfterMs: UNDO_REWARDED_REWARD_COOLDOWN_MS - elapsed };
+                }
+                const grantedTokens = Math.min(rewardAmount, MAX_UNDO_TOKENS - currentTokens);
+                user.lastUndoRewardedRewardAt = now;
+                user.undoTokens = currentTokens + grantedTokens;
+                await user.save({ session });
+                return { ok: true, reward: grantedTokens, undoTokens: user.undoTokens, type: rewardType, user };
             });
+            const { user: awardedUser, ...result } = awarded;
+            if (awardedUser) emitProfileSync(socket, awardedUser);
+            reply(result);
         } catch (err) {
             console.error("Greška pri undo token ad nagradi:", err);
             reply({ ok: false, reason: 'err_server_conn' });
@@ -13614,7 +13864,7 @@ io.on('connection', (socket) => {
                 toSafeInt(user.games, 0) >= normalized.profileGamesAfter &&
                 toSafeInt(user.totalScoreSum, 0) >= normalized.profileTotalScoreAfter &&
                 toSafeInt(user.highscore, 0) >= normalized.profileHighscoreAfter;
-            const powerIndexBefore = powerIndexCore.calculatePowerIndex(user);
+            const powerIndexBefore = powerIndexBeforeLeagueBooking(user, ledgerWrite.result);
 
             if (!alreadyIncludedInProfile) {
                 const score = normalized.selfParticipant.score;
@@ -13624,7 +13874,6 @@ io.on('connection', (socket) => {
             }
 
             diagnosticStage = 'stats_application';
-            await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score, { periodDate: normalized.payload.finishedAt });
             const powerIndexAfter = powerIndexCore.calculatePowerIndex(user);
             const powerIndexGain = alreadyIncludedInProfile ? null : powerIndexAfter - powerIndexBefore;
             rememberUserAppliedMatchResult(user, matchId);
@@ -13721,6 +13970,7 @@ io.on('connection', (socket) => {
                 score: submittedScore,
                 mode: finalMode,
                 photoUrl: finalPhoto,
+                date: verifiedMatch.result.finishedAt || verifiedMatch.result.createdAt,
                 matchId: verifiedMatch.matchId
             });
 
@@ -13794,9 +14044,11 @@ io.on('connection', (socket) => {
             const multiplier = data?.doubled ? 2 : 1;
             const localRecordReward = ['solo', 'hotseat', 'random', 'online', 'friend_invite', 'challenge', 'tournament'].includes(String(rewardSession.mode || '').toLowerCase());
             const soloScoreRecord = localRecordReward
-                ? await Score.findOne({ playerId: finalUid, matchId: rewardSession.matchId })
-                    .select('recordAchievements').lean()
+                ? await ensureGameRewardScoreRecord(finalUid, rewardSession.matchId)
                 : null;
+            if (localRecordReward && !soloScoreRecord) {
+                return replyGameReward({ ok: false, reason: 'game_reward_metadata_pending', permanent: false, retryAfterMs: 2000 });
+            }
             const payout = calculateSoloRecordPayout(
                 rewardSession.score,
                 soloScoreRecord?.recordAchievements || []
@@ -13830,7 +14082,12 @@ io.on('connection', (socket) => {
                 matchId: rewardSession.matchId,
                 rewardClaimedUids: finalUid
             });
-            if (rewardClaimedInLedger || hasUserClaimedGameReward(user, rewardSession.matchId)) {
+            const payoutHistory = await MatchResult.findOne({ matchId: rewardSession.matchId }).select('rewardPayouts').lean();
+            const payoutKey = crypto.createHash('sha256').update(finalUid).digest('hex');
+            const previousPayout = payoutHistory?.rewardPayouts?.[payoutKey];
+            if ((rewardClaimedInLedger || hasUserClaimedGameReward(user, rewardSession.matchId)) &&
+                (!previousPayout || previousPayout.amount >= reward)) {
+                if (!rewardClaimedInLedger) await MatchResult.updateOne({ matchId: rewardSession.matchId }, { $addToSet: { rewardClaimedUids: finalUid } });
                 rewardSession.claimedAt = Date.now();
                 clearPendingGameRewardSession(finalUid, rewardSession);
                 emitProfileSync(socket, user);
@@ -13843,13 +14100,14 @@ io.on('connection', (socket) => {
                 });
             }
 
+            let adVerification = null;
             if (multiplier === 2) {
                 // A recovered claim session may be opened only after the ad was watched.
                 // The completed match, not this in-memory session, is the time boundary.
                 const completedMatch = await MatchResult.findOne({ matchId: rewardSession.matchId })
                     .select('finishedAt createdAt').lean();
                 const minAdTimestamp = getGameRewardAdMinTimestamp(completedMatch, rewardSession);
-                const adVerification = await waitForVerifiedAdMobReward(
+                adVerification = await waitForVerifiedAdMobReward(
                     finalUid,
                     data?.ssvNonce,
                     ['game_double', 'generic_reward'],
@@ -13867,52 +14125,53 @@ io.on('connection', (socket) => {
                 }
             }
 
-            const balanceClaim = await claimVerifiedGameRewardBalance(
-                finalUid,
-                rewardSession.matchId,
-                reward
-            );
-            if (!balanceClaim.ok || !balanceClaim.user) {
-                releaseRewardClaimLock();
-                return replyGameReward({ ok: false, reason: 'profile_not_found', permanent: false });
-            }
-            user = balanceClaim.user;
-            if (!balanceClaim.claimed) {
-                rewardSession.claimedAt = Date.now();
-                clearPendingGameRewardSession(finalUid, rewardSession);
-                emitProfileSync(socket, user);
-                return replyGameReward({
-                    ok: true,
-                    reward: 0,
-                    balance: Math.max(0, toSafeInt(user.balance, 0)),
-                    alreadyClaimed: true,
-                    doubled: multiplier === 2
-                });
-            }
+            const awardGameReward = async session => {
+                const balanceClaim = await claimVerifiedGameRewardBalance(
+                    finalUid,
+                    rewardSession.matchId,
+                    reward,
+                    session
+                );
+                if (!balanceClaim.ok || !balanceClaim.user) {
+                    return { ok: false, reason: 'profile_not_found', permanent: false };
+                }
+                const paidUser = balanceClaim.user;
+                if (!balanceClaim.claimed) {
+                    return {
+                        ok: true,
+                        reward: 0,
+                        balance: Math.max(0, toSafeInt(paidUser.balance, 0)),
+                        alreadyClaimed: true,
+                        doubled: multiplier === 2, user: paidUser
+                    };
+                }
 
-            await MatchResult.updateOne(
-                { matchId: rewardSession.matchId, 'participants.uid': finalUid },
-                { $addToSet: { rewardClaimedUids: finalUid }, $set: { updatedAt: new Date() } }
-            );
+                return { ok: true, reward: balanceClaim.reward, totalReward: reward,
+                    balance: paidUser.balance, pendingDucats: paidUser.pendingDucats, doubled: multiplier === 2,
+                    soloRewardPreview: localRecordReward ? payout : null, user: paidUser };
+            };
+            const awarded = adVerification
+                ? await grantVerifiedAdMobReward(finalUid, adVerification, `game_double:${rewardSession.matchId}`, awardGameReward)
+                : await awardGameReward(null);
+            if (!awarded.ok) {
+                releaseRewardClaimLock();
+                return replyGameReward(awarded);
+            }
+            const { user: awardedUser, ...result } = awarded;
+            user = awardedUser;
             rewardSession.claimedAt = Date.now();
             delete pendingGameRewards[socket.id];
             clearPendingGameRewardSession(finalUid, rewardSession);
 
             emitProfileSync(socket, user, {
                 gameReward: {
-                    reward,
+                    reward: result.reward,
                     balance: user.balance,
                     doubled: multiplier === 2
                 }
             });
 
-            return replyGameReward({
-                ok: true,
-                reward,
-                balance: user.balance,
-                doubled: multiplier === 2,
-                soloRewardPreview: localRecordReward ? payout : null
-            });
+            return replyGameReward(result);
         } catch (err) {
             console.error("❌ claim_game_reward greška:", err);
             const finalUid = socket.verifiedUid || socket.playerId;
@@ -14142,9 +14401,9 @@ io.on('connection', (socket) => {
                 {
                     $set: {
                         playerName: finalName,
-                        photoUrl,
-                        date: Date.now()
+                        photoUrl
                     },
+                    $setOnInsert: { date: new Date() },
                     $max: { score: acceptedScore }
                 },
                 { upsert: true, new: true }
@@ -16258,7 +16517,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_register', async (playerData = {}) => {
+    socket.on('tourney_register', async function registerTournament(playerData = {}) {
         const uid = requireTournamentAuth(socket);
         if (!uid) {
             socket.emit('tourney_register_result', { ok: false, reason: 'auth_required' });
@@ -16267,6 +16526,17 @@ io.on('connection', (socket) => {
         if (!tournamentStateInitialized) {
             socket.emit('tourney_register_result', { ok: false, reason: 'err_server_conn' });
             return;
+        }
+
+        if (!tournamentReadinessCore.isManaged(tournamentState) && !legacyTournamentWrites.owns('registration')) {
+            const edition = tournamentState.tournamentNumber;
+            return legacyTournamentWrites.run('registration', () => profileWrites.run(uid, () => {
+                if (getVerifiedUid(socket) !== uid) return socket.emit('tourney_register_result', { ok: false, reason: 'auth_required' });
+                if (tournamentState.tournamentNumber !== edition || tournamentReadinessCore.isManaged(tournamentState)) {
+                    return socket.emit('tourney_register_result', { ok: false, reason: 'tourney_readiness_stale' });
+                }
+                return registerTournament(playerData);
+            }));
         }
 
         if (tournamentReadinessCore.isManaged(tournamentState)) {
@@ -16300,12 +16570,16 @@ io.on('connection', (socket) => {
             return;
         }
 
-        if (tournamentState.status !== 'registration' || tournamentState.players.length >= 8) {
+        if (tournamentState.status !== 'registration') {
+            if (tournamentState.status === 'active' && tournamentState.players.some(p => p.id === uid)) {
+                socket.emit('tourney_register_result', { ok: true, alreadyRegistered: true });
+                return;
+            }
             socket.emit('tourney_register_result', { ok: false, reason: 'msg_room_full' });
             return;
         }
 
-        if (tournamentState.players.find(p => p.id === uid)) {
+        if (!MONGO_URI && tournamentState.players.some(p => p.id === uid)) {
             socket.emit('tourney_register_result', { ok: true, alreadyRegistered: true });
             return;
         }
@@ -16318,30 +16592,8 @@ io.on('connection', (socket) => {
             return;
         }
 
-        let debitResult = null;
-
+        const edition = tournamentState.tournamentNumber;
         try {
-            debitResult = await debitTournamentEntryFee(uid);
-            if (!debitResult.ok) {
-                socket.emit('tourney_register_result', { ok: false, reason: debitResult.reason || 'err_server_conn' });
-                return;
-            }
-
-            const registeredAfterDebit = tournamentState.players.find(p => p.id === uid);
-            if (registeredAfterDebit) {
-                const refundedUser = await refundTournamentEntryFee(uid);
-                emitProfileSync(socket, refundedUser);
-                socket.emit('tourney_register_result', { ok: true, alreadyRegistered: true });
-                return;
-            }
-
-            if (tournamentState.status !== 'registration' || tournamentState.players.length >= 8) {
-                const refundedUser = await refundTournamentEntryFee(uid);
-                emitProfileSync(socket, refundedUser);
-                socket.emit('tourney_register_result', { ok: false, reason: 'msg_room_full' });
-                return;
-            }
-
             const serverPi = await calculateTournamentPi(uid, playerData.pi);
 
             const tournamentPlayer = {
@@ -16353,36 +16605,44 @@ io.on('connection', (socket) => {
                 participationRulesAcceptedAt: Date.now()
             };
 
-            tournamentState.players.push(tournamentPlayer);
-            if (!assignPlayerToRandomTournamentSlot(tournamentPlayer)) {
-                tournamentState.players = tournamentState.players.filter(player => player.id !== uid);
-                throw new Error('No free tournament bracket slot.');
+            let result;
+            if (MONGO_URI) {
+                result = await legacyTournamentRegistration.register(edition, tournamentPlayer);
+            } else {
+                if (tournamentState.tournamentNumber !== edition || tournamentState.status !== 'registration'
+                    || tournamentState.players.length >= 8 || tournamentState.readinessPolicyVersion) {
+                    socket.emit('tourney_register_result', { ok: false, reason: 'tourney_readiness_stale' });
+                    return;
+                }
+                const state = structuredClone(tournamentState);
+                seatLegacyTournamentPlayer(state, tournamentPlayer);
+                result = { ok: true, state };
             }
-
-            const tournamentStartedByRegistration = hasFullTournamentRoster()
-                ? generateTournamentBracket()
-                : false;
-            if (!tournamentStartedByRegistration) {
-                saveTournamentToDb();
+            if (!result.ok) {
+                socket.emit('tourney_register_result', { ok: false, reason: result.reason });
+                return;
             }
-
-            emitProfileSync(socket, debitResult.user);
+            const sameRegistration = tournamentState.tournamentNumber === edition
+                && tournamentState.status === 'registration' && !tournamentState.readinessPolicyVersion;
+            if (sameRegistration) {
+                const { status, players, bracket } = result.state;
+                Object.assign(tournamentState, { status, players, bracket });
+            }
+            if (result.user) emitProfileSync(socket, result.user);
             socket.emit('tourney_register_result', {
-                ok: true,
-                balance: debitResult.user ? debitResult.user.balance : undefined
+                ok: true, alreadyRegistered: result.alreadyRegistered, balance: result.user?.balance
             });
-            io.emit('tourney_state_update', tournamentState);
-            if (tournamentStartedByRegistration) {
+            if (!sameRegistration) return;
+            emitTournamentStateUpdate();
+            if (result.alreadyRegistered) return;
+            if (tournamentState.status === 'active') {
+                scheduleTournamentAutoReset();
                 queueTournamentPush(() => notifyTournamentStarted(), 'started', { retry: true });
             } else if (tournamentState.players.length === 7) {
                 queueTournamentPush(() => notifyTournamentOneSpotLeft(), 'one_spot_left', { retry: true });
             }
         } catch (err) {
             console.error("Greška pri turnirskoj prijavi:", err);
-            if (debitResult && debitResult.user) {
-                const refundedUser = await refundTournamentEntryFee(uid);
-                emitProfileSync(socket, refundedUser);
-            }
             socket.emit('tourney_register_result', { ok: false, reason: 'err_server_conn' });
         }
     });
@@ -16426,7 +16686,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_unregister', async (data = {}) => {
+    socket.on('tourney_unregister', async function unregisterTournament(data = {}) {
         const uid = requireTournamentAuth(socket);
         if (!uid) {
             socket.emit('tourney_unregister_result', { ok: false, reason: 'auth_required' });
@@ -16435,6 +16695,17 @@ io.on('connection', (socket) => {
         if (!tournamentStateInitialized) {
             socket.emit('tourney_unregister_result', { ok: false, reason: 'err_server_conn' });
             return;
+        }
+
+        if (!tournamentReadinessCore.isManaged(tournamentState) && !legacyTournamentWrites.owns('registration')) {
+            const edition = tournamentState.tournamentNumber;
+            return legacyTournamentWrites.run('registration', () => profileWrites.run(uid, () => {
+                if (getVerifiedUid(socket) !== uid) return socket.emit('tourney_unregister_result', { ok: false, reason: 'auth_required' });
+                if (tournamentState.tournamentNumber !== edition || tournamentReadinessCore.isManaged(tournamentState)) {
+                    return socket.emit('tourney_unregister_result', { ok: false, reason: 'tourney_readiness_stale' });
+                }
+                return unregisterTournament(data);
+            }));
         }
 
         if (tournamentReadinessCore.isManaged(tournamentState)) {
@@ -16457,27 +16728,33 @@ io.on('connection', (socket) => {
             return;
         }
 
-        const index = tournamentState.players.findIndex(p => p.id === uid);
-        if (index === -1) {
+        if (!tournamentState.players.some(p => p.id === uid)) {
             socket.emit('tourney_unregister_result', { ok: true, alreadyUnregistered: true });
             return;
         }
 
         try {
-            const refundedUser = await refundTournamentEntryFee(uid);
-
-            tournamentState.players.splice(index, 1);
-            removePlayerFromTournamentBracket(uid);
-            if (tournamentState.players.length < 7) {
-                delete ensureTournamentPushFlags().oneSpotLeft;
+            const tournamentNumber = tournamentState.tournamentNumber;
+            const result = MONGO_URI
+                ? await legacyTournamentWithdrawals.withdraw(uid, tournamentNumber)
+                : { ok: true, state: { ...tournamentState, players: tournamentState.players.filter(player => player.id !== uid) } };
+            if (!result.ok) {
+                socket.emit('tourney_unregister_result', { ok: false, reason: result.reason });
+                return;
             }
-            saveTournamentToDb();
+            if (result.state && tournamentState.tournamentNumber === tournamentNumber && tournamentState.status === 'registration') {
+                tournamentState.players = result.state.players;
+                tournamentState.bracket = result.state.bracket;
+                tournamentState.pushFlags = result.state.pushFlags;
+                if (!MONGO_URI) removePlayerFromTournamentBracket(uid);
+            }
             io.emit('tourney_state_update', tournamentState);
 
-            emitProfileSync(socket, refundedUser);
+            if (result.user) emitProfileSync(socket, result.user);
             socket.emit('tourney_unregister_result', {
                 ok: true,
-                balance: refundedUser ? refundedUser.balance : undefined
+                alreadyUnregistered: result.alreadyUnregistered,
+                balance: result.user ? result.user.balance : undefined
             });
             console.log(`↩️ Poništena prijava za turnir: ${uid}`);
         } catch (err) {

@@ -258,9 +258,8 @@ async function checkRewardedAdClientFallback() {
         serverSource.includes('const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);'),
         'Server must require Google-signed SSV unless the fallback is explicitly enabled'
     );
-    assert(serverSource.includes('ADMOB_CLIENT_FALLBACK_GRACE_MS'), 'Server is missing a bounded fallback grace window');
-    assert(serverSource.includes('const clientFallbackAllowed = ALLOW_ADMOB_CLIENT_REWARD_FALLBACK && options.clientRewarded === true;'), 'SSV fallback is not gated by the SDK rewarded signal');
-    assert(serverSource.includes('clientFallback: true'), 'SSV fallback does not return a distinguishable fallback result');
+    assert(!serverSource.includes('clientFallback: true'), 'Unsigned client signals must never grant rewards');
+    assert(!extractAsyncFunction(serverSource, 'waitForVerifiedAdMobReward').includes('findOneAndUpdate'), 'Waiting for proof must not consume it');
     assert(
         serverSource.includes('clientRewarded: data?.clientRewarded === true'),
         'Reward handlers do not pass the client rewarded signal into SSV verification'
@@ -269,7 +268,7 @@ async function checkRewardedAdClientFallback() {
     assert(managersSource.includes("{ ssvNonce, clientRewarded: true }"), 'Shop coin rewarded claim does not send clientRewarded');
     assert(managersSource.includes("{ itemId, ssvNonce, clientRewarded: true }"), 'Shop discount/ad-unlock claims do not send clientRewarded');
     assert(undoSource.includes("{ type, ssvNonce, clientRewarded: true }"), 'Undo token rewarded claim does not send clientRewarded');
-    assert(dailySource.includes("{ amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled, dayKey }"), 'Daily double rewarded claim must send clientRewarded and the challenge day');
+    assert(dailySource.includes("{ amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled, dayKey, claimToken }"), 'Daily reward must include the signed original challenge day');
     assert(gameSource.includes('clientRewarded: !!doubled'), 'Game-over double rewarded claim does not send clientRewarded');
 
     const rewardWait = extractClassMethod(managersSource, 'async waitForRewardVideoReadyFor');
@@ -280,11 +279,15 @@ async function checkRewardedAdClientFallback() {
         'AdMob controller does not load and wait for the exact rewarded context'
     );
     assert(
-        showRewardVideo.includes('await this.waitForRewardVideoReadyFor(rewardOptions)'),
+        showRewardVideo.includes('const requestedReward = this.normalizeRewardOptions(rewardOptions);') &&
+        showRewardVideo.includes('this.rewardRequestOptions = requestedReward;') &&
+        showRewardVideo.includes('await this.waitForRewardVideoReadyFor(requestedReward)'),
         'showRewardVideo can still fail immediately instead of waiting for the exact rewarded ad'
     );
     assert(
-        showRewardVideo.includes('.then(() => this.adMobPlugin.showRewardVideoAd())') &&
+        showRewardVideo.includes('return this.adMobPlugin.showRewardVideoAd();') &&
+        showRewardVideo.includes('this.rewardSsvInfo !== preparedInfo') &&
+        showRewardVideo.includes('this.activeRewardSsvInfo = preparedInfo;') &&
         showRewardVideo.includes('if (rewardItem && this.rewardResolve) this.settleRewardVideo(true);'),
         'showRewardVideo does not accept the native rewarded promise result as a client reward signal'
     );
@@ -303,6 +306,7 @@ async function checkRewardedAdClientFallback() {
         Math,
         Set,
         REQUIRE_ADMOB_SSV: true,
+        SERVER_RUNTIME: { environment: 'production' },
         ALLOW_ADMOB_CLIENT_REWARD_FALLBACK: true,
         ADMOB_SSV_WAIT_TIMEOUT_MS: 2000,
         ADMOB_CLIENT_FALLBACK_GRACE_MS: 2000,
@@ -312,7 +316,7 @@ async function checkRewardedAdClientFallback() {
         sleep: async () => {},
         recordMonitorAdOutcome() {},
         AdMobRewardVerification: {
-            findOneAndUpdate: async () => null
+            findOne: async () => null
         },
         console
     };
@@ -328,8 +332,8 @@ async function checkRewardedAdClientFallback() {
         ['shop_ad_reward'],
         { claimedBy: 'shop_ad_reward', clientRewarded: true }
     );
-    assert.strictEqual(sdkFallback.ok, true, 'Completed native rewarded ad was not accepted when SSV was unavailable');
-    assert.strictEqual(sdkFallback.clientFallback, true, 'Completed native rewarded ad did not use the bounded SDK fallback');
+    assert.strictEqual(sdkFallback.ok, false, 'An unsigned SDK signal granted a reward');
+    assert.strictEqual(sdkFallback.reason, 'ad_verification_pending', 'Missing SSV must remain retryable');
 
     const missingSdkReward = await waitForVerifiedAdMobReward(
         'firebase-user-1234567890',
@@ -350,10 +354,14 @@ async function checkRewardedAdClientFallback() {
     assert.strictEqual(rejectedClientReward.ok, false, 'Client reward was accepted without signed SSV in production mode');
     assert.strictEqual(rejectedClientReward.reason, 'ad_verification_pending');
 
-    verificationContext.AdMobRewardVerification.findOneAndUpdate = async () => ({
+    verificationContext.REQUIRE_ADMOB_SSV = false;
+    assert.strictEqual((await waitForVerifiedAdMobReward('firebase-user-1234567890', 'reward-nonce-123456', ['shop_ad_reward'])).ok,
+        false, 'Production bypassed SSV through its environment flag');
+    verificationContext.REQUIRE_ADMOB_SSV = true;
+    verificationContext.AdMobRewardVerification.findOne = async () => ({
         uid: 'firebase-user-1234567890',
         nonce: 'reward-nonce-ssv',
-        context: 'daily_double'
+        context: 'daily_double', adTimestamp: now
     });
     const ssvReward = await waitForVerifiedAdMobReward(
         'firebase-user-1234567890',
@@ -400,7 +408,7 @@ async function checkAdMobSsvAdUnitBoundary() {
         'getRawAdMobSsvQuery', 'base64UrlToBuffer', 'splitAdMobSsvSignedQuery',
         'isAllowedAdMobRewardUnit', 'parseAdMobCustomData', 'sanitizeAdMobUid',
         'sanitizeAdMobNonce', 'sanitizeAdMobContext', 'parseAdMobTimestamp',
-        'verifyAdMobRewardSignatureAndParams'
+        'verifyAdMobRewardSignatureAndParams', 'normalizeAdRewardClaimData'
     ].forEach(name => vm.runInContext(extractFunction(serverSource, name), verificationContext));
     vm.runInContext(extractAsyncFunction(serverSource, 'recordVerifiedAdMobReward'), verificationContext);
 
@@ -657,10 +665,10 @@ function checkDailyRewardAtomicClaim() {
     const handler = serverSource.slice(rewardStart, rewardEnd);
 
     assert(handler.includes('UserProfile.findOneAndUpdate('), 'Daily reward claim is not persisted atomically');
-    assert(handler.includes('lastDailyRewardClaimed: { $nin: [todayStr, legacyTodayStr] }'), 'Daily reward claim lacks a duplicate-claim guard in the DB query');
-    assert(handler.includes('$set: {\n                        lastDaily: todayStr,\n                        lastDailyRewardClaimed: todayStr'), 'Daily reward claim does not mark the day in the atomic update');
-    assert(handler.includes('$inc: { balance: reward }'), 'Daily reward claim does not increment balance in the same DB update');
-    assert(handler.includes('const freshUser = await UserProfile.findOne({ firebaseUid: uid });'), 'Daily reward race loser does not reload fresh server state');
+    assert(handler.includes('[payoutPath]: previous ? previous.amount : { $exists: false }'), 'Daily reward lacks an atomic payout-version guard');
+    assert(handler.includes('dailyRewardPayouts: { $mergeObjects:'), 'Daily payout amount is not recorded with its balance change');
+    assert(handler.includes('walletUpdate(delta, MAX_BALANCE,'), 'Daily reward does not preserve overflow in the atomic wallet update');
+    assert(handler.includes('const freshUser = await UserProfile.findOne({ firebaseUid: uid }, null, { session });'), 'Daily reward race loser does not reload fresh transactional state');
     assert(handler.includes("reason: 'daily_already_claimed'"), 'Daily reward duplicate claim does not return already-claimed status');
     assert(handler.includes('if (toSafeInt(updatedUser.balance, 0) > MAX_BALANCE)'), 'Daily reward claim does not clamp balance after atomic increment');
     assert(!handler.includes('user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward)'), 'Daily reward claim still mutates balance non-atomically');
@@ -975,6 +983,9 @@ async function checkServerDuelIdempotency() {
             if (!result) {
                 result = { ...payload, statsAppliedUids: [] };
                 ledger.set(payload.matchId, result);
+                for (const player of payload.participants) {
+                    await context.applyTechnicalLeagueDelta(users.get(player.uid), player.score);
+                }
             }
             return { ok: true, created, result };
         },
@@ -986,6 +997,7 @@ async function checkServerDuelIdempotency() {
         },
         async persistLeaderboardScoreRecord() { return { ok: true }; },
         powerIndexCore: { calculatePowerIndex(user) { return user.leagueDelta || 0; } },
+        powerIndexBeforeLeagueBooking() { return 0; },
         rememberRecentPowerIndexGain(user, matchId, gain) {
             user.recentPowerIndexDeltas = [{ matchId, gain }];
         },

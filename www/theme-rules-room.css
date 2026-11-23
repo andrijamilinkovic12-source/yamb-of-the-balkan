@@ -40,6 +40,13 @@
 }
 
 /* Keep the Green room's type scale and touch targets in every theme. */
+@media (min-width: 760px) {
+    body #rules-overlay-ui#rules-overlay-ui.active .rules-card.global-chat-shell {
+        left: 50% !important;
+        width: min(760px, calc(100% - 44px)) !important;
+        transform: translateX(-50%) !important;
+    }
+}
 #rules-overlay-ui#rules-overlay-ui .rules-card-header { gap: 8px; }
 #rules-overlay-ui#rules-overlay-ui .global-chat-title-group { flex: 1 1 auto; min-width: 0; }
 #rules-overlay-ui#rules-overlay-ui .rules-header-title {

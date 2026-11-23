@@ -20,8 +20,7 @@ for (const asset of manifest.assets) {
 }
 assert(source.includes("if (type === 'black_hole') void this.spawnBlackHole()"));
 assert(source.includes("if (type === 'black_hole') this.loadBlackHoleSprite"));
-assert(!css.includes('bhTableSingularity') && !css.includes('.bh-starfield'), 'old violent board collapse and starfield must be gone');
-assert(css.includes('scale(.975)') && css.includes('black-hole-sprite'), 'subtle board tug and PNG sprite must be active');
+assert(css.includes('.black-hole-projection') && !css.includes('bhTableTug'), 'draw the visual pull separately from the real table');
 assert(css.includes('@keyframes bhStreamFlow') && css.includes('@keyframes bhLensWave')
     && css.includes('var(--bh-mid-x)') && css.includes('var(--bh-near-x)'),
     'independent orbit, lens and curved particle motion must be active');
@@ -29,12 +28,13 @@ assert(css.includes('@keyframes bhStreamFlow') && css.includes('@keyframes bhLen
 function element(tag = 'div') {
     const classes = new Set();
     const node = {
-        tag, children: [], parentNode: null, style: { setProperty(name, value) { this[name] = value; } },
+        tag, children: [], parentNode: null, dataset: {}, isConnected: true, style: { setProperty(name, value) { this[name] = value; } },
         classList: { add(...names) { names.forEach(name => classes.add(name)); }, remove(...names) { names.forEach(name => classes.delete(name)); }, contains(name) { return classes.has(name); } },
         appendChild(child) { this.children.push(child); child.parentNode = this; return child; },
         append(...children) { children.forEach(child => this.appendChild(child)); },
         remove() { if (this.parentNode) this.parentNode.children = this.parentNode.children.filter(child => child !== this); this.parentNode = null; },
-        setAttribute() {},
+        setAttribute() {}, querySelectorAll() { return []; },
+        getContext() { return new Proxy({}, { get: () => () => {} }); },
         getBoundingClientRect() { return { left: 40, top: 120, width: 320, height: 520 }; }
     };
     Object.defineProperty(node, 'className', { get() { return [...classes].join(' '); }, set(value) { classes.clear(); value.split(/\s+/).filter(Boolean).forEach(name => classes.add(name)); } });
@@ -42,19 +42,21 @@ function element(tag = 'div') {
 }
 
 const start = source.indexOf('    loadBlackHoleSprite(');
-const end = source.indexOf('    trigger(type) {', start);
+const end = source.indexOf('    trigger(', start);
 assert(start > 0 && end > start);
 const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.indexOf('const filterYambThemeIds'));
 const Manager = new Function(`${prelude}\nreturn class {
     constructor() { this.blackHoleRunId = 0; this.blackHoleSpritePromises = {}; this.blackHoleCleanup = null; this.timers = []; }
     getGoldRainThemeId() { return globalThis.activeBlackHoleTheme; }
+    getTargetTable() { return document.querySelectorAll('.player-table')[0]; }
     clearEffectTimeouts() { this.timers = []; }
     scheduleEffectTimeout(callback, delay) { this.timers.push({ callback, delay }); }
     ${source.slice(start, end)}
 }`)();
 
 async function main() {
-    const previous = { document: global.document, window: global.window, Image: global.Image, MutationObserver: global.MutationObserver };
+    const previous = { document: global.document, window: global.window, Image: global.Image, MutationObserver: global.MutationObserver,
+        requestAnimationFrame: global.requestAnimationFrame, cancelAnimationFrame: global.cancelAnimationFrame };
     const body = element('body');
     const table = element();
     table.className = 'player-table';
@@ -63,8 +65,12 @@ async function main() {
     let reduced = false;
     let observer;
     global.activeBlackHoleTheme = 'neon';
-    global.document = { body, documentElement: element('html'), createElement: element, createDocumentFragment: () => element('fragment'), querySelectorAll: selector => selector === '.player-table' ? [table] : [] };
-    global.window = { matchMedia: () => ({ matches: reduced }) };
+    global.document = { body, documentElement: element('html'), getElementById: () => null, createElement: element, createDocumentFragment: () => element('fragment'),
+        querySelectorAll: selector => selector === '.player-table' ? [table] : [], addEventListener() {}, removeEventListener() {} };
+    global.window = { matchMedia: () => ({ matches: reduced }), innerWidth: 390, innerHeight: 844, addEventListener() {}, removeEventListener() {} };
+    const frames = new Set();
+    global.requestAnimationFrame = fn => { frames.add(fn); return fn; };
+    global.cancelAnimationFrame = fn => frames.delete(fn);
     global.Image = class { set src(value) { this._src = value; queueMicrotask(() => this.onload?.()); } get src() { return this._src; } };
     global.MutationObserver = class { constructor(callback) { this.callback = callback; observer = this; } observe() {} disconnect() { this.disconnected = true; } fire() { this.callback(); } };
     try {
@@ -73,22 +79,22 @@ async function main() {
         assert.equal(body.children.length, 1, 'one scene appears');
         const scene = body.children[0];
         assert.equal(scene.children[1].children[0].src, 'assets/effects/black-hole/neon-core-v1.png');
-        assert.equal(scene.children.length, 5, 'atmosphere, PNG orbit, two lens waves and particles');
+        assert.equal(scene.children.length, 6, 'atmosphere, PNG orbit, two lens waves, particles and board projection');
         assert.equal(scene.children[1].children.length, 3, 'PNG with two independently moving streams');
         assert.equal(scene.children[4].children.length, 16, 'sixteen spiralling particles');
         assert.equal(scene.style['--bh-size'], '185.6px', 'sprite follows board width');
         assert.equal(scene.style['--bh-core-x'], '49%', 'moving orbit aligns with themed core');
-        assert(table.classList.contains('anim-black-hole-table'));
+        assert.equal(frames.size, 1);
         assert.equal(manager.timers[0].delay, 5800);
         global.activeBlackHoleTheme = 'moon';
         observer.fire();
         assert.equal(body.children.length, 0, 'theme switch clears the old image');
-        assert(!table.classList.contains('anim-black-hole-table'));
+        assert.equal(frames.size, 0);
 
         reduced = true;
         await manager.spawnBlackHole();
         assert.equal(body.children[0].children.length, 2, 'reduced motion has no particles');
-        assert(!table.classList.contains('anim-black-hole-table'), 'reduced motion leaves the board still');
+        assert.equal(frames.size, 0, 'reduced motion leaves the board still');
         assert.equal(manager.timers[0].delay, 2600);
         manager.timers[0].callback();
         assert.equal(body.children.length, 0);
@@ -108,6 +114,8 @@ async function main() {
         global.window = previous.window;
         global.Image = previous.Image;
         global.MutationObserver = previous.MutationObserver;
+        global.requestAnimationFrame = previous.requestAnimationFrame;
+        global.cancelAnimationFrame = previous.cancelAnimationFrame;
         delete global.activeBlackHoleTheme;
     }
 }

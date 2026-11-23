@@ -212,6 +212,15 @@ async function persistence() {
     assert.equal(p.db.playergamenotices[0].type, 'tournament_champion');
     assert.equal(p.db.playergamenotices[0].champion.playerName, 'Winner');
 
+    const cappedPrizes = fake(final.state);
+    cappedPrizes.db.userprofiles[0].balance = 100000;
+    cappedPrizes.db.userprofiles[1].balance = 99000;
+    await cappedPrizes.store.commitState(finalFilter, values, plan);
+    assert.deepEqual(cappedPrizes.db.userprofiles.map(row => row.balance), [100000, 100000]);
+    assert.deepEqual(cappedPrizes.db.userprofiles.map(row => row.pendingDucats), [44000, 4500], 'Entire final prizes survive the cap');
+    await assert.rejects(cappedPrizes.store.commitState(finalFilter, values, plan), /revision_conflict/);
+    assert.deepEqual(cappedPrizes.db.userprofiles.map(row => row.pendingDucats), [44000, 4500]);
+
     const voided = fixture();
     const r = fake(voided.state);
     r.db.userprofiles[1].balance = 99000;

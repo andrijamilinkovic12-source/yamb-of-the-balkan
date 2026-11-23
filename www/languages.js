@@ -184,8 +184,8 @@ const TRANSLATIONS = {
         "menu_league": "Kvartalna Liga",
         "menu_ducats": "Dukati",
         "economy_ducats_lower": "dukata",
-        "economy_interstitial": "Interstitial",
-        "economy_rewarded": "Rewarded",
+        "economy_interstitial": "Oglas između partija",
+        "economy_rewarded": "Oglas za nagradu",
         "economy_your_tokens": "Vaši tokeni",
         "economy_watch_ad": "Gledaj reklamu",
         "economy_reward_video": "Nagradni video",
@@ -193,6 +193,10 @@ const TRANSLATIONS = {
         "economy_tokens_plural": "tokena",
         "economy_reward_message": "+{0} dukata",
         "economy_reward_cooldown": "Nagrada je već obrađena. Pokušajte ponovo za {0}s.",
+        "economy_wallet_full": "Nema dovoljno mesta u novčaniku za novu reklamnu nagradu.",
+        "economy_purchase_pending": "Kupovina čeka potvrdu servera. Dukati neće biti naplaćeni dvaput.",
+        "economy_price_changed": "Cena se promenila. Kupovina nije izvršena; proverite novu cenu.",
+        "economy_reserved_ducats": "Dukati na čuvanju: {0}",
         "economy_auth_required": "Morate se prijaviti da biste preuzeli nagradu.",
         "unsupported_unverified_ad_reward": "Ova vrsta reklame ne može da isplati nagradu. Koristite nagradni video.",
         "economy_ad_label": "Oglas",
@@ -366,7 +370,6 @@ const TRANSLATIONS = {
         "err_chat_slow_down": "Šaljete poruke prebrzo. Sačekajte par sekundi.",
         "err_chat_auth_required": "Morate biti prijavljeni da biste pisali u globalnom chatu.",
         "err_chat_report_slow_down": "Sačekajte pre sledeće prijave poruke.",
-        "err_chat_report_missing": "Ova poruka više nije dostupna za prijavu.",
         "err_chat_report_self": "Ne možete prijaviti svoju poruku.",
         "chat_report_action": "Prijavi poruku",
         "chat_report_confirm": "Želite li da prijavite ovu poruku moderatorima?",
@@ -409,7 +412,7 @@ const TRANSLATIONS = {
         "stat_online": "ONLINE IGRAČA",
         "stat_power_index": "INDEKS MOĆI",
         "stat_global_rank": "Globalni Rang",
-        "stat_alltime": "All-Time PTS",
+        "stat_alltime": "Ukupno poena",
         "stat_fav_opp": "Rival",
         "stat_none": "Nema",
         "stat_matches": "mečeva",
@@ -427,9 +430,9 @@ const TRANSLATIONS = {
         "h2h_avg_pts": "🎯 Tvoj prosek poena:",
         "h2h_win_pct": "POBEDA",
         "h2h_me": "Ja",
-        "h2h_wins_short": "W",
-        "h2h_draws_short": "D",
-        "h2h_losses_short": "L",
+        "h2h_wins_short": "POB",
+        "h2h_draws_short": "NER",
+        "h2h_losses_short": "POR",
         "h2h_max_short": "Max",
         "h2h_share_btn": "Podeli karticu",
         "h2h_share_aria": "Podeli H2H karticu",
@@ -568,7 +571,7 @@ const TRANSLATIONS = {
         "err_chat_moderation_self_mute": "Vlasniku nije moguće dodeliti ručnu zabranu pisanja.",
         "err_chat_moderation_system": "Sistemske poruke nisu dostupne za ovu radnju.",
         "err_chat_moderation_save_failed": "Odluka nije potvrđena u bazi. Osveži prikaz pre ponovnog pokušaja.",
-        "err_chat_report_missing": "Prijava više nije dostupna.",
+        "err_chat_report_missing": "Poruka ili njena prijava više nije dostupna.",
         "err_chat_report_resolved": "Ova prijava je već obrađena. Osveži prikaz.",
         "err_chat_user_missing": "Nalog više nije dostupan.",
         "duel_incoming": "⚔️ Igrač {0} vas izaziva na duel! Prihvatate?",
@@ -674,7 +677,7 @@ const TRANSLATIONS = {
         "go_record_all_time": "REKORD SVIH VREMENA",
         "go_record_confirmed": "POTVRĐENO",
         "go_record_pending": "PROVERA REKORDA",
-        "go_power_index_change": "POWER INDEX",
+        "go_power_index_change": "INDEKS MOĆI",
         "go_record_none": "BEZ NOVOG REKORDA",
         "go_claim_amount": "Preuzmi {0} i izađi",
         "go_double_amount": "Dupliraj: {0}",
@@ -865,7 +868,7 @@ const TRANSLATIONS = {
 
         "rules_league_title": "KVARTALNA LIGA 🏅",
         "rules_league_concept_title": "KONCEPT LIGE",
-        "rules_league_concept_text": "Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. Konačni rezultat svake regularno završene solo, AI, lokalne ili online partije dodaje se Vašem ligaškom zbiru. Tehnički ishod dodaje obračunatu nagradu pobedniku, a poraženom oduzima obračunati iznos do najmanje 0.",
+        "rules_league_concept_text": "Kvartal traje tri kalendarska meseca po vremenu Beograda. Konačni skor solo, AI, lokalne ili online partije pripada kvartalu završetka. Tehnički dobitak i odbitak računaju se zasebno prema proseku svakog igrača, bez odlaska u minus. Posle 06:05 prvog dana novog kvartala zakasneli rezultat ostaje u istoriji i redovnoj statistici, ali ne menja ligaške zbirove, medalje ni nagrade.",
         "rules_league_ranks_title": "RANGOVI",
         "rules_league_ranks_text": "Rangovi su: <strong>Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena</strong> u trenutnom kvartalu.",
         "rules_league_rewards_title": "KRAJ SEZONE I DVORANA SLAVNIH",
@@ -961,7 +964,7 @@ const TRANSLATIONS = {
         "tourney_qf": "ČETVRTFINALE",
         "tourney_sf": "POLUFINALE",
         "tourney_f": "FINALE 🏆",
-        "tourney_tbd": "TBD",
+        "tourney_tbd": "Još nije određeno",
         "tourney_in_progress": "⏳ U dogovoru",
         "tourney_winner": "Pobednik:",
         "tourney_time_agreed": "✅ TERMIN DOGOVOREN",
@@ -1067,6 +1070,7 @@ const TRANSLATIONS = {
         "tourney_technical_timeout": "istek vremena",
         "tourney_technical_disconnect": "prekid veze",
         "tourney_technical_opponent_dq": "diskvalifikacija protivnika",
+        "tourney_technical_walkover": "Administrativna pobeda",
         "tourney_technical_default": "tehnički",
         "tourney_tab_fame": "OSVAJAČI",
         "tourney_hall_of_fame": "OSVAJAČI TURNIRA",
@@ -1114,6 +1118,10 @@ const TRANSLATIONS = {
         "ws_power_plain": "Moć",
         "ws_wl": "Pob/Ner/Por",
         "ws_record_win_short": "POB",
+        "ws_online_record": "Online rekord",
+        "ws_rival_stats": "Podaci najvećeg rivala",
+        "ws_invite_link": "Link za poziv u partiju",
+        "btn_retry": "Pokušaj ponovo",
         "ws_record_draw_short": "NER",
         "ws_record_loss_short": "POR",
         "ws_searching_opp": "Tražim<br>protivnika...",
@@ -1428,6 +1436,10 @@ const TRANSLATIONS = {
         "economy_tokens_plural": "tokens",
         "economy_reward_message": "+{0} ducats",
         "economy_reward_cooldown": "Reward already processed. Try again in {0}s.",
+        "economy_wallet_full": "Your wallet has no room for another ad reward.",
+        "economy_purchase_pending": "Your purchase is awaiting server confirmation. You will not be charged twice.",
+        "economy_price_changed": "The price changed. Nothing was purchased; please review the new price.",
+        "economy_reserved_ducats": "Ducats held in reserve: {0}",
         "economy_auth_required": "You must sign in to claim this reward.",
         "unsupported_unverified_ad_reward": "This ad type cannot grant a reward. Use a reward video.",
         "economy_ad_label": "Ad",
@@ -1601,7 +1613,6 @@ const TRANSLATIONS = {
         "err_chat_slow_down": "You are sending messages too quickly. Please wait a few seconds.",
         "err_chat_auth_required": "You must be signed in to write in global chat.",
         "err_chat_report_slow_down": "Please wait before reporting another message.",
-        "err_chat_report_missing": "This message is no longer available to report.",
         "err_chat_report_self": "You cannot report your own message.",
         "chat_report_action": "Report message",
         "chat_report_confirm": "Do you want to report this message to moderators?",
@@ -1803,7 +1814,7 @@ const TRANSLATIONS = {
         "err_chat_moderation_self_mute": "The owner cannot receive a manual posting restriction.",
         "err_chat_moderation_system": "This action is not available for system messages.",
         "err_chat_moderation_save_failed": "The decision was not confirmed by the database. Refresh before trying again.",
-        "err_chat_report_missing": "This report is no longer available.",
+        "err_chat_report_missing": "The message or its report is no longer available.",
         "err_chat_report_resolved": "This report has already been handled. Refresh the view.",
         "err_chat_user_missing": "This account is no longer available.",
         "duel_incoming": "⚔️ Player {0} challenges you to a duel! Accept?",
@@ -2100,7 +2111,7 @@ const TRANSLATIONS = {
 
         "rules_league_title": "QUARTERLY LEAGUE 🏅",
         "rules_league_concept_title": "LEAGUE CONCEPT",
-        "rules_league_concept_text": "The Quarterly League lasts 3 calendar months in Belgrade time. Your final score from every regularly completed solo, AI, local, or online game is added to your league total. A technical result adds the calculated reward to the winner and deducts the calculated amount from the loser, down to 0.",
+        "rules_league_concept_text": "A quarter lasts three calendar months in Belgrade time. Solo, AI, local and online scores count toward the quarter in which the game finished. Technical gains and deductions use each player's own average and cannot reduce the total below zero. After 06:05 on the first day of the new quarter, a late result remains in history and regular stats but cannot change league totals, medals or prizes.",
         "rules_league_ranks_title": "RANKS",
         "rules_league_ranks_text": "The ranks are: <strong>Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points</strong> in the current quarter.",
         "rules_league_rewards_title": "END OF SEASON & HALL OF FAME",
@@ -2302,6 +2313,7 @@ const TRANSLATIONS = {
         "tourney_technical_timeout": "timeout",
         "tourney_technical_disconnect": "disconnect",
         "tourney_technical_opponent_dq": "opponent disqualification",
+        "tourney_technical_walkover": "Win by walkover",
         "tourney_technical_default": "technical",
         "tourney_tab_fame": "CHAMPIONS",
         "tourney_hall_of_fame": "TOURNAMENT CHAMPIONS",
@@ -2349,6 +2361,10 @@ const TRANSLATIONS = {
         "ws_power_plain": "Power",
         "ws_wl": "W/D/L",
         "ws_record_win_short": "W",
+        "ws_online_record": "Online record",
+        "ws_rival_stats": "Top rival's stats",
+        "ws_invite_link": "Game invitation link",
+        "btn_retry": "Try again",
         "ws_record_draw_short": "D",
         "ws_record_loss_short": "L",
         "ws_searching_opp": "Finding<br>opponent...",
@@ -2503,7 +2519,7 @@ function formatDukatIcons(value) {
 }
 
 function t(key) {
-    const lang = localStorage.getItem('yamb_lang') || 'sr';
+    const lang = localStorage.getItem('yamb_lang') === 'en' ? 'en' : 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
         const value = TRANSLATIONS[lang][key];
         if (key === 'go_rematch' || key === 'ws_power') {
@@ -2541,9 +2557,11 @@ function setLanguage(lang) {
         if (pushSync && typeof pushSync.catch === 'function') pushSync.catch(() => {});
     }
 
-    try {
-        window.dispatchEvent(new CustomEvent('yamb:languageChanged', { detail: { lang, previousLang } }));
-    } catch (err) {}
+    notifyLanguageChange(lang, previousLang);
+}
+
+function notifyLanguageChange(lang, previousLang) {
+    window.dispatchEvent(new CustomEvent('yamb:languageChanged', { detail: { lang, previousLang } }));
 }
 
 function applyTranslations() {
@@ -2609,13 +2627,10 @@ function applyTranslations() {
 }
 
 function syncGreenRecordLabels() {
-    const activeTheme = document.documentElement.dataset.splashTheme
-        || localStorage.getItem('yamb_theme') || 'dark';
-    const greenTheme = activeTheme === 'dark';
     const labels = {
-        win: greenTheme ? t('ws_record_win_short') : 'POB',
-        draw: greenTheme ? t('ws_record_draw_short') : 'NER',
-        loss: greenTheme ? t('ws_record_loss_short') : 'POR'
+        win: t('ws_record_win_short'),
+        draw: t('ws_record_draw_short'),
+        loss: t('ws_record_loss_short')
     };
     document.querySelectorAll('#waiting-screen [data-green-record]').forEach(el => {
         el.textContent = labels[el.dataset.greenRecord] || '';

@@ -119,6 +119,15 @@ class UndoManager {
         return { context: 'undo_tokens', amount: 1 };
     }
 
+    getEconomySession() {
+        return { uid: localStorage.getItem('yamb_uid') || '', version: Number(window.yambAuthSessionVersion) || 0 };
+    }
+
+    isEconomySessionCurrent(session) {
+        return !!session?.uid && session.uid === localStorage.getItem('yamb_uid') &&
+            session.version === (Number(window.yambAuthSessionVersion) || 0) && !window.yambAccountDeletionInProgress;
+    }
+
     syncEconomyBanner(index) {
         clearTimeout(this.bannerTimer);
         const adMob = window.adMobGlobal;
@@ -139,6 +148,8 @@ class UndoManager {
     }
 
     async claimCoinAdReward(type = 'rewarded') {
+        const session = this.getEconomySession();
+        if (!this.isEconomySessionCurrent(session)) return;
         const parsedType = String(type);
         const adMob = window.adMobGlobal;
 
@@ -167,17 +178,18 @@ class UndoManager {
         if (!isCoinRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
 
         const success = await adMob.showRewardVideo(rewardOptions);
-        if (!success) return;
+        if (!success || !this.isEconomySessionCurrent(session)) return;
 
         const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
             ? adMob.consumeLastRewardSsvNonce()
             : '';
         const result = typeof adMob.claimRewardWithSsvRetry === 'function'
             ? await adMob.claimRewardWithSsvRetry(
-                () => this.claimServerCoinReward('rewarded', ssvNonce),
-                { nonce: ssvNonce, context: 'shop_ad_reward' }
+                () => this.claimServerCoinReward('rewarded', ssvNonce, session),
+                { nonce: ssvNonce, context: 'shop_ad_reward', shouldCancel: () => !this.isEconomySessionCurrent(session) }
             )
-            : await this.claimServerCoinReward('rewarded', ssvNonce);
+            : await this.claimServerCoinReward('rewarded', ssvNonce, session);
+        if (!this.isEconomySessionCurrent(session)) return;
         if (!result.ok) {
             this.showRewardError(result);
             return;
@@ -186,7 +198,8 @@ class UndoManager {
         this.applyCoinReward(result, 500);
     }
 
-    async claimServerCoinReward(type, ssvNonce = '') {
+    async claimServerCoinReward(type, ssvNonce = '', session = this.getEconomySession()) {
+        if (!this.isEconomySessionCurrent(session)) return { ok: false, reason: 'account_changed' };
         if (type === 'interstitial') {
             return { ok: false, reason: 'unsupported_unverified_ad_reward', permanent: true };
         }
@@ -197,6 +210,7 @@ class UndoManager {
 
         if (typeof this.app.authenticateSocketIdentity === 'function') {
             const authResult = await this.app.authenticateSocketIdentity();
+            if (!this.isEconomySessionCurrent(session)) return { ok: false, reason: 'account_changed' };
             if (!authResult || !authResult.ok) {
                 return { ok: false, reason: 'auth_required' };
             }
@@ -215,12 +229,15 @@ class UndoManager {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
-                resolve(result || { ok: false, reason: 'err_server_conn' });
+                resolve(this.isEconomySessionCurrent(session)
+                    ? (result || { ok: false, reason: 'err_server_conn' })
+                    : { ok: false, reason: 'account_changed' });
             });
         });
     }
 
-    async claimServerUndoTokenReward(type, ssvNonce = '') {
+    async claimServerUndoTokenReward(type, ssvNonce = '', session = this.getEconomySession()) {
+        if (!this.isEconomySessionCurrent(session)) return { ok: false, reason: 'account_changed' };
         if (type === 'interstitial') {
             return { ok: false, reason: 'unsupported_unverified_ad_reward', permanent: true, type };
         }
@@ -231,6 +248,7 @@ class UndoManager {
 
         if (typeof this.app.authenticateSocketIdentity === 'function') {
             const authResult = await this.app.authenticateSocketIdentity();
+            if (!this.isEconomySessionCurrent(session)) return { ok: false, reason: 'account_changed' };
             if (!authResult || !authResult.ok) {
                 return { ok: false, reason: 'auth_required' };
             }
@@ -249,13 +267,15 @@ class UndoManager {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
-                resolve(result || { ok: false, reason: 'err_server_conn' });
+                resolve(this.isEconomySessionCurrent(session)
+                    ? (result || { ok: false, reason: 'err_server_conn' })
+                    : { ok: false, reason: 'account_changed' });
             });
         });
     }
 
     applyCoinReward(result, fallbackAmount) {
-        const rewardAmount = parseInt(result.reward) || fallbackAmount;
+        const rewardAmount = Number.isFinite(Number(result.reward)) ? Math.max(0, Number(result.reward)) : fallbackAmount;
 
         if (result.localFallback) {
             let balance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
@@ -278,6 +298,7 @@ class UndoManager {
         }
 
         this.updateMenuCounts();
+        if (result.alreadyClaimed) return;
         if (this.app.soundMgr) this.app.soundMgr.win();
         const rewardMessage = (gt('economy_reward_message') || "+{0} dukata").replace('{0}', rewardAmount);
         this.app.modal.alert(rewardMessage, gt('msg_reward_title') || "NAGRADA");
@@ -303,6 +324,8 @@ class UndoManager {
 
     // --- KUPOVINA TOKENA GLEDANJEM REKLAMA ---
     async buyTokens(type) {
+        const session = this.getEconomySession();
+        if (!this.isEconomySessionCurrent(session)) return;
         const requestedType = String(type || '').trim().toLowerCase();
         const adMob = window.adMobGlobal;
         
@@ -325,16 +348,17 @@ class UndoManager {
         if (!isTokenRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
 
         const success = await adMob.showRewardVideo(rewardOptions);
-        if (success) {
+        if (success && this.isEconomySessionCurrent(session)) {
             const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
                 ? adMob.consumeLastRewardSsvNonce()
                 : '';
             const result = typeof adMob.claimRewardWithSsvRetry === 'function'
                 ? await adMob.claimRewardWithSsvRetry(
-                    () => this.claimServerUndoTokenReward('rewarded', ssvNonce),
-                    { nonce: ssvNonce, context: 'undo_tokens' }
+                    () => this.claimServerUndoTokenReward('rewarded', ssvNonce, session),
+                    { nonce: ssvNonce, context: 'undo_tokens', shouldCancel: () => !this.isEconomySessionCurrent(session) }
                 )
-                : await this.claimServerUndoTokenReward('rewarded', ssvNonce);
+                : await this.claimServerUndoTokenReward('rewarded', ssvNonce, session);
+            if (!this.isEconomySessionCurrent(session)) return;
             if (!result.ok) {
                 this.showRewardError(result);
                 return;
@@ -344,7 +368,7 @@ class UndoManager {
     }
 
     applyTokenReward(result, fallbackAmount) {
-        const rewardAmount = parseInt(result.reward) || fallbackAmount;
+        const rewardAmount = Number.isFinite(Number(result.reward)) ? Math.max(0, Number(result.reward)) : fallbackAmount;
 
         if (result.localFallback) {
             this.addTokens(rewardAmount, false);
@@ -356,6 +380,7 @@ class UndoManager {
         }
 
         this.updateMenuCounts();
+        if (result.alreadyClaimed) return;
         if (this.app.soundMgr) this.app.soundMgr.win();
 
         const successMsg = (gt('undo_earned_msg') || "Dobili ste {0} tokena!").replace('{0}', rewardAmount);
@@ -395,6 +420,8 @@ class UndoManager {
     }
 
     async requestOnlineUndoRollback(snapshot) {
+        const session = this.getEconomySession();
+        if (!this.isEconomySessionCurrent(session)) return { ok: false, reason: 'account_changed' };
         if (!this.app || !snapshot || !this.app.socket || !this.app.socket.connected || !this.app.roomId) {
             return { ok: false, reason: 'err_server_conn' };
         }
@@ -402,6 +429,7 @@ class UndoManager {
 
         if (typeof this.app.authenticateSocketIdentity === 'function') {
             const authResult = await this.app.authenticateSocketIdentity();
+            if (!this.isEconomySessionCurrent(session)) return { ok: false, reason: 'account_changed' };
             if (!authResult || !authResult.ok) {
                 return { ok: false, reason: 'auth_required' };
             }
@@ -428,7 +456,9 @@ class UndoManager {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
-                resolve(result || { ok: false, reason: 'err_server_conn' });
+                resolve(this.isEconomySessionCurrent(session)
+                    ? (result || { ok: false, reason: 'err_server_conn' })
+                    : { ok: false, reason: 'account_changed' });
             });
         });
     }
@@ -479,8 +509,10 @@ class UndoManager {
         const snap = this.app.lastMoveSnapshot;
         const roomId = this.app.roomId;
         const onlineMode = this.app.onlineMode;
+        const session = onlineMode ? this.getEconomySession() : null;
         const isCurrentMove = () => this.app.lastMoveSnapshot === snap &&
-            this.app.roomId === roomId && this.app.onlineMode === onlineMode;
+            this.app.roomId === roomId && this.app.onlineMode === onlineMode &&
+            (!session || this.isEconomySessionCurrent(session));
 
         if (this.app.onlineMode) {
             // ONLINE MOD: Koristi tokene
@@ -495,6 +527,7 @@ class UndoManager {
             if (!confirmUndo || !isCurrentMove()) return;
 
             const rollbackResult = await this.requestOnlineUndoRollback(snap);
+            if (session && !this.isEconomySessionCurrent(session)) return;
             if (!rollbackResult.ok) {
                 this.showUndoError(rollbackResult);
                 return;

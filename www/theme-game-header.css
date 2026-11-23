@@ -89,6 +89,8 @@ body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
 
 #game-scene:is(#game-scene) #turn-timer-display {
     box-sizing:border-box;
+    height:32px !important;
+    min-height:32px !important;
     flex:0 0 min(88px, 24vw) !important;
     width:min(88px, 24vw) !important;
     min-width:0 !important;
@@ -101,6 +103,11 @@ body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme)
     gap: 3px;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+}
+/* Keep the avatar and full-size buttons in one row at 320px. Use the same
+   spacing in every theme so a theme switch never changes header geometry. */
+@media (max-width: 340px) {
+    #game-scene:is(#game-scene) .game-header-controls { gap:3px !important; }
 }
 #game-scene #turn-timer-display::before {
     content: '';

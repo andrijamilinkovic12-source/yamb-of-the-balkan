@@ -5,6 +5,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { walletUpdate, walletState } = require('../lib/ducat-wallet');
+const { applyUpdate, matches } = require('./economy-mongo-fixture.cjs');
 const crypto = require('node:crypto');
 const dailyChallengeCore = require('../www/dailyChallengeCore');
 const root = path.resolve(__dirname, '..');
@@ -55,8 +57,9 @@ function createServer(clock = fakeClock()) {
         async save() { profiles.set(this.firebaseUid, { ...this }); }
     });
     const context = vm.createContext({
-        ...clock, console, crypto,
+        ...clock, console, crypto, Buffer, walletUpdate, walletState,
         socket, DAILY_CHALLENGE_TIME_ZONE: 'Europe/Belgrade', DAILY_CHALLENGE_SECRET: 'review-only',
+        DAILY_REWARD_CLAIM_SECRET: 'private-review-claim-secret',
         dailyChallengeCore,
         MONGO_URI: 'in-memory-fixture', MAX_DAILY_REWARD: dailyChallengeCore.MAX_REWARD * 2,
         MAX_DAILY_BASE_REWARD: dailyChallengeCore.MAX_REWARD, MAX_BALANCE: 1e9,
@@ -65,14 +68,14 @@ function createServer(clock = fakeClock()) {
         getVerifiedUid: value => value.verifiedUid,
         emitProfileSync() {},
         async waitForVerifiedAdMobReward(...args) { adCalls.push(args); return context.adResult; },
+        grantVerifiedAdMobReward: async (_uid, _proof, _key, operation) => operation(null),
         adResult: { ok: true },
         UserProfile: {
             async findOne(query) { return cloneDoc(profiles.get(query.firebaseUid)); },
             async findOneAndUpdate(query, update) {
                 const value = profiles.get(query.firebaseUid);
-                if (!value || query.lastDailyRewardClaimed.$nin.includes(value.lastDailyRewardClaimed)) return null;
-                Object.assign(value, update.$set);
-                value.balance += update.$inc.balance;
+                if (!value || !matches(value, query)) return null;
+                applyUpdate(value, update);
                 return cloneDoc(value);
             }
         }
@@ -333,6 +336,40 @@ async function main() {
         c.daily.claimDailyRewardOnServer = original; await c.daily.claim(false);
         assert.equal(c.server.profiles.get('review-user').balance, 1000 + challenge.reward);
     });
+    await check('A signed x2 top-up after midnight credits only the difference and leaves the new day available', async () => {
+        const s = createServer(); s.clock.set('2026-11-18T22:59:50Z');
+        const original = await s.call('request_daily_challenge');
+        const input = { dayKey: original.dayKey, claimToken: original.claimToken, amount: original.reward };
+        assert.equal((await s.call('claim_daily_reward', input)).reward, original.reward);
+        s.clock.set('2026-11-19T11:00:00Z');
+        const topup = await s.call('claim_daily_reward', { ...input, amount: original.reward * 2, doubled: true, ssvNonce: 'original-ad' });
+        assert.equal(topup.reward, original.reward);
+        assert.equal(topup.totalReward, original.reward * 2);
+        assert.equal(s.profiles.get('review-user').balance, 1000 + original.reward * 2);
+        assert.equal((await s.call('request_daily_challenge')).alreadyClaimed, false);
+        assert.equal((await s.call('claim_daily_reward', input)).reason, 'daily_already_claimed');
+    });
+    await check('Signed old daily reward does not conflict with the current legacy date marker', async () => {
+        const s = createServer();
+        const original = await s.call('request_daily_challenge');
+        s.clock.set('2026-11-19T11:00:00Z');
+        s.profiles.get('review-user').lastDailyRewardClaimed = s.context.getLegacyDailyDayKey();
+        const result = await s.call('claim_daily_reward', { dayKey: original.dayKey, claimToken: original.claimToken, amount: original.reward });
+        assert.equal(result.ok, true);
+        assert.equal(s.profiles.get('review-user').balance, 1000 + original.reward);
+        assert.equal((await s.call('request_daily_challenge')).alreadyClaimed, true);
+    });
+    await check('The public daily seed cannot forge a backdated reward token or a different account entitlement', async () => {
+        const s = createServer();
+        const original = await s.call('request_daily_challenge');
+        s.clock.set('2026-11-19T11:00:00Z');
+        const forged = crypto.createHmac('sha256', 'review-only').update(JSON.stringify(['daily-claim', 'review-user', original.dayKey])).digest('hex');
+        const input = { dayKey: original.dayKey, amount: original.reward };
+        assert.equal((await s.call('claim_daily_reward', { ...input, claimToken: forged })).reason, 'daily_challenge_expired');
+        assert.equal(s.context.verifyDailyClaimToken('another-user', original.dayKey, original.claimToken), false);
+        assert.equal(s.profiles.get('review-user').balance, 1000);
+        assert.equal((await s.call('claim_daily_reward', { ...input, claimToken: original.claimToken })).ok, true);
+    });
     await check('Claim works after a short same-day background delay (logic only)', async () => {
         const c = createClient(); const challenge = await c.server.call('request_daily_challenge');
         c.daily.setChallengeState(challenge); c.daily.calculatedReward = challenge.reward;
@@ -346,17 +383,16 @@ async function main() {
         const next = await s.call('request_daily_challenge');
         assert.equal(next.dayKey, '2026-11-19'); assert.equal(next.alreadyClaimed, false);
     });
-    await check('Unclaimed previous-day result has a recoverable midnight transition', async () => {
+    await check('Signed previous-day reward remains payable without consuming the new daily challenge', async () => {
         const c = createClient(); c.server.clock.set('2026-11-18T22:59:50Z');
         const challenge = await c.server.call('request_daily_challenge'); c.daily.setChallengeState(challenge); c.daily.calculatedReward = challenge.reward;
         c.server.clock.set('2026-11-18T23:00:05Z');
         const result = await c.server.call('claim_daily_reward', { amount: challenge.reward, dayKey: challenge.dayKey });
         assert.equal(result.reason, 'daily_challenge_expired');
         await c.daily.claim(false);
-        assert.equal(c.daily.currentDayKey, '2026-11-19');
-        assert.equal(c.daily.isActive, true);
-        assert.equal(c.alerts.at(-1)?.[0], 'dc_expired');
-        assert.equal(c.server.profiles.get('review-user').balance, 1000);
+        assert.equal(c.daily.currentDayKey, '2026-11-18');
+        assert.equal(c.server.profiles.get('review-user').balance, 1000 + challenge.reward);
+        assert.equal((await c.server.call('request_daily_challenge')).alreadyClaimed, false);
         assert.equal(c.socketCalls.find(call => call.event === 'claim_daily_reward').data.dayKey, '2026-11-18');
     });
     await check('Pending open must not apply previous account data after account switch', async () => {

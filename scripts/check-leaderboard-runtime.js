@@ -4,10 +4,31 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '../www/toplista.js'), 'utf8');
+const powerIndexSource = fs.readFileSync(path.join(__dirname, '../www/powerindex.js'), 'utf8');
+const streakSource = fs.readFileSync(path.join(__dirname, '../www/vatreniniz.js'), 'utf8');
+const themeSource = fs.readFileSync(path.join(__dirname, '../www/teme.css'), 'utf8');
 const serverSource = fs.readFileSync(path.join(__dirname, '../server.js'), 'utf8').replace(/\r\n/g, '\n');
 const clone = value => value == null ? value : JSON.parse(JSON.stringify(value));
 const uidA = 'firebase-profile-a-1234567890';
 const uidB = 'firebase-profile-b-1234567890';
+
+function checkRankDockBehavior() {
+    for (const [name, leaderboardSource, dockId] of [
+        ['Power Index', powerIndexSource, 'pi-my-rank-dock'],
+        ['Vatreni niz', streakSource, 'streak-my-rank-dock']
+    ]) {
+        assert.ok(leaderboardSource.includes(`document.getElementById('${dockId}')`),
+            `${name} is missing its current-player dock`);
+        assert.ok(leaderboardSource.includes('this.renderPlayerRow(this.myPlayer, { pinned: true })'),
+            `${name} does not render the current player as a pinned rank card`);
+        assert.ok(leaderboardSource.includes("myRankDock.classList.add('is-visible')"),
+            `${name} does not show the current-player dock outside the loaded page`);
+        assert.ok(!leaderboardSource.includes('this.renderPlayerRow(this.myPlayer, { offTop: true })'),
+            `${name} duplicates the current player inside the scrolling rank list`);
+    }
+    assert.match(themeSource, /\.pi-my-rank-dock\.is-visible,\s*\.streak-my-rank-dock\.is-visible/,
+        'A theme-neutral current-player dock is missing for non-specialized themes');
+}
 
 function harness() {
     const values = new Map([['yamb_uid', uidA]]);
@@ -83,6 +104,51 @@ async function checkConcurrentLocalWrites() {
     await Promise.all([manager._saveLocal(entry('a')), manager._saveLocal(entry('b', uidB))]);
     assert.equal((await manager._readLocalScores()).length, 2,
         'Concurrent local writes lost a score from another account');
+}
+
+async function checkFinishedMatchSubmission() {
+    const { manager, socket, values } = harness();
+    const finishedAt = Date.parse('2026-11-01T22:59:59Z'); // Sunday in Belgrade
+    const records = [];
+    manager.app.recordSubmittedScoreAsHighscore = score => records.push(score);
+    socket.connected = false;
+    const submit = () => manager.submitScore('Same name', 2100, 'Duel', '', 'one-match', finishedAt);
+    await submit();
+    assert.deepEqual(records, [], 'Pending local scores cannot raise the official profile record');
+    await submit();
+    let rows = await manager._readLocalScores();
+    assert.equal(rows.length, 1, 'Retry duplicated the same match on the phone');
+    assert.equal(rows[0].date, new Date(finishedAt).toISOString(), 'Synchronization moved the match to another week');
+    socket.connected = true;
+    manager._submitScoreToServer = async () => ({ ok: true });
+    await manager.syncOfflineScores();
+    assert.deepEqual(records, [2100], 'Confirmed score should update its own profile');
+    values.set('yamb_uid', uidB);
+    await submit();
+    rows = await manager._readLocalScores();
+    assert.equal(rows.length, 2, 'Two different profiles must retain their own scores');
+}
+
+async function checkHotseatLocalHistory() {
+    const { manager } = harness();
+    const finishedAt = Date.parse('2026-11-30T22:59:59Z');
+    const results = [{ name: 'Ana', score: 2300 }, { name: 'Ana', score: 2300 }];
+    const sent = [];
+    manager._submitScoreToServer = async row => {
+        sent.push(row.uid);
+        return { ok: false, permanent: true, reason: 'server_rejected' };
+    };
+    const records = [];
+    manager.app.recordSubmittedScoreAsHighscore = score => records.push(score);
+    await manager.saveHotseatGuests(results, 0, 'hotseat', finishedAt);
+    await manager.saveHotseatGuests(results, 0, 'hotseat', finishedAt);
+    await manager.submitScore('Ana', 2300, 'Hotseat', '', 'hotseat', finishedAt);
+    await manager.syncOfflineScores();
+    const rows = await manager._readLocalScores();
+    assert.equal(rows.length, 2);
+    assert.equal(rows.filter(row => row.uid === null && row.guestIndex === 1).length, 1);
+    assert.deepEqual(sent, [uidA], 'Only the account score belongs on the global board');
+    assert.deepEqual(records, [], 'A rejected score cannot raise the profile record');
 }
 
 async function checkSyncDuringNewScore() {
@@ -267,9 +333,9 @@ async function checkServerErrors() {
 }
 
 async function main() {
-    const checks = [checkConcurrentLocalWrites, checkSyncDuringNewScore, checkSyncAccountIsolation,
+    const checks = [checkFinishedMatchSubmission, checkHotseatLocalHistory, checkConcurrentLocalWrites, checkSyncDuringNewScore, checkSyncAccountIsolation,
         checkConcurrentStatusUpdates, checkGlobalPaging, checkGlobalRequestRecovery, checkOfflinePeriodSwitch,
-        checkGlobalErrorRetry, checkCalendarBoundaries, checkLocalRendering, checkServerErrors];
+        checkGlobalErrorRetry, checkCalendarBoundaries, checkLocalRendering, checkRankDockBehavior, checkServerErrors];
     let failed = 0;
     for (const check of checks) {
         try { await check(); console.log(`PASS ${check.name}`); }

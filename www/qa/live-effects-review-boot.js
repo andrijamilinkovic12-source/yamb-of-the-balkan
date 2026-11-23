@@ -12,12 +12,17 @@ function bootLiveEffectsReview(EffectManager) {
         '<span>' + (index % 7 === 0 ? ['1', '2', '3', '4', '5', '6', 'MAX', 'MIN', 'K', 'F', 'Y', 'Σ'][Math.floor(index / 7)]
             : index < 7 ? ['', '↓', '↑', '↕', 'N', 'R', 'Σ'][index] : index % 3 === 0 ? '48' : '') + '</span>').join('');
     window.app ||= { playerName: params.get('name') || 'Andrija' };
+    const face = document.getElementById('drone-face');
+    face.value = /^[1-6]$/.test(params.get('face')) ? params.get('face') : '6';
+    face.addEventListener('change', () => run('drones'));
     const run = id => {
         fx.stop(); effect = id;
         document.getElementById('effect-choice').value = id;
         const onBoard = !['confetti', 'gold_rain', 'fireflies', 'bubbles'].includes(id);
         board.hidden = !onBoard; card.hidden = onBoard;
-        fx.trigger(id);
+        board.classList.toggle('qa-ice', id === 'ice_age');
+        face.hidden = id !== 'drones';
+        fx.trigger(id, id === 'drones' ? Number(face.value) : undefined);
     };
     const setTheme = id => {
         fx.stop();

@@ -1,21 +1,14 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const crypto = require('node:crypto');
 const { makeHarness, root } = require('./live-stage-test-harness.cjs');
-const manifest = require('../source-assets/dragon-breath-v1/manifest.json');
-const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
 
 (async () => {
-    assert.equal(hash(fs.readFileSync(path.join(root, manifest.master))), manifest.masterSha256);
-    for (const asset of manifest.assets) {
-        const png = fs.readFileSync(path.join(root, asset.productionPath));
-        assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
-        assert.equal(png[25], 6, 'Dragon parts preserve RGBA transparency');
-        assert.equal(hash(png), asset.sha256);
-        assert.equal(png.readUInt32BE(16), asset.width);
-        assert.equal(png.readUInt32BE(20), asset.height);
+    for (const name of ['visage', 'plume']) {
+        const data = fs.readFileSync(path.join(root, 'www/assets/effects/dragon-projection-v2', name + '.webp'));
+        assert.equal(data.toString('ascii', 8, 12), 'WEBP');
+        assert(data.length < 200000);
     }
     for (const theme of themes) for (const [width, height] of [[320, 480], [390, 844], [1280, 800]]) {
         const h = makeHarness({ theme, width, height });
@@ -35,28 +28,25 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         h.step(2600);
         const pose = scene.dragonPose(2.6);
         assert.equal(scene.overlay.dataset.dragonPhase, 'breath');
-        assert(pose.jawAngle > inhale.jawAngle && pose.breath === 1);
+        assert(pose.gape > inhale.gape && pose.breath === 1);
         assert(pose.mouth.x > 0 && pose.mouth.x < width && pose.mouth.y > 40 && pose.mouth.y < height * 0.65);
-        const layout = scene.dragonLayout, rig = manifest.rig;
-        const ux = (rig.upperMouth[0] - rig.headPivot[0]) * layout.width;
-        const uy = (rig.upperMouth[1] - rig.headPivot[1]) * layout.height;
-        const lx = (rig.lowerMouth[0] - rig.jawPivot[0]) * pose.jawWidth;
-        const ly = (rig.lowerMouth[1] - rig.jawPivot[1]) * layout.jawHeight;
-        const centerX = (ux + lx * Math.cos(pose.jawAngle) - ly * Math.sin(pose.jawAngle)) / 2;
-        const centerY = (uy + lx * Math.sin(pose.jawAngle) + ly * Math.cos(pose.jawAngle)) / 2;
-        assert(Math.abs(pose.mouth.x - pose.x - centerX * Math.cos(pose.angle) + centerY * Math.sin(pose.angle)) < 0.001);
-        assert(Math.abs(pose.mouth.y - pose.y - centerX * Math.sin(pose.angle) - centerY * Math.cos(pose.angle)) < 0.001);
+        assert(pose.size <= scene.board.width * 0.52 && pose.size <= 206);
+        assert.equal(pose.mouth.x, scene.dragonLayout.cx);
+        assert(Math.abs(pose.mouth.y - (pose.top + pose.size * (0.55 + 0.10 * pose.gape))) < 0.001);
+        const [far, mid, near] = [0, 0.5, 0.92].map(u => scene.dragonProjection(pose.mouth, u));
+        assert.equal(far.x, pose.mouth.x); assert.equal(far.y, pose.mouth.y);
+        assert(near.y - mid.y > mid.y - far.y && near.size > 3 * mid.size, 'Foreground accelerates and enlarges');
         assert(scene.ctx.calls.some(call => call[0] === 'drawImage' && call[1] === scene.images.head));
-        assert(scene.ctx.calls.some(call => call[0] === 'drawImage' && call[1] === scene.images.jaw));
+        assert(scene.ctx.calls.some(call => call[0] === 'drawImage' && call[1] === scene.images.plume));
         assert(scene.ctx.calls.some(call => call[0] === 'drawImage' && call[1] === scene.images.flame));
-        const cache = scene.dragonHeat;
+        const packets = scene.dragonPackets;
         const contexts = h.contexts.length;
         h.step(3400); h.step(4400);
         assert.equal(scene.overlay.dataset.dragonPhase, 'embers');
         assert.equal(scene.dragonPose(4.4).breath, 0);
-        assert.equal(h.contexts.length, contexts, 'Frames reuse the heat texture');
+        assert.equal(h.contexts.length, contexts, 'No per-frame canvas allocations');
         h.setViewport(360, 780); scene.resize();
-        assert.equal(scene.dragonHeat, cache);
+        assert.equal(scene.dragonPackets, packets);
         h.step(5300);
         assert.equal(scene.overlay.dataset.dragonPhase, 'exit');
         assert(scene.dragonPose(5.3).leave > 0.98);
@@ -85,5 +75,5 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     const late = new pending.Stage(pending.owner, 'dragon_fire');
     const start = late.start(); late.stop(); await start;
     assert.equal(pending.body.children.length, 0);
-    console.log('Dragon Breath passed: original RGBA rig, moving jaw/lip anchor, directed fire, ten themes, three sizes, one sound cue and cleanup.');
+    console.log('Dragon projection passed: board-relative head, moving throat anchor, perspective growth, ten themes, three sizes, reduced motion and cleanup.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

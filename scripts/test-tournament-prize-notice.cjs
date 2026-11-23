@@ -138,7 +138,7 @@ async function main() {
     assert.equal(late.dialogs.length, 0);
     assert.deepEqual(late.sent, [['tourney_prize_notice_read', later.id]]);
 
-    const builders = server.slice(server.indexOf('function buildTournamentPrizeNotice('), server.indexOf('async function debitTournamentEntryFee('));
+    const builders = server.slice(server.indexOf('function buildTournamentPrizeNotice('), server.indexOf('async function applyTournamentPrize('));
     const delivery = [];
     const socket = { connected: true, verifiedUid: uid, emit: (...args) => delivery.push(args) };
     const database = {

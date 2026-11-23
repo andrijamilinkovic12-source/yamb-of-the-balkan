@@ -66,6 +66,9 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     const calm = new reduced.Stage(reduced.owner, 'royal_yamb');
     await calm.start(); reduced.step(0); reduced.step(800);
     assert.equal(calm.overlay.dataset.ceremony, 'holding');
+    assert.equal(calm.royalShine, undefined, 'A static title does not allocate a moving shine mask');
+    assert.equal(calm.royalCoins, undefined, 'Three still ducats do not need fountain trajectories');
+    assert.equal(calm.royalPoses.length, 3);
     reduced.step(2600); assert.equal(reduced.body.children.length, 0);
 
     const interrupted = makeHarness();
@@ -79,6 +82,9 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     assert.equal(interrupted.body.children.length, 0);
 
     const pending = makeHarness();
+    const missed = new pending.Stage(pending.owner, 'royal_yamb');
+    pending.setSoundManager({ royalFanfare() { throw Error('Do not start the fanfare after its visual crest'); } });
+    await missed.start(); pending.step(0); pending.step(5200); missed.stop();
     const late = new pending.Stage(pending.owner, 'royal_yamb');
     const start = late.start(); late.stop(); await start;
     assert.equal(pending.body.children.length, 0);

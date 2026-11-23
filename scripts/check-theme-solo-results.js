@@ -348,7 +348,7 @@ for (const item of recordImages) assert(!item.src, 'old theme record PNG must cl
 window.themeSoloResults.sync(true);
 assert(powerIcon.src.includes('/green-soft-clay/canonical/statistics-overview/power-index-v1.png'));
 for (const item of recordImages) assert(item.src.includes(`/green-soft-clay/canonical/solo-record-icons/${item.dataset.soloRecordIcon}-v1.png`));
-const classifierMethod = server.match(/^async function getSoloRecordAchievementsBeforeInsert\(uid, score, recordDate, snapshots, mode = 'Solo'\) \{[\s\S]*?^\}/m)?.[0];
+const classifierMethod = server.match(/^async function getSoloRecordAchievementsBeforeInsert\([^)]*\) \{[\s\S]*?^\}/m)?.[0];
 assert(classifierMethod, 'server record classifier missing');
 let previousPersonal = null;
 let weeklyStart = new Date('2026-10-12T00:00:00Z');
@@ -417,6 +417,20 @@ const classify = vm.runInNewContext(`(${classifierMethod})`, {
         'an earlier Hotseat score on this account must count toward its personal best');
     assert.deepEqual([...await classifyByAccount('account-b', 2000, new Date('2026-10-16'), {})], [],
         'another account lower score must not create a false personal record');
+    const finish = new Date('2026-01-31T12:00:00Z');
+    const history = [{ score: 900, date: new Date('2026-01-30') }, { score: 1200, date: new Date('2026-02-02') }];
+    const delayed = vm.runInNewContext(`(${classifierMethod})`, {
+        Score: { findOne(query) {
+            const best = history.filter(row => !query.date || row.date <= query.date.$lte).sort((a, b) => b.score - a.score)[0];
+            return { sort() { return this; }, select() { return this; }, lean: async () => best };
+        } },
+        getLeaderboardPeriodStart(_period, at) { assert.equal(at, finish); return null; },
+        LEADERBOARD_RECORD_PERIODS: ['weekly', 'monthly', 'all_time'],
+        normalizeSoloRecordAchievements: normalizeRecords, toSafeInt: Number
+    });
+    const priorLeaders = { weekly: { score: 2000 }, monthly: { score: 2000 }, all_time: { score: 2000 } };
+    assert.deepEqual([...await delayed('account-a', 1000, finish, priorLeaders)], ['personal'],
+        'later 1200 must not erase the personal record earned above 900');
     const reconcileSource = game.match(/    async reconcileStatsHighscoreFromStoredScores\(\) \{[\s\S]*?\r?\n    \}/)?.[0];
     assert(reconcileSource, 'local highscore reconciliation missing');
     let currentUid = 'account-a';

@@ -190,6 +190,7 @@ class KvartalnaLigaManager {
 
         let pId = localStorage.getItem('yamb_uid');
         if (!pId) return;
+        const request = this.scoreSyncRequest = (this.scoreSyncRequest || 0) + 1;
 
         window.app.socket.emit('submit_league_score', {
             playerId: pId,
@@ -199,10 +200,11 @@ class KvartalnaLigaManager {
             year: data.year,
             quarter: data.quarter
         }, (result) => {
+            if (this.scoreSyncRequest !== request || localStorage.getItem('yamb_uid') !== pId) return;
             if (result && result.ok) {
                 if (result.leagueData) {
                     if (window.app && typeof window.app.applyCloudProfileSync === 'function') {
-                        window.app.applyCloudProfileSync({ leagueData: result.leagueData });
+                        window.app.applyCloudProfileSync({ recipientUid: pId, leagueData: result.leagueData });
                     } else {
                         this.saveScores(result.leagueData);
                         if (typeof updateMainMenuDashboard === 'function') {
@@ -495,7 +497,7 @@ class KvartalnaLigaManager {
                                 <div class="league-current-rank" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);"><img class="league-current-rank-soft-clay-badge" src="${this.getRankBadgeSource(currentRankData.id)}" alt="" aria-hidden="true" decoding="sync" loading="eager" onerror="window.kvartalnaLiga && window.kvartalnaLiga.retryRankBadgeElement(this, '${currentRankData.id}')"><span>${rank}</span></div>
                             </div>
                             <div class="league-summary-points" style="text-align: right;">
-                                <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
+                                <div id="league-summary-points" style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
                                 <div id="league-summary-alltime" style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time', 'SVA VREMENA')}: ${allTime}</div>
                             </div>
                         </div>
@@ -544,9 +546,36 @@ class KvartalnaLigaManager {
         this.setupLeaderboardInfiniteScroll();
         this.syncWithServer(); 
         
-        setTimeout(() => {
-            this.fetchLeaderboard();
-        }, 300);
+        this.fetchLeaderboard();
+        clearInterval(this.roomClock);
+        this.roomPeriod = `${data.year}/${data.quarter}`;
+        this.roomTotal = allTime;
+        this.roomConnected = !!window.app?.socket?.connected;
+        this.roomClock = setInterval(() => this.refreshOpenScores(), 15000);
+    }
+
+    refreshOpenScores() {
+        const points = document.getElementById('league-summary-points');
+        if (!points) return;
+        const data = this.getScores();
+        const period = `${data.year}/${data.quarter}`;
+        const scoreText = `${data.quarterlyScore} PTS`;
+        const total = data.baselineScore + data.quarterlyScore;
+        const connected = !!window.app?.socket?.connected;
+        if (this.roomPeriod === period && points.textContent === scoreText && this.roomTotal === total && this.roomConnected === connected) return;
+        this.roomPeriod = period;
+        this.roomTotal = total;
+        this.roomConnected = connected;
+        points.textContent = scoreText;
+        const rank = this.ranks.find(item => data.quarterlyScore >= item.min && data.quarterlyScore <= item.max);
+        const badge = document.querySelector('#league-modal-overlay .league-current-rank img');
+        if (badge && rank) {
+            badge.src = this.getRankBadgeSource(rank.id);
+            badge.onerror = () => this.retryRankBadgeElement(badge, rank.id);
+            badge.nextElementSibling.textContent = this.getRank(data.quarterlyScore);
+        }
+        this.updateAllTimeSummary(total);
+        this.fetchLeaderboard();
     }
 
     async closeModal() {
@@ -554,6 +583,8 @@ class KvartalnaLigaManager {
         if (!overlay) return;
         const viewedLongEnough = Date.now() - (this.openedAt || 0) >= 8000;
         overlay.remove();
+        clearInterval(this.roomClock);
+        this.leaderboardPages.clear();
         this.openedAt = 0;
         if (this.previousFocus?.isConnected) this.previousFocus.focus({ preventScroll: true });
         this.previousFocus = null;
@@ -636,6 +667,7 @@ class KvartalnaLigaManager {
         
         window.app.socket.off('hall_of_fame_data'); 
         window.app.socket.on('hall_of_fame_data', (data) => {
+            if (!list.isConnected) return;
             if (this.hofLoadTimeout) clearTimeout(this.hofLoadTimeout);
             this.hofLoadTimeout = null;
             this.hofLoadPending = false;
@@ -909,7 +941,7 @@ class KvartalnaLigaManager {
 
         let completed = false;
         const finish = (response) => {
-            if (completed || requestSerial !== state.requestSerial) return;
+            if (completed || this.leaderboardPages.get(rankId) !== state || requestSerial !== state.requestSerial) return;
             completed = true;
             clearTimeout(timeoutId);
             state.loading = false;
@@ -950,7 +982,9 @@ class KvartalnaLigaManager {
 
             const container = document.querySelector(`#league-modal-overlay .league-rank-scroll[data-league-rank="${rankId}"]`);
             if (state.hasMore && container && container.scrollHeight <= container.clientHeight + 4) {
-                setTimeout(() => this.loadLeaguePage(rankId), 0);
+                setTimeout(() => {
+                    if (this.leaderboardPages.get(rankId) === state) this.loadLeaguePage(rankId);
+                }, 0);
             }
         };
         const timeoutId = setTimeout(() => finish(null), 8000);
@@ -967,6 +1001,7 @@ class KvartalnaLigaManager {
     fetchLeaderboard() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
+        this.resetLeaderboardPagination();
         if (!window.app || !window.app.socket || !window.app.socket.connected) {
             this.ranks.forEach(r => {
                 const listEl = document.getElementById(`league-list-${r.id}`);
@@ -975,7 +1010,6 @@ class KvartalnaLigaManager {
             return;
         }
 
-        this.resetLeaderboardPagination();
         this.ranks.forEach(rank => this.loadLeaguePage(rank.id, { reset: true }));
     }
 

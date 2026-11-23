@@ -139,6 +139,13 @@ async function main() {
             assert.equal(Math.floor(delay / 390), i % 4, `${theme}: expected four staggered waves`);
             assert(delay + duration <= 5800, `${theme}: the last coins must finish before the rain ends`);
             assert(Math.abs(number(coin, '--fall-sway')) > 0, `${theme}: missing lateral sway`);
+            const left = parseFloat(coin.style.left);
+            const travel = number(coin, '--fall-travel');
+            if (left < 15 || left > 85) assert(left < 15 ? travel > 0 : travel < 0, 'Edge lanes must drift inward');
+            const period = number(coin, '--rock-period');
+            const phase = number(coin, '--rock-phase');
+            assert(period > 0 && phase <= 0 && -phase < period, 'Rocking must start within its own cycle');
+            assert.equal(Number(coin.style.zIndex), Math.round((number(coin, '--coin-opacity') - 0.77) / 0.115));
             const turn = Math.abs(number(coin, '--fall-turn'));
             assert(turn >= 40 && turn < 75, `${theme}: turning coins must still show the original face`);
         }

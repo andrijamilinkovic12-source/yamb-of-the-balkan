@@ -42,6 +42,8 @@ function rulesCanonicalSource(role, theme = rulesActiveTheme()) {
         spectate: 'online-players-internal/spectate-v1.png',
         duel: 'online-players-internal/duel-v1.png',
         globalChat: 'global-chat-room-identity/global-chat-room-v1.png',
+        mailbox: 'player-mailbox/post-v1.png',
+        hotseat: 'hotseat-room-identity/hotseat-room-v1.png',
         ducat: `ducat/ducat-inline-v${!green && ['easter', 'desert', 'severna'].includes(theme) ? 2 : 1}.png`,
         daily: 'daily-room-identity/daily-room-v1.png',
         video: 'rewarded-video/rewarded-video-active-inline-v1.png',
@@ -88,8 +90,11 @@ const RulesData = {
             content: `
                 <h3>${rulesTextGlyphHtml('🎯')} Cilj igre</h3>
                 <p>Cilj je osvojiti što više poena bacanjem 6 kockica i upisivanjem najboljih kombinacija u tabelu. U svakom potezu imate do 3 bacanja, a posle svakog bacanja možete zadržati kockice koje želite da sačuvate.</p>
-                <p>Svako polje u tabeli može se popuniti samo jednom. Ako kombinacija ne postoji, u polje se upisuje 0.</p>
+                <p>Za izabrani red igra sama bira pet od šest kockica. MAX sabira pet najvećih, MIN pet najmanjih, a u redovima 1–6 računa se najviše pet istih. Zadržane kockice ostaju iste; ponovo bacate samo ostale. Za bodovanje se uzima u obzir svih šest.</p>
+                <p>Upis završava potez. Svako polje popunjavate jednom; ako nemate traženu kombinaciju, upisujete 0. Kad su obe tabele u duelu pune, pobeđuje igrač sa većim zbirom poena.</p>
                 
+                <h3>${rulesCanonicalIcon('hotseat')} Igra na jednom uređaju</h3>
+                <p>U solo partiji popunjavate svoju tabelu i pokušavate da oborite lični rekord. U igri za dva igrača svako ima svoju tabelu; posle upisa uređaj preuzima sledeći igrač. Ako je na uređaju sačuvana prekinuta partija, možete je nastaviti kada ponovo otvorite isti način igre. Za Kvartalnu ligu računa se rezultat prijavljenog naloga.</p>
                 <h3>${rulesCanonicalIcon('statistics')} Kolone u igri</h3>
                 <ul>
                     <li><strong>↓ NADOLE:</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
@@ -97,14 +102,15 @@ const RulesData = {
                     <li><strong>⇅ SREDINA:</strong> Popunjava se od sredine ka krajevima. Gornja grana kreće od MAX ka 1, a donja od MIN ka Yambu.</li>
                     <li><strong>S SLOBODNA:</strong> Može se popunjavati bilo kojim redosledom u toku igre.</li>
                     <li><strong>R RUČNO:</strong> Boduje se samo posle prvog bacanja. Ako pokušate da upišete polje u ovoj koloni posle drugog ili trećeg bacanja, igra ga upisuje kao 0 tek nakon potvrde.</li>
-                    <li><strong>${rulesTextGlyphHtml('📢')} NAJAVA:</strong> Posle prvog bacanja možete uključiti Najavu, izabrati tačno polje u koloni Najava i zatim morate upisati baš to polje. Najava se može otkazati dok još nije zaključana.</li>
+                    <li><strong>📢 NAJAVA:</strong> Posle prvog bacanja možete odmah upisati rezultat u ovu kolonu ili najaviti prazno polje za sledeća bacanja. Najavu možete otkazati pre drugog bacanja. Posle njega morate upisati najavljeno polje, čak i ako vredi 0.</li>
                 </ul>
                 
                 <h3>${rulesCanonicalIcon('leaderboard')} Bodovanje i sekcije</h3>
                 <h4>1. SEKCIJA (1-6)</h4>
-                <p>Sabiraju se samo odgovarajući brojevi. Ako je zbir u ovoj sekciji najmanje 60, dobijate <strong>bonus od +30 poena</strong>.</p>
+                <p>U svakoj koloni posebno saberite poene iz redova 1–6. Zbir od najmanje 60 donosi <strong>još 30 poena</strong> u toj koloni.</p>
                 <h4>2. SEKCIJA (MIN - MAX)</h4>
-                <p>Računa se formulom: <em>(Max - Min) * broj jedinica</em>. Ako je rezultat najmanje 60, dodaje se <strong>bonus od +40 poena</strong>. Ako je MIN 0 ili je obračun negativan, ova sekcija vredi 0.</p>
+                <p>Od MAX oduzmite MIN i razliku pomnožite brojem upisanim u red 1 iste kolone. Ako je rezultat najmanje 60, dodajte <strong>još 40 poena</strong>. Ako je MIN nula ili je veći od MAX, sekcija vredi 0.</p>
+                <p>Primer: uz MAX 25, MIN 10 i četiri upisane jedinice dobijate (25 − 10) × 4 = 60. Sa bonusom to je 100 poena.</p>
                 <h4>3. SEKCIJA (KOMBINACIJE)</h4>
                 <ul>
                     <li><strong>TRILING (3 iste):</strong> Vrednost tri iste kockice + 20 poena.</li>
@@ -124,15 +130,16 @@ const RulesData = {
                     <li><strong>${rulesCanonicalIcon('powerIndex')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
                     <li><strong>${rulesCanonicalIcon('record')} Rekord:</strong> Vaš najbolji lični rezultat.</li>
                     <li><strong>${rulesCanonicalIcon('wins')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
-                    <li><strong>${rulesCanonicalIcon('fireStreak')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
+                    <li><strong>${rulesCanonicalIcon('fireStreak')} Vatreni niz:</strong> Uzastopne pobede u duelima i turnirima. Poraz ili remi prekida niz.</li>
                     <li><strong>${rulesCanonicalIcon('allTimePoints')} All-Time PTS:</strong> Ukupan zbir poena kroz sve završene partije.</li>
-                    <li><strong>${rulesCanonicalIcon('h2h')} Rival:</strong> Prijatelj sa kojim imate najviše odigranih međusobnih duela.</li>
+                    <li><strong>${rulesCanonicalIcon('h2h')} Rival:</strong> Protivnik sa kojim ste odigrali najviše duela.</li>
                 </ul>
                 
                 <h3>${rulesCanonicalIcon('h2h')} Međusobni dueli (H2H)</h3>
-                <p>Za svakog prijatelja-rivala formira se H2H kartica sa istorijom okršaja: pobede, porazi, nerešeno, najveća pobeda, najteži poraz, prosečni poeni i aktuelni vatreni niz protiv tog rivala.</p>
+                <p>Otvorite karticu protivnika da vidite istoriju svojih duela: pobede, porazi, nerešeno, najveća pobeda, najteži poraz, prosečni poeni i aktuelni vatreni niz protiv tog rivala.</p>
                 
                 <h3>${rulesCanonicalIcon('leaderboard')} Top liste i rangiranje</h3>
+                <p>Globalna lista prikazuje jedan najbolji rezultat po igraču za izabrani period. Kod istog broja poena prednost ima ranije ostvaren rezultat.</p>
                 <ul>
                     <li><strong>Nedeljna lista:</strong> Prikazuje najbolje rezultate iz tekuće nedelje.</li>
                     <li><strong>Mesečna lista:</strong> Prikazuje najbolje rezultate iz tekućeg meseca.</li>
@@ -146,21 +153,23 @@ const RulesData = {
             content: `
                 <h3>${rulesCanonicalIcon('onlineRandom')} Multiplayer i dueli</h3>
                 <h4>${rulesCanonicalIcon('onlineRandom')} Klasični Multiplayer</h4>
-                <p>Online igra vas spaja sa protivnikom koji je trenutno na mreži. Direktni dueli sa prijateljima čuvaju H2H istoriju i utiču na pobede, poraze i vatreni niz.</p>
+                <p>Online igra vas spaja sa protivnikom koji je trenutno na mreži. I nasumični i privatni onlajn dueli ulaze u međusobnu statistiku (H2H).</p>
                 <h4>${rulesCanonicalIcon('inviteFriend')} Privatni dueli</h4>
-                <p>Prijatelja možete dodati preko liste aktivnih igrača ili pozivnice. Kada protivnik prihvati izazov, otvara se privatni duel.</p>
+                <p>U sobi „Pozovi prijatelja“ podelite link do privatne sobe ili pošaljite poziv prijatelju u igri. To je poziv za zajedničku partiju, a ne kod za nagradu za preporuku.</p>
 
                 <h3>${rulesCanonicalIcon('tournament')} Turniri</h3>
                 <ul>
-                    <li><strong>${rulesCanonicalIcon('tournament')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
-                    <li><strong>${rulesCanonicalIcon('ducat')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
-                    <li><strong>${rulesCanonicalIcon('tournamentStart')} Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Nerešena partija se ponavlja dok neko ne pobedi.</li>
+                    <li><strong>${rulesCanonicalIcon('ducat')} Prijava:</strong> Kotizacija je 5.500 dukata. Pre početka možete se odjaviti uz pun povraćaj.</li>
+                    <li><strong>Potvrda spremnosti:</strong> Ako turnir traži potvrdu, svih osam igrača mora da potvrdi učešće pre žreba. Za potvrdu imate šest sati; računa se samo vreme od 09 do 22 h po Beogradu. Ako propustite rok, mesto se oslobađa uz povraćaj kotizacije, bez kazne. Ako se u roku od 24 sata ne skupi osam potvrda, kotizacije se vraćaju i prijave počinju ponovo.</li>
+                    <li><strong>${rulesCanonicalIcon('tournamentStart')} Zakazivanje:</strong> Otvorite svoj meč u kosturu i predložite termin, prihvatite protivnikov ili pošaljite drugi predlog. Potvrđen termin ne pokreće partiju automatski: otvorite meč i pokrenite duel ili prihvatite poziv protivnika. Ako je ponuđena evidencija prisustva, prijavite prisustvo i ostanite u sobi turnira dok čekate.</li>
                     <li><strong>${rulesCanonicalIcon('tournament')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesCanonicalIcon('hallOfFame')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
-                    <li><strong>${rulesCanonicalIcon('disconnected')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
+                    <li><strong>${rulesCanonicalIcon('disconnected')} Tehnički rezultat:</strong> Napuštanje partije ili istek vremena mogu doneti tehničku pobedu protivniku. Kod turnira koji beleže prisustvo, prva dokazana neaktivnost donosi upozorenje. Ako se ponovi u naredna tri nastupa, preskačete sledeće izdanje. Sam prekid veze nije dokaz neaktivnosti.</li>
                 </ul>
                 
                 <h3>${rulesCanonicalIcon('quarterly')} Kvartalna liga</h3>
-                <p>Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. U svakoj regularno završenoj solo, AI, lokalnoj ili online partiji Vaš konačni rezultat se dodaje ligaškom zbiru. Kod tehničkog ishoda pobedniku se dodaje izračunata nagrada, a poraženom se isti obračunati iznos oduzima do najmanje 0 poena.</p>
+                <p>Kvartal traje tri kalendarska meseca po vremenu Beograda. U redovnoj solo, AI, lokalnoj ili online partiji vaš konačni skor ulazi u kvartal u kojem je partija završena. Kod tehničkog ishoda dobitak i odbitak računaju se zasebno, prema proseku svakog igrača. Ligaški zbir ne može biti negativan.</p>
+                <p>Rezultati za prethodni kvartal primaju se do 06:05 prvog dana novog kvartala, po vremenu Beograda. Naknadno potvrđena partija ostaje u istoriji i redovnoj statistici, ali ne menja ligaške zbirove, medalje ni nagrade.</p>
                 <p>Rangovi su: Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena.</p>
                 <p>${rulesCanonicalIcon('quarterly', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
             `
@@ -176,10 +185,13 @@ const RulesData = {
                     <li><strong>${rulesCanonicalIcon('duel')} Izazov:</strong> Klikom na ikonicu možete direktno izazvati igrača na duel.</li>
                 </ul>
 
+                <h3>${rulesCanonicalIcon('mailbox')} Pošta</h3>
+                <p>U Poštu stižu zahtevi za prijateljstvo, turnirski podsetnici i obaveštenja o nagradama. Preko opcije „Prijavi problem“ možete pisati podršci; odgovor stiže u Poštu. Neprimerenu poruku u četu prijavite uz samu poruku.</p>
+
                 <h3>${rulesCanonicalIcon('globalChat')} Chat i komunikacija</h3>
                 <ul>
-                    <li><strong>${rulesCanonicalIcon('globalChat')} Globalni chat:</strong> Povezuje igrače na serveru. Zabranjeni su uvrede po rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i vulgarnost. Kršenja pravila vode do suspenzije chata.</li>
-                    <li><strong>${rulesCanonicalIcon('duel')} Duel chat:</strong> Privatni chat tokom meča sa protivnikom. I ovde važe ista pravila fer i kulturnog ponašanja.</li>
+                    <li><strong>${rulesCanonicalIcon('globalChat')} Globalni chat:</strong> Povezuje igrače na serveru. Zabranjene su uvrede po rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i vulgarnost. Kršenja pravila vode do suspenzije chata.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Duel chat:</strong> Tokom meča možete pisati protivniku ili isključiti čet. Dok je čet isključen, protivnik vam ne može poslati poruku.</li>
                     <li><strong>${rulesCanonicalIcon('duel')} Izazov iz chata:</strong> Klikom na ime igrača u globalnom chatu možete ga direktno izazvati.</li>
                 </ul>
             `
@@ -190,57 +202,61 @@ const RulesData = {
                 <h3>${rulesCanonicalIcon('ducat')} Dukati i ekonomija</h3>
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
-                    <li><strong>${rulesTextGlyphHtml('🎲')} Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
-                    <li><strong>${rulesCanonicalIcon('daily')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Najmanje 5 istih među 6 kockica donosi jedan YAMB bonus od 1.000 dukata, bez obzira na njihov položaj. Reklama duplira celu nagradu, uključujući bonus.</li>
+                    <li><strong>${rulesTextGlyphHtml('🎲')} Završene partije:</strong> Za regularno završenu partiju dobijate dukate prema svom rezultatu. U solo igri potvrđeni rekordi mogu povećati osnovicu. Nagradni video duplira iznos sa bonusima, do ukupno 8.000 dukata po partiji.</li>
+                    <li><strong>${rulesCanonicalIcon('daily')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. <br><strong>Yamb bonus:</strong> Pet ili šest istih kockica, na bilo kojim pozicijama, donosi jedan bonus od 1.000 dukata. Reklama duplira celu nagradu, uključujući bonus.</li>
                     <li><strong>${rulesCanonicalIcon('video')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
                     <li><strong>${rulesCanonicalIcon('tournament')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
+                    <li><strong>${rulesCanonicalIcon('mailbox')} Preporuke:</strong> Kada je ova opcija dostupna u Pošti, podelite svoj poziv. Novi igrač unosi vaš kod pre prve prijave. Kada server potvrdi njegovu prvu regularno završenu onlajn partiju, dobijate nagradu: 3.000 dukata za prvu potvrđenu preporuku, 3.000 za drugu i 5.000 za treću. Dalje preporuke ne donose dukate.</li>
                 </ul>
 
                 <h3>${rulesCanonicalIcon('undo')} Vraćanje upisa</h3>
                 <p>Dugme za ispravku postaje aktivno posle upisa u tabelu i vraća samo poslednji upis. Posle vraćanja dugme se gasi dok ne napravite novi upis.</p>
                 <ul>
-                    <li><strong>Online dueli:</strong> Vraćanje upisa troši 1 token i mora se iskoristiti pre nego protivnik započne sledeći potez. Zbog toga postoji zadrška od 2.5 sekunde pre protivnikovog bacanja.</li>
-                    <li><strong>Lokalna igra:</strong> U solo i igri za dva igrača vraćanje se potvrđuje gledanjem reklame kada je dostupna na uređaju.</li>
-                    <li><strong>Nabavka tokena:</strong> U meniju dukata kartica za tokene nudi +1 token za nagradni video.</li>
+                    <li><strong>Online dueli:</strong> Vraćanje upisa troši 1 token i mora se iskoristiti pre nego protivnik započne sledeći potez. Zbog toga postoji zadrška od 2,5 sekunde pre protivnikovog bacanja.</li>
+                    <li><strong>Lokalna igra:</strong> U mobilnoj aplikaciji poslednji upis vraćate tek posle odgledanog nagradnog videa. U pregledaču je dovoljna potvrda. Lokalno vraćanje ne troši token.</li>
+                    <li><strong>Nabavka tokena:</strong> U meniju dukata nagradni video na kartici za tokene donosi +1 token. Možete imati najviše 250 tokena.</li>
                 </ul>
 
                 <h3>${rulesCanonicalIcon('treasury')} Riznica</h3>
                 <p>Riznica je mesto za personalizaciju igre i pregled osvojenih stvari.</p>
                 <ul>
                     <li><strong>${rulesCanonicalIcon('trophyTab')} Trofeji:</strong> Posebni izazovi se otključavaju tokom igre i mogu doneti nagrade u dukatima.</li>
-                    <li><strong>${rulesCanonicalIcon('skinsTab')} Kockice:</strong> Kupujete i birate skinove za kockice.</li>
-                    <li><strong>${rulesCanonicalIcon('effectsTab')} Efekti:</strong> Animacije se aktiviraju kada u partiji dobijete Yamb.</li>
-                    <li><strong>${rulesCanonicalIcon('themesTab')} Teme:</strong> Menjaju izgled aplikacije. Neki artikli se kupuju dukatima, a neki podržavaju reklamu ili popust od 20%.</li>
+                    <li><strong>${rulesCanonicalIcon('skinsTab')} Kockice:</strong> Izaberite izgled kockica. Neki kompleti idu uz odgovarajuću temu i ne kupuju se zasebno.</li>
+                    <li><strong>${rulesCanonicalIcon('effectsTab')} Efekti:</strong> Kada upišete Yamb iz prvog bacanja, aktivira se grmljavina. Za Yamb iz drugog ili trećeg bacanja prikazuje se izabrani efekat.</li>
+                    <li><strong>${rulesCanonicalIcon('themesTab')} Teme:</strong> Menjaju izgled aplikacije. Kod artikala sa oznakom −20% nagradni video snižava cenu tog artikla na deset minuta. Kupovinu i dalje plaćate dukatima.</li>
                 </ul>
             `
         },
         {
             title: `${rulesCanonicalIcon('accountPage', 'rules-page-icon-canonical')} Nalog, privatnost i server`,
             content: `
-                <h3>${rulesCanonicalIcon('profile')} Google integracija i cloud čuvanje</h3>
-                <p>Yamb of the Balkan koristi Google prijavu da bi se napredak vezao za vaš nalog i vratio pri promeni uređaja.</p>
+                <h3>${rulesCanonicalIcon('profile')} Prijava i čuvanje naloga</h3>
+                <p>Napredak pripada vašem Yamb nalogu. Na drugom uređaju prijavite se na isti nalog. Ako je ponuđena prijava preko Facebooka, a već igrate preko Googlea, prvo se prijavite na postojeći nalog i povežite Facebook u Podešavanjima.</p>
                 <p>Na serveru se čuvaju statistika, H2H istorija, dukati, tokeni za vraćanje upisa, trofeji, inventar Riznice, aktivna tema/skin/efekat, Dnevni izazov, Kvartalna liga i turnirski status.</p>
 
                 <h4>${rulesCanonicalIcon('privacy')} Koji podaci se prikupljaju i zašto?</h4>
-                <p>Prilikom prijave aplikacija koristi osnovne podatke sa Google profila:</p>
+                <p>Za prikaz vašeg naloga igra koristi sledeće podatke, kada su dostupni:</p>
                 <ul>
                     <li><strong>Ime i prezime:</strong> Koristi se za ime u igri i prikaz na listama.</li>
-                    <li><strong>Email adresa:</strong> Služi kao jedinstveni identifikator naloga. Ne koristi se za spam poruke.</li>
+                    <li><strong>Email adresa:</strong> Ako je dostupna, pomaže vam da prepoznate nalog, na primer pri potvrdi brisanja.</li>
                     <li><strong>Profilna slika:</strong> Koristi se kao avatar u multiplayer mečevima.</li>
                 </ul>
 
-                <h3>${rulesCanonicalIcon('settings')} Server podrška i bezbednost</h3>
+                <p>U Podešavanjima birate temu i uključujete ili isključujete zvuk, muziku i vibraciju. Kada su ponuđene opcije privatnosti, tu možete promeniti izbor za oglase i analitiku korišćenja.</p>
+                <p>U Podešavanjima možete zatražiti trajno brisanje naloga. Kada je opcija dostupna, ponovo potvrdite identitet i proverite koji nalog brišete. Posle slanja zahteva možete proveriti njegov status.</p>
+
+                <h3>${rulesCanonicalIcon('settings')} Server i fer igra</h3>
                 <ul>
                     <li><strong>${rulesCanonicalIcon('privacy')} Fer igra:</strong> Server proverava online mečeve, rezultate, ekonomiju i nagrade kako bi sprečio manipulacije.</li>
-                    <li><strong>${rulesTextGlyphHtml('⏱️')} Anti-troll tajmer:</strong> Ako protivnik namerno odugovlači, server može dodeliti tehničku pobedu.</li>
-                    <li><strong>${rulesCanonicalIcon('reconnected')} Grace period:</strong> Kod kratkog prekida veze postoji pauza od 30 sekundi za povratak u meč.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏱️')} Vreme za potez:</strong> Za potez u onlajn duelu imate 90 sekundi. Istek tajmera može doneti tehničku pobedu protivniku.</li>
+                    <li><strong>${rulesCanonicalIcon('reconnected')} Prekid veze:</strong> Tajmer poteza se pauzira. Za povratak imate do 30 sekundi u običnom duelu, a do 5 minuta u turnirskom. Ponovni prekid u istom potezu ne obnavlja potrošeno vreme.</li>
                     <li><strong>${rulesCanonicalIcon('disconnected')} Napuštanje meča:</strong> Namerno napuštanje online duela može doneti kaznu u ligi i dukatima.</li>
                 </ul>
 
                 <h3>${rulesCanonicalIcon('video')} Reklame (AdMob)</h3>
                 <p>Reklame omogućavaju da igra ostane besplatna i da se nagrade potvrde na serveru.</p>
                 <ul>
-                    <li><strong>${rulesTextGlyphHtml('⏳')} Kratke reklame:</strong> Koriste se za pojedine akcije, povratak u meni, lokalno vraćanje upisa ili odjavu sa turnira. Ne isplaćuju direktno dukate ni tokene.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏳')} Kratke reklame:</strong> Mogu se prikazati pri povratku u meni. Ne isplaćuju direktno dukate ni tokene.</li>
                     <li><strong>${rulesCanonicalIcon('video')} Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
                 </ul>
             `
@@ -252,23 +268,27 @@ const RulesData = {
             content: `
                 <h3>${rulesTextGlyphHtml('🎯')} Goal of the Game</h3>
                 <p>The goal is to score as many points as possible by rolling 6 dice and entering the best combinations into the table. Each turn gives you up to 3 rolls, and after every roll you may hold dice you want to keep.</p>
-                <p>Each table field can be filled only once. If the combination does not exist, the field scores 0.</p>
+                <p>The game picks five of your six dice for the chosen row. MAX adds the five highest, MIN the five lowest, and rows 1–6 count at most five matching dice. Held dice stay as they are; only the others are rerolled. All six are considered for scoring.</p>
+                <p>Entering a score ends your turn. Fill each cell once; a missing combination scores 0. When both duel sheets are full, the higher total wins.</p>
                 
+                <h3>${rulesCanonicalIcon('hotseat')} Playing on one device</h3>
+                <p>In solo play, fill your sheet and try to beat your personal best. In two-player local play, each player has a sheet; pass the device after entering a score. If an interrupted game is saved on the device, you can resume it when you reopen that mode. Only the signed-in account’s score counts toward the Quarterly League.</p>
                 <h3>${rulesCanonicalIcon('statistics')} Game Columns</h3>
                 <ul>
                     <li><strong>↓ DOWN:</strong> Must be filled sequentially from 1 to Yamb.</li>
                     <li><strong>↑ UP:</strong> Must be filled sequentially from Yamb to 1.</li>
                     <li><strong>⇅ MIDDLE:</strong> Filled from the middle outward. The upper branch starts at MAX and moves toward 1; the lower branch starts at MIN and moves toward Yamb.</li>
-                    <li><strong>S FREE:</strong> Can be filled in any order.</li>
-                    <li><strong>R HAND:</strong> Scores only after the first roll. If you try to enter a field in this column after the second or third roll, the game enters 0 after confirmation.</li>
-                    <li><strong>${rulesTextGlyphHtml('📢')} ANNOUNCE:</strong> After the first roll, you may enable Announce, select the exact field in the Announce column, and then you must fill that field. The announcement can be canceled before it is locked.</li>
+                    <li><strong>FREE:</strong> Can be filled in any order.</li>
+                    <li><strong>HAND:</strong> Scores only after the first roll. If you try to enter a field in this column after the second or third roll, the game enters 0 after confirmation.</li>
+                    <li><strong>📢 ANNOUNCE:</strong> After the first roll, you can score directly in this column or announce an empty cell for later rolls. You can cancel before the second roll. After that, you must score the announced cell, even if it scores 0.</li>
                 </ul>
                 
                 <h3>${rulesCanonicalIcon('leaderboard')} Scoring & Sections</h3>
                 <h4>SECTION 1 (Rows 1 to 6)</h4>
-                <p>Only matching numbers are summed. If the section total is at least 60, you receive a <strong>+30 point bonus</strong>.</p>
+                <p>Add the scores in rows 1–6 separately for each column. A total of at least 60 earns <strong>30 extra points</strong> in that column.</p>
                 <h4>SECTION 2 (MIN - MAX)</h4>
-                <p>Formula: <em>(Max - Min) * number of ones</em>. If the result is at least 60, a <strong>+40 point bonus</strong> is added. If MIN is 0 or the calculation is negative, this section scores 0.</p>
+                <p>Subtract MIN from MAX, then multiply by the score in the ones row of the same column. If the result is at least 60, add <strong>40 extra points</strong>. If MIN is zero or higher than MAX, the section scores 0.</p>
+                <p>Example: with MAX 25, MIN 10 and four ones, (25 − 10) × 4 = 60. With the bonus, that is 100 points.</p>
                 <h4>SECTION 3 (COMBINATIONS)</h4>
                 <ul>
                     <li><strong>THREE OF A KIND:</strong> Value of the three matching dice + 20 points.</li>
@@ -288,15 +308,16 @@ const RulesData = {
                     <li><strong>${rulesCanonicalIcon('powerIndex')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
                     <li><strong>${rulesCanonicalIcon('record')} High score:</strong> Your personal best score.</li>
                     <li><strong>${rulesCanonicalIcon('wins')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
-                    <li><strong>${rulesCanonicalIcon('fireStreak')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
+                    <li><strong>${rulesCanonicalIcon('fireStreak')} Win Streak:</strong> Consecutive wins in duels and tournaments. A loss or draw ends the streak.</li>
                     <li><strong>${rulesCanonicalIcon('allTimePoints')} All-Time PTS:</strong> Total points across all finished games.</li>
-                    <li><strong>${rulesCanonicalIcon('h2h')} Rival:</strong> The friend you have played against the most.</li>
+                    <li><strong>${rulesCanonicalIcon('h2h')} Rival:</strong> The opponent you have played against most often.</li>
                 </ul>
                 
                 <h3>${rulesCanonicalIcon('h2h')} Head-to-Head (H2H)</h3>
-                <p>Every friend-rival gets an H2H card with your duel history: wins, losses, draws, biggest win, worst loss, average points, and current win streak against that rival.</p>
+                <p>Open an opponent’s H2H card to see your duel history: wins, losses, draws, biggest win, worst loss, average points, and current win streak against that rival.</p>
                 
                 <h3>${rulesCanonicalIcon('leaderboard')} Leaderboards</h3>
+                <p>The global leaderboard shows each player's best score for the selected period. If scores are tied, the earlier result ranks higher.</p>
                 <ul>
                     <li><strong>Weekly:</strong> Best scores from the current week.</li>
                     <li><strong>Monthly:</strong> Best scores from the current month.</li>
@@ -310,21 +331,23 @@ const RulesData = {
             content: `
                 <h3>${rulesCanonicalIcon('onlineRandom')} Multiplayer & Duels</h3>
                 <h4>${rulesCanonicalIcon('onlineRandom')} Classic Multiplayer</h4>
-                <p>Online play matches you with an opponent who is currently online. Direct friend duels save H2H history and affect wins, losses, and win streaks.</p>
+                <p>Online play matches you with an opponent who is currently online. Both random and private online duels count toward head-to-head stats (H2H).</p>
                 <h4>${rulesCanonicalIcon('inviteFriend')} Friend Duels</h4>
-                <p>You can add friends from the active player list or by invite. Once the opponent accepts, a private duel opens.</p>
+                <p>In Invite a Friend, share your private room link or send an in-game invitation to a friend. This invites them to play a match; it is not the referral code used to earn rewards.</p>
 
                 <h3>${rulesCanonicalIcon('tournament')} Tournaments</h3>
                 <ul>
-                    <li><strong>${rulesCanonicalIcon('tournament')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
-                    <li><strong>${rulesCanonicalIcon('ducat')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
-                    <li><strong>${rulesCanonicalIcon('tournamentStart')} Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
+                    <li><strong>${rulesCanonicalIcon('tournament')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. A tied game is replayed until one player wins.</li>
+                    <li><strong>${rulesCanonicalIcon('ducat')} Entry:</strong> Entry costs 5,500 ducats. You can withdraw for a full refund before the tournament starts.</li>
+                    <li><strong>Readiness check:</strong> In tournaments that require confirmation, all eight players must confirm before the draw. You have six hours to confirm; only time between 09:00 and 22:00 in Belgrade counts. Missing the deadline releases your spot with a full refund and no penalty. If eight players have not confirmed within 24 hours, entry fees are refunded and registration reopens.</li>
+                    <li><strong>${rulesCanonicalIcon('tournamentStart')} Scheduling:</strong> Open your bracket match to propose a time, accept your opponent’s proposal or suggest another time. Agreeing on a time does not start the game: open the match and start the duel or accept your opponent’s invitation. If check-in is offered, check in and stay in the tournament room while waiting.</li>
                     <li><strong>${rulesCanonicalIcon('tournament')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesCanonicalIcon('hallOfFame')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
-                    <li><strong>${rulesCanonicalIcon('disconnected')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
+                    <li><strong>${rulesCanonicalIcon('disconnected')} Technical result:</strong> Leaving a game or timing out can award a technical win to the opponent. In tournaments that track attendance, the first verified inactivity incident earns a warning. A repeat within your next three appearances means missing the next edition. A connection drop alone is not proof of inactivity.</li>
                 </ul>
                 
                 <h3>${rulesCanonicalIcon('quarterly')} Quarterly League</h3>
-                <p>The Quarterly League lasts 3 calendar months in Belgrade time. In every regularly completed solo, AI, local, or online game, your final score is added to your league total. For a technical result, the calculated reward is added to the winner and the same calculated amount is deducted from the loser, down to a minimum of 0 points.</p>
+                <p>A quarter lasts three calendar months in Belgrade time. Your final score in a regular solo, AI, local or online game counts toward the quarter in which it finished. For a technical result, the gain and deduction are calculated separately using each player's average. League scores cannot fall below zero.</p>
+                <p>Results for the previous quarter are accepted until 06:05 on the first day of the new quarter, Belgrade time. A game confirmed later still counts in match history and regular stats, but does not change league totals, medals or prizes.</p>
                 <p>The ranks are: Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points.</p>
                 <p>${rulesCanonicalIcon('quarterly', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
             `
@@ -340,10 +363,13 @@ const RulesData = {
                     <li><strong>${rulesCanonicalIcon('duel')} Challenge:</strong> Use the challenge icon to invite a player directly to a duel.</li>
                 </ul>
 
+                <h3>${rulesCanonicalIcon('mailbox')} Inbox</h3>
+                <p>Your Inbox receives friend requests, tournament reminders and prize notices. Choose “Report a problem” to contact support; the reply arrives in your Inbox. To report an inappropriate chat message, use the report action on that message.</p>
+
                 <h3>${rulesCanonicalIcon('globalChat')} Chat & Communication</h3>
                 <ul>
                     <li><strong>${rulesCanonicalIcon('globalChat')} Global Chat:</strong> Connects players on the server. Insults based on race, religion, nationality, or gender are forbidden, as is profanity. Violations lead to chat suspension.</li>
-                    <li><strong>${rulesCanonicalIcon('duel')} Duel Chat:</strong> Private chat during a match with your opponent. The same fair-play rules apply.</li>
+                    <li><strong>${rulesCanonicalIcon('duel')} Duel Chat:</strong> You can message your opponent during the match or turn duel chat off. While it is off, your opponent cannot send you messages.</li>
                     <li><strong>${rulesCanonicalIcon('duel')} Chat challenge:</strong> Clicking a player's name in global chat can challenge that player directly.</li>
                 </ul>
             `
@@ -354,57 +380,61 @@ const RulesData = {
                 <h3>${rulesCanonicalIcon('ducat')} Ducats & economy</h3>
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
-                    <li><strong>${rulesTextGlyphHtml('🎲')} Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
-                    <li><strong>${rulesCanonicalIcon('daily')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. At least 5 matching dice out of 6 earn one YAMB bonus of 1,000 ducats, regardless of their positions. An ad doubles the entire reward, including the bonus.</li>
+                    <li><strong>${rulesTextGlyphHtml('🎲')} Finished games:</strong> A regularly finished game earns ducats based on your score. In solo play, verified records can increase the base reward. A rewarded video doubles the amount including bonuses, up to 8,000 ducats in total per game.</li>
+                    <li><strong>${rulesCanonicalIcon('daily')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. <br><strong>Yamb bonus:</strong> Five or six matching dice in any positions earn one bonus of 1,000 ducats. An ad doubles the entire reward, including the bonus.</li>
                     <li><strong>${rulesCanonicalIcon('video')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
                     <li><strong>${rulesCanonicalIcon('tournament')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
+                    <li><strong>${rulesCanonicalIcon('mailbox')} Referrals:</strong> When referrals are available in your Inbox, share your invite. The new player enters your code before their first sign-in. Once the server confirms their first regularly completed online game, you earn 3,000 ducats for your first confirmed referral, 3,000 for the second and 5,000 for the third. Further referrals earn no ducats.</li>
                 </ul>
 
                 <h3>${rulesCanonicalIcon('undo')} Undo entry</h3>
                 <p>The undo button becomes active after an entry in the table and only restores the last entry. After undoing, the button deactivates until you make another entry.</p>
                 <ul>
                     <li><strong>Online duels:</strong> Undoing costs 1 undo token and must be used before the opponent starts the next turn. This is why there is a 2.5-second delay before the opponent's roll.</li>
-                    <li><strong>Local play:</strong> In solo and two-player local games, undo is confirmed by watching an ad when available on the device.</li>
-                    <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a rewarded video.</li>
+                    <li><strong>Local play:</strong> In the mobile app, you must finish a rewarded video to undo a local entry. In the browser, confirming is enough. Local undo does not spend a token.</li>
+                    <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a rewarded video. You can hold up to 250 tokens.</li>
                 </ul>
 
                 <h3>${rulesCanonicalIcon('treasury')} Treasury</h3>
                 <p>The Treasury is where you personalize the game and review collected items.</p>
                 <ul>
                     <li><strong>${rulesCanonicalIcon('trophyTab')} Trophies:</strong> Special challenges unlock during play and can reward ducats.</li>
-                    <li><strong>${rulesCanonicalIcon('skinsTab')} Dice:</strong> Buy and equip dice skins.</li>
-                    <li><strong>${rulesCanonicalIcon('effectsTab')} Effects:</strong> Animations trigger when you score Yamb in a game.</li>
-                    <li><strong>${rulesCanonicalIcon('themesTab')} Themes:</strong> Change the app appearance. Some items are bought with ducats, and some support ads or a 20% discount.</li>
+                    <li><strong>${rulesCanonicalIcon('skinsTab')} Dice:</strong> Choose a dice skin. Some sets come with their matching theme and are not sold separately.</li>
+                    <li><strong>${rulesCanonicalIcon('effectsTab')} Effects:</strong> Scoring Yamb on your first roll triggers thunder. Scoring it on your second or third roll plays your selected effect.</li>
+                    <li><strong>${rulesCanonicalIcon('themesTab')} Themes:</strong> Change the app appearance. For items marked −20%, a rewarded video reduces that item's price for ten minutes. You still pay for the item in ducats.</li>
                 </ul>
             `
         },
         {
             title: `${rulesCanonicalIcon('accountPage', 'rules-page-icon-canonical')} Account, privacy & server`,
             content: `
-                <h3>${rulesCanonicalIcon('profile')} Google Integration & Cloud Save</h3>
-                <p>Yamb of the Balkan uses Google sign-in so your progress is tied to your account and can be restored on another device.</p>
+                <h3>${rulesCanonicalIcon('profile')} Sign-in & Cloud Save</h3>
+                <p>Your progress belongs to your Yamb account. Sign in to the same account on another device to restore it. If Facebook sign-in is offered and you already play through Google, sign in to your existing account first and link Facebook in Settings.</p>
                 <p>The server saves stats, H2H history, ducats, undo tokens, trophies, Treasury inventory, active theme/skin/effect, Daily Challenge, Quarterly League, and tournament status.</p>
 
                 <h4>${rulesCanonicalIcon('privacy')} What data is collected and why?</h4>
-                <p>When you sign in, the app uses basic Google profile data:</p>
+                <p>When you sign in, the app uses available data from your sign-in profile:</p>
                 <ul>
                     <li><strong>First and last name:</strong> Used for your in-game name and leaderboard display.</li>
-                    <li><strong>Email address:</strong> Used as a unique account identifier. It is not used for spam.</li>
+                    <li><strong>Email address:</strong> When available, it helps you identify the account, for example when confirming deletion.</li>
                     <li><strong>Profile picture:</strong> Used as your avatar in multiplayer matches.</li>
                 </ul>
 
-                <h3>${rulesCanonicalIcon('settings')} Server Support & Security</h3>
+                <p>In Settings, you can choose a theme and turn sound, music and vibration on or off. When privacy options are available, you can also change your choices for ads and usage analytics.</p>
+                <p>You can request permanent account deletion in Settings when available. Verify your identity again and check which account you are deleting. After submitting the request, you can check its status.</p>
+
+                <h3>${rulesCanonicalIcon('settings')} Server & Fair Play</h3>
                 <ul>
                     <li><strong>${rulesCanonicalIcon('privacy')} Fair play:</strong> The server checks online matches, results, economy, and rewards to prevent manipulation.</li>
-                    <li><strong>${rulesTextGlyphHtml('⏱️')} Anti-troll timer:</strong> If an opponent intentionally stalls, the server can award a technical win.</li>
-                    <li><strong>${rulesCanonicalIcon('reconnected')} Grace period:</strong> A short connection drop gives you a 30-second pause to return to the match.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏱️')} Turn timer:</strong> You have 90 seconds for an online turn. Running out of time can award a technical win to your opponent.</li>
+                    <li><strong>${rulesCanonicalIcon('reconnected')} Reconnecting:</strong> The turn timer pauses. You have up to 30 seconds to return in a regular duel and up to 5 minutes in a tournament match. Disconnecting again on the same turn does not restore time already used.</li>
                     <li><strong>${rulesCanonicalIcon('disconnected')} Leaving a match:</strong> Intentionally leaving an online duel can cause league and ducat penalties.</li>
                 </ul>
 
                 <h3>${rulesCanonicalIcon('video')} Ads (AdMob)</h3>
                 <p>Ads help keep the game free and allow rewards to be verified by the server.</p>
                 <ul>
-                    <li><strong>${rulesTextGlyphHtml('⏳')} Short ads:</strong> Used for some actions, returning to the menu, local undo, or tournament unregistering. They do not directly pay ducats or undo tokens.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏳')} Short ads:</strong> May appear when returning to the menu. They do not directly pay ducats or undo tokens.</li>
                     <li><strong>${rulesCanonicalIcon('video')} Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
                 </ul>
             `

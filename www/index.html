@@ -104,7 +104,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700;800;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.25">
-    <link rel="stylesheet" href="teme.css?v=7.12">
+    <link rel="stylesheet" href="teme.css?v=7.13">
     <link rel="stylesheet" href="theme-loading-material.css?v=3">
     <link rel="stylesheet" href="theme-main-room-icons.css?v=26">
     <link rel="stylesheet" href="theme-main-menu-typography.css?v=3">
@@ -118,7 +118,7 @@
     <link rel="stylesheet" href="theme-achievement-trophies.css?v=10">
     <link rel="stylesheet" href="kockice.css?v=1.11">
     <link rel="stylesheet" href="dice-skin-png.css?v=5">
-    <link rel="stylesheet" href="efekti.css?v=3.7">
+    <link rel="stylesheet" href="efekti.css?v=3.12">
     <link rel="stylesheet" href="theme-card-surfaces.css?v=7">
     <link rel="stylesheet" href="theme-medals.css?v=2">
     <link rel="stylesheet" href="theme-treasury-controls.css?v=4">
@@ -134,7 +134,7 @@
     <link rel="stylesheet" href="theme-leaderboard-room.css?v=5">
     <link rel="stylesheet" href="skin-action-buttons.css?v=1">
     <link rel="stylesheet" href="skin-roll-counter.css?v=1">
-    <link rel="stylesheet" href="theme-game-header.css?v=8">
+    <link rel="stylesheet" href="theme-game-header.css?v=9">
     <link rel="stylesheet" href="theme-quote-contrast.css?v=1">
     <link rel="stylesheet" href="theme-daily-room.css?v=7">
     <link rel="stylesheet" href="theme-settings-room.css?v=8">
@@ -146,14 +146,14 @@
     <link rel="stylesheet" href="theme-finish-compact.css?v=6">
     <link rel="stylesheet" href="theme-statistics-layout.css?v=4">
     <link rel="stylesheet" href="theme-statistics-leaderboards.css?v=4">
-    <link rel="stylesheet" href="theme-rules-room.css?v=3">
+    <link rel="stylesheet" href="theme-rules-room.css?v=4">
     <link rel="stylesheet" href="theme-tournament-final.css?v=3">
     <link rel="stylesheet" href="theme-tournament-registration-rules.css?v=1">
     <link rel="stylesheet" href="theme-tournament-readiness.css?v=1">
     <link rel="stylesheet" href="theme-tournament-scheduling.css?v=1">
     <link rel="stylesheet" href="maintenance.css?v=2">
     
-    <script src="languages.js?v=5.59"></script>
+    <script src="languages.js?v=5.62"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -488,7 +488,7 @@
     </div>
 
     <div id="main-menu" class="screen">
-        <div class="main-global-chat-btn" onclick="app.openGlobalChat()" role="button" tabindex="0" aria-label="Global chat"
+        <div class="main-global-chat-btn" onclick="app.openGlobalChat()" role="button" tabindex="0" data-lang-aria="ui_global_chat_title" aria-label="Global chat"
              style="position: absolute; top: 30px; left: 20px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); font-size: 2rem;" 
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
@@ -1203,10 +1203,10 @@
                 <div id="solo-record-panel" class="solo-record-panel" hidden aria-live="polite">
                     <div class="solo-record-panel-title" data-lang="go_records_title">REKORDI PARTIJE</div>
                     <div class="solo-record-panel-grid">
-                        <span data-record-role="weekly" title="Nedeljni rekord"><img data-solo-record-icon="weekly" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_weekly">NEDELJNI</span></span>
-                        <span data-record-role="monthly" title="Mesečni rekord"><img data-solo-record-icon="monthly" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_monthly">MESEČNI</span></span>
-                        <span data-record-role="all_time" title="Rekord svih vremena"><img data-solo-record-icon="all_time" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_all_time">SVA VREMENA</span></span>
-                        <span data-record-role="personal" title="Lični rekord"><img data-solo-record-icon="personal" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_personal">LIČNI</span></span>
+                        <span data-record-role="weekly" data-lang-title="go_record_weekly" title="Nedeljni rekord"><img data-solo-record-icon="weekly" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_weekly">NEDELJNI</span></span>
+                        <span data-record-role="monthly" data-lang-title="go_record_monthly" title="Mesečni rekord"><img data-solo-record-icon="monthly" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_monthly">MESEČNI</span></span>
+                        <span data-record-role="all_time" data-lang-title="go_record_all_time" title="Rekord svih vremena"><img data-solo-record-icon="all_time" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_all_time">SVA VREMENA</span></span>
+                        <span data-record-role="personal" data-lang-title="go_record_personal" title="Lični rekord"><img data-solo-record-icon="personal" alt="" aria-hidden="true" decoding="async"><span class="solo-record-accessible-name" data-lang="go_record_personal">LIČNI</span></span>
                     </div>
                     <div class="solo-record-panel-footer">
                         <span id="solo-record-status" data-lang="go_record_none">BEZ NOVOG REKORDA</span>
@@ -1273,7 +1273,7 @@
                 <div class="ws-glass-stats">
                     <div class="ws-g-stat"><span class="lbl invite-power-label"><img class="invite-power-icon" data-invite-role="power" alt="" aria-hidden="true" decoding="async"><span data-lang="ws_power_plain">Moć</span></span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
                     <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-my-wl" class="val">0 / 0 / 0</span></div>
-                    <div class="ws-random-records" aria-label="Online rekord">
+                    <div class="ws-random-records" data-lang-aria="ws_online_record" aria-label="Online rekord">
                         <div class="ws-g-stat"><span class="lbl" data-green-record="win">POB</span><span id="waiting-my-wins" class="val">0</span></div>
                         <div class="ws-g-stat"><span class="lbl" data-green-record="draw">NER</span><span id="waiting-my-draws" class="val">0</span></div>
                         <div class="ws-g-stat"><span class="lbl" data-green-record="loss">POR</span><span id="waiting-my-losses" class="val">0</span></div>
@@ -1284,7 +1284,7 @@
                         <img id="easter-invite-rival-img" class="easter-invite-rival-img" loading="lazy" alt="" aria-hidden="true">
                         <span id="easter-invite-rival-name" class="easter-invite-rival-name" data-lang="stat_none">Nema</span>
                     </div>
-                    <div id="easter-invite-rival-record" class="easter-invite-rival-stats" aria-label="Podaci najvećeg rivala">
+                    <div id="easter-invite-rival-record" class="easter-invite-rival-stats" data-lang-aria="ws_rival_stats" aria-label="Podaci najvećeg rivala">
                         <div class="easter-invite-rival-stat easter-invite-rival-power"><span class="invite-power-label"><img class="invite-power-icon" data-invite-role="power" alt="" aria-hidden="true" decoding="async"><span data-lang="ws_power_plain">Moć</span></span><strong id="easter-invite-rival-power">—</strong></div>
                         <div class="easter-invite-rival-stat"><span data-green-record="win">POB</span><strong id="easter-invite-rival-wins">0</strong></div>
                         <div class="easter-invite-rival-stat"><span data-green-record="draw">NER</span><strong id="easter-invite-rival-draws">0</strong></div>
@@ -1314,7 +1314,7 @@
                     <div class="ws-glass-stats">
                         <div class="ws-g-stat"><span class="lbl invite-power-label"><img class="invite-power-icon" data-invite-role="power" alt="" aria-hidden="true" decoding="async"><span data-lang="ws_power_plain">Moć</span></span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
                         <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-opp-wl" class="val">0 / 0 / 0</span></div>
-                        <div class="ws-random-records" aria-label="Online rekord">
+                        <div class="ws-random-records" data-lang-aria="ws_online_record" aria-label="Online rekord">
                             <div class="ws-g-stat"><span class="lbl" data-green-record="win">POB</span><span id="waiting-opp-wins" class="val">0</span></div>
                             <div class="ws-g-stat"><span class="lbl" data-green-record="draw">NER</span><span id="waiting-opp-draws" class="val">0</span></div>
                             <div class="ws-g-stat"><span class="lbl" data-green-record="loss">POR</span><span id="waiting-opp-losses" class="val">0</span></div>
@@ -1328,7 +1328,7 @@
         <div id="share-area" class="ws-share-area hidden">
             <label for="invite-link" data-lang="invite_text">Pošalji ovaj link prijatelju:</label>
             <div class="ws-share-row">
-                <input id="invite-link" type="text" readonly aria-label="Link za poziv u partiju">
+                <input id="invite-link" type="text" readonly data-lang-aria="ws_invite_link" aria-label="Link za poziv u partiju">
                 <button type="button" onclick="app.shareInvite()">
                     <img class="invite-share-icon" data-invite-role="send" alt="" aria-hidden="true" decoding="async">
                     <span data-lang="invite_btn">PODELI LINK</span>
@@ -1832,15 +1832,15 @@
     <script src="theme-loading-diagnostics.js?v=1"></script>
     <script src="config.js?v=5.41"></script>
     <script src="maintenance-mode.js?v=2"></script>
-    <script src="live-effects-stage.js?v=11"></script>
-    <script src="managers.js?v=6.54"></script>
+    <script src="live-effects-stage.js?v=21"></script>
+    <script src="managers.js?v=6.68"></script>
     <script src="dailyChallengeCore.js?v=1"></script>
-    <script src="dnevniizazov.js?v=3.7"></script>
+    <script src="dnevniizazov.js?v=3.8"></script>
     <script src="riznica.js?v=1.22"></script>
     <script src="trophyManager.js?v=4.14"></script>
     <script src="features.js?v=3.9"></script>
     <script src="theme-leaderboard-room.js?v=4"></script>
-    <script src="toplista.js?v=5.0"></script>
+    <script src="toplista.js?v=5.1"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="tournamentReadinessCore.js?v=1"></script>
     <script src="tournamentSchedulingCore.js?v=2"></script>
@@ -1848,23 +1848,23 @@
     <script src="tournamentAdjudicationCore.js?v=1"></script>
     <script src="tournamentReliabilityCore.js?v=1"></script>
     <script src="tournamentMailCore.js?v=1"></script>
-    <script src="turnir.js?v=1043"></script>
-    <script src="pravilaigre.js?v=1.39"></script>
-    <script src="vracanjeupisa.js?v=1.8"></script>
-    <script src="globalchat.js?v=1.13"></script>
+    <script src="turnir.js?v=1046"></script>
+    <script src="pravilaigre.js?v=1.41"></script>
+    <script src="vracanjeupisa.js?v=1.9"></script>
+    <script src="globalchat.js?v=1.14"></script>
     <script src="globalchat-moderation.js?v=3"></script>
     <script src="appCheck.js?v=1.0"></script>
-    <script src="auth.js?v=1024"></script>
+    <script src="auth.js?v=1025"></script>
     <script src="account-deletion-client.js?v=3"></script>
     <link rel="stylesheet" href="analytics-privacy.css?v=3">
     <script src="analytics-privacy.js?v=2"></script>
-    <script src="account-privacy.js?v=6"></script>
+    <script src="account-privacy.js?v=7"></script>
     <script src="pushNotifications.js?v=1.3"></script>
     <script src="theme-invite-friend-room.js?v=4"></script>
     <script src="duel-chat.js?v=1"></script>
     <script src="player-referrals.js?v=2"></script>
     <script src="player-mailbox.js?v=19"></script>
-    <script src="game.js?v=6.63"></script>
+    <script src="game.js?v=6.67"></script>
     <script src="skin-action-buttons-data.js?v=1"></script>
     <script src="skin-roll-counter-data.js?v=1"></script>
     <script src="skin-roll-counter.js?v=1"></script>
@@ -1880,10 +1880,10 @@
     <script src="theme-rewarded-video-pack.js?v=3"></script>
     <script src="theme-solo-results.js?v=5"></script>
     <script src="theme-quarterly-league-room.js?v=2"></script>
-    <script src="kvartalnaliga.js?v=1033"></script>
+    <script src="kvartalnaliga.js?v=1034"></script>
     <script src="onlinenumber.js?v=1017"></script>
-    <script src="vatreniniz.js?v=1011"></script>
-    <script src="powerindex.js?v=1.11"></script>
+    <script src="vatreniniz.js?v=1012"></script>
+    <script src="powerindex.js?v=1.12"></script>
 
 </body>
 </html>

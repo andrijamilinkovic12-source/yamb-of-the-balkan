@@ -11190,6 +11190,22 @@ body.easter-theme .power-index-podium-medal {
     display: none;
 }
 
+/* Fallback for every room theme; specialized themes refine these colors below. */
+.pi-my-rank-dock.is-visible,
+.streak-my-rank-dock.is-visible {
+    display: block;
+    flex: 0 0 auto;
+    padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+    background: var(--bg-dark, #18221a);
+    border-top: 1px solid rgba(255,255,255,.18);
+    box-shadow: 0 -8px 22px rgba(0,0,0,.22);
+}
+
+.pi-my-rank-dock .power-index-player-row,
+.streak-my-rank-dock .fire-streak-player-row {
+    margin: 0;
+}
+
 body.easter-theme #pi-modal-overlay .pi-my-rank-dock.is-visible {
     display: block;
     flex: 0 0 auto;
@@ -12223,32 +12239,8 @@ body.easter-theme #game-scene.online-duel-room:not(.opponent-reconnecting) #turn
     height: 100%;
 }
 
-@media (max-width: 380px) {
-    body.easter-theme #game-scene.online-duel-room .game-header {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    body.easter-theme #game-scene.online-duel-room .game-header-controls {
-        gap: 4px !important;
-    }
-
-    body.easter-theme #game-scene.online-duel-room .game-header-exit,
-    body.easter-theme #game-scene.online-duel-room #btn-undo-move,
-    body.easter-theme #game-scene.online-duel-room #btn-game-menu-toggle {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        min-height: 36px !important;
-        flex: 0 0 36px !important;
-    }
-}
-
-@media (max-width: 340px) {
-    body.easter-theme #game-scene.online-duel-room #gh-current-avatar {
-        display: none !important;
-    }
-}
+/* Header geometry, including narrow screens, is shared in theme-game-header.css.
+   Theme-specific button sizes/gaps used to move the whole row when switching. */
 
 /* Statistika / Međusobni dueli: broj partija na avataru ostaje u istom slotu,
    ali koristi čitljiv Vaskrs Soft Clay kontrast. */

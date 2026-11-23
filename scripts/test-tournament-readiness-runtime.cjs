@@ -118,6 +118,35 @@ async function main() {
     assert.equal(future.players.length, 0);
     assert.equal(initial.registrationCycleId, 'verified-current-cycle-id', 'no rewrite of existing cycle');
 
+    // A legacy socket cannot acknowledge or broadcast the in-flight database change.
+    const { createProfileWrites } = require('../lib/profile-writes');
+    const legacyEvents = [];
+    let entered, finish, legacyHandler;
+    const legacy = { tournamentNumber: 10, status: 'registration', players: [], bracket: {} };
+    const legacyContext = vm.createContext({ ...context, tournamentState: legacy, legacyTournamentWrites: createProfileWrites(),
+        profileWrites: createProfileWrites(), getVerifiedUid: () => 'verified-user',
+        socket: { on(_name, fn) { legacyHandler = fn; }, emit: (...args) => legacyEvents.push(args) },
+        legacyTournamentRegistration: { register: async () => { entered(); return new Promise((resolve, reject) => { finish = { resolve, reject }; }); } },
+        console: { error() {} }, emitProfileSync: () => legacyEvents.push(['profile']),
+        emitTournamentStateUpdate: () => legacyEvents.push(['broadcast']) });
+    socketHandler('tourney_register', legacyContext);
+    const consent = { tournamentRulesAccepted: true, tournamentRulesVersion: '2026-10-23' };
+    for (const fail of [true, false]) {
+        legacyEvents.length = 0;
+        const started = new Promise(resolve => { entered = resolve; });
+        const pending = legacyHandler(consent);
+        await started;
+        assert.deepEqual(legacy.players, []);
+        assert.deepEqual(legacyEvents, []);
+        if (fail) finish.reject(new Error('roster_write_failed'));
+        else finish.resolve({ ok: true, user: { balance: 19500 }, state: { ...legacy, players: [{ id: 'verified-user' }] } });
+        await pending;
+        assert.equal(legacyEvents.find(([event]) => event === 'tourney_register_result')[1].ok, !fail);
+        assert.equal(legacyEvents.some(([event]) => event === 'broadcast'), !fail);
+        assert.equal(legacyEvents.some(([event]) => event === 'profile'), !fail);
+        assert.equal(legacy.players.length, Number(!fail));
+    }
+
     const synchronized = [], commits = [];
     let calls = 0;
     const runContext = vm.createContext({ console, Date, Map, Promise,

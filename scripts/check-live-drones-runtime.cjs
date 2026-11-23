@@ -71,5 +71,26 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
     const pending = makeHarness({ native });
     const late = new pending.Stage(pending.owner, 'drones'); const start = late.start(); late.stop(); await start;
     assert.equal(pending.body.children.length, 0);
-    console.log(`PASS ten themed drone PNGs, five-ship formation, sequential lights, shared pulse, departure, responsive bounds and cleanup${native ? ' with real Canvas2D' : ''}.`);
+    const edges = {
+        1:['13','17','67','78'], 2:['02','25','35','36','68'], 3:['02','25','45','58','68'],
+        4:['03','25','35','58'], 5:['02','03','35','58','68'], 6:['02','03','35','36','58','68']
+    };
+    for (const [width,height] of [[320,480],[390,844],[1280,800]]) for (let face=1;face<=6;face++) {
+        const h = makeHarness({width,height,native});
+        const manager = new h.Manager();
+        await manager.spawnStageEffect('drones',face);
+        const s = manager.stageScene, targets = s.droneTargets;
+        assert.equal(s.overlay.dataset.face,String(face));
+        const key = i => targets[i].row * 3 + targets[i].column + 1;
+        const segments = s.droneLinks.map(link => Array.from(link,key).sort().join(''));
+        assert.deepEqual(Array.from(segments).sort(), edges[face], 'Correct light strokes for digit '+face);
+        assert(targets.every(({x,y,size,ratio}) => size >= 72 && x-size/2 > 8 && x+size/2 < width-8
+            && y-size*ratio/2 > 30 && y+size*ratio/2 < height-30));
+        assert.equal(new Set(Array.from(targets,(_,i)=>key(i))).size,targets.length);
+        h.step(0); h.step(4550);
+        assert.equal(s.overlay.dataset.lit,String(targets.length));
+        h.setViewport(400,700); s.resize(); assert.equal(s.overlay.dataset.face,String(face));
+        h.step(8200); assert.equal(h.body.children.length,0);
+    }
+    console.log(`PASS ten themed drone PNGs, neutral squadron and six scoring digits, shared pulse, responsive bounds and cleanup${native ? ' with real Canvas2D' : ''}.`);
 })().catch(error => { console.error(error); process.exitCode = 1; });

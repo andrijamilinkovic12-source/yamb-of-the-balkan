@@ -17,6 +17,7 @@ async function checkLeagueAnnouncement() {
         Date, isPastLeaguePeriod: () => true,
         getLeagueSettlementInfo: () => ({ settled, settlesAt: new Date(1000) }),
         getLeaguePeriodKey: (year, quarter) => `${year}_Q${quarter}`,
+        LeagueClosing: { updateOne: async () => {} },
         LeagueHallOfFame: {
             findOne: () => ({ lean: async () => archive }),
             findOneAndUpdate: ({ periodKey }, { $set }) => ({ lean: async () => (archive = { periodKey, ...$set }) })

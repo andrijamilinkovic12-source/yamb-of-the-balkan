@@ -85,7 +85,7 @@ function checkRanksAndModes() {
         assert(serverSource.includes(`'${mode}'`), `League match ledger is missing mode ${mode}`);
     }
     assert(gameSource.includes('await this.queueCompletedLocalMatchResult({'), 'Local modes do not enter the match ledger');
-    assert(serverSource.includes('await applyTechnicalLeagueDelta(user, player.score, { periodDate:'), 'Regular online modes do not add final score to the league');
+    assert(serverSource.includes('await bookMatchLeague(result, session);'), 'Saving a match bypasses league booking');
 }
 
 function checkRewardsAndArchiveSafety() {
@@ -103,8 +103,7 @@ function checkRewardsAndArchiveSafety() {
     assert(rewardHandler.includes('rank === 3) rewardAmount = 2500'));
     assert(rewardHandler.includes('claimedLeagueRewards: { $ne: rewardKey }'), 'Quarter reward is not idempotent');
 
-    assert(serverSource.includes("{ periodDate: storedResult?.finishedAt }"), 'Technical win can cross into the wrong quarter');
-    assert(serverSource.includes("periodDate: storedResult?.finishedAt"), 'Technical loss can cross into the wrong quarter');
+    assert(serverSource.includes('periodDate: result.finishedAt, session, asOf'), 'League booking must use the durable finish time and transaction');
     assert(serverSource.includes("return replyMatchResult(false, 'invalid_finished_at', true);"), 'Client can forge an old quarter finish time');
 }
 

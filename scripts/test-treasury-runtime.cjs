@@ -28,6 +28,7 @@ function fixture() {
     };
     vm.createContext(context);
     vm.runInContext(read('www/config.js'), context);
+    const catalog = vm.runInContext('SHOP_DATA', context);
     vm.runInContext(read('www/managers.js') + '\nglobalThis.Shop = ShopManager;', context);
     // Rendering has its own DOM/browser suite; retain the actual state/purchase methods.
     context.Shop.prototype.render = function () {};
@@ -43,10 +44,42 @@ function fixture() {
         context.localStorage.setItem('yamb_dukati', this.stats.balance);
     } };
     w.statsManager.saveStats();
+    const economy = w.adMobGlobal;
+    economy.scheduleEconomyRecovery = () => {};
+    const purchases = new Map();
+    let purchaseResponse;
+    function serverPurchase(data, ack) {
+        const item = [...catalog.SKINS, ...catalog.EFFECTS, ...catalog.THEMES].find(item => item.id === data.itemId);
+        assert(item && !item.adUnlock && !item.themeGift);
+        const snapshot = structuredClone(w.statsManager.stats);
+        const owned = new Set([...snapshot.unlockedSkins, ...snapshot.unlockedEffects, ...snapshot.unlockedThemes]);
+        const discounts = JSON.parse(storage.get('yamb_shop_discounts_treasury-fixture') || '{}');
+        const price = discounts[item.id]?.expiresAt > Date.now() ? Math.floor(item.price * .8) : item.price;
+        const alreadyPurchased = purchases.has(data.requestId) || owned.has(item.id);
+        if (!alreadyPurchased) {
+            assert.equal(data.expectedPrice, price);
+            assert(snapshot.balance >= price);
+            snapshot.balance -= price;
+            const field = catalog.SKINS.includes(item) ? 'unlockedSkins' : catalog.EFFECTS.includes(item) ? 'unlockedEffects' : 'unlockedThemes';
+            snapshot[field].push(item.id);
+            delete discounts[item.id];
+            const gift = catalog.SKINS.find(skin => skin.themeGift === item.id);
+            if (gift) snapshot.unlockedSkins.push(gift.id);
+            purchases.set(data.requestId, price);
+        }
+        snapshot.yamb_unlocked = [...snapshot.unlockedSkins, ...snapshot.unlockedEffects, ...snapshot.unlockedThemes, ...snapshot.unlockedTrophies];
+        const result = { ok: true, alreadyPurchased, cloudStats: { ...snapshot, statsAuthoritative: true, shopDiscounts: discounts } };
+        if (purchaseResponse) purchaseResponse(result, ack, data);
+        else ack(result);
+    }
     context.localStorage.setItem('yamb_uid', 'treasury-fixture');
     w.app = Object.create(context.App.prototype);
     Object.assign(w.app, { stats: {}, playerName: 'QA', playerId: 'qa',
-        socket: { connected: true, emit: (...args) => sent.push(args) },
+        socket: { connected: true, emit: (...args) => {
+            sent.push(args);
+            if (args[0] === 'purchase_shop_item') serverPurchase(args[1], args[2]);
+        } },
+        authenticateSocketIdentity: async () => ({ ok: true }),
         getFullLocalStats: () => ({ ...w.statsManager.stats,
             activeSkin: storage.get('yamb_active_skin'), activeEffect: storage.get('yamb_active_effect'),
             activeTheme: storage.get('yamb_theme') }),
@@ -55,7 +88,8 @@ function fixture() {
         prepareTreasuryTheme: async () => true,
         navigateTo() {}, showMainMenu() {} });
     const tab = type => { w.riznicaManager.switchTab(type); return w.shop; };
-    return { context, w, storage, confirmations, notices, sent, tab,
+    return { context, w, storage, confirmations, notices, sent, tab, economy,
+        setPurchaseResponse: handler => { purchaseResponse = handler; },
         balance: value => { w.statsManager.stats.balance = value; w.statsManager.saveStats(); },
         json: key => JSON.parse(storage.get(key) || '[]') };
 }
@@ -65,9 +99,9 @@ const test = (name, run) => tests.push({ name, run });
 
 test('purchase, duplicate debit, reload, equip and typed inventories', async () => {
     const f = fixture(), shop = f.tab('skin');
-    assert.equal(shop.processTransaction('classic_red', 1), true);
+    assert.equal(await shop.processTransaction('classic_red', 1), true);
     assert.equal(shop.balance, 28500, 'Catalog price overrides supplied price');
-    assert.equal(shop.processTransaction('classic_red', 1500), false);
+    assert.equal(await shop.processTransaction('classic_red', 1500), false);
     assert.equal(shop.balance, 28500);
     assert(f.json('yamb_unlocked_skins').includes('classic_red'));
     assert(f.w.statsManager.stats.unlockedSkins.includes('classic_red'));
@@ -80,12 +114,12 @@ test('purchase, duplicate debit, reload, equip and typed inventories', async () 
     assert.equal(reopened.activeItem, 'classic_red');
     assert(f.sent.some(args => args[0] === 'set_player_data' && args[1].stats.activeSkin === 'classic_red'));
     const effect = f.tab('effect');
-    assert.equal(effect.processTransaction('fireflies', 5000), true);
+    assert.equal(await effect.processTransaction('fireflies', 5000), true);
     await effect.equip('fireflies');
     assert.equal(f.storage.get('yamb_active_effect'), 'fireflies');
     assert(f.json('yamb_unlocked_effects').includes('fireflies'));
     const theme = f.tab('theme');
-    assert.equal(theme.processTransaction('easter', 10000), true);
+    assert.equal(await theme.processTransaction('easter', 10000), true);
     await theme.equip('easter');
     assert.equal(f.storage.get('yamb_theme'), 'easter');
     assert(f.json('yamb_unlocked_themes').includes('easter'));
@@ -96,7 +130,7 @@ test('confirmation stays bound to its source shop after tab switch', async () =>
     await skin.tryBuy('classic_red', 'Red', 1500);
     f.tab('effect');
     f.confirmations.shift()(true);
-    await Promise.resolve();
+    await new Promise(setImmediate);
     assert(f.json('yamb_unlocked_skins').includes('classic_red'));
     assert.equal(f.storage.get('yamb_dukati'), '28500');
 });
@@ -111,7 +145,7 @@ test('cancel and insufficient balance leave inventory and money unchanged', asyn
     f.balance(100);
     await shop.tryBuy('classic_red', 'Red', 1500);
     assert.equal(f.confirmations.length, 0, 'Use latest balance before showing confirmation');
-    assert.equal(shop.processTransaction('classic_red', 1500), false);
+    assert.equal(await shop.processTransaction('classic_red', 1500), false);
     assert.equal(f.storage.get('yamb_dukati'), '100');
 });
 
@@ -120,30 +154,30 @@ test('balance changed while confirmation is open is not overwritten', async () =
     await shop.tryBuy('classic_red', 'Red', 1500);
     f.balance(32000);
     f.confirmations.shift()(true);
-    await Promise.resolve();
+    await new Promise(setImmediate);
     assert.equal(f.storage.get('yamb_dukati'), '30500', 'Do not discard a newly credited reward');
 });
 
-test('stale shop instance cannot charge twice or overwrite newer inventory', () => {
+test('stale shop instance cannot charge twice or overwrite newer inventory', async () => {
     const f = fixture(), old = f.tab('skin'), current = f.tab('skin');
-    current.processTransaction('classic_red', 1500);
-    assert.equal(old.processTransaction('classic_red', 1500), false);
-    old.processTransaction('classic_black', 2000);
+    await current.processTransaction('classic_red', 1500);
+    assert.equal(await old.processTransaction('classic_red', 1500), false);
+    await old.processTransaction('classic_black', 2000);
     assert.equal(f.storage.get('yamb_dukati'), '26500');
     assert(f.json('yamb_unlocked').includes('classic_red'));
     assert(f.json('yamb_unlocked').includes('classic_black'));
 });
 
-test('trophies, ad-only themes and unmet prerequisites cannot be bought directly', () => {
+test('trophies, ad-only themes and unmet prerequisites cannot be bought directly', async () => {
     const f = fixture();
-    assert.equal(f.tab('trophy').processTransaction('first_play', 0), false);
-    assert.equal(f.tab('theme').processTransaction('desert', 0), false);
-    assert.equal(f.tab('effect').processTransaction('thunder', 0), false);
+    assert.equal(await f.tab('trophy').processTransaction('first_play', 0), false);
+    assert.equal(await f.tab('theme').processTransaction('desert', 0), false);
+    assert.equal(await f.tab('effect').processTransaction('thunder', 0), false);
     assert.equal(f.storage.get('yamb_dukati'), '30000');
     f.w.statsManager.stats.unlockedTrophies.push('sveti_ilija');
     f.w.statsManager.saveStats();
     const effect = f.tab('effect');
-    assert.equal(effect.processTransaction('thunder', 1), true);
+    assert.equal(await effect.processTransaction('thunder', 1), true);
 });
 
 test('verified discount survives tab switch and restart, expires and is consumed', async () => {
@@ -158,7 +192,8 @@ test('verified discount survives tab switch and restart, expires and is consumed
     assert.equal(f.tab('skin').getCurrentItemPrice(item), 1500, 'Discount cache is account-scoped');
     f.storage.set('yamb_uid', 'treasury-fixture');
     const original = f.tab('skin');
-    original.processTransaction('classic_red', 1500);
+    f.w.adMobGlobal = f.economy;
+    await original.processTransaction('classic_red', 1500);
     assert.equal(f.storage.get('yamb_dukati'), '28800');
     assert.equal(f.tab('skin').getActiveDiscount('classic_red'), null);
     original.discountedItems.classic_black = { discountedPrice: 1600, expiresAt: Date.now() - 1 };
@@ -185,7 +220,7 @@ test('ad unlock requires verified progress and does not debit dukats', async () 
     assert.equal(f.storage.get('yamb_dukati'), '30000');
 });
 
-test('authoritative cloud sync refreshes open treasury balance and ownership', () => {
+test('authoritative cloud sync refreshes open treasury balance and ownership', async () => {
     const f = fixture(), shop = f.tab('skin');
     f.w.app.applyCloudProfileSync({ statsAuthoritative: true, balance: 800,
         unlockedSkins: ['classic_red'], unlockedEffects: [], unlockedTrophies: ['first_play'],
@@ -193,7 +228,7 @@ test('authoritative cloud sync refreshes open treasury balance and ownership', (
     assert.equal(f.w.shop.balance, 800);
     assert(f.w.shop.unlocked.includes('classic_red'));
     assert.equal(f.w.shop.activeItem, 'classic_red');
-    assert.equal(shop.processTransaction('classic_black', 2000), false);
+    assert.equal(await shop.processTransaction('classic_black', 2000), false);
 });
 
 test('an expired discount prompts confirmation again instead of charging a higher price', async () => {
@@ -204,11 +239,11 @@ test('an expired discount prompts confirmation again instead of charging a highe
     shop.discountedItems.classic_red.expiresAt = Date.now() - 1;
     shop.saveDiscounts();
     f.confirmations.shift()(true);
-    await Promise.resolve();
+    await new Promise(setImmediate);
     assert.equal(f.storage.get('yamb_dukati'), '30000');
     assert.equal(f.confirmations.length, 1);
     f.confirmations.shift()(true);
-    await Promise.resolve();
+    await new Promise(setImmediate);
     assert.equal(f.storage.get('yamb_dukati'), '28500');
 });
 
@@ -239,7 +274,8 @@ test('late ad callback preserves later purchases and the visible tab', async () 
     const claim = theme.watchAdForUnlock('desert', 3);
     await new Promise(setImmediate);
     const skin = f.tab('skin');
-    skin.processTransaction('classic_red', 1500);
+    f.w.adMobGlobal = f.economy;
+    await skin.processTransaction('classic_red', 1500);
     const rendered = [];
     theme.render = () => rendered.push('theme');
     skin.render = () => rendered.push('skin');
@@ -251,9 +287,9 @@ test('late ad callback preserves later purchases and the visible tab', async () 
     assert.deepEqual(rendered, ['skin']);
 });
 
-test('cloud sync restores verified discounts and revokes stale theme entitlements', () => {
+test('cloud sync restores verified discounts and revokes stale theme entitlements', async () => {
     const f = fixture();
-    f.tab('theme').processTransaction('easter', 10000);
+    await f.tab('theme').processTransaction('easter', 10000);
     const skin = f.tab('skin');
     f.w.app.applyCloudProfileSync({ statsAuthoritative: true, balance: 20000,
         unlockedSkins: [], unlockedEffects: [], unlockedTrophies: [], unlockedThemes: [], yamb_unlocked: [],
@@ -268,10 +304,10 @@ test('theme gift skins cannot be bought or equipped without their theme', async 
     const f = fixture(), shop = f.tab('skin');
     const gift = shop.items.find(item => item.themeGift === 'easter');
     assert(gift);
-    assert.equal(shop.processTransaction(gift.id, 0), false);
+    assert.equal(await shop.processTransaction(gift.id, 0), false);
     await shop.equip(gift.id);
     assert.notEqual(f.storage.get('yamb_active_skin'), gift.id);
-    f.tab('theme').processTransaction('easter', 10000);
+    await f.tab('theme').processTransaction('easter', 10000);
     const owned = f.tab('skin');
     await owned.equip(gift.id);
     assert.equal(f.storage.get('yamb_active_skin'), gift.id);
@@ -303,6 +339,46 @@ test('background sync updates cached state without rendering a closed treasury',
     shop.refreshTreasuryView();
     assert.equal(shop.balance, 700);
     assert.equal(renders, 0);
+});
+
+test('purchase waits for an acknowledgement and retries the same durable request', async () => {
+    const f = fixture(), shop = f.tab('skin');
+    let reply, response;
+    f.setPurchaseResponse((result, ack) => { response = result; reply = ack; });
+    const pending = shop.processTransaction('classic_red', 1500);
+    await new Promise(setImmediate);
+    assert.equal(f.storage.get('yamb_dukati'), '30000');
+    assert(!f.json('yamb_unlocked_skins').includes('classic_red'));
+    assert.equal(await shop.processTransaction('classic_red', 1500), false, 'Parallel click must not send another purchase');
+    assert.equal(f.sent.filter(args => args[0] === 'purchase_shop_item').length, 1);
+    const requestId = f.economy.readEconomyClaims()[0].claimData.requestId;
+    reply({ ok: false, reason: 'err_server_conn' });
+    assert.equal(await pending, false);
+    assert.equal(f.economy.readEconomyClaims()[0].claimData.requestId, requestId);
+    f.setPurchaseResponse((_result, ack) => ack(response));
+    assert.equal(await shop.processTransaction('classic_red', 1500), true);
+    assert.equal(f.storage.get('yamb_dukati'), '28500');
+    assert.equal(f.economy.readEconomyClaims().length, 0);
+    assert.equal(f.sent.filter(args => args[0] === 'purchase_shop_item')[1][1].requestId, requestId);
+});
+
+test('offline purchase and late cross-account confirmation cannot change local money', async () => {
+    const f = fixture(), shop = f.tab('skin');
+    f.w.app.socket.connected = false;
+    assert.equal(await shop.processTransaction('classic_red', 1500), false);
+    assert.equal(f.economy.readEconomyClaims().length, 0);
+    f.w.app.socket.connected = true;
+    let reply, response;
+    f.setPurchaseResponse((result, ack) => { response = result; reply = ack; });
+    const pending = shop.processTransaction('classic_red', 1500);
+    await new Promise(setImmediate);
+    f.storage.set('yamb_uid', 'other-account');
+    f.w.yambAuthSessionVersion = 1;
+    f.balance(700);
+    reply(response);
+    assert.equal(await pending, false);
+    assert.equal(f.storage.get('yamb_dukati'), '700');
+    assert.equal(f.economy.readEconomyClaims('treasury-fixture').length, 1, 'Old account keeps its unresolved purchase');
 });
 
 (async () => {

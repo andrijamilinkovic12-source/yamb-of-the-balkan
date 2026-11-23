@@ -641,7 +641,10 @@ function restoreAccountLocalSnapshot(uid) {
     const snapshot = readAccountLocalSnapshot(uid);
     if (!snapshot || !snapshot.values || typeof snapshot.values !== 'object') return false;
 
+    const previousLanguage = localStorage.getItem('yamb_lang');
     getAccountSnapshotStorageKeys(uid).forEach(key => {
+        if (key === 'yamb_lang' && (previousLanguage === 'en' || previousLanguage === 'sr')
+            && localStorage.getItem('yamb_lang_pending_sync') === previousLanguage) return;
         const value = snapshot.values[key];
         if (typeof value === 'string') localStorage.setItem(key, value);
         else localStorage.removeItem(key);
@@ -673,10 +676,13 @@ function restoreAccountLocalSnapshot(uid) {
         window.statsManager.stats = window.statsManager.loadStats() || window.statsManager.stats;
         window.statsManager.previousBalance = window.statsManager.stats.balance || 0;
     }
-    const restoredLanguage = localStorage.getItem('yamb_lang');
+    const restoredLanguage = localStorage.getItem('yamb_lang') || 'sr';
     if (restoredLanguage === 'sr' || restoredLanguage === 'en') {
         if (document.documentElement) document.documentElement.lang = restoredLanguage;
         if (typeof applyTranslations === 'function') applyTranslations();
+        if (previousLanguage !== restoredLanguage && typeof notifyLanguageChange === 'function') {
+            notifyLanguageChange(restoredLanguage, previousLanguage || 'sr');
+        }
     }
     refreshLeagueDashboardForCurrentUser();
     return true;

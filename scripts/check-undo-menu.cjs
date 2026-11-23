@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { createProfileWrites } = require('../lib/profile-writes');
+const { changeDucats } = require('../lib/ducat-wallet');
 
 const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
 const undoSource = read('www/vracanjeupisa.js');
@@ -18,7 +19,7 @@ const deferred = () => {
 const turn = () => new Promise(resolve => setImmediate(resolve));
 
 function makeClient() {
-    const values = new Map([['yamb_dukati', '100'], ['yamb_undo_tokens', '2']]);
+    const values = new Map([['yamb_uid', 'user-a'], ['yamb_dukati', '100'], ['yamb_undo_tokens', '2']]);
     const elements = new Map();
     const timers = new Map();
     const alerts = [], requests = [], ads = [], banners = [];
@@ -171,13 +172,14 @@ async function checkServerRewards() {
     const verifications = [];
     let verification = { ok: true };
     const context = {
-        socket, MONGO_URI: 'test-only', getVerifiedUid: () => socket.verifiedUid,
+        socket, MONGO_URI: 'test-only', getVerifiedUid: () => socket.verifiedUid, changeDucats,
         UserProfile: { findOne: async () => user },
         toSafeInt: (value, fallback) => Number.isFinite(Number(value)) ? Math.floor(Number(value)) : fallback,
         SHOP_AD_REWARD_AMOUNT: 500, SHOP_AD_REWARD_COOLDOWN_MS: 15000,
         UNDO_REWARDED_REWARD_AMOUNT: 1, UNDO_REWARDED_REWARD_COOLDOWN_MS: 15000,
         MAX_BALANCE: 10000, MAX_UNDO_TOKENS: 10, emitProfileSync() {},
         waitForVerifiedAdMobReward: async (...args) => { verifications.push(args); return verification; },
+        grantVerifiedAdMobReward: async (_uid, _proof, _key, operation) => operation(null),
         console: { error() {} }
     };
     for (const [event, next] of [['claim_shop_ad_reward', 'claim_shop_discount'], ['claim_undo_token_reward', 'get_previous_quarter_winner']]) {
@@ -205,11 +207,10 @@ async function checkServerRewards() {
         assert.equal(args[0], 'user-a');
         assert.equal(args[1], 'nonce');
         assert(args[2].includes(rewardContext));
-        assert.equal(args[3].clientRewarded, true);
         const count = verifications.length;
         assert.equal((await claim(event)).reason, 'ad_reward_cooldown');
         assert.equal(user[field], after);
-        assert.equal(verifications.length, count);
+        assert.equal(verifications.length, count + 1, 'Receipt replays are checked before cooldown validation');
         user[cooldownField] = 0;
     }
     user.undoTokens = 10;
@@ -319,6 +320,17 @@ async function checkClientUndo() {
     assert.equal(success.values.get('yamb_undo_tokens'), '1');
     assert.deepEqual(success.app.kockiceVals, [6, 6, 6, 6, 6, 6], 'Local snapshot must not overwrite authoritative online dice');
     assert.equal(success.app.lastMoveSnapshot, null);
+
+    const switched = makeClient(), ack = deferred();
+    switched.app.onlineMode = true;
+    switched.app.socket.emit = (_event, _data, reply) => ack.promise.then(reply);
+    const lateUndo = switched.manager.executeUndo();
+    await turn();
+    switched.values.set('yamb_uid', 'other-account');
+    switched.values.set('yamb_undo_tokens', '40');
+    ack.resolve({ ok: true, undoTokens: 1 });
+    await lateUndo;
+    assert.equal(switched.values.get('yamb_undo_tokens'), '40', 'Late rollback cannot change another account tokens');
 
     const offline = makeClient();
     offline.window.adMobGlobal.showRewardVideo = async () => { offline.app.lastMoveSnapshot = null; return true; };

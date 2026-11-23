@@ -53,6 +53,7 @@ class DnevniIzazov {
         this.loadingChallenge = false;
         this.serverDiceValues = [];
         this.currentDayKey = "";
+        this.claimToken = '';
         this.currentBaseReward = 0;
         this.currentYambBonus = 0;
         this.dailyAssetLoads = new Map();
@@ -502,8 +503,8 @@ class DnevniIzazov {
                 <div class="daily-glass-header">
                     <img class="daily-room-mark" data-daily-role="room" src="${this.getDailyAsset('room')}" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-task-mark" data-daily-role="task" src="${this.getDailyAsset('task')}" alt="" aria-hidden="true" decoding="async">
-                    <h2 class="daily-glass-title">${txtTitle}</h2>
-                    <div class="daily-glass-subtitle">${txtSub}</div>
+                    <h2 class="daily-glass-title" data-lang="dc_title">${txtTitle}</h2>
+                    <div class="daily-glass-subtitle" data-lang="dc_desc">${txtSub}</div>
                 </div>
                 
                 <div class="daily-glass-dice-grid">
@@ -516,11 +517,11 @@ class DnevniIzazov {
                 </div>
 
                 <div class="daily-glass-score-box">
-                    <div class="daily-glass-score-lbl">${txtSum}</div>
+                    <div class="daily-glass-score-lbl" data-lang="dc_sum">${txtSum}</div>
                     <div class="daily-glass-score-val" id="glass-daily-sum">0</div>
                 </div>
 
-                <button id="glass-btn-action" class="daily-glass-btn daily-glass-btn-stop" onclick="dnevniIzazov.stopDice()">${txtStop}</button>
+                <button id="glass-btn-action" class="daily-glass-btn daily-glass-btn-stop" data-lang="dc_stop" onclick="dnevniIzazov.stopDice()">${txtStop}</button>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -588,6 +589,7 @@ class DnevniIzazov {
         this.challengeSession = null;
         this.serverDiceValues = [];
         this.currentDayKey = "";
+        this.claimToken = '';
         this.currentBaseReward = 0;
         this.currentYambBonus = 0;
         this.calculatedReward = 0;
@@ -678,6 +680,7 @@ class DnevniIzazov {
         const dice = this.normalizeDiceValues(challenge.dice);
         this.serverDiceValues = dice;
         this.currentDayKey = challenge.dayKey || this.getTodayKey();
+        this.claimToken = challenge.claimToken || '';
         this.currentBaseReward = Math.max(0, parseInt(challenge.reward, 10) || this.calculateRewardFromDice(dice));
         const breakdown = window.dailyChallengeCore.calculateReward(dice);
         this.currentYambBonus = this.currentBaseReward === breakdown.reward ? breakdown.yambBonus : 0;
@@ -1115,6 +1118,8 @@ class DnevniIzazov {
         }
 
         if (window.adMobGlobal && typeof window.adMobGlobal.prepareReward === 'function') {
+            window.adMobGlobal.rememberEconomyClaim?.({ context: 'daily_base', uid: this.getSession().uid, active: true,
+                claimData: { dayKey: this.currentDayKey, amount: this.calculatedReward, claimToken: this.claimToken } });
             window.adMobGlobal.prepareReward(this.getDoubleRewardOptions());
         }
     }
@@ -1180,7 +1185,9 @@ class DnevniIzazov {
     getDoubleRewardOptions() {
         return {
             context: 'daily_double',
-            amount: Math.max(0, (parseInt(this.calculatedReward) || 0) * 2)
+            amount: Math.max(0, (parseInt(this.calculatedReward) || 0) * 2),
+            claimData: { dayKey: this.currentDayKey, claimToken: this.claimToken,
+                amount: Math.max(0, (parseInt(this.calculatedReward) || 0) * 2) }
         };
     }
 
@@ -1224,6 +1231,7 @@ class DnevniIzazov {
     }
 
     async claimDailyRewardOnServer(amount, doubled = false, ssvNonce = '', session = this.getSession(), dayKey = this.currentDayKey || this.getTodayKey()) {
+        const claimToken = this.claimToken || '';
         if (!this.isSessionCurrent(session)) return { ok: false, reason: 'auth_required' };
         const app = this.app;
         const socket = app?.socket;
@@ -1266,7 +1274,7 @@ class DnevniIzazov {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, claimTimeoutMs);
 
-            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled, dayKey }, (result) => {
+            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled, dayKey, claimToken }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -1304,6 +1312,8 @@ class DnevniIzazov {
         let finalAmount = doubled ? baseAmount * 2 : baseAmount;
         const uid = session.uid;
         const today = this.currentDayKey || this.getTodayKey();
+        const baseEntry = !doubled ? window.adMobGlobal?.rememberEconomyClaim?.({ context: 'daily_base', uid, active: false,
+            claimData: { dayKey: today, amount: baseAmount, claimToken: this.claimToken } }) : null;
         
         let rewardResult;
         try {
@@ -1319,6 +1329,13 @@ class DnevniIzazov {
         }
         if (!this.isSessionCurrent(session)) return;
         this.claimInProgress = false;
+        if (baseEntry) {
+            window.adMobGlobal.finishEconomyClaim(baseEntry, rewardResult);
+            window.adMobGlobal.scheduleEconomyRecovery();
+        }
+        if (rewardResult.ok || rewardResult.reason === 'daily_already_claimed') {
+            window.adMobGlobal?.finishEconomyClaim?.({ uid, key: `daily_base:${today}` }, { ok: true });
+        }
         if (!rewardResult.ok) {
             if (rewardResult.reason === 'daily_challenge_expired') {
                 await this.recoverExpiredChallenge(session);
@@ -1374,7 +1391,7 @@ class DnevniIzazov {
 
         if (doubled) {
             if (this.app.effectMgr) this.app.effectMgr.trigger('confetti');
-            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_doubled', awardedAmount), t('dc_congrats'), { contextClass: 'daily' });
+            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_doubled', rewardResult.totalReward || awardedAmount), t('dc_congrats'), { contextClass: 'daily' });
         } else {
             this.app.modal.alert(this.getDailyRewardMessage('dc_reward_won', awardedAmount), t('dc_success'), { contextClass: 'daily' });
         }

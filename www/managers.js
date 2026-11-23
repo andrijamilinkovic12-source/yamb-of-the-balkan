@@ -356,9 +356,9 @@ class EffectManager {
         return LiveEffectsStage.preload('ice_age', this.getGoldRainThemeId());
     }
 
-    async spawnStageEffect(type) {
+    async spawnStageEffect(type, yambFace) {
         this.stageScene?.stop();
-        const scene = new LiveEffectsStage(this, type);
+        const scene = new LiveEffectsStage(this, type, yambFace);
         this.stageScene = scene;
         try { await scene.start(); }
         catch (error) { scene.stop(); console.warn(`Effect failed: ${type}`, error); }
@@ -389,18 +389,140 @@ class EffectManager {
         return this.blackHoleSpritePromises[theme];
     }
 
+    captureEffectBoard(table, rect, glow, dpr, edges) {
+        const sheet = document.createElement('canvas'), ink = sheet.getContext('2d');
+        if (!ink || !rect.width || !rect.height) return null;
+        const scale = Math.min(dpr, 900 / Math.max(rect.width, rect.height));
+        sheet.width = Math.ceil(rect.width * scale); sheet.height = Math.ceil(rect.height * scale);
+        ink.scale(sheet.width / rect.width, sheet.height / rect.height);
+        ink.fillStyle = 'rgba(13,22,29,.88)';
+        ink.beginPath(); ink.roundRect(0, 0, rect.width, rect.height, 7); ink.fill();
+        ink.strokeStyle = `rgba(${glow},.85)`; ink.lineWidth = 2; ink.stroke();
+        const scores = [];
+        const cells = table.querySelectorAll('.grid-cell, .player-name, .total-score, .qa-board-grid > span');
+        const fontOf = s => `${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
+        for (const [i, cell] of cells.entries()) {
+            const r = cell.getBoundingClientRect();
+            if (!r.width || !r.height) continue;
+            const x = r.left - rect.left, y = r.top - rect.top, cs = getComputedStyle(cell);
+            const qa = cell.parentElement.classList.contains('qa-board-grid');
+            if (edges && (qa || cell.classList.contains('grid-cell'))) {
+                edges.x.add(x); edges.y.add(y);
+            }
+            const score = qa ? (i > 6 && i % 7 !== 0 ? cell : null) : cell.querySelector('.score-btn.filled');
+            const value = score?.textContent.trim();
+            ink.fillStyle = cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? `rgba(${glow},.13)` : cs.backgroundColor;
+            ink.fillRect(x + 0.5, y + 0.5, Math.max(1, r.width - 1), Math.max(1, r.height - 1));
+            ink.strokeStyle = `rgba(${glow},.3)`; ink.lineWidth = 0.7;
+            ink.strokeRect(x + 0.5, y + 0.5, r.width - 1, r.height - 1);
+            if (value && /^\d+$/.test(value)) {
+                const sr = score.getBoundingClientRect(), style = getComputedStyle(score);
+                scores.push({ node: score, value, font: fontOf(style), color: style.color,
+                    x: sr.left + sr.width / 2 - rect.left, y: sr.top + sr.height / 2 - rect.top });
+            } else if (cell.textContent.trim()) {
+                ink.fillStyle = cs.color; ink.font = fontOf(cs); ink.textAlign = 'center'; ink.textBaseline = 'middle';
+                ink.fillText(cell.textContent.trim(), x + r.width / 2, y + r.height / 2, r.width);
+            }
+        }
+        return { sheet, scores };
+    }
+
+    prepareBlackHolePull(table, rect, scene, theme) {
+        const width = window.innerWidth, height = window.innerHeight;
+        const layer = document.createElement('canvas'), c = layer.getContext('2d');
+        const dpr = Math.min(window.devicePixelRatio || 1, width <= 760 ? 1.15 : 1.5);
+        const { glow, glint } = GOLD_RAIN_THEME_PROFILES[theme];
+        const snapshot = this.captureEffectBoard(table, rect, glow, dpr);
+        if (!c || !snapshot) return null;
+        const { sheet, scores } = snapshot;
+        layer.className = 'black-hole-projection';
+        layer.width = Math.ceil(width * dpr); layer.height = Math.ceil(height * dpr);
+        const cx = rect.width / 2, cy = rect.height / 2, diagonal = Math.hypot(cx, cy);
+        for (const [i, s] of scores.entries()) {
+            s.dx = s.x - cx; s.dy = s.y - cy;
+            s.rank = Math.min(1, Math.hypot(s.dx, s.dy) / diagonal) * 0.86 + (i % 5) * 0.035;
+        }
+        scene.appendChild(layer);
+        const clamp = v => Math.max(0, Math.min(1, v));
+        const ease = v => { const u = clamp(v); return u * u * (3 - 2 * u); };
+        let left = rect.left, top = rect.top, raf = 0, last = -100, veil;
+        const start = performance.now();
+        const move = () => {
+            const r = table.getBoundingClientRect(); left = r.left; top = r.top;
+            scene.style.setProperty('--bh-x', (left + cx) + 'px');
+            scene.style.setProperty('--bh-y', (top + cy) + 'px');
+        };
+        const render = now => {
+            if (!scene.isConnected || !table.isConnected) { this.blackHoleCleanup?.(); return; }
+            raf = requestAnimationFrame(render);
+            if (width <= 760 && now - last < 30) return;
+            last = now;
+            const t = (now - start) / 1000;
+            const phase = t < 0.60 ? 'opening' : t < 2.08 ? 'capture' : t < 3.30 ? 'collapse'
+                : t < 3.53 ? 'core' : t < 5.57 ? 'return' : 'restored';
+            if (scene.dataset.pullPhase !== phase) scene.dataset.pullPhase = phase;
+            c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, width, height);
+            c.translate(left + cx, top + cy);
+            const pull = ease((t - 2.08) / 1.22) * (1 - ease((t - 3.53) / 0.98));
+            const ghost = ease((t - 1.86) / 0.32) * (1 - ease((t - 4.40) / 0.29));
+            if (ghost > 0 && !veil) {
+                // Hotseat pins opacity with !important. Append a visual filter; leave hits and player styles alone.
+                veil = table.animate([{ filter: 'opacity(1)' }, { filter: 'opacity(0)', offset: 0.32 / 2.83 },
+                    { filter: 'opacity(0)', offset: 2.54 / 2.83 }, { filter: 'opacity(1)' }],
+                { duration: 2830, composite: 'add', fill: 'none' });
+                veil.currentTime = (t - 1.86) * 1000;
+            }
+            if (ghost > 0 && pull < 0.995) {
+                c.globalAlpha = ghost * (1 - pull * 0.36);
+                // Bend horizontal strips of one cached board image into the same singularity.
+                for (let i = 0; i < 24; i++) {
+                    const a = Math.round(i * sheet.height / 24), b = Math.round((i + 1) * sheet.height / 24);
+                    const y = (a / sheet.height - 0.5) * rect.height;
+                    const shrink = 1 - pull * 0.985, twist = pull * (1.25 + 1.6 * y / rect.height);
+                    c.save(); c.rotate(twist); c.scale(shrink, shrink);
+                    c.drawImage(sheet, 0, a, sheet.width, b - a, -cx, y, rect.width, (b - a) * rect.height / sheet.height + 0.5);
+                    c.restore();
+                }
+            }
+            c.textAlign = 'center'; c.textBaseline = 'middle';
+            for (const s of scores) {
+                const enter = 0.60 + 0.68 * s.rank, back = 4.27 + 0.45 * (1 - s.rank);
+                const away = t > enter && t < back + 0.85;
+                if (away !== !!s.hidden) { s.node.toggleAttribute('data-bh-score-away', away); s.hidden = away; }
+                if (!away) continue;
+                const u = t < back ? ease((t - enter) / 1.12) : 1 - ease((t - back) / 0.85);
+                if (u >= 0.997) continue;
+                const radius = 1 - u, angle = u * (2.25 + 0.9 * s.rank);
+                const cos = Math.cos(angle), sin = Math.sin(angle);
+                c.save(); c.translate(radius * (s.dx * cos - s.dy * sin * 0.70), radius * (s.dy * cos + s.dx * sin * 0.70));
+                c.rotate(u * 0.50); const zoom = (1 - u * 0.84) * (1 + 0.31 * Math.sin(Math.PI * u));
+                c.scale(zoom, zoom); c.globalAlpha = 1 - ease((u - 0.78) / 0.22);
+                c.font = s.font; c.strokeStyle = 'rgba(9,14,20,.86)'; c.lineWidth = 2.2; c.strokeText(s.value, 0, 0);
+                c.fillStyle = u < 0.08 ? s.color : `rgb(${glint})`; c.fillText(s.value, 0, 0); c.restore();
+            }
+            c.globalAlpha = 1;
+        };
+        raf = requestAnimationFrame(render);
+        document.addEventListener('scroll', move, true);
+        return () => {
+            cancelAnimationFrame(raf); veil?.cancel();
+            document.removeEventListener('scroll', move, true);
+            for (const s of scores) if (s.hidden) s.node.removeAttribute('data-bh-score-away');
+        };
+    }
+
     async spawnBlackHole() {
         const runId = ++this.blackHoleRunId;
         const theme = this.getGoldRainThemeId();
         this.clearEffectTimeouts('black_hole');
         this.blackHoleCleanup?.();
-        const sprite = await this.loadBlackHoleSprite(theme);
-        if (!sprite || runId !== this.blackHoleRunId || theme !== this.getGoldRainThemeId()) return;
-
-        const tables = [...document.querySelectorAll('.player-table')];
-        const targetTable = tables.find(table => table.style.opacity === '1' || table.style.borderColor.includes('gold') || table.style.borderColor.includes('224')) || tables[0];
+        const player = window.app?.currentPlayerIdx;
+        const targetTable = (Number.isInteger(player) && document.getElementById('ptable-' + player)) || this.getTargetTable();
         if (!targetTable) return;
+        const sprite = await this.loadBlackHoleSprite(theme);
+        if (!sprite || document.hidden || !targetTable.isConnected || runId !== this.blackHoleRunId || theme !== this.getGoldRainThemeId()) return;
         const rect = targetTable.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
         const reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
         const duration = reduced ? 2600 : 5800;
         const size = Math.max(140, Math.min(rect.width * 0.58, 230));
@@ -457,18 +579,25 @@ class EffectManager {
                 fragment.appendChild(particle);
             }
             scene.appendChild(fragment);
-            targetTable.classList.add('anim-black-hole-table');
         }
         document.body.appendChild(scene);
 
+        const stopPull = !reduced && this.prepareBlackHolePull(targetTable, rect, scene, theme);
         let observer = null;
         const cleanup = () => {
+            if (this.blackHoleCleanup !== cleanup) return;
+            this.clearEffectTimeouts('black_hole');
             observer?.disconnect();
+            window.removeEventListener('resize', cleanup);
+            document.removeEventListener('visibilitychange', visibility);
+            if (stopPull) stopPull();
             scene.remove();
-            targetTable.classList.remove('anim-black-hole-table');
             if (this.blackHoleCleanup === cleanup) this.blackHoleCleanup = null;
         };
+        const visibility = () => { if (document.hidden) cleanup(); };
         this.blackHoleCleanup = cleanup;
+        window.addEventListener('resize', cleanup, { passive: true });
+        document.addEventListener('visibilitychange', visibility);
         if (typeof MutationObserver !== 'undefined') {
             observer = new MutationObserver(() => {
                 if (theme !== this.getGoldRainThemeId()) {
@@ -505,15 +634,109 @@ class EffectManager {
         return this.supernovaSpritePromises[theme];
     }
 
+    prepareSupernovaEjecta(table, rect, overlay, profile, center, farthest, dpr) {
+        const edges = { x: new Set(), y: new Set() };
+        const snapshot = this.captureEffectBoard(table, rect, profile.main, dpr, edges);
+        if (!snapshot) return null;
+        const { sheet, scores } = snapshot, w = rect.width, h = rect.height;
+        const layer = document.createElement('canvas'), c = layer.getContext('2d');
+        if (!c) return null;
+        layer.className = 'sn-board-projection';
+        layer.width = Math.ceil(window.innerWidth * dpr); layer.height = Math.ceil(window.innerHeight * dpr);
+        overlay.appendChild(layer);
+        const clamp = n => Math.max(0, Math.min(1, n));
+        const smooth = n => { const u = clamp(n); return u * u * (3 - 2 * u); };
+        // Invert the same cubic expansion used by the visible pressure front.
+        const contact = (x, y) => 2200 * (1 - Math.cbrt(1 - clamp((Math.hypot(x, y) - 12) / (1.09 * farthest))));
+        const pieces = [];
+        const cuts = (pixels, extent, count, starts) => Array.from({length: count + 1}, (_, i) => {
+            if (i === 0 || i === count) return i ? pixels : 0;
+            const ideal = extent * i / count;
+            let best = ideal, distance = extent / count * 0.48;
+            for (const edge of starts) if (Math.abs(edge - ideal) < distance) {
+                best = edge; distance = Math.abs(edge - ideal);
+            }
+            return Math.round(best * pixels / extent);
+        });
+        const cols = cuts(sheet.width, w, 3, edges.x), rows = cuts(sheet.height, h, 4, edges.y);
+        for (let row = 0; row < 4; row++) for (let col = 0; col < 3; col++) {
+            const a = cols[col], b = rows[row], sw = cols[col+1] - a, sh = rows[row+1] - b;
+            if (sw <= 0 || sh <= 0) continue;
+            const pw = sw * w / sheet.width, ph = sh * h / sheet.height;
+            const x = (a + sw / 2) * w / sheet.width - w / 2, y = (b + sh / 2) * h / sheet.height - h / 2;
+            pieces.push({ a, b, sw, sh, pw, ph, x, y, hit: contact(x, y), tilt: (col - 1) * 0.11 + (row - 1.5) * 0.036 });
+        }
+        for (const [i, score] of scores.entries()) {
+            score.x -= w / 2; score.y -= h / 2;
+            score.hit = contact(score.x, score.y);
+            score.depth = 0.76 + 0.32 * ((i * 7) % 13) / 12;
+            c.font = score.font;
+            score.halfWidth = c.measureText(score.value).width / 2;
+        }
+        const lift = (age, hit) => {
+            const time = age - hit;
+            return (1 - (1 - clamp(time / 720)) ** 3) * (1 - smooth((time - 850) / 1550));
+        };
+        let veil;
+        return {
+            paint(ctx, time) {
+                c.setTransform(dpr, 0, 0, dpr, 0, 0);
+                c.clearRect(0, 0, layer.width / dpr, layer.height / dpr);
+                if (time <= 0 || time >= 3850) return;
+                if (!veil) {
+                    // Filter composition also works when the two-player layout pins opacity.
+                    veil = table.animate([{ filter: 'opacity(1)' }, { filter: 'opacity(0)', offset: 0.04 },
+                        { filter: 'opacity(0)', offset: 0.91 }, { filter: 'opacity(1)' }],
+                    { duration: 3850, composite: 'add', fill: 'none' });
+                    veil.currentTime = time;
+                }
+                const coverage = clamp(time / 154) * clamp((3850 - time) / 346.5);
+                c.translate(center.x, center.y);
+                for (const part of pieces) {
+                    const z = lift(time, part.hit);
+                    c.save(); c.translate(part.x * (1 + 0.43 * z), part.y * (1 + 0.36 * z));
+                    c.rotate(z * part.tilt); c.scale(1 + z * 0.22, 1 + z * 0.19);
+                    c.globalAlpha = coverage * (1 - 0.22 * z);
+                    c.drawImage(sheet, part.a, part.b, part.sw, part.sh, -part.pw / 2, -part.ph / 2, part.pw, part.ph);
+                    if (z > 0.01) {
+                        c.strokeStyle = `rgba(${profile.main},${0.50 * z})`; c.lineWidth = 1.2;
+                        c.strokeRect(-part.pw / 2, -part.ph / 2, part.pw, part.ph);
+                    }
+                    c.restore();
+                }
+                ctx.save(); ctx.globalCompositeOperation = 'source-over'; ctx.translate(center.x, center.y);
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+                for (const s of scores) {
+                    const z = lift(time, s.hit) * s.depth;
+                    const zoom = 1 + 1.05 * z, margin = s.halfWidth * zoom + 4;
+                    const reach = s.x * 0.72 * z;
+                    const travel = reach < 0 ? Math.max(reach, Math.min(0, margin - (center.x + s.x)))
+                        : Math.min(reach, Math.max(0, window.innerWidth - margin - (center.x + s.x)));
+                    ctx.save(); ctx.translate(s.x + travel, s.y * (1 + 0.55 * z) - z * 13);
+                    ctx.scale(zoom, zoom);
+                    ctx.font = s.font; ctx.globalAlpha = coverage;
+                    if (z > 0.01) {
+                        ctx.strokeStyle = `rgba(12,16,22,${0.8 * Math.min(1, z * 4)})`;
+                        ctx.lineWidth = 2; ctx.strokeText(s.value, 0, 0);
+                    }
+                    ctx.fillStyle = z > 0.15 ? `rgb(${profile.accent})` : s.color;
+                    ctx.fillText(s.value, 0, 0); ctx.restore();
+                }
+                ctx.restore();
+            },
+            stop() { veil?.cancel(); layer.remove(); }
+        };
+    }
+
     async spawnSupernova() {
         const runId = ++this.supernovaRunId;
         this.supernovaCanvasCleanup?.();
         const theme = this.getGoldRainThemeId();
+        const player = window.app?.currentPlayerIdx;
+        const table = (Number.isInteger(player) && document.getElementById('ptable-' + player)) || this.getTargetTable();
         const sprite = await this.loadSupernovaSprite(theme);
-        if (!sprite || runId !== this.supernovaRunId || theme !== this.getGoldRainThemeId()) return;
+        if (!sprite || document.hidden || (table && !table.isConnected) || runId !== this.supernovaRunId || theme !== this.getGoldRainThemeId()) return;
 
-        const table = [...document.querySelectorAll('.player-table')]
-            .find(node => node.style.opacity === '1') || document.querySelector('.player-table');
         const reduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
         const mobile = window.innerWidth <= 760 || Boolean(window.matchMedia?.('(hover: none) and (pointer: coarse)').matches);
         const duration = reduced ? 1150 : 5000;
@@ -540,27 +763,20 @@ class EffectManager {
         let farthest = 0;
         let rafId = 0;
         let lastDraw = 0;
-        const resize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
+        const followTable = () => {
             const rect = table?.getBoundingClientRect();
             center.x = rect ? rect.left + rect.width / 2 : width / 2;
             center.y = rect ? rect.top + rect.height / 2 : height / 2;
             plasma.style.left = `${center.x}px`;
             plasma.style.top = `${center.y}px`;
-            farthest = Math.hypot(Math.max(center.x, width - center.x), Math.max(center.y, height - center.y));
-            const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.2 : 1.5);
-            canvas.width = Math.round(width * dpr);
-            canvas.height = Math.round(height * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         };
-        resize();
-        window.addEventListener('resize', resize, { passive: true });
-        if (!reduced) {
-            table?.classList.add('anim-supernova-table');
-            table?.style.setProperty('--sn-main', profile.main);
-            if (mobile) table?.classList.add('anim-supernova-table--compact');
-        }
+        width = window.innerWidth; height = window.innerHeight;
+        followTable();
+        farthest = Math.hypot(Math.max(center.x, width - center.x), Math.max(center.y, height - center.y));
+        const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.2 : 1.5);
+        canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const projection = !reduced && table ? this.prepareSupernovaEjecta(table, table.getBoundingClientRect(), overlay, profile, center, farthest, dpr) : null;
 
         const jitter = seed => {
             const value = Math.sin(seed * 127.1 + 78.233) * 43758.5453;
@@ -595,18 +811,25 @@ class EffectManager {
             tint: index % 3 === 0 ? profile.accent : profile.main
         }));
         const cleanup = () => {
+            if (this.supernovaCanvasCleanup !== cleanup) return;
             cancelAnimationFrame(rafId);
-            window.removeEventListener('resize', resize);
-            table?.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
-            table?.style.removeProperty('--sn-main');
+            this.clearEffectTimeouts('supernova');
+            window.removeEventListener('resize', cleanup);
+            document.removeEventListener('scroll', followTable, true);
+            document.removeEventListener('visibilitychange', visibility);
+            projection?.stop();
             overlay.remove();
             if (this.supernovaCanvasCleanup === cleanup) this.supernovaCanvasCleanup = null;
         };
+        const visibility = () => { if (document.hidden) cleanup(); };
         this.supernovaCanvasCleanup = cleanup;
+        window.addEventListener('resize', cleanup, { passive: true });
+        document.addEventListener('scroll', followTable, true);
+        document.addEventListener('visibilitychange', visibility);
 
         const draw = start => now => {
-            if (runId !== this.supernovaRunId || !overlay.isConnected) return;
-            if (theme !== this.getGoldRainThemeId()) { cleanup(); return; }
+            if (runId !== this.supernovaRunId) return;
+            if (!overlay.isConnected || (table && !table.isConnected) || theme !== this.getGoldRainThemeId()) { cleanup(); return; }
             if (mobile && lastDraw && now - lastDraw < 26) {
                 rafId = requestAnimationFrame(draw(start));
                 return;
@@ -785,6 +1008,7 @@ class EffectManager {
             plasma.style.opacity = String(clamp(plumeAlpha));
 
             ctx.globalCompositeOperation = 'source-over';
+            projection?.paint(ctx, blastTime);
             if (elapsed < duration) rafId = requestAnimationFrame(draw(start));
             else cleanup();
         };
@@ -794,10 +1018,10 @@ class EffectManager {
         }, duration + 80, 'supernova');
     }
 
-    trigger(type) {
+    trigger(type, yambFace) {
         this.stop();
         if (type === 'ice_age') { void this.spawnIceAge(); return; }
-        if (LIVE_STAGE_EFFECT_IDS.includes(type)) { void this.spawnStageEffect(type); return; }
+        if (LIVE_STAGE_EFFECT_IDS.includes(type)) { void this.spawnStageEffect(type, yambFace); return; }
         this.stageScene?.stop();
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
@@ -965,15 +1189,23 @@ class EffectManager {
                 const depth = ((lane + wave) % 3) / 2;
                 const size = Math.round((isCompact ? 23 : 28) + depth * (isCompact ? 16 : 21) + rand(0, 6));
                 const coin = addCoin(size, lane + wave * 2);
+                const origin = 2 + ((lane + rand(0.1, 0.9)) / lanes) * 96;
                 const direction = Math.random() < 0.5 ? -1 : 1;
-                const drift = direction * rand(14, isCompact ? 47 : 80) * profile.drift;
+                const inward = origin < 15 ? 1 : origin > 85 ? -1 : direction;
+                const travel = inward * rand(14, isCompact ? 48 : 82) * profile.drift;
+                const sway = direction * rand(9, isCompact ? 25 : 36) * (0.8 + depth * 0.4) * profile.drift;
+                const period = Math.round(rand(790, 1280) + (1 - depth) * 180);
                 const tilt = direction * rand(22, 53) * profile.spin;
                 const turn = direction * (rand(30, 54) + profile.spin * 30);
-                coin.style.left = `${(2 + ((lane + rand(0.1, 0.9)) / lanes) * 96).toFixed(1)}%`;
+                coin.style.left = `${origin.toFixed(1)}%`;
+                coin.style.zIndex = String(depth * 2);
                 coin.style.setProperty('--coin-opacity', (0.77 + depth * 0.23).toFixed(2));
                 coin.style.setProperty('--fall-delay', `${Math.round(wave * 390 + rand(0, 270))}ms`);
                 coin.style.setProperty('--fall-duration', `${Math.round(rand(3500, 4280) - depth * 620)}ms`);
-                coin.style.setProperty('--fall-sway', `${Math.round(drift)}px`);
+                coin.style.setProperty('--fall-travel', `${Math.round(travel)}px`);
+                coin.style.setProperty('--fall-sway', `${Math.round(sway)}px`);
+                coin.style.setProperty('--rock-period', `${period}ms`);
+                coin.style.setProperty('--rock-phase', `${-Math.floor(rand(0, period))}ms`);
                 coin.style.setProperty('--fall-tilt', `${Math.round(tilt)}deg`);
                 coin.style.setProperty('--fall-turn', `${Math.round(turn)}deg`);
             }
@@ -1053,15 +1285,18 @@ class EffectManager {
         if (!YAMB_THEME_IDS.includes(theme)) return Promise.resolve(null);
         if (this.fireflySpritePromises[theme]) return this.fireflySpritePromises[theme];
         const root = theme === 'dark' ? 'assets/green-soft-clay' : `assets/theme-packs/${theme}`;
-        this.fireflySpritePromises[theme] = new Promise(resolve => {
+        const load = (name, atlas) => new Promise(resolve => {
             const image = new Image();
             image.decoding = 'async';
-            image.onload = () => resolve(image);
-            image.onerror = () => {
-                delete this.fireflySpritePromises[theme];
-                resolve(null);
-            };
-            image.src = `${root}/canonical/effects/firefly-v1.png`;
+            image.onload = () => resolve({ src: image.src, atlas });
+            image.onerror = () => resolve(null);
+            image.src = `${root}/canonical/effects/${name}.png`;
+        });
+        this.fireflySpritePromises[theme] = load('firefly-flight-v2', true).then(async sprite => {
+            if (sprite) return sprite;
+            const fallback = await load('firefly-v1', false);
+            delete this.fireflySpritePromises[theme];
+            return fallback;
         });
         return this.fireflySpritePromises[theme];
     }
@@ -1125,7 +1360,8 @@ class EffectManager {
             fly.style.setProperty('--ff-size', size.toFixed(1) + 'px');
             fly.style.setProperty('--ff-delay', (i < 6 ? Math.random() * 0.3 : 0.2 + Math.random() * 1.2).toFixed(2) + 's');
             fly.style.setProperty('--ff-duration', (5.2 + Math.random() * 1.25).toFixed(2) + 's');
-            fly.style.setProperty('--ff-flap', (0.17 + Math.random() * 0.08).toFixed(2) + 's');
+            fly.style.setProperty('--ff-flap', (0.12 + Math.random() * 0.07).toFixed(2) + 's');
+            fly.style.setProperty('--ff-phase', (-Math.random() * 0.24).toFixed(2) + 's');
             const halo = document.createElement('span');
             halo.className = 'magic-firefly__halo';
             const image = document.createElement('img');
@@ -1134,7 +1370,18 @@ class EffectManager {
             image.alt = '';
             image.decoding = 'async';
             image.draggable = false;
-            fly.append(halo, image);
+            fly.appendChild(halo);
+            if (sprite.atlas) {
+                // Rows are front, left and right; choose the pose after reflecting edge routes.
+                const row = reducedMotion ? i % 3 : horizontal < 0 ? 1 : horizontal > 0 ? 2 : 0;
+                const frame = document.createElement('span');
+                frame.className = 'magic-firefly__frame';
+                image.style.top = -row * 100 + '%';
+                frame.appendChild(image);
+                fly.appendChild(frame);
+            } else {
+                fly.appendChild(image);
+            }
             fragment.appendChild(fly);
         }
 
@@ -1142,6 +1389,7 @@ class EffectManager {
         let observer = null;
         const cleanup = () => {
             if (runId !== this.fireflyRunId) return;
+            this.clearEffectTimeouts(group);
             observer?.disconnect();
             if (this.fireflyThemeObserver === observer) this.fireflyThemeObserver = null;
             field.remove();
@@ -1174,7 +1422,7 @@ class EffectManager {
         return this.bubbleSpritePromises[theme];
     }
 
-    async spawnBubbles(count = 39, group = 'bubbles') {
+    async spawnBubbles(count = 42, group = 'bubbles') {
         const runId = ++this.bubbleRunId;
         const themeId = this.getGoldRainThemeId();
         this.clearEffectTimeouts(group);
@@ -1186,7 +1434,7 @@ class EffectManager {
         if (runId !== this.bubbleRunId || themeId !== this.getGoldRainThemeId() || !sprite) return;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
-        const particleCount = reducedMotion ? 3 : Math.min(count, compact ? 27 : 39);
+        const particleCount = reducedMotion ? 3 : Math.min(count, compact ? 30 : 42);
         const field = document.createElement('div');
         field.className = `bubble-field${reducedMotion ? ' bubble-field--reduced' : ''}`;
         field.setAttribute('aria-hidden', 'true');
@@ -1194,29 +1442,80 @@ class EffectManager {
         const sizeRanges = compact ? [[20, 30], [34, 48], [56, 72]] : [[24, 34], [42, 58], [68, 88]];
         const laneCount = Math.ceil(particleCount / sizeRanges.length);
         const laneDurations = Array.from({ length: laneCount }, () => 4.8 + Math.random() * 1.5);
-        for (let i = 0; i < particleCount; i++) {
+        const layout = Array.from({ length: particleCount }, (_, i) => {
             const sizeIndex = i % sizeRanges.length;
             const lane = Math.floor(i / sizeRanges.length);
-            const wave = (lane + sizeIndex) % sizeRanges.length;
+            const [minSize, maxSize] = sizeRanges[sizeIndex];
+            return { sizeIndex, lane, size: Math.round(minSize + Math.random() * (maxSize - minSize)),
+                center: 6 + ((lane + .2 + Math.random() * .6) / laneCount) * 88,
+                drift: (Math.random() - .5) * (compact ? 110 : 180),
+                delay: (lane + sizeIndex) % 3 * .62 + Math.random() * .22,
+                duration: laneDurations[lane] + sizeIndex * .18 };
+        });
+        if (!reducedMotion) {
+            const width = window.innerWidth, height = window.innerHeight;
+            // Sample bubbleFloat once at launch. A little grazing looks natural;
+            // penalize paths where one bubble hides another for multiple samples.
+            const sample = b => Array.from({ length: 24 }, (_, i) => {
+                const t = (.45 + i * .29 - b.delay) / b.duration;
+                if (t <= 0 || t >= 1) return null;
+                const first = t < .34, last = t >= .68;
+                const u = first ? t / .34 : last ? (t - .68) / .32 : (t - .34) / .34;
+                const e = u * u * (3 - 2 * u);
+                const dx = first ? .55 * e : last ? -.3 + 1.3 * e : .55 - .85 * e;
+                const rise = first ? .37 * height * e : last ? .75 * height + (.25 * height + 130) * e
+                    : (.37 + .38 * e) * height;
+                const y = height + 60 - b.size / 2 - rise;
+                return y >= 0 && y <= height ? [width * b.center / 100 + b.drift * dx, y] : null;
+            });
+            const occupied = layout.filter(b => b.sizeIndex !== 0).map(b => ({
+                radius: b.size / 2, weight: b.sizeIndex === 2 ? 1 : .28, path: sample(b)
+            }));
+            for (const b of layout.filter(b => b.sizeIndex === 0)) {
+                let best = Infinity, bestPath;
+                for (let attempt = 0; attempt < 12 && best > 0; attempt++) {
+                    const route = attempt === 0 ? b : { ...b,
+                        center: Math.min(94, Math.max(6, 6 + (b.lane + .5 + (Math.random() - .5) * 2.4) / laneCount * 88)),
+                        delay: b.lane % 3 * .62 + Math.random() * .22,
+                        drift: (Math.random() - .5) * (compact ? 110 : 180),
+                        duration: 4.8 + Math.random() * 1.5 };
+                    const path = sample(route);
+                    let cost = 0;
+                    for (const other of occupied) {
+                        if (cost >= best) break;
+                        const gap = (b.size / 2 + other.radius) * .88;
+                        for (let i = 0; i < path.length; i++) {
+                            const p = path[i], q = other.path[i];
+                            if (!p || !q) continue;
+                            const dx = p[0]-q[0], dy = p[1]-q[1];
+                            cost += other.weight * Math.max(0, 1 - (dx*dx + dy*dy) / (gap*gap));
+                        }
+                    }
+                    if (cost < best) {
+                        best = cost;
+                        bestPath = path;
+                        Object.assign(b, route);
+                    }
+                }
+                occupied.push({ radius: b.size / 2, weight: .35, path: bestPath });
+            }
+        }
+        for (const [i, {sizeIndex, size, drift, center, delay, duration}] of layout.entries()) {
             const bubble = document.createElement('img');
             bubble.className = `magic-bubble magic-bubble--${['small', 'medium', 'large'][sizeIndex]}`;
             bubble.src = sprite.src;
             bubble.alt = '';
             bubble.decoding = 'async';
             bubble.draggable = false;
-            const [minSize, maxSize] = sizeRanges[sizeIndex];
-            const size = Math.round(minSize + Math.random() * (maxSize - minSize));
-            const drift = (Math.random() - .5) * (compact ? 110 : 180);
             bubble.style.setProperty('--bubble-size', `${size}px`);
-            const center = 6 + ((lane + .2 + Math.random() * .6) / laneCount) * 88;
             bubble.style.setProperty('--bubble-x', `calc(${center.toFixed(1)}vw - ${size / 2}px)`);
             bubble.style.setProperty('--bubble-drift-a', `${Math.round(drift * .55)}px`);
             bubble.style.setProperty('--bubble-drift-b', `${Math.round(-drift * .3)}px`);
             bubble.style.setProperty('--bubble-drift-c', `${Math.round(drift)}px`);
-            bubble.style.setProperty('--bubble-delay', `${(wave * .62 + Math.random() * .22).toFixed(2)}s`);
-            bubble.style.setProperty('--bubble-duration', `${(laneDurations[lane] + sizeIndex * .18).toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-delay', `${delay.toFixed(2)}s`);
+            bubble.style.setProperty('--bubble-duration', `${duration.toFixed(2)}s`);
             if (reducedMotion) {
-                bubble.style.setProperty('--bubble-x', `${18 + i * 30}vw`);
+                bubble.style.setProperty('--bubble-x', `calc(${20 + i * 30}vw - ${size / 2}px)`);
                 bubble.style.setProperty('--bubble-static-y', `${30 + i * 20}vh`);
             }
             fragment.appendChild(bubble);
@@ -1226,6 +1525,7 @@ class EffectManager {
         let observer = null;
         const cleanup = () => {
             if (runId !== this.bubbleRunId) return;
+            this.clearEffectTimeouts(group);
             observer?.disconnect();
             if (this.bubbleThemeObserver === observer) this.bubbleThemeObserver = null;
             field.remove();
@@ -1372,10 +1672,13 @@ class EffectManager {
         const particles = Array.from({ length: count }, (_, index) => {
             const spread = (index / (count - 1)) * 2 - 1;
             const followThrough = index % 4 === 0;
+            // One in twelve starts just ahead of the main fan. Cycle through all three themed shapes.
+            const lead = index % 12 === 2 + 4 * (Math.floor(index / 12) % 3);
+            const advance = lead ? rand(0.075, 0.12) : 0;
             return {
                 image: sprites[index % sprites.length],
-                x: width * (0.5 + rand(-0.06, 0.06) + (followThrough ? spread * 0.12 : 0)),
-                y: height * rand(0.75, 0.82),
+                x: width * (0.5 + rand(-0.06, 0.06) + spread * (followThrough ? 0.12 : advance)),
+                y: height * (rand(0.75, 0.82) - advance * (1.36 - 0.36 * Math.abs(spread))),
                 vx: spread * width * (followThrough ? rand(0.36, 0.6) : rand(0.72, 1.08)) + rand(-30, 30),
                 vy: -height * rand(1.08, 1.78),
                 gravity: height * rand(1.35, 1.82),
@@ -1383,7 +1686,7 @@ class EffectManager {
                 rotation: rand(-0.45, 0.45),
                 spin: rand(-2.8, 2.8),
                 size: rand(14, 24),
-                age: followThrough ? -rand(0.16, 0.36) : index % 2 === 1 ? 0 : -rand(0.02, 0.12),
+                age: followThrough ? -rand(0.16, 0.36) : lead || index % 2 === 1 ? 0 : -rand(0.02, 0.12),
                 ttl: rand(2.35, 2.95)
             };
         });
@@ -1415,6 +1718,7 @@ class EffectManager {
                     particle.age = particle.ttl;
                     continue;
                 }
+                if (particle.y < -particle.size) continue; // Offscreen at the apex; still simulate its return.
                 const fade = Math.min(1, (particle.ttl - particle.age) / 0.42);
                 const side = particle.size * (0.87 + Math.sin(particle.wobble) * 0.13);
                 ctx.save();
@@ -1579,9 +1883,9 @@ class EffectManager {
         this.confettiAnimationId = requestAnimationFrame(animate);
     }
     
-    celebrateYamb() {
+    celebrateYamb(yambFace) {
         const active = localStorage.getItem('yamb_active_effect') || 'confetti';
-        this.trigger(active); 
+        this.trigger(active, yambFace);
     }
     
     celebrateWin() {
@@ -1629,9 +1933,6 @@ class EffectManager {
         document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .bubble-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-particles, .gold-rain-static-coin').forEach(e => e.remove());
         
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
-        document.querySelectorAll('.anim-black-hole-table').forEach(tbl => tbl.classList.remove('anim-black-hole-table'));
-        document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
-        document.querySelectorAll('.anim-supernova-table--compact').forEach(tbl => tbl.classList.remove('anim-supernova-table--compact'));
         document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
         document.querySelectorAll('.anim-neon-pulse--green').forEach(tbl => tbl.classList.remove('anim-neon-pulse--green'));
         document.querySelectorAll('.anim-ufo-table').forEach(tbl => tbl.classList.remove('anim-ufo-table'));
@@ -2132,23 +2433,28 @@ class SoundManager {
             const master = ctx.createGain();
             master.gain.setValueAtTime(0.8, now);
             master.connect(ctx.destination);
-            const buffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-            const samples = buffer.getChannelData(0);
-            for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+            if (this.dragonWindBuffer?.sampleRate !== ctx.sampleRate) {
+                this.dragonWindBuffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+                const samples = this.dragonWindBuffer.getChannelData(0);
+                for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+            }
             const wind = ctx.createBufferSource();
-            wind.buffer = buffer; wind.loop = true;
+            wind.buffer = this.dragonWindBuffer; wind.loop = true;
             const filter = ctx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(600, now);
             filter.frequency.linearRampToValueAtTime(950, start);
             filter.frequency.linearRampToValueAtTime(3400, start + 0.12);
+            filter.frequency.exponentialRampToValueAtTime(1300, start + 1.8);
+            filter.frequency.linearRampToValueAtTime(3800, start + 2.53);
             filter.frequency.exponentialRampToValueAtTime(750, end);
             const windGain = ctx.createGain();
             windGain.gain.setValueAtTime(0, now);
             windGain.gain.linearRampToValueAtTime(0.025, now + breathDelay * 0.65);
             windGain.gain.linearRampToValueAtTime(0.012, start);
             windGain.gain.linearRampToValueAtTime(0.18, start + 0.09);
-            windGain.gain.linearRampToValueAtTime(0.12, start + 2);
+            windGain.gain.linearRampToValueAtTime(0.115, start + 1.8);
+            windGain.gain.linearRampToValueAtTime(0.235, start + 2.53);
             windGain.gain.exponentialRampToValueAtTime(0.0001, end);
             wind.connect(filter); filter.connect(windGain); windGain.connect(master);
             wind.start(now); wind.stop(end);
@@ -2255,47 +2561,44 @@ class SoundManager {
         });
     }
 
-    ufoAbduction() {
+    ufoAbduction(beamAt = 1.35, releaseAt = 5) {
+        let cleanup;
         this.playSound(() => {
-            const now = this.ctx.currentTime;
-
-            const humOsc = this.ctx.createOscillator();
-            const humGain = this.ctx.createGain();
-            const humFilter = this.ctx.createBiquadFilter();
-            humOsc.type = 'sawtooth';
-            humOsc.frequency.setValueAtTime(78, now);
-            humOsc.frequency.linearRampToValueAtTime(54, now + 1.6);
-            humOsc.frequency.linearRampToValueAtTime(118, now + 4.6);
-            humOsc.frequency.exponentialRampToValueAtTime(36, now + 7.2);
-            humFilter.type = 'lowpass';
-            humFilter.frequency.setValueAtTime(420, now);
-            humFilter.frequency.linearRampToValueAtTime(1100, now + 2.4);
-            humFilter.frequency.exponentialRampToValueAtTime(180, now + 7.2);
-            humGain.gain.setValueAtTime(0, now);
-            humGain.gain.linearRampToValueAtTime(0.18, now + 0.35);
-            humGain.gain.linearRampToValueAtTime(0.24, now + 2.2);
-            humGain.gain.exponentialRampToValueAtTime(0.001, now + 7.3);
-            humOsc.connect(humFilter);
-            humFilter.connect(humGain);
-            humGain.connect(this.ctx.destination);
-            humOsc.start(now);
-            humOsc.stop(now + 7.4);
-
-            [0.58, 0.92, 1.28, 4.45, 5.15, 5.78].forEach((offset, index) => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = index % 2 ? 'square' : 'triangle';
-                osc.frequency.setValueAtTime(index % 2 ? 980 : 620, now + offset);
-                osc.frequency.exponentialRampToValueAtTime(index % 2 ? 360 : 1320, now + offset + 0.22);
-                gain.gain.setValueAtTime(0, now + offset);
-                gain.gain.linearRampToValueAtTime(0.08, now + offset + 0.025);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.34);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(now + offset);
-                osc.stop(now + offset + 0.36);
-            });
+            const ctx = this.ctx, now = ctx.currentTime, bus = ctx.createGain();
+            bus.connect(ctx.destination);
+            const sources = [];
+            const voice = (type, start, frequencies, levels) => {
+                const osc = ctx.createOscillator(), amp = ctx.createGain();
+                const at = now + start;
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequencies[0][1], at);
+                for (const [dt, hz] of frequencies.slice(1)) osc.frequency.exponentialRampToValueAtTime(hz, at + dt);
+                amp.gain.setValueAtTime(0, at);
+                for (const [dt, value] of levels) amp.gain.linearRampToValueAtTime(value, at + dt);
+                osc.connect(amp); amp.connect(bus);
+                osc.onended = () => { osc.disconnect(); amp.disconnect(); };
+                osc.start(at); osc.stop(at + levels[levels.length - 1][0] + .015);
+                sources.push(osc);
+            };
+            // A low motor under a rising carrier; the falling interval cues the return to the board.
+            voice('triangle', 0, [[0,106],[beamAt,76],[releaseAt,91],[7.25,52]],
+                [[.42,.055],[beamAt,.078],[releaseAt,.060],[6.15,.046],[7.25,0]]);
+            const capture = releaseAt - beamAt;
+            voice('sine', beamAt, [[0,185],[.78,277],[capture-.18,440],[capture,415],[capture+.85,185]],
+                [[.30,.042],[capture-.25,.055],[capture,.032],[capture+.85,0]]);
+            voice('sine', releaseAt, [[0,622],[.40,415],[.90,277]],
+                [[.06,.044],[.32,.035],[.94,0]]);
+            let stopped = false;
+            cleanup = () => {
+                if (stopped) return;
+                stopped = true;
+                const cut = ctx.currentTime;
+                bus.gain.setValueAtTime(1, cut);
+                bus.gain.linearRampToValueAtTime(0, cut + .025);
+                for (const osc of sources) { try { osc.stop(cut + .03); } catch (_) {} }
+            };
         });
+        return cleanup;
     }
 
     iceAge(growthSeconds = 2.8) {
@@ -2305,9 +2608,12 @@ class SoundManager {
             const now = ctx.currentTime;
             const end = now + growthSeconds;
             const bufferSize = Math.ceil(ctx.sampleRate * growthSeconds);
-            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+            if (this.iceGrowBuffer?.length !== bufferSize || this.iceGrowBuffer.sampleRate !== ctx.sampleRate) {
+                this.iceGrowBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const output = this.iceGrowBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+            }
+            this.prepareIceCrack(ctx);
             const master = ctx.createGain();
             master.gain.setValueAtTime(1, now);
             master.connect(ctx.destination);
@@ -2315,7 +2621,7 @@ class SoundManager {
             const frostNoise = this.ctx.createBufferSource();
             const frostFilter = this.ctx.createBiquadFilter();
             const frostGain = this.ctx.createGain();
-            frostNoise.buffer = noiseBuffer;
+            frostNoise.buffer = this.iceGrowBuffer;
             frostFilter.type = 'bandpass';
             frostFilter.frequency.setValueAtTime(5200, now);
             frostFilter.frequency.exponentialRampToValueAtTime(780, end);
@@ -2371,25 +2677,46 @@ class SoundManager {
         return stop;
     }
 
-    iceAgeCrack() {
-        this.playSound(() => {
-            const ctx = this.ctx;
-            const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.17), ctx.sampleRate);
-            const samples = buffer.getChannelData(0);
+    prepareIceCrack(ctx) {
+        if (this.iceCrackBuffer?.sampleRate === ctx.sampleRate) return this.iceCrackBuffer;
+        const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.62), ctx.sampleRate);
+        const samples = buffer.getChannelData(0);
+        // One close snap followed by smaller splits travelling through the sheet.
+        for (const [onset, level, pitch] of [[0, 0.48, 260], [0.058, 0.23, 870],
+            [0.137, 0.16, 1320], [0.196, 0.11, 1780]]) {
+            const start = Math.round(onset * ctx.sampleRate);
             let previous = 0;
-            for (let i = 0; i < samples.length; i++) {
-                const t = i / ctx.sampleRate;
-                const noise = Math.random() * 2 - 1;
-                const snap = (noise - previous * 0.72) * 0.18 * Math.exp(-t / 0.014);
-                const body = Math.sin(2 * Math.PI * 230 * t) * 0.13 * Math.exp(-t / 0.027);
-                samples[i] = (snap + body) * Math.min(1, t / 0.001, (samples.length - i - 1) / (ctx.sampleRate * 0.02));
+            for (let i = start; i < samples.length; i++) {
+                const t = (i - start) / ctx.sampleRate, noise = Math.random() * 2 - 1;
+                const snap = (noise - previous * 0.67) * Math.exp(-t / 0.012) * 0.66;
+                const ring = Math.sin(2 * Math.PI * (pitch * t + 3.5 * (1 - Math.exp(-t * 27)))) * Math.exp(-t / 0.066);
+                samples[i] += level * (snap + 0.54 * ring) * Math.min(1, t * 1800, (samples.length - i - 1) / (ctx.sampleRate * 0.018));
                 previous = noise;
             }
-            const source = ctx.createBufferSource();
-            source.buffer = buffer;
-            source.connect(ctx.destination);
+        }
+        this.iceCrackBuffer = buffer;
+        return buffer;
+    }
+
+    iceAgeCrack() {
+        let stop;
+        this.playSound(() => {
+            const ctx = this.ctx;
+            const source = ctx.createBufferSource(), volume = ctx.createGain();
+            source.buffer = this.prepareIceCrack(ctx);
+            source.connect(volume); volume.connect(ctx.destination);
+            let ended = false;
+            source.onended = () => { ended = true; source.disconnect(); volume.disconnect(); };
             source.start();
+            stop = () => {
+                if (ended) return;
+                ended = true;
+                volume.gain.setValueAtTime(1, ctx.currentTime);
+                volume.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.016);
+                source.stop(ctx.currentTime + 0.018);
+            };
         });
+        return stop;
     }
      
     // --- PROCEDURALNI ZVUK GROMA ---
@@ -2418,26 +2745,25 @@ class SoundManager {
             wind.envelope.linearRampToValueAtTime(0.055, strike - 0.1);
             wind.envelope.linearRampToValueAtTime(0, strike);
 
-            const crack = noise('highpass', 780, strike, strike + 0.27);
-            crack.envelope.linearRampToValueAtTime(0.32, strike + 0.003);
-            crack.envelope.exponentialRampToValueAtTime(0.0001, strike + 0.26);
-
-            const rumble = noise('lowpass', 650, strike + 0.09, end);
-            rumble.filter.frequency.exponentialRampToValueAtTime(65, end);
-            rumble.envelope.linearRampToValueAtTime(0.2, strike + 0.18);
-            rumble.envelope.linearRampToValueAtTime(0.12, strike + 0.45);
-            rumble.envelope.linearRampToValueAtTime(0.16, strike + 0.68);
+            // The original thunder opened up from a low rumble, not a separate high-pitched pop.
+            const rumble = noise('lowpass', 150, strike, end);
+            rumble.filter.frequency.linearRampToValueAtTime(1000, strike + 0.085);
+            rumble.filter.frequency.exponentialRampToValueAtTime(45, end);
+            rumble.envelope.linearRampToValueAtTime(0.92, strike + 0.045);
+            rumble.envelope.exponentialRampToValueAtTime(0.34, strike + 0.4);
+            rumble.envelope.linearRampToValueAtTime(0.22, strike + 0.65);
+            rumble.envelope.linearRampToValueAtTime(0.29, strike + 0.88);
             rumble.envelope.exponentialRampToValueAtTime(0.0001, end - 0.06);
 
             const bass = ctx.createOscillator(), bassGain = ctx.createGain();
-            bass.type = 'sine';
-            bass.frequency.setValueAtTime(58, strike + 0.07);
-            bass.frequency.exponentialRampToValueAtTime(31, end);
-            bassGain.gain.setValueAtTime(0, strike + 0.07);
-            bassGain.gain.linearRampToValueAtTime(0.105, strike + 0.15);
+            bass.type = 'triangle';
+            bass.frequency.setValueAtTime(50, strike);
+            bass.frequency.exponentialRampToValueAtTime(14, end);
+            bassGain.gain.setValueAtTime(0, strike);
+            bassGain.gain.linearRampToValueAtTime(0.33, strike + 0.095);
             bassGain.gain.exponentialRampToValueAtTime(0.0001, end - 0.05);
             bass.connect(bassGain); bassGain.connect(master);
-            bass.start(strike + 0.07); bass.stop(end); sources.push(bass);
+            bass.start(strike); bass.stop(end); sources.push(bass);
             let remaining = sources.length;
             sources.forEach(source => { source.onended = () => {
                 source.disconnect();
@@ -2524,9 +2850,10 @@ class SoundManager {
                     const noise = Math.random() * 2 - 1;
                     softNoise += (noise - softNoise) * smoothing;
                     // A dry crack and a short paper rustle, with no long explosion tail.
-                    const crack = (noise * 0.26 + softNoise * 0.22) * Math.exp(-t / 0.012);
-                    const thump = Math.sin(2 * Math.PI * 175 * t) * 0.19 * Math.exp(-t / 0.017);
-                    const paper = (noise - softNoise) * 0.055 * Math.exp(-t / 0.045);
+                    const crack = (noise * 0.32 + softNoise * 0.24) * Math.exp(-t / 0.010);
+                    const thump = Math.sin(2 * Math.PI * (136 * t + 1.85 * (1 - Math.exp(-t * 79))))
+                        * 0.24 * Math.exp(-t / 0.024);
+                    const paper = (noise - softNoise) * (0.064 + 0.036 * Math.sin(164 * t) ** 2) * Math.exp(-t / 0.043);
                     samples[i] = (crack + thump + paper) * Math.min(1, t / 0.0015, (length - i - 1) / (sampleRate * 0.015));
                 }
                 this.confettiPopBuffer = buffer;
@@ -2538,7 +2865,7 @@ class SoundManager {
         });
     }
 
-    fireworkExplode(kind = 'sphere', variation = 0, volume = 1) {
+    fireworkExplode(kind = 'sphere', variation = 0, volume = 1, crackles = [], elapsed = 0) {
         let cleanup;
         this.playSound(() => {
             const ctx = this.ctx, now = ctx.currentTime, voice = this.fireworkVoice(volume);
@@ -2565,6 +2892,22 @@ class SoundManager {
             thump.connect(bass); bass.connect(voice.master);
             thump.start(now); thump.stop(now + 0.45);
             voice.sources.push(noise, thump);
+            if (willow && crackles.length) {
+                const fizz = ctx.createBufferSource(), high = ctx.createBiquadFilter(), amp = ctx.createGain();
+                fizz.buffer = this.getFireworkNoise(); high.type = 'highpass'; high.frequency.value = 1900;
+                amp.gain.value = 0;
+                for (const cue of crackles) {
+                    const at = now + Math.max(0, cue - elapsed);
+                    amp.gain.setValueAtTime(0, at);
+                    amp.gain.linearRampToValueAtTime(0.12, at + 0.003);
+                    amp.gain.exponentialRampToValueAtTime(0.001, at + 0.028);
+                    amp.gain.linearRampToValueAtTime(0.053, at + 0.043);
+                    amp.gain.exponentialRampToValueAtTime(0.0001, at + 0.078);
+                }
+                fizz.connect(high); high.connect(amp); amp.connect(voice.master);
+                fizz.start(now); fizz.stop(now + crackles[crackles.length - 1] - elapsed + 0.09);
+                voice.sources.push(fizz);
+            }
             cleanup = voice.stop;
         });
         return cleanup;
@@ -2644,187 +2987,104 @@ class SoundManager {
         if (shouldResume) this.playMusic();
     }
 
-    // --- SVADBA V.4 - BRZO KOLO U 2/4 TAKTU ---
-    balkanTrumpet() {
+    // Original ten-bar kolo in 2/4. Each bar contains eight sixteenth-note ticks.
+    balkanTrumpet(beat = 60 / 144, pickup = 0.045) {
+        const resume = this.balkanResumeMusic;
         this.stopBalkanMusic(false);
-
         this.playSound(() => {
-            const now = this.ctx.currentTime + 0.04;
-            const bpm = 142;
-            const beat = 60 / bpm;
-            const eighth = beat / 2;
-            const bar = beat * 2;
-            const midiToFreq = midi => 440 * Math.pow(2, (midi - 69) / 12);
-            const nodes = this.balkanNodes;
-            const register = node => {
-                nodes.push(node);
-                return node;
+            const ctx = this.ctx, now = ctx.currentTime + pickup, bar = 2 * beat, tick = beat / 4;
+            this.balkanResumeMusic = resume || !!(this.bgMusic && !this.bgMusic.paused);
+            if (this.bgMusic && !this.bgMusic.paused) this.bgMusic.pause();
+            const keep = node => { this.balkanNodes.push(node); return node; };
+            const mix = keep(ctx.createGain()), compressor = keep(ctx.createDynamicsCompressor());
+            mix.gain.value = 0.76;
+            compressor.threshold.value = -13; compressor.ratio.value = 3;
+            mix.connect(compressor); compressor.connect(ctx.destination);
+            const freq = key => 440 * 2 ** ((key - 69) / 12);
+            const gate = (param, at, length, level, attack) => {
+                param.setValueAtTime(0.0001, at);
+                param.linearRampToValueAtTime(level, at + attack);
+                param.exponentialRampToValueAtTime(level * 0.71, at + length * 0.59);
+                param.exponentialRampToValueAtTime(0.0001, at + length);
             };
-            const scheduleGate = (param, start, length, level, attack = 0.012) => {
-                const releaseStart = start + Math.max(attack + 0.01, length * 0.7);
-                param.setValueAtTime(0.0001, start);
-                param.linearRampToValueAtTime(level, start + attack);
-                param.setValueAtTime(level, releaseStart);
-                param.exponentialRampToValueAtTime(0.0001, start + length);
+            const wave = harmonics => ctx.createPeriodicWave(new Float32Array(harmonics.length), Float32Array.from(harmonics));
+            const bell = wave([0, 1, 0.56, 0.48, 0.22, 0.19, 0.10, 0.06]);
+            const reed = wave([0, 1, 0.26, 0.41, 0.11, 0.15, 0.07]);
+            const voice = (shape, cutoff, detune = 0) => {
+                const osc = keep(ctx.createOscillator()), tone = keep(ctx.createBiquadFilter()), amp = keep(ctx.createGain());
+                if (typeof shape === 'string') osc.type = shape;
+                else osc.setPeriodicWave(shape);
+                osc.detune.value = detune; tone.type = 'lowpass'; tone.frequency.value = cutoff; tone.Q.value = 0.72;
+                amp.gain.value = 0.0001; osc.connect(tone); tone.connect(amp); amp.connect(mix);
+                osc.start(now); osc.stop(now + 10 * bar + 0.08);
+                return { osc, amp, tone };
             };
-
-            this.balkanResumeMusic = !!(this.bgMusic && !this.bgMusic.paused);
-            if (this.balkanResumeMusic) this.bgMusic.pause();
-
-            const master = register(this.ctx.createGain());
-            const compressor = register(this.ctx.createDynamicsCompressor());
-            compressor.threshold.value = -20;
-            compressor.knee.value = 14;
-            compressor.ratio.value = 4;
-            compressor.attack.value = 0.006;
-            compressor.release.value = 0.16;
-            master.gain.setValueAtTime(0.0001, now);
-            master.gain.linearRampToValueAtTime(0.52, now + 0.08);
-            master.connect(compressor);
-            compressor.connect(this.ctx.destination);
-
-            // Deset taktova po četiri osmine: živahna, ali i dalje igriva fraza kola.
-            const melody = [
-                81, 81, 83, 81, 78, 79, 81, 78,
-                76, 78, 79, 81, 79, 78, 76, 78,
-                81, 83, 85, 86, 85, 83, 81, 78,
-                79, 81, 83, 79, 78, 76, 74, 76,
-                78, 79, 81, 79, 78, 76, 74, 74
-            ];
-
-            const leadFilter = register(this.ctx.createBiquadFilter());
-            const leadGain = register(this.ctx.createGain());
-            const leadMain = register(this.ctx.createOscillator());
-            const leadReed = register(this.ctx.createOscillator());
-            leadMain.type = 'sawtooth';
-            leadReed.type = 'square';
-            leadReed.detune.value = 7;
-            leadFilter.type = 'lowpass';
-            leadFilter.frequency.value = 3200;
-            leadFilter.Q.value = 1.4;
-            leadGain.gain.value = 0.0001;
-            leadMain.connect(leadFilter);
-            leadReed.connect(leadFilter);
-            leadFilter.connect(leadGain);
-            leadGain.connect(master);
-
-            melody.forEach((midi, index) => {
-                const noteStart = now + index * eighth;
-                const target = midiToFreq(midi);
-                const ornamented = index % 8 === 0 || index === 18 || index === 34;
-                leadMain.frequency.setValueAtTime(ornamented ? midiToFreq(midi - 1) : target, noteStart);
-                leadReed.frequency.setValueAtTime(ornamented ? midiToFreq(midi - 1) : target, noteStart);
-                if (ornamented) {
-                    leadMain.frequency.exponentialRampToValueAtTime(target, noteStart + 0.028);
-                    leadReed.frequency.exponentialRampToValueAtTime(target, noteStart + 0.028);
-                }
-                scheduleGate(leadGain.gain, noteStart, eighth * 0.88, index % 4 === 0 ? 0.13 : 0.105);
-            });
-
-            const chordRoots = [50, 50, 55, 57, 50, 55, 57, 50, 57, 50];
-            const chordGain = register(this.ctx.createGain());
-            const chordFilter = register(this.ctx.createBiquadFilter());
-            const chordOscillators = [0, 4, 7].map((interval, index) => {
-                const osc = register(this.ctx.createOscillator());
-                osc.type = index === 1 ? 'square' : 'sawtooth';
-                osc.detune.value = (index - 1) * 5;
-                osc.connect(chordFilter);
-                return { osc, interval };
-            });
-            chordFilter.type = 'lowpass';
-            chordFilter.frequency.value = 1700;
-            chordFilter.Q.value = 0.8;
-            chordGain.gain.value = 0.0001;
-            chordFilter.connect(chordGain);
-            chordGain.connect(master);
-
-            const bass = register(this.ctx.createOscillator());
-            const bassFilter = register(this.ctx.createBiquadFilter());
-            const bassGain = register(this.ctx.createGain());
-            bass.type = 'triangle';
-            bassFilter.type = 'lowpass';
-            bassFilter.frequency.value = 460;
-            bassGain.gain.value = 0.0001;
-            bass.connect(bassFilter);
-            bassFilter.connect(bassGain);
-            bassGain.connect(master);
-
-            const hat = register(this.ctx.createOscillator());
-            const hatFilter = register(this.ctx.createBiquadFilter());
-            const hatGain = register(this.ctx.createGain());
-            hat.type = 'square';
-            hat.frequency.value = 5200;
-            hatFilter.type = 'highpass';
-            hatFilter.frequency.value = 3900;
-            hatGain.gain.value = 0.0001;
-            hat.connect(hatFilter);
-            hatFilter.connect(hatGain);
-            hatGain.connect(master);
-
-            const noiseBuffer = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * 0.1), this.ctx.sampleRate);
-            const noiseData = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < noiseData.length; i++) {
-                noiseData[i] = Math.random() * 2 - 1;
+            const lead = voice(bell, 3000), reply = voice(reed, 2500, -4);
+            const chord = [voice(reed, 1850, -5), voice(reed, 1950, 5), voice(reed, 2050)];
+            const bass = voice('triangle', 520), drum = voice('sine', 260);
+            const rim = keep(ctx.createBufferSource()), skin = keep(ctx.createBiquadFilter()), rimGain = keep(ctx.createGain());
+            if (!this.weddingDrumSkin || this.weddingDrumSkin.sampleRate !== ctx.sampleRate) {
+                this.weddingDrumSkin = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.19), ctx.sampleRate);
+                const samples = this.weddingDrumSkin.getChannelData(0);
+                for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
             }
-
-            chordRoots.forEach((root, barIndex) => {
-                const barStart = now + barIndex * bar;
-                chordOscillators.forEach(({ osc, interval }) => {
-                    osc.frequency.setValueAtTime(midiToFreq(root + interval), barStart);
-                });
-                scheduleGate(chordGain.gain, barStart, beat * 0.46, 0.048);
-                scheduleGate(chordGain.gain, barStart + beat, beat * 0.46, 0.064);
-
-                bass.frequency.setValueAtTime(midiToFreq(root - 12), barStart);
-                scheduleGate(bassGain.gain, barStart, beat * 0.58, 0.16);
-                bass.frequency.setValueAtTime(midiToFreq(root - 5), barStart + beat);
-                scheduleGate(bassGain.gain, barStart + beat, beat * 0.58, 0.13);
-
-                const kick = register(this.ctx.createOscillator());
-                const kickGain = register(this.ctx.createGain());
-                kick.type = 'sine';
-                kick.frequency.setValueAtTime(118, barStart);
-                kick.frequency.exponentialRampToValueAtTime(48, barStart + 0.11);
-                kickGain.gain.setValueAtTime(0.18, barStart);
-                kickGain.gain.exponentialRampToValueAtTime(0.0001, barStart + 0.13);
-                kick.connect(kickGain);
-                kickGain.connect(master);
-                kick.start(barStart);
-                kick.stop(barStart + 0.14);
-
-                const snare = register(this.ctx.createBufferSource());
-                const snareFilter = register(this.ctx.createBiquadFilter());
-                const snareGain = register(this.ctx.createGain());
-                snare.buffer = noiseBuffer;
-                snareFilter.type = 'bandpass';
-                snareFilter.frequency.value = 1700;
-                snareFilter.Q.value = 0.7;
-                snareGain.gain.setValueAtTime(0.09, barStart + beat);
-                snareGain.gain.exponentialRampToValueAtTime(0.0001, barStart + beat + 0.09);
-                snare.connect(snareFilter);
-                snareFilter.connect(snareGain);
-                snareGain.connect(master);
-                snare.start(barStart + beat);
-                snare.stop(barStart + beat + 0.1);
+            rim.buffer = this.weddingDrumSkin; rim.loop = true;
+            skin.type = 'bandpass'; skin.frequency.value = 1650; skin.Q.value = 0.8;
+            rimGain.gain.value = 0.0001;
+            rim.connect(skin); skin.connect(rimGain); rimGain.connect(mix);
+            rim.start(now); rim.stop(now + 10 * bar + 0.08);
+            const phrase = [
+                [[74,2],[78,2],[81,3],[79,1]], [[78,2],[76,1],[78,1],[74,3],[73,1]],
+                [[74,2],[78,2],[81,2],[83,2]], [[81,3],[79,1],[78,2],[76,2]],
+                [[83,2],[81,1],[79,1],[78,2],[79,2]], [[81,3],[78,1],[76,2],[74,2]],
+                [[79,2],[83,2],[86,2],[85,1],[83,1]], [[81,2],[79,2],[76,3],[73,1]],
+                [[74,1],[76,1],[78,2],[81,2],[78,2]], [[76,2],[73,2],[74,4]]
+            ];
+            const roots = [50, 50, 50, 57, 55, 50, 55, 57, 50, 50];
+            const drumHit = (at, level) => {
+                drum.osc.frequency.setValueAtTime(118, at);
+                drum.osc.frequency.exponentialRampToValueAtTime(52, at + 0.105);
+                gate(drum.amp.gain, at, 0.125, level, 0.004);
+            };
+            phrase.forEach((notes, i) => {
+                const start = now + bar * i, root = roots[i];
+                let position = 0;
+                for (const [note, ticks] of notes) {
+                    const at = start + position * tick, length = ticks * tick * (ticks > 2 ? 0.94 : 0.86);
+                    const grace = position === 0 && [0, 2, 4, 6, 8].includes(i);
+                    lead.osc.frequency.setValueAtTime(freq(grace ? note - 2 : note), at);
+                    if (grace) lead.osc.frequency.setValueAtTime(freq(note), at + 0.029);
+                    lead.tone.frequency.setValueAtTime(1550, at);
+                    lead.tone.frequency.exponentialRampToValueAtTime(position % 4 ? 2500 : 3600, at + 0.025);
+                    gate(lead.amp.gain, at, length, position % 4 ? 0.19 : 0.23, 0.012);
+                    if ((i >= 4 && i % 2 === 0) || (i % 2 && position >= 4)) {
+                        const third = [2, 4, 7, 9].includes(note % 12) ? 3 : 4;
+                        reply.osc.frequency.setValueAtTime(freq(note - third), at + 0.009);
+                        gate(reply.amp.gain, at + 0.009, length * 0.93, 0.09, 0.018);
+                    }
+                    position += ticks;
+                }
+                for (let j = 0; j < 2; j++) {
+                    const down = start + j * beat, off = down + beat / 2 + 0.008;
+                    const tonic = i === 9 && j === 0 ? 57 : root;
+                    bass.osc.frequency.setValueAtTime(freq(tonic - (j && i !== 9 ? 5 : 12)), down);
+                    gate(bass.amp.gain, down, beat * 0.64, j ? 0.21 : 0.25, 0.014);
+                    drumHit(down, j ? 0.11 : 0.19);
+                    if (j) {
+                        gate(rimGain.gain, down, 0.071, 0.22, 0.003);
+                        if (i === 3 || i === 7) gate(rimGain.gain, down + beat * 0.75, 0.05, 0.12, 0.004);
+                    }
+                    const finale = i === 9 && j === 1;
+                    const stab = finale ? down + 0.012 : off;
+                    chord.forEach(({osc, amp}, k) => {
+                        osc.frequency.setValueAtTime(freq(tonic + [7, 12, 16][k]), stab);
+                        gate(amp.gain, stab, beat * (finale ? 0.82 : 0.29), 0.069, 0.012);
+                    });
+                }
             });
-
-            melody.forEach((_, index) => {
-                const hitTime = now + index * eighth;
-                scheduleGate(hatGain.gain, hitTime, Math.min(0.045, eighth * 0.3), index % 2 === 0 ? 0.018 : 0.012, 0.004);
-            });
-
-            const totalDuration = melody.length * eighth;
-            master.gain.setValueAtTime(0.52, now + totalDuration - 0.28);
-            master.gain.exponentialRampToValueAtTime(0.0001, now + totalDuration + 0.04);
-
-            [leadMain, leadReed, bass, hat, ...chordOscillators.map(item => item.osc)].forEach(osc => {
-                osc.start(now);
-                osc.stop(now + totalDuration + 0.08);
-            });
-
-            this.balkanStopTimer = setTimeout(() => {
-                this.stopBalkanMusic(true);
-            }, Math.ceil((totalDuration + 0.12) * 1000));
+            mix.gain.setValueAtTime(0.76, now + 10 * bar - 0.11);
+            mix.gain.exponentialRampToValueAtTime(0.0001, now + 10 * bar + 0.04);
+            this.balkanStopTimer = setTimeout(() => this.stopBalkanMusic(true), (pickup + 10 * bar + 0.12) * 1000);
         });
     }
     
@@ -3012,14 +3272,15 @@ class ShopManager {
     updateBalanceDisplay() {
         if (!this.balanceEl) return;
         const balance = Math.max(0, Number(this.balance) || 0);
+        const locale = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
         const compact = (value, unit) => {
             const scaled = balance / value;
-            return `${Number.isInteger(scaled) ? scaled : scaled.toFixed(1)}${unit}`;
+            return `${scaled.toLocaleString(locale, { maximumFractionDigits: 1, useGrouping: false })}${unit}`;
         };
         this.balanceEl.innerText = balance >= 1000000
             ? compact(1000000, 'M')
             : balance >= 10000 ? compact(1000, 'K') : String(balance);
-        const fullBalance = balance.toLocaleString('sr-RS');
+        const fullBalance = balance.toLocaleString(locale);
         this.balanceEl.title = fullBalance;
         this.balanceEl.setAttribute('aria-label', fullBalance);
     }
@@ -3467,7 +3728,7 @@ class ShopManager {
         }
     }
 
-    processTransaction(id, price) {
+    async processTransaction(id, price) {
         if (!this.isCurrentAccount()) return false;
         this.refreshState();
         const itemId = String(id || '').trim();
@@ -3496,75 +3757,44 @@ class ShopManager {
             return false;
         }
 
-        this.balance -= safePrice;
-        this.unlocked.push(itemId);
-        delete this.discountedItems[itemId];
-        this.saveDiscounts();
-        
-        localStorage.setItem('yamb_dukati', this.balance);
-        localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
-        
-        let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-        if (!opstiNiz.includes(itemId)) {
-            opstiNiz.push(itemId);
-            localStorage.setItem('yamb_unlocked', JSON.stringify(opstiNiz));
+        const economy = window.adMobGlobal;
+        if (!economy || !window.app?.socket?.connected) {
+            this.showRewardMessage(_safeT('err_server_conn') || 'Nema veze sa serverom.', _safeT('modal_title_info'));
+            return false;
         }
-
-        if (window.statsManager) {
-            window.statsManager.stats.balance = this.balance;
-            const statsFieldByType = {
-                skin: 'unlockedSkins',
-                effect: 'unlockedEffects',
-                theme: 'unlockedThemes'
-            };
-            const storageKeyByType = {
-                skin: 'yamb_unlocked_skins',
-                effect: 'yamb_unlocked_effects',
-                theme: 'yamb_unlocked_themes'
-            };
-            const statsField = statsFieldByType[this.type];
-            const storageKey = storageKeyByType[this.type];
-
-            if (statsField) {
-                if (!Array.isArray(window.statsManager.stats[statsField])) {
-                    window.statsManager.stats[statsField] = [];
-                }
-                if (!window.statsManager.stats[statsField].includes(itemId)) {
-                    window.statsManager.stats[statsField].push(itemId);
-                }
+        const identity = economy.economyIdentity();
+        if (!economy.isEconomyIdentityCurrent(identity)) return false;
+        const pending = economy.readEconomyClaims(identity.uid).find(entry => entry.context === 'purchase' &&
+            !entry.blocked && entry.claimData.itemId === itemId && entry.claimData.expectedPrice === safePrice);
+        let entry;
+        try {
+            entry = pending || economy.rememberEconomyClaim({ context: 'purchase', uid: identity.uid,
+                claimData: { requestId: economy.createRewardNonce(), itemId, expectedPrice: safePrice } });
+            if (economy.economyClaimsInFlight.has(entry.key)) return false;
+            economy.economyClaimsInFlight.add(entry.key);
+            const result = await economy.sendEconomyRequest('purchase_shop_item', entry.claimData, identity);
+            if (!this.isCurrentAccount() || !economy.isEconomyIdentityCurrent(identity)) return false;
+            if (result.cloudStats) window.app.applyCloudProfileSync(result.cloudStats);
+            economy.finishEconomyClaim(entry, result.ok && !result.cloudStats ? { ok: false, reason: 'profile_pending' } : result);
+            this.refreshTreasuryView();
+            if (!result.ok || !result.cloudStats) {
+                const message = result.reason === 'shop_price_changed' ? _safeT('economy_price_changed')
+                    : result.reason === 'shop_insufficient_balance' ? _safeT('msg_no_money') : _safeT('economy_purchase_pending');
+                this.showRewardMessage(message || 'Kupovina čeka potvrdu servera.', _safeT('modal_title_info'));
+                return false;
             }
-
-            if (storageKey) {
-                const typedUnlocked = JSON.parse(localStorage.getItem(storageKey) || '[]');
-                if (!typedUnlocked.includes(itemId)) {
-                    typedUnlocked.push(itemId);
-                    localStorage.setItem(storageKey, JSON.stringify(typedUnlocked));
-                }
-            }
-            window.statsManager.saveStats();
+            if (this.type === 'theme') this.grantThemeDiceSkinForTheme(itemId);
+            if (!result.alreadyPurchased) window.app.soundMgr?.trophy();
+            this.showRewardMessage(_safeT('msg_purchase_success') || 'Kupovina uspešna!', _safeT('modal_title_info'));
+            return true;
+        } catch (error) {
+            console.warn('Kupovina nije potvrđena.', error);
+            this.showRewardMessage(_safeT('err_server_conn') || 'Kupovina nije potvrđena.', _safeT('modal_title_info'));
+            return false;
+        } finally {
+            if (entry) economy.economyClaimsInFlight.delete(entry.key);
+            economy.scheduleEconomyRecovery();
         }
-
-        if (this.type === 'theme') this.grantThemeDiceSkinForTheme(itemId);
-
-        if (window.app?.socket?.connected && localStorage.getItem('yamb_uid')) {
-            window.app.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: window.app.playerName,
-                stats: window.app.getFullLocalStats(),
-                playerId: window.app.playerId
-            });
-        }
-
-        this.refreshTreasuryView();
-        
-        if(window.app && window.app.soundMgr) window.app.soundMgr.trophy(); 
-
-        if (typeof window.showNotification === 'function') {
-            window.showNotification(_safeT('modal_title_info'), _safeT('msg_purchase_success') || "Kupovina uspešna!");
-        } else if (window.modalManager && window.modalManager.overlay) {
-            window.modalManager.alert(_safeT('msg_purchase_success'), _safeT('modal_title_info'));
-        }
-        return true;
     }
 
     getAdController() {
@@ -3601,6 +3831,12 @@ class ShopManager {
                 if (!this.isCurrentAccount()) return;
                 if (!discountResult.ok) {
                     this.showAdClaimError(discountResult);
+                    return;
+                }
+                if (discountResult.alreadyClaimed && discountResult.expiresAt <= Date.now()) {
+                    delete this.discountedItems[item.id];
+                    this.saveDiscounts();
+                    this.refreshTreasuryView();
                     return;
                 }
 
@@ -3904,12 +4140,14 @@ class ShopManager {
                      return;
                  }
 
-                 const rewardAmount = parseInt(rewardResult.reward) || 500;
+                 const rewardAmount = Number.isFinite(Number(rewardResult.reward))
+                     ? Math.max(0, Number(rewardResult.reward)) : 500;
                  if (rewardResult.localFallback) {
                      this.addBalance(rewardAmount, false);
                  } else if (rewardResult.balance !== undefined) {
                      this.setServerBalance(rewardResult.balance);
                  }
+                 if (rewardResult.alreadyClaimed) return;
                  
                  if(window.app && window.app.soundMgr) window.app.soundMgr.win();
 
@@ -3964,6 +4202,7 @@ class AdMobController {
         this.rewardDismissTimer = null;
         this.rewardShowTimer = null;
         this.rewardShowInProgress = false;
+        this.rewardRequestOptions = null;
         this.adLoadedAt = { rewarded: 0, interstitial: 0 };
         this.adMaxAgeMs = 55 * 60 * 1000;
         this.interstitialCooldownMs = 10 * 60 * 1000;
@@ -3971,6 +4210,10 @@ class AdMobController {
         this.lastInterstitialShownAt = 0;
         this.interstitialShowInProgress = false;
         this.rewardClaimRetryTimeoutMs = 60000;
+        this.economyRuntimeId = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+        this.economyClaimsInFlight = new Set();
+        this.economyRecoveries = new Map();
+        this.economyRecoveryTimer = null;
         
         this.uiSelectors = ['.btn-ad-double', '.daily-glass-btn-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware'];
     }
@@ -4179,6 +4422,10 @@ class AdMobController {
 
         if (success) {
             this.lastRewardSsvInfo = this.activeRewardSsvInfo || this.rewardSsvInfo || this.lastRewardSsvInfo || null;
+            if (resolve && this.lastRewardSsvInfo?.context !== 'offline_undo') {
+                try { this.rememberEconomyClaim(this.lastRewardSsvInfo); }
+                catch (error) { console.warn('Reward queue storage failed; signed server receipt remains recoverable.', error); }
+            }
         }
 
         this.activeRewardSsvInfo = null;
@@ -4208,17 +4455,18 @@ class AdMobController {
         this.ads[type].retryCount = 0; 
         this.adLoadedAt[type] = Date.now();
         if (type === 'rewarded') {
-            if (this.pendingRewardOptions && !this.isRewardSsvInfoMatch(this.rewardSsvInfo, this.pendingRewardOptions)) {
-                const pendingOptions = this.pendingRewardOptions;
-                this.pendingRewardOptions = null;
+            const desiredOptions = this.rewardRequestOptions || this.pendingRewardOptions;
+            if (desiredOptions && !this.isRewardSsvInfoMatch(this.rewardSsvInfo, desiredOptions)) {
+                if (!this.rewardRequestOptions) this.pendingRewardOptions = null;
                 this.ads.rewarded.isReady = false;
                 this.rewardSsvInfo = null;
                 this.updateUI(false);
-                this.preloadAd('rewarded', pendingOptions);
+                this.preloadAd('rewarded', desiredOptions);
                 return;
             }
 
-            this.pendingRewardOptions = null;
+            if (!this.rewardRequestOptions || (this.pendingRewardOptions &&
+                this.isRewardSsvInfoMatch(this.rewardSsvInfo, this.pendingRewardOptions))) this.pendingRewardOptions = null;
             this.updateUI(this.ads.rewarded.isReady);
         }
     }
@@ -4250,9 +4498,9 @@ class AdMobController {
         adState.retryTimer = setTimeout(() => {
             adState.retryTimer = null;
             const nextOptions = type === 'rewarded'
-                ? (this.pendingRewardOptions || rewardOptions)
+                ? (this.rewardRequestOptions || this.pendingRewardOptions || rewardOptions)
                 : rewardOptions;
-            if (type === 'rewarded') this.pendingRewardOptions = null;
+            if (type === 'rewarded' && !this.rewardRequestOptions) this.pendingRewardOptions = null;
             this.preloadAd(type, nextOptions);
         }, nextDelay);
     }
@@ -4270,7 +4518,7 @@ class AdMobController {
                 clearTimeout(this.rewardDismissTimer);
                 this.rewardDismissTimer = null;
             }
-            const retryOptions = this.pendingRewardOptions || this.currentRewardOptions || {};
+            const retryOptions = this.rewardRequestOptions || this.pendingRewardOptions || this.currentRewardOptions || {};
             this.updateUI(this.ads.rewarded.isReady);
             this.scheduleAdRetry(type, retryOptions);
             return;
@@ -4338,19 +4586,20 @@ class AdMobController {
         return {
             uid: localStorage.getItem('yamb_uid') || window.app?.playerId || '',
             context: this.normalizeRewardContext(options.context),
-            amount: this.normalizeRewardAmount(options.amount)
+            amount: this.normalizeRewardAmount(options.amount),
+            claimData: options.claimData && typeof options.claimData === 'object' ? { ...options.claimData } : {}
         };
     }
 
     createRewardSsvInfo(options = {}) {
-        const { uid, context, amount } = this.normalizeRewardOptions(options);
+        const { uid, context, amount, claimData } = this.normalizeRewardOptions(options);
         const nonce = this.createRewardNonce();
         const customData = JSON.stringify({
             v: 1,
             nonce,
             context,
             amount,
-            uid
+            uid, claimData
         });
 
         return {
@@ -4358,6 +4607,7 @@ class AdMobController {
             nonce,
             context,
             amount,
+            claimData,
             ssv: {
                 userId: uid,
                 customData
@@ -4372,7 +4622,7 @@ class AdMobController {
             info.uid &&
             info.uid === expected.uid &&
             info.context === expected.context &&
-            info.amount === expected.amount
+            info.amount === expected.amount && JSON.stringify(info.claimData || {}) === JSON.stringify(expected.claimData)
         );
     }
 
@@ -4393,12 +4643,163 @@ class AdMobController {
         return this.lastRewardSsvInfo?.nonce || '';
     }
 
+    economyIdentity() {
+        return { uid: localStorage.getItem('yamb_uid') || '', version: Number(window.yambAuthSessionVersion) || 0 };
+    }
+
+    isEconomyIdentityCurrent(identity) {
+        return !!identity.uid && identity.uid === localStorage.getItem('yamb_uid') &&
+            identity.version === (Number(window.yambAuthSessionVersion) || 0) && !window.yambAccountDeletionInProgress;
+    }
+
+    readEconomyClaims(uid = this.economyIdentity().uid) {
+        if (!uid) return [];
+        try {
+            const entries = JSON.parse(localStorage.getItem(`yamb_pending_economy_${uid}`) || '[]');
+            return Array.isArray(entries) ? entries.filter(entry => entry && typeof entry.key === 'string' && entry.uid === uid) : [];
+        } catch (_) { return []; }
+    }
+
+    writeEconomyClaims(uid, entries) {
+        if (uid) localStorage.setItem(`yamb_pending_economy_${uid}`, JSON.stringify(entries));
+    }
+
+    rememberEconomyClaim(info) {
+        const uid = info.uid || this.economyIdentity().uid;
+        if (!uid || !info.context) return null;
+        const data = { ...(info.claimData || {}) };
+        const key = info.key || (info.nonce ? `ad:${info.nonce}` : `${info.context}:${data.requestId || data.dayKey || `${data.year}_Q${data.quarter}`}`);
+        const entries = this.readEconomyClaims(uid);
+        const previous = entries.find(entry => entry.key === key);
+        const entry = { ...previous, ...info, uid, key, claimData: data,
+            createdAt: previous?.createdAt || Date.now(), runtimeId: previous?.runtimeId || this.economyRuntimeId };
+        this.writeEconomyClaims(uid, [...entries.filter(item => item.key !== key), entry]);
+        return entry;
+    }
+
+    economyRequest(entry) {
+        const data = entry.claimData || {};
+        const ad = { ssvNonce: entry.nonce, clientRewarded: true };
+        if (entry.context === 'shop_ad_reward') return ['claim_shop_ad_reward', ad];
+        if (entry.context === 'undo_tokens') return ['claim_undo_token_reward', { ...ad, type: 'rewarded' }];
+        if (entry.context.startsWith('shop_discount:')) return ['claim_shop_discount', { ...ad, itemId: entry.context.split(':')[1] }];
+        if (entry.context.startsWith('shop_ad_unlock:')) return ['claim_shop_ad_unlock', { ...ad, itemId: entry.context.split(':')[1] }];
+        if (entry.context === 'game_double' && data.matchId) return ['claim_game_reward', { ...ad, ...data, doubled: true, verificationWaitMs: 4000 }];
+        if (['daily_base', 'daily_double'].includes(entry.context) && data.dayKey) return ['claim_daily_reward', { ...ad, ...data, doubled: entry.context === 'daily_double' }];
+        if (entry.context === 'purchase') return ['purchase_shop_item', data];
+        if (entry.context === 'quarter_reward') return ['check_quarter_reward', data];
+        return null;
+    }
+
+    async sendEconomyRequest(event, data, identity = this.economyIdentity(), timeoutMs = 45000) {
+        if (!this.isEconomyIdentityCurrent(identity)) return { ok: false, reason: 'account_changed' };
+        const app = window.app;
+        const socket = app?.socket;
+        if (!socket?.connected) return { ok: false, reason: 'err_server_conn' };
+        if (typeof app.authenticateSocketIdentity === 'function') {
+            const auth = await app.authenticateSocketIdentity();
+            if (!this.isEconomyIdentityCurrent(identity)) return { ok: false, reason: 'account_changed' };
+            if (!auth?.ok) return { ok: false, reason: 'auth_required' };
+        }
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = result => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(this.isEconomyIdentityCurrent(identity) ? (result || { ok: false, reason: 'empty_reward_response' })
+                    : { ok: false, reason: 'account_changed' });
+            };
+            const timer = setTimeout(() => finish({ ok: false, reason: 'err_server_conn' }), timeoutMs);
+            socket.emit(event, data, finish);
+        });
+    }
+
+    finishEconomyClaim(entry, result) {
+        const entries = this.readEconomyClaims(entry.uid);
+        const complete = (result?.ok && !result.localFallback) || result?.reason === 'daily_already_claimed';
+        if (complete) {
+            this.writeEconomyClaims(entry.uid, entries.filter(item => item.key !== entry.key));
+        } else {
+            const updated = entries.map(item => item.key === entry.key ? { ...item, active: false,
+                blocked: !!result?.permanent, reason: result?.reason,
+                retryAt: Date.now() + Math.max(5000, Number(result?.retryAfterMs) || 30000) } : item);
+            this.writeEconomyClaims(entry.uid, updated);
+        }
+    }
+
+    scheduleEconomyRecovery({ discover = false } = {}) {
+        clearTimeout(this.economyRecoveryTimer);
+        const identity = this.economyIdentity();
+        const entries = this.readEconomyClaims(identity.uid).filter(entry => !entry.blocked && !(entry.active && entry.runtimeId === this.economyRuntimeId));
+        if (!identity.uid || (!entries.length && !discover) || !window.app?.socket?.connected) return;
+        const next = entries.length ? Math.min(...entries.map(entry => entry.retryAt || Date.now() + 30000)) : Date.now() + 1000;
+        this.economyRecoveryTimer = setTimeout(() => {
+            if (this.isEconomyIdentityCurrent(identity)) this.recoverPendingEconomyClaims().catch(error => console.warn('Reward recovery failed.', error));
+        }, Math.max(1000, Math.min(1800000, next - Date.now())));
+        this.economyRecoveryTimer?.unref?.();
+    }
+
+    async recoverPendingEconomyClaims() {
+        const identity = this.economyIdentity();
+        if (!this.isEconomyIdentityCurrent(identity) || !window.app?.socket?.connected) return;
+        if (this.economyRecoveries.has(identity.uid)) return this.economyRecoveries.get(identity.uid);
+        const recovery = (async () => {
+            let after = '';
+            do {
+                const page = await this.sendEconomyRequest('get_pending_ad_rewards', { after }, identity, 18000);
+                if (!page.ok || !this.isEconomyIdentityCurrent(identity)) break;
+                for (const info of page.entries || []) {
+                    if (!this.readEconomyClaims(identity.uid).some(entry => entry.nonce === info.nonce)) this.rememberEconomyClaim({ ...info, uid: identity.uid });
+                }
+                after = page.next || '';
+            } while (after);
+            const quarters = await this.sendEconomyRequest('get_pending_quarter_rewards', {}, identity, 18000);
+            if (!this.isEconomyIdentityCurrent(identity)) return;
+            if (quarters.ok) for (const period of quarters.entries || []) {
+                const key = `quarter_reward:${period.year}_Q${period.quarter}`;
+                if (!this.readEconomyClaims(identity.uid).some(entry => entry.key === key)) this.rememberEconomyClaim({ uid: identity.uid, context: 'quarter_reward', key, claimData: period });
+            }
+            for (const entry of this.readEconomyClaims(identity.uid)) {
+                if (!this.isEconomyIdentityCurrent(identity)) return;
+                if (entry.blocked || entry.retryAt > Date.now() || this.economyClaimsInFlight.has(entry.key) ||
+                    (entry.active && entry.runtimeId === this.economyRuntimeId) || (entry.nonce && this.activeRewardSsvInfo?.nonce === entry.nonce)) continue;
+                const request = this.economyRequest(entry);
+                if (!request) {
+                    this.finishEconomyClaim(entry, { ok: false, reason: 'missing_reward_target', permanent: true });
+                    continue;
+                }
+                this.economyClaimsInFlight.add(entry.key);
+                try {
+                    if (entry.context === 'game_double' && typeof window.app.ensurePendingRewardMatchSubmitted === 'function') {
+                        const submitted = await window.app.ensurePendingRewardMatchSubmitted(entry.claimData.matchId);
+                        if (!submitted.ok) continue;
+                    }
+                    const result = await this.sendEconomyRequest(request[0], request[1], identity);
+                    if (!this.isEconomyIdentityCurrent(identity)) return;
+                    this.finishEconomyClaim(entry, result);
+                    if (result.ok && entry.context === 'game_double') window.app.forgetPendingGameReward?.(entry.claimData.matchId);
+                    if (result.cloudStats) window.app.applyCloudProfileSync?.(result.cloudStats);
+                } finally { this.economyClaimsInFlight.delete(entry.key); }
+            }
+            if (this.isEconomyIdentityCurrent(identity)) {
+                const profile = await this.sendEconomyRequest('request_profile_sync', {}, identity, 18000);
+                if (this.isEconomyIdentityCurrent(identity) && profile.cloudStats) window.app.applyCloudProfileSync?.(profile.cloudStats);
+            }
+        })();
+        this.economyRecoveries.set(identity.uid, recovery);
+        try { await recovery; } finally { this.economyRecoveries.delete(identity.uid); this.scheduleEconomyRecovery(); }
+    }
+
     isRewardClaimRetryable(result = {}, nonce = '') {
         if (!result || result.ok || result.permanent) return false;
         const reason = result.reason;
         if (reason === 'ad_verification_required' && !nonce) return false;
         return reason === 'ad_verification_pending' ||
             reason === 'ad_verification_required' ||
+            reason === 'game_reward_metadata_pending' ||
+            reason === 'ad_reward_cooldown' ||
+            reason === 'undo_tokens_max' ||
             (!!nonce && !!window.app?.socket?.connected && (
                 reason === 'err_server_conn' ||
                 reason === 'server_error' ||
@@ -4442,8 +4843,14 @@ class AdMobController {
 
     async claimRewardWithSsvRetry(claimFn, options = {}) {
         if (typeof claimFn !== 'function') return { ok: false, reason: 'err_server_conn' };
+        const uid = localStorage.getItem('yamb_uid') || '';
+        const sessionVersion = Number(window.yambAuthSessionVersion) || 0;
+        const accountChanged = () => localStorage.getItem('yamb_uid') !== uid ||
+            (Number(window.yambAuthSessionVersion) || 0) !== sessionVersion || window.yambAccountDeletionInProgress;
 
         const nonce = typeof options.nonce === 'string' ? options.nonce : '';
+        const key = nonce ? `ad:${nonce}` : '';
+        if (key) this.economyClaimsInFlight.add(key);
         const context = options.context || '';
         const shouldCancel = typeof options.shouldCancel === 'function' ? options.shouldCancel : () => false;
         const maxWaitMs = Math.max(2000, parseInt(options.maxWaitMs) || this.rewardClaimRetryTimeoutMs);
@@ -4459,9 +4866,13 @@ class AdMobController {
             }
         };
 
-        do {
+        try { do {
+            if (accountChanged()) return { ok: false, reason: 'account_changed', permanent: true };
             if (shouldCancel()) return { ok: false, reason: 'base_reward_selected', permanent: false };
             result = await claimOnce();
+            const entry = key && this.readEconomyClaims(uid).find(item => item.key === key);
+            if (entry && !accountChanged()) this.finishEconomyClaim(entry, result);
+            if (accountChanged()) return { ok: false, reason: 'account_changed', permanent: true };
             if (shouldCancel()) return result && result.ok
                 ? result
                 : { ok: false, reason: 'base_reward_selected', permanent: false };
@@ -4475,11 +4886,21 @@ class AdMobController {
         } while (Date.now() < deadline);
 
         return result || { ok: false, reason: 'ad_verification_pending', permanent: false };
+        } finally { if (key) this.economyClaimsInFlight.delete(key); this.scheduleEconomyRecovery(); }
+    }
+
+    deferRewardLoad(rewardOptions = {}) {
+        if (!this.rewardRequestOptions) return false;
+        // Preloads cannot replace the SDK ad selected by an in-flight reward request.
+        if (this.isRewardSsvInfoMatch(this.rewardRequestOptions, rewardOptions)) return !!this.rewardResolve;
+        this.pendingRewardOptions = this.normalizeRewardOptions(rewardOptions);
+        return true;
     }
 
     async preloadAd(type, rewardOptions = {}) {
         if (!this.canRequestAds || !this.adMobPlugin || !navigator.onLine) return;
         if (type === 'rewarded' && !rewardOptions.context) return;
+        if (type === 'rewarded' && this.deferRewardLoad(rewardOptions)) return;
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
         
         this.ads[type].isLoading = true;
@@ -4514,6 +4935,7 @@ class AdMobController {
         if (!this.canRequestAds) return;
         if (type === 'rewarded') {
             if (!this.ads.rewarded || !rewardOptions.context) return;
+            if (this.deferRewardLoad(rewardOptions)) return;
 
             const matchingReady = this.isRewardVideoReadyFor(rewardOptions);
             const matchingLoading = this.ads.rewarded.isLoading && this.isRewardSsvInfoMatch(this.rewardSsvInfo, rewardOptions);
@@ -4773,28 +5195,59 @@ class AdMobController {
             return Promise.resolve(false);
         }
 
+        const requestedReward = this.normalizeRewardOptions(rewardOptions);
+        this.rewardRequestOptions = requestedReward;
         this.rewardShowInProgress = true;
         return (async () => {
             try {
-                if (!this.isRewardVideoReadyFor(rewardOptions) && typeof window.showNotification === 'function') {
+                const identity = this.economyIdentity();
+                const existing = this.readEconomyClaims(identity.uid).find(entry => entry.nonce && !entry.blocked && entry.context === requestedReward.context &&
+                    JSON.stringify(entry.claimData || {}) === JSON.stringify(requestedReward.claimData));
+                if (existing) { this.lastRewardSsvInfo = existing; return true; }
+                if (!this.isRewardVideoReadyFor(requestedReward) && typeof window.showNotification === 'function') {
                     window.showNotification(_safeT('info_title') || "INFO", _safeT('msg_ad_loading') || "Učitavanje reklame...");
                 }
 
-                const readyForReward = await this.waitForRewardVideoReadyFor(rewardOptions);
+                const readyForReward = await this.waitForRewardVideoReadyFor(requestedReward);
                 if (!readyForReward) {
                     if (typeof window.showNotification === 'function') window.showNotification(_safeT('info_title') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
                     return false;
                 }
 
+                const preparedInfo = this.rewardSsvInfo;
+                if (!this.isRewardSsvInfoMatch(preparedInfo, requestedReward)) return false;
+                if (requestedReward.context !== 'offline_undo') {
+                    const eligible = await this.sendEconomyRequest('check_reward_eligibility', {
+                        context: requestedReward.context, claimData: requestedReward.claimData
+                    }, identity, 18000);
+                    if (!eligible.ok) {
+                        const message = eligible.reason === 'undo_tokens_max' ? _safeT('undo_tokens_max')
+                            : eligible.reason === 'wallet_capacity' ? _safeT('economy_wallet_full')
+                            : eligible.reason === 'ad_reward_cooldown' ? (_safeT('economy_reward_cooldown') || '').replace('{0}', Math.ceil(eligible.retryAfterMs / 1000))
+                            : _safeT('err_server_conn');
+                        window.showNotification?.(_safeT('info_title') || 'INFO', message || 'Nagrada trenutno nije dostupna.');
+                        return false;
+                    }
+                }
+                if (!this.isEconomyIdentityCurrent(identity) || this.rewardSsvInfo !== preparedInfo ||
+                    !this.isRewardVideoReadyFor(requestedReward)) return false;
+
                 return await new Promise(resolve => {
                     this.rewardResolve = resolve;
-                    this.activeRewardSsvInfo = this.rewardSsvInfo;
+                    this.activeRewardSsvInfo = preparedInfo;
                     this.activeRewardEarned = false;
                     this.rewardShowTimer = setTimeout(() => {
                         this.failRewardVideo(new Error('Rewarded ad show timeout'));
                     }, 180000);
 
-                    Promise.resolve().then(() => this.adMobPlugin.showRewardVideoAd())
+                    Promise.resolve().then(() => {
+                        if (!this.isEconomyIdentityCurrent(identity) || this.rewardSsvInfo !== preparedInfo ||
+                            !this.isRewardVideoReadyFor(requestedReward)) {
+                            this.settleRewardVideo(false);
+                            return;
+                        }
+                        return this.adMobPlugin.showRewardVideoAd();
+                    })
                         .then(rewardItem => {
                             if (rewardItem && this.rewardResolve) this.settleRewardVideo(true);
                         })
@@ -4807,6 +5260,7 @@ class AdMobController {
                 return false;
             } finally {
                 this.rewardShowInProgress = false;
+                this.rewardRequestOptions = null;
             }
         })();
     }

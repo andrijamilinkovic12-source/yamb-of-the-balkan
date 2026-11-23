@@ -20,7 +20,7 @@ for (const dimension of ['top', 'bottom', 'side']) {
     assert.equal(variable(cardCss, `theme-room-${dimension}`), variable(greenCss, `green-room-${dimension}`),
         `Rules room ${dimension} must match Green`);
 }
-assert(html.includes('theme-rules-room.css?v=3'), 'The updated Rules stylesheet is not loaded');
+assert(html.includes('theme-rules-room.css?v=4'), 'The updated Rules stylesheet is not loaded');
 assert.equal(definitions.sharedTypography.uiFont, 'Montserrat', 'Rules must use the shared UI font');
 assert(/font-family:\s*'Montserrat',\s*sans-serif/.test(read('www/style.css')), 'The app body does not load Montserrat');
 assert(html.includes('family=Montserrat:wght@200;400;600;700;800;900'), 'Rules typography weights are unavailable');

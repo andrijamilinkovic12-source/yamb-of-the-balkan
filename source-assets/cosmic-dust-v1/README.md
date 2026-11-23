@@ -1,0 +1,7 @@
+# Cosmic Dust near-field atlas
+
+The transparent master was generated with built-in ImageGen. Production uses one 192 x 64 PNG: three square cells, left to right. Resize the master to 192 x 64 with Lanczos resampling, retaining RGBA, to rebuild `www/assets/effects/cosmic-dust-v1/near-field.png`.
+
+Prompt:
+
+> Use case: stylized-concept. One production game VFX sprite atlas on true transparent background, wide 3:1 layout, exactly THREE separate optical micro-dust sprites in equal square cells in one horizontal row. Absolutely no text, dividers, background field or labels. Each sprite centered inside its cell with ample empty margins, silhouette takes up middle 65%. They will be rendered at 14-22 pixels on a dark background so make the forms readable. Left: one asymmetric faceted silvery mica fleck caught in light, a short broken diamond shape with one brilliant ivory bevel and two darker facets, NOT a gemstone icon. Center: one sparse irregular cluster of four luminous pinpricks with a little pearlescent powder between the bright cores, varying sizes, not a constellation diagram. Right: a small tapered curved filament of iridescent cosmic dust, one pearly bright head fraying into a short wispy tail. Professional cinematic optical VFX texture, neutral silver/white with soft desaturated icy highlights so each can take a theme tint. Delicate translucent edges; not big lens flares, no crosses, no rings, no stars in the empty margins, no drop shadows or ground plane. This atlas is a texture, not an illustration of space.

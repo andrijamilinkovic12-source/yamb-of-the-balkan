@@ -80,7 +80,7 @@ function checkMatchResultWiring() {
     assert(completedDuel.includes("resultType: 'regular'"), 'Regular online duel is not written to the ledger');
     assert(completedDuel.includes('ensureMatchResult({'), 'Regular online duel bypasses the ledger');
     assert(completedDuel.includes('hasUserAppliedMatchResult(user, matchId)'), 'Regular duel lacks durable profile idempotency');
-    assert(/await applyTechnicalLeagueDelta\(user,\s*player\.score/.test(completedDuel), 'Regular online duel does not update quarterly league points server-side');
+    assert(extractFunction(serverSource, 'ensureMatchResult').includes('await bookMatchLeague(result, session)'), 'Online score is not booked with the durable match');
     assert(completedDuel.includes('markMatchResultStatsApplied(matchId, player.uid)'), 'Regular duel does not mark applied stats');
 
     const technical = extractFunction(serverSource, 'applyServerSideTechnicalResult');
@@ -90,7 +90,7 @@ function checkMatchResultWiring() {
 
     const reconciler = extractFunction(serverSource, 'reconcileStoredServerMatchResult');
     assert(reconciler.includes('hasUserAppliedMatchResult(user, result.matchId)'), 'Reconciler can duplicate a previously saved profile result');
-    assert(/await applyTechnicalLeagueDelta\(user,\s*score/.test(reconciler), 'Reconciler does not restore quarterly league points for regular duel results');
+    assert(reconciler.includes('await bookMatchLeague(stored, session)'), 'Legacy unbooked results skip league recovery');
     assert(reconciler.includes('markMatchResultStatsApplied(result.matchId, uid)'), 'Reconciler does not close incomplete ledger entries');
     assert(serverSource.includes('reconcileIncompleteServerMatchResults'), 'Missing incomplete result reconciliation worker');
 
@@ -410,10 +410,10 @@ function checkVerifiedEconomyMatchProof() {
     assert(leagueHandler.includes("return replyLeagueSubmit(false, 'match_result_required');"), 'Quarterly league still accepts direct client score growth');
 
     const balanceClaim = extractFunction(serverSource, 'claimVerifiedGameRewardBalance');
-    assert(balanceClaim.includes('claimedGameRewardIds: { $ne: matchId }'), 'Game reward balance is not guarded by an atomic match claim');
-    assert(balanceClaim.includes("$ifNull: ['$balance', 0]"), 'Atomic reward does not update the stored balance');
+    assert(balanceClaim.includes('mongoose.connection.transaction') && balanceClaim.includes('match.rewardPayouts?.[key]'), 'Game rewards must use a transaction and persistent payout history');
+    assert(balanceClaim.includes('changeDucats(user, delta, MAX_BALANCE)'), 'Game payout does not apply only the unpaid amount');
     assert(balanceClaim.includes('-RECENT_MATCH_RESULT_MEMORY'), 'Atomic reward claim history is not bounded');
-    assert(serverSource.includes('{ $addToSet: { rewardClaimedUids: finalUid }, $set: { updatedAt: new Date() } }'), 'Game reward claim is not persisted in the permanent match ledger');
+    assert(balanceClaim.includes('$addToSet: { rewardClaimedUids: uid }') && balanceClaim.includes('rewardPayouts.${key}'), 'Game reward claim is not persisted in the permanent match ledger');
     assert(gameSource.includes("gameSessionToken: this.localGameSessionToken || ''"), 'Client does not preserve the signed local game session');
     assert(gameSource.includes('const queuedResult = await this.queueCompletedLocalMatchResult({'), 'Client submits leaderboard score before storing local match proof');
     assert(gameSource.includes('acceptedClientResultIds.push(item.clientResultId);'), 'Client cannot distinguish a confirmed MatchResult from a queued local result');
@@ -466,13 +466,15 @@ async function checkLedgerIdempotencyAndConflict() {
             documents.set(filter.matchId, document);
             return { upsertedCount: 1, matchedCount: 1 };
         },
-        async findOne(filter) {
-            return documents.get(filter.matchId) || null;
+        findOne(filter) {
+            return { session: async () => documents.get(filter.matchId) || null };
         }
     };
     const context = createFunctionContext({
         MONGO_URI: 'mongodb://test',
         MatchResult,
+        mongoose: { connection: { transaction: fn => fn({}) } },
+        bookMatchLeague: async result => { result.leagueBooking ||= { status: 'booked' }; },
         console: { error() {} }
     });
     vm.runInContext(extractFunction(serverSource, 'ensureMatchResult'), context);
@@ -747,6 +749,7 @@ async function checkGameOverAdFallbackBehavior() {
                 return { ok: true, balance: 10000 + score * (doubled ? 2 : 1) };
             },
             applyAuthoritativeGameRewardBalance(balance) { storage.set('yamb_dukati', String(balance)); },
+            rememberPendingGameReward() {},
             forgetPendingGameReward() {},
             deferPendingGameReward() {},
             modal: { alert() { return Promise.resolve(); } },
@@ -900,29 +903,27 @@ async function checkAtomicRewardClaimBehavior() {
     const profile = {
         firebaseUid: 'verified-user',
         balance: 10000,
-        claimedGameRewardIds: []
+        claimedGameRewardIds: [], markModified() {}, async save() {}
     };
+    const match = { participants: [{ uid: 'verified-user' }], rewardClaimedUids: [], rewardPayouts: {} };
     const context = {
         profileWrites: require('../lib/profile-writes').createProfileWrites(),
         Math,
         MAX_REWARD_PER_GAME: 8000,
         MAX_BALANCE: 5000000,
         RECENT_MATCH_RESULT_MEMORY: 200,
+        crypto, changeDucats: require('../lib/ducat-wallet').changeDucats,
+        mongoose: { connection: { transaction: operation => operation({}) } },
+        hasUserClaimedGameReward: (user, id) => user.claimedGameRewardIds.includes(id),
+        MatchResult: { findOne: async () => match,
+            updateOne: async (_query, update) => require('./economy-mongo-fixture.cjs').applyUpdate(match, update) },
         toSafeInt(value, fallback = 0) {
             const number = Number(value);
             return Number.isFinite(number) ? Math.floor(number) : fallback;
         },
         UserProfile: {
-            async findOneAndUpdate(filter, updatePipeline) {
-                const matchId = filter.claimedGameRewardIds.$ne;
-                if (profile.claimedGameRewardIds.includes(matchId)) return null;
-                const rewardExpression = updatePipeline[0].$set.balance.$min[1].$max[1].$add[1];
-                profile.balance = Math.min(5000000, Math.max(0, profile.balance + rewardExpression));
-                profile.claimedGameRewardIds = [...profile.claimedGameRewardIds, matchId].slice(-200);
-                return { ...profile };
-            },
             async findOne() {
-                return { ...profile };
+                return profile;
             }
         }
     };
@@ -934,6 +935,10 @@ async function checkAtomicRewardClaimBehavior() {
     assert.strictEqual(first.claimed, true, 'First verified reward was not claimed');
     assert.strictEqual(repeated.claimed, false, 'Repeated match reward was applied twice');
     assert.strictEqual(profile.balance, 10275, 'Repeated reward changed the balance more than once');
+    const upgraded = await context.claimVerifiedGameRewardBalance('verified-user', 'match-atomic-1', 550);
+    assert.strictEqual(upgraded.reward, 275, 'Late x2 must pay only the outstanding difference');
+    assert.strictEqual(profile.balance, 10550);
+    assert.strictEqual((await context.claimVerifiedGameRewardBalance('verified-user', 'match-atomic-1', 275)).claimed, false);
 }
 
 async function checkClientRewardRecoveryBehavior() {

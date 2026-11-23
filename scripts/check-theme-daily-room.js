@@ -152,8 +152,10 @@ const rules = read('www/pravilaigre.js').toString();
 const roomIcons = read('www/theme-main-room-icons.js').toString();
 const oceanPreview = read('www/themes/ocean/qa-preview.html').toString();
 assert.match(html, /theme-daily-room\.css\?v=7/);
-assert.match(html, /dnevniizazov\.js\?v=3\.7/);
-assert.ok(html.indexOf('dailyChallengeCore.js?v=1') < html.indexOf('dnevniizazov.js?v=3.7'));
+assert.match(html, /dnevniizazov\.js\?v=3\.8"/);
+const scriptOrder = [...html.matchAll(/<script\b[^>]*\bsrc="([^"?]+)(?:\?[^"]*)?"/g)].map(match => match[1]);
+assert.ok(scriptOrder.includes('dailyChallengeCore.js') &&
+    scriptOrder.indexOf('dailyChallengeCore.js') < scriptOrder.indexOf('dnevniizazov.js'));
 const dailyAlerts = js.split('\n').filter(line => line.includes('this.app.modal.alert('));
 assert.equal(dailyAlerts.length, 7);
 assert.ok(dailyAlerts.every(line => line.includes("contextClass: 'daily'")), 'Daily notices must opt into scoped Green typography and theme contrast');

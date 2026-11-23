@@ -52,6 +52,7 @@ function harness() {
     function collection(name) {
         const rows = options => (options?.session?.draft || database)[name];
         function apply(document, update, inserted) {
+            if (Array.isArray(update)) return require('./economy-mongo-fixture.cjs').applyUpdate(document, update);
             Object.assign(document, clone(update.$set || {}));
             if (inserted) Object.assign(document, clone(update.$setOnInsert || {}));
             for (const [key, value] of Object.entries(update.$inc || {})) document[key] = Number(document[key] || 0) + value;

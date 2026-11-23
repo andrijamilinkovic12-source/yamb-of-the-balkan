@@ -660,7 +660,8 @@ class GlobalChatManager {
         if (createdAt) {
             const parsedTime = new Date(createdAt);
             if (!Number.isNaN(parsedTime.getTime())) {
-                const safeTime = sec.escapeHtml(parsedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                const locale = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-Latn-RS';
+                const safeTime = sec.escapeHtml(parsedTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }));
                 timeHtml = `<span>${safeTime}</span>`;
             }
         }

@@ -11,7 +11,10 @@ vm.runInNewContext(source.replace('window.app = new YambApp();','globalThis.Test
   Object.assign(app,{players:Array(count).fill('Same visible name'),playerName:'Same visible name',allScores:Array(count).fill({}),gameActive:true,onlineMode:false,aiMode:false,isSpectator:false,socket:null,rewardAdAttemptId:0,soundMgr:{stopMusic(){},win(){throw endBeforeRendering;}}});
   for(const name of ['pauseLocalGameClock','refreshLocalStats','updateStats','rememberPendingGameReward'])app[name]=()=>{};
   app.calculateTotalScore=i=>i===0?650:500;app.getCurrentPlayerUid=()=> 'fixture';
-  app.queueCompletedLocalMatchResult=async()=>({clientResultId:'fixture-result',accepted});
+  const finishedAt = Date.parse('2026-11-30T22:59:59Z');
+  const guestCalls = [];
+  app.topListManager = { saveHotseatGuests: (...args) => guestCalls.push(args) };
+  app.queueCompletedLocalMatchResult=async()=>({clientResultId:'fixture-result',accepted,finishedAt});
   const preview={baseReward:715,adReward:1430};
   app.safeSubmitScore=async(...args)=>{calls.push(args);return accepted===true
       ? {ok:true,recordAchievements:['personal'],soloRewardPreview:preview}
@@ -20,6 +23,15 @@ vm.runInNewContext(source.replace('window.app = new YambApp();','globalThis.Test
   assert.equal(calls.length,1,`${count} players / accepted=${accepted}: score acknowledgement was skipped`);
   assert.equal(calls[0][1],650,'Account score must be used even with identical player names');
   assert.equal(calls[0][4],'fixture-result');assert.equal(calls[0][5].serverVerified,accepted===true);
+  assert.equal(calls[0][5].finishedAt, finishedAt);
+  assert.equal(guestCalls.length, count === 2 ? 1 : 0);
+  if (count === 2) {
+      const [results, accountIndex, matchId, playedAt] = guestCalls[0];
+      assert.equal(results[1].score, 500);
+      assert.equal(accountIndex, 0);
+      assert.equal(matchId, 'fixture-result');
+      assert.equal(playedAt, finishedAt);
+  }
   assert.equal(app.soloRewardPreview,accepted===true?preview:null,'Unconfirmed scores must not invent a confirmed reward preview');
   assert.equal(app.lastLocalResultAccepted,accepted===true);
  }

@@ -19,7 +19,7 @@ for (const asset of manifest.assets) {
 
 const prelude = source.slice(source.indexOf('const YAMB_THEME_IDS ='), source.indexOf('const filterYambThemeIds'));
 const start = source.indexOf('    loadSupernovaSprite(');
-const end = source.indexOf('    trigger(type) {', start);
+const end = source.indexOf('    trigger(', start);
 assert(start > 0 && end > start);
 const Manager = new Function(`${prelude}\nreturn class {
     constructor() {
@@ -29,6 +29,9 @@ const Manager = new Function(`${prelude}\nreturn class {
         this.timers = [];
     }
     getGoldRainThemeId() { return globalThis.activeSupernovaTheme; }
+    getTargetTable() { return document.querySelector('.player-table'); }
+    clearEffectTimeouts() { this.timers = []; }
+    ${source.slice(source.indexOf('    captureEffectBoard('), source.indexOf('    prepareBlackHolePull('))}
     scheduleEffectTimeout(callback, delay) { this.timers.push({ callback, delay }); }
     ${source.slice(start, end)}
 }`)();
@@ -49,6 +52,8 @@ function node(tag = 'div') {
             this.parentNode = null;
         },
         get isConnected() { return Boolean(this.parentNode); },
+        querySelectorAll() { return []; },
+        animate() { return { cancel() {} }; },
         getBoundingClientRect() { return { left: 40, top: 120, width: 320, height: 520 }; }
     };
     Object.defineProperty(element, 'className', {
@@ -62,12 +67,14 @@ async function main() {
     const prior = { document: global.document, window: global.window, Image: global.Image, requestAnimationFrame: global.requestAnimationFrame, cancelAnimationFrame: global.cancelAnimationFrame };
     const body = node('body');
     const table = node('table');
+    table.parentNode = body;
     table.style.opacity = '1';
     let theme = 'neon';
     let reduced = false;
     const frames = [];
     const ctx = {
         radii: [], strokes: 0,
+        scale() {}, translate() {}, roundRect() {}, strokeRect() {}, drawImage() {}, rotate() {},
         setTransform() {}, clearRect() {}, fillRect() {}, beginPath() {}, fill() {}, save() {}, restore() {},
         arc(x, y, radius) { this.radii.push(radius); }, stroke() { this.strokes++; },
         moveTo() {}, lineTo() {},
@@ -76,7 +83,11 @@ async function main() {
     global.activeSupernovaTheme = theme;
     global.document = {
         body,
-        createElement() {
+        addEventListener() {}, removeEventListener() {},
+        createElement(tag) {
+            if (tag === 'canvas') {
+                const canvas = node('canvas'); canvas.getContext = () => ctx; return canvas;
+            }
             const overlay = node();
             Object.defineProperty(overlay, 'innerHTML', {
                 set() {
@@ -118,7 +129,7 @@ async function main() {
         await manager.spawnSupernova();
         assert.equal(body.children.length, 1);
         assert.equal(body.children[0].children[1].src, 'assets/effects/supernova/neon-plasma-v2.png');
-        assert(table.classList.contains('anim-supernova-table'));
+        assert.equal(body.children[0].children[2].className, 'sn-board-projection');
         assert.equal(manager.timers[0].delay, 5080);
         step(0);
         step(500);
@@ -133,12 +144,12 @@ async function main() {
         global.activeSupernovaTheme = theme = 'moon';
         step(1750);
         assert.equal(body.children.length, 0, 'theme switch clears old animation');
-        assert(!table.classList.contains('anim-supernova-table'));
 
         reduced = true;
         await manager.spawnSupernova();
         assert.equal(body.children.length, 1);
         assert.equal(body.children[0].children[1].src, 'assets/effects/supernova/moon-plasma-v2.png');
+        assert.equal(body.children[0].children.length, 2, 'Reduced motion leaves the board still');
         assert.equal(manager.timers.at(-1).delay, 1230);
         step(3000);
         manager.supernovaCanvasCleanup();

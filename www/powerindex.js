@@ -299,11 +299,13 @@ class PowerIndexLeaderboard {
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe
             || (myUid && player.uid && player.uid === myUid)
             || (!player.uid && player.playerName === myName)));
+        if (myRankDock && this.myPlayer && !isMyPlayerVisible) {
+            myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
+            myRankDock.classList.add('is-visible');
+        }
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
-            .join('') + (this.myPlayer && !isMyPlayerVisible
-                ? this.renderPlayerRow(this.myPlayer, { offTop: true })
-                : '');
+            .join('');
 
         const footerHtml = this.loading
             ? `<div class="pi-list-message" style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('pi_loading_more', 'Učitavam još igrača...')}</div>`

@@ -384,6 +384,11 @@ test('offline snapshot recovery applies the account audio and language before an
     assert.equal(packed.vibrationEnabled, false);
     assert.equal(packed.musicEnabled, false);
     assert.equal(packed.musicVolume, 0);
+    f.storage.set('yamb_lang', 'sr');
+    f.storage.set('yamb_lang_pending_sync', 'sr');
+    assert.equal(f.context.restoreAccountLocalSnapshot(uid), true);
+    assert.equal(f.storage.get('yamb_lang'), 'sr', 'An old snapshot must not replace a pending splash selection');
+    assert.equal(f.context.document.documentElement.lang, 'sr');
 });
 
 test('empty or foreign profiles cannot erase snapshots, and older snapshot format still restores', () => {

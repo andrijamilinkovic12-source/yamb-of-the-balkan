@@ -41,7 +41,12 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
                 h.step(4900);
                 assert(ctx.calls.some(call => call[0] === 'clip'), 'scan is clipped to the board');
                 assert(ctx.calls.some(call => call[0] === 'setLineDash'), 'neon pulses follow the rail');
-                const paint = JSON.stringify([strokes, ctx.calls]);
+                const { tube, beam } = scene.neonFrame;
+                for (const sprite of [tube, beam]) {
+                    assert(ctx.calls.filter(call => call[0] === 'drawImage' && call[1] === sprite).length >= 2,
+                        'Active frames reuse the baked tube and scan');
+                }
+                const paint = JSON.stringify([strokes, ctx.calls, tube.getContext('2d').calls, beam.getContext('2d').calls]);
                 universalNeon ??= paint;
                 assert.equal(paint, universalNeon, `${theme}: same neon painting as all other themes`);
                 h.step(5000);
@@ -61,6 +66,19 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         assert(rects.some(call => call[4] === h.board.height), `ice clips to complete board at ${size}`);
         h.setTheme('moon'); h.step(3400); assert.equal(h.body.children.length, 0, 'theme switch cleans scene');
     }
+    const neon = makeHarness({ width: 390, height: 844 });
+    const pulse = new neon.Stage(neon.owner, 'neon_pulse');
+    await pulse.start();
+    const original = pulse.neonFrame;
+    neon.setViewport(320,480);
+    pulse.resize();
+    assert.notEqual(pulse.neonFrame.tube, original.tube, 'Resize rebuilds the cached tube');
+    assert.notEqual(pulse.neonFrame.beam, original.beam, 'Resize rebuilds the matching scan');
+    assert(pulse.neonFrame.x + pulse.neonFrame.width <= 312 && pulse.neonFrame.y + pulse.neonFrame.height <= 472,
+        'The frame fits around the visible part of the board after resize');
+    neon.step(0); neon.step(1400);
+    neon.setTheme('light'); neon.step(1500);
+    assert.equal(neon.body.children.length, 0, 'Changing theme removes the active neon frame');
     const ice = makeHarness();
     const iceSounds = [];
     ice.setSoundManager({
@@ -93,7 +111,7 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     assert.deepEqual(iceSounds, [2.8, 'stop'], 'Early exit must stop the grow sound without playing the crack');
     assert.equal(ice.frames.size, 0);
 
-    for (const [width, expectedCount] of [[390, 420], [1280, 720]]) {
+    for (const [width, base, extra] of [[390, 420, 36], [1280, 720, 60]]) {
         const h = makeHarness({ width, theme: 'light' });
         const dust = new h.Stage(h.owner, 'cosmic_dust');
         await dust.start();
@@ -101,20 +119,34 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         const fillRect = dust.ctx.fillRect;
         dust.ctx.fillRect = (...args) => { paints.push(dust.ctx.fillStyle); fillRect(...args); };
         h.step(0);
+        h.step(60);
+        assert(!dust.ctx.calls.some(call => call[0] === 'drawImage'), 'Backdrop leads particle entry');
         paints.length = 0;
         h.step(1900);
         assert.equal(paints[0], 'rgba(4, 7, 13,0.6)', 'Cosmic Dust strongly darkens even a light theme');
         const particles = dust.dustParticles;
-        assert.equal(particles.length, expectedCount);
-        assert.equal(new Set(particles.map(particle => particle.shape)).size, 4, 'Grains, halos, stars and trails');
+        assert.equal(particles.length, base + extra);
+        assert.equal(new Set(particles.slice(0, base).map(p => p.shape)).size, 4, 'Original field stays intact');
+        assert.equal(new Set(particles.map(p => p.shape)).size, 7, 'Three additional PNG shapes');
+        assert.equal(particles.filter(p => p.shape >= 4).length, extra / 3);
         assert(particles.every(({ angle, radius, speed }, i) => angle === dust.seed(i + 22) * Math.PI * 2
             && radius === 0.08 + dust.seed(i + 74) * 0.75 && speed === 0.1 + (i % 3) * 0.09),
         'The original orbit and speeds stay unchanged');
-        assert(dust.ctx.calls.filter(call => call[0] === 'drawImage' && call[1] === dust.dustAtlas).length > expectedCount,
+        h.step(3100);
+        assert(dust.ctx.calls.filter(call => call[0] === 'drawImage' && call[1] === dust.dustAtlas).length > base + extra,
             'Particles use the cached atlas across multiple frames');
+        assert.equal(dust.dustAtlas.getContext('2d').calls.filter(call => call[0] === 'drawImage' && call[1] === dust.images.flecks).length,
+            9, 'Build three tints per sprite once, not per frame');
         h.step(dust.duration);
         assert.equal(h.body.children.length, 0, 'Cosmic Dust removes its dim layer on completion');
     }
+    const unloaded = makeHarness();
+    unloaded.Stage.preload = async () => ({flecks:null});
+    const fallback = new unloaded.Stage(unloaded.owner,'cosmic_dust'); await fallback.start();
+    unloaded.step(0); unloaded.step(950);
+    assert.equal(fallback.dustParticles.length,456);
+    assert(fallback.dustParticles.every(p => p.shape < 4), 'Missing optional art keeps procedural orbits');
+    fallback.stop();
 
     const reduced = makeHarness({ reduced: true });
     const quiet = [];
@@ -123,7 +155,8 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         const scene = new reduced.Stage(reduced.owner, type); await scene.start();
         assert(scene.duration <= 2600); reduced.step(0); reduced.step(800);
         if (type === 'neon_pulse') {
-            assert(scene.ctx.calls.some(call => call[0] === 'stroke'), 'reduced motion keeps the neon rail');
+            assert(scene.ctx.calls.some(call => call[0] === 'drawImage' && call[1] === scene.neonFrame.tube), 'reduced motion keeps the neon rail');
+            assert.equal(scene.neonFrame.beam, null, 'reduced motion does not allocate a moving scan');
             assert(!scene.ctx.calls.some(call => ['setLineDash', 'clip'].includes(call[0])), 'reduced motion has no moving pulse or scan');
         }
         if (type === 'cosmic_dust') {

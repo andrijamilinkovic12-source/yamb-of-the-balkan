@@ -9,14 +9,16 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         const scene = new h.Stage(h.owner, 'fireworks');
         await scene.start();
         const shells = scene.fireworkShells;
+        assert.equal(scene.images.blooms.src, 'assets/effects/fireworks-blooms-v1/blooms.png');
+        assert.equal(new Set(shells.map(shell => shell.slot)).size, 4, 'Four distinct original burst silhouettes');
         assert.equal(shells.length, 9);
         assert.equal(new Set(shells.map(shell => shell.kind)).size, 3);
         assert.equal(new Set(shells.flatMap(shell => shell.particles.map(particle => particle.color))).size, 5);
         assert.equal(shells.filter(shell => shell.finale).length, 3);
         assert(shells.every(shell => shell.launch + shell.rise + shell.duration <= 6.81), 'Every particle gets its full lifetime');
-        assert(shells.every(shell => shell.particles.length <= (width <= 760 ? 129 : 203)), 'Bounded particle budget');
+        assert(shells.every(shell => shell.particles.length <= (width <= 760 ? 27 : 46)), 'PNG carries the fine details');
         assert(shells.every(shell => shell.x - shell.radius >= 10 && shell.x + shell.radius <= width - 10
-            && shell.y - shell.radius >= 10), 'Burst centers and initial radial expansion fit');
+            && shell.y - shell.radius * [1.02, 0.98, 0.49, 0.8][shell.slot] >= 10), 'Burst pivots and expansion fit');
         const serialized = JSON.stringify(shells);
         const key = width + 'x' + height;
         if (references.has(key)) assert.equal(serialized, references.get(key), 'All themes share the exact fireworks choreography');
@@ -24,13 +26,16 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
         const sphere = shells.find(shell => shell.kind === 'sphere');
         const ring = shells.find(shell => shell.kind === 'ring');
         const willow = shells.find(shell => shell.kind === 'willow');
-        assert(willow.gravity > sphere.gravity && willow.particles[0].tail > ring.particles[0].tail, 'Willows have long, falling gold trails');
+        assert(willow.gravity > sphere.gravity && willow.duration > ring.duration, 'Golden willows hang longer and fall further');
         const particle = sphere.particles.find(spark => spark.vx > 0.5);
         const dx = (from, to) => scene.fireworkPoint(sphere, particle, to)[0] - scene.fireworkPoint(sphere, particle, from)[0];
         assert(dx(0.2, 0.4) > dx(1, 1.2), 'Air resistance slows the expanding sparks');
         const atlas = scene.fireworkAtlas, contexts = h.contexts.length;
         h.step(0); h.step(900); h.step(1800); h.step(3500); h.step(4700);
         assert.equal(scene.overlay.dataset.fireworksPhase, 'finale');
+        const bloomDraws = scene.ctx.calls.filter(call => call[0] === 'drawImage' && call[1] === scene.images.blooms);
+        assert(bloomDraws.some(call => call[3] === 0) && bloomDraws.some(call => call[3] === 320),
+            'Live animation draws both layers of the PNG');
         assert(Number(scene.overlay.dataset.activeBursts) >= 3);
         assert.equal(h.contexts.length, contexts, 'Animation frames reuse the spark atlas');
         h.setViewport(360, 780); scene.resize();
@@ -59,6 +64,10 @@ const themes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter
     assert.equal(calls.filter(call => call.method === 'launch').length, 9, 'One whistle per rocket');
     assert.equal(calls.filter(call => call.method === 'burst').length, 9, 'One sound per visible explosion, including the finale');
     assert.equal(new Set(calls.filter(call => call.method === 'burst').map(call => call.args[0])).size, 3);
+    for (const {args} of calls.filter(call => call.method === 'burst')) {
+        assert.deepEqual([...args[3]], args[0] === 'willow' ? [0.32, 0.57, 0.84] : []);
+        assert(args[4] >= 0 && args[4] < 0.07, 'Audio starts on the first visible burst frame');
+    }
     h.step(7030);
     assert.equal(cleanups.length, 18);
     scene.stop(); assert.equal(cleanups.length, 18, 'Sound cleanup is idempotent');

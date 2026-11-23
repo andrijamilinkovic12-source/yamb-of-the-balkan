@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const vm = require('node:vm');
 const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
@@ -35,7 +36,7 @@ assert(room.includes("contextClass: 'tournament'"));
 assert(room.includes('registrationRulesPromptOpen'));
 
 const serverRulesCheck = server.indexOf('playerData.tournamentRulesAccepted !== true');
-const serverDebit = server.indexOf('debitTournamentEntryFee(uid)', serverRulesCheck);
+const serverDebit = server.indexOf('legacyTournamentRegistration.register(edition, tournamentPlayer)', serverRulesCheck);
 assert(serverRulesCheck >= 0, 'server must require explicit rules acceptance');
 assert(serverDebit > serverRulesCheck, 'server must check rules acceptance before the entry fee is debited');
 assert(server.includes("const TOURNEY_PARTICIPATION_RULES_VERSION = '" + version + "';"));
@@ -59,3 +60,35 @@ for (const theme of ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 
 }
 
 console.log('PASS: tournament registration requires explicit fair-play rules acceptance before entry-fee debit.');
+
+const at = Date.parse('2026-11-20T21:00:00Z');
+let local = 100, skew = 0, nextTick;
+const label = { isConnected: true };
+const container = { querySelector: () => label };
+const manager = vm.runInNewContext(room + '\nObject.create(TournamentManager.prototype)', {
+    Date: class extends Date { static now() { return at + skew; } },
+    performance: { now: () => local }, window: {}, clearTimeout() {},
+    setTimeout(fn) { nextTick = fn; }, t: key => key
+});
+Object.assign(manager, { app: {}, state: { tournamentNumber: 11, players: [], status: 'finished', resetAt: at + 3600000 } });
+assert.equal(manager.formatTournamentResetCountdown(at + 3600000), '', 'do not show device time before sync');
+manager.readinessTimeBase = { server: at, local };
+for (skew of [-7200000, 7200000]) assert.equal(manager.formatTournamentResetCountdown(at + 3600000), '1h 0m');
+manager.renderRegistration(container);
+assert.equal(label.textContent, '1h 0m');
+local += 60000;
+nextTick();
+assert.equal(label.textContent, '59m');
+local += 59 * 60000;
+nextTick();
+assert.equal(label.textContent, manager.tr('tourney_next_registration_soon', 'uskoro'));
+const match = { p1: { id: 'a' }, p2: { id: 'b' }, resultType: 'technical', p1Score: null, p2Score: null };
+for (const [winnerId, label] of [['a', '1-0 TP'], ['b', '0-1 TP'], ['unknown', '']]) {
+    assert.equal(manager.getMatchResultLabel({ ...match, winnerId }), label);
+}
+const first = { ...match, winnerId: 'a' };
+assert.equal(manager.getMatchResultLabel({ ...first, p1Score: '', p2Score: ' ' }), '1-0 TP');
+assert.equal(manager.getMatchResultLabel({ ...first, p1Score: '7', p2Score: 0 }), '7-0 TP');
+assert.equal(manager.getMatchResultLabel({ ...first, resultType: 'regular' }), '');
+assert.equal(manager.getMatchResultLabel({ ...first, scoreLabel: '600-599' }), '600-599');
+console.log('PASS: official reset countdown and recorded or missing bracket scores.');

@@ -103,7 +103,7 @@ async function concurrentScoreWrites() {
         Date, console, MONGO_URI: true, MAX_SCORE: 3500, MAX_NAME_LENGTH: 40,
         leaderboardWrites: createProfileWrites(), Score: scoreModel,
         toSafeInt: Number, normalizeSoloRecordAchievements: value => value || [],
-        getSoloRecordAchievementsBeforeInsert: async () => [],
+        freezeMatchRecordAchievements: async () => [],
         leaderboardRecordNotice, LEADERBOARD_RECORD_PERIODS: Object.keys(starts), getLeaderboardPeriodStart: period => starts[period],
         async captureLeaderboardRecordSnapshots() {
             await new Promise(resolve => setTimeout(resolve, 5));

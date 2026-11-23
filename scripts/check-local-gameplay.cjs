@@ -8,7 +8,7 @@ const vm = require('node:vm');
 const read = file => fs.readFileSync(path.join(__dirname, '../www', file), 'utf8');
 const elements = new Map();
 const element = id => {
-    if (!elements.has(id)) elements.set(id, { classList: { add() {}, remove() {} }, disabled: false, innerText: '' });
+    if (!elements.has(id)) elements.set(id, { classList: { add() {}, remove() {} }, dataset: {}, setAttribute() {}, disabled: false, innerText: '' });
     return elements.get(id);
 };
 const context = {
@@ -105,4 +105,28 @@ async function run(count) {
     console.log(`PASS: ${app.modeTag} complete ${moves}-move game, dice/hold/roll limits, sheet/order guards, announcement, manual zero, turn resets and one finish transition.`);
 }
 
-(async () => { await run(1); await run(2); })().catch(error => { console.error(error); process.exitCode = 1; });
+async function checkYambFace() {
+    for (const mode of ['Solo','Hotseat','Online']) for (let face = 1; face <= 6; face++) {
+        const solo = mode === 'Solo', online = mode === 'Online', idx = solo ? 0 : 1;
+        const app = createApp(solo ? 1 : 2), events = [], sent = [];
+        Object.assign(app, { currentPlayerIdx: idx, myOnlineIndex: idx, onlineMode: online,
+            roomId: online ? 'fixture' : '', socket: { emit(...args) { sent.push(args); } },
+            effectMgr: { trigger(type) { events.push(type); }, celebrateYamb(n) { events.push(n); } } });
+        for (const [roll,col,expected] of [[1,'Slobodna','thunder'], [2,'Nagore',face], [3,'Najava',face]]) {
+            app.currentPlayerIdx = idx;
+            app.brojBacanja = roll;
+            app.kockiceVals = [face % 6 + 1, face, face, face, face, face];
+            if (col === 'Najava') app.najavljenoPolje = {row:'Yamb',col};
+            assert.equal(await app.writeScore('Yamb', col, idx), true);
+            assert.equal(app.allScores[idx][col].Yamb, 50 + 5 * face);
+            assert.deepEqual(events.splice(0), [expected]);
+            assert(app.kockiceVals.every(v => v === 0), 'Effect survives the normal turn reset');
+            if (online) assert.deepEqual({...sent.pop()[1]}, {roomId:'fixture',row:'Yamb',col,points:50+5*face,pIdx:idx});
+        }
+        app.currentPlayerIdx = idx; app.brojBacanja = 2; app.kockiceVals = [1,2,3,4,5,6];
+        assert.equal(await app.writeScore('Yamb', 'Ru\u010dno', idx), true);
+        assert.deepEqual(events, [], 'Crossing out a Yamb must not celebrate');
+    }
+    console.log('PASS all six scoring faces, first-roll override, zero and unchanged online payload.');
+}
+(async () => { await run(1); await run(2); await checkYambFace(); })().catch(error => { console.error(error); process.exitCode = 1; });

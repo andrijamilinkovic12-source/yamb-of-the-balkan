@@ -31,6 +31,60 @@ async function main() {
         page.on('pageerror', error => errors.push(error.message));
         page.setDefaultTimeout(5000);
         await page.goto('http://settings-controls.local/www/fixture.html');
+        await page.addScriptTag({ content: read('www/languages.js') });
+        await page.addScriptTag({ content: read('www/dailyChallengeCore.js') });
+        await page.addScriptTag({ content: read('www/dnevniizazov.js') });
+        await page.evaluate(() => {
+            window.dnevniIzazov = new DnevniIzazov({});
+            document.getElementById('splash-login-container').style.display = 'flex';
+            applyTranslations();
+        });
+        const themes = await page.locator('#setting-theme option').evaluateAll(options => options.map(option => option.value));
+        assert.ok(themes.includes('easter') && themes.includes('desert'));
+        for (const theme of themes) {
+            await page.evaluate(theme => {
+                document.documentElement.dataset.splashTheme = theme;
+                document.body.className = theme + '-theme';
+                localStorage.setItem('yamb_theme', theme);
+            }, theme);
+            for (const [lang, welcome, labels] of [['en', 'WELCOME', ['W', 'D', 'L']], ['sr', 'DOBRODOŠLI', ['POB', 'NER', 'POR']]]) {
+                await page.locator(`.splash-language-switcher [onclick="setLanguage('${lang}')"]`).click();
+                assert.equal(await page.locator('[data-lang="splash_welcome_short"]').textContent(), welcome);
+                assert.equal(await page.locator('.daily-glass-title').textContent(), lang === 'en' ? 'DAILY CHALLENGE' : 'DNEVNI IZAZOV');
+                assert.equal(await page.locator('.daily-glass-subtitle').textContent(), lang === 'en' ? 'Stop the dice at the right moment!' : 'Zaustavi kockice u pravom trenutku!');
+                assert.equal(await page.locator('html').getAttribute('lang'), lang);
+                assert.deepEqual(await page.locator('#easter-invite-rival-record [data-green-record]').allTextContents(), labels);
+                assert.equal(await page.locator('#invite-link').getAttribute('aria-label'), lang === 'en' ? 'Game invitation link' : 'Link za poziv u partiju');
+                const reward = await page.evaluate(() => {
+                    const daily = window.dnevniIzazov;
+                    daily.serverDiceValues = [6, 6, 6, 6, 6, 6];
+                    const { reward, yambBonus } = dailyChallengeCore.calculateReward(daily.serverDiceValues);
+                    daily.calculatedReward = reward;
+                    daily.currentYambBonus = yambBonus;
+                    daily.showResultModal();
+                    const view = document.getElementById('glass-daily-result');
+                    const text = selector => view.querySelector(selector).textContent.trim();
+                    const copy = [view.getAttribute('aria-label'), text('.daily-glass-btn-double'),
+                        text('.daily-glass-btn-claim'), text('.daily-yamb-heading span'),
+                        text('.daily-reward-total dt'), text('.daily-reward-total dd')];
+                    daily.clearDailyResult();
+                    daily.currentYambBonus = 0;
+                    const message = document.createElement('div');
+                    message.innerHTML = daily.getDailyRewardMessage('dc_reward_doubled', 260);
+                    return { copy, message: message.textContent.trim(), icons: message.querySelectorAll('img').length };
+                });
+                const english = lang === 'en';
+                assert.deepEqual(reward.copy, english
+                    ? ['SUCCESS', 'DOUBLE', 'CLAIM', '6 matching dice', 'Total', '1,864']
+                    : ['USPEŠNO', 'DUPLIRAJ', 'PREUZMI', '6 istih kockica', 'Ukupno', '1.864']);
+                const short = theme === 'dark' || theme === 'easter';
+                assert.equal(reward.message.replace(/\s+/g, ' '), english
+                    ? 'Reward doubled! You won 260' + (short ? ' !' : ' ducats!')
+                    : 'Nagrada je duplirana! Osvojili ste 260' + (short ? ' !' : ' dukata!'));
+                assert.equal(reward.icons, 1);
+            }
+        }
+        await page.reload();
         await page.evaluate(() => {
             localStorage.clear();
             for (const [key, value] of Object.entries({ yamb_uid: 'settings-fixture', yamb_player_name: 'QA',
@@ -98,6 +152,19 @@ async function main() {
         assert.deepEqual((await states()).checked, [true, true, true]);
         assert.equal(await page.locator('[data-lang="settings_title"]').textContent(), 'SETTINGS');
         await page.evaluate(() => {
+            localStorage.setItem('yamb_lang_changed_at', '0');
+            app.applyCloudProfileSync({ language: 'sr' });
+        });
+        assert.equal(await page.locator('html').getAttribute('lang'), 'en', 'A stale cloud language cannot undo a pending selection');
+        await page.evaluate(() => {
+            app.applyCloudProfileSync({ language: 'en' });
+            app.applyCloudProfileSync({ language: 'sr' });
+        });
+        assert.equal(await page.locator('[data-settings-lang="sr"]').getAttribute('aria-pressed'), 'true');
+        await page.locator('[data-settings-lang="en"]').click();
+        await page.locator('[data-settings-lang="sr"]').click();
+        assert.equal(await page.locator('[data-lang="settings_title"]').textContent(), 'PODEŠAVANJA');
+        await page.evaluate(() => {
             localStorage.removeItem('yamb_audio_pending_sync_settings-fixture');
             app.manualAudioSettings = null;
             app.applyCloudProfileSync({ soundEnabled: false, musicEnabled: false, vibrationEnabled: false, musicVolume: 0.2 });
@@ -105,7 +172,7 @@ async function main() {
         assert.deepEqual((await states()).checked, [false, false, false]);
         assert.equal((await states()).slider, 0.2);
         assert.deepEqual(errors, []);
-        console.log('PASS: real Settings labels, stale replies, document reloads, quick/main state, music unmute, slider and language persistence. No live account or service used.');
+        console.log('PASS: splash SR/EN across ' + themes.length + ' themes, daily challenge, records, Settings clicks, persisted language and stale/confirmed profile replies. No live account or service used.');
     } finally { await browser.close(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

@@ -160,7 +160,7 @@ class TopListManager {
     /**
      * Upisuje skor (Prvo lokalno, pa pokušava na server)
      */
-    async submitScore(name, score, mode, providedPhoto = undefined, matchId = '') {
+    async submitScore(name, score, mode, providedPhoto = undefined, matchId = '', finishedAt = Date.now()) {
         if (!score || score <= 0) return { ok: false, reason: 'invalid_score' };
 
         // OBAVEZNO: Rešavanje tuđih avatara!
@@ -175,32 +175,30 @@ class TopListManager {
         const currentUid = localStorage.getItem('yamb_uid');
 
         // Pripremamo objekat za bazu
-        const entry = {
+        const matchDate = new Date(finishedAt);
+        let entry = {
             localId: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
             uid: currentUid, // <-- DODATO OVO POLJE
             matchId: String(matchId || ''),
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
             mode: mode || 'Solo',
-            date: new Date().toISOString(),
+            date: Number.isFinite(matchDate.getTime()) ? matchDate.toISOString() : new Date().toISOString(),
             photoUrl: photo, // Sada slika ide i u lokalnu top listu!
             synced: false 
         };
 
         // 1. Uvek prvo sačuvaj lokalno
-        await this._saveLocal(entry);
-        if (this.app && typeof this.app.recordSubmittedScoreAsHighscore === 'function') {
-            this.app.recordSubmittedScoreAsHighscore(entry.score);
-        }
+        entry = await this._saveLocal(entry) || entry;
 
         // 2. Skor iz upravo završene partije šaljemo odmah i čekamo odgovor,
         // dok server još ima aktivnu validnu game sesiju za taj socket.
-        if (this.app.socket && this.app.socket.connected) {
+        if (currentUid && currentUid === localStorage.getItem('yamb_uid') && this.app.socket?.connected) {
             const result = await this._submitScoreToServer(entry);
             await this._markLocalSubmitResult(entry, result);
 
             if (result && result.ok) {
-                this._loadGlobal();
+                if (this._isGlobalVisible()) this._loadGlobal();
                 return result;
             }
         }
@@ -357,11 +355,15 @@ class TopListManager {
     async _markLocalSubmitResult(entry, result) {
         if (!entry || !result) return;
         if (!result.ok && !result.permanent) return;
+        const uid = entry.uid || entry.playerId;
+        if (result.ok && uid && uid === localStorage.getItem('yamb_uid')) {
+            this.app.recordSubmittedScoreAsHighscore?.(entry.score);
+        }
 
         try {
             await this._updateLocalScores(scores => {
                 const idx = scores.findIndex(item => {
-                    if (entry.localId && item.localId === entry.localId) return true;
+                    if (entry.localId && item.localId) return item.localId === entry.localId;
                     return !item.synced &&
                         item.uid === entry.uid &&
                         item.score === entry.score &&
@@ -373,7 +375,7 @@ class TopListManager {
                 if (result.ok) {
                     scores[idx].synced = true;
                     delete scores[idx].syncRejected;
-                } else if (result.permanent) {
+                } else if (!scores[idx].synced && result.permanent) {
                     scores[idx].syncRejected = result.reason || 'server_rejected';
                 }
             });
@@ -447,14 +449,32 @@ class TopListManager {
 
     async _saveLocal(newEntry) {
         try {
-            const scores = await this._updateLocalScores(items => items.push(newEntry));
+            let stored = newEntry;
+            const scores = await this._updateLocalScores(items => {
+                const existing = newEntry.matchId && items.find(item =>
+                    item.matchId === newEntry.matchId && item.uid === newEntry.uid &&
+                    item.guestIndex === newEntry.guestIndex);
+                if (existing) stored = existing;
+                else items.push(newEntry);
+            });
             
             const listLocal = document.getElementById('local-hs-list');
             if (listLocal) {
                 this._renderLocalScores(scores);
             }
+            return stored;
         } catch (e) {
             console.error("Local save error:", e);
+        }
+    }
+
+    async saveHotseatGuests(results, accountIndex, matchId, finishedAt) {
+        for (const [guestIndex, result] of results.entries()) {
+            if (guestIndex === accountIndex || !(result.score > 0)) continue;
+            await this._saveLocal({
+                uid: null, guestIndex, matchId, playerName: result.name,
+                score: result.score, mode: 'Hotseat', date: new Date(finishedAt).toISOString()
+            });
         }
     }
 
@@ -601,6 +621,9 @@ class TopListManager {
         }
 
         const currentLang = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
+        const displayDate = new Intl.DateTimeFormat(currentLang, {
+            day: 'numeric', month: 'numeric', timeZone: this.leaderboardTimeZone
+        });
         const currentUid = String(localStorage.getItem('yamb_uid') || '');
         const sec = window.YambSecurity;
 
@@ -624,7 +647,7 @@ class TopListManager {
             if (entry.date) {
                 const d = new Date(entry.date);
                 if (!isNaN(d)) {
-                    dateDisplay = `${d.getDate()}.${d.getMonth() + 1}.`;
+                    dateDisplay = displayDate.format(d);
                 }
             }
 

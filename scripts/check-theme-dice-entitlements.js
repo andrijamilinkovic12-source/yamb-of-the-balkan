@@ -135,10 +135,36 @@ shop = new shopContext.ShopManager(shopConfig);
 visible = Object.values(shop.groupByCategory()).flat().map(item => item.id);
 assert(visible.includes('theme_neon_cyber') && shop.unlocked.includes('theme_neon_cyber'), 'Owned Neon gift missing');
 
+(async () => {
 state.clear();
 state.set('yamb_dukati', '20000');
 const activations = [];
-shopContext.window.app = { ensureThemeDiceSkin: (...args) => activations.push(args) };
+shopContext.window.app = {
+    socket: { connected: true },
+    ensureThemeDiceSkin: (...args) => activations.push(args),
+    applyCloudProfileSync(profile) {
+        storage.setItem('yamb_dukati', profile.balance);
+        storage.setItem('yamb_unlocked', JSON.stringify(profile.yamb_unlocked));
+        storage.setItem('yamb_unlocked_themes', JSON.stringify(profile.unlockedThemes));
+        this.stats = profile;
+        shopContext.window.statsManager.stats = profile;
+    }
+};
+let requestNumber = 0;
+shopContext.window.adMobGlobal = {
+    economyIdentity: () => ({ uid: 'fixture', version: 1 }), isEconomyIdentityCurrent: () => true,
+    readEconomyClaims: () => [], economyClaimsInFlight: new Set(),
+    createRewardNonce: () => `purchase-request-${++requestNumber}`,
+    rememberEconomyClaim: info => ({ ...info, key: info.claimData.requestId }),
+    finishEconomyClaim() {}, scheduleEconomyRecovery() {},
+    async sendEconomyRequest(event, data) {
+        assert.equal(event, 'purchase_shop_item');
+        const isTheme = themeCatalog.has(data.itemId);
+        return { ok: true, cloudStats: { balance: Number(storage.getItem('yamb_dukati')) - data.expectedPrice,
+            yamb_unlocked: [data.itemId], unlockedThemes: isTheme ? [data.itemId] : [],
+            unlockedSkins: isTheme ? [] : [data.itemId] } };
+    }
+};
 for (const [themeId, { price, adUnlock }] of themeCatalog) {
     if (price <= 0 || adUnlock > 0) continue;
     state.clear();
@@ -146,7 +172,7 @@ for (const [themeId, { price, adUnlock }] of themeCatalog) {
     activations.length = 0;
     shopContext.window.statsManager.stats = { unlockedSkins: [], unlockedThemes: [] };
     const themeShop = new shopContext.ShopManager({ type: 'theme', items: [{ id: themeId, price }], containerId: 'missing', balanceId: 'missing' });
-    themeShop.processTransaction(themeId, price);
+    assert.equal(await themeShop.processTransaction(themeId, price), true);
     assert.equal(activations.length, 1, `${themeId}: purchase did not activate gift`);
     assert.equal(activations[0][0], themeId);
     assert.equal(activations[0][1], gifts.find(item => item.themeGift === themeId).id);
@@ -161,7 +187,7 @@ const paidSkinShop = new shopContext.ShopManager({
     type: 'skin', items: [{ id: 'default', price: 0 }, { id: 'classic_red', price: 1500 }],
     containerId: 'missing', balanceId: 'missing'
 });
-paidSkinShop.processTransaction('classic_red', 1500);
+await paidSkinShop.processTransaction('classic_red', 1500);
 assert(paidSkinShop.unlocked.includes('classic_red'), 'Paid standalone skin was not granted');
 assert.equal(state.get('yamb_dukati'), '3500', 'Paid standalone skin charged wrong price');
 assert(paidSkinShop.unlocked.includes('default'), 'Free default skin is unavailable');
@@ -172,11 +198,10 @@ const insufficientShop = new shopContext.ShopManager({
     type: 'skin', items: [{ id: 'default', price: 0 }, { id: 'classic_red', price: 1500 }],
     containerId: 'missing', balanceId: 'missing'
 });
-insufficientShop.processTransaction('classic_red', 1500);
+await insufficientShop.processTransaction('classic_red', 1500);
 assert(!insufficientShop.unlocked.includes('classic_red'), 'Paid skin unlocked without enough coins');
 assert.equal(state.get('yamb_dukati'), '1000', 'Insufficient purchase changed balance');
 
-(async () => {
     state.clear();
     state.set('yamb_dukati', '20000');
     activations.length = 0;

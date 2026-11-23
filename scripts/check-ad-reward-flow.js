@@ -40,7 +40,8 @@ const plugin = {
 };
 
 const context = {
-    window: { showNotification() { notifications++; } },
+    window: { showNotification() { notifications++; },
+        app: { socket: { connected: true, emit(_event, _data, ack) { if (typeof ack === 'function') ack({ ok: true }); } } } },
     document: {
         querySelectorAll: selector => selector === '.btn-ad-state-aware' ? [button] : [],
         getElementById: () => null
@@ -94,6 +95,7 @@ async function main() {
 
     const firstShow = controller.showRewardVideo(undo);
     assert.equal(await controller.showRewardVideo(coin), false, 'Drugi paralelni zahtev ne sme preuzeti prvu nagradu');
+    await new Promise(resolve => setImmediate(resolve));
     assert.equal(shows, 1);
     listeners.get('onRewardedVideoAdFailedToShow')?.({ message: 'mock failure' });
     assert.equal(await firstShow, false, 'Neuspeo prikaz mora razrešiti zahtev');
@@ -105,10 +107,11 @@ async function main() {
     listeners.get('onRewardedVideoAdFailedToShow')?.({ message: 'late failure from previous show' });
     assert.equal(controller.isRewardVideoReadyFor(coin), true, 'Zakasneli signal ne sme poništiti novi oglas');
     const successfulShow = controller.showRewardVideo(coin);
-    await Promise.resolve();
+    await new Promise(resolve => setImmediate(resolve));
     listeners.get('onRewardedVideoAdReward')?.();
     assert.equal(await successfulShow, true, 'Potvrđena nagrada mora uspešno razrešiti zahtev');
     assert(controller.consumeLastRewardSsvNonce(), 'Nagrada mora zadržati SSV nonce za serversku potvrdu');
+    controller.writeEconomyClaims('test-user', []);
     assert.equal(controller.rewardShowInProgress, false);
 
     controller.adLoadedAt.rewarded = Date.now() - controller.adMaxAgeMs - 1;
@@ -117,6 +120,7 @@ async function main() {
 
     showMode = 'reward';
     assert.equal(await controller.showRewardVideo(coin), true, 'Nativni odgovor o nagradi mora razrešiti zahtev');
+    controller.writeEconomyClaims('test-user', []);
     controller.ads.rewarded.isReady = false;
     controller.adLoadedAt.rewarded = 0;
     controller.prepareReward(coin);

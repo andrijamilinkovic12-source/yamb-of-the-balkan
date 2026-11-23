@@ -1256,18 +1256,15 @@ class TournamentManager {
         const name = String(championship.winnerName || player.playerName || tt('player_guest') || 'Igrač').trim();
         const wins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
         const edition = this.getChampionshipEditionLabel(championship, index + 1);
-        const finalScore = String(championship.scoreLabel || '-').trim();
-        const runnerUpName = String(championship.runnerUpName || tt('tourney_finalist_title') || 'Finalista').trim();
+        const finalScore = this.getChampionshipFinalScore(championship);
+        const { runnerUpName, finalDecision } = this.getChampionshipFinalDetails(championship);
         const wonAt = championship.wonAt ? this.formatDate(championship.wonAt) : '';
-        const path = this.getChampionPathMatches(championship).map(step => {
-            const opponent = this.getHistoryOpponent(step.match, championship.winnerId);
-            return {
-                round: this.getHistoryRoundLabel(step.round),
-                opponent: opponent?.name || tt('player_guest') || 'Igrač',
-                score: this.getMatchResultLabel(step.match) || '-',
-                drawCount: Number(step.match?.drawCount || 0)
-            };
-        });
+        const path = this.getChampionPathMatches(championship).map(step => ({
+            round: this.getHistoryRoundLabel(step.round),
+            opponent: this.getHistoryOpponentName(step.match, championship.winnerId),
+            score: this.getMatchResultText(step.match) || '-',
+            drawCount: Number(step.match?.drawCount || 0)
+        }));
 
         return {
             name,
@@ -1275,6 +1272,7 @@ class TournamentManager {
             edition,
             finalScore,
             runnerUpName,
+            finalDecision,
             wonAt,
             path
         };
@@ -1461,7 +1459,8 @@ class TournamentManager {
 
         const finalLabel = clean(this.getHistoryRoundLabel('f'));
         fitText(`${finalLabel}: ${data.finalScore || '-'}`, width / 2, 910, 760, 42, 28, colors.text, 900);
-        fitText(`${clean(tt('tourney_finalist_title') || 'Finalista')}: ${data.runnerUpName || '-'}`, width / 2, 968, 760, 30, 22, colors.muted, 800);
+        const subtitle = data.runnerUpName ? `${clean(tt('tourney_finalist_title'))}: ${data.runnerUpName}` : data.finalDecision;
+        if (subtitle) fitText(subtitle, width / 2, 968, 760, 30, 22, colors.muted, 800);
 
         const rows = Array.isArray(data.path) && data.path.length ? data.path.slice(0, 3) : [];
         const startY = 1040;
@@ -1469,8 +1468,8 @@ class TournamentManager {
             const y = startY + (index * 78);
             fillRound(135, y, width - 270, 58, 18, index % 2 === 0 ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.03)', 'rgba(255,255,255,0.075)', 1);
             fitText(step.round, 165, y + 38, 230, 24, 18, colors.gold, 900, 'left');
-            fitText(step.opponent, width / 2, y + 38, 360, 24, 18, colors.text, 800);
-            fitText(step.score, width - 165, y + 38, 160, 26, 18, colors.gold, 900, 'right');
+            if (step.opponent) fitText(step.opponent, width / 2, y + 38, 360, 24, 18, colors.text, 800);
+            fitText(step.score, width - 165, y + 38, step.opponent ? 160 : 510, 26, 18, colors.gold, 900, 'right');
         });
 
         if (data.wonAt) {
@@ -1538,10 +1537,13 @@ class TournamentManager {
                 const safePlayerName = this.escape(winnerName);
                 const editionLabel = this.getChampionshipEditionLabel(championship, entry.tournamentNumber || 1);
                 const safeEditionLabel = this.escape(editionLabel);
-                const safeFinalScore = this.escape(championship.scoreLabel || '-');
-                const safeRunnerUp = this.escape(championship.runnerUpName || tt('tourney_finalist_title') || 'Finalista');
+                const safeFinalScore = this.escape(this.getChampionshipFinalScore(championship));
+                const { runnerUpName, finalDecision } = this.getChampionshipFinalDetails(championship);
                 const finalLabel = this.escape(this.getHistoryRoundLabel('f'));
                 const runnerLabel = this.escape(tt('tourney_finalist_title') || 'Finalista');
+                const runnerLine = runnerUpName
+                    ? `<img class="tourney-champion-finalist-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${runnerLabel}:</span> ${this.escape(runnerUpName)}`
+                    : this.escape(finalDecision);
                 const cardClass = 'tourney-champion-card is-openable';
                 const clickAttr = `onclick="app.tournamentManager.openChampionJourney(${playerIndex}, ${championshipIndex})"`;
                 const ariaLabel = this.escapeAttr(`${editionLabel} - ${winnerName}`);
@@ -1557,7 +1559,7 @@ class TournamentManager {
                             <span class="tourney-champion-final-label">${finalLabel}</span>
                             <strong>${safeFinalScore}</strong>
                         </div>
-                        <div class="tourney-champion-runner-up"><img class="tourney-champion-finalist-icon-canonical" src="${getTournamentFinalistSource()}" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${runnerLabel}:</span> ${safeRunnerUp}</div>
+                        ${runnerLine ? `<div class="tourney-champion-runner-up">${runnerLine}</div>` : ''}
                         <div class="tourney-champion-actions">
                             ${journeyButton}
                             <button type="button" class="tourney-champion-action-btn tourney-champion-share-btn" data-champion-index="${playerIndex}" data-championship-index="${championshipIndex}" aria-label="${this.escapeAttr(tt('tourney_share_aria') || 'Podeli karticu osvajača')}" onclick="event.stopPropagation(); app.tournamentManager.shareChampionCard(${playerIndex}, ${championshipIndex})">
@@ -1615,11 +1617,30 @@ class TournamentManager {
         return (tt('tourney_f') || 'FINALE').replace(/🏆/g, '').trim() || 'FINALE';
     }
 
+    getChampionshipFinalScore(championship) {
+        return String(championship.scoreLabel || '').trim() || this.getMatchResultText(championship.bracket?.f?.[0]) || '-';
+    }
+
+    getChampionshipFinalDetails(championship) {
+        const match = championship.bracket?.f?.[0];
+        const opponent = this.getHistoryOpponent(match, championship.winnerId);
+        const saved = String(championship.runnerUpName || '').trim();
+        // Old archives sometimes stored the title "Finalista" in place of an absent name.
+        const placeholder = !opponent && !championship.runnerUpId && /^(finalista|finalist)$/i.test(saved);
+        return {
+            runnerUpName: opponent?.name || (placeholder ? '' : saved),
+            finalDecision: match?.technicalWinReason === 'administrative_walkover' ? this.getTechnicalReasonLabel(match.technicalWinReason) : ''
+        };
+    }
+
     getHistoryOpponent(match, championId) {
-        if (!match) return null;
-        if (match.p1 && match.p1.id === championId) return match.p2 || null;
-        if (match.p2 && match.p2.id === championId) return match.p1 || null;
-        return null;
+        if (!championId) return null;
+        return match?.p1?.id === championId ? match.p2 : match?.p2?.id === championId ? match.p1 : null;
+    }
+
+    getHistoryOpponentName(match, championId) {
+        const opponent = this.getHistoryOpponent(match, championId);
+        return opponent ? (opponent.name || tt('player_guest') || 'Igrač') : '';
     }
 
     getChampionPathMatches(championship) {
@@ -1646,8 +1667,7 @@ class TournamentManager {
         }
 
         return path.map((step, index) => {
-            const opponent = this.getHistoryOpponent(step.match, championship.winnerId);
-            const opponentName = this.escape(opponent?.name || tt('player_guest') || 'Igrač');
+            const opponentName = this.escape(this.getHistoryOpponentName(step.match, championship.winnerId));
             const resultLabel = this.getMatchResultLabel(step.match) || '-';
             const technicalReason = this.isTechnicalMatchResult(step.match)
                 ? `<span class="tourney-journey-reason">${this.escape(this.getTechnicalReasonLabel(step.match.technicalWinReason))}</span>`
@@ -1662,7 +1682,7 @@ class TournamentManager {
                     <div class="tourney-journey-index">${index + 1}</div>
                     <div class="tourney-journey-main">
                         <span class="tourney-journey-round">${this.getHistoryRoundLabel(step.round)}</span>
-                        <strong>${opponentName}</strong>
+                        ${opponentName ? `<strong>${opponentName}</strong>` : ''}
                     </div>
                     <div class="tourney-journey-score">
                         <span>${resultLabel}</span>
@@ -1676,7 +1696,7 @@ class TournamentManager {
 
     createHistoryBracketMatchHTML(match, championId) {
         if (!match || (!match.p1 && !match.p2)) {
-            return `<div class="tourney-history-match is-empty">---</div>`;
+            return `<div class="tourney-history-match is-empty">${this.escape(this.getTournamentReviewLabel(match) || '---')}</div>`;
         }
 
         const playerHtml = (player) => {
@@ -1742,7 +1762,7 @@ class TournamentManager {
         });
         const editionLabel = this.getChampionshipEditionLabel(championship, selectedIndex + 1);
         const edition = this.escape(editionLabel);
-        const finalScore = this.escape(championship.scoreLabel || '-');
+        const finalScore = this.escape(this.getChampionshipFinalScore(championship));
         const wonAt = championship.wonAt ? this.escape(this.formatDate(championship.wonAt)) : '';
         const finalLabel = this.escape(this.getHistoryRoundLabel('f'));
         const selectorHtml = savedChampionships.length > 1
@@ -1900,7 +1920,7 @@ class TournamentManager {
                     ? (tt('tourney_reg_active_title') || 'Prijavljeni ste')
                     : (tt('tourney_reg_started') || 'Turnir je već počeo'));
             const labelSecondary = isFinished
-                ? `${tt('tourney_next_registration_in') || 'Nove prijave'}: ${nextEdition}${resetCountdown ? ` (${resetCountdown})` : ''}`
+                ? `${tt('tourney_next_registration_in') || 'Nove prijave'}: ${nextEdition}${resetCountdown ? ` (<span data-tourney-reset-countdown>${resetCountdown}</span>)` : ''}`
                 : (isRegistered ? (tt('tourney_reg_active_subtitle') || 'Turnir u toku') : '');
             const greenState = isFinished ? 'state-match-complete-v1' : (isRegistered ? 'state-start-v1' : 'state-registration-locked-v1');
             buttonHtml = `
@@ -1965,6 +1985,18 @@ class TournamentManager {
                 </div>
             </div>
         `;
+        clearTimeout(this.resetCountdownTimer);
+        if (isFinished && resetCountdown) {
+            const label = container.querySelector('[data-tourney-reset-countdown]');
+            const resetAt = this.state.resetAt;
+            const tick = () => {
+                if (!label?.isConnected || this.state.status !== 'finished' || this.state.resetAt !== resetAt) return;
+                label.textContent = this.formatTournamentResetCountdown(resetAt);
+                const remaining = new Date(resetAt).getTime() - this.tournamentNow();
+                if (remaining > 0) this.resetCountdownTimer = setTimeout(tick, (remaining % 60000 || 60000) + 1);
+            };
+            tick();
+        }
     }
 
     buildTournamentParticipationRules(fee) {
@@ -2181,8 +2213,8 @@ class TournamentManager {
 
     formatTournamentResetCountdown(resetAt) {
         const target = resetAt ? new Date(resetAt).getTime() : 0;
-        if (!Number.isFinite(target) || target <= 0) return '';
-        const remainingMs = Math.max(0, target - Date.now());
+        if (!this.readinessTimeBase || !Number.isFinite(target) || target <= 0) return '';
+        const remainingMs = Math.max(0, target - this.tournamentNow());
         if (remainingMs <= 0) return this.tr('tourney_next_registration_soon', 'uskoro');
 
         const totalMinutes = Math.ceil(remainingMs / 60000);
@@ -2193,6 +2225,7 @@ class TournamentManager {
     }
 
     normalizeMatchScore(value) {
+        if (typeof value !== 'number' && !(typeof value === 'string' && value.trim())) return null;
         const num = Number(value);
         if (!Number.isFinite(num)) return null;
         return Math.max(0, Math.floor(num));
@@ -2203,20 +2236,27 @@ class TournamentManager {
     }
 
     getMatchResultLabel(match) {
+        return this.escape(this.getMatchResultText(match));
+    }
+
+    getMatchResultText(match) {
         const reviewLabel = this.getTournamentReviewLabel(match);
-        if (reviewLabel) return this.escape(reviewLabel);
+        if (reviewLabel) return reviewLabel;
         if (!match || !match.winnerId) return '';
-        if (match.scoreLabel) return this.escape(match.scoreLabel);
+        if (match.scoreLabel) return String(match.scoreLabel);
 
         const p1Score = this.normalizeMatchScore(match.p1Score);
         const p2Score = this.normalizeMatchScore(match.p2Score);
-        if (p1Score !== null && p2Score !== null) {
-            return this.escape(`${p1Score}-${p2Score}${this.isTechnicalMatchResult(match) ? ' TP' : ''}`);
+        const technical = this.isTechnicalMatchResult(match);
+        // Old archives encoded missing scores as two zeroes, even for unplayed matches.
+        const ambiguousZeros = p1Score === 0 && p2Score === 0 && (technical || !match.p1 || !match.p2);
+        if (p1Score !== null && p2Score !== null && !ambiguousZeros) {
+            return `${p1Score}-${p2Score}${technical ? ' TP' : ''}`;
         }
 
-        if (this.isTechnicalMatchResult(match) && match.p1 && match.p2) {
-            const winnerIsP1 = match.winnerId === match.p1.id;
-            return winnerIsP1 ? '1-0 TP' : '0-1 TP';
+        if (technical && match.p1 && match.p2) {
+            if (match.winnerId === match.p1.id) return '1-0 TP';
+            if (match.winnerId === match.p2.id) return '0-1 TP';
         }
 
         return '';
@@ -2277,6 +2317,7 @@ class TournamentManager {
 
     getTechnicalReasonLabel(reason) {
         switch (String(reason || 'technical')) {
+            case 'administrative_walkover': return tt('tourney_technical_walkover');
             case 'back_to_menu':
                 return this.tr('tourney_technical_quit', 'napuštanje');
             case 'turn_timeout':

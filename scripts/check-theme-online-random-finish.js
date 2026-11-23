@@ -191,7 +191,7 @@ playerRooms.A = roomId;
 playerRooms.B = roomId;
 
 // Online personal best must query only this UID's Online results; local best keeps Solo/Hotseat.
-const classifyMethod = server.match(/^async function getSoloRecordAchievementsBeforeInsert\(uid, score, recordDate, snapshots, mode = 'Solo'\) \{[\s\S]*?^\}/m)?.[0];
+const classifyMethod = server.match(/^async function getSoloRecordAchievementsBeforeInsert\([^)]*\) \{[\s\S]*?^\}/m)?.[0];
 assert(classifyMethod);
 let queried;
 const classify = vm.runInNewContext(`(${classifyMethod})`, {

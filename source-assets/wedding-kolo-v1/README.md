@@ -1,0 +1,9 @@
+# Wedding kolo
+
+`dancers-master.png` is the original transparent cutout generated with the built-in image generation tool. The shared cast is independent of the ten existing, theme-specific wedding trumpet PNGs. The stage paints the cloth and its embroidery using the selected theme palette.
+
+Runtime derivative: `www/assets/effects/wedding-kolo-v1/dancers.webp`, fitted to 800 pixels wide using Lanczos, WebP quality 87, preserving alpha.
+
+## Generation prompt
+
+Use case: stylized-concept. Create a premium landscape transparent RGBA live game sprite for the Serbian board game Yamb of the Balkan. ONE linked line of FOUR joyful adult dancers from head to shoes, drawn as beautiful individually designed soft carved wooden folk-art figurines with stitched linen costumes, sculpted rounded forms and hand-painted faces; collectible clay diorama craftsmanship, sophisticated rather than cartoon emoji. The center pair is a bride in an ivory dress, short transparent veil and small floral wreath, and groom in charcoal suit with a small white boutonniere. Outer dancers: Serbian female folk dancer, intricate woven red apron and puffed cream sleeves, and male guest with traditional dark embroidered vest, cream shirt and opanci shoes. Dance a Serbian kolo side step, hands linked low at their sides, distinct lively bent legs stepping to the side in unison. Face toward camera, stage front view, four clearly distinct silhouettes equally spaced across one wide horizontal line. No scenery, no floor, no props, no musical instruments, no text, no shadows outside figures, genuine transparent background, modest clear transparent border on all sides. Warm sophisticated jewel-toned textiles, soft studio key light, clean outlines readable at 250 pixels wide. Keep white clothing bright and intact. All feet visible; no oversized heads.

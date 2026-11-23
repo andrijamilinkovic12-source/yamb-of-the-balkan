@@ -304,11 +304,13 @@ class VatreniNizManager {
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe
             || (myUid && player.uid && player.uid === myUid)
             || (!player.uid && player.name === myName)));
+        if (myRankDock && this.myPlayer && !isMyPlayerVisible) {
+            myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
+            myRankDock.classList.add('is-visible');
+        }
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
-            .join('') + (this.myPlayer && !isMyPlayerVisible
-                ? this.renderPlayerRow(this.myPlayer, { offTop: true })
-                : '');
+            .join('');
         const footerHtml = this.loading
             ? `<div class="streak-list-message" style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('streak_loading_more', 'Učitavam još igrača...')}</div>`
             : this.hasMore

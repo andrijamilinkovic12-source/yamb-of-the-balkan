@@ -49,7 +49,9 @@
                 'yamb_daily_reward_amount', 'yamb_push_token', 'yamb_push_token_synced_' + uid,
                 'yamb_global_chat_read_' + uid, 'yamb_duel_chat_disabled_' + uid]) localStorage.removeItem(key);
             app?.globalChat?.syncActivityIdentity();
-            if (purge) localStorage.removeItem('yamb_account_snapshot_' + uid);
+            if (purge) for (const prefix of ['yamb_account_snapshot_', 'yamb_pending_economy_', 'yamb_pending_game_rewards_']) {
+                localStorage.removeItem(prefix + uid);
+            }
             if (purge) localStorage.setItem('yamb_deletion_disabled_uid', uid);
             localStorage.setItem('yamb_lang', rememberedLanguage);
             localStorage.setItem('yamb_last_theme', rememberedTheme);

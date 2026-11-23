@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Deset tema — pregled živih efekata</title>
-  <link rel="stylesheet" href="/efekti.css?v=3.7">
+  <link rel="stylesheet" href="/efekti.css?v=3.12">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
@@ -21,6 +21,13 @@
     .action { width: 100%; border: 0; border-radius: 14px; background: var(--action-background, #adca8d); color: var(--action-text, #17331c); padding: 13px; margin-top: 12px; font-weight: 800; }
     .qa-board { position: absolute; z-index: 2; left: 50%; top: 53%; translate: -50% -50%; width: min(78vw, 360px); height: min(68dvh, 565px); padding: 8px; border: 2px solid rgba(220,244,248,.7); border-radius: 13px; background: rgba(34,61,77,.88); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
     .qa-board[hidden] { display: none; }
+    .qa-board.qa-ice { top: 46%; height: min(53dvh, 490px); }
+    .qa-ice-footer { display: none; position: absolute; top: calc(100% + 7px); left: 0; right: 0; }
+    .qa-ice .qa-ice-footer { display: grid; gap: 5px; }
+    .qa-ice-footer #dice-container { display: grid; gap: 4px; grid-template-columns: repeat(6,1fr); }
+    .qa-ice-footer .dice { border-radius: 21%; display: grid; place-items: center; height: min(7dvh,42px); background: #23323e; color: #fff4cf; font: 27px/1 Arial,sans-serif; }
+    .qa-ice-footer .action-btn-group { display: flex; gap: 6px; }
+    .qa-ice-footer button { flex: 1; height: min(7dvh,38px); background: #2e4e5c; color: white; border: 1px solid #97b7c2; border-radius: 9px; font-weight: bold; }
     .qa-board-grid { display: grid; grid-template-columns: 1.35fr repeat(6, 1fr); grid-template-rows: repeat(12, 1fr); gap: 2px; height: 100%; }
     .qa-board-grid span { display: grid; place-items: center; border-radius: 3px; background: rgba(218,242,246,.14); color: #f7fbfd; font: 700 12px Arial, sans-serif; }
     .note { position: fixed; z-index: 2; bottom: max(8px, env(safe-area-inset-bottom)); left: 12px; right: 12px; font: 11px Arial, sans-serif; text-align: center; text-shadow: 0 1px 4px #000; }
@@ -34,6 +41,10 @@
       <option value="dark">Zelena</option><option value="light">Svetlo zlato</option><option value="medium">Trula višnja</option><option value="winter">Plavi okean</option><option value="neon">Neon Cyber</option><option value="amethyst">Kraljevski ametist</option><option value="easter">Vaskršnja</option><option value="desert">Pustinjsko staklo</option><option value="moon">Mesečev sjaj</option><option value="severna">Severna maglina</option>
     </select>
     <select id="effect-choice" aria-label="Efekat"><option value="confetti">Konfete</option><option value="gold_rain">Kiša dukata</option><option value="fireflies">Magični svici</option><option value="bubbles">Magični mehurići</option><option value="ice_age">Ledeno doba</option><option value="black_hole">Crna rupa</option><option value="supernova">Supernova</option><option value="neon_pulse">Neon puls</option><option value="thunder">Gromovnik</option><option value="balkan">Svadba</option><option value="fireworks">Vatromet</option><option value="drones">Yamb eskadrila</option><option value="cosmic_dust">Svemirska prašina</option><option value="ufo_abduction">UFO abdukcija</option><option value="dragon_fire">Zmajeva vatra</option><option value="royal_yamb">Kraljevski Yamb</option></select>
+    <select id="drone-face" aria-label="Cifra Yamba" hidden>
+      <option value="1">Yamb 1</option><option value="2">Yamb 2</option><option value="3">Yamb 3</option>
+      <option value="4">Yamb 4</option><option value="5">Yamb 5</option><option value="6">Yamb 6</option>
+    </select>
     <button type="button" data-effect="play">Ponovi</button>
     <button type="button" data-effect="stop">Zaustavi</button>
   </div>
@@ -46,7 +57,12 @@
     <div class="row">Najjača kolona · Najava 472</div>
     <button class="action" type="button">Preuzmi i izađi</button>
   </main>
-  <div class="qa-board player-table" hidden aria-label="Tabla za proveru ledenog efekta"><div class="qa-board-grid" id="qa-board-grid"></div></div>
+  <div class="qa-board player-table" hidden aria-label="Tabla za proveru efekata"><div class="qa-board-grid" id="qa-board-grid"></div>
+    <div class="qa-ice-footer" aria-hidden="true">
+      <div id="dice-container"><span class="dice">&#x2684;</span><span class="dice">&#x2684;</span><span class="dice">&#x2684;</span><span class="dice">&#x2681;</span><span class="dice">&#x2684;</span><span class="dice">&#x2684;</span></div>
+      <div class="action-btn-group"><button id="btn-najava" disabled>Najava</button><button id="btn-bacaj" disabled>Bacaj</button></div>
+    </div>
+  </div>
   <div class="note">Pregled pokreće stvarni EffectManager, bez naloga, kupovine i promene rezultata.</div>
   <canvas id="confetti-canvas"></canvas>
   <div id="qa-error" hidden></div>

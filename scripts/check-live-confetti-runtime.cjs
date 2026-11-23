@@ -112,7 +112,9 @@ async function main() {
         qa.frame(themeIndex * 1000);
         assert.equal(qa.pops.length, themeIndex + 1, `${theme}: pop must play with the first frame`);
         assert.equal(qa.pops.at(-1).drawCount, 0, `${theme}: pop must precede the particle draws`);
-        assert.equal(qa.draws.length, 114, `${theme}: first frame must have a visible burst`);
+        assert.equal(qa.draws.length, 133, `${theme}: 19 extra pieces in the initial fan without raising the overall budget`);
+        const leadShapes = qa.draws.filter((_, i) => qa.positions[i].y < 844 * 0.75);
+        assert(leadShapes.length === 19 && new Set(leadShapes).size === 3, 'Opening fan includes all three themed shapes');
         let peak = 0;
         for (let frame = 1; frame <= 55; frame++) {
             const previous = qa.draws.length;
@@ -148,7 +150,7 @@ async function main() {
     const desktop = harness({ width: 1280, height: 800, muted: true });
     await desktop.fx.spawnThemedConfetti('dark');
     desktop.frame(0);
-    assert.equal(desktop.draws.length, 162, 'Desktop must have a larger initial burst');
+    assert.equal(desktop.draws.length, 189, 'Desktop opens with 27 extra pieces inside the existing budget');
     assert.equal(desktop.canvas.width, 2560, 'Desktop canvas must cap DPR at 2');
     let desktopPeak = 0;
     for (let frame = 1; frame <= 250; frame++) {
