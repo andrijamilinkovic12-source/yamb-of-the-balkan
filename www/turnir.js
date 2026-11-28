@@ -196,22 +196,48 @@ class TournamentManager {
 
     async confirmReadiness(expected = null) {
         const player = this.myReadinessPlayer();
-        if (!this.isReadinessPrestart() || !player || !this.state.readiness || this.pendingReadiness) return;
+        if (!this.isReadinessPrestart() || !player || !this.state.readiness || this.pendingReadiness
+            || this.readinessCore().isReady(player)) return;
+        if (expected && (expected.entryId !== player.entryId || expected.cycleId !== this.state.registrationCycleId
+            || expected.recipientUid !== this.app.playerId)) return;
         if (!this.app.socket?.connected) {
             this.app.modal.alert(tt('sys_no_conn'), tt('err_title'));
             return;
         }
-        this.pendingReadiness = true;
+        const request = { entryId: player.entryId, cycleId: this.state.registrationCycleId, uid: this.app.playerId, notice: expected };
+        this.pendingReadiness = request;
         this.app.socket.emit('tourney_readiness_confirm', {
-            ...(expected || { cycleId: this.state.registrationCycleId, entryId: player.entryId }), ...this.tournamentProtocolFields()
+            cycleId: request.cycleId, entryId: request.entryId, ...this.tournamentProtocolFields()
         });
         this.render();
         setTimeout(() => {
-            if (!this.pendingReadiness) return;
+            if (this.pendingReadiness !== request) return;
             this.pendingReadiness = false;
             this.app.socket?.emit('tourney_get_state');
+            this.showReadinessReceipt('tourney_readiness_unverified');
             if (document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
         }, 12000);
+    }
+
+    showReadinessReceipt(key) {
+        if (document.hidden || this.app.gameActive || document.getElementById('game-scene')?.classList.contains('active')
+            || document.getElementById('custom-modal-overlay')?.style.display === 'flex') return;
+        this.app.modal.alert(tt(key), tt('tourney_readiness_title'), { contextClass: 'tournament' });
+    }
+
+    reconcileReadinessRequest(player) {
+        const request = this.pendingReadiness;
+        if (!request) return;
+        if (request.uid !== this.app.playerId || request.cycleId !== this.state.registrationCycleId
+            || player?.entryId !== request.entryId) {
+            this.pendingReadiness = false;
+        } else if (this.readinessCore().isReady(player)) {
+            this.pendingReadiness = false;
+            if (request.notice) this.acknowledgeTournamentNotice(request.notice);
+            if (!document.getElementById('tournament-screen')?.classList.contains('active')) {
+                this.showReadinessReceipt('tourney_readiness_saved');
+            }
+        }
     }
 
     scheduleReadinessNoticeCheck() {
@@ -262,6 +288,7 @@ class TournamentManager {
             return;
         }
         const isConfirmation = ['readiness_requested', 'readiness_halfway', 'readiness_last_call'].includes(next.kind);
+        if (isConfirmation && (this.pendingReadiness || !this.app.socket?.connected)) return;
         if (isConfirmation && (!pending || next.entryId !== player.entryId
             || next.cycleId !== this.state.registrationCycleId)) {
             this.readinessNotices = this.readinessNotices.filter(item => item.noticeId !== next.noticeId);
@@ -292,7 +319,8 @@ class TournamentManager {
                     cancelText: this.tr('tourney_readiness_later', 'KASNIJE'), contextClass: 'tournament'
                 });
                 if (accepted && next.recipientUid === this.app.playerId) {
-                    this.confirmReadiness({ cycleId: next.cycleId, entryId: next.entryId });
+                    this.confirmReadiness(next);
+                    return;
                 }
             } else {
                 await this.app.modal.alert(this.escape(this.tr('tourney_readiness_refund_recorded',
@@ -357,6 +385,7 @@ class TournamentManager {
             }
             this.activeTab = 'info';
             this.open({ skipIntro: true });
+            if (['readiness_requested', 'readiness_halfway', 'readiness_last_call'].includes(notice.kind)) return;
         }
         this.acknowledgeTournamentNotice(notice);
     }
@@ -650,6 +679,8 @@ class TournamentManager {
                 this.app.socket.emit('tourney_get_state', this.tournamentProtocolFields());
 
                 this.app.socket.on('tourney_state_update', (newState) => {
+                    if (newState.registrationCycleId && newState.registrationCycleId === this.state.registrationCycleId
+                        && newState.readinessRevision < this.state.readinessRevision) return;
                     const oldStatus = this.state.status;
                     this.state = newState;
                     this.requestTournamentReliability();
@@ -659,7 +690,7 @@ class TournamentManager {
                     const readinessPlayer = this.myReadinessPlayer();
                     if (readinessPlayer || !this.isReadinessPrestart()) this.pendingRegistration = false;
                     if (!readinessPlayer) this.pendingUnregister = false;
-                    if (this.readinessCore()?.isReady(readinessPlayer) || !this.isReadinessPrestart()) this.pendingReadiness = false;
+                    this.reconcileReadinessRequest(readinessPlayer);
                     this.updateReadinessClock();
 
                     // --- POZIV NOVE FUNKCIJE ZA BEDŽ ---
@@ -737,8 +768,13 @@ class TournamentManager {
                 });
 
                 this.app.socket.on('tourney_readiness_result', (result = {}) => {
-                    this.pendingReadiness = false;
-                    if (!result.ok) this.app.modal.alert(this.serverMessage(result.reason, tt('err_server_conn')), tt('warning_title'));
+                    const request = this.pendingReadiness;
+                    if (!request || (result.entryId && result.entryId !== request.entryId)
+                        || (result.cycleId && result.cycleId !== request.cycleId)) return;
+                    if (!result.ok) {
+                        this.pendingReadiness = false;
+                        this.app.modal.alert(this.serverMessage(result.reason, tt('err_server_conn')), tt('warning_title'));
+                    }
                     if (document.getElementById('tournament-screen')?.classList.contains('active')) this.render();
                 });
                 this.app.socket.on('tourney_schedule_result', (result = {}) => {
@@ -1876,7 +1912,7 @@ class TournamentManager {
                     <div><h3>${this.escape(this.getCurrentTournamentEditionLabel())}</h3><p>${title}</p></div>
                     <strong class="tourney-readiness-total">${count}<span>/8</span></strong>
                 </header>
-                <p class="tourney-readiness-count-label">${text(session ? 'tourney_readiness_confirmed_count' : 'tourney_registered')}</p>
+                <p class="tourney-readiness-count-label">${session ? this.escape(this.tr('tourney_readiness_counts', '').replace('{0}', this.state.players.length).replace('{1}', count)) : text('tourney_registered')}</p>
                 <p class="tourney-readiness-summary">${summary}</p>
                 ${reliability?.blocked || reliability?.warningEdition ? `<p class="tourney-readiness-summary" role="status">${text(reliability.blocked ? 'tourney_reliability_blocked' : 'tourney_reliability_warning_summary')}</p>` : ''}
                 ${pending ? `<div class="tourney-readiness-deadline"><time datetime="${new Date(deadline).toISOString()}">${text('tourney_readiness_until')} ${this.escape(this.readinessDeadline(deadline))} · ${text('tourney_readiness_belgrade')}</time><strong data-readiness-countdown="${deadline}"></strong><p>${text('tourney_readiness_clock_note')}</p></div>` : ''}

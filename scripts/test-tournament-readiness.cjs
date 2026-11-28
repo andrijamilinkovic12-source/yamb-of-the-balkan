@@ -159,6 +159,10 @@ async function run() {
     equal(core.countReady(h.state), 7, 'no duplicate confirmations');
     equal((await h.confirm(8, { entryId: h.player(7).entryId })).ok, false, 'cannot confirm for another account');
     equal((await h.confirm(7)).started, true, 'eighth confirmation starts the bracket');
+    const drawn = structuredClone(h.state.bracket);
+    equal((await h.confirm(7)).alreadyConfirmed, true, 'lost reply after final confirmation can be retried');
+    equal((await h.confirm(7, { entryId: h.player(6).entryId })).ok, false, 'retry must match the original entry');
+    equal(h.state.bracket, drawn, 'retry after start preserves the draw and scheduling deadlines');
     equal(h.state.status, 'active', 'tournament started');
     equal(h.state.bracket.qf.length, 4, 'four quarterfinals');
     equal(h.state.bracket.qf.map(match => match.scheduling.openedAt), Array(4).fill(h.at), 'quarterfinal clocks start on official draw');

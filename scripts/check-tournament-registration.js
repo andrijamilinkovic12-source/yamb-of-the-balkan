@@ -92,3 +92,33 @@ assert.equal(manager.getMatchResultLabel({ ...first, p1Score: '7', p2Score: 0 })
 assert.equal(manager.getMatchResultLabel({ ...first, resultType: 'regular' }), '');
 assert.equal(manager.getMatchResultLabel({ ...first, scoreLabel: '600-599' }), '600-599');
 console.log('PASS: official reset countdown and recorded or missing bracket scores.');
+
+async function verifyReadinessReceipt() {
+    const core = require('../www/tournamentReadinessCore');
+    const player = { id: 'p', entryId: 'entry', readyDeadlineAt: at + 3600000 };
+    const notice = { recipientUid: 'p', entryId: 'entry', cycleId: 'cycle', kind: 'readiness_requested', noticeId: 'entry:readiness_requested' };
+    const seen = new Map(), events = [], timers = [];
+    const ui = vm.runInNewContext(room + '\nObject.create(TournamentManager.prototype)', {
+        window: { tournamentReadinessCore: core }, document: { getElementById: () => null },
+        localStorage: { getItem: k => seen.get(k), setItem: (k,v) => seen.set(k,v) },
+        setTimeout: (fn, delay) => { if (delay === 12000) timers.push(fn); }, t: k => k
+    });
+    Object.assign(ui, { render() {}, tournamentNow: () => at, state: { readinessPolicyVersion: core.VERSION,
+        status: 'confirmation', readiness: {}, registrationCycleId: 'cycle', players: [player] },
+        app: { playerId: 'p', socket: { connected: true, emit: e => events.push(e) },
+            modal: { confirm: async () => true, alert() {} } } });
+    await ui.maybeShowReadinessNotice(notice);
+    assert.deepEqual(events, ['tourney_readiness_confirm'], 'accept is not a read receipt');
+    ui.reconcileReadinessRequest(player);
+    assert.equal(seen.size, 0, 'unconfirmed server snapshot does not acknowledge');
+    timers[0]();
+    await ui.maybeShowReadinessNotice(notice);
+    timers[0]();
+    assert(ui.pendingReadiness, 'timer from timed out request cannot clear a retry');
+    player.readyConfirmedAt = at;
+    ui.reconcileReadinessRequest(player);
+    assert.equal(events.filter(e => e === 'tourney_notice_read').length, 1);
+    assert(seen.has('yamb_tourney_notice_' + notice.noticeId));
+    assert.equal(ui.pendingReadiness, false);
+}
+verifyReadinessReceipt().catch(error => { console.error(error); process.exitCode = 1; });

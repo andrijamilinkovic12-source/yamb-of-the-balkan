@@ -16486,20 +16486,22 @@ io.on('connection', (socket) => {
 
     socket.on('tourney_readiness_confirm', async (data = {}) => {
         const uid = requireTournamentAuth(socket);
-        if (!uid) return;
+        const reply = (ok, reason) => socket.emit('tourney_readiness_result', { ok, reason,
+            entryId: typeof data?.entryId === 'string' ? data.entryId : '', cycleId: typeof data?.cycleId === 'string' ? data.cycleId : '' });
+        if (!uid) return reply(false, 'auth_required');
         if (!tournamentStateInitialized) {
-            socket.emit('tourney_readiness_result', { ok: false, reason: 'err_server_conn' });
+            reply(false, 'err_server_conn');
             return;
         }
         try {
             const result = await runTournamentReadinessCommand('confirm', {
                 uid, cycleId: data?.cycleId, entryId: data?.entryId, clientProtocol: data?.clientProtocol
             });
-            socket.emit('tourney_readiness_result', { ok: result.ok, reason: result.reason });
+            reply(result.ok, result.reason);
             socket.emit('tourney_state_update', { ...tournamentState, serverTime: Date.now() });
         } catch (error) {
             console.error('Tournament readiness confirmation failed:', error.code || error.name);
-            socket.emit('tourney_readiness_result', { ok: false, reason: 'err_server_conn' });
+            reply(false, 'err_server_conn');
         }
     });
 
